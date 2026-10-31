@@ -678,15 +678,38 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         PojavControlsMod.nativeSendScroll(vertical)
     }
 
+    /**
+     * Accumulates look travel rather than sending it immediately (item 216).
+     *
+     * <p>Several move events can arrive between two game frames, and the game samples the look it
+     * is handed on its own tick. Sending per event dropped all but the last delta of the frame, so
+     * a fast flick under-turned. The deltas are summed here and sent once, from [tick], which also
+     * collapses the shaping work to one call per frame.
+     */
+    private val lookDeltaCoalescer =
+        org.chimeramc.client.core.mods.inbuilt.overlay.LookDeltaCoalescer()
+    private val lookDeltaScratch = FloatArray(2)
+
     override fun pojavSendLookDelta(deltaX: Float, deltaY: Float) {
-        // One shaper, never more: each carries its own smoothing, so stacking them would
-        // compound the damping. Hit Registration supersedes the others when it is on; the
-        // catalogue's Rotation Smoother is next; Aim Settings is the default. Aim Settings keeps
-        // drawing its crosshair regardless, since that is separate.
+        lookDeltaCoalescer.add(deltaX, deltaY)
+    }
+
+    /**
+     * Sends this frame's accumulated look travel through exactly one shaper.
+     *
+     * <p>One shaper, never more: each carries its own smoothing, so stacking them would compound
+     * the damping. Hit Registration supersedes the others when it is on; the catalogue's Rotation
+     * Smoother is next; Aim Settings is the default. Aim Settings keeps drawing its crosshair
+     * regardless, since that is separate.
+     */
+    private fun flushLookDelta() {
+        if (!lookDeltaCoalescer.flush(lookDeltaScratch)) return
+        val deltaX = lookDeltaScratch[0]
+        val deltaY = lookDeltaScratch[1]
         val smoothed = if (org.chimeramc.client.core.mods.inbuilt.overlay.HitRegistrationMod
                 .isActive()) {
             org.chimeramc.client.core.mods.inbuilt.overlay.HitRegistrationMod
-                .shapeLookDelta(deltaX, deltaY)
+                .shapeLookDelta(deltaX, deltaY, lookDeltaScratch)
         } else if (org.chimeramc.client.launcher.core.mods.inbuilt.overlay.RotationSmootherMod
                 .isActive()) {
             org.chimeramc.client.launcher.core.mods.inbuilt.overlay.RotationSmootherMod
@@ -723,6 +746,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             // their own held state so an indicator cannot claim a module is still armed (item 195).
             GameBridge.releaseAll()
             overlayManager?.onWindowFocusLost()
+            // Any look travel that arrived but has not been sent belongs to the frame that was
+            // interrupted; flushing it on resume would turn the camera by a stale amount.
+            lookDeltaCoalescer.reset()
         }
     }
 
@@ -739,6 +765,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
     override fun onPause() {
         GameBridge.releaseAll()
+        lookDeltaCoalescer.reset()
         val shouldRestartAfterNormalExit = shouldRestartAfterNormalExit()
         if (shouldRestartAfterNormalExit) {
             PreloaderInput.cancelDocumentRequest("Minecraft closed")
@@ -815,6 +842,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         // the install has run, so the steady-state cost is negligible. It runs before super.tick()
         // so the hook exists before the frame it will observe renders.
         ModManager.pumpGameHookInstall()
+        // One shaped look call per frame, from this frame's accumulated travel (item 216). Before
+        // super.tick() so the game's own tick reads this frame's aim rather than the previous one's.
+        flushLookDelta()
         super.tick()
         overlayManager?.tick()
     }
