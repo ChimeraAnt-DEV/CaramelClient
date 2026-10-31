@@ -1096,4 +1096,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_overlay_gyro_off">जायरो बंद</string>
     <string name="mod_overlay_gyro_calibrating">कैलिब्रेट हो रहा है…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">स्प्रिंट चालू</string>
+    <string name="mod_overlay_autosprint_off">स्प्रिंट बंद</string>
 </resources>

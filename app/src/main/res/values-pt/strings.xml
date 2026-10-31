@@ -1068,4 +1068,6 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="mod_overlay_gyro_off">Giro desligado</string>
     <string name="mod_overlay_gyro_calibrating">Calibrando…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">Corrida ativada</string>
+    <string name="mod_overlay_autosprint_off">Corrida desativada</string>
 </resources>

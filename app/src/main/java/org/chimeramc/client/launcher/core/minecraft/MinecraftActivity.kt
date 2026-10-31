@@ -719,8 +719,10 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         super.onWindowFocusChanged(hasFocus)
         if (!hasFocus) {
             // Losing focus must not leave a key or mouse button held down in the game: nothing will
-            // send the matching release once another app has the window.
+            // send the matching release once another app has the window. The overlays also drop
+            // their own held state so an indicator cannot claim a module is still armed (item 195).
             GameBridge.releaseAll()
+            overlayManager?.onWindowFocusLost()
         }
     }
 

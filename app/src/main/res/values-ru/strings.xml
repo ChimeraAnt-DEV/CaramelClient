@@ -1099,4 +1099,6 @@
     <string name="mod_overlay_gyro_off">Гироскоп выключен</string>
     <string name="mod_overlay_gyro_calibrating">Калибровка…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">Спринт включён</string>
+    <string name="mod_overlay_autosprint_off">Спринт выключен</string>
 </resources>

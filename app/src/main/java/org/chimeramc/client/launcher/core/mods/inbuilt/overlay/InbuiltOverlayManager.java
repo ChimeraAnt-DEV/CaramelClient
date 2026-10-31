@@ -33,6 +33,7 @@ public class InbuiltOverlayManager {
     private boolean moreButtonsEditorOpen;
     private final Map<String, Integer> modPositionMap = new HashMap<>();
     private ChickPetOverlay chickPetOverlay;
+    private AutoSprintOverlay autoSprintOverlay;
     private ZoomOverlay zoomOverlay;
     private SnaplookOverlay snaplookOverlay;
     private GyroOverlay gyroOverlay;
@@ -279,10 +280,12 @@ public class InbuiltOverlayManager {
                 modOverlayMap.put(modId, hud);
                 break;
             case ModIds.AUTO_SPRINT:
-                AutoSprintOverlay sprint = new AutoSprintOverlay(activity);
-                sprint.show(savedX, savedY);
-                overlays.add(sprint);
-                modOverlayMap.put(modId, sprint);
+                if (autoSprintOverlay == null) {
+                    autoSprintOverlay = new AutoSprintOverlay(activity);
+                }
+                autoSprintOverlay.show(savedX, savedY);
+                overlays.add(autoSprintOverlay);
+                modOverlayMap.put(modId, autoSprintOverlay);
                 break;
             case ModIds.CHICK_PET:
                 if (chickPetOverlay == null) {
@@ -875,6 +878,19 @@ public class InbuiltOverlayManager {
     }
 
 
+    /**
+     * Tells the overlays the game window lost focus (item 195).
+     *
+     * <p>A module that holds a key for the player must not stay armed while another app owns the
+     * window: the backend releases the key, and the overlay drops its own flag so the indicator and
+     * the real state agree when the player returns.
+     */
+    public void onWindowFocusLost() {
+        if (autoSprintOverlay != null) {
+            autoSprintOverlay.onFocusLost();
+        }
+    }
+
     public void hideAllOverlays() {
         PojavControls.setEnabled(activity,
                 activity instanceof PojavControlsHost ? (PojavControlsHost) activity : null,
@@ -899,6 +915,10 @@ public class InbuiltOverlayManager {
         if (zoomOverlay != null) {
             zoomOverlay.hide();
             zoomOverlay = null;
+        }
+        if (autoSprintOverlay != null) {
+            autoSprintOverlay.hide();
+            autoSprintOverlay = null;
         }
         if (fpsDisplayOverlay != null) {
             fpsDisplayOverlay.hide();

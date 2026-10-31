@@ -1095,4 +1095,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_overlay_gyro_off">Jiroskop kapalı</string>
     <string name="mod_overlay_gyro_calibrating">Kalibre ediliyor…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">Koşu açık</string>
+    <string name="mod_overlay_autosprint_off">Koşu kapalı</string>
 </resources>

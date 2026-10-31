@@ -1089,4 +1089,6 @@
     <string name="mod_overlay_gyro_off">陀螺仪已关闭</string>
     <string name="mod_overlay_gyro_calibrating">正在校准…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">疾跑已开启</string>
+    <string name="mod_overlay_autosprint_off">疾跑已关闭</string>
 </resources>

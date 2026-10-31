@@ -1098,4 +1098,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="mod_overlay_gyro_off">Con quay tắt</string>
     <string name="mod_overlay_gyro_calibrating">Đang hiệu chỉnh…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">Chạy nước rút bật</string>
+    <string name="mod_overlay_autosprint_off">Chạy nước rút tắt</string>
 </resources>

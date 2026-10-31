@@ -1092,4 +1092,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_overlay_gyro_off">Giro nonaktif</string>
     <string name="mod_overlay_gyro_calibrating">Mengkalibrasi…</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
+    <string name="mod_overlay_autosprint_on">Sprint aktif</string>
+    <string name="mod_overlay_autosprint_off">Sprint nonaktif</string>
 </resources>
