@@ -65,6 +65,7 @@ public class InbuiltModManager {
     private static final String KEY_OVERLAY_POSITION_Y_PREFIX = "overlay_pos_y_";
     private static final String KEY_OVERLAY_LOCK_PREFIX = "overlay_lock_";
     private static final String KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX = "overlay_show_everywhere_";
+    private static final String KEY_FRAME_GRAPH_PREFIX = "overlay_frame_graph_";
     private static final String KEY_HOTBAR_ITEM_ICONS = "hotbar_item_icons";
     private static final String KEY_HOTBAR_SLOT_ENABLED_PREFIX = "hotbar_slot_enabled_";
     private static final String KEY_AIM_SMOOTHING = "aim_smoothing";
@@ -622,6 +623,21 @@ public class InbuiltModManager {
         prefs.edit().putBoolean(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + sharedOverlaySettingsId(modId), showEverywhere).apply();
     }
 
+    /**
+     * Whether the FPS overlay draws its frame-time graph (item 191).
+     *
+     * <p>A per-module overlay option like the others, stored under the same shared-settings id so a
+     * module that shares its overlay appearance (the hotbar slots) also shares this. Off by default:
+     * the graph is an addition, and a user who never asked for it keeps the plain readout.
+     */
+    public boolean isFrameTimeGraphEnabled(String modId) {
+        return prefs.getBoolean(KEY_FRAME_GRAPH_PREFIX + sharedOverlaySettingsId(modId), false);
+    }
+
+    public void setFrameTimeGraphEnabled(String modId, boolean enabled) {
+        prefs.edit().putBoolean(KEY_FRAME_GRAPH_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
+    }
+
     public void clearOverlaySettings(String modId) {
         if (modId == null || modId.isEmpty()) return;
         prefs.edit()
@@ -631,6 +647,7 @@ public class InbuiltModManager {
                 .remove(KEY_OVERLAY_POSITION_Y_PREFIX + modId)
                 .remove(KEY_OVERLAY_LOCK_PREFIX + modId)
                 .remove(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + modId)
+                .remove(KEY_FRAME_GRAPH_PREFIX + modId)
                 .apply();
         overlayVisibilityRevision.incrementAndGet();
     }

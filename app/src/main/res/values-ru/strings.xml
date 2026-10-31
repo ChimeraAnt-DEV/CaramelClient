@@ -861,6 +861,7 @@
     <string name="inbuilt_mod_more_buttons">Дополнительные кнопки</string>
     <string name="inbuilt_mod_more_buttons_desc">Создавайте пользовательские экранные кнопки с назначением одной клавиши и SVG-значками</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Показывать везде</string>
+    <string name="mod_config_fps_frame_graph" formatted="false">График времени кадра</string>
     <string name="mod_config_zoom_transition">Длительность перехода (мс)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Горизонтальная чувствительность (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Вертикальная чувствительность (%)</string>

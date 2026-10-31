@@ -830,6 +830,7 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="inbuilt_mod_more_buttons">Plus de boutons</string>
     <string name="inbuilt_mod_more_buttons_desc">Créez des boutons personnalisés à l\'écran avec une seule touche assignée et des icônes SVG</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Afficher partout</string>
+    <string name="mod_config_fps_frame_graph" formatted="false">Graphique du temps par image</string>
     <string name="mod_config_zoom_transition">Durée de transition (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Sensibilité horizontale (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Sensibilité verticale (%)</string>

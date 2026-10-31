@@ -18,6 +18,7 @@ import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
 import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod;
+import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.FrameTimeGraphView;
 import org.chimeramc.client.util.MainThread;
 import org.chimeramc.client.util.OverlayRefreshGate;
 
@@ -31,6 +32,7 @@ public class FpsDisplayOverlay {
 
     private View overlayView;
     private TextView statsText;
+    private FrameTimeGraphView graphView;
     private WindowManager.LayoutParams wmParams;
     private boolean isShowing = false;
     private Runnable pendingShowRunnable;
@@ -84,6 +86,23 @@ public class FpsDisplayOverlay {
         }, 1000);
     }
 
+    /**
+     * Inflates the overlay body: the plain readout, or the readout plus the frame-time graph when
+     * the user enabled it (item 191). Both layouts expose the same {@code stats_text} id, so the
+     * rest of the overlay is unchanged; the graph is only present in the graph layout.
+     */
+    private void inflateOverlay() {
+        boolean graph = InbuiltModManager.getInstance(activity).isFrameTimeGraphEnabled(ModIds.FPS_DISPLAY);
+        int layout = graph ? R.layout.overlay_stats_display_graph : R.layout.overlay_stats_display;
+        overlayView = LayoutInflater.from(activity).inflate(layout, null);
+        statsText = overlayView.findViewById(R.id.stats_text);
+        graphView = graph ? overlayView.findViewById(R.id.frame_time_graph) : null;
+        if (graphView != null) {
+            graphView.setHistory(fallbackMeter.history());
+            graphView.setLineColor(activity.getColor(R.color.overlay_text_primary));
+        }
+    }
+
     private void showInternal(int startX, int startY) {
         pendingShowRunnable = null;
         if (isShowing || activity.isFinishing() || activity.isDestroyed()) return;
@@ -93,8 +112,7 @@ public class FpsDisplayOverlay {
         }
 
         try {
-            overlayView = LayoutInflater.from(activity).inflate(R.layout.overlay_stats_display, null);
-            statsText = overlayView.findViewById(R.id.stats_text);
+            inflateOverlay();
             statsText.setText(activity.getString(R.string.mod_overlay_fps_unknown));
             refreshGate.reset();
 
@@ -134,8 +152,7 @@ public class FpsDisplayOverlay {
         ViewGroup rootView = activity.findViewById(android.R.id.content);
         if (rootView == null) return;
 
-        overlayView = LayoutInflater.from(activity).inflate(R.layout.overlay_stats_display, null);
-        statsText = overlayView.findViewById(R.id.stats_text);
+        inflateOverlay();
         statsText.setText(activity.getString(R.string.mod_overlay_fps_unknown));
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -182,6 +199,9 @@ public class FpsDisplayOverlay {
                 statsText.setText(fps > 0
                         ? activity.getString(R.string.mod_overlay_fps_value, fps)
                         : activity.getString(R.string.mod_overlay_fps_unknown));
+            }
+            if (graphView != null) {
+                graphView.refresh();
             }
             clampCurrentPosition(false);
         }
@@ -384,6 +404,7 @@ public class FpsDisplayOverlay {
         } catch (Exception ignored) {}
         overlayView = null;
         statsText = null;
+        graphView = null;
     }
 
     public void applyConfigurationChanges() {

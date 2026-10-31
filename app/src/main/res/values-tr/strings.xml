@@ -857,6 +857,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="inbuilt_mod_more_buttons">Daha Fazla Düğme</string>
     <string name="inbuilt_mod_more_buttons_desc">Tek tuş eşlemeleri ve SVG simgeleriyle özel ekran düğmeleri oluşturun</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Her Yerde Göster</string>
+    <string name="mod_config_fps_frame_graph" formatted="false">Kare Süresi Grafiği</string>
     <string name="mod_config_zoom_transition">Geçiş Süresi (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Yatay Hassasiyet (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Dikey Hassasiyet (%)</string>

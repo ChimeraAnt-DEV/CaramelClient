@@ -858,6 +858,7 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="inbuilt_mod_more_buttons">अधिक बटन</string>
     <string name="inbuilt_mod_more_buttons_desc">एकल-कुंजी मैपिंग और SVG आइकन के साथ कस्टम ऑन-स्क्रीन बटन बनाएँ</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">हर जगह दिखाएँ</string>
+    <string name="mod_config_fps_frame_graph" formatted="false">फ़्रेम-समय ग्राफ़</string>
     <string name="mod_config_zoom_transition">ट्रांज़िशन अवधि (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">क्षैतिज संवेदनशीलता (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">ऊर्ध्वाधर संवेदनशीलता (%)</string>

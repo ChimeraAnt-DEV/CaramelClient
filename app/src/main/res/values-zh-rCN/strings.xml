@@ -851,6 +851,7 @@
     <string name="inbuilt_mod_more_buttons">更多按钮</string>
     <string name="inbuilt_mod_more_buttons_desc">使用单键映射和 SVG 图标创建自定义屏幕按钮</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">始终显示</string>
+    <string name="mod_config_fps_frame_graph" formatted="false">帧时间图表</string>
     <string name="mod_config_zoom_transition">过渡时长 (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">水平灵敏度 (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">垂直灵敏度 (%)</string>

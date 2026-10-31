@@ -28,6 +28,7 @@ public final class InbuiltModuleProvider {
     private static final String CFG_OVERLAY_OPACITY = "overlay_opacity";
     private static final String CFG_OVERLAY_LOCK = "overlay_lock";
     private static final String CFG_OVERLAY_SHOW_EVERYWHERE = "overlay_show_everywhere";
+    private static final String CFG_FRAME_GRAPH = "overlay_frame_graph";
     private static final String CFG_AUTO_SPRINT_KEYBIND = "auto_sprint_keybind";
     private static final String CFG_CURSOR_SENSITIVITY = "cursor_sensitivity";
     private static final String CFG_ZOOM_LEVEL = "zoom_level";
@@ -963,6 +964,16 @@ public final class InbuiltModuleProvider {
                     String.valueOf(manager.isOverlayShowEverywhere(modId))));
         }
 
+        // The frame-time graph is an FPS-overlay-only option (item 191): it needs the FPS meter,
+        // which only that overlay runs.
+        if (ModIds.FPS_DISPLAY.equals(modId)) {
+            configs.add(config(CFG_FRAME_GRAPH,
+                    context.getString(R.string.mod_config_fps_frame_graph),
+                    UnifiedMod.ConfigType.TOGGLE,
+                    "false", "", "",
+                    String.valueOf(manager.isFrameTimeGraphEnabled(modId))));
+        }
+
         if (ModIds.HOTBAR_SLOT.equals(modId)) {
             configs.add(config(CFG_HOTBAR_ITEM_ICONS,
                     context.getString(R.string.mod_config_hotbar_item_icons),
@@ -1376,6 +1387,9 @@ public final class InbuiltModuleProvider {
                 break;
             case CFG_OVERLAY_SHOW_EVERYWHERE:
                 manager.setOverlayShowEverywhere(mod.getId(), parseBoolean(value));
+                break;
+            case CFG_FRAME_GRAPH:
+                manager.setFrameTimeGraphEnabled(mod.getId(), parseBoolean(value));
                 break;
             case CFG_AUTO_SPRINT_KEYBIND:
                 manager.setAutoSprintKeybind(parseInt(value, manager.getAutoSprintKeybind()));
