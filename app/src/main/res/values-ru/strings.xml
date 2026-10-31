@@ -1189,4 +1189,11 @@
     <string name="instance_notes_desc">Личная заметка об этом экземпляре, показанная на его карточке. Игра её не использует.</string>
     <string name="instance_notes_hint">напр. сборка для PvP, без шейдеров</string>
     <string name="instance_notes_saved">Заметка сохранена</string>
+    <string name="instance_storage_title">Хранилище</string>
+    <string name="instance_storage_desc">Сколько места занимает этот экземпляр. Очистка кэша всегда безопасна: он пересоздаётся при следующем запуске.</string>
+    <string name="instance_storage_calculating">Подсчёт…</string>
+    <string name="instance_storage_breakdown">Всего %1$s · Игра %2$s · Моды %3$s · Рантайм %4$s · Кэш %5$s</string>
+    <string name="instance_storage_clear_cache">Очистить кэш</string>
+    <string name="instance_storage_cleared">Кэш очищен (освобождено %1$s)</string>
+    <string name="instance_storage_clear_failed">Не удалось очистить кэш: %1$s</string>
 </resources>

@@ -1185,4 +1185,11 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="instance_notes_desc">Bu örnek hakkında kartında gösterilen özel bir not. Oyun tarafından kullanılmaz.</string>
     <string name="instance_notes_hint">örn. PvP yapısı, shader kapalı</string>
     <string name="instance_notes_saved">Not kaydedildi</string>
+    <string name="instance_storage_title">Depolama</string>
+    <string name="instance_storage_desc">Bu örneğin kullandığı disk alanı. Önbelleği temizlemek her zaman güvenlidir: sonraki başlatmada yeniden oluşturulur.</string>
+    <string name="instance_storage_calculating">Hesaplanıyor…</string>
+    <string name="instance_storage_breakdown">Toplam %1$s · Oyun %2$s · Modlar %3$s · Çalışma zamanı %4$s · Önbellek %5$s</string>
+    <string name="instance_storage_clear_cache">Önbelleği temizle</string>
+    <string name="instance_storage_cleared">Önbellek temizlendi (%1$s boşaltıldı)</string>
+    <string name="instance_storage_clear_failed">Önbellek temizlenemedi: %1$s</string>
 </resources>

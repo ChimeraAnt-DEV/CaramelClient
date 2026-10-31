@@ -1864,6 +1864,13 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="instance_notes_desc">A private note about this instance, shown on its card. Not used by the game.</string>
     <string name="instance_notes_hint">e.g. PvP build, keep shaders off</string>
     <string name="instance_notes_saved">Note saved</string>
+    <string name="instance_storage_title">Storage</string>
+    <string name="instance_storage_desc">How much disk this instance uses. Clearing the cache is always safe: it is rebuilt on the next launch.</string>
+    <string name="instance_storage_calculating">Calculating…</string>
+    <string name="instance_storage_breakdown">Total %1$s · Game %2$s · Mods %3$s · Runtime %4$s · Cache %5$s</string>
+    <string name="instance_storage_clear_cache">Clear cache</string>
+    <string name="instance_storage_cleared">Cache cleared (%1$s freed)</string>
+    <string name="instance_storage_clear_failed">Could not clear the cache: %1$s</string>
     <string name="foreground_service_channel">Minecraft</string>
     <string name="foreground_service_notification_title">Minecraft is running</string>
     <string name="foreground_service_notification_text">Keeping the game alive in the background</string>

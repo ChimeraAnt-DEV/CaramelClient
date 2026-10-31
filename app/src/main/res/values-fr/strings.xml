@@ -1158,4 +1158,11 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="instance_notes_desc">Une note privée sur cette instance, affichée sur sa carte. Non utilisée par le jeu.</string>
     <string name="instance_notes_hint">ex. build PvP, sans shaders</string>
     <string name="instance_notes_saved">Note enregistrée</string>
+    <string name="instance_storage_title">Stockage</string>
+    <string name="instance_storage_desc">L\'espace disque utilisé par cette instance. Vider le cache est toujours sûr : il est reconstruit au prochain lancement.</string>
+    <string name="instance_storage_calculating">Calcul…</string>
+    <string name="instance_storage_breakdown">Total %1$s · Jeu %2$s · Mods %3$s · Moteur %4$s · Cache %5$s</string>
+    <string name="instance_storage_clear_cache">Vider le cache</string>
+    <string name="instance_storage_cleared">Cache vidé (%1$s libérés)</string>
+    <string name="instance_storage_clear_failed">Impossible de vider le cache : %1$s</string>
 </resources>

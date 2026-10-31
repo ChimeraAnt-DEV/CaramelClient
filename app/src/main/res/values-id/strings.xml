@@ -1182,4 +1182,11 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="instance_notes_desc">Catatan pribadi tentang instans ini, ditampilkan di kartunya. Tidak digunakan oleh game.</string>
     <string name="instance_notes_hint">mis. build PvP, matikan shader</string>
     <string name="instance_notes_saved">Catatan disimpan</string>
+    <string name="instance_storage_title">Penyimpanan</string>
+    <string name="instance_storage_desc">Berapa banyak disk yang dipakai instans ini. Menghapus cache selalu aman: akan dibuat ulang saat peluncuran berikutnya.</string>
+    <string name="instance_storage_calculating">Menghitung…</string>
+    <string name="instance_storage_breakdown">Total %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Cache %5$s</string>
+    <string name="instance_storage_clear_cache">Hapus cache</string>
+    <string name="instance_storage_cleared">Cache dihapus (%1$s dibebaskan)</string>
+    <string name="instance_storage_clear_failed">Tidak bisa menghapus cache: %1$s</string>
 </resources>

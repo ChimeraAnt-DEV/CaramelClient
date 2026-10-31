@@ -32,8 +32,15 @@ import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.ui.dialogs.InstallProgressDialog;
 import org.chimeramc.client.util.InstanceBackupManager;
 import org.chimeramc.client.util.InstanceShortcutManager;
+import org.chimeramc.client.core.minecraft.InstanceDiskUsage;
+import org.chimeramc.client.core.minecraft.MinecraftLauncher;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
+import org.chimeramc.client.util.LauncherStorage;
+import org.chimeramc.client.launcher.util.StorageUsage;
+import org.chimeramc.client.util.AppExecutors;
 import org.chimeramc.client.util.MainThread;
+
+import java.io.File;
 
 public class InstanceSettingsActivity extends BaseActivity {
     private static final int REQUEST_BACKUP_STORAGE = 4201;
@@ -58,6 +65,8 @@ public class InstanceSettingsActivity extends BaseActivity {
     private TextView boundAccountValue;
     private TextView boundAccountWarning;
     private EditText editShortcutName;
+    private TextView storageValue;
+    private Button clearCacheButton;
     private EditText editInstanceNotes;
     private Runnable pendingNotesSave;
     private String lastSavedNotes = "";
@@ -125,6 +134,11 @@ public class InstanceSettingsActivity extends BaseActivity {
         setupBoundAccountRow();
         editShortcutName = findViewById(R.id.edit_shortcut_name);
         shortcutIconPreview = findViewById(R.id.shortcut_icon_preview);
+        storageValue = findViewById(R.id.instance_storage_value);
+        clearCacheButton = findViewById(R.id.btn_clear_instance_cache);
+        if (clearCacheButton != null) {
+            clearCacheButton.setOnClickListener(v -> confirmClearCache());
+        }
         editInstanceNotes = findViewById(R.id.edit_instance_notes);
         if (editInstanceNotes != null) {
             editInstanceNotes.addTextChangedListener(new TextWatcher() {
@@ -269,6 +283,7 @@ public class InstanceSettingsActivity extends BaseActivity {
             editInstanceNotes.setText(lastSavedNotes);
         }
         populatingData = false;
+        refreshStorageUsage();
     }
 
     /**
@@ -385,6 +400,96 @@ public class InstanceSettingsActivity extends BaseActivity {
                 sections[i].setVisibility(View.GONE);
             }
         }
+    }
+
+    /**
+     * Measures the instance's disk use off the main thread and renders the breakdown (item 265).
+     *
+     * <p>The walk touches every file under the instance, so it must not run on the UI thread. The
+     * measurement is recomputed after a cache clear, so the figure the user sees is the real one.
+     */
+    private void refreshStorageUsage() {
+        if (storageValue == null || version == null) return;
+        storageValue.setText(R.string.instance_storage_calculating);
+        if (clearCacheButton != null) clearCacheButton.setEnabled(false);
+        final String profileId = MinecraftLauncher.getStorageProfileId(version);
+        final boolean versionIsolation = version.versionIsolation;
+        AppExecutors.run(AppExecutors.Kind.DISK, "instance-storage", () -> {
+            File gameData = LauncherStorage.getStorageGameDataDir(this, profileId, versionIsolation, true);
+            File mods = LauncherStorage.getProfileModsDir(this, profileId);
+            File runtime = MinecraftLauncher.getRuntimeLibDir(this, profileId);
+            File cache = LauncherStorage.getProfileCacheRoot(this, profileId);
+            final InstanceDiskUsage usage = InstanceDiskUsage.measure(gameData, mods, runtime, cache);
+            MainThread.post(() -> renderStorageUsage(usage));
+        });
+    }
+
+    private void renderStorageUsage(InstanceDiskUsage usage) {
+        if (storageValue == null) return;
+        storageValue.setText(getString(R.string.instance_storage_breakdown,
+                StorageUsage.format(usage.totalBytes()),
+                StorageUsage.format(usage.gameDataBytes),
+                StorageUsage.format(usage.modsBytes),
+                StorageUsage.format(usage.runtimeBytes),
+                StorageUsage.format(usage.cacheBytes)));
+        if (clearCacheButton != null) clearCacheButton.setEnabled(usage.hasClearableCache());
+    }
+
+    private void confirmClearCache() {
+        if (version == null) return;
+        new CustomAlertDialog(this)
+                .setTitleText(getString(R.string.instance_storage_clear_cache))
+                .setMessage(getString(R.string.instance_storage_desc))
+                .setPositiveButton(getString(android.R.string.ok), v -> clearCacheNow())
+                .setNegativeButton(getString(android.R.string.cancel), null)
+                .show();
+    }
+
+    private void clearCacheNow() {
+        if (version == null) return;
+        final String profileId = MinecraftLauncher.getStorageProfileId(version);
+        final File cache = LauncherStorage.getProfileCacheRoot(this, profileId);
+        AppExecutors.run(AppExecutors.Kind.DISK, "instance-cache-clear", () -> {
+            long before = StorageUsage.sizeOf(cache);
+            boolean ok = deleteContents(cache);
+            final long freed = Math.max(0L, before - StorageUsage.sizeOf(cache));
+            MainThread.post(() -> {
+                if (ok) {
+                    Toast.makeText(this, getString(R.string.instance_storage_cleared,
+                            StorageUsage.format(freed)), Toast.LENGTH_SHORT).show();
+                    refreshStorageUsage();
+                } else {
+                    Toast.makeText(this, getString(R.string.instance_storage_clear_failed,
+                            cache.getAbsolutePath()), Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+    }
+
+    /**
+     * Deletes everything inside {@code dir} but keeps the directory itself.
+     *
+     * @return true when every child was removed.
+     */
+    private static boolean deleteContents(File dir) {
+        File[] children = dir == null ? null : dir.listFiles();
+        if (children == null) return dir != null && !dir.exists();
+        boolean all = true;
+        for (File child : children) {
+            all &= deleteRecursively(child);
+        }
+        return all;
+    }
+
+    private static boolean deleteRecursively(File file) {
+        if (file == null) return true;
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) deleteRecursively(child);
+            }
+        }
+        return file.delete();
     }
 
     /**

@@ -1179,4 +1179,11 @@
     <string name="instance_notes_desc">关于此实例的私人备注，显示在其卡片上。游戏不会使用它。</string>
     <string name="instance_notes_hint">例如：PvP 配置，关闭光影</string>
     <string name="instance_notes_saved">备注已保存</string>
+    <string name="instance_storage_title">存储</string>
+    <string name="instance_storage_desc">此实例占用的磁盘空间。清除缓存始终安全：下次启动时会重新生成。</string>
+    <string name="instance_storage_calculating">正在计算…</string>
+    <string name="instance_storage_breakdown">总计 %1$s · 游戏 %2$s · 模组 %3$s · 运行库 %4$s · 缓存 %5$s</string>
+    <string name="instance_storage_clear_cache">清除缓存</string>
+    <string name="instance_storage_cleared">缓存已清除（释放 %1$s）</string>
+    <string name="instance_storage_clear_failed">无法清除缓存：%1$s</string>
 </resources>

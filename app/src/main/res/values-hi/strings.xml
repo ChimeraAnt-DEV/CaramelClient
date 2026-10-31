@@ -1186,4 +1186,11 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="instance_notes_desc">इस इंस्टेंस के बारे में एक निजी नोट, इसके कार्ड पर दिखाया जाता है। गेम इसका उपयोग नहीं करता।</string>
     <string name="instance_notes_hint">जैसे PvP बिल्ड, शेडर बंद रखें</string>
     <string name="instance_notes_saved">नोट सहेजा गया</string>
+    <string name="instance_storage_title">संग्रहण</string>
+    <string name="instance_storage_desc">यह इंस्टेंस कितनी डिस्क लेता है। कैश साफ़ करना हमेशा सुरक्षित है: यह अगली बार चालू होने पर फिर बन जाता है।</string>
+    <string name="instance_storage_calculating">गणना हो रही है…</string>
+    <string name="instance_storage_breakdown">कुल %1$s · गेम %2$s · मॉड्स %3$s · रनटाइम %4$s · कैश %5$s</string>
+    <string name="instance_storage_clear_cache">कैश साफ़ करें</string>
+    <string name="instance_storage_cleared">कैश साफ़ हुआ (%1$s मुक्त)</string>
+    <string name="instance_storage_clear_failed">कैश साफ़ नहीं हो सका: %1$s</string>
 </resources>

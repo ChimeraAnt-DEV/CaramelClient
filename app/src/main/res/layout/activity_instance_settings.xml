@@ -656,6 +656,58 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/instance_storage_title"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/on_surface"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_hairline"
+                            android:text="@string/instance_storage_desc"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/text_secondary"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <TextView
+                            android:id="@+id/instance_storage_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_3"
+                            android:text="@string/instance_storage_calculating"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/on_surface"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+
+                        <Button
+                            android:id="@+id/btn_clear_instance_cache"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="36dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:paddingHorizontal="@dimen/space_6"
+                            android:text="@string/instance_storage_clear_cache"
+                            android:fontFamily="@font/misans"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textColor="@color/on_primary"
+                            android:backgroundTint="@color/primary"
+                            android:textAllCaps="false" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        style="@style/Widget.Chimera.Card.Compact"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_4">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@string/instance_danger_zone"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"

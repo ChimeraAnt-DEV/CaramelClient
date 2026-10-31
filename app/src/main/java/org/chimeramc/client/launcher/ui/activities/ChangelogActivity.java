@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ActivityChangelogBinding;
 import org.chimeramc.client.launcher.core.changelog.ChangelogMarkdown;
 import org.chimeramc.client.ui.activities.BaseActivity;
 import org.chimeramc.client.util.AppLog;
@@ -36,21 +37,19 @@ public class ChangelogActivity extends BaseActivity {
     private static final String ASSET_PATH = "launcher/CHANGELOG.md";
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ActivityChangelogBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_changelog);
+        binding = ActivityChangelogBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setActiveNavTab(R.id.nav_tab_settings);
 
-        TextView version = findViewById(R.id.changelog_screen_version);
-        if (version != null) {
-            version.setText(getString(R.string.changelog_version, BuildConfig.VERSION_NAME));
-        }
+        binding.changelogScreenVersion.setText(
+                getString(R.string.changelog_version, BuildConfig.VERSION_NAME));
 
-        LinearLayout content = findViewById(R.id.changelog_screen_content);
-        if (content == null) return;
-        loadChangelog(content);
+        loadChangelog(binding.changelogScreenContent);
     }
 
     private void loadChangelog(LinearLayout content) {

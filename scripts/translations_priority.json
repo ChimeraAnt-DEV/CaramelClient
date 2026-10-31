@@ -165,7 +165,14 @@
     "instance_notes_title": "Nota",
     "instance_notes_desc": "Una nota privada sobre esta instancia, mostrada en su tarjeta. No la usa el juego.",
     "instance_notes_hint": "p. ej. build de PvP, sin shaders",
-    "instance_notes_saved": "Nota guardada"
+    "instance_notes_saved": "Nota guardada",
+    "instance_storage_title": "Almacenamiento",
+    "instance_storage_desc": "Cuánto disco usa esta instancia. Borrar la caché siempre es seguro: se reconstruye en el próximo inicio.",
+    "instance_storage_calculating": "Calculando…",
+    "instance_storage_breakdown": "Total %1$s · Juego %2$s · Mods %3$s · Motor %4$s · Caché %5$s",
+    "instance_storage_clear_cache": "Borrar caché",
+    "instance_storage_cleared": "Caché borrada (%1$s liberados)",
+    "instance_storage_clear_failed": "No se pudo borrar la caché: %1$s"
   },
   "fr": {
     "nav_back": "Retour",
@@ -333,7 +340,14 @@
     "instance_notes_title": "Note",
     "instance_notes_desc": "Une note privée sur cette instance, affichée sur sa carte. Non utilisée par le jeu.",
     "instance_notes_hint": "ex. build PvP, sans shaders",
-    "instance_notes_saved": "Note enregistrée"
+    "instance_notes_saved": "Note enregistrée",
+    "instance_storage_title": "Stockage",
+    "instance_storage_desc": "L'espace disque utilisé par cette instance. Vider le cache est toujours sûr : il est reconstruit au prochain lancement.",
+    "instance_storage_calculating": "Calcul…",
+    "instance_storage_breakdown": "Total %1$s · Jeu %2$s · Mods %3$s · Moteur %4$s · Cache %5$s",
+    "instance_storage_clear_cache": "Vider le cache",
+    "instance_storage_cleared": "Cache vidé (%1$s libérés)",
+    "instance_storage_clear_failed": "Impossible de vider le cache : %1$s"
   },
   "hi": {
     "nav_back": "वापस",
@@ -501,7 +515,14 @@
     "instance_notes_title": "नोट",
     "instance_notes_desc": "इस इंस्टेंस के बारे में एक निजी नोट, इसके कार्ड पर दिखाया जाता है। गेम इसका उपयोग नहीं करता।",
     "instance_notes_hint": "जैसे PvP बिल्ड, शेडर बंद रखें",
-    "instance_notes_saved": "नोट सहेजा गया"
+    "instance_notes_saved": "नोट सहेजा गया",
+    "instance_storage_title": "संग्रहण",
+    "instance_storage_desc": "यह इंस्टेंस कितनी डिस्क लेता है। कैश साफ़ करना हमेशा सुरक्षित है: यह अगली बार चालू होने पर फिर बन जाता है।",
+    "instance_storage_calculating": "गणना हो रही है…",
+    "instance_storage_breakdown": "कुल %1$s · गेम %2$s · मॉड्स %3$s · रनटाइम %4$s · कैश %5$s",
+    "instance_storage_clear_cache": "कैश साफ़ करें",
+    "instance_storage_cleared": "कैश साफ़ हुआ (%1$s मुक्त)",
+    "instance_storage_clear_failed": "कैश साफ़ नहीं हो सका: %1$s"
   },
   "id": {
     "nav_back": "Kembali",
@@ -669,7 +690,14 @@
     "instance_notes_title": "Catatan",
     "instance_notes_desc": "Catatan pribadi tentang instans ini, ditampilkan di kartunya. Tidak digunakan oleh game.",
     "instance_notes_hint": "mis. build PvP, matikan shader",
-    "instance_notes_saved": "Catatan disimpan"
+    "instance_notes_saved": "Catatan disimpan",
+    "instance_storage_title": "Penyimpanan",
+    "instance_storage_desc": "Berapa banyak disk yang dipakai instans ini. Menghapus cache selalu aman: akan dibuat ulang saat peluncuran berikutnya.",
+    "instance_storage_calculating": "Menghitung…",
+    "instance_storage_breakdown": "Total %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Cache %5$s",
+    "instance_storage_clear_cache": "Hapus cache",
+    "instance_storage_cleared": "Cache dihapus (%1$s dibebaskan)",
+    "instance_storage_clear_failed": "Tidak bisa menghapus cache: %1$s"
   },
   "ja": {
     "nav_back": "戻る",
@@ -837,7 +865,14 @@
     "instance_notes_title": "メモ",
     "instance_notes_desc": "このインスタンスについての非公開メモ。カードに表示されます。ゲームでは使用されません。",
     "instance_notes_hint": "例: PvP 用、シェーダーなし",
-    "instance_notes_saved": "メモを保存しました"
+    "instance_notes_saved": "メモを保存しました",
+    "instance_storage_title": "ストレージ",
+    "instance_storage_desc": "このインスタンスが使用するディスク容量。キャッシュの削除は常に安全です。次回起動時に再生成されます。",
+    "instance_storage_calculating": "計算中…",
+    "instance_storage_breakdown": "合計 %1$s · ゲーム %2$s · MOD %3$s · ランタイム %4$s · キャッシュ %5$s",
+    "instance_storage_clear_cache": "キャッシュを削除",
+    "instance_storage_cleared": "キャッシュを削除しました（%1$s 解放）",
+    "instance_storage_clear_failed": "キャッシュを削除できません: %1$s"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -1005,7 +1040,14 @@
     "instance_notes_title": "Nota",
     "instance_notes_desc": "Uma nota privada sobre esta instância, mostrada no cartão. Não é usada pelo jogo.",
     "instance_notes_hint": "ex.: build de PvP, sem shaders",
-    "instance_notes_saved": "Nota salva"
+    "instance_notes_saved": "Nota salva",
+    "instance_storage_title": "Armazenamento",
+    "instance_storage_desc": "Quanto disco esta instância usa. Limpar o cache é sempre seguro: ele é recriado na próxima inicialização.",
+    "instance_storage_calculating": "Calculando…",
+    "instance_storage_breakdown": "Total %1$s · Jogo %2$s · Mods %3$s · Runtime %4$s · Cache %5$s",
+    "instance_storage_clear_cache": "Limpar cache",
+    "instance_storage_cleared": "Cache limpo (%1$s liberados)",
+    "instance_storage_clear_failed": "Não foi possível limpar o cache: %1$s"
   },
   "ru": {
     "nav_back": "Назад",
@@ -1173,7 +1215,14 @@
     "instance_notes_title": "Заметка",
     "instance_notes_desc": "Личная заметка об этом экземпляре, показанная на его карточке. Игра её не использует.",
     "instance_notes_hint": "напр. сборка для PvP, без шейдеров",
-    "instance_notes_saved": "Заметка сохранена"
+    "instance_notes_saved": "Заметка сохранена",
+    "instance_storage_title": "Хранилище",
+    "instance_storage_desc": "Сколько места занимает этот экземпляр. Очистка кэша всегда безопасна: он пересоздаётся при следующем запуске.",
+    "instance_storage_calculating": "Подсчёт…",
+    "instance_storage_breakdown": "Всего %1$s · Игра %2$s · Моды %3$s · Рантайм %4$s · Кэш %5$s",
+    "instance_storage_clear_cache": "Очистить кэш",
+    "instance_storage_cleared": "Кэш очищен (освобождено %1$s)",
+    "instance_storage_clear_failed": "Не удалось очистить кэш: %1$s"
   },
   "tr": {
     "nav_back": "Geri",
@@ -1341,7 +1390,14 @@
     "instance_notes_title": "Not",
     "instance_notes_desc": "Bu örnek hakkında kartında gösterilen özel bir not. Oyun tarafından kullanılmaz.",
     "instance_notes_hint": "örn. PvP yapısı, shader kapalı",
-    "instance_notes_saved": "Not kaydedildi"
+    "instance_notes_saved": "Not kaydedildi",
+    "instance_storage_title": "Depolama",
+    "instance_storage_desc": "Bu örneğin kullandığı disk alanı. Önbelleği temizlemek her zaman güvenlidir: sonraki başlatmada yeniden oluşturulur.",
+    "instance_storage_calculating": "Hesaplanıyor…",
+    "instance_storage_breakdown": "Toplam %1$s · Oyun %2$s · Modlar %3$s · Çalışma zamanı %4$s · Önbellek %5$s",
+    "instance_storage_clear_cache": "Önbelleği temizle",
+    "instance_storage_cleared": "Önbellek temizlendi (%1$s boşaltıldı)",
+    "instance_storage_clear_failed": "Önbellek temizlenemedi: %1$s"
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1509,7 +1565,14 @@
     "instance_notes_title": "Ghi chú",
     "instance_notes_desc": "Ghi chú riêng về bản này, hiển thị trên thẻ của nó. Trò chơi không dùng.",
     "instance_notes_hint": "ví dụ: bản PvP, tắt shader",
-    "instance_notes_saved": "Đã lưu ghi chú"
+    "instance_notes_saved": "Đã lưu ghi chú",
+    "instance_storage_title": "Dung lượng",
+    "instance_storage_desc": "Bản này dùng bao nhiêu dung lượng. Xóa bộ nhớ đệm luôn an toàn: nó được tạo lại ở lần chạy sau.",
+    "instance_storage_calculating": "Đang tính…",
+    "instance_storage_breakdown": "Tổng %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Bộ đệm %5$s",
+    "instance_storage_clear_cache": "Xóa bộ nhớ đệm",
+    "instance_storage_cleared": "Đã xóa bộ nhớ đệm (giải phóng %1$s)",
+    "instance_storage_clear_failed": "Không xóa được bộ nhớ đệm: %1$s"
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1677,6 +1740,13 @@
     "instance_notes_title": "备注",
     "instance_notes_desc": "关于此实例的私人备注，显示在其卡片上。游戏不会使用它。",
     "instance_notes_hint": "例如：PvP 配置，关闭光影",
-    "instance_notes_saved": "备注已保存"
+    "instance_notes_saved": "备注已保存",
+    "instance_storage_title": "存储",
+    "instance_storage_desc": "此实例占用的磁盘空间。清除缓存始终安全：下次启动时会重新生成。",
+    "instance_storage_calculating": "正在计算…",
+    "instance_storage_breakdown": "总计 %1$s · 游戏 %2$s · 模组 %3$s · 运行库 %4$s · 缓存 %5$s",
+    "instance_storage_clear_cache": "清除缓存",
+    "instance_storage_cleared": "缓存已清除（释放 %1$s）",
+    "instance_storage_clear_failed": "无法清除缓存：%1$s"
   }
 }

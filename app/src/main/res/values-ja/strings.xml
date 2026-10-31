@@ -1155,4 +1155,11 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="instance_notes_desc">このインスタンスについての非公開メモ。カードに表示されます。ゲームでは使用されません。</string>
     <string name="instance_notes_hint">例: PvP 用、シェーダーなし</string>
     <string name="instance_notes_saved">メモを保存しました</string>
+    <string name="instance_storage_title">ストレージ</string>
+    <string name="instance_storage_desc">このインスタンスが使用するディスク容量。キャッシュの削除は常に安全です。次回起動時に再生成されます。</string>
+    <string name="instance_storage_calculating">計算中…</string>
+    <string name="instance_storage_breakdown">合計 %1$s · ゲーム %2$s · MOD %3$s · ランタイム %4$s · キャッシュ %5$s</string>
+    <string name="instance_storage_clear_cache">キャッシュを削除</string>
+    <string name="instance_storage_cleared">キャッシュを削除しました（%1$s 解放）</string>
+    <string name="instance_storage_clear_failed">キャッシュを削除できません: %1$s</string>
 </resources>

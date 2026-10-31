@@ -1158,4 +1158,11 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="instance_notes_desc">Una nota privada sobre esta instancia, mostrada en su tarjeta. No la usa el juego.</string>
     <string name="instance_notes_hint">p. ej. build de PvP, sin shaders</string>
     <string name="instance_notes_saved">Nota guardada</string>
+    <string name="instance_storage_title">Almacenamiento</string>
+    <string name="instance_storage_desc">Cuánto disco usa esta instancia. Borrar la caché siempre es seguro: se reconstruye en el próximo inicio.</string>
+    <string name="instance_storage_calculating">Calculando…</string>
+    <string name="instance_storage_breakdown">Total %1$s · Juego %2$s · Mods %3$s · Motor %4$s · Caché %5$s</string>
+    <string name="instance_storage_clear_cache">Borrar caché</string>
+    <string name="instance_storage_cleared">Caché borrada (%1$s liberados)</string>
+    <string name="instance_storage_clear_failed">No se pudo borrar la caché: %1$s</string>
 </resources>

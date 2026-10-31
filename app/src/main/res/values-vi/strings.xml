@@ -1188,4 +1188,11 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="instance_notes_desc">Ghi chú riêng về bản này, hiển thị trên thẻ của nó. Trò chơi không dùng.</string>
     <string name="instance_notes_hint">ví dụ: bản PvP, tắt shader</string>
     <string name="instance_notes_saved">Đã lưu ghi chú</string>
+    <string name="instance_storage_title">Dung lượng</string>
+    <string name="instance_storage_desc">Bản này dùng bao nhiêu dung lượng. Xóa bộ nhớ đệm luôn an toàn: nó được tạo lại ở lần chạy sau.</string>
+    <string name="instance_storage_calculating">Đang tính…</string>
+    <string name="instance_storage_breakdown">Tổng %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Bộ đệm %5$s</string>
+    <string name="instance_storage_clear_cache">Xóa bộ nhớ đệm</string>
+    <string name="instance_storage_cleared">Đã xóa bộ nhớ đệm (giải phóng %1$s)</string>
+    <string name="instance_storage_clear_failed">Không xóa được bộ nhớ đệm: %1$s</string>
 </resources>
