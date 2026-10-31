@@ -15,19 +15,20 @@ import java.util.Set;
 /**
  * Pins the pause-menu button row's entries (item 224).
  *
- * <p>The row and the menu it appears in must agree about what the four actions are, and each must
- * have a label and an icon or it renders as a blank button.
+ * <p>The row and the menu it appears in must agree about what the actions are, and each must have a
+ * label and an icon or it renders as a blank button.
  */
 public class PauseMenuActionsTest {
 
     @Test
-    public void theRowHasTheFourRequestedActions() {
+    public void theRowHasTheRequestedActions() {
         List<PauseMenuActions.Entry> entries = PauseMenuActions.all();
-        assertEquals(4, entries.size());
+        assertEquals(5, entries.size());
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_SCREENSHOT));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_HIDE_HUD));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_SWITCH_LAYOUT));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_OPEN_LOGS));
+        assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_QUICK_SETTINGS));
     }
 
     @Test

@@ -1132,4 +1132,22 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="pause_menu_open_logs">Nhật ký</string>
     <string name="pause_menu_no_layouts">Không có bố cục nào được lưu</string>
     <string name="pause_menu_layout_switched">Bố cục: %1$s</string>
+    <string name="pause_menu_quick_settings">Cài đặt nhanh</string>
+    <string name="quick_settings_title">Cài đặt nhanh</string>
+    <string name="quick_settings_resolution">Tỷ lệ độ phân giải</string>
+    <string name="quick_settings_refresh_cap">Giới hạn tốc độ khung hình</string>
+    <string name="quick_settings_resolution_next_load">Áp dụng ở lần tải thế giới tiếp theo</string>
+    <string name="quick_settings_refresh_immediate">Áp dụng ngay</string>
+    <string name="quick_settings_scale_50">50%%</string>
+    <string name="quick_settings_scale_75">75%%</string>
+    <string name="quick_settings_scale_100">100%%</string>
+    <string name="quick_settings_cap_30">30 fps</string>
+    <string name="quick_settings_cap_60">60 fps</string>
+    <string name="quick_settings_cap_90">90 fps</string>
+    <string name="quick_settings_cap_120">120 fps</string>
+    <string name="quick_settings_cap_unlimited">Không giới hạn</string>
+    <string name="quick_settings_applied">Đã áp dụng</string>
+    <string name="quick_settings_no_instance">Chưa chọn phiên bản</string>
+    <string name="quick_settings_write_failed">Không thể ghi tùy chọn</string>
+    <string name="quick_settings_cap_unsupported">Màn hình này không có chế độ ở tốc độ đó</string>
 </resources>

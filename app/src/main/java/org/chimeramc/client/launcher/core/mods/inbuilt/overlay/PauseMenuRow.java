@@ -154,6 +154,9 @@ public class PauseMenuRow {
             case PauseMenuActions.ACTION_OPEN_LOGS:
                 toggleLogcat();
                 break;
+            case PauseMenuActions.ACTION_QUICK_SETTINGS:
+                new QuickSettingsPanel(activity).show();
+                break;
             default:
                 break;
         }

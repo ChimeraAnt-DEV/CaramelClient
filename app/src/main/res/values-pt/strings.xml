@@ -1102,4 +1102,22 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="pause_menu_open_logs">Registros</string>
     <string name="pause_menu_no_layouts">Nenhum layout salvo</string>
     <string name="pause_menu_layout_switched">Layout: %1$s</string>
+    <string name="pause_menu_quick_settings">Configurações rápidas</string>
+    <string name="quick_settings_title">Configurações rápidas</string>
+    <string name="quick_settings_resolution">Escala de resolução</string>
+    <string name="quick_settings_refresh_cap">Limite de taxa de quadros</string>
+    <string name="quick_settings_resolution_next_load">Aplica-se no próximo carregamento do mundo</string>
+    <string name="quick_settings_refresh_immediate">Aplica-se agora</string>
+    <string name="quick_settings_scale_50">50%%</string>
+    <string name="quick_settings_scale_75">75%%</string>
+    <string name="quick_settings_scale_100">100%%</string>
+    <string name="quick_settings_cap_30">30 fps</string>
+    <string name="quick_settings_cap_60">60 fps</string>
+    <string name="quick_settings_cap_90">90 fps</string>
+    <string name="quick_settings_cap_120">120 fps</string>
+    <string name="quick_settings_cap_unlimited">Ilimitado</string>
+    <string name="quick_settings_applied">Aplicado</string>
+    <string name="quick_settings_no_instance">Nenhuma instância selecionada</string>
+    <string name="quick_settings_write_failed">Não foi possível gravar a opção</string>
+    <string name="quick_settings_cap_unsupported">Esta tela não tem um modo nessa taxa</string>
 </resources>

@@ -2548,6 +2548,24 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="pause_menu_hide_hud">Hide HUD</string>
     <string name="pause_menu_switch_layout">Switch layout</string>
     <string name="pause_menu_open_logs">Logs</string>
+    <string name="pause_menu_quick_settings">Quick settings</string>
+    <string name="quick_settings_title">Quick settings</string>
+    <string name="quick_settings_resolution">Resolution scale</string>
+    <string name="quick_settings_refresh_cap">Frame-rate cap</string>
+    <string name="quick_settings_resolution_next_load">Applies on the next world load</string>
+    <string name="quick_settings_refresh_immediate">Applies now</string>
+    <string name="quick_settings_scale_50">50%%</string>
+    <string name="quick_settings_scale_75">75%%</string>
+    <string name="quick_settings_scale_100">100%%</string>
+    <string name="quick_settings_cap_30">30 fps</string>
+    <string name="quick_settings_cap_60">60 fps</string>
+    <string name="quick_settings_cap_90">90 fps</string>
+    <string name="quick_settings_cap_120">120 fps</string>
+    <string name="quick_settings_cap_unlimited">Unlimited</string>
+    <string name="quick_settings_applied">Applied</string>
+    <string name="quick_settings_no_instance">No instance selected</string>
+    <string name="quick_settings_write_failed">Could not write the option</string>
+    <string name="quick_settings_cap_unsupported">This display has no mode at that rate</string>
     <string name="pause_menu_no_layouts">No saved overlay layouts</string>
     <string name="pause_menu_layout_switched">Layout: %1$s</string>
 </resources>

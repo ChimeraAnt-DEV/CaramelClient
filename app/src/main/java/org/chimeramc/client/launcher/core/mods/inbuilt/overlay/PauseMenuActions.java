@@ -24,6 +24,8 @@ public final class PauseMenuActions {
     public static final String ACTION_SWITCH_LAYOUT = "switch_layout";
     /** Show or hide the log viewer. */
     public static final String ACTION_OPEN_LOGS = "open_logs";
+    /** Open the in-game quick settings panel (item 225). */
+    public static final String ACTION_QUICK_SETTINGS = "quick_settings";
 
     /** One entry in the row. */
     public static final class Entry {
@@ -65,6 +67,8 @@ public final class PauseMenuActions {
                 R.drawable.ic_layout));
         entries.add(new Entry(ACTION_OPEN_LOGS, R.string.pause_menu_open_logs,
                 R.drawable.ic_logs));
+        entries.add(new Entry(ACTION_QUICK_SETTINGS, R.string.pause_menu_quick_settings,
+                R.drawable.ic_settings));
         return entries;
     }
 
