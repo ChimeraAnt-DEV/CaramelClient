@@ -13,12 +13,34 @@ public final class LaunchTrace {
 
     private static final String TAG = "MinecraftLaunchTrace";
 
+    /**
+     * The stages of the most recent launch, so the Diagnostics screen can name the slowest ones
+     * (item 307) without holding a reference to the launch's own trace object, which is passed
+     * activity to activity through the launch intent.
+     *
+     * <p>Guarded by {@link #lastLaunchLock}. A new session id clears it, so a report never mixes two
+     * launches' stages.
+     */
+    private static final LaunchTraceStages lastLaunch = new LaunchTraceStages();
+    private static final Object lastLaunchLock = new Object();
+    private static String lastLaunchSessionId;
+
     private final String sessionId;
     private final long startedElapsedMs;
 
     private LaunchTrace(String sessionId, long startedElapsedMs) {
         this.sessionId = sessionId;
         this.startedElapsedMs = startedElapsedMs;
+    }
+
+    /**
+     * The stages recorded by the most recent launch, or an empty record when none has run this
+     * process. Never null, so a caller can describe it unconditionally.
+     */
+    public static LaunchTraceStages lastLaunchStages() {
+        synchronized (lastLaunchLock) {
+            return lastLaunch;
+        }
     }
 
     public static LaunchTrace create(Intent intent) {
@@ -92,6 +114,16 @@ public final class LaunchTrace {
 
         if (!emit) {
             return;
+        }
+
+        // Record the stage into the shared "last launch" view for the Diagnostics screen. A new
+        // session id means a new launch, so the previous launch's stages are dropped first.
+        synchronized (lastLaunchLock) {
+            if (!sessionId.equals(lastLaunchSessionId)) {
+                lastLaunch.clear();
+                lastLaunchSessionId = sessionId;
+            }
+            lastLaunch.record(stage, totalMs);
         }
 
         String message = String.format(Locale.US, "[%s] +%dms %s",

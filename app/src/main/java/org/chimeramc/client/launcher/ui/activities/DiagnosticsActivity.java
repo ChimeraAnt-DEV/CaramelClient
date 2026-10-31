@@ -672,6 +672,12 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Last launch failure: (none recorded)\n");
         }
 
+        // Item 307: name the slowest stages of the last launch, so a "the launcher takes ages to
+        // start" report says which stage is slow instead of only that it is.
+        sb.append("Slowest launch stages:\n");
+        sb.append(org.chimeramc.client.core.minecraft.LaunchTrace.lastLaunchStages().describeSlowest(3))
+                .append("\n");
+
         sb.append("Extraction version: ")
                 .append(data.extractionCurrent ? "up to date" : "stale")
                 .append(" (expected ").append(data.extractionExpected).append(")\n");
