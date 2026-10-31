@@ -1092,4 +1092,8 @@
     <string name="session_restart_loop_message">Перезапуск остановлен: этот сеанс перезапускался %1$d раза подряд. Запустите снова с главного экрана или отключите недавно добавленные моды.</string>
     <string name="nav_logo_home">Главная GlowberryClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Подготовка предпросмотра…</string>
+    <string name="mod_overlay_snaplook_on">Активно</string>
+    <string name="mod_overlay_snaplook_off">Неактивно</string>
+    <string name="mod_config_snaplook_keybind">Клавиша быстрого взгляда</string>
+    <string name="mod_config_snaplook_return_speed">Скорость возврата</string>
 </resources>

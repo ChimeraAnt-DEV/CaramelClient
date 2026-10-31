@@ -1085,4 +1085,8 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="session_restart_loop_message">Berhenti memulai ulang: sesi ini memulai ulang %1$d kali berturut-turut. Luncurkan lagi dari layar utama, atau nonaktifkan mod yang baru Anda tambahkan.</string>
     <string name="nav_logo_home">Beranda GlowberryClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Menyiapkan pratinjau…</string>
+    <string name="mod_overlay_snaplook_on">Siap</string>
+    <string name="mod_overlay_snaplook_off">Diam</string>
+    <string name="mod_config_snaplook_keybind">Tombol snap-look</string>
+    <string name="mod_config_snaplook_return_speed">Kecepatan kembali</string>
 </resources>

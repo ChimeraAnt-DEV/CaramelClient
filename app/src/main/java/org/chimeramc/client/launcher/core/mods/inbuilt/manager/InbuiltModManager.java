@@ -52,6 +52,8 @@ public class InbuiltModManager {
     private static final String KEY_ZOOM_TRANSITION_DURATION = "zoom_transition_duration";
     private static final String KEY_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
     private static final String KEY_ZOOM_SMOOTHING = "zoom_smoothing";
+    private static final String KEY_SNAPLOOK_KEYBIND = "snaplook_keybind";
+    private static final String KEY_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
@@ -163,6 +165,9 @@ public class InbuiltModManager {
     public static final int MIN_ZOOM_SCROLL_SENSITIVITY = 10;
     public static final int MAX_ZOOM_SCROLL_SENSITIVITY = 300;
     public static final int MAX_ZOOM_SMOOTHING = 90;
+    private static final int DEFAULT_SNAPLOOK_RETURN_SPEED = 50;
+    /** The snap-look return-speed slider bounds (item 193). */
+    public static final int MAX_SNAPLOOK_RETURN_SPEED = 100;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
     private static final int DEFAULT_GYRO_SENSITIVITY = 100;
     private static final int DEFAULT_GYRO_DEADZONE = 5;
@@ -622,6 +627,30 @@ public class InbuiltModManager {
     public void setZoomSmoothing(int percent) {
         prefs.edit().putInt(KEY_ZOOM_SMOOTHING,
                 Math.max(0, Math.min(MAX_ZOOM_SMOOTHING, percent))).apply();
+    }
+
+    /** The snap-look key, default X (item 193). */
+    public int getSnaplookKeybind() {
+        return prefs.getInt(KEY_SNAPLOOK_KEYBIND, KeyEvent.KEYCODE_X);
+    }
+
+    public void setSnaplookKeybind(int keyCode) {
+        prefs.edit().putInt(KEY_SNAPLOOK_KEYBIND, keyCode).apply();
+    }
+
+    /**
+     * How fast the camera returns to the stored heading on a snap-look, 0..100 (item 193).
+     *
+     * <p>0 is instant, 100 is the slowest eased return. Kept here rather than hard-coded so a
+     * player can match it to their look sensitivity.
+     */
+    public int getSnaplookReturnSpeed() {
+        return prefs.getInt(KEY_SNAPLOOK_RETURN_SPEED, DEFAULT_SNAPLOOK_RETURN_SPEED);
+    }
+
+    public void setSnaplookReturnSpeed(int percent) {
+        prefs.edit().putInt(KEY_SNAPLOOK_RETURN_SPEED,
+                Math.max(0, Math.min(MAX_SNAPLOOK_RETURN_SPEED, percent))).apply();
     }
 
     public int getCursorSensitivity() {

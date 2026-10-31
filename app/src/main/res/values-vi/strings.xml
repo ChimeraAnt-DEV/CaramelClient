@@ -1091,4 +1091,8 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="session_restart_loop_message">Đã dừng khởi động lại: phiên này đã khởi động lại %1$d lần liên tiếp. Hãy khởi chạy lại từ màn hình chính hoặc tắt các mod bạn vừa thêm.</string>
     <string name="nav_logo_home">Trang chủ GlowberryClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Đang chuẩn bị xem trước…</string>
+    <string name="mod_overlay_snaplook_on">Sẵn sàng</string>
+    <string name="mod_overlay_snaplook_off">Chờ</string>
+    <string name="mod_config_snaplook_keybind">Phím snap-look</string>
+    <string name="mod_config_snaplook_return_speed">Tốc độ trở về</string>
 </resources>

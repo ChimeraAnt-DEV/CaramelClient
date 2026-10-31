@@ -1058,4 +1058,8 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="session_restart_loop_message">再起動を停止しました: このセッションは連続して%1$d回再起動しました。ホーム画面から再度起動するか、最近追加したModを無効にしてください。</string>
     <string name="nav_logo_home">GlowberryClient ホーム</string>
     <string name="cosmetics_preview_preparing" formatted="false">プレビューを準備中…</string>
+    <string name="mod_overlay_snaplook_on">作動中</string>
+    <string name="mod_overlay_snaplook_off">待機中</string>
+    <string name="mod_config_snaplook_keybind">スナップルックキー</string>
+    <string name="mod_config_snaplook_return_speed">復帰速度</string>
 </resources>

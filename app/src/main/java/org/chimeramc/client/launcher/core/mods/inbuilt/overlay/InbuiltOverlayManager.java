@@ -1207,7 +1207,7 @@ public class InbuiltOverlayManager {
 
         boolean snaplookEnabled = modActiveStates.getOrDefault(ModIds.SNAPLOOK, false);
 
-        if (snaplookEnabled && keyCode == android.view.KeyEvent.KEYCODE_X) {
+        if (snaplookEnabled && keyCode == manager.getSnaplookKeybind()) {
             if (snaplookOverlay != null) {
                 if (action == android.view.KeyEvent.ACTION_DOWN) {
                     snaplookOverlay.onKeyDown();

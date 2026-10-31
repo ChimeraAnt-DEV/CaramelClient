@@ -1088,4 +1088,8 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="session_restart_loop_message">Yeniden başlatma durduruldu: bu oturum üst üste %1$d kez yeniden başladı. Ana ekrandan yeniden başlatın veya son eklediğiniz modları devre dışı bırakın.</string>
     <string name="nav_logo_home">GlowberryClient ana sayfa</string>
     <string name="cosmetics_preview_preparing" formatted="false">Önizleme hazırlanıyor…</string>
+    <string name="mod_overlay_snaplook_on">Hazır</string>
+    <string name="mod_overlay_snaplook_off">Boşta</string>
+    <string name="mod_config_snaplook_keybind">Hızlı bakış tuşu</string>
+    <string name="mod_config_snaplook_return_speed">Dönüş hızı</string>
 </resources>

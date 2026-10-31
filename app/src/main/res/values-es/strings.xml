@@ -1061,4 +1061,8 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="session_restart_loop_message">Dejó de reiniciar: esta sesión se reinició %1$d veces seguidas. Inicia de nuevo desde la pantalla de inicio o desactiva los mods que añadiste recientemente.</string>
     <string name="nav_logo_home">Inicio de GlowberryClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Preparando vista previa…</string>
+    <string name="mod_overlay_snaplook_on">Armado</string>
+    <string name="mod_overlay_snaplook_off">Inactivo</string>
+    <string name="mod_config_snaplook_keybind">Tecla de vista rápida</string>
+    <string name="mod_config_snaplook_return_speed">Velocidad de retorno</string>
 </resources>

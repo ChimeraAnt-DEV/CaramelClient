@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Snap-look overlay body: the icon with an armed/idle label beneath it (item 193), so the state
+    is visible at a glance rather than only by the icon's colour. The root keeps the shared overlay
+    button id so the base class's touch and layout handling is unchanged.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mod_overlay_button"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:contentDescription="@string/inbuilt_mod_snaplook">
+
+    <ImageView
+        android:id="@+id/snaplook_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/ic_snaplook_normal" />
+
+    <TextView
+        android:id="@+id/snaplook_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/overlay_scrim"
+        android:paddingStart="@dimen/space_1"
+        android:paddingEnd="@dimen/space_1"
+        android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+        android:textColor="@color/overlay_text_primary"
+        tools:text="Armed" />
+</FrameLayout>

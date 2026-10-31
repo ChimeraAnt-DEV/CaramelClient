@@ -38,6 +38,8 @@ public final class InbuiltModuleProvider {
     private static final String CFG_ZOOM_KEYBIND = "zoom_keybind";
     private static final String CFG_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
     private static final String CFG_ZOOM_SMOOTHING = "zoom_smoothing";
+    private static final String CFG_SNAPLOOK_KEYBIND = "snaplook_keybind";
+    private static final String CFG_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String CFG_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String CFG_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String CFG_GYRO_INVERT_X = "gyro_invert_x";
@@ -1081,6 +1083,18 @@ public final class InbuiltModuleProvider {
                     "0", "0",
                     String.valueOf(InbuiltModManager.MAX_ZOOM_SMOOTHING),
                     String.valueOf(manager.getZoomSmoothing())));
+        } else if (ModIds.SNAPLOOK.equals(modId)) {
+            configs.add(config(CFG_SNAPLOOK_KEYBIND,
+                    context.getString(R.string.mod_config_snaplook_keybind),
+                    UnifiedMod.ConfigType.KEYBIND,
+                    "", "", "",
+                    String.valueOf(manager.getSnaplookKeybind())));
+            configs.add(config(CFG_SNAPLOOK_RETURN_SPEED,
+                    context.getString(R.string.mod_config_snaplook_return_speed),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    "50", "0",
+                    String.valueOf(InbuiltModManager.MAX_SNAPLOOK_RETURN_SPEED),
+                    String.valueOf(manager.getSnaplookReturnSpeed())));
         } else if (ModIds.GYRO.equals(modId)) {
             configs.add(config(CFG_GYRO_SENSITIVITY_X,
                     context.getString(R.string.mod_config_gyro_sensitivity_x),
@@ -1446,6 +1460,12 @@ public final class InbuiltModuleProvider {
                 break;
             case CFG_ZOOM_SMOOTHING:
                 manager.setZoomSmoothing(parseInt(value, manager.getZoomSmoothing()));
+                break;
+            case CFG_SNAPLOOK_KEYBIND:
+                manager.setSnaplookKeybind(parseInt(value, manager.getSnaplookKeybind()));
+                break;
+            case CFG_SNAPLOOK_RETURN_SPEED:
+                manager.setSnaplookReturnSpeed(parseInt(value, manager.getSnaplookReturnSpeed()));
                 break;
             case CFG_GYRO_SENSITIVITY_X:
                 manager.setGyroSensitivityX(parseInt(value, manager.getGyroSensitivityX()));
