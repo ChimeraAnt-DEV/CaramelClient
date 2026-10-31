@@ -103,6 +103,30 @@ public final class VoiceChatOverlay {
         handler.post(refreshRunnable);
     }
 
+    /**
+     * Moves the indicator to a pixel position (item 212), so applying an overlay layout moves the
+     * live mic indicator rather than only writing its stored position.
+     */
+    public void updatePosition(int x, int y) {
+        if (overlayView == null) return;
+        OverlayBounds.Position position =
+                OverlayBounds.clampPosition(activity, overlayView, x, y);
+        if (wmParams != null && windowManager != null) {
+            wmParams.x = position.x;
+            wmParams.y = position.y;
+            try {
+                windowManager.updateViewLayout(overlayView, wmParams);
+            } catch (Exception ignored) {
+            }
+        } else if (overlayView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
+            FrameLayout.LayoutParams params =
+                    (FrameLayout.LayoutParams) overlayView.getLayoutParams();
+            params.leftMargin = position.x;
+            params.topMargin = position.y;
+            overlayView.setLayoutParams(params);
+        }
+    }
+
     private View buildView(Context context) {
         LinearLayout column = new LinearLayout(context);
         column.setOrientation(LinearLayout.VERTICAL);

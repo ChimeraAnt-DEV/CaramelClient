@@ -918,6 +918,7 @@ public class RadialMenuView extends View {
             case OPEN_SETTINGS: return UiIcons.Icon.GEAR;
             case OPEN_HUD: return UiIcons.Icon.PENCIL;
             case OPEN_SUBWHEEL: return UiIcons.Icon.CHEVRON;
+            case SWITCH_LAYOUT: return UiIcons.Icon.HUD;
             default: return UiIcons.Icon.CUBE;
         }
     }

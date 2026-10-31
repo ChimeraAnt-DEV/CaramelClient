@@ -1074,4 +1074,15 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="mod_overlay_autosprint_on">Corrida ativada</string>
     <string name="mod_overlay_autosprint_off">Corrida desativada</string>
     <string name="mod_menu_setting_wheel_dead_zone">Zona morta da roda</string>
+    <string name="overlay_layout_title">Layouts de sobreposição</string>
+    <string name="overlay_layout_save_current">Salvar atual</string>
+    <string name="overlay_layout_save_title">Nomeie este layout</string>
+    <string name="overlay_layout_empty">Nenhum layout ainda. Organize o HUD e salve-o como layout.</string>
+    <string name="overlay_layout_entry_count">%1$d widgets</string>
+    <string name="overlay_layout_apply">Usar</string>
+    <string name="overlay_layout_rename">Renomear</string>
+    <string name="overlay_layout_rename_title">Renomear este layout</string>
+    <string name="overlay_layout_delete">Excluir</string>
+    <string name="mod_menu_action_manage_layouts">Layouts de sobreposição</string>
+    <string name="mod_menu_action_manage_layouts_desc">Salvar, aplicar e excluir layouts de posição do HUD</string>
 </resources>

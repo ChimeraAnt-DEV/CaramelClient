@@ -1095,4 +1095,15 @@
     <string name="mod_overlay_autosprint_on">疾跑已开启</string>
     <string name="mod_overlay_autosprint_off">疾跑已关闭</string>
     <string name="mod_menu_setting_wheel_dead_zone">轮盘死区</string>
+    <string name="overlay_layout_title">叠加布局</string>
+    <string name="overlay_layout_save_current">保存当前</string>
+    <string name="overlay_layout_save_title">为此布局命名</string>
+    <string name="overlay_layout_empty">还没有布局。调整 HUD 后将其保存为布局。</string>
+    <string name="overlay_layout_entry_count">%1$d 个组件</string>
+    <string name="overlay_layout_apply">使用</string>
+    <string name="overlay_layout_rename">重命名</string>
+    <string name="overlay_layout_rename_title">重命名此布局</string>
+    <string name="overlay_layout_delete">删除</string>
+    <string name="mod_menu_action_manage_layouts">叠加布局</string>
+    <string name="mod_menu_action_manage_layouts_desc">保存、应用和删除 HUD 位置布局</string>
 </resources>

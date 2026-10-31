@@ -1102,4 +1102,15 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_overlay_autosprint_on">स्प्रिंट चालू</string>
     <string name="mod_overlay_autosprint_off">स्प्रिंट बंद</string>
     <string name="mod_menu_setting_wheel_dead_zone">व्हील डेड ज़ोन</string>
+    <string name="overlay_layout_title">ओवरले लेआउट</string>
+    <string name="overlay_layout_save_current">वर्तमान सहेजें</string>
+    <string name="overlay_layout_save_title">इस लेआउट को नाम दें</string>
+    <string name="overlay_layout_empty">अभी कोई लेआउट नहीं। अपना HUD व्यवस्थित करें, फिर सहेजें।</string>
+    <string name="overlay_layout_entry_count">%1$d विजेट</string>
+    <string name="overlay_layout_apply">उपयोग करें</string>
+    <string name="overlay_layout_rename">नाम बदलें</string>
+    <string name="overlay_layout_rename_title">इस लेआउट का नाम बदलें</string>
+    <string name="overlay_layout_delete">हटाएं</string>
+    <string name="mod_menu_action_manage_layouts">ओवरले लेआउट</string>
+    <string name="mod_menu_action_manage_layouts_desc">HUD स्थिति लेआउट सहेजें, लागू करें और हटाएं</string>
 </resources>

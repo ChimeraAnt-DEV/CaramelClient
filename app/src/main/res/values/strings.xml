@@ -2522,4 +2522,15 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="about_maintainer_name">MrPokeG</string>
     <string name="server_sample_address">play.example.com</string>
 
+    <string name="overlay_layout_title">Overlay layouts</string>
+    <string name="overlay_layout_save_current">Save current</string>
+    <string name="overlay_layout_save_title">Name this layout</string>
+    <string name="overlay_layout_empty">No layouts yet. Arrange your HUD, then save it as a layout.</string>
+    <string name="overlay_layout_entry_count">%1$d widgets</string>
+    <string name="overlay_layout_apply">Use</string>
+    <string name="overlay_layout_rename">Rename</string>
+    <string name="overlay_layout_rename_title">Rename this layout</string>
+    <string name="overlay_layout_delete">Delete</string>
+    <string name="mod_menu_action_manage_layouts">Overlay layouts</string>
+    <string name="mod_menu_action_manage_layouts_desc">Save, apply and delete HUD position layouts</string>
 </resources>

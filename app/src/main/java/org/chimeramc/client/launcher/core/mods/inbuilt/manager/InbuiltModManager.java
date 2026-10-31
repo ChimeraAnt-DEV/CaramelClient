@@ -729,6 +729,53 @@ public class InbuiltModManager {
         overlayMetrics = metrics;
     }
 
+    /** The stored fraction for the x axis, or {@code fallback} when the overlay has no position. */
+    public float getOverlayFractionX(String modId, float fallback) {
+        return resolveFraction(modId, KEY_OVERLAY_POSITION_XF_PREFIX,
+                KEY_OVERLAY_POSITION_X_PREFIX, fallback, true);
+    }
+
+    /** The stored fraction for the y axis, or {@code fallback} when the overlay has no position. */
+    public float getOverlayFractionY(String modId, float fallback) {
+        return resolveFraction(modId, KEY_OVERLAY_POSITION_YF_PREFIX,
+                KEY_OVERLAY_POSITION_Y_PREFIX, fallback, false);
+    }
+
+    /** Writes a position as a fraction, so a layout restore does not need a pixel value. */
+    public void setOverlayPositionFraction(String modId, float xFraction, float yFraction) {
+        if (modId == null || modId.isEmpty()) return;
+        prefs.edit()
+                .putFloat(KEY_OVERLAY_POSITION_XF_PREFIX + modId, clampFraction(xFraction))
+                .putFloat(KEY_OVERLAY_POSITION_YF_PREFIX + modId, clampFraction(yFraction))
+                .apply();
+    }
+
+    private static float clampFraction(float value) {
+        if (Float.isNaN(value)) return 0f;
+        return Math.max(0f, Math.min(1f, value));
+    }
+
+    private float resolveFraction(String modId, String fractionKey, String pixelKey, float fallback,
+                                  boolean horizontal) {
+        String key = fractionKey + modId;
+        if (prefs.contains(key)) {
+            float stored = prefs.getFloat(key, Float.NaN);
+            if (org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .isValid(stored)) {
+                return stored;
+            }
+        }
+        // No fraction yet (a position saved before item 211): derive one from the pixel value.
+        android.util.DisplayMetrics metrics = overlayMetrics;
+        String pxKey = pixelKey + modId;
+        if (metrics != null && prefs.contains(pxKey)) {
+            int surface = horizontal ? metrics.widthPixels : metrics.heightPixels;
+            return org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .fraction(prefs.getInt(pxKey, 0), surface);
+        }
+        return fallback;
+    }
+
     /**
      * Reads one axis: the fraction wins when it is present and valid, so a widget follows a
      * resolution-scale change; otherwise the legacy pixel value, otherwise the caller's default.

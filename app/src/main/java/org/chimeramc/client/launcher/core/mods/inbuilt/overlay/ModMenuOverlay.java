@@ -995,6 +995,11 @@ public class ModMenuOverlay {
                         org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
                                 .getInstance(activity).getModMenuSettings()));
                 break;
+            case ModMenuActionCatalog.ACTION_MANAGE_LAYOUTS:
+                OverlayLayoutManagerDialog.show(activity, new ModMenuTheme(activity,
+                        org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
+                                .getInstance(activity).getModMenuSettings()));
+                break;
             default:
                 break;
         }

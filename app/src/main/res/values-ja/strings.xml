@@ -1071,4 +1071,15 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_overlay_autosprint_on">スプリント オン</string>
     <string name="mod_overlay_autosprint_off">スプリント オフ</string>
     <string name="mod_menu_setting_wheel_dead_zone">ホイールのデッドゾーン</string>
+    <string name="overlay_layout_title">オーバーレイレイアウト</string>
+    <string name="overlay_layout_save_current">現在を保存</string>
+    <string name="overlay_layout_save_title">このレイアウトに名前を付ける</string>
+    <string name="overlay_layout_empty">レイアウトがありません。HUDを配置して保存してください。</string>
+    <string name="overlay_layout_entry_count">%1$d ウィジェット</string>
+    <string name="overlay_layout_apply">使用</string>
+    <string name="overlay_layout_rename">名前を変更</string>
+    <string name="overlay_layout_rename_title">このレイアウトの名前を変更</string>
+    <string name="overlay_layout_delete">削除</string>
+    <string name="mod_menu_action_manage_layouts">オーバーレイレイアウト</string>
+    <string name="mod_menu_action_manage_layouts_desc">HUD位置レイアウトの保存・適用・削除</string>
 </resources>

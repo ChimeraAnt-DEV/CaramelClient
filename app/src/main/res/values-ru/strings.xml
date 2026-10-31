@@ -1105,4 +1105,15 @@
     <string name="mod_overlay_autosprint_on">Спринт включён</string>
     <string name="mod_overlay_autosprint_off">Спринт выключен</string>
     <string name="mod_menu_setting_wheel_dead_zone">Мёртвая зона колеса</string>
+    <string name="overlay_layout_title">Раскладки оверлеев</string>
+    <string name="overlay_layout_save_current">Сохранить текущую</string>
+    <string name="overlay_layout_save_title">Назовите эту раскладку</string>
+    <string name="overlay_layout_empty">Раскладок пока нет. Разместите HUD и сохраните его.</string>
+    <string name="overlay_layout_entry_count">%1$d виджетов</string>
+    <string name="overlay_layout_apply">Применить</string>
+    <string name="overlay_layout_rename">Переименовать</string>
+    <string name="overlay_layout_rename_title">Переименовать эту раскладку</string>
+    <string name="overlay_layout_delete">Удалить</string>
+    <string name="mod_menu_action_manage_layouts">Раскладки оверлеев</string>
+    <string name="mod_menu_action_manage_layouts_desc">Сохранение, применение и удаление раскладок HUD</string>
 </resources>

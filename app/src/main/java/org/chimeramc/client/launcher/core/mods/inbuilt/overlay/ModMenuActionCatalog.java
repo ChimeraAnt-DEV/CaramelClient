@@ -21,6 +21,8 @@ public final class ModMenuActionCatalog {
     public static final String ACTION_RELOAD_MODULES = "reload_modules";
     /** Open the radial wheel's profile manager. */
     public static final String ACTION_MANAGE_WHEEL = "manage_wheel";
+    /** Open the overlay layout manager (item 212). */
+    public static final String ACTION_MANAGE_LAYOUTS = "manage_layouts";
 
     private static final List<ModMenuAction> ACTIONS = Collections.unmodifiableList(build());
 
@@ -46,6 +48,11 @@ public final class ModMenuActionCatalog {
                 R.string.mod_menu_action_manage_wheel_desc,
                 "inbuilt",
                 R.drawable.ic_wheel));
+        actions.add(new ModMenuAction(ACTION_MANAGE_LAYOUTS,
+                R.string.mod_menu_action_manage_layouts,
+                R.string.mod_menu_action_manage_layouts_desc,
+                "inbuilt",
+                R.drawable.ic_hud));
         return actions;
     }
 

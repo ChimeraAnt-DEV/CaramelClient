@@ -1074,4 +1074,15 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_overlay_autosprint_on">Sprint activé</string>
     <string name="mod_overlay_autosprint_off">Sprint désactivé</string>
     <string name="mod_menu_setting_wheel_dead_zone">Zone morte de la roue</string>
+    <string name="overlay_layout_title">Dispositions de superposition</string>
+    <string name="overlay_layout_save_current">Enregistrer l\'actuel</string>
+    <string name="overlay_layout_save_title">Nommer cette disposition</string>
+    <string name="overlay_layout_empty">Aucune disposition. Placez votre HUD puis enregistrez-le.</string>
+    <string name="overlay_layout_entry_count">%1$d widgets</string>
+    <string name="overlay_layout_apply">Utiliser</string>
+    <string name="overlay_layout_rename">Renommer</string>
+    <string name="overlay_layout_rename_title">Renommer cette disposition</string>
+    <string name="overlay_layout_delete">Supprimer</string>
+    <string name="mod_menu_action_manage_layouts">Dispositions de superposition</string>
+    <string name="mod_menu_action_manage_layouts_desc">Enregistrer, appliquer et supprimer les dispositions du HUD</string>
 </resources>

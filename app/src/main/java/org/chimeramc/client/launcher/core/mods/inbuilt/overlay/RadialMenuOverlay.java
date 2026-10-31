@@ -221,6 +221,14 @@ public class RadialMenuOverlay {
                 @Override
                 public void onEntry(WheelEntry entry) {
                     if (entry == null) return;
+                    if (entry.action == WheelEntry.Action.SWITCH_LAYOUT) {
+                        InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
+                        if (overlayManager != null) {
+                            overlayManager.switchOverlayLayout(entry.target);
+                        }
+                        menuView.invalidate();
+                        return;
+                    }
                     if (entry.action == WheelEntry.Action.TOGGLE_MODULE) {
                         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
                         boolean next = !manager.resolveInbuiltModEnabled(entry.target, false);

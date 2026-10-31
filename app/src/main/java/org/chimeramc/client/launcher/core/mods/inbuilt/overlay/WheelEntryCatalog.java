@@ -107,6 +107,28 @@ public final class WheelEntryCatalog {
     }
 
     /**
+     * The choices plus one sub-wheel entry per profile in {@code profiles} and one layout-switch
+     * entry per stored overlay layout (item 212).
+     *
+     * <p>A layout entry carries the layout's id in {@code target}, so the wheel can switch to it
+     * without a second lookup table. Layouts are offered after the sub-wheels so the wheel's own
+     * navigation stays at the top of the list.
+     */
+    public static List<Choice> forProfile(List<WheelEntry.Profile> profiles, String editingProfileId,
+                                          java.util.List<OverlayLayout> layouts) {
+        List<Choice> out = new ArrayList<>(forProfile(profiles, editingProfileId));
+        if (layouts != null) {
+            for (OverlayLayout layout : layouts) {
+                if (layout == null || layout.id == null || layout.id.isEmpty()) continue;
+                String label = layout.name == null || layout.name.trim().isEmpty()
+                        ? layout.id : layout.name.trim();
+                out.add(new Choice(WheelEntry.Action.SWITCH_LAYOUT, layout.id, 0, label));
+            }
+        }
+        return out;
+    }
+
+    /**
      * The choices plus one sub-wheel entry per profile in {@code profiles}.
      *
      * <p>A sub-wheel is offered only for a profile other than the one being edited, because an entry

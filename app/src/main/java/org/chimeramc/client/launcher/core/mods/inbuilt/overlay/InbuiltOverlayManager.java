@@ -202,7 +202,20 @@ public class InbuiltOverlayManager {
         // a saved readout does not silently vanish on the next launch.
         CatalogModuleHost.restoreEnabled(activity, this, manager);
         refreshExternalButtons();
+        // A layout the player had active comes back with this session, so a PvP arrangement
+        // survives a relaunch without a trip through the manager (item 212).
+        restoreActiveOverlayLayout(manager);
         refreshRuntimeVisibility();
+    }
+
+    /** Re-applies the stored active layout, if any; a missing one is simply not applied. */
+    private void restoreActiveOverlayLayout(InbuiltModManager manager) {
+        OverlayLayoutStore store = new OverlayLayoutStore(activity);
+        String activeId = store.getActiveId();
+        if (activeId.isEmpty()) return;
+        OverlayLayout layout = OverlayLayoutStore.findById(store.load(), activeId);
+        if (layout == null) return;
+        applyOverlayLayout(layout);
     }
 
     private void restorePersistedInbuiltModState(InbuiltModManager manager, String modId) {
@@ -1667,6 +1680,111 @@ public class InbuiltOverlayManager {
     public void refreshRuntimeVisibility() {
         lastVisibilityStateHash = Long.MIN_VALUE;
         tick();
+    }
+
+    // --- Overlay layouts (item 212) -----------------------------------------------------------
+    //
+    // A layout is a named set of overlay positions, so a player can keep a PvP arrangement and a
+    // survival one and switch between them from the wheel. Only positions are captured: which
+    // modules are on belongs to the module list, and switching a layout must not change it.
+
+    /** Every overlay key this session can position, so a capture covers what is on screen. */
+    private java.util.Set<String> layoutKeys() {
+        java.util.Set<String> keys = new java.util.LinkedHashSet<>(modOverlayMap.keySet());
+        for (Integer slot : hotbarSlotOverlayMap.keySet()) {
+            keys.add(ModIds.HOTBAR_SLOT + ":" + slot);
+        }
+        if (fpsDisplayOverlay != null) keys.add(ModIds.FPS_DISPLAY);
+        if (armorHudOverlay != null) keys.add(ModIds.ARMOR_HUD);
+        if (hitTimingOverlay != null) keys.add(ModIds.HIT_TIMING);
+        if (cpsDisplayOverlay != null) keys.add(ModIds.CPS_DISPLAY);
+        if (voiceChatOverlay != null) keys.add(ModIds.VOICE_CHAT);
+        return keys;
+    }
+
+    /**
+     * Captures the current overlay positions into a layout.
+     *
+     * <p>Reads the fractions the manager persists rather than the live window params, so a widget
+     * that is not currently shown is still captured (its last position is what a switch should
+     * restore) and the capture and the restore agree about the units.
+     */
+    public OverlayLayout captureOverlayLayout(String name) {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        String id = OverlayLayoutStore.uniqueId(
+                new OverlayLayoutStore(activity).load(), name);
+        OverlayLayout layout = new OverlayLayout(id, name);
+        for (String key : layoutKeys()) {
+            float fx = manager.getOverlayFractionX(key, Float.NaN);
+            float fy = manager.getOverlayFractionY(key, Float.NaN);
+            if (Float.isNaN(fx) || Float.isNaN(fy)) continue;
+            layout.put(key, fx, fy);
+        }
+        return layout;
+    }
+
+    /**
+     * Applies a layout: writes every stored fraction and moves the live widgets that are on screen.
+     *
+     * <p>A key the layout does not name is left alone, so a layout saved before a new widget existed
+     * does not move that widget to the origin. Returns true when the layout had anything to apply.
+     */
+    public boolean applyOverlayLayout(OverlayLayout layout) {
+        if (layout == null || layout.isEmpty()) return false;
+        android.util.DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        for (java.util.Map.Entry<String, float[]> entry : layout.positions.entrySet()) {
+            String key = entry.getKey();
+            float[] fraction = entry.getValue();
+            if (key == null || fraction == null || fraction.length < 2) continue;
+            manager.setOverlayPositionFraction(key, fraction[0], fraction[1]);
+            int px = Math.round(fraction[0] * metrics.widthPixels);
+            int py = Math.round(fraction[1] * metrics.heightPixels);
+            moveLiveOverlay(key, px, py);
+        }
+        return true;
+    }
+
+    /**
+     * Moves whichever live widget owns {@code key}.
+     *
+     * <p>The button map covers most widgets, but the FPS/CPS/armour/hit-timing readouts and the mic
+     * indicator keep their own fields, so a layout apply that only walked the map would leave those
+     * on screen where they were and the switch would look half applied.
+     */
+    private void moveLiveOverlay(String key, int px, int py) {
+        BaseOverlayButton button = modOverlayMap.get(key);
+        if (button != null) {
+            button.updatePosition(px, py);
+            return;
+        }
+        if (ModIds.FPS_DISPLAY.equals(key) && fpsDisplayOverlay != null) {
+            fpsDisplayOverlay.updatePosition(px, py);
+        } else if (ModIds.CPS_DISPLAY.equals(key) && cpsDisplayOverlay != null) {
+            cpsDisplayOverlay.updatePosition(px, py);
+        } else if (ModIds.ARMOR_HUD.equals(key) && armorHudOverlay != null) {
+            armorHudOverlay.updatePosition(px, py);
+        } else if (ModIds.HIT_TIMING.equals(key) && hitTimingOverlay != null) {
+            hitTimingOverlay.updatePosition(px, py);
+        } else if (ModIds.VOICE_CHAT.equals(key) && voiceChatOverlay != null) {
+            voiceChatOverlay.updatePosition(px, py);
+        }
+    }
+
+    /**
+     * Switches to a stored layout and returns its name, or null when the id is unknown.
+     *
+     * <p>The wheel's SWITCH_LAYOUT entry routes here. Setting the active id first means a later
+     * session can restore the same layout, and the apply is what makes the change visible now.
+     */
+    public String switchOverlayLayout(String layoutId) {
+        if (layoutId == null || layoutId.isEmpty()) return null;
+        OverlayLayoutStore store = new OverlayLayoutStore(activity);
+        OverlayLayout layout = OverlayLayoutStore.findById(store.load(), layoutId);
+        if (layout == null) return null;
+        store.setActiveId(layoutId);
+        applyOverlayLayout(layout);
+        return layout.name;
     }
 
     public void tick() {

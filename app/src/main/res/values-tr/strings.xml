@@ -1101,4 +1101,15 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_overlay_autosprint_on">Koşu açık</string>
     <string name="mod_overlay_autosprint_off">Koşu kapalı</string>
     <string name="mod_menu_setting_wheel_dead_zone">Tekerlek ölü bölgesi</string>
+    <string name="overlay_layout_title">Kaplama yerleşimleri</string>
+    <string name="overlay_layout_save_current">Geçerli olanı kaydet</string>
+    <string name="overlay_layout_save_title">Bu yerleşimi adlandır</string>
+    <string name="overlay_layout_empty">Henüz yerleşim yok. HUD\'u düzenleyip kaydedin.</string>
+    <string name="overlay_layout_entry_count">%1$d araç</string>
+    <string name="overlay_layout_apply">Kullan</string>
+    <string name="overlay_layout_rename">Yeniden adlandır</string>
+    <string name="overlay_layout_rename_title">Bu yerleşimi yeniden adlandır</string>
+    <string name="overlay_layout_delete">Sil</string>
+    <string name="mod_menu_action_manage_layouts">Kaplama yerleşimleri</string>
+    <string name="mod_menu_action_manage_layouts_desc">HUD konum yerleşimlerini kaydet, uygula ve sil</string>
 </resources>

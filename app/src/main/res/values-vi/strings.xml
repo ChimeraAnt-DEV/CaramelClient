@@ -1104,4 +1104,15 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="mod_overlay_autosprint_on">Chạy nước rút bật</string>
     <string name="mod_overlay_autosprint_off">Chạy nước rút tắt</string>
     <string name="mod_menu_setting_wheel_dead_zone">Vùng chết của bánh xe</string>
+    <string name="overlay_layout_title">Bố cục lớp phủ</string>
+    <string name="overlay_layout_save_current">Lưu hiện tại</string>
+    <string name="overlay_layout_save_title">Đặt tên cho bố cục này</string>
+    <string name="overlay_layout_empty">Chưa có bố cục. Sắp xếp HUD rồi lưu lại.</string>
+    <string name="overlay_layout_entry_count">%1$d tiện ích</string>
+    <string name="overlay_layout_apply">Dùng</string>
+    <string name="overlay_layout_rename">Đổi tên</string>
+    <string name="overlay_layout_rename_title">Đổi tên bố cục này</string>
+    <string name="overlay_layout_delete">Xóa</string>
+    <string name="mod_menu_action_manage_layouts">Bố cục lớp phủ</string>
+    <string name="mod_menu_action_manage_layouts_desc">Lưu, áp dụng và xóa bố cục vị trí HUD</string>
 </resources>

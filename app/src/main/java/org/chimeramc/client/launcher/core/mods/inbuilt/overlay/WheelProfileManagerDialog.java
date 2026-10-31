@@ -336,8 +336,8 @@ final class WheelProfileManagerDialog {
     private static void showEntryPicker(Activity activity, ModMenuTheme theme,
                                         WheelProfileStore store, String profileId,
                                         Runnable onPicked) {
-        List<WheelEntryCatalog.Choice> choices =
-                WheelEntryCatalog.forProfile(store.load(), profileId);
+        List<WheelEntryCatalog.Choice> choices = WheelEntryCatalog.forProfile(
+                store.load(), profileId, new OverlayLayoutStore(activity).load());
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LinearLayout root = new LinearLayout(activity);
