@@ -23,10 +23,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ActivityControllerBinding;
 import org.chimeramc.client.core.minecraft.MinecraftLauncher;
 import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.launcher.controller.ControllerInputProcessor;
+import org.chimeramc.client.launcher.controller.ControllerDeviceKey;
 import org.chimeramc.client.launcher.controller.ControllerProfile;
 import org.chimeramc.client.launcher.controller.LayerModifierCapture;
 import org.chimeramc.client.launcher.controller.ControllerProfileCodec;
@@ -57,6 +59,8 @@ import java.util.List;
  */
 public class ControllerSettingsFragment extends Fragment {
 
+    /** View binding for this screen, so a new control is a field rather than another lookup. */
+    private ActivityControllerBinding binding;
     private Controller3DView illustration;
     private TextView statusText;
     private TextView illustrationLabel;
@@ -64,6 +68,8 @@ public class ControllerSettingsFragment extends Fragment {
     private ControllerProfileManager profileManager;
     private ControllerType currentType = ControllerType.XBOX;
     private ControllerType detectedType;
+    /** The connected pad's vendor/product key, or null when none is detected (item 219). */
+    private ControllerDeviceKey detectedDevice;
     private int manualIndex;
     private boolean autoSelected;
     private InputManager inputManager;
@@ -96,7 +102,8 @@ public class ControllerSettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_controller, container, false);
+        binding = ActivityControllerBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -212,35 +219,32 @@ public class ControllerSettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PersonalizationManager pm = new PersonalizationManager(requireContext());
-        View root = view.findViewById(R.id.controller_root);
-        if (root != null) {
-            pm.applyAccentToView(root, requireContext());
-        }
+        pm.applyAccentToView(binding.controllerRoot, requireContext());
         applyCompactAndRounding(pm);
 
-        illustration = view.findViewById(R.id.controller_illustration);
-        if (illustration != null) {
-            illustration.setAccentColor(pm.getAccentColor());
-        }
-        statusText = view.findViewById(R.id.controller_status);
-        illustrationLabel = view.findViewById(R.id.controller_illustration_label);
-        profileChips = view.findViewById(R.id.controller_profile_chips);
+        illustration = binding.controllerIllustration;
+        illustration.setAccentColor(pm.getAccentColor());
+        statusText = binding.controllerStatus;
+        illustrationLabel = binding.controllerIllustrationLabel;
+        profileChips = binding.controllerProfileChips;
         profileManager = new ControllerProfileManager(requireContext());
 
-        view.findViewById(R.id.controller_next_button).setOnClickListener(v -> nextIllustration());
-        view.findViewById(R.id.controller_edit_button).setOnClickListener(v -> openEditor());
-        view.findViewById(R.id.controller_profile_create).setOnClickListener(v -> createProfile());
-        view.findViewById(R.id.controller_profile_rename).setOnClickListener(v -> renameProfile());
-        view.findViewById(R.id.controller_profile_duplicate).setOnClickListener(v -> duplicateProfile());
-        view.findViewById(R.id.controller_profile_delete).setOnClickListener(v -> deleteProfile());
-        view.findViewById(R.id.controller_profile_export).setOnClickListener(v -> startProfileExport());
-        view.findViewById(R.id.controller_profile_import).setOnClickListener(v -> startProfileImport());
-        view.findViewById(R.id.controller_bind_instance).setOnClickListener(v -> bindToInstance());
-        view.findViewById(R.id.controller_bind_clear).setOnClickListener(v -> clearInstanceBinding());
+        binding.controllerNextButton.setOnClickListener(v -> nextIllustration());
+        binding.controllerEditButton.setOnClickListener(v -> openEditor());
+        binding.controllerProfileCreate.setOnClickListener(v -> createProfile());
+        binding.controllerProfileRename.setOnClickListener(v -> renameProfile());
+        binding.controllerProfileDuplicate.setOnClickListener(v -> duplicateProfile());
+        binding.controllerProfileDelete.setOnClickListener(v -> deleteProfile());
+        binding.controllerProfileExport.setOnClickListener(v -> startProfileExport());
+        binding.controllerProfileImport.setOnClickListener(v -> startProfileImport());
+        binding.controllerBindInstance.setOnClickListener(v -> bindToInstance());
+        binding.controllerBindClear.setOnClickListener(v -> clearInstanceBinding());
+        binding.controllerBindDevice.setOnClickListener(v -> bindToDevice());
+        binding.controllerBindDeviceClear.setOnClickListener(v -> clearDeviceBinding());
 
-        antiDriftSwitch = view.findViewById(R.id.controller_antidrift_switch);
-        antiDriftStatus = view.findViewById(R.id.controller_antidrift_status);
-        calibrateButton = view.findViewById(R.id.controller_calibrate);
+        antiDriftSwitch = binding.controllerAntidriftSwitch;
+        antiDriftStatus = binding.controllerAntidriftStatus;
+        calibrateButton = binding.controllerCalibrate;
         antiDriftSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onAntiDriftToggled(isChecked));
         calibrateButton.setOnClickListener(v -> startCalibration());
 
@@ -267,6 +271,7 @@ public class ControllerSettingsFragment extends Fragment {
         antiDriftSwitch = null;
         antiDriftStatus = null;
         calibrateButton = null;
+        binding = null;
         calibration.cancel();
         super.onDestroyView();
     }
@@ -438,11 +443,13 @@ public class ControllerSettingsFragment extends Fragment {
         ControllerType found = findConnectedController();
         if (found != null) {
             detectedType = found;
+            detectedDevice = findConnectedDeviceKey();
             currentType = found;
             autoSelected = true;
             statusText.setText(getString(R.string.controller_status_connected, found.getDisplayName()));
         } else {
             detectedType = null;
+            detectedDevice = null;
             autoSelected = false;
             statusText.setText(getString(R.string.controller_status_none));
         }
@@ -450,6 +457,64 @@ public class ControllerSettingsFragment extends Fragment {
         illustrationLabel.setText(currentType.getDisplayName());
         ControllerInputProcessor.detectAndLoad(requireContext());
         refreshProfiles();
+    }
+
+    /**
+     * The vendor/product key of the connected pad, or null when none is detected.
+     *
+     * <p>Separate from {@link #findConnectedController()} because the type is a family: two pads of
+     * the same family both resolve to one type but must be distinguishable to bind a profile to a
+     * specific one (item 219).
+     */
+    private ControllerDeviceKey findConnectedDeviceKey() {
+        int[] ids = InputDevice.getDeviceIds();
+        for (int id : ids) {
+            InputDevice device = InputDevice.getDevice(id);
+            if (device == null) continue;
+            int sources = device.getSources();
+            boolean gamepad = (sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD;
+            boolean joystick = (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK;
+            if (!gamepad && !joystick) continue;
+            ControllerDeviceKey key = ControllerDeviceKey.of(
+                    device.getVendorId(), device.getProductId());
+            if (key != null) return key;
+        }
+        return null;
+    }
+
+    /** Binds the active profile slot to the currently connected controller (item 219). */
+    private void bindToDevice() {
+        if (detectedDevice == null) {
+            Toast.makeText(requireContext(), R.string.controller_bind_device_none,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int activeSlot = profileManager.getActiveSlot(currentType);
+        ControllerProfile active = profileManager.getActiveProfile(currentType);
+        profileManager.bindDevice(detectedDevice, activeSlot);
+        // The running session holds the profile that was active when it started, so re-apply.
+        ControllerInputProcessor.setActiveProfile(currentType, active);
+        Toast.makeText(requireContext(),
+                getString(R.string.controller_bind_device_success, currentType.getDisplayName()),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /** Removes the connected controller's binding, if it has one. */
+    private void clearDeviceBinding() {
+        if (detectedDevice == null) {
+            Toast.makeText(requireContext(), R.string.controller_bind_device_none,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!profileManager.hasDeviceBinding(detectedDevice)) {
+            Toast.makeText(requireContext(), R.string.controller_bind_device_none,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        profileManager.clearDeviceBinding(detectedDevice);
+        Toast.makeText(requireContext(),
+                getString(R.string.controller_bind_device_cleared, currentType.getDisplayName()),
+                Toast.LENGTH_SHORT).show();
     }
 
     private ControllerType findConnectedController() {
@@ -484,8 +549,8 @@ public class ControllerSettingsFragment extends Fragment {
     }
 
     private void applyCompactAndRounding(PersonalizationManager pm) {
-        View root = getView() == null ? null : getView().findViewById(R.id.controller_root);
-        if (root instanceof ViewGroup viewGroup) {
+        ViewGroup viewGroup = binding == null ? null : binding.controllerRoot;
+        if (viewGroup != null) {
             int pad = (int) (org.chimeramc.client.ui.components.UiTokens.SPACE_4
                     * getResources().getDisplayMetrics().density);
             viewGroup.setPadding(pad, pad, pad, pad);
@@ -497,7 +562,7 @@ public class ControllerSettingsFragment extends Fragment {
         profileChips.removeAllViews();
         List<ControllerProfile> profiles = profileManager.getProfiles(currentType);
         int active = profileManager.getActiveSlot(currentType);
-        View emptyHint = getView() == null ? null : getView().findViewById(R.id.empty_controller_profiles);
+        View emptyHint = binding == null ? null : binding.emptyControllerProfiles;
         boolean hasProfiles = profiles != null && !profiles.isEmpty();
         if (emptyHint != null) {
             emptyHint.setVisibility(hasProfiles ? View.GONE : View.VISIBLE);

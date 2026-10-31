@@ -1430,6 +1430,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="controller_bind_none">No instance selected</string>
     <string name="controller_bind_success">%1$s will use this profile</string>
     <string name="controller_bind_cleared">%1$s no longer has a bound profile</string>
+    <string name="controller_bind_device">Bind to this controller</string>
+    <string name="controller_bind_device_clear">Remove controller binding</string>
+    <string name="controller_bind_device_none">No controller detected</string>
+    <string name="controller_bind_device_success">%1$s will always use this profile</string>
+    <string name="controller_bind_device_cleared">%1$s no longer has a bound profile</string>
     <string name="controller_bind_title">Bind profile to instance</string>
     <string name="controller_bind_hint">Bind the active profile to a Minecraft instance so that instance always launches with it.</string>
     <string name="controller_antidrift_title">Anti stick drift</string>

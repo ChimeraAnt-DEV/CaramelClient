@@ -1117,4 +1117,9 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_menu_action_toggle_hud_desc">सभी ओवरले छिपाएं या दिखाएं (तीन उंगली टैप)</string>
     <string name="mod_menu_hud_hidden">HUD ओवरले छिपे हैं</string>
     <string name="mod_menu_hud_shown">HUD ओवरले दिख रहे हैं</string>
+    <string name="controller_bind_device">इस कंट्रोलर से लिंक करें</string>
+    <string name="controller_bind_device_clear">कंट्रोलर लिंक हटाएँ</string>
+    <string name="controller_bind_device_none">कोई कंट्रोलर नहीं मिला</string>
+    <string name="controller_bind_device_success">%1$s हमेशा यह प्रोफ़ाइल इस्तेमाल करेगा</string>
+    <string name="controller_bind_device_cleared">%1$s से जुड़ी प्रोफ़ाइल अब नहीं है</string>
 </resources>

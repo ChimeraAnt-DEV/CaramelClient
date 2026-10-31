@@ -1086,4 +1086,9 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_menu_action_toggle_hud_desc">すべてのオーバーレイを非表示/表示（3本指タップ）</string>
     <string name="mod_menu_hud_hidden">HUDオーバーレイを非表示にしました</string>
     <string name="mod_menu_hud_shown">HUDオーバーレイを表示しました</string>
+    <string name="controller_bind_device">このコントローラーに紐付け</string>
+    <string name="controller_bind_device_clear">コントローラーの紐付けを解除</string>
+    <string name="controller_bind_device_none">コントローラーが見つかりません</string>
+    <string name="controller_bind_device_success">%1$s は常にこのプロファイルを使用します</string>
+    <string name="controller_bind_device_cleared">%1$s には紐付けられたプロファイルがありません</string>
 </resources>

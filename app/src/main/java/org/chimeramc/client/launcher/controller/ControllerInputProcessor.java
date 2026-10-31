@@ -157,7 +157,12 @@ public final class ControllerInputProcessor {
                     || (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK) {
                 ControllerType type = ControllerType.from(device);
                 if (type != null) {
-                    ControllerProfile profile = new ControllerProfileManager(context).getActiveProfile(type);
+                    // A device binding wins over the type's active slot, so two pads of the same
+                    // family can carry different profiles (item 219).
+                    ControllerDeviceKey key = ControllerDeviceKey.of(
+                            device.getVendorId(), device.getProductId());
+                    ControllerProfile profile = new ControllerProfileManager(context)
+                            .getProfileForDevice(type, key);
                     setActiveProfile(type, profile);
                     return;
                 }

@@ -1089,4 +1089,9 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="mod_menu_action_toggle_hud_desc">Ocultar ou mostrar todas as sobreposições (toque com três dedos)</string>
     <string name="mod_menu_hud_hidden">Sobreposições do HUD ocultas</string>
     <string name="mod_menu_hud_shown">Sobreposições do HUD visíveis</string>
+    <string name="controller_bind_device">Vincular a este controle</string>
+    <string name="controller_bind_device_clear">Remover vínculo do controle</string>
+    <string name="controller_bind_device_none">Nenhum controle detectado</string>
+    <string name="controller_bind_device_success">%1$s sempre usará este perfil</string>
+    <string name="controller_bind_device_cleared">%1$s não tem mais um perfil vinculado</string>
 </resources>

@@ -1116,4 +1116,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_menu_action_toggle_hud_desc">Tüm kaplamaları gizle veya göster (üç parmakla dokunma)</string>
     <string name="mod_menu_hud_hidden">HUD kaplamaları gizlendi</string>
     <string name="mod_menu_hud_shown">HUD kaplamaları gösterildi</string>
+    <string name="controller_bind_device">Bu kumandaya bağla</string>
+    <string name="controller_bind_device_clear">Kumanda bağlantısını kaldır</string>
+    <string name="controller_bind_device_none">Kumanda bulunamadı</string>
+    <string name="controller_bind_device_success">%1$s her zaman bu profili kullanacak</string>
+    <string name="controller_bind_device_cleared">%1$s artık bağlı bir profile sahip değil</string>
 </resources>

@@ -1119,4 +1119,9 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="mod_menu_action_toggle_hud_desc">Ẩn hoặc hiện mọi lớp phủ (chạm ba ngón)</string>
     <string name="mod_menu_hud_hidden">Đã ẩn lớp phủ HUD</string>
     <string name="mod_menu_hud_shown">Đã hiện lớp phủ HUD</string>
+    <string name="controller_bind_device">Liên kết với tay cầm này</string>
+    <string name="controller_bind_device_clear">Gỡ liên kết tay cầm</string>
+    <string name="controller_bind_device_none">Không phát hiện tay cầm</string>
+    <string name="controller_bind_device_success">%1$s sẽ luôn dùng cấu hình này</string>
+    <string name="controller_bind_device_cleared">%1$s không còn cấu hình được liên kết</string>
 </resources>

@@ -1120,4 +1120,9 @@
     <string name="mod_menu_action_toggle_hud_desc">Скрыть или показать все оверлеи (касание тремя пальцами)</string>
     <string name="mod_menu_hud_hidden">Оверлеи HUD скрыты</string>
     <string name="mod_menu_hud_shown">Оверлеи HUD показаны</string>
+    <string name="controller_bind_device">Привязать к этому геймпаду</string>
+    <string name="controller_bind_device_clear">Убрать привязку геймпада</string>
+    <string name="controller_bind_device_none">Геймпад не обнаружен</string>
+    <string name="controller_bind_device_success">%1$s всегда будет использовать этот профиль</string>
+    <string name="controller_bind_device_cleared">У %1$s больше нет привязанного профиля</string>
 </resources>

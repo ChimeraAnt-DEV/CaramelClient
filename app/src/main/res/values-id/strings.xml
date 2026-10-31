@@ -1113,4 +1113,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_menu_action_toggle_hud_desc">Sembunyikan atau tampilkan semua overlay (ketuk tiga jari)</string>
     <string name="mod_menu_hud_hidden">Overlay HUD disembunyikan</string>
     <string name="mod_menu_hud_shown">Overlay HUD ditampilkan</string>
+    <string name="controller_bind_device">Tautkan ke pengontrol ini</string>
+    <string name="controller_bind_device_clear">Hapus tautan pengontrol</string>
+    <string name="controller_bind_device_none">Tidak ada pengontrol terdeteksi</string>
+    <string name="controller_bind_device_success">%1$s akan selalu memakai profil ini</string>
+    <string name="controller_bind_device_cleared">%1$s tidak lagi memiliki profil tertaut</string>
 </resources>

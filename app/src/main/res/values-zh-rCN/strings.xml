@@ -1110,4 +1110,9 @@
     <string name="mod_menu_action_toggle_hud_desc">隐藏或显示所有叠加（三指轻触）</string>
     <string name="mod_menu_hud_hidden">HUD 叠加已隐藏</string>
     <string name="mod_menu_hud_shown">HUD 叠加已显示</string>
+    <string name="controller_bind_device">绑定到此控制器</string>
+    <string name="controller_bind_device_clear">移除控制器绑定</string>
+    <string name="controller_bind_device_none">未检测到控制器</string>
+    <string name="controller_bind_device_success">%1$s 将始终使用此配置</string>
+    <string name="controller_bind_device_cleared">%1$s 不再有绑定的配置</string>
 </resources>
