@@ -125,6 +125,116 @@ public class LauncherGameBackendTest {
     }
 
     @Test
+    public void aHeldKeyIsReleasedWhenTheWindowLosesFocus() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        assertEquals(1, backend.heldKeyCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("key:87:false"), host.calls);
+        assertEquals(0, backend.heldKeyCount());
+    }
+
+    @Test
+    public void aReleasedKeyIsNotReleasedAgain() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        backend.sendKey(87, false);
+        assertEquals(0, backend.heldKeyCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertTrue("a key already released must not be sent again", host.calls.isEmpty());
+    }
+
+    @Test
+    public void aHeldMouseButtonIsReleasedWhenTheWindowLosesFocus() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendMouseButton(1, true);
+        assertEquals(1, backend.heldButtonCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("mouse:1:false"), host.calls);
+        assertEquals(0, backend.heldButtonCount());
+    }
+
+    @Test
+    public void releaseAllIsIdempotent() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        backend.releaseAll();
+        host.calls.clear();
+        backend.releaseAll();
+        assertTrue("the second release must find nothing to do", host.calls.isEmpty());
+    }
+
+    @Test
+    public void aSprintStartedByAutoSprintIsReleased() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.setAutoSprint(true);
+        // The double-tap leaves forward held, so a focus loss must release it.
+        assertEquals(1, backend.heldKeyCount());
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("key:87:false"), host.calls);
+    }
+
+    @Test
+    public void aThrowingHostDuringReleaseDoesNotEscape() {
+        GameInputHost throwing = new GameInputHost() {
+            @Override
+            public boolean injectKey(int bedrockKeyCode, boolean down) {
+                throw new IllegalStateException("host is gone");
+            }
+
+            @Override
+            public boolean injectMouseButton(int androidButton, boolean down) {
+                throw new IllegalStateException("host is gone");
+            }
+
+            @Override
+            public boolean injectScroll(float vertical) {
+                return false;
+            }
+
+            @Override
+            public boolean injectLookDelta(float deltaX, float deltaY) {
+                return false;
+            }
+
+            @Override
+            public boolean injectPointer(float x, float y) {
+                return false;
+            }
+        };
+        LauncherGameBackend backend = new LauncherGameBackend(throwing);
+        try {
+            throwing.injectKey(87, true);
+        } catch (IllegalStateException expected) {
+            // The recording host above throws on every call; the point is the release path.
+        }
+        backend.releaseAll();
+        assertEquals(0, backend.heldKeyCount());
+    }
+
+    @Test
+    public void aHotbarSelectionDoesNotLeaveAKeyHeld() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertTrue(backend.selectHotbarSlot(3));
+        assertEquals("the press and its release both go through sendKey",
+                0, backend.heldKeyCount());
+        assertEquals(Arrays.asList("key:51:true", "key:51:false"), host.calls);
+    }
+
+    @Test
     public void aNullHostIsRefusedAtConstruction() {
         try {
             new LauncherGameBackend(null);

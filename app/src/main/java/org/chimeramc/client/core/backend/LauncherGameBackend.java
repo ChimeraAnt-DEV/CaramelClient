@@ -1,7 +1,10 @@
 package org.chimeramc.client.core.backend;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The launcher's own {@link GameBackend}, driving input through the game activity's handler.
@@ -32,6 +35,20 @@ public final class LauncherGameBackend implements GameBackend {
 
     private boolean autoSprintActive;
 
+    /**
+     * The keys and buttons this backend has pressed and not yet released (item 217).
+     *
+     * <p>Needed because the backend is the only thing that knows what it injected. When the window
+     * loses focus or the activity pauses, nothing will ever send the matching release, so a key held
+     * at that moment stays held in the game — the classic "the player keeps walking after
+     * alt-tabbing" bug. {@link #releaseAll()} walks these and sends the release for each.
+     *
+     * <p>Concurrent sets because injection and the focus/pause callback are not guaranteed to be the
+     * same thread. These are per-event, not per-frame, so the cost is off the frame path.
+     */
+    private final Set<Integer> heldKeys = ConcurrentHashMap.newKeySet();
+    private final Set<Integer> heldButtons = ConcurrentHashMap.newKeySet();
+
     public LauncherGameBackend(GameInputHost host) {
         if (host == null) {
             throw new IllegalArgumentException("host");
@@ -61,12 +78,24 @@ public final class LauncherGameBackend implements GameBackend {
 
     @Override
     public boolean sendKey(int bedrockKeyCode, boolean down) {
-        return host.injectKey(bedrockKeyCode, down);
+        boolean injected = host.injectKey(bedrockKeyCode, down);
+        if (down) {
+            heldKeys.add(bedrockKeyCode);
+        } else {
+            heldKeys.remove(bedrockKeyCode);
+        }
+        return injected;
     }
 
     @Override
     public boolean sendMouseButton(int androidButton, boolean down) {
-        return host.injectMouseButton(androidButton, down);
+        boolean injected = host.injectMouseButton(androidButton, down);
+        if (down) {
+            heldButtons.add(androidButton);
+        } else {
+            heldButtons.remove(androidButton);
+        }
+        return injected;
     }
 
     @Override
@@ -111,11 +140,13 @@ public final class LauncherGameBackend implements GameBackend {
         }
         autoSprintActive = enabled;
         if (enabled) {
-            host.injectKey(BEDROCK_KEY_W, true);
-            host.injectKey(BEDROCK_KEY_W, false);
-            host.injectKey(BEDROCK_KEY_W, true);
+            // The double-tap goes through sendKey, not the host directly, so the held key is
+            // tracked and released if the window loses focus mid-sprint (item 217).
+            sendKey(BEDROCK_KEY_W, true);
+            sendKey(BEDROCK_KEY_W, false);
+            sendKey(BEDROCK_KEY_W, true);
         } else {
-            host.injectKey(BEDROCK_KEY_W, false);
+            sendKey(BEDROCK_KEY_W, false);
         }
         return true;
     }
@@ -131,13 +162,50 @@ public final class LauncherGameBackend implements GameBackend {
             return false;
         }
         int bedrockKey = '0' + slot;
-        boolean down = host.injectKey(bedrockKey, true);
-        host.injectKey(bedrockKey, false);
+        boolean down = sendKey(bedrockKey, true);
+        sendKey(bedrockKey, false);
         return down;
     }
 
+    /**
+     * Releases everything this backend injected and is still holding.
+     *
+     * <p>Called on window-focus loss and on pause. It must be idempotent and must never throw: it
+     * runs from a lifecycle callback where an exception would take the game down. A release that
+     * fails is dropped rather than retried, because the alternative — leaving it in the held set —
+     * would keep re-releasing a key the host has already forgotten.
+     */
     @Override
     public void releaseAll() {
         autoSprintActive = false;
+
+        List<Integer> keys = new ArrayList<>(heldKeys);
+        heldKeys.clear();
+        for (int key : keys) {
+            try {
+                host.injectKey(key, false);
+            } catch (Throwable ignored) {
+                // Best effort: the session is losing focus, so nothing useful can be reported here.
+            }
+        }
+
+        List<Integer> buttons = new ArrayList<>(heldButtons);
+        heldButtons.clear();
+        for (int button : buttons) {
+            try {
+                host.injectMouseButton(button, false);
+            } catch (Throwable ignored) {
+            }
+        }
+    }
+
+    /** How many keys this backend is currently holding; a diagnostic for tests and the log. */
+    public int heldKeyCount() {
+        return heldKeys.size();
+    }
+
+    /** How many mouse buttons this backend is currently holding. */
+    public int heldButtonCount() {
+        return heldButtons.size();
     }
 }
