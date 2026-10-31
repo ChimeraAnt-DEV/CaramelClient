@@ -35,6 +35,7 @@ pkix = "1.54.0.0"
 playServicesGamesV2 = "21.0.0"
 preference-ktx = "1.2.1"
 profileinstaller = "1.4.1"
+leakcanary = "2.14"
 roomRuntime = "2.8.4"
 simpleXml = "2.7.1"
 billing = "8.3.0"
@@ -68,6 +69,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preference-ktx" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bcprovJdk15on" }
 bedrock-connection = { module = "org.cloudburstmc.protocol:bedrock-connection", version.ref = "bedrockConnection" }

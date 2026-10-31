@@ -240,5 +240,10 @@ dependencies {
     testImplementation 'org.json:json:20240303'
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // Item 297: LeakCanary watches for activity-context leaks in debug builds only. Its own
+    // AppInitializer installs it via the AndroidX startup provider, so no code change is needed in
+    // the application class; a release build never sees the dependency.
+    debugImplementation libs.leakcanary.android
     implementation libs.glide
 }
