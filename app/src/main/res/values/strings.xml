@@ -1067,6 +1067,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="cosmetics_sync_manual_save">Save peer</string>
     <string name="cosmetics_sync_manual_saved">Manual peer saved — cosmetics are sent to it while no relay is set.</string>
     <string name="cosmetics_preview_description">Preview of your character wearing the selected cape and accessory</string>
+    <string name="cosmetics_preview_preparing" formatted="false">Preparing preview…</string>
     <string name="cosmetics_skin_source">Skin: %1$s</string>
     <string name="cosmetics_skin_default_steve">Showing Steve, the default character — import a skin in Customize, Skins and it will appear here.</string>
     <string name="cosmetics_skin_fallback">Showing a placeholder character — the skin could not be loaded. Apply a skin pack in Customize, Skins and it will appear here.</string>

@@ -1091,4 +1091,5 @@
     <string name="crash_disable_done">Отключено модов: %1$d. Запустите снова, чтобы попробовать без них.</string>
     <string name="session_restart_loop_message">Перезапуск остановлен: этот сеанс перезапускался %1$d раза подряд. Запустите снова с главного экрана или отключите недавно добавленные моды.</string>
     <string name="nav_logo_home">Главная GlowberryClient</string>
+    <string name="cosmetics_preview_preparing" formatted="false">Подготовка предпросмотра…</string>
 </resources>

@@ -196,6 +196,9 @@ public class CapePreviewView extends View {
     private long animStartMs;
     private boolean animating;
     private boolean attached;
+    /** True once at least one frame has been rendered, so a caller can hide its placeholder. */
+    private boolean drewFirstFrame;
+    private Runnable onFirstFrame;
     /** When true, idle motion runs even with no cape/pet equipped (the Launch-tab hero). */
     private boolean alwaysAnimate;
 
@@ -444,6 +447,20 @@ public class CapePreviewView extends View {
      * wants the character to turn and glance regardless, so it opts in here rather than changing
      * the editor's behaviour.
      */
+    /**
+     * Runs {@code callback} once, after the next frame is rendered (item 205). Used by the Closet to
+     * swap its "preparing preview" placeholder for the real render without a fixed delay. If the
+     * preview has already drawn a frame the callback runs on the next post.
+     */
+    public void runAfterFirstFrame(Runnable callback) {
+        if (callback == null) return;
+        if (drewFirstFrame) {
+            post(callback);
+        } else {
+            onFirstFrame = callback;
+        }
+    }
+
     public void setAlwaysAnimate(boolean value) {
         this.alwaysAnimate = value;
         syncAnimation();
@@ -637,6 +654,12 @@ public class CapePreviewView extends View {
             }
             renderScene(camera, internalW, internalH);
             target.setPixels(raster.pixels(), 0, internalW, 0, 0, internalW, internalH);
+            if (!drewFirstFrame) {
+                drewFirstFrame = true;
+                Runnable callback = onFirstFrame;
+                onFirstFrame = null;
+                if (callback != null) post(callback);
+            }
             sourceRect.set(0, 0, internalW, internalH);
             destRect.set(0, 0, w, h);
             canvas.drawBitmap(target, sourceRect, destRect, pixelPaint);
