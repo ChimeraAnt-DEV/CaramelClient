@@ -484,6 +484,11 @@ public class LogcatOverlay extends FrameLayout {
         ioExecutor.submit(() -> {
             StringBuilder sb = new StringBuilder();
             List<String> batch = new ArrayList<>(MAX_BATCH_LINES);
+            // Item 208: coalesce the UI flush. The reader appends to the bounded queue and this loop
+            // drains it; posting a rebuild per drain tick put up to ten main-thread rebuilds a
+            // second on the UI thread. The flush now happens at most every FLUSH_INTERVAL_MS, or
+            // immediately once the batch is full so a burst is never truncated.
+            long lastFlushMs = android.os.SystemClock.uptimeMillis();
             while (true) {
                 try {
                     String ln = pendingLines.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS);
@@ -506,9 +511,12 @@ public class LogcatOverlay extends FrameLayout {
                         }
                     }
 
-                    if (sb.length() > 0) {
+                    long now = android.os.SystemClock.uptimeMillis();
+                    if (LogcatBatchPolicy.shouldFlush(now, lastFlushMs, batch.size(), MAX_BATCH_LINES)
+                            && sb.length() > 0) {
                         final String chunk = sb.toString();
                         sb.setLength(0);
+                        lastFlushMs = now;
                         mainHandler.post(() -> appendChunk(chunk));
                     }
                 } catch (InterruptedException e) {
