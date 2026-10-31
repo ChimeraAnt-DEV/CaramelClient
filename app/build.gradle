@@ -122,6 +122,10 @@ android {
     sourceSets {
         main {
             assets.srcDirs += rootProject.file('resources')
+            // Item 292: the baseline profile is packaged so ProfileInstaller can install it at first
+            // run. AGP compiles it into the APK's dexopt profile; on device it is applied without a
+            // Play Store update.
+            baselineProfiles.srcDirs += 'src/main/baselineProfiles'
         }
     }
     buildTypes {
@@ -204,6 +208,9 @@ dependencies {
     // can be sent to an LLM for reimplementation. No Android APIs, plain jar.
     implementation libs.cfr
     implementation libs.androidx.preference.ktx
+    // Item 292: ProfileInstaller ships the baseline profile in the APK and installs it at first run,
+    // so the startup path is compiled ahead of time on device. Works on every supported version.
+    implementation libs.androidx.profileinstaller
     implementation libs.androidx.games.activity
     implementation libs.okhttp
     implementation libs.androidx.dynamicanimation
