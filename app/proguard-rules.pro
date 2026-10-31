@@ -138,3 +138,16 @@
 # ---------------------------------------------------------------------------
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
+
+# ---------------------------------------------------------------------------
+# Optional dependencies of the crypto and HTTP stacks that do not exist on Android.
+#
+# R8 fails the build (not just warns) on a missing class reached from kept code. Each of these is a
+# desktop-JVM-only type: nimbus-jose reaches for tink's Ed25519/X25519 primitives only when a caller
+# asks for that backend, Apache HttpClient's hostname verifier reaches javax.naming for DN parsing
+# that the Android runtime does not provide, and the jgss/blockhound types are never on the classpath.
+# The Android code paths do not use them, so they are declared absent rather than bundled.
+-dontwarn com.google.crypto.tink.**
+-dontwarn javax.naming.**
+-dontwarn org.ietf.jgss.**
+-dontwarn reactor.blockhound.**

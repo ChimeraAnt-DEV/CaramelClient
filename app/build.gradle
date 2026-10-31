@@ -188,6 +188,18 @@ android {
     }
 
     ndkVersion = "28.2.13676358"
+
+    // Item 286: simple-xml (used by the bundled Xbox XLE serialization) drags in xpp3, which ships
+    // its own org.xmlpull.v1.XmlPullParser. Android already provides that class in the platform, so
+    // R8 refuses the program/library clash ("Library class android.content.res.XmlResourceParser
+    // implements program class org.xmlpull.v1.XmlPullParser") and the release build cannot be
+    // minified at all. Excluding the bundled pull parser leaves the platform copy, which is the
+    // implementation the runtime actually uses.
+    configurations.configureEach {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'stax', module: 'stax-api'
+    }
 }
 
 dependencies {
