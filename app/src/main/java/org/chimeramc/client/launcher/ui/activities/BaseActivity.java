@@ -186,6 +186,9 @@ public class BaseActivity extends AppCompatActivity {
     private View navShapeView;
     /** The screen's own content view, re-measured when the nav shape changes. */
     private View navContentView;
+    /** The debug bounds overlay, or null when the debug layout toggle is off (item 80). */
+    @Nullable
+    private org.chimeramc.client.ui.navigation.NavBoundsOverlay navBoundsOverlay;
 
     private void wrapWithNavBar(View contentView) {
         if (shouldSkipNavBar()) {
@@ -255,6 +258,7 @@ public class BaseActivity extends AppCompatActivity {
         controllerCursor = LauncherCursorOverlay.attach(this, wrapper);
         navBarInjected = true;
         setupBaseNavBar();
+        installNavDebugBounds();
 
         applyPersonalization();
 
@@ -346,6 +350,73 @@ public class BaseActivity extends AppCompatActivity {
      */
     private NavLayoutMode resolveNavLayoutMode() {
         return NavLayoutMode.forWindow(currentWidthDp(), currentWindowWidthDp());
+    }
+
+    /**
+     * Outlines every nav entry's real bounds and logs them, on a debug build (item 80).
+     *
+     * <p>The whole class of nav defect here - a row padded by the rail's own width, a wordmark on a
+     * bar with no room for it, a header that centres a pair - shows up as a view whose laid-out
+     * bounds disagree with the size it asked for. Both halves of this aid are therefore needed: the
+     * overlay draws the bounds where they are actually happening, and the log line makes a report
+     * quotable. It runs after the first layout, when the bounds are real.
+     *
+     * <p>Debug-only, and inert in release: there is no toggle to ship and nothing to remove.
+     */
+    private void installNavDebugBounds() {
+        if (!org.chimeramc.client.BuildConfig.DEBUG || navShapeView == null) return;
+        if (navBoundsOverlay != null) return;
+        navShapeView.post(() -> {
+            if (isFinishing() || navShapeView == null) return;
+            // The entries come from walking the nav's own subtree rather than from a list of
+            // looked-up ids: this aid is about the whole shape (the row, its tabs, the header),
+            // and a lookup list would silently stop covering a view that a layout change added.
+            // It also leaves the findViewById ratchet (item 111) where it was, adding no lookups.
+            java.util.List<View> views = new java.util.ArrayList<>();
+            collectNavViews(navShapeView, views);
+            org.chimeramc.client.ui.navigation.NavDebugBounds.Entry[] entries =
+                    new org.chimeramc.client.ui.navigation.NavDebugBounds.Entry[views.size()];
+            for (int i = 0; i < views.size(); i++) {
+                View v = views.get(i);
+                entries[i] = new org.chimeramc.client.ui.navigation.NavDebugBounds.Entry(
+                        describeView(v),
+                        v.getLeft(), v.getTop(), v.getRight(), v.getBottom(),
+                        v.getMeasuredWidth(), v.getVisibility() == View.VISIBLE);
+            }
+            android.util.Log.d("NavBounds", org.chimeramc.client.ui.navigation.NavDebugBounds
+                    .describe(entries));
+            navBoundsOverlay = new org.chimeramc.client.ui.navigation.NavBoundsOverlay(
+                    views.toArray(new View[0]));
+            navShapeView.getOverlay().add(navBoundsOverlay);
+        });
+    }
+
+    /**
+     * Collects the identified descendants of {@code root}: the nav's own subtree (item 80).
+     *
+     * <p>Only identified views are collected, so the overlay outlines the entries a report would
+     * name (tabs, wordmark, logo, back button) rather than every anonymous wrapper, and the
+     * recursion still walks through those wrappers so nothing is skipped.
+     */
+    private static void collectNavViews(View root, java.util.List<View> out) {
+        if (root.getId() != View.NO_ID) out.add(root);
+        if (!(root instanceof ViewGroup)) return;
+        ViewGroup group = (ViewGroup) root;
+        for (int i = 0; i < group.getChildCount(); i++) {
+            collectNavViews(group.getChildAt(i), out);
+        }
+    }
+
+    /** A stable name for a view in the bounds log: its entry name, or its class if it has none. */
+    private static String describeView(View view) {
+        if (view.getId() != View.NO_ID) {
+            try {
+                return view.getResources().getResourceEntryName(view.getId());
+            } catch (android.content.res.Resources.NotFoundException ignored) {
+                // A view tagged with a non-resource id; fall through to the class name.
+            }
+        }
+        return view.getClass().getSimpleName();
     }
 
     /**
@@ -1231,6 +1302,10 @@ public class BaseActivity extends AppCompatActivity {
         boolean rail = mode.isRail();
         navLayoutMode = mode;
 
+        if (navBoundsOverlay != null) {
+            navShapeView.getOverlay().remove(navBoundsOverlay);
+            navBoundsOverlay = null;
+        }
         navColumn.removeView(navShapeView);
         navShapeView = LayoutInflater.from(this)
                 .inflate(rail ? R.layout.nav_rail : R.layout.nav_bar, navColumn, false);
@@ -1245,6 +1320,7 @@ public class BaseActivity extends AppCompatActivity {
         applyEdgeToEdgeInsets(navShapeView, navContentView, rail);
         logNavDecision();
         setupBaseNavBar();
+        installNavDebugBounds();
         // The content was already visible, so it must not replay its arrival animation; only the
         // nav shape needs to settle into place.
         LauncherTab own = LauncherTab.forActivity(getClass());
