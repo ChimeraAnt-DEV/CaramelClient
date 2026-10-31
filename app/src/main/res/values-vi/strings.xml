@@ -1197,4 +1197,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="instance_storage_clear_failed">Không xóa được bộ nhớ đệm: %1$s</string>
     <string name="guest_mode_title">Chế độ khách</string>
     <string name="guest_mode_desc">Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng.</string>
+    <string name="streaming_safe_title">Chế độ an toàn khi phát trực tiếp</string>
+    <string name="streaming_safe_desc">Che tên tài khoản, tọa độ thế giới và địa chỉ máy chủ trong lớp phủ và thông tin gỡ lỗi đã sao chép, để buổi phát hoặc ảnh chụp không tiết lộ bạn ở đâu hay là ai.</string>
 </resources>

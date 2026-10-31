@@ -5,11 +5,11 @@ import android.content.Context;
 import org.chimeramc.client.settings.FeatureSettings;
 
 /**
- * Reads the privacy switch into a {@link PrivacyMode} (item 272).
+ * Reads the two privacy switches into a {@link PrivacyMode} (items 272, 277).
  *
  * <p>The only Android-aware piece of the pair. A caller asks this for the current mode and then asks
  * the pure {@link PrivacyMode} what to hide, so the rule is tested without a Context and the
- * preference is read in one place. An unreadable preference reads as "off", which is the safe
+ * preferences are read in one place. An unreadable preference reads as "off", which is the safe
  * default for a mode whose whole purpose is to be opted into.
  */
 public final class PrivacyModes {
@@ -21,7 +21,7 @@ public final class PrivacyModes {
     public static PrivacyMode current() {
         try {
             FeatureSettings fs = FeatureSettings.getInstance();
-            return new PrivacyMode(fs.isGuestModeEnabled());
+            return new PrivacyMode(fs.isGuestModeEnabled(), fs.isStreamingSafeModeEnabled());
         } catch (Throwable ignored) {
             return PrivacyMode.open();
         }

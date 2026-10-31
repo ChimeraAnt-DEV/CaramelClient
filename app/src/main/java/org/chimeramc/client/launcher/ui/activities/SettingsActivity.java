@@ -471,8 +471,9 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        // Guest mode (item 272) hides mods/servers/voice. It is read through PrivacyModes, so the
-        // screens that already drew their shortcuts are refreshed by recreating this one, which is
+        // Privacy modes (items 272, 277). Guest mode hides mods/servers/voice; streaming-safe
+        // masks names, coordinates and server addresses. Both are read through PrivacyModes, so a
+        // screen that already drew its shortcuts is refreshed by recreating this one, which is
         // where the nav bar and the Settings entries are built.
         SwitchMaterial switchGuest = findViewById(R.id.switch_guest_mode);
         if (switchGuest != null) {
@@ -482,6 +483,13 @@ public class SettingsActivity extends BaseActivity {
                 recreate();
             });
         }
+        SwitchMaterial switchStreamingSafe = findViewById(R.id.switch_streaming_safe);
+        if (switchStreamingSafe != null) {
+            switchStreamingSafe.setChecked(fs.isStreamingSafeModeEnabled());
+            switchStreamingSafe.setOnCheckedChangeListener(
+                    (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
+        }
+
         SwitchMaterial switchFpsOptimizer = findViewById(R.id.switch_fps_optimizer);
         if (switchFpsOptimizer != null) {
             switchFpsOptimizer.setChecked(fs.isFpsOptimizerEnabled());

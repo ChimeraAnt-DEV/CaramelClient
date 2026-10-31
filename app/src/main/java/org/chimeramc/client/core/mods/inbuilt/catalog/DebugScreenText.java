@@ -56,6 +56,12 @@ public final class DebugScreenText {
         public boolean frameVsyncLocked;
         /** True when a frame-pacing reading exists at all this session. */
         public boolean framePacingAvailable;
+        /**
+         * Streaming-safe mode (item 277): mask the world position, so a stream or a screenshot does
+         * not reveal where the player is. The frame rate, memory and version are not identifying
+         * and stay visible.
+         */
+        public boolean streamingSafe;
     }
 
     /** The full debug block, one line per entry, without a trailing newline. */
@@ -120,12 +126,14 @@ public final class DebugScreenText {
     }
 
     private static String positionLine(Snapshot v) {
+        if (v.streamingSafe) return "XYZ: [hidden]";
         String coords = LocalPlayerReadouts.coordinates(v.position);
         return coords == null ? "XYZ: unavailable" : "XYZ: " + coords;
     }
 
     /** The integer block the player occupies, the way F3 shows "Block: bx by bz". */
     private static String blockLine(Snapshot v) {
+        if (v.streamingSafe) return "Block: [hidden]";
         if (v.position == null || v.position.length < 3) return "Block: unavailable";
         return String.format(Locale.US, "Block: %d %d %d",
                 (int) Math.floor(v.position[0]),
@@ -134,6 +142,7 @@ public final class DebugScreenText {
     }
 
     private static String chunkLine(Snapshot v) {
+        if (v.streamingSafe) return "Chunk: [hidden]";
         String chunk = LocalPlayerReadouts.chunk(v.position);
         if (chunk == null) return "Chunk: unavailable";
         String origin = LocalPlayerReadouts.chunkOrigin(v.position);
@@ -141,6 +150,7 @@ public final class DebugScreenText {
     }
 
     private static String facingLine(Snapshot v) {
+        if (v.streamingSafe) return "Facing: [hidden]";
         String direction = LocalPlayerReadouts.direction(v.rotation);
         if (direction == null) return "Facing: unavailable";
         String pitch = LocalPlayerReadouts.pitch(v.rotation);

@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import android.view.KeyEvent;
 
 import org.chimeramc.client.core.mods.inbuilt.catalog.ActionTimers;
+import org.chimeramc.client.core.privacy.PrivacyRedactor;
 import org.chimeramc.client.core.mods.inbuilt.catalog.CatalogSessionCounters;
 import org.chimeramc.client.core.mods.inbuilt.catalog.CatalogTimerRules;
 import org.chimeramc.client.core.mods.inbuilt.catalog.ChatInjector;
@@ -243,6 +244,16 @@ public final class CatalogModuleRuntime {
         return value;
     }
 
+    /**
+     * Whether streaming-safe mode is on right now (item 277).
+     *
+     * <p>Read per readout rather than cached: the readouts refresh on their own 500&nbsp;ms timer, so
+     * the cost is negligible, and caching would leave a stale answer after the switch is toggled.
+     */
+    private boolean streamingSafe() {
+        return org.chimeramc.client.core.privacy.PrivacyModes.current(activity).hidesCoordinates();
+    }
+
     private String textFor(String modId) {
         switch (modId) {
             case "hud_clock":
@@ -274,13 +285,18 @@ public final class CatalogModuleRuntime {
                 return "Kills " + counters.kills();
             case "hud_coordinates":
             case "move_position_display":
-                return LocalPlayerReadouts.coordinates(PreloaderInput.readLocalPlayerPosition());
+                // Streaming-safe mode masks the HUD readout too (item 277): the overlay is drawn
+                // over the game and is exactly what a capture would show, so masking only the
+                // debug screen and the exported log would leave the most visible leak in place.
+                return streamingSafe() ? PrivacyRedactor.MASK
+                        : LocalPlayerReadouts.coordinates(PreloaderInput.readLocalPlayerPosition());
             case "hud_direction":
                 return LocalPlayerReadouts.direction(PreloaderInput.readLocalPlayerRotation());
             case "hud_compass":
                 return LocalPlayerReadouts.direction(PreloaderInput.readLocalPlayerRotation());
             case "hud_chunk_borders":
-                return LocalPlayerReadouts.chunkOrigin(PreloaderInput.readLocalPlayerPosition());
+                return streamingSafe() ? PrivacyRedactor.MASK
+                        : LocalPlayerReadouts.chunkOrigin(PreloaderInput.readLocalPlayerPosition());
             case "hud_speedometer":
             case "move_speed_display":
                 return LocalPlayerReadouts.speed(lastSpeed);
@@ -371,9 +387,13 @@ public final class CatalogModuleRuntime {
         if (position == null || position.length < 3) return null;
         java.util.List<ReachIndicator.VoicePeerPosition> peers = PeerPositions.read();
         if (peers.isEmpty()) return null;
+        // Streaming-safe mode masks the peer's name too (item 277): the target line is drawn over
+        // the game, so a name on it would be captured even though the exported log is redacted.
+        boolean maskNames = streamingSafe();
         java.util.List<PeerTargets.Peer> converted = new java.util.ArrayList<>(peers.size());
         for (ReachIndicator.VoicePeerPosition peer : peers) {
-            converted.add(new PeerTargets.Peer(peer.id, peer.name, peer.x, peer.y, peer.z));
+            String name = maskNames ? PrivacyRedactor.MASK : peer.name;
+            converted.add(new PeerTargets.Peer(peer.id, name, peer.x, peer.y, peer.z));
         }
         return PeerTargets.describe(PeerTargets.nearest(position, converted));
     }

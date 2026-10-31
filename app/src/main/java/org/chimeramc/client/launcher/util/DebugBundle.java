@@ -34,13 +34,28 @@ public final class DebugBundle {
      * @param fullLog   the whole launch log, or null when unavailable
      */
     public static String compose(String report, String fullLog) {
+        return compose(report, fullLog, false);
+    }
+
+    /**
+     * Composes the bundle, optionally applying the streaming-safe masks (item 277).
+     *
+     * <p>With {@code streamingSafe} the report and the log also lose world coordinates and server
+     * addresses, on top of the always-on credential redaction. The mask is applied last so a
+     * coordinate that appears inside a line already redacted for a token is still covered.
+     */
+    public static String compose(String report, String fullLog, boolean streamingSafe) {
         StringBuilder sb = new StringBuilder();
         sb.append(report != null ? report : "(no diagnostics report)");
         sb.append("\nRecent log (last ").append(MAX_LOG_LINES).append(" lines):\n");
         String tail = tail(fullLog, MAX_LOG_LINES);
         sb.append(tail.isEmpty() ? "  (no log available)" : redact(tail));
         sb.append("\n");
-        return sb.toString();
+        String out = sb.toString();
+        if (streamingSafe) {
+            out = org.chimeramc.client.core.privacy.PrivacyRedactor.everything(out);
+        }
+        return out;
     }
 
     /**

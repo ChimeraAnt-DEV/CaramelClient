@@ -144,7 +144,7 @@ public class LauncherTabTest {
                 LauncherTab.visibleTabs(org.chimeramc.client.core.privacy.PrivacyMode.open()).length);
 
         LauncherTab[] guest = LauncherTab.visibleTabs(
-                new org.chimeramc.client.core.privacy.PrivacyMode(true));
+                new org.chimeramc.client.core.privacy.PrivacyMode(true, false));
         assertEquals(LauncherTab.values().length - 1, guest.length);
         for (LauncherTab tab : guest) {
             assertFalse(tab.hiddenInGuestMode());
@@ -156,7 +156,9 @@ public class LauncherTabTest {
         }
         assertTrue(hasLaunch);
 
-        // An absent mode (a caller that could not read the preference) removes nothing.
+        // Streaming-safe mode alone does not remove a destination.
+        assertEquals(LauncherTab.values().length, LauncherTab.visibleTabs(
+                new org.chimeramc.client.core.privacy.PrivacyMode(false, true)).length);
         assertEquals(LauncherTab.values().length, LauncherTab.visibleTabs(null).length);
     }
 

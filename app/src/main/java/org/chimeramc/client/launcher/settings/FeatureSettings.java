@@ -22,6 +22,12 @@ public class FeatureSettings {
     private boolean guestModeEnabled = false;
 
     /**
+     * Streaming-safe mode (item 277): mask account names, coordinates and server addresses in
+     * overlays and in any text that leaves the app.
+     */
+    private boolean streamingSafeModeEnabled = false;
+
+    /**
      * The top-level destination the user was last on, by {@code LauncherTab} name (item 77).
      *
      * <p>Stored as the enum's name, not its view id: an id is a generated resource number that a
@@ -207,6 +213,9 @@ public class FeatureSettings {
 
     public boolean isGuestModeEnabled() { return guestModeEnabled; }
     public void setGuestModeEnabled(boolean enabled) { this.guestModeEnabled = enabled; autoSave(); }
+
+    public boolean isStreamingSafeModeEnabled() { return streamingSafeModeEnabled; }
+    public void setStreamingSafeModeEnabled(boolean enabled) { this.streamingSafeModeEnabled = enabled; autoSave(); }
 
     public boolean isReduceNetworkLatencyEnabled() { return reduceNetworkLatencyEnabled; }
     public void setReduceNetworkLatencyEnabled(boolean enabled) {

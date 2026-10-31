@@ -179,7 +179,9 @@ public class DiagnosticsActivity extends BaseActivity {
             AppLog.warn(TAG, "Reading the launch log for the debug bundle failed", t);
             log = null;
         }
-        return org.chimeramc.client.launcher.util.DebugBundle.compose(buildReport(), log);
+        boolean streamingSafe = org.chimeramc.client.core.privacy.PrivacyModes.current(this)
+                .isStreamingSafeMode();
+        return org.chimeramc.client.launcher.util.DebugBundle.compose(buildReport(), log, streamingSafe);
     }
 
     private void copyDebugInfo() {

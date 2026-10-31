@@ -174,7 +174,9 @@
     "instance_storage_cleared": "Caché borrada (%1$s liberados)",
     "instance_storage_clear_failed": "No se pudo borrar la caché: %1$s",
     "guest_mode_title": "Modo invitado",
-    "guest_mode_desc": "Oculta mods, servidores y chat de voz en un dispositivo compartido o prestado. No se elimina nada y el juego sigue iniciándose; desactívalo para volver a verlos."
+    "guest_mode_desc": "Oculta mods, servidores y chat de voz en un dispositivo compartido o prestado. No se elimina nada y el juego sigue iniciándose; desactívalo para volver a verlos.",
+    "streaming_safe_title": "Modo seguro para transmisiones",
+    "streaming_safe_desc": "Oculta nombres de cuenta, coordenadas del mundo y direcciones de servidores en las superposiciones y en la información de depuración copiada, para que una transmisión o una captura no revele dónde ni quién eres."
   },
   "fr": {
     "nav_back": "Retour",
@@ -351,7 +353,9 @@
     "instance_storage_cleared": "Cache vidé (%1$s libérés)",
     "instance_storage_clear_failed": "Impossible de vider le cache : %1$s",
     "guest_mode_title": "Mode invité",
-    "guest_mode_desc": "Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir."
+    "guest_mode_desc": "Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir.",
+    "streaming_safe_title": "Mode diffusion sécurisée",
+    "streaming_safe_desc": "Masque les noms de compte, les coordonnées du monde et les adresses de serveur dans les superpositions et les infos de débogage copiées, pour qu'une diffusion ou une capture ne révèle ni où ni qui vous êtes."
   },
   "hi": {
     "nav_back": "वापस",
@@ -528,7 +532,9 @@
     "instance_storage_cleared": "कैश साफ़ हुआ (%1$s मुक्त)",
     "instance_storage_clear_failed": "कैश साफ़ नहीं हो सका: %1$s",
     "guest_mode_title": "अतिथि मोड",
-    "guest_mode_desc": "साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।"
+    "guest_mode_desc": "साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।",
+    "streaming_safe_title": "स्ट्रीमिंग-सुरक्षित मोड",
+    "streaming_safe_desc": "ओवरले और कॉपी किए गए डीबग विवरण में खाता नाम, विश्व निर्देशांक और सर्वर पते छिपाता है, ताकि स्ट्रीम या स्क्रीनशॉट से यह पता न चले कि आप कहाँ या कौन हैं।"
   },
   "id": {
     "nav_back": "Kembali",
@@ -705,7 +711,9 @@
     "instance_storage_cleared": "Cache dihapus (%1$s dibebaskan)",
     "instance_storage_clear_failed": "Tidak bisa menghapus cache: %1$s",
     "guest_mode_title": "Mode tamu",
-    "guest_mode_desc": "Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi."
+    "guest_mode_desc": "Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi.",
+    "streaming_safe_title": "Mode aman streaming",
+    "streaming_safe_desc": "Menyamarkan nama akun, koordinat dunia, dan alamat server di overlay dan info debug yang disalin, agar siaran atau tangkapan layar tidak mengungkap di mana atau siapa Anda."
   },
   "ja": {
     "nav_back": "戻る",
@@ -882,7 +890,9 @@
     "instance_storage_cleared": "キャッシュを削除しました（%1$s 解放）",
     "instance_storage_clear_failed": "キャッシュを削除できません: %1$s",
     "guest_mode_title": "ゲストモード",
-    "guest_mode_desc": "共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。"
+    "guest_mode_desc": "共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。",
+    "streaming_safe_title": "配信セーフモード",
+    "streaming_safe_desc": "オーバーレイやコピーしたデバッグ情報のアカウント名、座標、サーバーアドレスを隠し、配信やスクリーンショットであなたの居場所や身元が分からないようにします。"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -1059,7 +1069,9 @@
     "instance_storage_cleared": "Cache limpo (%1$s liberados)",
     "instance_storage_clear_failed": "Não foi possível limpar o cache: %1$s",
     "guest_mode_title": "Modo convidado",
-    "guest_mode_desc": "Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente."
+    "guest_mode_desc": "Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente.",
+    "streaming_safe_title": "Modo seguro para transmissão",
+    "streaming_safe_desc": "Oculta nomes de conta, coordenadas do mundo e endereços de servidor nas sobreposições e nas informações de depuração copiadas, para que uma transmissão ou captura não revele onde ou quem você é."
   },
   "ru": {
     "nav_back": "Назад",
@@ -1236,7 +1248,9 @@
     "instance_storage_cleared": "Кэш очищен (освобождено %1$s)",
     "instance_storage_clear_failed": "Не удалось очистить кэш: %1$s",
     "guest_mode_title": "Гостевой режим",
-    "guest_mode_desc": "Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть."
+    "guest_mode_desc": "Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть.",
+    "streaming_safe_title": "Безопасный режим для стрима",
+    "streaming_safe_desc": "Скрывает имена аккаунтов, координаты мира и адреса серверов в оверлеях и скопированной отладочной информации, чтобы стрим или скриншот не выдал, где вы и кто вы."
   },
   "tr": {
     "nav_back": "Geri",
@@ -1413,7 +1427,9 @@
     "instance_storage_cleared": "Önbellek temizlendi (%1$s boşaltıldı)",
     "instance_storage_clear_failed": "Önbellek temizlenemedi: %1$s",
     "guest_mode_title": "Misafir modu",
-    "guest_mode_desc": "Paylaşılan veya ödünç alınan bir cihazda modları, sunucuları ve sesli sohbeti gizler. Hiçbir şey silinmez ve oyun yine başlar; tekrar görmek için kapatın."
+    "guest_mode_desc": "Paylaşılan veya ödünç alınan bir cihazda modları, sunucuları ve sesli sohbeti gizler. Hiçbir şey silinmez ve oyun yine başlar; tekrar görmek için kapatın.",
+    "streaming_safe_title": "Yayın güvenli modu",
+    "streaming_safe_desc": "Kaplamalarda ve kopyalanan hata ayıklama bilgilerinde hesap adlarını, dünya koordinatlarını ve sunucu adreslerini gizler; böylece bir yayın veya ekran görüntüsü nerede ve kim olduğunuzu açığa çıkarmaz."
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1590,7 +1606,9 @@
     "instance_storage_cleared": "Đã xóa bộ nhớ đệm (giải phóng %1$s)",
     "instance_storage_clear_failed": "Không xóa được bộ nhớ đệm: %1$s",
     "guest_mode_title": "Chế độ khách",
-    "guest_mode_desc": "Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng."
+    "guest_mode_desc": "Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng.",
+    "streaming_safe_title": "Chế độ an toàn khi phát trực tiếp",
+    "streaming_safe_desc": "Che tên tài khoản, tọa độ thế giới và địa chỉ máy chủ trong lớp phủ và thông tin gỡ lỗi đã sao chép, để buổi phát hoặc ảnh chụp không tiết lộ bạn ở đâu hay là ai."
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1767,6 +1785,8 @@
     "instance_storage_cleared": "缓存已清除（释放 %1$s）",
     "instance_storage_clear_failed": "无法清除缓存：%1$s",
     "guest_mode_title": "访客模式",
-    "guest_mode_desc": "在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。"
+    "guest_mode_desc": "在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。",
+    "streaming_safe_title": "直播安全模式",
+    "streaming_safe_desc": "在悬浮层和复制的调试信息中遮蔽账户名、世界坐标和服务器地址，让直播或截图不会泄露你在哪里或你是谁。"
   }
 }

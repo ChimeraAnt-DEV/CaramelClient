@@ -1191,4 +1191,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="instance_storage_clear_failed">Tidak bisa menghapus cache: %1$s</string>
     <string name="guest_mode_title">Mode tamu</string>
     <string name="guest_mode_desc">Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi.</string>
+    <string name="streaming_safe_title">Mode aman streaming</string>
+    <string name="streaming_safe_desc">Menyamarkan nama akun, koordinat dunia, dan alamat server di overlay dan info debug yang disalin, agar siaran atau tangkapan layar tidak mengungkap di mana atau siapa Anda.</string>
 </resources>

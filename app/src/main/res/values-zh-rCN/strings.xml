@@ -1188,4 +1188,6 @@
     <string name="instance_storage_clear_failed">无法清除缓存：%1$s</string>
     <string name="guest_mode_title">访客模式</string>
     <string name="guest_mode_desc">在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。</string>
+    <string name="streaming_safe_title">直播安全模式</string>
+    <string name="streaming_safe_desc">在悬浮层和复制的调试信息中遮蔽账户名、世界坐标和服务器地址，让直播或截图不会泄露你在哪里或你是谁。</string>
 </resources>

@@ -1167,4 +1167,6 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="instance_storage_clear_failed">Não foi possível limpar o cache: %1$s</string>
     <string name="guest_mode_title">Modo convidado</string>
     <string name="guest_mode_desc">Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente.</string>
+    <string name="streaming_safe_title">Modo seguro para transmissão</string>
+    <string name="streaming_safe_desc">Oculta nomes de conta, coordenadas do mundo e endereços de servidor nas sobreposições e nas informações de depuração copiadas, para que uma transmissão ou captura não revele onde ou quem você é.</string>
 </resources>

@@ -99,6 +99,34 @@ public class DebugScreenTextTest {
     }
 
     @Test
+    public void streamingSafeModeHidesPositionButKeepsTheFrameRate() {
+        // Item 277: the position, block, chunk and facing lines are masked, because they are what
+        // gives away where the player is. The frame rate and the version stay, because a debug
+        // screenshot a maintainer is reading still needs them.
+        DebugScreenText.Snapshot s = full();
+        s.streamingSafe = true;
+        String text = DebugScreenText.build(s);
+        assertTrue(text, text.contains("XYZ: [hidden]"));
+        assertTrue(text, text.contains("Block: [hidden]"));
+        assertTrue(text, text.contains("Chunk: [hidden]"));
+        assertTrue(text, text.contains("Facing: [hidden]"));
+        assertFalse(text, text.contains("10.5"));
+        assertFalse(text, text.contains("-20.2"));
+        // Non-identifying lines are untouched.
+        assertTrue(text, text.contains("FPS: 60"));
+        assertTrue(text, text.contains("1.26.33.1"));
+        assertTrue(text, text.contains("Memory: 220 / 512 MB"));
+    }
+
+    @Test
+    public void withoutStreamingSafeThePositionIsShown() {
+        DebugScreenText.Snapshot s = full();
+        String text = DebugScreenText.build(s);
+        assertFalse(text, text.contains("[hidden]"));
+        assertTrue(text, text.contains("10.5"));
+    }
+
+    @Test
     public void microsFormattingMatchesTheDiagnosticsReport() {
         assertEquals("500 us", DebugScreenText.formatMicros(500));
         assertEquals("16.7 ms", DebugScreenText.formatMicros(16700));

@@ -1198,4 +1198,6 @@
     <string name="instance_storage_clear_failed">Не удалось очистить кэш: %1$s</string>
     <string name="guest_mode_title">Гостевой режим</string>
     <string name="guest_mode_desc">Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть.</string>
+    <string name="streaming_safe_title">Безопасный режим для стрима</string>
+    <string name="streaming_safe_desc">Скрывает имена аккаунтов, координаты мира и адреса серверов в оверлеях и скопированной отладочной информации, чтобы стрим или скриншот не выдал, где вы и кто вы.</string>
 </resources>
