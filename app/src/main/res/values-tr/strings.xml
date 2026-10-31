@@ -802,6 +802,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_config_zoom_level_percent" formatted="false">Yakınlaştırma seviyesi (%)</string>
     <string name="mod_config_auto_sprint_keybind">Otomatik koşu tuş ataması</string>
     <string name="mod_config_zoom_keybind">Yakınlaştırma tuş ataması</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">Kaydırma Hassasiyeti (%)</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">Kaydırma Yumuşatma (%)</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">Atamak için herhangi bir tuşa basın...</string>
     <string name="mod_config_key_unknown">BİLİNMİYOR</string>
     <string name="mod_config_color_alpha_short">A</string>

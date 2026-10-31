@@ -772,6 +772,9 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_config_zoom_level_percent" formatted="false">ज़ूम स्तर (%)</string>
     <string name="mod_config_auto_sprint_keybind">ऑटो स्प्रिंट कीबाइंड</string>
     <string name="mod_config_zoom_keybind">ज़ूम कीबाइंड</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">स्क्रॉल संवेदनशीलता (%)</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">स्क्रॉल स्मूदिंग (%)</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">बाइंड करने के लिए कोई भी कुंजी दबाएं...</string>
     <string name="mod_config_key_unknown">अज्ञात</string>
     <string name="mod_config_color_alpha_short">A</string>

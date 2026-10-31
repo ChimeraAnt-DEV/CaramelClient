@@ -50,6 +50,8 @@ public class InbuiltModManager {
     private static final String KEY_ZOOM_LEVEL = "zoom_level";
     private static final String KEY_ZOOM_KEYBIND = "zoom_keybind";
     private static final String KEY_ZOOM_TRANSITION_DURATION = "zoom_transition_duration";
+    private static final String KEY_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
+    private static final String KEY_ZOOM_SMOOTHING = "zoom_smoothing";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
@@ -155,6 +157,12 @@ public class InbuiltModManager {
     private static final int MIN_MOD_MENU_OPACITY = 70;
     private static final int DEFAULT_ZOOM_LEVEL = 10;
     private static final int DEFAULT_ZOOM_TRANSITION_DURATION = 150;
+    private static final int DEFAULT_ZOOM_SCROLL_SENSITIVITY = 100;
+    private static final int DEFAULT_ZOOM_SMOOTHING = 0;
+    /** Bounds for the zoom scroll knobs (item 192); the smoothing cap stays below 100. */
+    public static final int MIN_ZOOM_SCROLL_SENSITIVITY = 10;
+    public static final int MAX_ZOOM_SCROLL_SENSITIVITY = 300;
+    public static final int MAX_ZOOM_SMOOTHING = 90;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
     private static final int DEFAULT_GYRO_SENSITIVITY = 100;
     private static final int DEFAULT_GYRO_DEADZONE = 5;
@@ -589,6 +597,31 @@ public class InbuiltModManager {
 
     public void setZoomTransitionDuration(int duration) {
         prefs.edit().putInt(KEY_ZOOM_TRANSITION_DURATION, Math.max(0, Math.min(1000, duration))).apply();
+    }
+
+    /** How far one scroll notch moves the zoom, as a percentage of the default (item 192). */
+    public int getZoomScrollSensitivity() {
+        return prefs.getInt(KEY_ZOOM_SCROLL_SENSITIVITY, DEFAULT_ZOOM_SCROLL_SENSITIVITY);
+    }
+
+    public void setZoomScrollSensitivity(int percent) {
+        prefs.edit().putInt(KEY_ZOOM_SCROLL_SENSITIVITY,
+                Math.max(MIN_ZOOM_SCROLL_SENSITIVITY, Math.min(MAX_ZOOM_SCROLL_SENSITIVITY, percent))).apply();
+    }
+
+    /**
+     * How much the scroll zoom is smoothed, 0..90 (item 192).
+     *
+     * <p>A higher value keeps more of the previous frame's zoom, so a coarse wheel notch eases in
+     * rather than stepping. Bounded below 100 so the zoom can always reach its target.
+     */
+    public int getZoomSmoothing() {
+        return prefs.getInt(KEY_ZOOM_SMOOTHING, DEFAULT_ZOOM_SMOOTHING);
+    }
+
+    public void setZoomSmoothing(int percent) {
+        prefs.edit().putInt(KEY_ZOOM_SMOOTHING,
+                Math.max(0, Math.min(MAX_ZOOM_SMOOTHING, percent))).apply();
     }
 
     public int getCursorSensitivity() {

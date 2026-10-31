@@ -1193,6 +1193,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_config_zoom_level_percent" formatted="false">Zoom Level (%)</string>
     <string name="mod_config_auto_sprint_keybind">Auto Sprint Keybind</string>
     <string name="mod_config_zoom_keybind">Zoom Keybind</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">Scroll Sensitivity (%)</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">Scroll Smoothing (%)</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_zoom_transition">Transition Duration (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Horizontal Sensitivity (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Vertical Sensitivity (%)</string>

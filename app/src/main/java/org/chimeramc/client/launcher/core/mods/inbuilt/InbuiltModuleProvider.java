@@ -36,6 +36,8 @@ public final class InbuiltModuleProvider {
     private static final String CFG_ZOOM_LEVEL = "zoom_level";
     private static final String CFG_ZOOM_TRANSITION = "zoom_transition";
     private static final String CFG_ZOOM_KEYBIND = "zoom_keybind";
+    private static final String CFG_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
+    private static final String CFG_ZOOM_SMOOTHING = "zoom_smoothing";
     private static final String CFG_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String CFG_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String CFG_GYRO_INVERT_X = "gyro_invert_x";
@@ -1066,6 +1068,19 @@ public final class InbuiltModuleProvider {
                     UnifiedMod.ConfigType.KEYBIND,
                     "", "", "",
                     String.valueOf(manager.getZoomKeybind())));
+            configs.add(config(CFG_ZOOM_SCROLL_SENSITIVITY,
+                    context.getString(R.string.mod_config_zoom_scroll_sensitivity),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    String.valueOf(100),
+                    String.valueOf(InbuiltModManager.MIN_ZOOM_SCROLL_SENSITIVITY),
+                    String.valueOf(InbuiltModManager.MAX_ZOOM_SCROLL_SENSITIVITY),
+                    String.valueOf(manager.getZoomScrollSensitivity())));
+            configs.add(config(CFG_ZOOM_SMOOTHING,
+                    context.getString(R.string.mod_config_zoom_smoothing),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    "0", "0",
+                    String.valueOf(InbuiltModManager.MAX_ZOOM_SMOOTHING),
+                    String.valueOf(manager.getZoomSmoothing())));
         } else if (ModIds.GYRO.equals(modId)) {
             configs.add(config(CFG_GYRO_SENSITIVITY_X,
                     context.getString(R.string.mod_config_gyro_sensitivity_x),
@@ -1425,6 +1440,12 @@ public final class InbuiltModuleProvider {
                 break;
             case CFG_ZOOM_KEYBIND:
                 manager.setZoomKeybind(parseInt(value, manager.getZoomKeybind()));
+                break;
+            case CFG_ZOOM_SCROLL_SENSITIVITY:
+                manager.setZoomScrollSensitivity(parseInt(value, manager.getZoomScrollSensitivity()));
+                break;
+            case CFG_ZOOM_SMOOTHING:
+                manager.setZoomSmoothing(parseInt(value, manager.getZoomSmoothing()));
                 break;
             case CFG_GYRO_SENSITIVITY_X:
                 manager.setGyroSensitivityX(parseInt(value, manager.getGyroSensitivityX()));

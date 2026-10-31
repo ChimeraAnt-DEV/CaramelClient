@@ -744,6 +744,9 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_config_zoom_level_percent" formatted="false">Niveau de zoom (%)</string>
     <string name="mod_config_auto_sprint_keybind">Touche de sprint automatique</string>
     <string name="mod_config_zoom_keybind">Touche de zoom</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">Sensibilité de défilement (%)</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">Lissage du défilement (%)</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">Appuyez sur une touche pour associer...</string>
     <string name="mod_config_key_unknown">INCONNU</string>
     <string name="mod_config_color_alpha_short">A</string>

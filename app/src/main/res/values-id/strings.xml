@@ -768,6 +768,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_config_zoom_level_percent" formatted="false">Level Zoom (%)</string>
     <string name="mod_config_auto_sprint_keybind">Keybind Sprint Otomatis</string>
     <string name="mod_config_zoom_keybind">Keybind Zoom</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">Sensitivitas Gulir (%)</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">Penghalusan Gulir (%)</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">Tekan tombol apa saja untuk mengikat...</string>
     <string name="mod_config_key_unknown">TIDAK DIKETAHUI</string>
     <string name="mod_config_color_alpha_short">A</string>

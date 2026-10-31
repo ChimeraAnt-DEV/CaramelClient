@@ -580,6 +580,9 @@
     <string name="mod_config_zoom_level_percent" formatted="false">缩放级别（%）</string>
     <string name="mod_config_auto_sprint_keybind">自动疾跑按键绑定</string>
     <string name="mod_config_zoom_keybind">缩放按键绑定</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">滚轮灵敏度（%）</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">滚轮平滑（%）</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">按任意键完成绑定...</string>
     <string name="mod_config_key_unknown">未知</string>
     <string name="mod_config_color_alpha_short">A</string>

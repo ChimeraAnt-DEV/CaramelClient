@@ -741,6 +741,9 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_config_zoom_level_percent" formatted="false">ズームレベル (%)</string>
     <string name="mod_config_auto_sprint_keybind">オートスプリントのキー割り当て</string>
     <string name="mod_config_zoom_keybind">ズームのキー割り当て</string>
+    <string name="mod_config_zoom_scroll_sensitivity" formatted="false">スクロール感度（%）</string>
+    <string name="mod_config_zoom_smoothing" formatted="false">スクロール平滑化（%）</string>
+    <string name="mod_overlay_zoom_level" formatted="false">%1$.1fx</string>
     <string name="mod_config_press_any_key">割り当てるキーを押してください...</string>
     <string name="mod_config_key_unknown">不明</string>
     <string name="mod_config_color_alpha_short">A</string>

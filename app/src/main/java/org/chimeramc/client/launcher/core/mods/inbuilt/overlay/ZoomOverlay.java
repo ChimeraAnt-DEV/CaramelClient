@@ -3,7 +3,10 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
@@ -15,6 +18,9 @@ public class ZoomOverlay extends BaseOverlayButton {
     private boolean isZooming = false;
     private boolean initialized = false;
     private final Handler handler = MainThread.handler();
+    private final ZoomScrollFilter scrollFilter = new ZoomScrollFilter();
+    private ImageView iconView;
+    private TextView levelView;
 
     public ZoomOverlay(Activity activity) {
         super(activity);
@@ -28,6 +34,18 @@ public class ZoomOverlay extends BaseOverlayButton {
     @Override
     protected int getIconResource() {
         return isZooming ? R.drawable.ic_zoom_pressed : R.drawable.ic_zoom_normal;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.overlay_zoom_button;
+    }
+
+    @Override
+    protected void configureOverlayView(View view) {
+        iconView = view.findViewById(R.id.zoom_icon);
+        levelView = view.findViewById(R.id.zoom_level);
+        updateZoomLevelLabel();
     }
 
     @Override
@@ -76,6 +94,7 @@ public class ZoomOverlay extends BaseOverlayButton {
         if (isZooming) return;
         
         isZooming = true;
+        scrollFilter.reset();
         applyZoomLevel();
         ZoomMod.nativeOnKeyDown();
         updateButtonState(true);
@@ -107,23 +126,46 @@ public class ZoomOverlay extends BaseOverlayButton {
     }
 
     private void updateButtonState(boolean active) {
-        if (overlayView instanceof ImageButton) {
+        float userOpacity = getButtonOpacity();
+        if (iconView != null) {
+            iconView.setAlpha(userOpacity);
+            iconView.setImageResource(active ? R.drawable.ic_zoom_pressed : R.drawable.ic_zoom_normal);
+        } else if (overlayView instanceof ImageButton) {
             ImageButton btn = (ImageButton) overlayView;
-            float userOpacity = getButtonOpacity();
             btn.setAlpha(userOpacity);
             btn.setImageResource(active ? R.drawable.ic_zoom_pressed : R.drawable.ic_zoom_normal);
         }
     }
 
+    /** Prints the current zoom level beside the icon (item 192). */
+    private void updateZoomLevelLabel() {
+        if (levelView == null) return;
+        levelView.setText(zoomLevelText());
+    }
+
+    /**
+     * The zoom as a multiplier: the configured percentage maps the field of view onto a factor, so
+     * "0%" is 1.0x and a larger percentage zooms further in. Kept in one place so the overlay's
+     * label and any future readout cannot disagree.
+     */
+    private String zoomLevelText() {
+        int percent = InbuiltModManager.getInstance(activity).getZoomLevel();
+        float factor = 1f + Math.max(0, percent) / 50f;
+        return activity.getString(R.string.mod_overlay_zoom_level, factor);
+    }
+
     public void onScroll(float delta) {
-        if (initialized && isZooming) {
-            ZoomMod.nativeOnScroll(delta);
-        }
+        if (!initialized || !isZooming) return;
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        ZoomMod.nativeOnScroll(scrollFilter.apply(
+                delta, manager.getZoomScrollSensitivity(), manager.getZoomSmoothing()));
     }
 
     @Override
     public void hide() {
         handler.removeCallbacksAndMessages(null);
+        iconView = null;
+        levelView = null;
         if (isZooming && initialized) {
             ZoomMod.nativeOnKeyUp();
             isZooming = false;
@@ -138,6 +180,7 @@ public class ZoomOverlay extends BaseOverlayButton {
     @Override
     public void applyConfigurationChanges() {
         super.applyConfigurationChanges();
+        updateZoomLevelLabel();
         if (initialized) {
             applyZoomLevel();
         }
