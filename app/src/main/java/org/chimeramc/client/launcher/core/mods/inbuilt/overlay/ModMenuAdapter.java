@@ -55,6 +55,13 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String reorderSectionId;
     /** Per-module row state, from the registry (M10). Absent means "derive from availability". */
     private final Map<String, ModMenuRowState> rowStates = new HashMap<>();
+    /**
+     * The row states the visible rows were last bound with (item 202).
+     *
+     * <p>Distinct from {@link #rowStates}, which is what the next bind will use: the diff needs both
+     * sides to notice a module the crash guard disabled without the user's toggle changing.
+     */
+    private final Map<String, ModMenuRowState> boundRowStates = new HashMap<>();
     /** The index a controller has moved the selection to, or NONE. -1 because position 0 is valid. */
     private int controllerFocus = ModMenuNavigation.NONE;
     private RecyclerView recycler;
@@ -394,6 +401,9 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         items.clear();
         toggleStates.clear();
         favoriteStates.clear();
+        // Every row is re-created on the next bind, so the bound snapshot is meaningless; clear it
+        // or the next diff would compare against a list that no longer matches what is on screen.
+        boundRowStates.clear();
         if (getItemCount() > 0) {
             notifyItemRangeChanged(0, getItemCount());
         }
@@ -478,14 +488,24 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 String oldKey = oldItem.mod.getStableKey();
                 String newKey = newItem.mod.getStableKey();
-                return Objects.equals(oldItem.mod.getName(), newItem.mod.getName())
-                    && Objects.equals(oldItem.mod.getDescription(), newItem.mod.getDescription())
-                    && oldItem.mod.hasConfig() == newItem.mod.hasConfig()
-                    && oldItem.showGroupLabel == newItem.showGroupLabel
-                    && oldToggleStates.getOrDefault(oldKey, false)
-                        .equals(nextToggleStates.getOrDefault(newKey, false))
-                    && oldFavoriteStates.getOrDefault(oldKey, false)
-                        .equals(nextFavoriteStates.getOrDefault(newKey, false));
+                boolean oldEnabled = oldToggleStates.getOrDefault(oldKey, false);
+                boolean newEnabled = nextToggleStates.getOrDefault(newKey, false);
+                // The content rule lives in ModMenuRowContent so it is unit-tested; the row state is
+                // compared as "what the old row was bound with" against "what the new row will bind
+                // with", which is what catches a module the crash guard disabled without the user's
+                // toggle changing (item 202).
+                return ModMenuRowContent.sameContent(
+                        oldItem.mod.getName(), newItem.mod.getName(),
+                        oldItem.mod.getDescription(), newItem.mod.getDescription(),
+                        oldItem.mod.hasConfig(), newItem.mod.hasConfig(),
+                        oldItem.showGroupLabel, newItem.showGroupLabel,
+                        oldEnabled, newEnabled,
+                        ModMenuRowContent.resolve(boundRowStates, oldKey,
+                                ModAvailability.isInteractive(oldItem.mod.getId()), oldEnabled),
+                        ModMenuRowContent.resolve(rowStates, newKey,
+                                ModAvailability.isInteractive(newItem.mod.getId()), newEnabled),
+                        oldFavoriteStates.getOrDefault(oldKey, false),
+                        nextFavoriteStates.getOrDefault(newKey, false));
             }
         }, false);
 
@@ -497,6 +517,10 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         toggleStates.putAll(nextToggleStates);
         favoriteStates.clear();
         favoriteStates.putAll(nextFavoriteStates);
+        // The rows about to be bound use the current states; record them so the next diff compares
+        // against what is actually on screen rather than against itself (item 202).
+        boundRowStates.clear();
+        boundRowStates.putAll(rowStates);
         diff.dispatchUpdatesTo(this);
         // A filter change or a refresh renumbers every position, so the controller selection would
         // point at a different card than the one that was highlighted. Drop it rather than let the
@@ -877,6 +901,8 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (explicit != null) return explicit;
         return ModMenuRowState.of(true, available, false, enabled);
     }
+
+
 
     /**
      * Renders the failure surfacing for a row (M10).
