@@ -118,6 +118,19 @@ public class CapePreviewView extends View {
 
     /** Offscreen 2x supersample target; reallocated only when the view size changes. */
     private Bitmap frame;
+    /**
+     * The scene revision the cached {@link #frame} holds (item 204).
+     *
+     * <p>Rasterising the whole scene at 2x is the expensive part of a frame, and the view is
+     * invalidated for reasons that do not change it: a parent redraw, a focus change, a sibling's
+     * animation. Re-blitting the cached bitmap when the revision is unchanged skips that work
+     * without changing what is on screen. Bumped by {@link #markSceneDirty()} whenever anything the
+     * render reads changes.
+     */
+    private long sceneRevision;
+    private long renderedRevision = -1L;
+    /** Whether the hosting window is visible; a hidden window must not drive Choreographer frames. */
+    private boolean windowVisible = true;
 
     // --- Phase D: the software-rasterised scene ----------------------------------------------
     // The whole scene is drawn by the pure PreviewRaster/PreviewScene pipeline instead of Canvas: it
@@ -246,6 +259,7 @@ public class CapePreviewView extends View {
 
     public void setCape(CosmeticCatalog.Cape cape) {
         this.cape = cape;
+        markSceneDirty();
         if (cape != null) capeSim.reset(0f, 0f, 0f);
         rebuildCapeScene();
         syncAnimation();
@@ -254,6 +268,7 @@ public class CapePreviewView extends View {
 
     public void setAccessory(CosmeticCatalog.Accessory accessory) {
         this.accessory = accessory;
+        markSceneDirty();
         rebuildAccessoryMesh();
         rebuildAccessoryScene();
         syncAnimation();
@@ -306,6 +321,7 @@ public class CapePreviewView extends View {
 
     public void setPet(CosmeticCatalog.Pet pet) {
         this.pet = pet;
+        markSceneDirty();
         rebuildPetMesh();
         rebuildPetScene();
         syncAnimation();
@@ -354,6 +370,7 @@ public class CapePreviewView extends View {
     /** The gait the equipped pet is currently animating; the panel offers the ones it supports. */
     public void setPetLocomotion(CosmeticCatalog.PetLocomotion locomotion) {
         this.petLocomotion = PetPose.resolveGait(pet == null ? null : pet.species, locomotion);
+        markSceneDirty();
         rebuildPetScene();
         syncAnimation();
         invalidate();
@@ -430,6 +447,7 @@ public class CapePreviewView extends View {
         this.skin = resolved;
         rebuildFaceCrops();
         rebuildCharacterScene();
+        markSceneDirty();
         invalidate();
     }
 
@@ -492,6 +510,7 @@ public class CapePreviewView extends View {
         petAtlasLoaded = false;
         recycleOne(frame);
         frame = null;
+        renderedRevision = -1L;
         rebuildFaceCrops();
     }
 
@@ -508,8 +527,9 @@ public class CapePreviewView extends View {
     }
 
     private void syncAnimation() {
-        boolean want = DynamicAnim.areAnimationsEnabled() && getVisibility() == VISIBLE && attached
-                && (alwaysAnimate || pet != null || cape != null);
+        boolean want = PreviewRenderCache.wantsAnimation(
+                DynamicAnim.areAnimationsEnabled(), getVisibility() == VISIBLE, attached,
+                windowVisible, alwaysAnimate, pet != null || cape != null);
         if (want && !animating) {
             animating = true;
             lastFrameNanos = 0L;
@@ -526,8 +546,37 @@ public class CapePreviewView extends View {
         android.view.Choreographer.getInstance().removeFrameCallback(frameCallback);
     }
 
+    /**
+     * Records that the scene changed and must be rasterised again (item 204).
+     *
+     * <p>Called from every path that alters what the render reads: the animation step, a touch
+     * drag, a cosmetic change, a skin refresh and a size change. The counter only ever moves
+     * forward, so a stale frame can never be mistaken for the current one.
+     */
+    private void markSceneDirty() {
+        sceneRevision++;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // The internal target is derived from the view size, so a resize invalidates the cache.
+        markSceneDirty();
+        renderedRevision = -1L;
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        // A window that is not visible (the activity stopped, another window covers it) must not
+        // keep driving Choreographer frames; the animation restarts when the window returns.
+        windowVisible = visibility == VISIBLE;
+        syncAnimation();
+    }
+
     private void advance(float dt) {
         if (!DynamicAnim.areAnimationsEnabled()) return;
+        markSceneDirty();
         if (!userRotating) {
             // A flick keeps spinning for a moment, then settles back to the slow idle turn.
             if (Math.abs(spinVelocity) > 1f) {
@@ -608,6 +657,7 @@ public class CapePreviewView extends View {
                 spinVelocity = -(dx * 0.6f) / (dtMs / 1000f);
                 lastTouchX = event.getX();
                 lastTouchMs = event.getEventTime();
+                markSceneDirty();
                 invalidate();
                 return true;
             }
@@ -643,17 +693,24 @@ public class CapePreviewView extends View {
                 // No offscreen target could be allocated: draw nothing rather than a broken half-frame.
                 return;
             }
-            // Background: transparent, so the glass panel behind the preview shows through.
-            raster.prepare(internalW, internalH, 0x00000000);
-            if (camera == null) {
-                camera = new SkinModel.Camera(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
-            } else {
-                // Re-target rather than rebuild: the constructor recomputes six trig values and
-                // this runs every frame while the preview is animating (item 17).
-                camera.set(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
+            // Item 204: rasterise only when the scene actually changed. A redraw caused by a parent
+            // or a sibling does not alter this scene, and re-rasterising at 2x for it is pure waste;
+            // the cached bitmap is re-blitted instead. `renderedRevision` is only set after a
+            // successful full render, so a failed frame is retried rather than frozen.
+            if (PreviewRenderCache.shouldRasterise(renderedRevision, sceneRevision)) {
+                // Background: transparent, so the glass panel behind the preview shows through.
+                raster.prepare(internalW, internalH, 0x00000000);
+                if (camera == null) {
+                    camera = new SkinModel.Camera(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
+                } else {
+                    // Re-target rather than rebuild: the constructor recomputes six trig values and
+                    // this runs every frame while the preview is animating (item 17).
+                    camera.set(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
+                }
+                renderScene(camera, internalW, internalH);
+                target.setPixels(raster.pixels(), 0, internalW, 0, 0, internalW, internalH);
+                renderedRevision = sceneRevision;
             }
-            renderScene(camera, internalW, internalH);
-            target.setPixels(raster.pixels(), 0, internalW, 0, 0, internalW, internalH);
             if (!drewFirstFrame) {
                 drewFirstFrame = true;
                 Runnable callback = onFirstFrame;
