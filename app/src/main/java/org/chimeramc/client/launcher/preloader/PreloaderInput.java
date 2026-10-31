@@ -40,20 +40,12 @@ public class PreloaderInput {
     }
 
     private static native int nativeAbiVersion();
-    private static final int[] MOUSE_BUTTONS = {
-            MotionEvent.BUTTON_PRIMARY,
-            MotionEvent.BUTTON_SECONDARY,
-            MotionEvent.BUTTON_TERTIARY,
-            MotionEvent.BUTTON_BACK,
-            MotionEvent.BUTTON_FORWARD,
-            MotionEvent.BUTTON_STYLUS_PRIMARY,
-            MotionEvent.BUTTON_STYLUS_SECONDARY
-    };
-
-    private static int mouseButtonsDown;
-    private static int blockedMouseButtons;
-    private static int lastConsumedMouseTransitions;
-    private static boolean blockedMousePointerStream;
+    // The mouse button state machine lives in PreloaderMouseState so its rules are unit-testable
+    // without a native library; the native declarations have to stay on this class, because a JNI
+    // symbol resolves from the declaring class (item 215).
+    private static final PreloaderMouseState MOUSE_STATE = new PreloaderMouseState();
+    /** Scratch for the per-event button diff, reused so the dispatch path allocates nothing. */
+    private static final int[] MOUSE_DIFF = new int[2];
 
     public static native boolean nativeOnTouch(int action, int pointerId, float x, float y);
     public static native boolean nativeOnKeyEvent(int keyCode, int unicodeChar, boolean isKeyDown);
@@ -1002,39 +994,19 @@ public class PreloaderInput {
     }
 
     private static boolean dispatchMouseTransition(int button, boolean isDown) {
-        boolean alreadyDown = (mouseButtonsDown & button) != 0;
+        // A duplicate transition (the same state as tracked) must not reach the native side, so the
+        // state machine decides that before the call.
+        boolean alreadyDown = (MOUSE_STATE.buttonsDown() & button) != 0;
         if (alreadyDown == isDown) {
-            return (lastConsumedMouseTransitions & button) != 0;
+            return MOUSE_STATE.lastTransitionConsumed(button);
         }
-
         boolean consumed;
         try {
             consumed = nativeOnMouse(button, isDown);
         } catch (UnsatisfiedLinkError e) {
             consumed = false;
         }
-
-        if (isDown) {
-            mouseButtonsDown |= button;
-            if (consumed) {
-                blockedMouseButtons |= button;
-                lastConsumedMouseTransitions |= button;
-            } else {
-                blockedMouseButtons &= ~button;
-                lastConsumedMouseTransitions &= ~button;
-            }
-            return consumed;
-        }
-
-        boolean effectiveConsumed = consumed || (blockedMouseButtons & button) != 0;
-        mouseButtonsDown &= ~button;
-        blockedMouseButtons &= ~button;
-        if (effectiveConsumed) {
-            lastConsumedMouseTransitions |= button;
-        } else {
-            lastConsumedMouseTransitions &= ~button;
-        }
-        return effectiveConsumed;
+        return MOUSE_STATE.transition(button, isDown, consumed);
     }
 
     public static synchronized boolean onMouse(int button, boolean isDown) {
@@ -1059,59 +1031,57 @@ public class PreloaderInput {
             normalizedButtonState = 0;
         }
 
-        int pressedButtons = normalizedButtonState & ~mouseButtonsDown;
-        int releasedButtons = mouseButtonsDown & ~normalizedButtonState;
-        int blockedBeforeTransitions = blockedMouseButtons;
+        MOUSE_STATE.diff(normalizedButtonState, MOUSE_DIFF);
+        int pressedButtons = MOUSE_DIFF[0];
+        int releasedButtons = MOUSE_DIFF[1];
+        int blockedBeforeTransitions = MOUSE_STATE.blockedButtons();
         boolean transitionConsumed = false;
 
-        for (int button : MOUSE_BUTTONS) {
+        for (int button : PreloaderMouseState.buttons()) {
             if ((pressedButtons & button) != 0) {
                 transitionConsumed |= dispatchMouseTransition(button, true);
             }
         }
-        for (int button : MOUSE_BUTTONS) {
+        for (int button : PreloaderMouseState.buttons()) {
             if ((releasedButtons & button) != 0) {
                 transitionConsumed |= dispatchMouseTransition(button, false);
             }
         }
 
-        boolean blockedButtonActive = (normalizedButtonState & blockedMouseButtons) != 0;
+        boolean blockedButtonActive = (normalizedButtonState & MOUSE_STATE.blockedButtons()) != 0;
         boolean duplicateTransitionConsumed = actionButton != 0 &&
-                (lastConsumedMouseTransitions & actionButton) != 0;
+                MOUSE_STATE.lastTransitionConsumed(actionButton);
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_BUTTON_PRESS:
                 if (transitionConsumed || blockedButtonActive || duplicateTransitionConsumed) {
-                    blockedMousePointerStream = true;
+                    MOUSE_STATE.setBlockedPointerStream(true);
                 }
-                return blockedMousePointerStream;
+                return MOUSE_STATE.blockedPointerStream();
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_HOVER_MOVE:
-                return blockedMousePointerStream || blockedButtonActive;
+                return MOUSE_STATE.blockedPointerStream() || blockedButtonActive;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_BUTTON_RELEASE:
             case MotionEvent.ACTION_CANCEL:
                 boolean consumeRelease = transitionConsumed ||
-                        blockedMousePointerStream ||
+                        MOUSE_STATE.blockedPointerStream() ||
                         blockedBeforeTransitions != 0 ||
                         duplicateTransitionConsumed;
-                if (mouseButtonsDown == 0 || action == MotionEvent.ACTION_CANCEL) {
-                    blockedMousePointerStream = false;
+                if (MOUSE_STATE.buttonsDown() == 0 || action == MotionEvent.ACTION_CANCEL) {
+                    MOUSE_STATE.setBlockedPointerStream(false);
                 }
                 return consumeRelease;
             default:
-                return blockedMousePointerStream || blockedButtonActive;
+                return MOUSE_STATE.blockedPointerStream() || blockedButtonActive;
         }
     }
 
     public static synchronized void resetMouseState() {
-        mouseButtonsDown = 0;
-        blockedMouseButtons = 0;
-        lastConsumedMouseTransitions = 0;
-        blockedMousePointerStream = false;
+        MOUSE_STATE.reset();
     }
 
     public static void setActivity(Object activity) {
