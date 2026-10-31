@@ -38,6 +38,7 @@ import com.google.android.material.slider.RangeSlider;
 
 import org.json.JSONArray;
 import org.chimeramc.client.core.mods.inbuilt.ExternalModBridge;
+import org.chimeramc.client.core.mods.inbuilt.RuntimeConfigControl;
 import org.chimeramc.client.core.mods.inbuilt.RuntimeConfigSchema;
 import org.chimeramc.client.core.mods.inbuilt.UnifiedMod;
 
@@ -419,8 +420,10 @@ final class RuntimeConfigView {
             case "ordered_list": buildOrderedList(card, node); break;
             case "color": buildColor(card, node); break;
             case "keybind": buildKeybind(card, node); break;
-            case "text": buildText(card, node, false); break;
-            case "multiline_text": buildText(card, node, true); break;
+            // Both text kinds share one builder; the multi-line rule lives in the pure control
+            // rules (item 203) so the type check is not repeated here.
+            case "text":
+            case "multiline_text": buildText(card, node, RuntimeConfigControl.multiline(node)); break;
             case "button": buildButton(card, node); break;
             case "info": break;
             default: break;
@@ -495,23 +498,21 @@ final class RuntimeConfigView {
     }
 
     private void buildIntSlider(LinearLayout parent, RuntimeConfigSchema.Node node) {
-        int min = parseInt(node.minValue, 0);
-        int max = Math.max(min, parseInt(node.maxValue, 100));
-        int step = Math.max(1, parseInt(node.step, 1));
-        int current = clamp(parseInt(mod.getConfigValue(node.key, node.defaultValue), min), min, max);
-        TextView value = valueText(formatNumber(current, node.unit));
+        // The bounds/step/value rules live in RuntimeConfigControl so they are unit-tested (item
+        // 203); the view only places the widget.
+        RuntimeConfigControl.IntRange range = RuntimeConfigControl.intRange(
+                node, mod.getConfigValue(node.key, node.defaultValue));
+        TextView value = valueText(formatNumber(range.value, node.unit));
         parent.addView(value, alignEnd());
         SeekBar seek = new SeekBar(context);
-        int range = max - min;
-        int count = Math.max(1, (range + step - 1) / step);
         seek.setMin(0);
-        seek.setMax(count);
-        seek.setProgress(Math.min(count, Math.round((current - min) / (float) step)));
+        seek.setMax(range.steps());
+        seek.setProgress(range.positionOf(range.value));
         tintSeek(seek);
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (!fromUser) return;
-                int next = Math.min(max, min + progress * step);
+                int next = range.valueAt(progress);
                 value.setText(formatNumber(next, node.unit));
                 setValue(node.key, String.valueOf(next));
             }
@@ -522,11 +523,13 @@ final class RuntimeConfigView {
     }
 
     private void buildFloatSlider(LinearLayout parent, RuntimeConfigSchema.Node node) {
-        float min = parseFloat(node.minValue, 0f);
-        float max = Math.max(min, parseFloat(node.maxValue, 1f));
+        RuntimeConfigControl.FloatRange bounds = RuntimeConfigControl.floatRange(
+                node, mod.getConfigValue(node.key, node.defaultValue));
+        float min = bounds.min;
+        float max = bounds.max;
         float step = parseFloat(node.step, 0f);
         if (step <= 0f) step = Math.max((max - min) / 100f, 0.001f);
-        float current = clamp(parseFloat(mod.getConfigValue(node.key, node.defaultValue), min), min, max);
+        float current = bounds.value;
         int count = Math.min(1000, Math.max(1, Math.round((max - min) / step)));
         final float actualStep = (max - min) / count;
         TextView value = valueText(formatFloat(current, node.unit));
@@ -584,16 +587,14 @@ final class RuntimeConfigView {
 
     private void buildChoice(LinearLayout parent, RuntimeConfigSchema.Node node) {
         String current = mod.getConfigValue(node.key, node.defaultValue);
-        String style = node.style;
-        if ("auto".equals(style)) style = node.options.size() <= 4 ? "segmented" : "dropdown";
+        // The style rule and the selected-option index are pure (item 203), so the view asks rather
+        // than re-deriving them; a schema with no matching option reads index 0 on both paths.
+        String style = RuntimeConfigControl.choiceStyle(node);
         if ("dropdown".equals(style)) {
             Spinner spinner = new Spinner(context);
             List<String> labels = new ArrayList<>();
-            int selected = 0;
-            for (int i = 0; i < node.options.size(); i++) {
-                labels.add(node.options.get(i).label);
-                if (node.options.get(i).value.equals(current)) selected = i;
-            }
+            for (int i = 0; i < node.options.size(); i++) labels.add(node.options.get(i).label);
+            int selected = RuntimeConfigControl.choiceIndex(node.options, current);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, labels) {
                 @Override public boolean isEnabled(int position) {
                     return position >= 0 && position < node.options.size() && !node.options.get(position).disabled;
@@ -1001,8 +1002,10 @@ final class RuntimeConfigView {
         input.setHint(node.placeholder);
         input.setSingleLine(!multiline);
         input.setMinLines(multiline ? 3 : 1);
-        if (node.maxLength > 0) {
-            input.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(node.maxLength)});
+        int maxLength = RuntimeConfigControl.maxLength(node);
+        if (maxLength > 0) {
+            input.setFilters(new android.text.InputFilter[]{
+                    new android.text.InputFilter.LengthFilter(maxLength)});
         }
         input.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
