@@ -24,6 +24,11 @@ jobs:
       - name: Validate release content
         run: python3 scripts/validate_release_content.py
 
+      # A submodule that tracks a branch can move under the build; the pin must be a commit bumped
+      # in a dedicated commit (item 324).
+      - name: Check submodules are pinned
+        run: ./scripts/check_submodules.sh
+
       - name: Prepare google-services.json
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
