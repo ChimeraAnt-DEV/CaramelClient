@@ -249,6 +249,34 @@ public class RadialWheelLayoutTest {
         assertEquals(Sector.NONE, flick(135.0, 2500f));
     }
 
+    // --- The screen-reader slot targets (item 200) ----------------------------------------------
+
+    @Test
+    public void everySlotCentreSitsOnTheRingBand() {
+        float cx = 200f, cy = 150f, inner = 100f, outer = 160f;
+        for (int i = 0; i < 4; i++) {
+            float[] c = RadialWheelLayout.slotCenter(i, 4, cx, cy, inner, outer);
+            float r = (float) Math.hypot(c[0] - cx, c[1] - cy);
+            assertEquals((inner + outer) / 2f, r, 0.01f);
+        }
+    }
+
+    @Test
+    public void slotCentresAreDistinctAndSpreadAroundTheWheel() {
+        float[] a = RadialWheelLayout.slotCenter(0, 4, 0f, 0f, 100f, 160f);
+        float[] b = RadialWheelLayout.slotCenter(1, 4, 0f, 0f, 100f, 160f);
+        assertTrue(Math.hypot(a[0] - b[0], a[1] - b[1]) > 10f);
+    }
+
+    @Test
+    public void aSingleSlotIsStillPlacedOnTheBand() {
+        // The profile wheel can open a one-entry sub-wheel; a divide-by-zero or a NaN here would
+        // make the slot unreachable to a screen reader.
+        float[] c = RadialWheelLayout.slotCenter(0, 1, 10f, 20f, 100f, 160f);
+        assertTrue(Float.isFinite(c[0]) && Float.isFinite(c[1]));
+        assertEquals(130f, (float) Math.hypot(c[0] - 10f, c[1] - 20f), 0.01f);
+    }
+
     @Test
     public void theFlickThresholdMatchesTheRule() {
         // At exactly the threshold the flick counts; the boundary is inclusive so a deliberate

@@ -133,6 +133,31 @@ public final class RadialWheelLayout {
         return quadrantFor(deg);
     }
 
+    /**
+     * The centre point of a ring slot's touch target, in view coordinates (item 200).
+     *
+     * <p>Screen-reader virtual nodes need a rectangle per slot, and the wheel draws its sectors on
+     * a band, so the centre of the band at the sector's mid-angle is the one point every slot has in
+     * common. Kept here with the rest of the geometry so the accessibility targets and the painted
+     * sectors cannot disagree about where a slot is.
+     *
+     * @param index        the slot index
+     * @param count        the number of slots
+     * @param centerX      the wheel centre x
+     * @param centerY      the wheel centre y
+     * @param innerRadius  the ring's inner radius
+     * @param outerRadius  the ring's outer radius
+     * @return {x, y} of the slot centre
+     */
+    public static float[] slotCenter(int index, int count, float centerX, float centerY,
+                                     float innerRadius, float outerRadius) {
+        double deg = WheelLayout.sectorCenterDegrees(index, count);
+        float radius = (innerRadius + outerRadius) / 2f;
+        double a = Math.toRadians(deg);
+        return new float[]{centerX + (float) (Math.cos(a) * radius),
+                centerY + (float) (Math.sin(a) * radius)};
+    }
+
     /** The quadrant sector for an angle in degrees (screen space, y down). */
     public static Sector quadrantFor(double deg) {
         if (deg >= -135.0 && deg < -45.0) return Sector.MODS;

@@ -80,7 +80,7 @@ public class RadialMenuView extends View {
      * wheel tells the player what is active without opening the module grid. Selecting a row toggles
      * its module, which is how the wheel switches things off again.
      */
-    private static final class Chip {
+    static final class Chip {
         final String moduleId;
         final String label;
 
@@ -133,6 +133,8 @@ public class RadialMenuView extends View {
     private android.view.VelocityTracker flickTracker;
 
     private float density;
+    /** The screen-reader virtual-view bridge for the wheel's slots (item 200). */
+    private RadialWheelAccessibilityHelper a11yHelper;
 
     private Bitmap skinHead;
 
@@ -240,6 +242,21 @@ public class RadialMenuView extends View {
                 RadialWheelMotion.LABEL_WEIGHT, false));
         labelPaint.setTextSize(RadialWheelMotion.LABEL_SP * density);
         applyLabelWeight(labelPaint, RadialWheelMotion.LABEL_WEIGHT);
+        a11yHelper = new RadialWheelAccessibilityHelper(this);
+        setFocusable(true);
+    }
+
+    /** The accessibility bridge, exposed so the host can forward hover events (item 200). */
+    RadialWheelAccessibilityHelper accessibilityHelper() {
+        return a11yHelper;
+    }
+
+    @Override
+    protected boolean dispatchHoverEvent(android.view.MotionEvent event) {
+        // The bridge needs the hover stream to resolve which virtual slot the pointer is over; a
+        // touch-exploring screen reader drives the wheel through this path, not through onTouchEvent.
+        if (a11yHelper != null && a11yHelper.dispatchHoverEvent(event)) return true;
+        return super.dispatchHoverEvent(event);
     }
 
     public void setListener(Listener listener) {
@@ -1169,6 +1186,114 @@ public class RadialMenuView extends View {
             }
         }
         return -1;
+    }
+
+    // --- Accessibility surface (item 200) -------------------------------------------------------
+    //
+    // The bridge in RadialWheelAccessibilityHelper reads these; keeping them here means the
+    // helper needs no reflection and the wheel's own fields stay private.
+
+    /** The number of virtual slots (ring destinations or profile entries). */
+    int a11ySlotCount() {
+        if (activeProfile != null) {
+            WheelEntry.Profile profile = currentProfile();
+            return profile == null ? 0 : profile.safeEntries().size();
+        }
+        return SECTORS.length;
+    }
+
+    /** The spoken label of a ring slot. */
+    String a11ySlotLabel(int index) {
+        if (activeProfile != null) {
+            WheelEntry.Profile profile = currentProfile();
+            if (profile == null) return null;
+            List<WheelEntry> entries = profile.safeEntries();
+            return index >= 0 && index < entries.size() ? entries.get(index).label : null;
+        }
+        if (index < 0 || index >= SECTORS.length) return null;
+        return sectorLabel(SECTORS[index]);
+    }
+
+    /** The centre of a ring slot's touch target, in view coordinates. */
+    float[] a11ySlotCenter(int index) {
+        float outer = outerRadius();
+        return RadialWheelLayout.slotCenter(index, Math.max(1, a11ySlotCount()),
+                centerX(), centerY(), ringInnerRadius(), outer);
+    }
+
+    /** Whether a ring slot is the current selection. */
+    boolean a11ySlotSelected(int index) {
+        if (activeProfile != null) return index == highlightedEntry;
+        return index >= 0 && index < SECTORS.length && SECTORS[index] == highlighted;
+    }
+
+    /** Activates a ring slot exactly as a tap or a stick commit would. */
+    void a11yActivateSlot(int index) {
+        if (activeProfile != null) {
+            activateProfileEntry(index);
+            return;
+        }
+        if (index < 0 || index >= SECTORS.length) return;
+        Sector s = SECTORS[index];
+        if (!RadialWheelLayout.isDestination(s)) return;
+        applyHaptic(RadialWheelMotion.hapticFor(false, false, true));
+        if (listener != null) listener.onSector(s);
+    }
+
+    /** The module chips shown on the wheel, left column first then the right column. */
+    List<Chip> a11yChips() {
+        List<Chip> all = new ArrayList<>(quickChips.size() + chips.size());
+        all.addAll(quickChips);
+        all.addAll(chips);
+        return all;
+    }
+
+    /**
+     * The combined-index chip (left column first, then right) under a point, or -1 (item 200).
+     *
+     * <p>{@link #a11yChips} concatenates the two columns, so the bridge needs the same numbering;
+     * {@link #chipHit} numbers each column separately, and translating here keeps that knowledge in
+     * the view rather than in the accessibility helper.
+     */
+    int a11yChipIndexAt(float x, float y) {
+        int[] hit = chipHit(x, y, getWidth(), getHeight());
+        if (hit == null) return -1;
+        return hit[0] == 0 ? hit[1] : quickChips.size() + hit[1];
+    }
+
+    /** The bounds of a combined-index chip, in view coordinates. */
+    android.graphics.Rect a11yChipBounds(int combinedIndex) {
+        android.graphics.Rect out = new android.graphics.Rect();
+        int quick = quickChips.size();
+        List<Chip> list = combinedIndex < quick ? quickChips : chips;
+        boolean fromRight = combinedIndex >= quick;
+        int index = fromRight ? combinedIndex - quick : combinedIndex;
+        if (index < 0 || index >= list.size()) return out;
+        float[][] centers = RadialWheelLayout.moduleListCenters(
+                getWidth(), getHeight(), list.size(), density, fromRight);
+        if (index >= centers.length) return out;
+        chipTextPaint.setTextSize(UiChip.LABEL_SP * density);
+        float cw = UiChip.width(chipTextPaint.measureText(list.get(index).label), density);
+        float ch = UiChip.HEIGHT_DP * density;
+        float left = fromRight ? centers[index][0] - cw : centers[index][0] - cw / 2f;
+        float right = fromRight ? centers[index][0] : centers[index][0] + cw / 2f;
+        out.set(Math.round(left), Math.round(centers[index][1] - ch / 2f),
+                Math.round(right), Math.round(centers[index][1] + ch / 2f));
+        return out;
+    }
+
+    /** Whether a chip's module is currently enabled. */
+    boolean a11yChipOn(Chip chip) {
+        return chipToggle != null && chip != null && chipToggle.isChipOn(chip.moduleId);
+    }
+
+    /** Toggles a chip's module, the same path a tap takes. */
+    void a11yActivateChip(Chip chip) {
+        if (chip == null || chipToggle == null) return;
+        chipToggle.onChipToggled(chip.moduleId);
+        applyHaptic(RadialWheelMotion.hapticFor(false, false, true));
+        rebuildEnabledList();
+        invalidate();
     }
 
     /** The right-column index under a point, or -1 (kept for the controller cursor's highlight). */
