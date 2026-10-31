@@ -69,6 +69,16 @@ public class InbuiltModManager {
     private static final String KEY_OFFHAND_KEYBIND = "offhand_keybind";
     private static final String KEY_OVERLAY_POSITION_X_PREFIX = "overlay_pos_x_";
     private static final String KEY_OVERLAY_POSITION_Y_PREFIX = "overlay_pos_y_";
+    /**
+     * The same position stored as a fraction of the surface (item 211).
+     *
+     * <p>The pixel keys above are kept so a position saved before this change still reads back, but
+     * every new save also writes the fraction, and a read prefers the fraction when present. A pixel
+     * position is only meaningful for the surface it was measured on, so a resolution-scale change
+     * or a rotation moved a widget; the fraction keeps it where the user put it.
+     */
+    private static final String KEY_OVERLAY_POSITION_XF_PREFIX = "overlay_pos_xf_";
+    private static final String KEY_OVERLAY_POSITION_YF_PREFIX = "overlay_pos_yf_";
     private static final String KEY_OVERLAY_LOCK_PREFIX = "overlay_lock_";
     private static final String KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX = "overlay_show_everywhere_";
     private static final String KEY_FRAME_GRAPH_PREFIX = "overlay_frame_graph_";
@@ -184,6 +194,8 @@ public class InbuiltModManager {
     private final SharedPreferences prefs;
     private final AtomicLong overlayVisibilityRevision = new AtomicLong(1L);
     private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener;
+    /** The surface the fractional overlay positions are relative to; null until a session sets it. */
+    private volatile android.util.DisplayMetrics overlayMetrics;
 
     private InbuiltModManager(Context context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -684,18 +696,59 @@ public class InbuiltModManager {
     }
 
     public int getOverlayPositionX(String modId, int defaultX) {
-        return prefs.getInt(KEY_OVERLAY_POSITION_X_PREFIX + modId, defaultX);
+        return resolveAxis(modId, KEY_OVERLAY_POSITION_XF_PREFIX, KEY_OVERLAY_POSITION_X_PREFIX,
+                defaultX, true);
     }
 
     public int getOverlayPositionY(String modId, int defaultY) {
-        return prefs.getInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, defaultY);
+        return resolveAxis(modId, KEY_OVERLAY_POSITION_YF_PREFIX, KEY_OVERLAY_POSITION_Y_PREFIX,
+                defaultY, false);
     }
 
     public void setOverlayPosition(String modId, int x, int y) {
-        prefs.edit()
+        android.util.DisplayMetrics metrics = overlayMetrics;
+        android.content.SharedPreferences.Editor editor = prefs.edit()
             .putInt(KEY_OVERLAY_POSITION_X_PREFIX + modId, x)
-            .putInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, y)
-            .apply();
+            .putInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, y);
+        // Store the fraction too, so a later read on a different surface size keeps the widget in
+        // the same relative place (item 211). Without metrics there is nothing to divide by, so the
+        // pixel value alone is written and a later read falls back to it.
+        if (metrics != null && metrics.widthPixels > 0 && metrics.heightPixels > 0) {
+            editor.putFloat(KEY_OVERLAY_POSITION_XF_PREFIX + modId,
+                    org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .fraction(x, metrics.widthPixels));
+            editor.putFloat(KEY_OVERLAY_POSITION_YF_PREFIX + modId,
+                    org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .fraction(y, metrics.heightPixels));
+        }
+        editor.apply();
+    }
+
+    /** Remembers the surface size the fractional positions are relative to. */
+    public void setOverlaySurfaceMetrics(android.util.DisplayMetrics metrics) {
+        overlayMetrics = metrics;
+    }
+
+    /**
+     * Reads one axis: the fraction wins when it is present and valid, so a widget follows a
+     * resolution-scale change; otherwise the legacy pixel value, otherwise the caller's default.
+     */
+    private int resolveAxis(String modId, String fractionKey, String pixelKey, int defaultPx,
+                            boolean horizontal) {
+        String key = fractionKey + modId;
+        if (prefs.contains(key)) {
+            float fraction = prefs.getFloat(key, Float.NaN);
+            android.util.DisplayMetrics metrics = overlayMetrics;
+            if (org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .isValid(fraction) && metrics != null) {
+                int surface = horizontal ? metrics.widthPixels : metrics.heightPixels;
+                if (surface > 0) {
+                    return org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .pixel(fraction, surface);
+                }
+            }
+        }
+        return prefs.getInt(pixelKey + modId, defaultPx);
     }
 
     public boolean isOverlayLocked(String modId) {
@@ -763,6 +816,8 @@ public class InbuiltModManager {
                 .remove(KEY_OVERLAY_OPACITY_PREFIX + modId)
                 .remove(KEY_OVERLAY_POSITION_X_PREFIX + modId)
                 .remove(KEY_OVERLAY_POSITION_Y_PREFIX + modId)
+                .remove(KEY_OVERLAY_POSITION_XF_PREFIX + modId)
+                .remove(KEY_OVERLAY_POSITION_YF_PREFIX + modId)
                 .remove(KEY_OVERLAY_LOCK_PREFIX + modId)
                 .remove(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + modId)
                 .remove(KEY_FRAME_GRAPH_PREFIX + modId)

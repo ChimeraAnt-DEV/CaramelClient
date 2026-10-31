@@ -89,6 +89,10 @@ public class InbuiltOverlayManager {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         if (!manager.isModMenuEnabled()) return;
 
+        // Overlay positions are stored as fractions of the surface (item 211); record the surface
+        // they are relative to before any position is read or written.
+        manager.setOverlaySurfaceMetrics(activity.getResources().getDisplayMetrics());
+
         // The in-game pack changer must be able to nudge the live session whether or not voice
         // chat happens to be running, so the reloader is installed here, not as a side effect of
         // starting the voice link. Without it a pack toggle writes the files but the loaded world
