@@ -1111,6 +1111,18 @@ public class InstancesFragment extends Fragment {
             vh.playtime.setText(holder.itemView.getContext().getString(R.string.playtime_label,
                     org.chimeramc.client.core.minecraft.PlaytimeManager.formatPlaytime(playtimeMs)));
 
+            // Item 278: the note is shown on the card, and the line is hidden entirely when there
+            // is none rather than left as a blank row.
+            if (vh.notes != null) {
+                String note = org.chimeramc.client.core.versions.InstanceNotes.normalize(v.notes);
+                if (note == null) {
+                    vh.notes.setVisibility(View.GONE);
+                } else {
+                    vh.notes.setText(note);
+                    vh.notes.setVisibility(View.VISIBLE);
+                }
+            }
+
             DynamicAnim.applyPressScale(holder.itemView);
         }
 
@@ -1134,7 +1146,7 @@ public class InstancesFragment extends Fragment {
         }
 
         static class VH extends RecyclerView.ViewHolder {
-            TextView versionCode, typeTag, displayName, playtime;
+            TextView versionCode, typeTag, displayName, playtime, notes;
             TextView abiBadge;
             ImageView settingsIcon;
 
@@ -1144,6 +1156,7 @@ public class InstancesFragment extends Fragment {
                 typeTag = v.findViewById(R.id.card_type_tag);
                 displayName = v.findViewById(R.id.card_display_name);
                 playtime = v.findViewById(R.id.card_playtime);
+                notes = v.findViewById(R.id.card_notes);
                 abiBadge = v.findViewById(R.id.card_abi_badge);
                 settingsIcon = v.findViewById(R.id.card_settings_icon);
             }

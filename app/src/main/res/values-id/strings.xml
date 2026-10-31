@@ -1178,4 +1178,8 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="diagnostics_report_bug">Laporkan bug</string>
     <string name="diagnostics_report_bug_copied">Info debug disalin. Tempelkan ke laporan bug yang akan terbuka berikutnya.</string>
     <string name="diagnostics_report_bug_no_app">Info debug disalin. Tidak dapat membuka Discord; tempelkan ke laporan Anda secara manual.</string>
+    <string name="instance_notes_title">Catatan</string>
+    <string name="instance_notes_desc">Catatan pribadi tentang instans ini, ditampilkan di kartunya. Tidak digunakan oleh game.</string>
+    <string name="instance_notes_hint">mis. build PvP, matikan shader</string>
+    <string name="instance_notes_saved">Catatan disimpan</string>
 </resources>

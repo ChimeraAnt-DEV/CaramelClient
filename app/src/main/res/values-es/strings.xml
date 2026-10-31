@@ -1154,4 +1154,8 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="diagnostics_report_bug">Informar de un error</string>
     <string name="diagnostics_report_bug_copied">Información de depuración copiada. Pégala en el informe de error que se abrirá a continuación.</string>
     <string name="diagnostics_report_bug_no_app">Información de depuración copiada. No se pudo abrir Discord; pégala en tu informe manualmente.</string>
+    <string name="instance_notes_title">Nota</string>
+    <string name="instance_notes_desc">Una nota privada sobre esta instancia, mostrada en su tarjeta. No la usa el juego.</string>
+    <string name="instance_notes_hint">p. ej. build de PvP, sin shaders</string>
+    <string name="instance_notes_saved">Nota guardada</string>
 </resources>

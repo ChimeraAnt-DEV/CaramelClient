@@ -58,6 +58,9 @@ public class InstanceSettingsActivity extends BaseActivity {
     private TextView boundAccountValue;
     private TextView boundAccountWarning;
     private EditText editShortcutName;
+    private EditText editInstanceNotes;
+    private Runnable pendingNotesSave;
+    private String lastSavedNotes = "";
     private ImageView shortcutIconPreview;
     private String shortcutIconUri;
     private ActivityResultLauncher<String[]> shortcutIconPicker;
@@ -122,6 +125,23 @@ public class InstanceSettingsActivity extends BaseActivity {
         setupBoundAccountRow();
         editShortcutName = findViewById(R.id.edit_shortcut_name);
         shortcutIconPreview = findViewById(R.id.shortcut_icon_preview);
+        editInstanceNotes = findViewById(R.id.edit_instance_notes);
+        if (editInstanceNotes != null) {
+            editInstanceNotes.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (!populatingData) scheduleInstanceNotesSave();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+        }
 
         tabGeneral.setOnClickListener(v -> selectTab(tabGeneral));
         tabLaunchOptions.setOnClickListener(v -> selectTab(tabLaunchOptions));
@@ -242,6 +262,12 @@ public class InstanceSettingsActivity extends BaseActivity {
         editShortcutName.setText(InstanceShortcutManager.getSavedName(this, version));
         shortcutIconUri = InstanceShortcutManager.getSavedIconUri(this, version);
         updateShortcutIconPreview();
+
+        String notes = versionManager.getInstanceNotes(version);
+        lastSavedNotes = notes == null ? "" : notes;
+        if (editInstanceNotes != null) {
+            editInstanceNotes.setText(lastSavedNotes);
+        }
         populatingData = false;
     }
 
@@ -359,6 +385,33 @@ public class InstanceSettingsActivity extends BaseActivity {
                 sections[i].setVisibility(View.GONE);
             }
         }
+    }
+
+    /**
+     * Debounces the note save (item 278) the same way the name is debounced, so a typed sentence
+     * writes once after the user pauses rather than once per keystroke.
+     */
+    private void scheduleInstanceNotesSave() {
+        if (pendingNotesSave != null) {
+            autoSaveHandler.removeCallbacks(pendingNotesSave);
+        }
+        pendingNotesSave = this::saveInstanceNotesNow;
+        autoSaveHandler.postDelayed(pendingNotesSave, 250);
+    }
+
+    private void saveInstanceNotesNow() {
+        if (pendingNotesSave != null) {
+            autoSaveHandler.removeCallbacks(pendingNotesSave);
+            pendingNotesSave = null;
+        }
+        if (editInstanceNotes == null || version == null) return;
+        String value = editInstanceNotes.getText().toString();
+        String normalized = org.chimeramc.client.core.versions.InstanceNotes.normalize(value);
+        String stored = normalized == null ? "" : normalized;
+        if (stored.equals(lastSavedNotes)) return;
+        versionManager.setInstanceNotes(version, value);
+        lastSavedNotes = stored;
+        setResult(RESULT_OK);
     }
 
     private void scheduleInstanceNameSave() {
@@ -524,6 +577,7 @@ public class InstanceSettingsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         saveInstanceNameNow();
+        saveInstanceNotesNow();
         saveShortcutSettings();
         super.onPause();
     }

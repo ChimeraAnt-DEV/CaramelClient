@@ -1154,4 +1154,8 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="diagnostics_report_bug">Signaler un bug</string>
     <string name="diagnostics_report_bug_copied">Informations de débogage copiées. Collez-les dans le rapport de bug qui va s\'ouvrir.</string>
     <string name="diagnostics_report_bug_no_app">Informations de débogage copiées. Impossible d\'ouvrir Discord ; collez-les manuellement dans votre rapport.</string>
+    <string name="instance_notes_title">Note</string>
+    <string name="instance_notes_desc">Une note privée sur cette instance, affichée sur sa carte. Non utilisée par le jeu.</string>
+    <string name="instance_notes_hint">ex. build PvP, sans shaders</string>
+    <string name="instance_notes_saved">Note enregistrée</string>
 </resources>

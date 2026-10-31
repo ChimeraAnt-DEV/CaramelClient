@@ -1181,4 +1181,8 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="diagnostics_report_bug">Hata bildir</string>
     <string name="diagnostics_report_bug_copied">Hata ayıklama bilgileri kopyalandı. Açılacak hata bildirimine yapıştırın.</string>
     <string name="diagnostics_report_bug_no_app">Hata ayıklama bilgileri kopyalandı. Discord açılamadı; bildiriminize elle yapıştırın.</string>
+    <string name="instance_notes_title">Not</string>
+    <string name="instance_notes_desc">Bu örnek hakkında kartında gösterilen özel bir not. Oyun tarafından kullanılmaz.</string>
+    <string name="instance_notes_hint">örn. PvP yapısı, shader kapalı</string>
+    <string name="instance_notes_saved">Not kaydedildi</string>
 </resources>

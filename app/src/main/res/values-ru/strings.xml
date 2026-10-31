@@ -1185,4 +1185,8 @@
     <string name="diagnostics_report_bug">Сообщить об ошибке</string>
     <string name="diagnostics_report_bug_copied">Отладочная информация скопирована. Вставьте её в отчёт об ошибке, который откроется далее.</string>
     <string name="diagnostics_report_bug_no_app">Отладочная информация скопирована. Не удалось открыть Discord; вставьте её в отчёт вручную.</string>
+    <string name="instance_notes_title">Заметка</string>
+    <string name="instance_notes_desc">Личная заметка об этом экземпляре, показанная на его карточке. Игра её не использует.</string>
+    <string name="instance_notes_hint">напр. сборка для PvP, без шейдеров</string>
+    <string name="instance_notes_saved">Заметка сохранена</string>
 </resources>

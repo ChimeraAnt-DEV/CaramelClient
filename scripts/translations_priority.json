@@ -161,7 +161,11 @@
     "diagnostics_debug_info_copied": "Información de depuración copiada. Pégala en tu informe.",
     "diagnostics_report_bug": "Informar de un error",
     "diagnostics_report_bug_copied": "Información de depuración copiada. Pégala en el informe de error que se abrirá a continuación.",
-    "diagnostics_report_bug_no_app": "Información de depuración copiada. No se pudo abrir Discord; pégala en tu informe manualmente."
+    "diagnostics_report_bug_no_app": "Información de depuración copiada. No se pudo abrir Discord; pégala en tu informe manualmente.",
+    "instance_notes_title": "Nota",
+    "instance_notes_desc": "Una nota privada sobre esta instancia, mostrada en su tarjeta. No la usa el juego.",
+    "instance_notes_hint": "p. ej. build de PvP, sin shaders",
+    "instance_notes_saved": "Nota guardada"
   },
   "fr": {
     "nav_back": "Retour",
@@ -325,7 +329,11 @@
     "diagnostics_debug_info_copied": "Informations de débogage copiées. Collez-les dans votre rapport.",
     "diagnostics_report_bug": "Signaler un bug",
     "diagnostics_report_bug_copied": "Informations de débogage copiées. Collez-les dans le rapport de bug qui va s'ouvrir.",
-    "diagnostics_report_bug_no_app": "Informations de débogage copiées. Impossible d'ouvrir Discord ; collez-les manuellement dans votre rapport."
+    "diagnostics_report_bug_no_app": "Informations de débogage copiées. Impossible d'ouvrir Discord ; collez-les manuellement dans votre rapport.",
+    "instance_notes_title": "Note",
+    "instance_notes_desc": "Une note privée sur cette instance, affichée sur sa carte. Non utilisée par le jeu.",
+    "instance_notes_hint": "ex. build PvP, sans shaders",
+    "instance_notes_saved": "Note enregistrée"
   },
   "hi": {
     "nav_back": "वापस",
@@ -489,7 +497,11 @@
     "diagnostics_debug_info_copied": "डीबग जानकारी कॉपी हो गई। इसे अपनी रिपोर्ट में पेस्ट करें।",
     "diagnostics_report_bug": "बग की रिपोर्ट करें",
     "diagnostics_report_bug_copied": "डीबग जानकारी कॉपी हो गई। इसे अगली खुलने वाली बग रिपोर्ट में पेस्ट करें।",
-    "diagnostics_report_bug_no_app": "डीबग जानकारी कॉपी हो गई। Discord नहीं खुल सका; इसे मैन्युअल रूप से अपनी रिपोर्ट में पेस्ट करें।"
+    "diagnostics_report_bug_no_app": "डीबग जानकारी कॉपी हो गई। Discord नहीं खुल सका; इसे मैन्युअल रूप से अपनी रिपोर्ट में पेस्ट करें।",
+    "instance_notes_title": "नोट",
+    "instance_notes_desc": "इस इंस्टेंस के बारे में एक निजी नोट, इसके कार्ड पर दिखाया जाता है। गेम इसका उपयोग नहीं करता।",
+    "instance_notes_hint": "जैसे PvP बिल्ड, शेडर बंद रखें",
+    "instance_notes_saved": "नोट सहेजा गया"
   },
   "id": {
     "nav_back": "Kembali",
@@ -653,7 +665,11 @@
     "diagnostics_debug_info_copied": "Info debug disalin. Tempelkan ke laporan Anda.",
     "diagnostics_report_bug": "Laporkan bug",
     "diagnostics_report_bug_copied": "Info debug disalin. Tempelkan ke laporan bug yang akan terbuka berikutnya.",
-    "diagnostics_report_bug_no_app": "Info debug disalin. Tidak dapat membuka Discord; tempelkan ke laporan Anda secara manual."
+    "diagnostics_report_bug_no_app": "Info debug disalin. Tidak dapat membuka Discord; tempelkan ke laporan Anda secara manual.",
+    "instance_notes_title": "Catatan",
+    "instance_notes_desc": "Catatan pribadi tentang instans ini, ditampilkan di kartunya. Tidak digunakan oleh game.",
+    "instance_notes_hint": "mis. build PvP, matikan shader",
+    "instance_notes_saved": "Catatan disimpan"
   },
   "ja": {
     "nav_back": "戻る",
@@ -817,7 +833,11 @@
     "diagnostics_debug_info_copied": "デバッグ情報をコピーしました。レポートに貼り付けてください。",
     "diagnostics_report_bug": "バグを報告",
     "diagnostics_report_bug_copied": "デバッグ情報をコピーしました。次に開くバグ報告に貼り付けてください。",
-    "diagnostics_report_bug_no_app": "デバッグ情報をコピーしました。Discord を開けませんでした。手動でレポートに貼り付けてください。"
+    "diagnostics_report_bug_no_app": "デバッグ情報をコピーしました。Discord を開けませんでした。手動でレポートに貼り付けてください。",
+    "instance_notes_title": "メモ",
+    "instance_notes_desc": "このインスタンスについての非公開メモ。カードに表示されます。ゲームでは使用されません。",
+    "instance_notes_hint": "例: PvP 用、シェーダーなし",
+    "instance_notes_saved": "メモを保存しました"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -981,7 +1001,11 @@
     "diagnostics_debug_info_copied": "Informações de depuração copiadas. Cole-as no seu relatório.",
     "diagnostics_report_bug": "Reportar um bug",
     "diagnostics_report_bug_copied": "Informações de depuração copiadas. Cole-as no relatório de bug que será aberto.",
-    "diagnostics_report_bug_no_app": "Informações de depuração copiadas. Não foi possível abrir o Discord; cole-as no seu relatório manualmente."
+    "diagnostics_report_bug_no_app": "Informações de depuração copiadas. Não foi possível abrir o Discord; cole-as no seu relatório manualmente.",
+    "instance_notes_title": "Nota",
+    "instance_notes_desc": "Uma nota privada sobre esta instância, mostrada no cartão. Não é usada pelo jogo.",
+    "instance_notes_hint": "ex.: build de PvP, sem shaders",
+    "instance_notes_saved": "Nota salva"
   },
   "ru": {
     "nav_back": "Назад",
@@ -1145,7 +1169,11 @@
     "diagnostics_debug_info_copied": "Отладочная информация скопирована. Вставьте её в отчёт.",
     "diagnostics_report_bug": "Сообщить об ошибке",
     "diagnostics_report_bug_copied": "Отладочная информация скопирована. Вставьте её в отчёт об ошибке, который откроется далее.",
-    "diagnostics_report_bug_no_app": "Отладочная информация скопирована. Не удалось открыть Discord; вставьте её в отчёт вручную."
+    "diagnostics_report_bug_no_app": "Отладочная информация скопирована. Не удалось открыть Discord; вставьте её в отчёт вручную.",
+    "instance_notes_title": "Заметка",
+    "instance_notes_desc": "Личная заметка об этом экземпляре, показанная на его карточке. Игра её не использует.",
+    "instance_notes_hint": "напр. сборка для PvP, без шейдеров",
+    "instance_notes_saved": "Заметка сохранена"
   },
   "tr": {
     "nav_back": "Geri",
@@ -1309,7 +1337,11 @@
     "diagnostics_debug_info_copied": "Hata ayıklama bilgileri kopyalandı. Bildiriminize yapıştırın.",
     "diagnostics_report_bug": "Hata bildir",
     "diagnostics_report_bug_copied": "Hata ayıklama bilgileri kopyalandı. Açılacak hata bildirimine yapıştırın.",
-    "diagnostics_report_bug_no_app": "Hata ayıklama bilgileri kopyalandı. Discord açılamadı; bildiriminize elle yapıştırın."
+    "diagnostics_report_bug_no_app": "Hata ayıklama bilgileri kopyalandı. Discord açılamadı; bildiriminize elle yapıştırın.",
+    "instance_notes_title": "Not",
+    "instance_notes_desc": "Bu örnek hakkında kartında gösterilen özel bir not. Oyun tarafından kullanılmaz.",
+    "instance_notes_hint": "örn. PvP yapısı, shader kapalı",
+    "instance_notes_saved": "Not kaydedildi"
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1473,7 +1505,11 @@
     "diagnostics_debug_info_copied": "Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo của bạn.",
     "diagnostics_report_bug": "Báo cáo lỗi",
     "diagnostics_report_bug_copied": "Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo lỗi sắp mở.",
-    "diagnostics_report_bug_no_app": "Đã sao chép thông tin gỡ lỗi. Không mở được Discord; hãy dán vào báo cáo của bạn theo cách thủ công."
+    "diagnostics_report_bug_no_app": "Đã sao chép thông tin gỡ lỗi. Không mở được Discord; hãy dán vào báo cáo của bạn theo cách thủ công.",
+    "instance_notes_title": "Ghi chú",
+    "instance_notes_desc": "Ghi chú riêng về bản này, hiển thị trên thẻ của nó. Trò chơi không dùng.",
+    "instance_notes_hint": "ví dụ: bản PvP, tắt shader",
+    "instance_notes_saved": "Đã lưu ghi chú"
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1637,6 +1673,10 @@
     "diagnostics_debug_info_copied": "已复制调试信息。请粘贴到你的报告中。",
     "diagnostics_report_bug": "报告问题",
     "diagnostics_report_bug_copied": "已复制调试信息。请粘贴到接下来打开的报告中。",
-    "diagnostics_report_bug_no_app": "已复制调试信息。无法打开 Discord；请手动粘贴到你的报告中。"
+    "diagnostics_report_bug_no_app": "已复制调试信息。无法打开 Discord；请手动粘贴到你的报告中。",
+    "instance_notes_title": "备注",
+    "instance_notes_desc": "关于此实例的私人备注，显示在其卡片上。游戏不会使用它。",
+    "instance_notes_hint": "例如：PvP 配置，关闭光影",
+    "instance_notes_saved": "备注已保存"
   }
 }

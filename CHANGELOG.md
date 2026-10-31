@@ -1,7 +1,8 @@
 # Changelog
 
-One line per user-visible change, newest first. This file is bundled into the app
-(`resources/launcher/CHANGELOG.md`) and rendered by the in-app changelog screen.
+One line per user-visible change, newest first. This file is copied into the app's
+assets at build time (`app/build.gradle` -> `syncChangelogAsset`) and rendered by the
+in-app changelog screen, so there is a single source of truth.
 
 ## BETA3
 
@@ -25,6 +26,9 @@ One line per user-visible change, newest first. This file is bundled into the ap
 
 - Settings can be exported and imported as one JSON file.
 - About names the exact build (version, commit, type) and the native library status.
+- A full changelog screen, rendered from this file, is reachable from Settings.
+- An instance can carry a private note, shown on its card and editable in instance
+  settings.
 - Diagnostics gained a Copy debug info action that bundles the report with the recent,
   redacted log, and a Report a bug action that copies it before opening the invite.
 

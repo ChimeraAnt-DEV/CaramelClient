@@ -1175,4 +1175,8 @@
     <string name="diagnostics_report_bug">报告问题</string>
     <string name="diagnostics_report_bug_copied">已复制调试信息。请粘贴到接下来打开的报告中。</string>
     <string name="diagnostics_report_bug_no_app">已复制调试信息。无法打开 Discord；请手动粘贴到你的报告中。</string>
+    <string name="instance_notes_title">备注</string>
+    <string name="instance_notes_desc">关于此实例的私人备注，显示在其卡片上。游戏不会使用它。</string>
+    <string name="instance_notes_hint">例如：PvP 配置，关闭光影</string>
+    <string name="instance_notes_saved">备注已保存</string>
 </resources>

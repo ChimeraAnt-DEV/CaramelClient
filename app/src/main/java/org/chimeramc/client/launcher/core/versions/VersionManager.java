@@ -536,6 +536,7 @@ public class VersionManager {
             gv.shaderCompatEnabled = metadata.shaderCompatEnabled;
             gv.inGamePackChangerEnabled = metadata.inGamePackChangerEnabled;
             gv.boundAccountId = metadata.boundAccountId;
+            gv.notes = metadata.notes;
 
             installedVersions.add(gv);
         } catch (PackageManager.NameNotFoundException ignored) {
@@ -593,6 +594,7 @@ public class VersionManager {
                         metadata.shaderCompatEnabled = current.shaderCompatEnabled;
                         metadata.inGamePackChangerEnabled = current.inGamePackChangerEnabled;
                         metadata.boundAccountId = current.boundAccountId;
+                        metadata.notes = current.notes;
                     }
             );
         } catch (IOException ignored) {
@@ -738,6 +740,7 @@ public class VersionManager {
         gv.shaderCompatEnabled = metadata.shaderCompatEnabled;
         gv.inGamePackChangerEnabled = metadata.inGamePackChangerEnabled;
         gv.boundAccountId = metadata.boundAccountId;
+        gv.notes = metadata.notes;
 
         return gv;
     }
@@ -846,6 +849,34 @@ public class VersionManager {
     /** The account id bound to an instance, or null when it uses the active account. */
     public String getInstanceBoundAccount(GameVersion version) {
         return version == null ? null : version.boundAccountId;
+    }
+
+    /**
+     * Stores a free-form note for an instance (item 278).
+     *
+     * <p>The text is normalised by {@link InstanceNotes} before it is written, so a pasted newline
+     * cannot break the JSON metadata and an empty note is stored as null rather than {@code ""}.
+     */
+    public void setInstanceNotes(GameVersion version, String notes) {
+        if (version == null) return;
+        String value = InstanceNotes.normalize(notes);
+        version.notes = value;
+        updateCachedInstance(version, cached -> cached.notes = value);
+        try {
+            File metadataDir = LauncherStorage.getProfileMetadataDir(context, getMetadataDirectoryName(version));
+            metadataStore.update(
+                    metadataDir,
+                    metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
+                    metadata -> metadata.notes = value
+            );
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-notes", "Persisting the per-instance note failed", ignored);
+        }
+    }
+
+    /** The note kept for an instance (item 278), or null when none is set. */
+    public String getInstanceNotes(GameVersion version) {
+        return version == null ? null : version.notes;
     }
 
     public boolean setInstanceDisplayName(GameVersion version, String displayName) {

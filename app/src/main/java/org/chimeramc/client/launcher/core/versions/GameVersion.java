@@ -32,6 +32,8 @@ public class GameVersion implements Parcelable {
      * {@code InstanceAccountBinding}.
      */
     public String boundAccountId;
+    /** A free-form note shown on the instance card (item 278), or null when empty. */
+    public String notes;
     public final File modsDir;
 
     public GameVersion(String directoryName, String displayName, String versionCode, File versionDir, boolean isOfficial, String packageName, String abiList) {
@@ -72,6 +74,7 @@ public class GameVersion implements Parcelable {
         modsDir = modsDirPath == null ? null : new File(modsDirPath);
         inGamePackChangerEnabled = in.readByte() != 0;
         boundAccountId = in.readString();
+        notes = in.readString();
     }
 
     @Override
@@ -93,6 +96,7 @@ public class GameVersion implements Parcelable {
         dest.writeString(modsDir == null ? null : modsDir.getAbsolutePath());
         dest.writeByte((byte) (inGamePackChangerEnabled ? 1 : 0));
         dest.writeString(boundAccountId);
+        dest.writeString(notes);
     }
 
     @Override

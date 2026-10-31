@@ -1184,4 +1184,8 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="diagnostics_report_bug">Báo cáo lỗi</string>
     <string name="diagnostics_report_bug_copied">Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo lỗi sắp mở.</string>
     <string name="diagnostics_report_bug_no_app">Đã sao chép thông tin gỡ lỗi. Không mở được Discord; hãy dán vào báo cáo của bạn theo cách thủ công.</string>
+    <string name="instance_notes_title">Ghi chú</string>
+    <string name="instance_notes_desc">Ghi chú riêng về bản này, hiển thị trên thẻ của nó. Trò chơi không dùng.</string>
+    <string name="instance_notes_hint">ví dụ: bản PvP, tắt shader</string>
+    <string name="instance_notes_saved">Đã lưu ghi chú</string>
 </resources>

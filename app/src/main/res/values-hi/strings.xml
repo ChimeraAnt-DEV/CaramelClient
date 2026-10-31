@@ -1182,4 +1182,8 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="diagnostics_report_bug">बग की रिपोर्ट करें</string>
     <string name="diagnostics_report_bug_copied">डीबग जानकारी कॉपी हो गई। इसे अगली खुलने वाली बग रिपोर्ट में पेस्ट करें।</string>
     <string name="diagnostics_report_bug_no_app">डीबग जानकारी कॉपी हो गई। Discord नहीं खुल सका; इसे मैन्युअल रूप से अपनी रिपोर्ट में पेस्ट करें।</string>
+    <string name="instance_notes_title">नोट</string>
+    <string name="instance_notes_desc">इस इंस्टेंस के बारे में एक निजी नोट, इसके कार्ड पर दिखाया जाता है। गेम इसका उपयोग नहीं करता।</string>
+    <string name="instance_notes_hint">जैसे PvP बिल्ड, शेडर बंद रखें</string>
+    <string name="instance_notes_saved">नोट सहेजा गया</string>
 </resources>
