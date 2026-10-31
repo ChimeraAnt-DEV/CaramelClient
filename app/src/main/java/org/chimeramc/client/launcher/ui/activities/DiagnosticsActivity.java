@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
 import org.chimeramc.client.ui.activities.BaseActivity;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
+import org.chimeramc.client.util.AppLog;
 import org.chimeramc.client.util.PersonalizationManager;
 import org.chimeramc.client.util.MainThread;
 
@@ -152,6 +154,64 @@ public class DiagnosticsActivity extends BaseActivity {
         if (refresh != null) {
             refresh.setOnClickListener(v -> refresh());
             DynamicAnim.applyPressScale(refresh);
+        }
+        // Item 262: the whole bundle (report + recent, redacted log) in one tap.
+        Button copyDebug = findViewById(R.id.diagnostics_copy_debug_button);
+        if (copyDebug != null) {
+            copyDebug.setOnClickListener(v -> copyDebugInfo());
+            DynamicAnim.applyPressScale(copyDebug);
+        }
+        // Item 263: the same bundle, copied and then the community invite opened so the report can
+        // be pasted where it will be read.
+        Button reportBug = findViewById(R.id.diagnostics_report_bug_button);
+        if (reportBug != null) {
+            reportBug.setOnClickListener(v -> reportBug());
+            DynamicAnim.applyPressScale(reportBug);
+        }
+    }
+
+    /** Builds the full debug bundle: the report plus the recent, redacted log (item 262). */
+    private String buildDebugBundle() {
+        String log;
+        try {
+            log = org.chimeramc.client.core.minecraft.LaunchLog.readAll(this);
+        } catch (Throwable t) {
+            AppLog.warn(TAG, "Reading the launch log for the debug bundle failed", t);
+            log = null;
+        }
+        return org.chimeramc.client.launcher.util.DebugBundle.compose(buildReport(), log);
+    }
+
+    private void copyDebugInfo() {
+        String bundle = buildDebugBundle();
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            Toast.makeText(this, R.string.diagnostics_debug_info_copied, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Copies the debug bundle and opens the community invite so the report can be pasted there.
+     *
+     * <p>The copy happens first on purpose: opening another app backgrounds this one, so a failure
+     * to resolve the link must not lose the bundle the user was about to paste.
+     */
+    private void reportBug() {
+        String bundle = buildDebugBundle();
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+        }
+        String url = getString(R.string.discord_join_url);
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            Toast.makeText(this, R.string.diagnostics_report_bug_copied, Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            // The bundle is already on the clipboard, so the user can still paste it somewhere
+            // else; the message says so rather than claiming the flow failed.
+            AppLog.warn(TAG, "Opening the bug-report link failed", t);
+            Toast.makeText(this, R.string.diagnostics_report_bug_no_app, Toast.LENGTH_LONG).show();
         }
     }
 

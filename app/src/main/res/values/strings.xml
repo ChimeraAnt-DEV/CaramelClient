@@ -1521,6 +1521,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_copied">Diagnostics report copied.</string>
     <string name="diagnostics_share">Share report</string>
     <string name="diagnostics_share_title">Share diagnostics report</string>
+    <string name="diagnostics_copy_debug_info">Copy debug info</string>
+    <string name="diagnostics_debug_info_copied">Debug info copied. Paste it into your report.</string>
+    <string name="diagnostics_report_bug">Report a bug</string>
+    <string name="diagnostics_report_bug_copied">Debug info copied. Paste it into the bug report that opens next.</string>
+    <string name="diagnostics_report_bug_no_app">Debug info copied. Could not open Discord; paste it into your report manually.</string>
     <string name="diagnostics_repair">Repair installation</string>
     <string name="diagnostics_repair_desc">Wipe and re-extract the native library cache for the selected version. Fixes stale or corrupted extracted libraries that fail to dlopen.</string>
     <string name="diagnostics_repair_confirm_title">Repair native libraries?</string>

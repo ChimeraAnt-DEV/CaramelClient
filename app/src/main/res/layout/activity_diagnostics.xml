@@ -297,6 +297,41 @@
                     android:textColor="@color/primary" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/diagnostics_copy_debug_button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:minHeight="44dp"
+                    android:fontFamily="@font/misans"
+                    android:text="@string/diagnostics_copy_debug_info"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary" />
+
+                <Button
+                    android:id="@+id/diagnostics_report_bug_button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_2"
+                    android:minHeight="44dp"
+                    android:fontFamily="@font/misans"
+                    android:text="@string/diagnostics_report_bug"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary" />
+            </LinearLayout>
+
             <Button
                 android:id="@+id/diagnostics_refresh_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
