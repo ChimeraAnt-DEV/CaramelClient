@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ItemServerBinding;
 import org.chimeramc.client.core.content.ServerItem;
 import org.chimeramc.client.core.content.ServerPongInfo;
 import org.chimeramc.client.ui.components.ListDiff;
@@ -87,9 +88,9 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_server, parent, false);
-        return new ViewHolder(view);
+        ItemServerBinding binding = ItemServerBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -178,12 +179,12 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
         TextView statusText;
         Button deleteButton;
 
-        ViewHolder(View view) {
-            super(view);
-            nameText = view.findViewById(R.id.server_name);
-            ipText = view.findViewById(R.id.server_ip);
-            statusText = view.findViewById(R.id.server_status);
-            deleteButton = view.findViewById(R.id.server_delete_button);
+        ViewHolder(ItemServerBinding binding) {
+            super(binding.getRoot());
+            nameText = binding.serverName;
+            ipText = binding.serverIp;
+            statusText = binding.serverStatus;
+            deleteButton = binding.serverDeleteButton;
         }
     }
 }
