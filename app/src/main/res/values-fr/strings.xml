@@ -1094,4 +1094,6 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="controller_bind_device_none">Aucune manette détectée</string>
     <string name="controller_bind_device_success">%1$s utilisera toujours ce profil</string>
     <string name="controller_bind_device_cleared">%1$s n\'a plus de profil lié</string>
+    <string name="controller_stick_preview_description">Position du stick en direct : l\'anneau est la lecture brute et le point ce que le profil envoie</string>
+    <string name="controller_stick_preview_side">Affichage du stick %1$s</string>
 </resources>

@@ -1094,4 +1094,6 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="controller_bind_device_none">No se detectó ningún mando</string>
     <string name="controller_bind_device_success">%1$s siempre usará este perfil</string>
     <string name="controller_bind_device_cleared">%1$s ya no tiene un perfil vinculado</string>
+    <string name="controller_stick_preview_description">Posición del stick en vivo: el anillo es la lectura real y el punto es lo que envía el perfil</string>
+    <string name="controller_stick_preview_side">Mostrando el stick %1$s</string>
 </resources>

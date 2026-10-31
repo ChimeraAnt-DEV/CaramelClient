@@ -1115,4 +1115,6 @@
     <string name="controller_bind_device_none">未检测到控制器</string>
     <string name="controller_bind_device_success">%1$s 将始终使用此配置</string>
     <string name="controller_bind_device_cleared">%1$s 不再有绑定的配置</string>
+    <string name="controller_stick_preview_description">摇杆实时位置：圆环是原始读数，圆点是配置实际发送的值</string>
+    <string name="controller_stick_preview_side">正在显示%1$s摇杆</string>
 </resources>

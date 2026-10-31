@@ -1118,4 +1118,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="controller_bind_device_none">Tidak ada pengontrol terdeteksi</string>
     <string name="controller_bind_device_success">%1$s akan selalu memakai profil ini</string>
     <string name="controller_bind_device_cleared">%1$s tidak lagi memiliki profil tertaut</string>
+    <string name="controller_stick_preview_description">Posisi stik langsung: cincin adalah bacaan mentah dan titik adalah yang dikirim profil</string>
+    <string name="controller_stick_preview_side">Menampilkan stik %1$s</string>
 </resources>

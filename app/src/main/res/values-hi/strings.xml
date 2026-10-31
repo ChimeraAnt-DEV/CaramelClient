@@ -1122,4 +1122,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="controller_bind_device_none">कोई कंट्रोलर नहीं मिला</string>
     <string name="controller_bind_device_success">%1$s हमेशा यह प्रोफ़ाइल इस्तेमाल करेगा</string>
     <string name="controller_bind_device_cleared">%1$s से जुड़ी प्रोफ़ाइल अब नहीं है</string>
+    <string name="controller_stick_preview_description">लाइव स्टिक स्थिति: छल्ला असली पाठ है और बिंदु वह जो प्रोफ़ाइल भेजती है</string>
+    <string name="controller_stick_preview_side">%1$s स्टिक दिखाई जा रही है</string>
 </resources>

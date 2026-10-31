@@ -1125,4 +1125,6 @@
     <string name="controller_bind_device_none">Геймпад не обнаружен</string>
     <string name="controller_bind_device_success">%1$s всегда будет использовать этот профиль</string>
     <string name="controller_bind_device_cleared">У %1$s больше нет привязанного профиля</string>
+    <string name="controller_stick_preview_description">Положение стика в реальном времени: кольцо — сырое значение, точка — то, что отправляет профиль</string>
+    <string name="controller_stick_preview_side">Показан %1$s стик</string>
 </resources>

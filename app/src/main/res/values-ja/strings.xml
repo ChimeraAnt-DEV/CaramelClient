@@ -1091,4 +1091,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="controller_bind_device_none">コントローラーが見つかりません</string>
     <string name="controller_bind_device_success">%1$s は常にこのプロファイルを使用します</string>
     <string name="controller_bind_device_cleared">%1$s には紐付けられたプロファイルがありません</string>
+    <string name="controller_stick_preview_description">スティックの現在位置: リングが生の値、ドットがプロファイルの送信値です</string>
+    <string name="controller_stick_preview_side">%1$s スティックを表示中</string>
 </resources>

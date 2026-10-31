@@ -101,7 +101,9 @@
     "controller_bind_device_clear": "Quitar vínculo del mando",
     "controller_bind_device_none": "No se detectó ningún mando",
     "controller_bind_device_success": "%1$s siempre usará este perfil",
-    "controller_bind_device_cleared": "%1$s ya no tiene un perfil vinculado"
+    "controller_bind_device_cleared": "%1$s ya no tiene un perfil vinculado",
+    "controller_stick_preview_description": "Posición del stick en vivo: el anillo es la lectura real y el punto es lo que envía el perfil",
+    "controller_stick_preview_side": "Mostrando el stick %1$s"
   },
   "fr": {
     "nav_back": "Retour",
@@ -205,7 +207,9 @@
     "controller_bind_device_clear": "Supprimer le lien de la manette",
     "controller_bind_device_none": "Aucune manette détectée",
     "controller_bind_device_success": "%1$s utilisera toujours ce profil",
-    "controller_bind_device_cleared": "%1$s n\'a plus de profil lié"
+    "controller_bind_device_cleared": "%1$s n\\'a plus de profil lié",
+    "controller_stick_preview_description": "Position du stick en direct : l\\'anneau est la lecture brute et le point ce que le profil envoie",
+    "controller_stick_preview_side": "Affichage du stick %1$s"
   },
   "hi": {
     "nav_back": "वापस",
@@ -309,7 +313,9 @@
     "controller_bind_device_clear": "कंट्रोलर लिंक हटाएँ",
     "controller_bind_device_none": "कोई कंट्रोलर नहीं मिला",
     "controller_bind_device_success": "%1$s हमेशा यह प्रोफ़ाइल इस्तेमाल करेगा",
-    "controller_bind_device_cleared": "%1$s से जुड़ी प्रोफ़ाइल अब नहीं है"
+    "controller_bind_device_cleared": "%1$s से जुड़ी प्रोफ़ाइल अब नहीं है",
+    "controller_stick_preview_description": "लाइव स्टिक स्थिति: छल्ला असली पाठ है और बिंदु वह जो प्रोफ़ाइल भेजती है",
+    "controller_stick_preview_side": "%1$s स्टिक दिखाई जा रही है"
   },
   "id": {
     "nav_back": "Kembali",
@@ -413,7 +419,9 @@
     "controller_bind_device_clear": "Hapus tautan pengontrol",
     "controller_bind_device_none": "Tidak ada pengontrol terdeteksi",
     "controller_bind_device_success": "%1$s akan selalu memakai profil ini",
-    "controller_bind_device_cleared": "%1$s tidak lagi memiliki profil tertaut"
+    "controller_bind_device_cleared": "%1$s tidak lagi memiliki profil tertaut",
+    "controller_stick_preview_description": "Posisi stik langsung: cincin adalah bacaan mentah dan titik adalah yang dikirim profil",
+    "controller_stick_preview_side": "Menampilkan stik %1$s"
   },
   "ja": {
     "nav_back": "戻る",
@@ -517,7 +525,9 @@
     "controller_bind_device_clear": "コントローラーの紐付けを解除",
     "controller_bind_device_none": "コントローラーが見つかりません",
     "controller_bind_device_success": "%1$s は常にこのプロファイルを使用します",
-    "controller_bind_device_cleared": "%1$s には紐付けられたプロファイルがありません"
+    "controller_bind_device_cleared": "%1$s には紐付けられたプロファイルがありません",
+    "controller_stick_preview_description": "スティックの現在位置: リングが生の値、ドットがプロファイルの送信値です",
+    "controller_stick_preview_side": "%1$s スティックを表示中"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -621,7 +631,9 @@
     "controller_bind_device_clear": "Remover vínculo do controle",
     "controller_bind_device_none": "Nenhum controle detectado",
     "controller_bind_device_success": "%1$s sempre usará este perfil",
-    "controller_bind_device_cleared": "%1$s não tem mais um perfil vinculado"
+    "controller_bind_device_cleared": "%1$s não tem mais um perfil vinculado",
+    "controller_stick_preview_description": "Posição do analógico ao vivo: o anel é a leitura bruta e o ponto é o que o perfil envia",
+    "controller_stick_preview_side": "Mostrando o analógico %1$s"
   },
   "ru": {
     "nav_back": "Назад",
@@ -725,7 +737,9 @@
     "controller_bind_device_clear": "Убрать привязку геймпада",
     "controller_bind_device_none": "Геймпад не обнаружен",
     "controller_bind_device_success": "%1$s всегда будет использовать этот профиль",
-    "controller_bind_device_cleared": "У %1$s больше нет привязанного профиля"
+    "controller_bind_device_cleared": "У %1$s больше нет привязанного профиля",
+    "controller_stick_preview_description": "Положение стика в реальном времени: кольцо — сырое значение, точка — то, что отправляет профиль",
+    "controller_stick_preview_side": "Показан %1$s стик"
   },
   "tr": {
     "nav_back": "Geri",
@@ -829,7 +843,9 @@
     "controller_bind_device_clear": "Kumanda bağlantısını kaldır",
     "controller_bind_device_none": "Kumanda bulunamadı",
     "controller_bind_device_success": "%1$s her zaman bu profili kullanacak",
-    "controller_bind_device_cleared": "%1$s artık bağlı bir profile sahip değil"
+    "controller_bind_device_cleared": "%1$s artık bağlı bir profile sahip değil",
+    "controller_stick_preview_description": "Canlı çubuk konumu: halka ham okuma, nokta profilin gönderdiğidir",
+    "controller_stick_preview_side": "%1$s çubuk gösteriliyor"
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -933,7 +949,9 @@
     "controller_bind_device_clear": "Gỡ liên kết tay cầm",
     "controller_bind_device_none": "Không phát hiện tay cầm",
     "controller_bind_device_success": "%1$s sẽ luôn dùng cấu hình này",
-    "controller_bind_device_cleared": "%1$s không còn cấu hình được liên kết"
+    "controller_bind_device_cleared": "%1$s không còn cấu hình được liên kết",
+    "controller_stick_preview_description": "Vị trí cần gạt trực tiếp: vòng là giá trị thô, chấm là giá trị cấu hình gửi đi",
+    "controller_stick_preview_side": "Đang hiển thị cần gạt %1$s"
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1037,6 +1055,8 @@
     "controller_bind_device_clear": "移除控制器绑定",
     "controller_bind_device_none": "未检测到控制器",
     "controller_bind_device_success": "%1$s 将始终使用此配置",
-    "controller_bind_device_cleared": "%1$s 不再有绑定的配置"
+    "controller_bind_device_cleared": "%1$s 不再有绑定的配置",
+    "controller_stick_preview_description": "摇杆实时位置：圆环是原始读数，圆点是配置实际发送的值",
+    "controller_stick_preview_side": "正在显示%1$s摇杆"
   }
 }

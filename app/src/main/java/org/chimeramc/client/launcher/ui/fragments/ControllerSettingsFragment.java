@@ -30,6 +30,8 @@ import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.launcher.controller.ControllerInputProcessor;
 import org.chimeramc.client.launcher.controller.ControllerDeviceKey;
 import org.chimeramc.client.launcher.controller.ControllerProfile;
+import org.chimeramc.client.launcher.controller.ControllerResponse;
+import org.chimeramc.client.launcher.controller.StickResponsePreview;
 import org.chimeramc.client.launcher.controller.LayerModifierCapture;
 import org.chimeramc.client.launcher.controller.ControllerProfileCodec;
 import org.chimeramc.client.launcher.controller.ControllerProfileManager;
@@ -42,6 +44,7 @@ import org.chimeramc.client.launcher.controller.StickCurve;
 import org.chimeramc.client.launcher.controller.TriggerCurve;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.launcher.ui.views.Controller3DView;
+import org.chimeramc.client.launcher.ui.views.StickPreviewView;
 import org.chimeramc.client.ui.views.CurvePreviewView;
 import org.chimeramc.client.util.PersonalizationManager;
 
@@ -70,6 +73,9 @@ public class ControllerSettingsFragment extends Fragment {
     private ControllerType detectedType;
     /** The connected pad's vendor/product key, or null when none is detected (item 219). */
     private ControllerDeviceKey detectedDevice;
+    /** The live raw-vs-filtered reading, and the view that draws it (item 220). */
+    private StickResponsePreview stickPreview;
+    private StickPreviewView stickPreviewView;
     private int manualIndex;
     private boolean autoSelected;
     private InputManager inputManager;
@@ -245,6 +251,14 @@ public class ControllerSettingsFragment extends Fragment {
         antiDriftSwitch = binding.controllerAntidriftSwitch;
         antiDriftStatus = binding.controllerAntidriftStatus;
         calibrateButton = binding.controllerCalibrate;
+
+        stickPreviewView = binding.controllerStickPreview;
+        stickPreview = new StickResponsePreview();
+        stickPreview.setResponse(new ControllerResponse(
+                profileManager.getActiveProfile(currentType), false));
+        stickPreviewView.setPreview(stickPreview);
+        stickPreviewView.setColors(pm.getAccentColor(),
+                requireContext().getColor(R.color.text_secondary), 0x33FFFFFF);
         antiDriftSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> onAntiDriftToggled(isChecked));
         calibrateButton.setOnClickListener(v -> startCalibration());
 
@@ -271,6 +285,10 @@ public class ControllerSettingsFragment extends Fragment {
         antiDriftSwitch = null;
         antiDriftStatus = null;
         calibrateButton = null;
+        stickPreviewView = null;
+        if (stickPreview != null) {
+            stickPreview.clear();
+        }
         binding = null;
         calibration.cancel();
         super.onDestroyView();
@@ -399,8 +417,43 @@ public class ControllerSettingsFragment extends Fragment {
         if (calibration.isActive()) {
             feedCalibration(event);
         }
+        feedStickPreview(event);
         if (illustration != null) {
             illustration.handleMotionEvent(event);
+        }
+    }
+
+    /**
+     * Shows the raw stick reading beside what the profile makes of it (item 220).
+     *
+     * <p>The side follows the stick the player is actually moving, so the reading always belongs to
+     * the dead zone being discussed rather than whichever one was picked last. A pad reporting both
+     * sticks at rest leaves the reading centred.
+     */
+    private void feedStickPreview(MotionEvent event) {
+        if (stickPreview == null || stickPreviewView == null) return;
+        float lx = event.getAxisValue(MotionEvent.AXIS_X);
+        float ly = event.getAxisValue(MotionEvent.AXIS_Y);
+        float rx = event.getAxisValue(MotionEvent.AXIS_Z);
+        float ry = event.getAxisValue(MotionEvent.AXIS_RZ);
+        boolean leftActive = (lx * lx + ly * ly) >= (rx * rx + ry * ry);
+        stickPreview.setSide(leftActive ? StickResponsePreview.Side.LEFT
+                : StickResponsePreview.Side.RIGHT);
+        stickPreview.setRaw(leftActive ? lx : rx, leftActive ? ly : ry);
+        stickPreviewView.refresh();
+    }
+
+    /**
+     * Rebuilds the preview's response from a profile, so an edit in the dialog is visible at once.
+     *
+     * <p>Called from the editor's dead-zone sliders: the point of the preview is to show the effect
+     * of the value being dragged, not the value that was saved last time.
+     */
+    private void refreshStickPreviewResponse(ControllerProfile profile) {
+        if (stickPreview == null) return;
+        stickPreview.setResponse(new ControllerResponse(profile, false));
+        if (stickPreviewView != null) {
+            stickPreviewView.refresh();
         }
     }
 
@@ -858,6 +911,29 @@ public class ControllerSettingsFragment extends Fragment {
         content.addView(leftDz);
         content.addView(label(getString(R.string.controller_editor_right_deadzone)));
         content.addView(rightDz);
+        // Dragging a dead zone updates the live reading, so the value is felt rather than guessed
+        // (item 220). The working copy is what the preview shapes with, matching the save path.
+        android.widget.SeekBar.OnSeekBarChangeListener deadZonePreview =
+                new android.widget.SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(android.widget.SeekBar sb, int progress,
+                                                  boolean fromUser) {
+                        if (!fromUser) return;
+                        working.setLeftDeadZone(leftDz.getProgress() / 100f);
+                        working.setRightDeadZone(rightDz.getProgress() / 100f);
+                        refreshStickPreviewResponse(working);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(android.widget.SeekBar sb) {
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(android.widget.SeekBar sb) {
+                    }
+                };
+        leftDz.setOnSeekBarChangeListener(deadZonePreview);
+        rightDz.setOnSeekBarChangeListener(deadZonePreview);
 
         content.addView(label(getString(R.string.controller_editor_sensitivity_label)));
         android.widget.SeekBar leftSens = seekBarSens(working.getLeftStickSensitivity());
@@ -1047,6 +1123,7 @@ public class ControllerSettingsFragment extends Fragment {
                     List<ControllerProfile> profiles = profileManager.getProfiles(currentType);
                     profiles.set(active, working);
                     profileManager.saveProfiles(currentType, profiles);
+                    refreshStickPreviewResponse(working);
                     org.chimeramc.client.ui.animation.UiTouchFeedback.confirm(requireContext());
                     refreshProfiles();
                 })

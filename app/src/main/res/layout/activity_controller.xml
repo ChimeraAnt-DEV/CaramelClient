@@ -67,6 +67,13 @@
                 android:textColor="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
 
+            <org.chimeramc.client.launcher.ui.views.StickPreviewView
+                android:id="@+id/controller_stick_preview"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="top|start"
+                android:contentDescription="@string/controller_stick_preview_description" />
+
         </FrameLayout>
 
         <TextView
