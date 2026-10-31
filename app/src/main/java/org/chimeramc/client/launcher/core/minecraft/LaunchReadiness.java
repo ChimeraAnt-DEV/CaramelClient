@@ -46,6 +46,15 @@ public final class LaunchReadiness {
         STALE_NATIVE_LIBS,
         /** The signature rules do not cover this build, so the byte-pattern hooks stay off. */
         SIGNATURE_RULES_MISSING,
+        /**
+         * The installed Minecraft build is newer than every rule in the signature set (item 256).
+         *
+         * <p>A distinct state from {@link #SIGNATURE_RULES_MISSING} because the two read
+         * differently: this one means the game moved ahead of the launcher's tested range, so the
+         * player should expect the newest build's hooks to lag rather than think their exact build
+         * was skipped. Like the rules-missing state it is a warning, not a blocker.
+         */
+        GAME_NEWER_THAN_RULES,
         /** The Minecraft package itself is not installed on the device. */
         GAME_NOT_INSTALLED,
         /** The launcher-managed account is required but not signed in. */
@@ -64,6 +73,11 @@ public final class LaunchReadiness {
         public boolean abiIncompatible;
         public boolean extractionStale;
         public boolean signatureRulesCoverBuild = true;
+        /**
+         * True when the installed build is newer than every rule's range, rather than merely
+         * uncovered. Only meaningful when {@link #signatureRulesCoverBuild} is false.
+         */
+        public boolean signatureRulesNewerBuild;
         public boolean minecraftInstalled = true;
         public boolean signInRequired;
         public boolean signedIn = true;
@@ -74,6 +88,7 @@ public final class LaunchReadiness {
         public Facts abiIncompatible(boolean v) { abiIncompatible = v; return this; }
         public Facts extractionStale(boolean v) { extractionStale = v; return this; }
         public Facts signatureRulesCoverBuild(boolean v) { signatureRulesCoverBuild = v; return this; }
+        public Facts signatureRulesNewerBuild(boolean v) { signatureRulesNewerBuild = v; return this; }
         public Facts minecraftInstalled(boolean v) { minecraftInstalled = v; return this; }
         public Facts signInRequired(boolean v) { signInRequired = v; return this; }
         public Facts signedIn(boolean v) { signedIn = v; return this; }
@@ -94,7 +109,10 @@ public final class LaunchReadiness {
         if (!facts.gameFilesPresent) return State.GAME_FILES_MISSING;
         if (facts.abiIncompatible) return State.ABI_INCOMPATIBLE;
         if (facts.extractionStale) return State.STALE_NATIVE_LIBS;
-        if (!facts.signatureRulesCoverBuild) return State.SIGNATURE_RULES_MISSING;
+        if (!facts.signatureRulesCoverBuild) {
+            return facts.signatureRulesNewerBuild
+                    ? State.GAME_NEWER_THAN_RULES : State.SIGNATURE_RULES_MISSING;
+        }
         if (!facts.minecraftInstalled) return State.GAME_NOT_INSTALLED;
         if (facts.signInRequired && !facts.signedIn) return State.SIGN_IN_REQUIRED;
         return State.READY;
@@ -113,6 +131,7 @@ public final class LaunchReadiness {
             case READY:
             case STALE_NATIVE_LIBS:
             case SIGNATURE_RULES_MISSING:
+            case GAME_NEWER_THAN_RULES:
                 return false;
             default:
                 return true;

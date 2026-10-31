@@ -42,6 +42,12 @@ public final class LaunchProbe {
         /** Whether the signature rules cover the installed build. */
         boolean signatureRulesCoverBuild();
 
+        /**
+         * Whether the installed build is newer than every rule's range, rather than merely
+         * uncovered (item 256). Only meaningful when {@link #signatureRulesCoverBuild()} is false.
+         */
+        boolean signatureRulesNewerBuild();
+
         /** Whether the Minecraft package is installed on the device. */
         boolean minecraftInstalled();
 
@@ -77,6 +83,7 @@ public final class LaunchProbe {
         facts.abiIncompatible(read(source::abiIncompatible, false));
         facts.extractionStale(read(source::extractionStale, false));
         facts.signatureRulesCoverBuild(read(source::signatureRulesCoverBuild, true));
+        facts.signatureRulesNewerBuild(read(source::signatureRulesNewerBuild, false));
         facts.minecraftInstalled(read(source::minecraftInstalled, true));
         facts.signInRequired(read(source::signInRequired, false));
         facts.signedIn(read(source::signedIn, true));

@@ -2312,7 +2312,50 @@ import okhttp3.OkHttpClient;
             } catch (Throwable ignored) {
             }
         }
+        if (readiness == LaunchReadiness.State.GAME_NEWER_THAN_RULES) {
+            // The installed game is ahead of the signature set (item 256). This is a warning, not a
+            // blocker: the game runs, only the hook-driven features lag. The user is told once, on
+            // the launch attempt that hit it, and continuing is a single tap.
+            trace.warning("Installed build newer than signature rules", version.versionCode);
+            showNewerGameWarning(version, trace);
+            return;
+        }
 
+        proceedWithLaunch(version, trace);
+    }
+
+    /**
+     * The warning shown when the installed build is newer than the signature set (item 256).
+     *
+     * <p>It is deliberately a dismissible dialog rather than a silent log line: the features the
+     * user expects (overlays, cosmetics, controller hooks) will be missing, and without a word
+     * they would read as a bug in this launcher. It names the newest build the rules cover so the
+     * statement is checkable.
+     */
+    private void showNewerGameWarning(GameVersion version, LaunchTrace trace) {
+        String covered = "";
+        try {
+            covered = PreloaderSignatureRulesManager.highestCoveredVersion(this);
+        } catch (Throwable ignored) {
+        }
+        String message = getString(R.string.launch_failure_message_newer_game);
+        if (covered != null && !covered.isEmpty()) {
+            message = message + "\n\n"
+                    + getString(R.string.launch_failure_newer_game_covered, covered);
+        }
+        new CustomAlertDialog(this)
+                .setTitleText(getString(R.string.launch_failure_title_newer_game))
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.launch_failure_continue_anyway),
+                        v -> proceedWithLaunch(version, trace))
+                .setOnDismissAnimationEndListener(this::resetLaunchButton)
+                .show();
+    }
+
+    /**
+     * The launch itself, once every readiness check has been satisfied or warned past.
+     */
+    private void proceedWithLaunch(GameVersion version, LaunchTrace trace) {
         trace.mark("Launch validation completed", version.directoryName + " " + version.versionCode);
         try {
             Intent launchIntent = createMinecraftLaunchIntent();

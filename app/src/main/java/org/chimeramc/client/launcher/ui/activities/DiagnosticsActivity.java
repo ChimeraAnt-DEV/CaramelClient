@@ -97,6 +97,13 @@ public class DiagnosticsActivity extends BaseActivity {
         int rulesRevision = -1;
         /** Non-null when the rule DB has no entry covering the selected build. */
         String coverageFailure;
+        /**
+         * True when the selected build is newer than every rule's range (item 256), as opposed to
+         * merely uncovered. The diagnostics row says which, because the two need different actions.
+         */
+        boolean rulesNewerBuild;
+        /** The newest build any rule covers, or "" when coverage is open-ended/unreadable. */
+        String highestCoveredVersion = "";
         boolean nativeLoaded;
         boolean skinSeam;
         /** Whether the preloader's player-render hook is live (read once, off the UI thread). */
@@ -202,6 +209,10 @@ public class DiagnosticsActivity extends BaseActivity {
                 && !out.version.versionCode.isEmpty()) {
             out.coverageFailure = PreloaderSignatureRulesManager
                     .describeCoverageFailure(this, out.version.versionCode);
+            out.rulesNewerBuild = PreloaderSignatureRulesManager
+                    .installedBuildNewerThanRules(this, out.version.versionCode);
+            out.highestCoveredVersion = PreloaderSignatureRulesManager
+                    .highestCoveredVersion(this);
         }
         try {
             out.nativeLoaded = PreloaderInput.readRenderDiagnostics() != null;
@@ -391,9 +402,26 @@ public class DiagnosticsActivity extends BaseActivity {
         // build, every byte-pattern hook is off; the report must say that explicitly.
         if (data.version != null && data.version.versionCode != null
                 && !data.version.versionCode.isEmpty()) {
-            addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
-                    data.coverageFailure == null ? getString(R.string.diagnostics_rules_covers_build)
-                            : getString(R.string.diagnostics_rules_no_coverage));
+            if (data.coverageFailure == null) {
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_covers_build));
+            } else if (data.rulesNewerBuild) {
+                // "Newer than the rules" and "no rule for this exact build" are different
+                // statements; the row must not collapse them into one.
+                String covered = data.highestCoveredVersion == null
+                        || data.highestCoveredVersion.isEmpty()
+                        ? getString(R.string.diagnostics_rules_unknown)
+                        : data.highestCoveredVersion;
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_newer_build, covered));
+            } else {
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_no_coverage));
+            }
+            if (!data.highestCoveredVersion.isEmpty()) {
+                addRow(rows, R.string.diagnostics_field_signature_rules_highest,
+                        data.highestCoveredVersion);
+            }
         }
     }
 
@@ -653,8 +681,14 @@ public class DiagnosticsActivity extends BaseActivity {
         sb.append("Signature rules revision: ").append(data.rulesRevision).append("\n");
         if (version != null && version.versionCode != null && !version.versionCode.isEmpty()) {
             sb.append("Signature rule coverage: ")
-                    .append(data.coverageFailure == null
-                            ? "covered" : "NOT COVERED (byte-pattern hooks disabled)").append("\n");
+                    .append(data.coverageFailure == null ? "covered"
+                            : data.rulesNewerBuild
+                                    ? "build NEWER than the rules (byte-pattern hooks disabled)"
+                                    : "NOT COVERED (byte-pattern hooks disabled)")
+                    .append("\n");
+            if (!data.highestCoveredVersion.isEmpty()) {
+                sb.append("Newest covered build: ").append(data.highestCoveredVersion).append("\n");
+            }
         }
 
         AccountDiagnostics.Snapshot account = data.account;

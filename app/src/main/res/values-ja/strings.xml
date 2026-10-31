@@ -1137,4 +1137,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="script_manager_load_order">読み込み順 %1$d</string>
     <string name="script_manager_toggle_desc">このパッケージを有効または無効にする</string>
     <string name="script_manager_open">スクリプト管理</string>
+    <string name="launch_failure_title_newer_game">このMinecraftバージョンは未対応です</string>
+    <string name="launch_failure_message_newer_game">お使いのMinecraftはこのランチャーが対応するバージョンより新しいものです。アップデートで対応が追加されるまで、オーバーレイ・コスメ・コントローラーフックは制限または無効になります。ゲーム自体は通常どおり動作します。</string>
+    <string name="launch_failure_newer_game_covered">このバージョンが対応する最新のMinecraftは%1$sです。</string>
+    <string name="launch_failure_continue_anyway">それでも続行</string>
+    <string name="diagnostics_field_signature_rules_highest">対応する最新ビルド</string>
+    <string name="diagnostics_rules_newer_build">ビルドがルールより新しいです — 対応する最新は%1$sです</string>
 </resources>

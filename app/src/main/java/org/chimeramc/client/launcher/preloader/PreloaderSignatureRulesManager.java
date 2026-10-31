@@ -163,6 +163,36 @@ public final class PreloaderSignatureRulesManager {
                 + ": byte-pattern hooks (menu/HUD screens) are disabled for this build";
     }
 
+    /**
+     * True when the installed build is newer than every rule's range (item 256).
+     *
+     * <p>Distinguished from {@link #coversInstalledVersion} so the launcher can say "your game is
+     * newer than this build supports" rather than the generic "no hook definitions", which reads as
+     * a gap in this exact build. Fails closed to false: an unreadable rule file is reported by the
+     * coverage check, not as a newer-game condition.
+     */
+    public static boolean installedBuildNewerThanRules(Context context, String version) {
+        try {
+            String content = readRulesFile(getRulesFile(context));
+            return PreloaderRules.newerThanRules(content, version);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * The newest Bedrock build any rule covers, or "" when coverage is open-ended or unreadable.
+     * Shown by the diagnostics screen and the newer-game warning.
+     */
+    public static String highestCoveredVersion(Context context) {
+        try {
+            String content = readRulesFile(getRulesFile(context));
+            return PreloaderRules.highestCoveredVersion(content);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private static String readRulesFile(File file) {
         if (file == null || !file.isFile()) {
             return null;

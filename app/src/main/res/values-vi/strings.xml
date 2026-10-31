@@ -1170,4 +1170,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="script_manager_load_order">Thứ tự tải %1$d</string>
     <string name="script_manager_toggle_desc">Bật hoặc tắt gói này</string>
     <string name="script_manager_open">Trình quản lý script</string>
+    <string name="launch_failure_title_newer_game">Phiên bản Minecraft chưa được hỗ trợ</string>
+    <string name="launch_failure_message_newer_game">Phiên bản Minecraft của bạn mới hơn mức trình khởi chạy này hỗ trợ. Lớp phủ, trang trí và móc tay cầm sẽ bị hạn chế hoặc tắt cho đến khi bản cập nhật bổ sung hỗ trợ. Bản thân trò chơi vẫn chạy bình thường.</string>
+    <string name="launch_failure_newer_game_covered">Phiên bản Minecraft mới nhất được hỗ trợ bởi bản này là %1$s.</string>
+    <string name="launch_failure_continue_anyway">Vẫn tiếp tục</string>
+    <string name="diagnostics_field_signature_rules_highest">Bản dựng được hỗ trợ mới nhất</string>
+    <string name="diagnostics_rules_newer_build">Bản dựng mới hơn quy tắc — mới nhất được hỗ trợ là %1$s</string>
 </resources>

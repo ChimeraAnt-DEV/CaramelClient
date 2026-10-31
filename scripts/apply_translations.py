@@ -53,11 +53,15 @@ def escape(value: str) -> str:
     """A value written into XML, with the characters that are not valid raw made safe.
 
     The batch stores a literal newline escape as two characters (\\n), which is what the resource
-    system wants, so backslashes are not doubled. Apostrophes are: an unescaped one inside a
-    double-quoted Android string is fine, but the files use the escaped form throughout and mixing
-    the two styles makes the diffs unreadable.
+    system wants, so backslashes are not doubled. A raw ASCII apostrophe, though, is not valid in an
+    Android string resource: aapt rejects it with "Invalid unicode escape sequence", which is a build
+    failure rather than a runtime one, so a French sentence with "jusqu'à" broke the whole resource
+    merge. Every apostrophe is therefore written in the escaped form the files already use; the
+    normalisation runs first so a batch that already carries \\' is not double-escaped.
     """
-    return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    value = value.replace("\\'", "'")
+    return (value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            .replace("'", "\\'"))
 
 
 def check(locale: str, key: str, default: str, translated: str, problems: list[str]) -> None:

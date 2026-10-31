@@ -1140,4 +1140,10 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="script_manager_load_order">Orden de carga %1$d</string>
     <string name="script_manager_toggle_desc">Habilitar o deshabilitar este paquete</string>
     <string name="script_manager_open">Gestor de scripts</string>
+    <string name="launch_failure_title_newer_game">Versión de Minecraft aún no compatible</string>
+    <string name="launch_failure_message_newer_game">Tu versión de Minecraft es más reciente que la que admite este lanzador. Los overlays, cosméticos y ganchos de mando estarán limitados o desactivados hasta que una actualización añada compatibilidad. El juego funcionará con normalidad.</string>
+    <string name="launch_failure_newer_game_covered">La versión más reciente de Minecraft compatible con esta versión es %1$s.</string>
+    <string name="launch_failure_continue_anyway">Continuar de todos modos</string>
+    <string name="diagnostics_field_signature_rules_highest">Compilación compatible más reciente</string>
+    <string name="diagnostics_rules_newer_build">La compilación es más reciente que las reglas: la más nueva compatible es %1$s</string>
 </resources>

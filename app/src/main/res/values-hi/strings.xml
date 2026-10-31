@@ -1168,4 +1168,10 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="script_manager_load_order">लोड क्रम %1$d</string>
     <string name="script_manager_toggle_desc">इस पैकेज को सक्षम या अक्षम करें</string>
     <string name="script_manager_open">स्क्रिप्ट प्रबंधक</string>
+    <string name="launch_failure_title_newer_game">Minecraft संस्करण अभी समर्थित नहीं</string>
+    <string name="launch_failure_message_newer_game">आपका Minecraft संस्करण इस लॉन्चर के समर्थित संस्करण से नया है। ओवरले, कॉस्मेटिक्स और कंट्रोलर हुक सीमित या बंद रहेंगे जब तक कोई अपडेट समर्थन नहीं जोड़ता। गेम सामान्य रूप से चलेगा।</string>
+    <string name="launch_failure_newer_game_covered">इस संस्करण द्वारा समर्थित नवीनतम Minecraft संस्करण %1$s है।</string>
+    <string name="launch_failure_continue_anyway">फिर भी जारी रखें</string>
+    <string name="diagnostics_field_signature_rules_highest">नवीनतम समर्थित बिल्ड</string>
+    <string name="diagnostics_rules_newer_build">बिल्ड नियमों से नया है — नवीनतम समर्थित %1$s है</string>
 </resources>

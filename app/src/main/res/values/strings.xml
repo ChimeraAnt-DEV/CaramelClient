@@ -1574,6 +1574,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_field_signature_rules_coverage">Signature rule coverage</string>
     <string name="diagnostics_rules_covers_build">Covers this build</string>
     <string name="diagnostics_rules_no_coverage">NOT COVERED — byte-pattern hooks disabled for this build</string>
+    <string name="diagnostics_field_signature_rules_highest">Newest supported build</string>
+    <string name="diagnostics_rules_newer_build">Build is newer than the rules — newest supported is %1$s</string>
     <string name="diagnostics_field_cosmetics_hook">Cosmetics render hook</string>
     <string name="diagnostics_field_skin_seam">Skin capture seam</string>
     <string name="diagnostics_field_berry_api">BerryAPI backend</string>
@@ -2464,6 +2466,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="launch_failure_message_stale_libs">The extracted native libraries are from an older version of the launcher. They will be re-extracted automatically on the next launch. If the game still fails to start, run Repair installation in Settings \u2192 Diagnostics.</string>
     <string name="launch_failure_title_rules">Limited compatibility</string>
     <string name="launch_failure_message_rules">There are no hook definitions for this Minecraft build yet, so in-game overlays and cosmetics are disabled. The game itself will run normally.</string>
+    <string name="launch_failure_title_newer_game">Minecraft version not yet supported</string>
+    <string name="launch_failure_message_newer_game">Your Minecraft build is newer than this launcher version supports. In-game overlays, cosmetics and controller hooks will be limited or off until an update adds support. The game itself will run normally.</string>
+    <string name="launch_failure_newer_game_covered">The newest Minecraft build this version supports is %1$s.</string>
+    <string name="launch_failure_continue_anyway">Continue anyway</string>
     <string name="launch_failure_title_unexpected">Could not start the game</string>
     <string name="launch_failure_message_unexpected">The launcher could not begin the launch and the cause was not one it recognises. Nothing was changed on your device. Reopen the launcher and try again; if it keeps happening, run Repair installation in Settings \u2192 Diagnostics.</string>
     <string name="launch_failure_title_not_installed">Minecraft not found</string>

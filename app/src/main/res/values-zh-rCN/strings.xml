@@ -1161,4 +1161,10 @@
     <string name="script_manager_load_order">加载顺序 %1$d</string>
     <string name="script_manager_toggle_desc">启用或禁用此软件包</string>
     <string name="script_manager_open">脚本管理器</string>
+    <string name="launch_failure_title_newer_game">Minecraft 版本暂不支持</string>
+    <string name="launch_failure_message_newer_game">你的 Minecraft 版本比此启动器支持的版本更新。在更新加入支持之前，叠加层、装饰和手柄钩子将受限或关闭。游戏本身仍可正常运行。</string>
+    <string name="launch_failure_newer_game_covered">此版本支持的最新 Minecraft 版本为 %1$s。</string>
+    <string name="launch_failure_continue_anyway">仍然继续</string>
+    <string name="diagnostics_field_signature_rules_highest">最新支持的版本</string>
+    <string name="diagnostics_rules_newer_build">该版本比规则更新 — 最新支持的是 %1$s</string>
 </resources>

@@ -33,6 +33,8 @@ public final class LaunchFailurePresenter {
                 return R.string.launch_failure_title_stale_libs;
             case SIGNATURE_RULES_MISSING:
                 return R.string.launch_failure_title_rules;
+            case GAME_NEWER_THAN_RULES:
+                return R.string.launch_failure_title_newer_game;
             case GAME_NOT_INSTALLED:
                 return R.string.launch_failure_title_not_installed;
             case SIGN_IN_REQUIRED:
@@ -60,6 +62,8 @@ public final class LaunchFailurePresenter {
                 return R.string.launch_failure_message_stale_libs;
             case SIGNATURE_RULES_MISSING:
                 return R.string.launch_failure_message_rules;
+            case GAME_NEWER_THAN_RULES:
+                return R.string.launch_failure_message_newer_game;
             case GAME_NOT_INSTALLED:
                 return R.string.launch_failure_message_not_installed;
             case SIGN_IN_REQUIRED:

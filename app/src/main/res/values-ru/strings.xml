@@ -1171,4 +1171,10 @@
     <string name="script_manager_load_order">Порядок загрузки %1$d</string>
     <string name="script_manager_toggle_desc">Включить или отключить этот пакет</string>
     <string name="script_manager_open">Менеджер скриптов</string>
+    <string name="launch_failure_title_newer_game">Эта версия Minecraft пока не поддерживается</string>
+    <string name="launch_failure_message_newer_game">Ваша версия Minecraft новее, чем поддерживает этот лаунчер. Оверлеи, косметика и хуки контроллера будут ограничены или отключены, пока обновление не добавит поддержку. Сама игра будет работать как обычно.</string>
+    <string name="launch_failure_newer_game_covered">Самая новая версия Minecraft, поддерживаемая этой версией: %1$s.</string>
+    <string name="launch_failure_continue_anyway">Всё равно продолжить</string>
+    <string name="diagnostics_field_signature_rules_highest">Самая новая поддерживаемая сборка</string>
+    <string name="diagnostics_rules_newer_build">Сборка новее правил — самая новая поддерживаемая: %1$s</string>
 </resources>

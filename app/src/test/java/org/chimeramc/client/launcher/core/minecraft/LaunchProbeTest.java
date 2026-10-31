@@ -23,6 +23,7 @@ public class LaunchProbeTest {
         boolean abiIncompatible;
         boolean stale;
         boolean rulesCover = true;
+        boolean rulesNewer;
         boolean installed = true;
         boolean signInRequired;
         boolean signedIn = true;
@@ -40,6 +41,7 @@ public class LaunchProbeTest {
         @Override public boolean abiIncompatible() { maybeThrow("abiIncompatible"); return abiIncompatible; }
         @Override public boolean extractionStale() { maybeThrow("extractionStale"); return stale; }
         @Override public boolean signatureRulesCoverBuild() { maybeThrow("signatureRulesCoverBuild"); return rulesCover; }
+        @Override public boolean signatureRulesNewerBuild() { maybeThrow("signatureRulesNewerBuild"); return rulesNewer; }
         @Override public boolean minecraftInstalled() { maybeThrow("minecraftInstalled"); return installed; }
         @Override public boolean signInRequired() { maybeThrow("signInRequired"); return signInRequired; }
         @Override public boolean signedIn() { maybeThrow("signedIn"); return signedIn; }
@@ -55,6 +57,7 @@ public class LaunchProbeTest {
         assertFalse(facts.abiIncompatible);
         assertFalse(facts.extractionStale);
         assertTrue(facts.signatureRulesCoverBuild);
+        assertFalse(facts.signatureRulesNewerBuild);
         assertTrue(facts.minecraftInstalled);
         assertFalse(facts.signInRequired);
         assertTrue(facts.signedIn);
@@ -115,6 +118,7 @@ public class LaunchProbeTest {
             @Override public boolean abiIncompatible() { throw new NoSuchMethodError("readAllBytes"); }
             @Override public boolean extractionStale() { return false; }
             @Override public boolean signatureRulesCoverBuild() { return true; }
+            @Override public boolean signatureRulesNewerBuild() { return false; }
             @Override public boolean minecraftInstalled() { return true; }
             @Override public boolean signInRequired() { return false; }
             @Override public boolean signedIn() { return true; }

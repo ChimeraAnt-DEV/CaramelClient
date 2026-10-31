@@ -259,6 +259,64 @@ public class PreloaderRulesTest {
                 sourceRules, packaged);
     }
 
+    @Test
+    public void aBuildBeyondTheNewestRuleIsNewerThanTheRules() {
+        // The ranges the DB ships: nothing above 1.26.50.99 is covered, so a 1.26.60 build is
+        // "newer than the rules" rather than merely sitting in a gap.
+        String db = "{\"revision\":7,\"rules\":["
+                + rule("1.26.40.00", "1.26.40.99", 17, true) + ","
+                + rule("1.26.50.00", "1.26.50.99", 17, true)
+                + "]}";
+        assertTrue(PreloaderRules.newerThanRules(db, "1.26.60.28"));
+        assertTrue(PreloaderRules.newerThanRules(db, "26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules(db, "1.26.50.20"));
+        // A version inside the range is not newer, and neither is one below it.
+        assertFalse(PreloaderRules.newerThanRules(db, "1.26.40.50"));
+    }
+
+    @Test
+    public void aGapBetweenRulesIsNotNewerThanTheRules() {
+        // A version between two ranges is uncovered but not newer than the newest rule: the two
+        // states carry different copy, so they must not be conflated.
+        String db = "{\"revision\":7,\"rules\":["
+                + rule("1.26.40.00", "1.26.40.99", 17, true) + ","
+                + rule("1.26.50.00", "1.26.50.99", 17, true)
+                + "]}";
+        assertFalse(PreloaderRules.newerThanRules(db, "1.26.45.10"));
+        assertFalse(PreloaderRules.coversVersion(db, "1.26.45.10"));
+    }
+
+    @Test
+    public void anOpenEndedRuleMeansNothingIsNewer() {
+        // A rule with no max covers everything above it, so the launcher must never claim the game
+        // has outrun a rule set that is deliberately unbounded.
+        String db = "{\"revision\":7,\"rules\":["
+                + rule("1.21.132", null, 17, true)
+                + "]}";
+        assertFalse(PreloaderRules.newerThanRules(db, "1.26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules(db, "99.99.99"));
+        assertEquals("", PreloaderRules.highestCoveredVersion(db));
+    }
+
+    @Test
+    public void theHighestCoveredVersionIsTheNewestMax() {
+        String db = "{\"revision\":7,\"rules\":["
+                + rule("1.26.40.00", "1.26.40.99", 17, true) + ","
+                + rule("1.26.50.00", "1.26.50.99", 17, true) + ","
+                + rule("1.26.33", "1.26.39.99", 17, true)
+                + "]}";
+        assertEquals("1.26.50.99", PreloaderRules.highestCoveredVersion(db));
+    }
+
+    @Test
+    public void anEmptyOrUnreadableDatabaseIsNeverNewer() {
+        assertFalse(PreloaderRules.newerThanRules("", "1.26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules("not json", "1.26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules("{\"revision\":7,\"rules\":[]}", "1.26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules(null, "1.26.60.28"));
+        assertFalse(PreloaderRules.newerThanRules("{\"rules\":[]}", null));
+    }
+
     private static java.nio.file.Path realRulesPath() {
         // Gradle runs unit tests with the module dir as the working directory, so the file is at
         // ../resources/preloader/...; fall back to a repo-relative path for other runners.

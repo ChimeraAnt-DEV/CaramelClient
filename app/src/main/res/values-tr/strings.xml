@@ -1167,4 +1167,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="script_manager_load_order">Yükleme sırası %1$d</string>
     <string name="script_manager_toggle_desc">Bu paketi etkinleştir veya devre dışı bırak</string>
     <string name="script_manager_open">Betik yöneticisi</string>
+    <string name="launch_failure_title_newer_game">Minecraft sürümü henüz desteklenmiyor</string>
+    <string name="launch_failure_message_newer_game">Minecraft sürümünüz bu başlatıcının desteklediğinden daha yeni. Bir güncelleme destek ekleyene kadar yer paylaşımları, kozmetikler ve denetleyici kancaları sınırlı veya kapalı olacak. Oyunun kendisi normal çalışır.</string>
+    <string name="launch_failure_newer_game_covered">Bu sürümün desteklediği en yeni Minecraft sürümü %1$s.</string>
+    <string name="launch_failure_continue_anyway">Yine de devam et</string>
+    <string name="diagnostics_field_signature_rules_highest">Desteklenen en yeni derleme</string>
+    <string name="diagnostics_rules_newer_build">Derleme kurallardan daha yeni — desteklenen en yeni sürüm %1$s</string>
 </resources>

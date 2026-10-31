@@ -41,6 +41,7 @@ public class LaunchFailurePresenterTest {
                 LaunchReadiness.State.ABI_INCOMPATIBLE,
                 LaunchReadiness.State.STALE_NATIVE_LIBS,
                 LaunchReadiness.State.SIGNATURE_RULES_MISSING,
+                LaunchReadiness.State.GAME_NEWER_THAN_RULES,
                 LaunchReadiness.State.GAME_NOT_INSTALLED,
                 LaunchReadiness.State.SIGN_IN_REQUIRED,
         };
@@ -61,6 +62,7 @@ public class LaunchFailurePresenterTest {
                     LaunchFailurePresenter.isWarning(state));
         }
         assertTrue(LaunchFailurePresenter.isWarning(LaunchReadiness.State.STALE_NATIVE_LIBS));
+        assertTrue(LaunchFailurePresenter.isWarning(LaunchReadiness.State.GAME_NEWER_THAN_RULES));
         assertFalse(LaunchFailurePresenter.isWarning(LaunchReadiness.State.ABI_INCOMPATIBLE));
     }
 }

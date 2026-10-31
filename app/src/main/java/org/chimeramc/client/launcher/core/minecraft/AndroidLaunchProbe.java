@@ -165,6 +165,19 @@ public final class AndroidLaunchProbe implements LaunchProbe.Source {
     }
 
     @Override
+    public boolean signatureRulesNewerBuild() {
+        if (version == null || version.versionCode == null || version.versionCode.isEmpty()) {
+            return false;
+        }
+        try {
+            return PreloaderSignatureRulesManager.installedBuildNewerThanRules(
+                    context, version.versionCode);
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean minecraftInstalled() {
         try {
             return PlayStoreValidator.isMinecraftInstalled(context);

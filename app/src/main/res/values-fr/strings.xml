@@ -1140,4 +1140,10 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="script_manager_load_order">Ordre de chargement %1$d</string>
     <string name="script_manager_toggle_desc">Activer ou désactiver ce paquet</string>
     <string name="script_manager_open">Gestionnaire de scripts</string>
+    <string name="launch_failure_title_newer_game">Version de Minecraft pas encore prise en charge</string>
+    <string name="launch_failure_message_newer_game">Votre version de Minecraft est plus récente que celle prise en charge par ce lanceur. Les superpositions, cosmétiques et raccourcis de manette seront limités ou désactivés jusqu\'à ce qu\'une mise à jour ajoute la prise en charge. Le jeu fonctionnera normalement.</string>
+    <string name="launch_failure_newer_game_covered">La version de Minecraft la plus récente prise en charge par cette version est %1$s.</string>
+    <string name="launch_failure_continue_anyway">Continuer quand même</string>
+    <string name="diagnostics_field_signature_rules_highest">Version prise en charge la plus récente</string>
+    <string name="diagnostics_rules_newer_build">La version est plus récente que les règles : la plus récente prise en charge est %1$s</string>
 </resources>

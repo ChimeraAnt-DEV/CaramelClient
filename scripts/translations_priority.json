@@ -147,7 +147,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Orden de carga %1$d",
     "script_manager_toggle_desc": "Habilitar o deshabilitar este paquete",
-    "script_manager_open": "Gestor de scripts"
+    "script_manager_open": "Gestor de scripts",
+    "launch_failure_title_newer_game": "Versión de Minecraft aún no compatible",
+    "launch_failure_message_newer_game": "Tu versión de Minecraft es más reciente que la que admite este lanzador. Los overlays, cosméticos y ganchos de mando estarán limitados o desactivados hasta que una actualización añada compatibilidad. El juego funcionará con normalidad.",
+    "launch_failure_newer_game_covered": "La versión más reciente de Minecraft compatible con esta versión es %1$s.",
+    "launch_failure_continue_anyway": "Continuar de todos modos",
+    "diagnostics_field_signature_rules_highest": "Compilación compatible más reciente",
+    "diagnostics_rules_newer_build": "La compilación es más reciente que las reglas: la más nueva compatible es %1$s"
   },
   "fr": {
     "nav_back": "Retour",
@@ -297,7 +303,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Ordre de chargement %1$d",
     "script_manager_toggle_desc": "Activer ou désactiver ce paquet",
-    "script_manager_open": "Gestionnaire de scripts"
+    "script_manager_open": "Gestionnaire de scripts",
+    "launch_failure_title_newer_game": "Version de Minecraft pas encore prise en charge",
+    "launch_failure_message_newer_game": "Votre version de Minecraft est plus récente que celle prise en charge par ce lanceur. Les superpositions, cosmétiques et raccourcis de manette seront limités ou désactivés jusqu'à ce qu'une mise à jour ajoute la prise en charge. Le jeu fonctionnera normalement.",
+    "launch_failure_newer_game_covered": "La version de Minecraft la plus récente prise en charge par cette version est %1$s.",
+    "launch_failure_continue_anyway": "Continuer quand même",
+    "diagnostics_field_signature_rules_highest": "Version prise en charge la plus récente",
+    "diagnostics_rules_newer_build": "La version est plus récente que les règles : la plus récente prise en charge est %1$s"
   },
   "hi": {
     "nav_back": "वापस",
@@ -447,7 +459,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "लोड क्रम %1$d",
     "script_manager_toggle_desc": "इस पैकेज को सक्षम या अक्षम करें",
-    "script_manager_open": "स्क्रिप्ट प्रबंधक"
+    "script_manager_open": "स्क्रिप्ट प्रबंधक",
+    "launch_failure_title_newer_game": "Minecraft संस्करण अभी समर्थित नहीं",
+    "launch_failure_message_newer_game": "आपका Minecraft संस्करण इस लॉन्चर के समर्थित संस्करण से नया है। ओवरले, कॉस्मेटिक्स और कंट्रोलर हुक सीमित या बंद रहेंगे जब तक कोई अपडेट समर्थन नहीं जोड़ता। गेम सामान्य रूप से चलेगा।",
+    "launch_failure_newer_game_covered": "इस संस्करण द्वारा समर्थित नवीनतम Minecraft संस्करण %1$s है।",
+    "launch_failure_continue_anyway": "फिर भी जारी रखें",
+    "diagnostics_field_signature_rules_highest": "नवीनतम समर्थित बिल्ड",
+    "diagnostics_rules_newer_build": "बिल्ड नियमों से नया है — नवीनतम समर्थित %1$s है"
   },
   "id": {
     "nav_back": "Kembali",
@@ -597,7 +615,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Urutan muat %1$d",
     "script_manager_toggle_desc": "Aktifkan atau nonaktifkan paket ini",
-    "script_manager_open": "Pengelola skrip"
+    "script_manager_open": "Pengelola skrip",
+    "launch_failure_title_newer_game": "Versi Minecraft belum didukung",
+    "launch_failure_message_newer_game": "Versi Minecraft Anda lebih baru daripada yang didukung peluncur ini. Overlay, kosmetik, dan kait pengontrol akan terbatas atau nonaktif sampai pembaruan menambahkan dukungan. Gamenya sendiri akan berjalan normal.",
+    "launch_failure_newer_game_covered": "Versi Minecraft terbaru yang didukung versi ini adalah %1$s.",
+    "launch_failure_continue_anyway": "Tetap lanjutkan",
+    "diagnostics_field_signature_rules_highest": "Build didukung terbaru",
+    "diagnostics_rules_newer_build": "Build lebih baru daripada aturan — terbaru yang didukung adalah %1$s"
   },
   "ja": {
     "nav_back": "戻る",
@@ -747,7 +771,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "読み込み順 %1$d",
     "script_manager_toggle_desc": "このパッケージを有効または無効にする",
-    "script_manager_open": "スクリプト管理"
+    "script_manager_open": "スクリプト管理",
+    "launch_failure_title_newer_game": "このMinecraftバージョンは未対応です",
+    "launch_failure_message_newer_game": "お使いのMinecraftはこのランチャーが対応するバージョンより新しいものです。アップデートで対応が追加されるまで、オーバーレイ・コスメ・コントローラーフックは制限または無効になります。ゲーム自体は通常どおり動作します。",
+    "launch_failure_newer_game_covered": "このバージョンが対応する最新のMinecraftは%1$sです。",
+    "launch_failure_continue_anyway": "それでも続行",
+    "diagnostics_field_signature_rules_highest": "対応する最新ビルド",
+    "diagnostics_rules_newer_build": "ビルドがルールより新しいです — 対応する最新は%1$sです"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -897,7 +927,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Ordem de carregamento %1$d",
     "script_manager_toggle_desc": "Habilitar ou desabilitar este pacote",
-    "script_manager_open": "Gerenciador de scripts"
+    "script_manager_open": "Gerenciador de scripts",
+    "launch_failure_title_newer_game": "Versão do Minecraft ainda não suportada",
+    "launch_failure_message_newer_game": "A sua versão do Minecraft é mais recente do que a suportada por este launcher. Sobreposições, cosméticos e atalhos de comando ficarão limitados ou desativados até que uma atualização adicione suporte. O jogo em si funcionará normalmente.",
+    "launch_failure_newer_game_covered": "A versão mais recente do Minecraft suportada por esta versão é %1$s.",
+    "launch_failure_continue_anyway": "Continuar mesmo assim",
+    "diagnostics_field_signature_rules_highest": "Build suportada mais recente",
+    "diagnostics_rules_newer_build": "A build é mais recente que as regras — a mais recente suportada é %1$s"
   },
   "ru": {
     "nav_back": "Назад",
@@ -1047,7 +1083,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Порядок загрузки %1$d",
     "script_manager_toggle_desc": "Включить или отключить этот пакет",
-    "script_manager_open": "Менеджер скриптов"
+    "script_manager_open": "Менеджер скриптов",
+    "launch_failure_title_newer_game": "Эта версия Minecraft пока не поддерживается",
+    "launch_failure_message_newer_game": "Ваша версия Minecraft новее, чем поддерживает этот лаунчер. Оверлеи, косметика и хуки контроллера будут ограничены или отключены, пока обновление не добавит поддержку. Сама игра будет работать как обычно.",
+    "launch_failure_newer_game_covered": "Самая новая версия Minecraft, поддерживаемая этой версией: %1$s.",
+    "launch_failure_continue_anyway": "Всё равно продолжить",
+    "diagnostics_field_signature_rules_highest": "Самая новая поддерживаемая сборка",
+    "diagnostics_rules_newer_build": "Сборка новее правил — самая новая поддерживаемая: %1$s"
   },
   "tr": {
     "nav_back": "Geri",
@@ -1197,7 +1239,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Yükleme sırası %1$d",
     "script_manager_toggle_desc": "Bu paketi etkinleştir veya devre dışı bırak",
-    "script_manager_open": "Betik yöneticisi"
+    "script_manager_open": "Betik yöneticisi",
+    "launch_failure_title_newer_game": "Minecraft sürümü henüz desteklenmiyor",
+    "launch_failure_message_newer_game": "Minecraft sürümünüz bu başlatıcının desteklediğinden daha yeni. Bir güncelleme destek ekleyene kadar yer paylaşımları, kozmetikler ve denetleyici kancaları sınırlı veya kapalı olacak. Oyunun kendisi normal çalışır.",
+    "launch_failure_newer_game_covered": "Bu sürümün desteklediği en yeni Minecraft sürümü %1$s.",
+    "launch_failure_continue_anyway": "Yine de devam et",
+    "diagnostics_field_signature_rules_highest": "Desteklenen en yeni derleme",
+    "diagnostics_rules_newer_build": "Derleme kurallardan daha yeni — desteklenen en yeni sürüm %1$s"
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1347,7 +1395,13 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "Thứ tự tải %1$d",
     "script_manager_toggle_desc": "Bật hoặc tắt gói này",
-    "script_manager_open": "Trình quản lý script"
+    "script_manager_open": "Trình quản lý script",
+    "launch_failure_title_newer_game": "Phiên bản Minecraft chưa được hỗ trợ",
+    "launch_failure_message_newer_game": "Phiên bản Minecraft của bạn mới hơn mức trình khởi chạy này hỗ trợ. Lớp phủ, trang trí và móc tay cầm sẽ bị hạn chế hoặc tắt cho đến khi bản cập nhật bổ sung hỗ trợ. Bản thân trò chơi vẫn chạy bình thường.",
+    "launch_failure_newer_game_covered": "Phiên bản Minecraft mới nhất được hỗ trợ bởi bản này là %1$s.",
+    "launch_failure_continue_anyway": "Vẫn tiếp tục",
+    "diagnostics_field_signature_rules_highest": "Bản dựng được hỗ trợ mới nhất",
+    "diagnostics_rules_newer_build": "Bản dựng mới hơn quy tắc — mới nhất được hỗ trợ là %1$s"
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1497,6 +1551,12 @@
     "script_manager_meta": "%1$s \\u00b7 v%2$s",
     "script_manager_load_order": "加载顺序 %1$d",
     "script_manager_toggle_desc": "启用或禁用此软件包",
-    "script_manager_open": "脚本管理器"
+    "script_manager_open": "脚本管理器",
+    "launch_failure_title_newer_game": "Minecraft 版本暂不支持",
+    "launch_failure_message_newer_game": "你的 Minecraft 版本比此启动器支持的版本更新。在更新加入支持之前，叠加层、装饰和手柄钩子将受限或关闭。游戏本身仍可正常运行。",
+    "launch_failure_newer_game_covered": "此版本支持的最新 Minecraft 版本为 %1$s。",
+    "launch_failure_continue_anyway": "仍然继续",
+    "diagnostics_field_signature_rules_highest": "最新支持的版本",
+    "diagnostics_rules_newer_build": "该版本比规则更新 — 最新支持的是 %1$s"
   }
 }
