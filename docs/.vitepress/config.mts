@@ -26,6 +26,7 @@ function buildEnglishSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
+        { text: "Rule File Signing", link: `${localePrefix}preloader-rule-signing` },
         {
           text: "Memory Hook Macros",
           link: `${localePrefix}api/memory-hook-macros`,
@@ -58,6 +59,7 @@ function buildChineseSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
+        { text: "规则文件签名", link: `${localePrefix}preloader-rule-signing` },
         { text: "Memory Hook 宏", link: `${localePrefix}api/memory-hook-macros` },
         { text: "Types 与宏", link: `${localePrefix}api/types-and-macros` },
       ],

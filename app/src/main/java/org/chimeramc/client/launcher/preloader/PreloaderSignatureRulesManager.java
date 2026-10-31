@@ -26,6 +26,10 @@ import okhttp3.ResponseBody;
 public final class PreloaderSignatureRulesManager {
     private static final String TAG = "PreloaderSigs";
     private static final String ASSET_DEFAULT_RULES = "preloader/preloader_signature_rules_source.json";
+    private static final String ASSET_RULES_SIGNATURE = "preloader/preloader_signature_rules_source.json.sig";
+    private static final String ASSET_RULES_PUBLIC_KEY = "preloader/preloader_rules_public_key.pem";
+    /** The detached signature sits beside the rule file, so the URL is derived, never configured. */
+    private static final String SIGNATURE_SUFFIX = ".sig";
     private static final String RESOURCE_DIR = "resources/preloader";
     private static final String LOCAL_RULES_FILE = "preloader_signature_rules.json";
     private static final String PREFS_NAME = "preloader_signature_rules";
@@ -33,20 +37,29 @@ public final class PreloaderSignatureRulesManager {
 
     /** Where the rules file currently in use came from. Reported by the diagnostics summary. */
     public static final String SOURCE_BUNDLED = "bundled";
-    public static final String SOURCE_REMOTE = "remote";
+    /**
+     * A remote rule set whose detached signature verified against the shipped public key (item
+     * 257). There is no unsigned remote state: a fetched file that does not verify is refused, so
+     * the only remote source that can be recorded is this one.
+     */
+    public static final String SOURCE_REMOTE = "remote-signed";
     private static final String KEY_RULES_SOURCE = "rules_source";
 
     private static volatile String sLastSource = SOURCE_BUNDLED;
 
     /**
-     * Signature rules are fetched from these sources in order. The first source that returns
-     * valid rules wins, so Chimera's own copy is authoritative and Levi's upstream file is
-     * only the fallback for when our host is unreachable. The bundled asset is the last
-     * resort, so an offline launch still has current rules.
+     * Signature rules are fetched from these sources in order, and the first one whose detached
+     * signature verifies wins. Only hosts that publish a copy we can sign belong here: the rule
+     * file selects the addresses the preloader patches, so an unsigned copy from a third party
+     * would be a way to run arbitrary code, and it is refused rather than trusted.
+     *
+     * <p>The upstream LeviLaunchroid rules are the provenance of the bundled snapshot (see the
+     * README acknowledgements) rather than a runtime fetch, because that project does not sign
+     * with this key. The bundled asset is the offline floor, so a launch with no network still has
+     * current rules.
      */
     private static final String[] REMOTE_RULES_URLS = {
-            "https://raw.githubusercontent.com/ChimeraAnt-DEV/GlowberryClient/main/resources/preloader/preloader_signature_rules_source.json",
-            "https://raw.githubusercontent.com/LiteLDev/LeviLaunchroid/refs/heads/main/resources/preloader/preloader_signature_rules_source.json"
+            "https://raw.githubusercontent.com/ChimeraAnt-DEV/GlowberryClient/main/resources/preloader/preloader_signature_rules_source.json"
     };
 
     private static final AtomicBoolean refreshRunning = new AtomicBoolean(false);
@@ -275,6 +288,24 @@ public final class PreloaderSignatureRulesManager {
 
         String remoteRules = null;
         String failureMessage = "Failed to fetch remote preloader signature rules";
+        // The rule file decides which code addresses the preloader patches, so a fetched copy is
+        // verified against the shipped public key before it is accepted (item 257). The key is
+        // bundled, so a host that is compromised or a man in the middle cannot substitute a rule
+        // set: they would have to forge a signature without the private key. A missing bundled key
+        // (a broken asset) disables the remote path rather than accepting unsigned rules.
+        String publicKey = readAsset(context, ASSET_RULES_PUBLIC_KEY);
+        if (isBlank(publicKey)) {
+            // No key means no way to tell a real rule set from a forged one, and an unverified
+            // rule set decides which addresses get patched. The remote path is closed; the bundled
+            // rules stay in use.
+            Log.w(TAG, "No bundled rules public key; remote rule sets are refused");
+            return new RefreshResult(
+                    false,
+                    false,
+                    "No bundled rules public key; remote rule sets are refused",
+                    getLastSuccessfulUpdateTime(context)
+            );
+        }
         for (String url : REMOTE_RULES_URLS) {
             if (isBlank(url)) {
                 continue;
@@ -286,6 +317,14 @@ public final class PreloaderSignatureRulesManager {
             if (!PreloaderRules.hasValidRules(candidate)) {
                 Log.w(TAG, "Signature rules from " + url + " are invalid, trying next source");
                 failureMessage = "Remote preloader signature rules are invalid";
+                continue;
+            }
+            String signature = fetchText(url.trim() + SIGNATURE_SUFFIX);
+            if (!PreloaderRulesSignature.verify(candidate, signature, publicKey)) {
+                Log.w(TAG, "Signature rules from " + url
+                        + " failed signature verification; refusing the rule set");
+                failureMessage =
+                        "Remote preloader signature rules failed signature verification";
                 continue;
             }
             remoteRules = candidate;
@@ -343,8 +382,10 @@ public final class PreloaderSignatureRulesManager {
         }
 
         if (writeResult.changed) {
+            // Only a signature-verified rule set reaches this point, so the recorded source says
+            // so: "remote" alone would not tell a reader whether the file was checked.
             sLastSource = SOURCE_REMOTE;
-            setRulesSource(context, SOURCE_REMOTE);
+            setRulesSource(context, sLastSource);
         }
         long updateTime = System.currentTimeMillis();
         setLastSuccessfulUpdateTime(context, updateTime);

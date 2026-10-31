@@ -151,6 +151,13 @@ jobs:
           python3 tools/tests/verify_binary_test.py
           python3 scripts/tests/compute_checksums_test.py
           python3 scripts/tests/release_notes_test.py
+          python3 scripts/tests/sign_preloader_rules_test.py
+
+      - name: Verify the shipped rule signature
+        # The rule file decides which addresses the preloader patches, so a signature that does not
+        # match the file would silently disable every remote rule set (item 257). This checks the
+        # pair the app actually bundles, with the public key the app ships.
+        run: python3 scripts/sign_preloader_rules.py --verify
 
       - name: Inject API Keys
         env:

@@ -1590,7 +1590,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_hook_live">Live</string>
     <string name="diagnostics_hook_inactive">Inactive</string>
     <string name="diagnostics_rules_bundled">Bundled</string>
-    <string name="diagnostics_rules_remote">Remote</string>
+    <string name="diagnostics_rules_remote">Remote (signature verified)</string>
     <string name="diagnostics_rules_unknown">Unknown</string>
     <string name="diagnostics_extraction_ok">Up to date</string>
     <string name="diagnostics_extraction_stale">Stale — will re-extract on next launch</string>

@@ -388,7 +388,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String sourceLabel;
         if (data.rulesSource == null) {
             sourceLabel = getString(R.string.diagnostics_rules_unknown);
-        } else if ("remote".equals(data.rulesSource)) {
+        } else if (PreloaderSignatureRulesManager.SOURCE_REMOTE.equals(data.rulesSource)) {
             sourceLabel = getString(R.string.diagnostics_rules_remote);
         } else {
             sourceLabel = getString(R.string.diagnostics_rules_bundled);
