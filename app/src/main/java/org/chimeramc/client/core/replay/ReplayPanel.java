@@ -746,14 +746,23 @@ public final class ReplayPanel {
                 highlightSelection();
                 showClipActions(clip);
             });
+            // Item 206: one throttle per card, so a fast drag cannot queue a decode per touch
+            // move. `frameAt` decodes at the drag position, so the preview follows the finger
+            // without the queue growing behind it.
+            final ReplayScrubThrottle scrubThrottle = new ReplayScrubThrottle();
             card.setScrubListener(new ClipCardView.ScrubListener() {
                 @Override
                 public void onScrubStart(ReplayClip c) {
                     // A scrub is a preview, not a selection; it must not disturb the selected card.
+                    scrubThrottle.reset();
                 }
 
                 @Override
                 public void onScrub(ReplayClip c, float fraction) {
+                    if (!scrubThrottle.shouldDecode(
+                            android.os.SystemClock.uptimeMillis(), fraction, c.durationMs())) {
+                        return;
+                    }
                     runOnIo(() -> {
                         final android.graphics.Bitmap frame = ReplayThumbnails.frameAt(c, fraction);
                         if (frame == null) return;
@@ -767,6 +776,7 @@ public final class ReplayPanel {
 
                 @Override
                 public void onScrubEnd(ReplayClip c) {
+                    scrubThrottle.reset();
                     card.clearScrubPreview();
                 }
             });

@@ -201,19 +201,19 @@ final class ClipCardView extends FrameLayout {
                 scrubDownY = event.getY();
                 return false;
             case android.view.MotionEvent.ACTION_MOVE: {
-                float dx = Math.abs(event.getX() - scrubDownX);
-                float dy = Math.abs(event.getY() - scrubDownY);
+                // The slop/horizontal decision and the fraction are pure rules (item 206), so the
+                // view only feeds them the touch coordinates.
                 if (!scrubActive) {
                     int slop = android.view.ViewConfiguration.get(context).getScaledTouchSlop();
-                    if (dx > slop && dx > dy) {
+                    if (ReplayScrubGesture.isScrub(scrubDownX, scrubDownY,
+                            event.getX(), event.getY(), slop)) {
                         scrubActive = true;
                         scrubListener.onScrubStart(clip);
                     }
                 }
                 if (scrubActive) {
-                    float width = Math.max(1f, getWidth());
-                    float fraction = Math.max(0f, Math.min(1f, event.getX() / width));
-                    scrubListener.onScrub(clip, fraction);
+                    scrubListener.onScrub(clip,
+                            ReplayScrubGesture.fraction(event.getX(), getWidth()));
                     return true;
                 }
                 return false;
