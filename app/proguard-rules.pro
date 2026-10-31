@@ -12,7 +12,14 @@
 
 # The preloader bridge (Java -> libpreloader.so). Every public method here is either a native
 # method or called from a native callback by name.
--keep class org.chimeramc.client.launcher.preloader.** { *; }
+#
+# The package is org.chimeramc.client.preloader, NOT ...client.launcher.preloader: the files sit in
+# a `launcher/preloader/` directory, but the package declaration (and therefore the mangled JNI
+# symbol) is `preloader`. Keeping the wrong path left every native method reachable only through the
+# broad `native <methods>` rule below — which keeps the method but still lets R8 rename the class,
+# so `Java_org_chimeramc_client_preloader_PreloaderInput_*` would no longer resolve. The directory
+# segment is not part of the name; keep the package.
+-keep class org.chimeramc.client.preloader.** { *; }
 
 # The JNI helpers under core.jni.
 -keep class org.chimeramc.client.core.jni.** { *; }
