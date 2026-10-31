@@ -1205,4 +1205,21 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="diagnostics_stats_success_rate">सफलता दर</string>
     <string name="diagnostics_stats_avg_first_frame">पहले फ़्रेम तक औसत समय</string>
     <string name="diagnostics_stats_none">अभी तक कोई लॉन्च दर्ज नहीं।</string>
+    <string name="setup_compat_title">डिवाइस जाँच</string>
+    <string name="setup_compat_all_ok">सब कुछ ठीक है।</string>
+    <string name="setup_compat_free_space">खाली जगह</string>
+    <string name="setup_compat_free_space_ok">पर्याप्त खाली जगह (%1$s उपलब्ध)</string>
+    <string name="setup_compat_free_space_low">जगह कम: %1$s उपलब्ध, लॉन्च विफल हो सकता है</string>
+    <string name="setup_compat_free_space_blocking">जगह अपर्याप्त: %1$s उपलब्ध, लगभग %2$s चाहिए</string>
+    <string name="setup_compat_free_space_unknown">खाली जगह पढ़ी नहीं जा सकी</string>
+    <string name="setup_compat_abi">गेम बिल्ड</string>
+    <string name="setup_compat_abi_ok">यह बिल्ड इस डिवाइस पर चल सकता है</string>
+    <string name="setup_compat_abi_blocking">यह बिल्ड केवल 32-बिट है; 64-बिट बिल्ड आयात करें</string>
+    <string name="setup_compat_play_store">गेम स्रोत</string>
+    <string name="setup_compat_play_store_ok">आयातित गेम उपयोग हो रहा है</string>
+    <string name="setup_compat_play_store_warn">इंस्टॉल किया Play Store गेम उपयोग हो रहा है; सभी सुविधाओं के लिए APK आयात करें</string>
+    <string name="setup_compat_perm">स्टोरेज पहुँच</string>
+    <string name="setup_compat_perm_ok">प्रदान की गई</string>
+    <string name="setup_compat_perm_blocking">अस्वीकृत; गेम डेटा लिखने के लिए पहुँच दें</string>
+    <string name="setup_compat_fix">ठीक करें</string>
 </resources>

@@ -1204,4 +1204,21 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="diagnostics_stats_success_rate">Başarı oranı</string>
     <string name="diagnostics_stats_avg_first_frame">İlk kareye kadar ortalama süre</string>
     <string name="diagnostics_stats_none">Henüz başlatma kaydedilmedi.</string>
+    <string name="setup_compat_title">Cihaz denetimi</string>
+    <string name="setup_compat_all_ok">Her şey yolunda.</string>
+    <string name="setup_compat_free_space">Boş alan</string>
+    <string name="setup_compat_free_space_ok">Yeterli boş alan (%1$s kullanılabilir)</string>
+    <string name="setup_compat_free_space_low">Alan azalıyor: %1$s kullanılabilir, başlatma başarısız olabilir</string>
+    <string name="setup_compat_free_space_blocking">Yetersiz alan: %1$s kullanılabilir, yaklaşık %2$s gerekli</string>
+    <string name="setup_compat_free_space_unknown">Boş alan okunamadı</string>
+    <string name="setup_compat_abi">Oyun derlemesi</string>
+    <string name="setup_compat_abi_ok">Bu derleme bu cihazda çalışabilir</string>
+    <string name="setup_compat_abi_blocking">Bu derleme yalnızca 32 bit; 64 bit derleme içe aktarın</string>
+    <string name="setup_compat_play_store">Oyun kaynağı</string>
+    <string name="setup_compat_play_store_ok">İçe aktarılan oyun kullanılıyor</string>
+    <string name="setup_compat_play_store_warn">Yüklü Play Store oyunu kullanılıyor; tüm özellikler için bir APK içe aktarın</string>
+    <string name="setup_compat_perm">Depolama erişimi</string>
+    <string name="setup_compat_perm_ok">Verildi</string>
+    <string name="setup_compat_perm_blocking">Reddedildi; oyun verisi yazılabilmesi için erişim verin</string>
+    <string name="setup_compat_fix">Düzelt</string>
 </resources>

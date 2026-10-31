@@ -1201,4 +1201,21 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="diagnostics_stats_success_rate">Tingkat keberhasilan</string>
     <string name="diagnostics_stats_avg_first_frame">Rata-rata waktu ke frame pertama</string>
     <string name="diagnostics_stats_none">Belum ada peluncuran yang tercatat.</string>
+    <string name="setup_compat_title">Pemeriksaan perangkat</string>
+    <string name="setup_compat_all_ok">Semua baik.</string>
+    <string name="setup_compat_free_space">Ruang kosong</string>
+    <string name="setup_compat_free_space_ok">Ruang kosong cukup (%1$s tersedia)</string>
+    <string name="setup_compat_free_space_low">Ruang menipis: %1$s tersedia, peluncuran bisa gagal</string>
+    <string name="setup_compat_free_space_blocking">Ruang tidak cukup: %1$s tersedia, perlu sekitar %2$s</string>
+    <string name="setup_compat_free_space_unknown">Ruang kosong tidak dapat dibaca</string>
+    <string name="setup_compat_abi">Build game</string>
+    <string name="setup_compat_abi_ok">Build ini dapat berjalan di perangkat ini</string>
+    <string name="setup_compat_abi_blocking">Build ini hanya 32-bit; impor build 64-bit</string>
+    <string name="setup_compat_play_store">Sumber game</string>
+    <string name="setup_compat_play_store_ok">Menggunakan game yang diimpor</string>
+    <string name="setup_compat_play_store_warn">Menggunakan game Play Store terpasang; impor APK untuk semua fitur</string>
+    <string name="setup_compat_perm">Akses penyimpanan</string>
+    <string name="setup_compat_perm_ok">Diberikan</string>
+    <string name="setup_compat_perm_blocking">Ditolak; berikan akses agar data game dapat ditulis</string>
+    <string name="setup_compat_fix">Perbaiki</string>
 </resources>

@@ -1208,4 +1208,21 @@
     <string name="diagnostics_stats_success_rate">Доля успешных</string>
     <string name="diagnostics_stats_avg_first_frame">Среднее время до первого кадра</string>
     <string name="diagnostics_stats_none">Запуски пока не зафиксированы.</string>
+    <string name="setup_compat_title">Проверка устройства</string>
+    <string name="setup_compat_all_ok">Всё в порядке.</string>
+    <string name="setup_compat_free_space">Свободное место</string>
+    <string name="setup_compat_free_space_ok">Достаточно свободного места (%1$s доступно)</string>
+    <string name="setup_compat_free_space_low">Мало места: %1$s доступно, запуск может не удаться</string>
+    <string name="setup_compat_free_space_blocking">Недостаточно места: %1$s доступно, нужно около %2$s</string>
+    <string name="setup_compat_free_space_unknown">Не удалось прочитать свободное место</string>
+    <string name="setup_compat_abi">Сборка игры</string>
+    <string name="setup_compat_abi_ok">Эта сборка может работать на этом устройстве</string>
+    <string name="setup_compat_abi_blocking">Эта сборка только 32-битная; импортируйте 64-битную сборку</string>
+    <string name="setup_compat_play_store">Источник игры</string>
+    <string name="setup_compat_play_store_ok">Используется импортированная игра</string>
+    <string name="setup_compat_play_store_warn">Используется установленная игра из Play Store; импортируйте APK для всех функций</string>
+    <string name="setup_compat_perm">Доступ к хранилищу</string>
+    <string name="setup_compat_perm_ok">Предоставлен</string>
+    <string name="setup_compat_perm_blocking">Отклонён; предоставьте доступ, чтобы записывать данные игры</string>
+    <string name="setup_compat_fix">Исправить</string>
 </resources>

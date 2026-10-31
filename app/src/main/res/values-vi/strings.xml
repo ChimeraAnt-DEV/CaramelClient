@@ -1207,4 +1207,21 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="diagnostics_stats_success_rate">Tỷ lệ thành công</string>
     <string name="diagnostics_stats_avg_first_frame">Thời gian trung bình đến khung hình đầu tiên</string>
     <string name="diagnostics_stats_none">Chưa có lần khởi chạy nào được ghi lại.</string>
+    <string name="setup_compat_title">Kiểm tra thiết bị</string>
+    <string name="setup_compat_all_ok">Mọi thứ đều ổn.</string>
+    <string name="setup_compat_free_space">Dung lượng trống</string>
+    <string name="setup_compat_free_space_ok">Đủ dung lượng trống (%1$s khả dụng)</string>
+    <string name="setup_compat_free_space_low">Sắp hết dung lượng: %1$s khả dụng, khởi chạy có thể thất bại</string>
+    <string name="setup_compat_free_space_blocking">Không đủ dung lượng: %1$s khả dụng, cần khoảng %2$s</string>
+    <string name="setup_compat_free_space_unknown">Không đọc được dung lượng trống</string>
+    <string name="setup_compat_abi">Bản dựng game</string>
+    <string name="setup_compat_abi_ok">Bản dựng này chạy được trên thiết bị này</string>
+    <string name="setup_compat_abi_blocking">Bản dựng này chỉ 32-bit; hãy nhập bản dựng 64-bit</string>
+    <string name="setup_compat_play_store">Nguồn game</string>
+    <string name="setup_compat_play_store_ok">Đang dùng game đã nhập</string>
+    <string name="setup_compat_play_store_warn">Đang dùng game Play Store đã cài; hãy nhập APK để có mọi tính năng</string>
+    <string name="setup_compat_perm">Quyền truy cập bộ nhớ</string>
+    <string name="setup_compat_perm_ok">Đã cấp</string>
+    <string name="setup_compat_perm_blocking">Bị từ chối; hãy cấp quyền để ghi dữ liệu game</string>
+    <string name="setup_compat_fix">Khắc phục</string>
 </resources>

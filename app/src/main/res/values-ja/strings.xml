@@ -1174,4 +1174,21 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="diagnostics_stats_success_rate">成功率</string>
     <string name="diagnostics_stats_avg_first_frame">初回フレームまでの平均時間</string>
     <string name="diagnostics_stats_none">まだ起動が記録されていません。</string>
+    <string name="setup_compat_title">デバイスチェック</string>
+    <string name="setup_compat_all_ok">すべて問題ありません。</string>
+    <string name="setup_compat_free_space">空き容量</string>
+    <string name="setup_compat_free_space_ok">空き容量は十分です（%1$s 利用可能）</string>
+    <string name="setup_compat_free_space_low">容量不足気味: %1$s 利用可能、起動に失敗する可能性があります</string>
+    <string name="setup_compat_free_space_blocking">容量が足りません: %1$s 利用可能、約 %2$s 必要です</string>
+    <string name="setup_compat_free_space_unknown">空き容量を読み取れませんでした</string>
+    <string name="setup_compat_abi">ゲームビルド</string>
+    <string name="setup_compat_abi_ok">このビルドはこのデバイスで実行できます</string>
+    <string name="setup_compat_abi_blocking">このビルドは 32 ビットのみです。64 ビット版をインポートしてください</string>
+    <string name="setup_compat_play_store">ゲームの入手元</string>
+    <string name="setup_compat_play_store_ok">インポートしたゲームを使用中</string>
+    <string name="setup_compat_play_store_warn">インストール済みの Play ストア版を使用中。全機能には APK をインポートしてください</string>
+    <string name="setup_compat_perm">ストレージへのアクセス</string>
+    <string name="setup_compat_perm_ok">許可済み</string>
+    <string name="setup_compat_perm_blocking">拒否されました。ゲームデータを書き込むにはアクセスを許可してください</string>
+    <string name="setup_compat_fix">修正</string>
 </resources>

@@ -59,6 +59,36 @@
             android:textAppearance="@style/TextAppearance.Glowberry.Caption"
             android:visibility="gone" />
 
+        <!--
+            The device compatibility pass (item 284). Each row is a check with its own fix, so a
+            first-run failure is named before the user picks a version and presses Play.
+        -->
+        <LinearLayout
+            android:id="@+id/setup_compat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            style="@style/Widget.Chimera.Card.Compact"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_compat_title"
+                android:fontFamily="@font/misans"
+                android:textColor="@color/ui_text_primary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/setup_compat_rows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:orientation="vertical" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/setup_primary"
             android:layout_width="match_parent"

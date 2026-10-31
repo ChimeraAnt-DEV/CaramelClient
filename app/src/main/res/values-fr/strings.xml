@@ -1177,4 +1177,21 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="diagnostics_stats_success_rate">Taux de réussite</string>
     <string name="diagnostics_stats_avg_first_frame">Temps moyen jusqu\'à la première image</string>
     <string name="diagnostics_stats_none">Aucun lancement enregistré pour l\'instant.</string>
+    <string name="setup_compat_title">Vérification de l\'appareil</string>
+    <string name="setup_compat_all_ok">Tout est en ordre.</string>
+    <string name="setup_compat_free_space">Espace libre</string>
+    <string name="setup_compat_free_space_ok">Assez d\'espace libre (%1$s disponible)</string>
+    <string name="setup_compat_free_space_low">Peu d\'espace : %1$s disponible, le lancement peut échouer</string>
+    <string name="setup_compat_free_space_blocking">Espace insuffisant : %1$s disponible, environ %2$s requis</string>
+    <string name="setup_compat_free_space_unknown">Impossible de lire l\'espace libre</string>
+    <string name="setup_compat_abi">Version du jeu</string>
+    <string name="setup_compat_abi_ok">Cette version peut s\'exécuter sur cet appareil</string>
+    <string name="setup_compat_abi_blocking">Cette version est 32 bits uniquement ; importez une version 64 bits</string>
+    <string name="setup_compat_play_store">Source du jeu</string>
+    <string name="setup_compat_play_store_ok">Jeu importé utilisé</string>
+    <string name="setup_compat_play_store_warn">Jeu Play Store installé utilisé ; importez un APK pour toutes les fonctions</string>
+    <string name="setup_compat_perm">Accès au stockage</string>
+    <string name="setup_compat_perm_ok">Accordé</string>
+    <string name="setup_compat_perm_blocking">Refusé ; accordez l\'accès pour écrire les données du jeu</string>
+    <string name="setup_compat_fix">Corriger</string>
 </resources>

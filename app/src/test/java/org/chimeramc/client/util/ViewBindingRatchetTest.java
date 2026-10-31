@@ -34,7 +34,7 @@ public class ViewBindingRatchetTest {
      * The number of {@code findViewById} calls allowed. Lower it whenever a conversion lands; never
      * raise it. Raised once, it stops being a ratchet.
      */
-    private static final int CEILING = 859;
+    private static final int CEILING = 852;
 
     @Test
     public void findViewByIdCallsDoNotIncrease() throws IOException {

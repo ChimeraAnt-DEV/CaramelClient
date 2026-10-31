@@ -2487,6 +2487,24 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_step_signin_body">Sign in with your Microsoft account to play online and keep your progress.</string>
     <string name="setup_step_signin_action">Sign in</string>
     <string name="setup_skip">Skip for now</string>
+    <!-- First-run device compatibility pass (item 284). Each row is a check with its own fix. -->
+    <string name="setup_compat_title">Device check</string>
+    <string name="setup_compat_all_ok">Everything checks out.</string>
+    <string name="setup_compat_free_space">Free space</string>
+    <string name="setup_compat_free_space_ok">Enough free space (%1$s available)</string>
+    <string name="setup_compat_free_space_low">Low on space: %1$s available, a launch may fail</string>
+    <string name="setup_compat_free_space_blocking">Not enough space: %1$s available, about %2$s needed</string>
+    <string name="setup_compat_free_space_unknown">Free space could not be read</string>
+    <string name="setup_compat_abi">Game build</string>
+    <string name="setup_compat_abi_ok">This build can run on this device</string>
+    <string name="setup_compat_abi_blocking">This build is 32-bit only; import a 64-bit build</string>
+    <string name="setup_compat_play_store">Game source</string>
+    <string name="setup_compat_play_store_ok">Using an imported game</string>
+    <string name="setup_compat_play_store_warn">Using the installed Play Store game; import an APK for every feature</string>
+    <string name="setup_compat_perm">Storage access</string>
+    <string name="setup_compat_perm_ok">Granted</string>
+    <string name="setup_compat_perm_blocking">Denied; grant access so game data can be written</string>
+    <string name="setup_compat_fix">Fix</string>
     <string name="setup_import_failed">Import failed: %1$s</string>
 
     <!-- Named launch failure states (U14). Each cause gets its own copy so a report can name it. -->

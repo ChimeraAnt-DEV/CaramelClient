@@ -1198,4 +1198,21 @@
     <string name="diagnostics_stats_success_rate">成功率</string>
     <string name="diagnostics_stats_avg_first_frame">到首帧的平均时间</string>
     <string name="diagnostics_stats_none">尚未记录任何启动。</string>
+    <string name="setup_compat_title">设备检查</string>
+    <string name="setup_compat_all_ok">一切正常。</string>
+    <string name="setup_compat_free_space">可用空间</string>
+    <string name="setup_compat_free_space_ok">可用空间充足（可用 %1$s）</string>
+    <string name="setup_compat_free_space_low">空间不足：可用 %1$s，启动可能会失败</string>
+    <string name="setup_compat_free_space_blocking">空间不足：可用 %1$s，约需 %2$s</string>
+    <string name="setup_compat_free_space_unknown">无法读取可用空间</string>
+    <string name="setup_compat_abi">游戏构建</string>
+    <string name="setup_compat_abi_ok">此构建可在此设备上运行</string>
+    <string name="setup_compat_abi_blocking">此构建仅支持 32 位；请导入 64 位构建</string>
+    <string name="setup_compat_play_store">游戏来源</string>
+    <string name="setup_compat_play_store_ok">正在使用已导入的游戏</string>
+    <string name="setup_compat_play_store_warn">正在使用已安装的 Play 商店游戏；请导入 APK 以获得全部功能</string>
+    <string name="setup_compat_perm">存储权限</string>
+    <string name="setup_compat_perm_ok">已授予</string>
+    <string name="setup_compat_perm_blocking">已拒绝；请授予权限以便写入游戏数据</string>
+    <string name="setup_compat_fix">修复</string>
 </resources>
