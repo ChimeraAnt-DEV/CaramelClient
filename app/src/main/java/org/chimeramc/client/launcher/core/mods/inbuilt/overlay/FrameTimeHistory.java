@@ -78,6 +78,49 @@ public final class FrameTimeHistory {
         return max;
     }
 
+    /**
+     * The mean interval over the newest {@code window} frames, in milliseconds, or 0 when nothing is
+     * recorded. {@code window} is clamped to what is retained, so a caller can ask for a longer
+     * window than has been recorded yet and get the frames it does have rather than a wrong answer.
+     */
+    public float averageIntervalMs(int window) {
+        int n = clampWindow(window);
+        if (n == 0) return 0f;
+        float sum = 0f;
+        for (int i = 0; i < n; i++) sum += intervalMs(i);
+        return sum / n;
+    }
+
+    /**
+     * The interval at {@code percentile} (0..1) over the newest {@code window} frames: the value
+     * that fraction of frames are at or below. Used for the p95/p99 frame times, which show stutter
+     * a mean hides. Returns 0 when nothing is recorded.
+     *
+     * <p>Copies at most {@link #CAPACITY} values into a reusable buffer and sorts them — this runs on
+     * the overlay's once-a-second refresh, never on the frame path.
+     */
+    public float percentileIntervalMs(int window, float percentile) {
+        int n = clampWindow(window);
+        if (n == 0) return 0f;
+        float p = percentile;
+        if (p < 0f) p = 0f;
+        if (p > 1f) p = 1f;
+        float[] scratch = sortScratch;
+        for (int i = 0; i < n; i++) scratch[i] = intervalMs(i);
+        java.util.Arrays.sort(scratch, 0, n);
+        int index = (int) Math.round(p * (n - 1));
+        if (index < 0) index = 0;
+        if (index >= n) index = n - 1;
+        return scratch[index];
+    }
+
+    private final float[] sortScratch = new float[CAPACITY];
+
+    private int clampWindow(int window) {
+        if (window <= 0) return 0;
+        return Math.min(window, count);
+    }
+
     public void reset() {
         for (int i = 0; i < CAPACITY; i++) intervals[i] = EMPTY;
         cursor = 0;

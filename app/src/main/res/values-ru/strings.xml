@@ -862,6 +862,9 @@
     <string name="inbuilt_mod_more_buttons_desc">Создавайте пользовательские экранные кнопки с назначением одной клавиши и SVG-значками</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Показывать везде</string>
     <string name="mod_config_fps_frame_graph" formatted="false">График времени кадра</string>
+    <string name="mod_config_fps_stats" formatted="false">Показывать среднее и 1% минимум</string>
+    <string name="mod_config_fps_stats_window" formatted="false">Окно статистики (кадры)</string>
+    <string name="mod_overlay_fps_stats" formatted="false">%1$d сред / %2$d мин</string>
     <string name="mod_config_zoom_transition">Длительность перехода (мс)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Горизонтальная чувствительность (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Вертикальная чувствительность (%)</string>

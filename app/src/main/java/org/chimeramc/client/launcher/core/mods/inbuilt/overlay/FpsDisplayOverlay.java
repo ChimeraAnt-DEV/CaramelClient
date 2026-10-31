@@ -33,6 +33,7 @@ public class FpsDisplayOverlay {
     private View overlayView;
     private TextView statsText;
     private FrameTimeGraphView graphView;
+    private boolean statsEnabled;
     private WindowManager.LayoutParams wmParams;
     private boolean isShowing = false;
     private Runnable pendingShowRunnable;
@@ -92,7 +93,9 @@ public class FpsDisplayOverlay {
      * rest of the overlay is unchanged; the graph is only present in the graph layout.
      */
     private void inflateOverlay() {
-        boolean graph = InbuiltModManager.getInstance(activity).isFrameTimeGraphEnabled(ModIds.FPS_DISPLAY);
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        statsEnabled = manager.isFpsStatsEnabled(ModIds.FPS_DISPLAY);
+        boolean graph = manager.isFrameTimeGraphEnabled(ModIds.FPS_DISPLAY);
         int layout = graph ? R.layout.overlay_stats_display_graph : R.layout.overlay_stats_display;
         overlayView = LayoutInflater.from(activity).inflate(layout, null);
         statsText = overlayView.findViewById(R.id.stats_text);
@@ -196,15 +199,38 @@ public class FpsDisplayOverlay {
             // The timer runs four times a second but the readout changes far less often, so the
             // text is built and set only when the number actually differs (item 187).
             if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
-                statsText.setText(fps > 0
+                String text = fps > 0
                         ? activity.getString(R.string.mod_overlay_fps_value, fps)
-                        : activity.getString(R.string.mod_overlay_fps_unknown));
+                        : activity.getString(R.string.mod_overlay_fps_unknown);
+                if (statsEnabled) {
+                    String stats = fpsStatsText();
+                    if (stats != null) text = text + "  " + stats;
+                }
+                statsText.setText(text);
             }
             if (graphView != null) {
                 graphView.refresh();
             }
             clampCurrentPosition(false);
         }
+    }
+
+    /**
+     * The average and 1% low over the configured window (item 190), as "60 avg / 41 low", or null
+     * when there is not yet a reading. Computed from the same history the graph draws, so the two
+     * can never disagree, and only on the once-a-second refresh — never on the frame path.
+     */
+    private String fpsStatsText() {
+        FrameTimeHistory history = fallbackMeter.history();
+        if (history == null || history.size() < 2) return null;
+        int window = InbuiltModManager.getInstance(activity).getFpsStatsWindow(ModIds.FPS_DISPLAY);
+        float avgMs = history.averageIntervalMs(window);
+        if (avgMs <= 0f) return null;
+        int avgFps = Math.round(1000f / avgMs);
+        // The 1% low is the worst 1% of frames, i.e. the 99th percentile interval.
+        float lowMs = history.percentileIntervalMs(window, 0.99f);
+        int lowFps = lowMs > 0f ? Math.round(1000f / lowMs) : avgFps;
+        return activity.getString(R.string.mod_overlay_fps_stats, avgFps, lowFps);
     }
 
     /**
@@ -405,6 +431,7 @@ public class FpsDisplayOverlay {
         overlayView = null;
         statsText = null;
         graphView = null;
+        statsEnabled = false;
     }
 
     public void applyConfigurationChanges() {

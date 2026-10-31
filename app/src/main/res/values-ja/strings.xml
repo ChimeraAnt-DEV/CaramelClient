@@ -828,6 +828,9 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="inbuilt_mod_more_buttons_desc">1キー割り当てと SVG アイコンを使ってカスタム画面ボタンを作成します</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">常に表示</string>
     <string name="mod_config_fps_frame_graph" formatted="false">フレームタイムグラフ</string>
+    <string name="mod_config_fps_stats" formatted="false">平均と1%低を表示</string>
+    <string name="mod_config_fps_stats_window" formatted="false">統計ウィンドウ（フレーム）</string>
+    <string name="mod_overlay_fps_stats" formatted="false">平均 %1$d / 低 %2$d</string>
     <string name="mod_config_zoom_transition">切り替え時間 (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">水平感度 (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">垂直感度 (%)</string>

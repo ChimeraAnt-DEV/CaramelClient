@@ -831,6 +831,9 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="inbuilt_mod_more_buttons_desc">Crea botones personalizados en pantalla con asignaciones de una sola tecla e iconos SVG</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Mostrar en todas partes</string>
     <string name="mod_config_fps_frame_graph" formatted="false">Gráfico de tiempo de fotograma</string>
+    <string name="mod_config_fps_stats" formatted="false">Mostrar promedio y mínimo del 1%</string>
+    <string name="mod_config_fps_stats_window" formatted="false">Ventana de estadísticas (fotogramas)</string>
+    <string name="mod_overlay_fps_stats" formatted="false">%1$d prom / %2$d mín</string>
     <string name="mod_config_zoom_transition">Duración de la transición (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Sensibilidad horizontal (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Sensibilidad vertical (%)</string>

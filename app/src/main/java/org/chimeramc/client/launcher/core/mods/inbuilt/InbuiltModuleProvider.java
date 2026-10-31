@@ -29,6 +29,8 @@ public final class InbuiltModuleProvider {
     private static final String CFG_OVERLAY_LOCK = "overlay_lock";
     private static final String CFG_OVERLAY_SHOW_EVERYWHERE = "overlay_show_everywhere";
     private static final String CFG_FRAME_GRAPH = "overlay_frame_graph";
+    private static final String CFG_FPS_STATS = "overlay_fps_stats";
+    private static final String CFG_FPS_STATS_WINDOW = "overlay_fps_stats_window";
     private static final String CFG_AUTO_SPRINT_KEYBIND = "auto_sprint_keybind";
     private static final String CFG_CURSOR_SENSITIVITY = "cursor_sensitivity";
     private static final String CFG_ZOOM_LEVEL = "zoom_level";
@@ -972,6 +974,18 @@ public final class InbuiltModuleProvider {
                     UnifiedMod.ConfigType.TOGGLE,
                     "false", "", "",
                     String.valueOf(manager.isFrameTimeGraphEnabled(modId))));
+            configs.add(config(CFG_FPS_STATS,
+                    context.getString(R.string.mod_config_fps_stats),
+                    UnifiedMod.ConfigType.TOGGLE,
+                    "false", "", "",
+                    String.valueOf(manager.isFpsStatsEnabled(modId))));
+            configs.add(config(CFG_FPS_STATS_WINDOW,
+                    context.getString(R.string.mod_config_fps_stats_window),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_DEFAULT),
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_MIN),
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_MAX),
+                    String.valueOf(manager.getFpsStatsWindow(modId))));
         }
 
         if (ModIds.HOTBAR_SLOT.equals(modId)) {
@@ -1390,6 +1404,12 @@ public final class InbuiltModuleProvider {
                 break;
             case CFG_FRAME_GRAPH:
                 manager.setFrameTimeGraphEnabled(mod.getId(), parseBoolean(value));
+                break;
+            case CFG_FPS_STATS:
+                manager.setFpsStatsEnabled(mod.getId(), parseBoolean(value));
+                break;
+            case CFG_FPS_STATS_WINDOW:
+                manager.setFpsStatsWindow(mod.getId(), parseInt(value, manager.getFpsStatsWindow(mod.getId())));
                 break;
             case CFG_AUTO_SPRINT_KEYBIND:
                 manager.setAutoSprintKeybind(parseInt(value, manager.getAutoSprintKeybind()));

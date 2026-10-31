@@ -66,6 +66,13 @@ public class InbuiltModManager {
     private static final String KEY_OVERLAY_LOCK_PREFIX = "overlay_lock_";
     private static final String KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX = "overlay_show_everywhere_";
     private static final String KEY_FRAME_GRAPH_PREFIX = "overlay_frame_graph_";
+    private static final String KEY_FPS_STATS_PREFIX = "overlay_fps_stats_";
+    private static final String KEY_FPS_STATS_WINDOW_PREFIX = "overlay_fps_stats_window_";
+
+    /** The window bounds for the FPS overlay's average and 1% low (item 190). */
+    public static final int FPS_STATS_WINDOW_MIN = 10;
+    public static final int FPS_STATS_WINDOW_MAX = 120;
+    public static final int FPS_STATS_WINDOW_DEFAULT = 60;
     private static final String KEY_HOTBAR_ITEM_ICONS = "hotbar_item_icons";
     private static final String KEY_HOTBAR_SLOT_ENABLED_PREFIX = "hotbar_slot_enabled_";
     private static final String KEY_AIM_SMOOTHING = "aim_smoothing";
@@ -638,6 +645,33 @@ public class InbuiltModManager {
         prefs.edit().putBoolean(KEY_FRAME_GRAPH_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
     }
 
+    /**
+     * Whether the FPS overlay prints its average and 1% low beside the rate (item 190).
+     *
+     * <p>Off by default: the average and the low are extra detail, and a user who wants just the
+     * number keeps it. Both are computed over {@link #getFpsStatsWindow(String)} frames.
+     */
+    public boolean isFpsStatsEnabled(String modId) {
+        return prefs.getBoolean(KEY_FPS_STATS_PREFIX + sharedOverlaySettingsId(modId), false);
+    }
+
+    public void setFpsStatsEnabled(String modId, boolean enabled) {
+        prefs.edit().putBoolean(KEY_FPS_STATS_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
+    }
+
+    /** The number of frames the FPS overlay averages over (item 190); clamped to 10..120. */
+    public int getFpsStatsWindow(String modId) {
+        return Math.max(FPS_STATS_WINDOW_MIN,
+                Math.min(FPS_STATS_WINDOW_MAX,
+                        prefs.getInt(KEY_FPS_STATS_WINDOW_PREFIX + sharedOverlaySettingsId(modId),
+                                FPS_STATS_WINDOW_DEFAULT)));
+    }
+
+    public void setFpsStatsWindow(String modId, int frames) {
+        prefs.edit().putInt(KEY_FPS_STATS_WINDOW_PREFIX + sharedOverlaySettingsId(modId),
+                Math.max(FPS_STATS_WINDOW_MIN, Math.min(FPS_STATS_WINDOW_MAX, frames))).apply();
+    }
+
     public void clearOverlaySettings(String modId) {
         if (modId == null || modId.isEmpty()) return;
         prefs.edit()
@@ -648,6 +682,8 @@ public class InbuiltModManager {
                 .remove(KEY_OVERLAY_LOCK_PREFIX + modId)
                 .remove(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + modId)
                 .remove(KEY_FRAME_GRAPH_PREFIX + modId)
+                .remove(KEY_FPS_STATS_PREFIX + modId)
+                .remove(KEY_FPS_STATS_WINDOW_PREFIX + modId)
                 .apply();
         overlayVisibilityRevision.incrementAndGet();
     }

@@ -855,6 +855,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="inbuilt_mod_more_buttons_desc">Buat tombol layar kustom dengan pemetaan satu tombol keyboard dan ikon SVG</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Tampilkan di Mana Saja</string>
     <string name="mod_config_fps_frame_graph" formatted="false">Grafik Waktu Frame</string>
+    <string name="mod_config_fps_stats" formatted="false">Tampilkan Rata-rata dan 1% Terendah</string>
+    <string name="mod_config_fps_stats_window" formatted="false">Jendela Statistik (frame)</string>
+    <string name="mod_overlay_fps_stats" formatted="false">%1$d rata / %2$d rendah</string>
     <string name="mod_config_zoom_transition">Durasi Transisi (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Sensitivitas Horizontal (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Sensitivitas Vertikal (%)</string>

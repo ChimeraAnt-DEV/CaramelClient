@@ -861,6 +861,9 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="inbuilt_mod_more_buttons_desc">Tạo các nút tùy chỉnh trên màn hình với ánh xạ một phím và biểu tượng SVG</string>
     <string name="mod_config_overlay_show_everywhere" formatted="false">Hiển thị mọi nơi</string>
     <string name="mod_config_fps_frame_graph" formatted="false">Biểu đồ thời gian khung hình</string>
+    <string name="mod_config_fps_stats" formatted="false">Hiện Trung bình và 1% Thấp nhất</string>
+    <string name="mod_config_fps_stats_window" formatted="false">Cửa sổ Thống kê (khung hình)</string>
+    <string name="mod_overlay_fps_stats" formatted="false">%1$d tb / %2$d thấp</string>
     <string name="mod_config_zoom_transition">Thời lượng chuyển đổi (ms)</string>
     <string name="mod_config_gyro_sensitivity_x" formatted="false">Độ nhạy ngang (%)</string>
     <string name="mod_config_gyro_sensitivity_y" formatted="false">Độ nhạy dọc (%)</string>
