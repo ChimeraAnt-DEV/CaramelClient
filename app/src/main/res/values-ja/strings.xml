@@ -1093,4 +1093,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="controller_bind_device_cleared">%1$s には紐付けられたプロファイルがありません</string>
     <string name="controller_stick_preview_description">スティックの現在位置: リングが生の値、ドットがプロファイルの送信値です</string>
     <string name="controller_stick_preview_side">%1$s スティックを表示中</string>
+    <string name="pause_menu_screenshot">スクリーンショット</string>
+    <string name="pause_menu_hide_hud">HUDを隠す</string>
+    <string name="pause_menu_switch_layout">レイアウトを切り替え</string>
+    <string name="pause_menu_open_logs">ログ</string>
+    <string name="pause_menu_no_layouts">保存されたレイアウトはありません</string>
+    <string name="pause_menu_layout_switched">レイアウト: %1$s</string>
 </resources>

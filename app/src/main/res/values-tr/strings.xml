@@ -1123,4 +1123,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="controller_bind_device_cleared">%1$s artık bağlı bir profile sahip değil</string>
     <string name="controller_stick_preview_description">Canlı çubuk konumu: halka ham okuma, nokta profilin gönderdiğidir</string>
     <string name="controller_stick_preview_side">%1$s çubuk gösteriliyor</string>
+    <string name="pause_menu_screenshot">Ekran görüntüsü</string>
+    <string name="pause_menu_hide_hud">HUD\'ı gizle</string>
+    <string name="pause_menu_switch_layout">Düzeni değiştir</string>
+    <string name="pause_menu_open_logs">Günlükler</string>
+    <string name="pause_menu_no_layouts">Kayıtlı düzen yok</string>
+    <string name="pause_menu_layout_switched">Düzen: %1$s</string>
 </resources>

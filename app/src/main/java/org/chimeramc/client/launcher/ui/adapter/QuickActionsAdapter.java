@@ -86,8 +86,10 @@ public class QuickActionsAdapter extends RecyclerView.Adapter<QuickActionsAdapte
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.qa_title);
-            icon = itemView.findViewById(R.id.qa_icon);
+            org.chimeramc.client.databinding.ItemQuickActionBinding binding =
+                    org.chimeramc.client.databinding.ItemQuickActionBinding.bind(itemView);
+            title = binding.qaTitle;
+            icon = binding.qaIcon;
         }
     }
 

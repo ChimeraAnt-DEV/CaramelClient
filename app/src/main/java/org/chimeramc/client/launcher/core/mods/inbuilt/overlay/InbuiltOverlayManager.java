@@ -62,6 +62,7 @@ public class InbuiltOverlayManager {
     private CatalogModuleRuntime catalogRuntime;
     private org.chimeramc.client.core.cosmetics.CosmeticSyncModule cosmeticSyncModule;
     private ModMenuButton modMenuButton;
+    private PauseMenuRow pauseMenuRow;
     private HudOverlay hudOverlay;
     private BaseOverlayButton selectedHudEditorOverlay;
     private String selectedDisplayModId;
@@ -208,6 +209,12 @@ public class InbuiltOverlayManager {
 
         modMenuButton = new ModMenuButton(activity);
         modMenuButton.show(START_X, nextY);
+        // The pause-menu button row (item 224) attaches with the session and is shown only while
+        // the game's pause menu is open, so it never competes with gameplay.
+        if (pauseMenuRow == null) {
+            pauseMenuRow = new PauseMenuRow(activity);
+        }
+        pauseMenuRow.show();
         // A catalogue module that was on when the last session ended comes back with this one. The
         // shipped modules are restored by the calls above; the catalogue ones are restored here so
         // a saved readout does not silently vanish on the next launch.
@@ -1030,6 +1037,10 @@ public class InbuiltOverlayManager {
         if (modMenuButton != null) {
             modMenuButton.hide();
             modMenuButton = null;
+        }
+        if (pauseMenuRow != null) {
+            pauseMenuRow.hide();
+            pauseMenuRow = null;
         }
         if (hudOverlay != null) {
             hudOverlay.hide();
@@ -1968,6 +1979,10 @@ public class InbuiltOverlayManager {
         stateHash = 31L * stateHash + (hudOverlay == null ? 0L : System.identityHashCode(hudOverlay));
         if (stateHash == lastVisibilityStateHash) return;
         lastVisibilityStateHash = stateHash;
+
+        if (pauseMenuRow != null) {
+            pauseMenuRow.setPauseMenuOpen(isPauseOpen, isShowingMenu);
+        }
 
         activity.runOnUiThread(() -> {
             if (modMenuButton != null) {

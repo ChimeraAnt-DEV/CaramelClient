@@ -1120,4 +1120,10 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="controller_bind_device_cleared">%1$s tidak lagi memiliki profil tertaut</string>
     <string name="controller_stick_preview_description">Posisi stik langsung: cincin adalah bacaan mentah dan titik adalah yang dikirim profil</string>
     <string name="controller_stick_preview_side">Menampilkan stik %1$s</string>
+    <string name="pause_menu_screenshot">Tangkapan layar</string>
+    <string name="pause_menu_hide_hud">Sembunyikan HUD</string>
+    <string name="pause_menu_switch_layout">Ganti tata letak</string>
+    <string name="pause_menu_open_logs">Log</string>
+    <string name="pause_menu_no_layouts">Tidak ada tata letak tersimpan</string>
+    <string name="pause_menu_layout_switched">Tata letak: %1$s</string>
 </resources>

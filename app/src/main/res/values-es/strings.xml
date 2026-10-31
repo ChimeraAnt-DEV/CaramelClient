@@ -1096,4 +1096,10 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="controller_bind_device_cleared">%1$s ya no tiene un perfil vinculado</string>
     <string name="controller_stick_preview_description">Posición del stick en vivo: el anillo es la lectura real y el punto es lo que envía el perfil</string>
     <string name="controller_stick_preview_side">Mostrando el stick %1$s</string>
+    <string name="pause_menu_screenshot">Captura</string>
+    <string name="pause_menu_hide_hud">Ocultar HUD</string>
+    <string name="pause_menu_switch_layout">Cambiar diseño</string>
+    <string name="pause_menu_open_logs">Registros</string>
+    <string name="pause_menu_no_layouts">No hay diseños guardados</string>
+    <string name="pause_menu_layout_switched">Diseño: %1$s</string>
 </resources>

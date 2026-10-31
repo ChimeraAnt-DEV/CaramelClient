@@ -1117,4 +1117,10 @@
     <string name="controller_bind_device_cleared">%1$s 不再有绑定的配置</string>
     <string name="controller_stick_preview_description">摇杆实时位置：圆环是原始读数，圆点是配置实际发送的值</string>
     <string name="controller_stick_preview_side">正在显示%1$s摇杆</string>
+    <string name="pause_menu_screenshot">截图</string>
+    <string name="pause_menu_hide_hud">隐藏 HUD</string>
+    <string name="pause_menu_switch_layout">切换布局</string>
+    <string name="pause_menu_open_logs">日志</string>
+    <string name="pause_menu_no_layouts">没有已保存的布局</string>
+    <string name="pause_menu_layout_switched">布局：%1$s</string>
 </resources>

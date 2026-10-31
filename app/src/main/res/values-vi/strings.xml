@@ -1126,4 +1126,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="controller_bind_device_cleared">%1$s không còn cấu hình được liên kết</string>
     <string name="controller_stick_preview_description">Vị trí cần gạt trực tiếp: vòng là giá trị thô, chấm là giá trị cấu hình gửi đi</string>
     <string name="controller_stick_preview_side">Đang hiển thị cần gạt %1$s</string>
+    <string name="pause_menu_screenshot">Ảnh chụp màn hình</string>
+    <string name="pause_menu_hide_hud">Ẩn HUD</string>
+    <string name="pause_menu_switch_layout">Đổi bố cục</string>
+    <string name="pause_menu_open_logs">Nhật ký</string>
+    <string name="pause_menu_no_layouts">Không có bố cục nào được lưu</string>
+    <string name="pause_menu_layout_switched">Bố cục: %1$s</string>
 </resources>

@@ -2544,4 +2544,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_action_toggle_hud_desc">Hide or show every overlay (three-finger tap)</string>
     <string name="mod_menu_hud_hidden">HUD overlays hidden</string>
     <string name="mod_menu_hud_shown">HUD overlays shown</string>
+    <string name="pause_menu_screenshot">Screenshot</string>
+    <string name="pause_menu_hide_hud">Hide HUD</string>
+    <string name="pause_menu_switch_layout">Switch layout</string>
+    <string name="pause_menu_open_logs">Logs</string>
+    <string name="pause_menu_no_layouts">No saved overlay layouts</string>
+    <string name="pause_menu_layout_switched">Layout: %1$s</string>
 </resources>

@@ -1127,4 +1127,10 @@
     <string name="controller_bind_device_cleared">У %1$s больше нет привязанного профиля</string>
     <string name="controller_stick_preview_description">Положение стика в реальном времени: кольцо — сырое значение, точка — то, что отправляет профиль</string>
     <string name="controller_stick_preview_side">Показан %1$s стик</string>
+    <string name="pause_menu_screenshot">Скриншот</string>
+    <string name="pause_menu_hide_hud">Скрыть HUD</string>
+    <string name="pause_menu_switch_layout">Сменить макет</string>
+    <string name="pause_menu_open_logs">Журналы</string>
+    <string name="pause_menu_no_layouts">Нет сохранённых макетов</string>
+    <string name="pause_menu_layout_switched">Макет: %1$s</string>
 </resources>

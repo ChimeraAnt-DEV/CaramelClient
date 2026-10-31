@@ -497,51 +497,7 @@ public final class CatalogModuleRuntime {
      * silently doing nothing.
      */
     private void captureScreenshot() {
-        java.io.File dir = screenshotsDir();
-        if (dir == null) {
-            toast(org.chimeramc.client.R.string.catalog_options_no_instance);
-            return;
-        }
-        org.chimeramc.client.launcher.core.content.ScreenshotCapture.capture(activity, dir,
-                new org.chimeramc.client.launcher.core.content.ScreenshotCapture.Callback() {
-                    @Override
-                    public void onSaved(java.io.File file) {
-                        toast(org.chimeramc.client.R.string.catalog_screenshot_saved);
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        toast(org.chimeramc.client.R.string.catalog_screenshot_failed);
-                    }
-                });
-    }
-
-    /** The selected instance's Screenshots folder, resolved as the content screen resolves it. */
-    private java.io.File screenshotsDir() {
-        org.chimeramc.client.core.versions.VersionManager manager =
-                org.chimeramc.client.core.versions.VersionManager.getIfInitialized();
-        if (manager == null) return null;
-        org.chimeramc.client.core.versions.GameVersion version = manager.getSelectedVersion();
-        if (version == null) return null;
-        android.content.SharedPreferences prefs = activity.getSharedPreferences(
-                org.chimeramc.client.util.LauncherStorage.CONTENT_MANAGEMENT_PREFS_NAME,
-                android.content.Context.MODE_PRIVATE);
-        org.chimeramc.client.settings.FeatureSettings.StorageType stored =
-                org.chimeramc.client.settings.FeatureSettings.StorageType.INTERNAL;
-        try {
-            stored = org.chimeramc.client.settings.FeatureSettings.StorageType.valueOf(prefs.getString(
-                    org.chimeramc.client.util.LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
-                    org.chimeramc.client.settings.FeatureSettings.StorageType.INTERNAL.name()));
-        } catch (Throwable ignored) {
-            // A malformed preference reads as the default rather than aborting the capture.
-        }
-        org.chimeramc.client.settings.FeatureSettings.StorageType resolved =
-                org.chimeramc.client.util.LauncherStorage.normalizeContentStorageType(
-                        stored, version.versionIsolation);
-        java.io.File gameDataDir = org.chimeramc.client.util.LauncherStorage.getContentGameDataDir(
-                activity, version.getStorageProfileId(), resolved);
-        if (gameDataDir == null) return null;
-        return new java.io.File(gameDataDir, "Screenshots");
+        org.chimeramc.client.launcher.core.content.ScreenshotAction.capture(activity);
     }
 
     private void sendChat(String line) {
