@@ -28,6 +28,7 @@ import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.launcher.controller.ControllerInputProcessor;
 import org.chimeramc.client.launcher.controller.ControllerProfile;
+import org.chimeramc.client.launcher.controller.LayerModifierCapture;
 import org.chimeramc.client.launcher.controller.ControllerProfileCodec;
 import org.chimeramc.client.launcher.controller.ControllerProfileManager;
 import org.chimeramc.client.launcher.controller.ControllerType;
@@ -277,12 +278,14 @@ public class ControllerSettingsFragment extends Fragment {
 
     public void handleHardwareKey(int keyCode, boolean down) {
         // A layer-modifier capture takes the next press before the illustration sees it, so the
-        // captured button is the one the player meant rather than also lighting the map.
-        if (pendingLayerModifier != null && down) {
-            RemapLayer layer = pendingLayerModifier;
-            pendingLayerModifier = null;
-            layer.setModifierKeyCode(keyCode);
+        // captured button is the one the player meant rather than also lighting the map. The
+        // decision itself lives in the tested LayerModifierCapture (item 218).
+        LayerModifierCapture.Decision decision = layerCapture.offer(keyCode, down);
+        if (decision == LayerModifierCapture.Decision.CAPTURED) {
             if (layerModifierRefresh != null) layerModifierRefresh.run();
+            return;
+        }
+        if (decision == LayerModifierCapture.Decision.SWALLOWED) {
             return;
         }
         if (illustration != null) {
@@ -290,15 +293,15 @@ public class ControllerSettingsFragment extends Fragment {
         }
     }
 
-    /** The layer currently waiting for its modifier button, or null when no capture is running. */
-    private RemapLayer pendingLayerModifier;
+    /** The button-to-modifier capture state; owns which layer is waiting for a press (item 218). */
+    private final LayerModifierCapture layerCapture = new LayerModifierCapture();
     /** Repaints the layer rows after a capture or edit, so the label is never stale. */
     private Runnable layerModifierRefresh;
     /** The layer rows are rebuilt in place when a layer is added or removed. */
     private LinearLayout layerContainer;
 
     private void startLayerModifierCapture(RemapLayer layer) {
-        pendingLayerModifier = layer;
+        layerCapture.begin(layer);
         android.widget.Toast.makeText(requireContext(),
                 R.string.controller_layer_press_modifier, android.widget.Toast.LENGTH_SHORT).show();
     }
