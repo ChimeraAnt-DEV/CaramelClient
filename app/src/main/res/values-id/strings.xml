@@ -1193,4 +1193,12 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="guest_mode_desc">Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi.</string>
     <string name="streaming_safe_title">Mode aman streaming</string>
     <string name="streaming_safe_desc">Menyamarkan nama akun, koordinat dunia, dan alamat server di overlay dan info debug yang disalin, agar siaran atau tangkapan layar tidak mengungkap di mana atau siapa Anda.</string>
+    <string name="diagnostics_section_stats">Statistik peluncuran</string>
+    <string name="diagnostics_stats_desc">Hanya dihitung di perangkat ini. Tidak ada yang diunggah.</string>
+    <string name="diagnostics_stats_launches">Peluncuran</string>
+    <string name="diagnostics_stats_completed">Mencapai game</string>
+    <string name="diagnostics_stats_crashes">Gagal</string>
+    <string name="diagnostics_stats_success_rate">Tingkat keberhasilan</string>
+    <string name="diagnostics_stats_avg_first_frame">Rata-rata waktu ke frame pertama</string>
+    <string name="diagnostics_stats_none">Belum ada peluncuran yang tercatat.</string>
 </resources>

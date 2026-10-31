@@ -262,6 +262,41 @@
                     android:orientation="vertical" />
             </LinearLayout>
 
+            <!-- Local launch/crash statistics (item 282). Local data only. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                style="@style/Widget.Chimera.Card.Compact"
+                android:orientation="vertical"
+                android:padding="@dimen/space_4">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/diagnostics_section_stats"
+                    android:fontFamily="@font/misans"
+                    android:textColor="@color/on_surface"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_1"
+                    android:text="@string/diagnostics_stats_desc"
+                    android:fontFamily="@font/misans"
+                    android:textColor="@color/text_secondary"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                <LinearLayout
+                    android:id="@+id/diagnostics_stats_rows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

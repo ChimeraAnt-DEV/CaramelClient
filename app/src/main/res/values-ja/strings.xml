@@ -1166,4 +1166,12 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="guest_mode_desc">共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。</string>
     <string name="streaming_safe_title">配信セーフモード</string>
     <string name="streaming_safe_desc">オーバーレイやコピーしたデバッグ情報のアカウント名、座標、サーバーアドレスを隠し、配信やスクリーンショットであなたの居場所や身元が分からないようにします。</string>
+    <string name="diagnostics_section_stats">起動統計</string>
+    <string name="diagnostics_stats_desc">この端末でのみ集計されます。何もアップロードされません。</string>
+    <string name="diagnostics_stats_launches">起動回数</string>
+    <string name="diagnostics_stats_completed">ゲーム到達</string>
+    <string name="diagnostics_stats_crashes">失敗</string>
+    <string name="diagnostics_stats_success_rate">成功率</string>
+    <string name="diagnostics_stats_avg_first_frame">初回フレームまでの平均時間</string>
+    <string name="diagnostics_stats_none">まだ起動が記録されていません。</string>
 </resources>

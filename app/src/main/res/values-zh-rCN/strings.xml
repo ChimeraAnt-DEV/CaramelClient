@@ -1190,4 +1190,12 @@
     <string name="guest_mode_desc">在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。</string>
     <string name="streaming_safe_title">直播安全模式</string>
     <string name="streaming_safe_desc">在悬浮层和复制的调试信息中遮蔽账户名、世界坐标和服务器地址，让直播或截图不会泄露你在哪里或你是谁。</string>
+    <string name="diagnostics_section_stats">启动统计</string>
+    <string name="diagnostics_stats_desc">仅在本设备上统计。不会上传任何内容。</string>
+    <string name="diagnostics_stats_launches">启动次数</string>
+    <string name="diagnostics_stats_completed">进入游戏</string>
+    <string name="diagnostics_stats_crashes">失败</string>
+    <string name="diagnostics_stats_success_rate">成功率</string>
+    <string name="diagnostics_stats_avg_first_frame">到首帧的平均时间</string>
+    <string name="diagnostics_stats_none">尚未记录任何启动。</string>
 </resources>

@@ -1197,4 +1197,12 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="guest_mode_desc">साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।</string>
     <string name="streaming_safe_title">स्ट्रीमिंग-सुरक्षित मोड</string>
     <string name="streaming_safe_desc">ओवरले और कॉपी किए गए डीबग विवरण में खाता नाम, विश्व निर्देशांक और सर्वर पते छिपाता है, ताकि स्ट्रीम या स्क्रीनशॉट से यह पता न चले कि आप कहाँ या कौन हैं।</string>
+    <string name="diagnostics_section_stats">लॉन्च आँकड़े</string>
+    <string name="diagnostics_stats_desc">केवल इस डिवाइस पर गिना जाता है। कुछ भी अपलोड नहीं होता।</string>
+    <string name="diagnostics_stats_launches">लॉन्च</string>
+    <string name="diagnostics_stats_completed">गेम तक पहुँचा</string>
+    <string name="diagnostics_stats_crashes">विफल</string>
+    <string name="diagnostics_stats_success_rate">सफलता दर</string>
+    <string name="diagnostics_stats_avg_first_frame">पहले फ़्रेम तक औसत समय</string>
+    <string name="diagnostics_stats_none">अभी तक कोई लॉन्च दर्ज नहीं।</string>
 </resources>

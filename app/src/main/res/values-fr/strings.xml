@@ -1169,4 +1169,12 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="guest_mode_desc">Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n\'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir.</string>
     <string name="streaming_safe_title">Mode diffusion sécurisée</string>
     <string name="streaming_safe_desc">Masque les noms de compte, les coordonnées du monde et les adresses de serveur dans les superpositions et les infos de débogage copiées, pour qu\'une diffusion ou une capture ne révèle ni où ni qui vous êtes.</string>
+    <string name="diagnostics_section_stats">Statistiques de lancement</string>
+    <string name="diagnostics_stats_desc">Comptabilisées uniquement sur cet appareil. Rien n\'est envoyé.</string>
+    <string name="diagnostics_stats_launches">Lancements</string>
+    <string name="diagnostics_stats_completed">Jeu atteint</string>
+    <string name="diagnostics_stats_crashes">Échecs</string>
+    <string name="diagnostics_stats_success_rate">Taux de réussite</string>
+    <string name="diagnostics_stats_avg_first_frame">Temps moyen jusqu\'à la première image</string>
+    <string name="diagnostics_stats_none">Aucun lancement enregistré pour l\'instant.</string>
 </resources>

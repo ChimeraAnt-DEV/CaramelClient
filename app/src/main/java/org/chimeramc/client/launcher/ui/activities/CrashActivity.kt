@@ -35,6 +35,11 @@ class CrashActivity : BaseActivity() {
         val summary = intent.getStringExtra("SUMMARY")
             ?: intent.getStringExtra("EMERGENCY")
         val crashType = intent.getStringExtra("CRASH_TYPE")
+        // Item 282: a crash screen means the previous process died before a session was recorded, so
+        // count it here rather than from the dying process -- an async write from a crashing process
+        // is not guaranteed to land. This screen runs in the fresh launcher process, where the
+        // write is durable.
+        org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCrash(this)
         CrashReporter.sendUnsentReports(this)
 
         val tvTitle = findViewById<TextView>(R.id.crash_title)

@@ -1169,4 +1169,12 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="guest_mode_desc">Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente.</string>
     <string name="streaming_safe_title">Modo seguro para transmissão</string>
     <string name="streaming_safe_desc">Oculta nomes de conta, coordenadas do mundo e endereços de servidor nas sobreposições e nas informações de depuração copiadas, para que uma transmissão ou captura não revele onde ou quem você é.</string>
+    <string name="diagnostics_section_stats">Estatísticas de inicialização</string>
+    <string name="diagnostics_stats_desc">Contadas apenas neste dispositivo. Nada é enviado.</string>
+    <string name="diagnostics_stats_launches">Inicializações</string>
+    <string name="diagnostics_stats_completed">Chegou ao jogo</string>
+    <string name="diagnostics_stats_crashes">Falhas</string>
+    <string name="diagnostics_stats_success_rate">Taxa de sucesso</string>
+    <string name="diagnostics_stats_avg_first_frame">Tempo médio até o primeiro quadro</string>
+    <string name="diagnostics_stats_none">Nenhuma inicialização registrada ainda.</string>
 </resources>

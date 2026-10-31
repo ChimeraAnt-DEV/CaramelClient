@@ -1199,4 +1199,12 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="guest_mode_desc">Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng.</string>
     <string name="streaming_safe_title">Chế độ an toàn khi phát trực tiếp</string>
     <string name="streaming_safe_desc">Che tên tài khoản, tọa độ thế giới và địa chỉ máy chủ trong lớp phủ và thông tin gỡ lỗi đã sao chép, để buổi phát hoặc ảnh chụp không tiết lộ bạn ở đâu hay là ai.</string>
+    <string name="diagnostics_section_stats">Thống kê khởi chạy</string>
+    <string name="diagnostics_stats_desc">Chỉ được đếm trên thiết bị này. Không có gì được tải lên.</string>
+    <string name="diagnostics_stats_launches">Lần khởi chạy</string>
+    <string name="diagnostics_stats_completed">Đã vào game</string>
+    <string name="diagnostics_stats_crashes">Thất bại</string>
+    <string name="diagnostics_stats_success_rate">Tỷ lệ thành công</string>
+    <string name="diagnostics_stats_avg_first_frame">Thời gian trung bình đến khung hình đầu tiên</string>
+    <string name="diagnostics_stats_none">Chưa có lần khởi chạy nào được ghi lại.</string>
 </resources>

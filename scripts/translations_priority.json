@@ -176,7 +176,15 @@
     "guest_mode_title": "Modo invitado",
     "guest_mode_desc": "Oculta mods, servidores y chat de voz en un dispositivo compartido o prestado. No se elimina nada y el juego sigue iniciándose; desactívalo para volver a verlos.",
     "streaming_safe_title": "Modo seguro para transmisiones",
-    "streaming_safe_desc": "Oculta nombres de cuenta, coordenadas del mundo y direcciones de servidores en las superposiciones y en la información de depuración copiada, para que una transmisión o una captura no revele dónde ni quién eres."
+    "streaming_safe_desc": "Oculta nombres de cuenta, coordenadas del mundo y direcciones de servidores en las superposiciones y en la información de depuración copiada, para que una transmisión o una captura no revele dónde ni quién eres.",
+    "diagnostics_section_stats": "Estadísticas de inicio",
+    "diagnostics_stats_desc": "Solo se cuentan en este dispositivo. No se sube nada.",
+    "diagnostics_stats_launches": "Inicios",
+    "diagnostics_stats_completed": "Llegó al juego",
+    "diagnostics_stats_crashes": "Fallidos",
+    "diagnostics_stats_success_rate": "Tasa de éxito",
+    "diagnostics_stats_avg_first_frame": "Tiempo medio hasta el primer fotograma",
+    "diagnostics_stats_none": "Aún no hay inicios registrados."
   },
   "fr": {
     "nav_back": "Retour",
@@ -355,7 +363,15 @@
     "guest_mode_title": "Mode invité",
     "guest_mode_desc": "Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir.",
     "streaming_safe_title": "Mode diffusion sécurisée",
-    "streaming_safe_desc": "Masque les noms de compte, les coordonnées du monde et les adresses de serveur dans les superpositions et les infos de débogage copiées, pour qu'une diffusion ou une capture ne révèle ni où ni qui vous êtes."
+    "streaming_safe_desc": "Masque les noms de compte, les coordonnées du monde et les adresses de serveur dans les superpositions et les infos de débogage copiées, pour qu'une diffusion ou une capture ne révèle ni où ni qui vous êtes.",
+    "diagnostics_section_stats": "Statistiques de lancement",
+    "diagnostics_stats_desc": "Comptabilisées uniquement sur cet appareil. Rien n'est envoyé.",
+    "diagnostics_stats_launches": "Lancements",
+    "diagnostics_stats_completed": "Jeu atteint",
+    "diagnostics_stats_crashes": "Échecs",
+    "diagnostics_stats_success_rate": "Taux de réussite",
+    "diagnostics_stats_avg_first_frame": "Temps moyen jusqu'à la première image",
+    "diagnostics_stats_none": "Aucun lancement enregistré pour l'instant."
   },
   "hi": {
     "nav_back": "वापस",
@@ -534,7 +550,15 @@
     "guest_mode_title": "अतिथि मोड",
     "guest_mode_desc": "साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।",
     "streaming_safe_title": "स्ट्रीमिंग-सुरक्षित मोड",
-    "streaming_safe_desc": "ओवरले और कॉपी किए गए डीबग विवरण में खाता नाम, विश्व निर्देशांक और सर्वर पते छिपाता है, ताकि स्ट्रीम या स्क्रीनशॉट से यह पता न चले कि आप कहाँ या कौन हैं।"
+    "streaming_safe_desc": "ओवरले और कॉपी किए गए डीबग विवरण में खाता नाम, विश्व निर्देशांक और सर्वर पते छिपाता है, ताकि स्ट्रीम या स्क्रीनशॉट से यह पता न चले कि आप कहाँ या कौन हैं।",
+    "diagnostics_section_stats": "लॉन्च आँकड़े",
+    "diagnostics_stats_desc": "केवल इस डिवाइस पर गिना जाता है। कुछ भी अपलोड नहीं होता।",
+    "diagnostics_stats_launches": "लॉन्च",
+    "diagnostics_stats_completed": "गेम तक पहुँचा",
+    "diagnostics_stats_crashes": "विफल",
+    "diagnostics_stats_success_rate": "सफलता दर",
+    "diagnostics_stats_avg_first_frame": "पहले फ़्रेम तक औसत समय",
+    "diagnostics_stats_none": "अभी तक कोई लॉन्च दर्ज नहीं।"
   },
   "id": {
     "nav_back": "Kembali",
@@ -713,7 +737,15 @@
     "guest_mode_title": "Mode tamu",
     "guest_mode_desc": "Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi.",
     "streaming_safe_title": "Mode aman streaming",
-    "streaming_safe_desc": "Menyamarkan nama akun, koordinat dunia, dan alamat server di overlay dan info debug yang disalin, agar siaran atau tangkapan layar tidak mengungkap di mana atau siapa Anda."
+    "streaming_safe_desc": "Menyamarkan nama akun, koordinat dunia, dan alamat server di overlay dan info debug yang disalin, agar siaran atau tangkapan layar tidak mengungkap di mana atau siapa Anda.",
+    "diagnostics_section_stats": "Statistik peluncuran",
+    "diagnostics_stats_desc": "Hanya dihitung di perangkat ini. Tidak ada yang diunggah.",
+    "diagnostics_stats_launches": "Peluncuran",
+    "diagnostics_stats_completed": "Mencapai game",
+    "diagnostics_stats_crashes": "Gagal",
+    "diagnostics_stats_success_rate": "Tingkat keberhasilan",
+    "diagnostics_stats_avg_first_frame": "Rata-rata waktu ke frame pertama",
+    "diagnostics_stats_none": "Belum ada peluncuran yang tercatat."
   },
   "ja": {
     "nav_back": "戻る",
@@ -892,7 +924,15 @@
     "guest_mode_title": "ゲストモード",
     "guest_mode_desc": "共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。",
     "streaming_safe_title": "配信セーフモード",
-    "streaming_safe_desc": "オーバーレイやコピーしたデバッグ情報のアカウント名、座標、サーバーアドレスを隠し、配信やスクリーンショットであなたの居場所や身元が分からないようにします。"
+    "streaming_safe_desc": "オーバーレイやコピーしたデバッグ情報のアカウント名、座標、サーバーアドレスを隠し、配信やスクリーンショットであなたの居場所や身元が分からないようにします。",
+    "diagnostics_section_stats": "起動統計",
+    "diagnostics_stats_desc": "この端末でのみ集計されます。何もアップロードされません。",
+    "diagnostics_stats_launches": "起動回数",
+    "diagnostics_stats_completed": "ゲーム到達",
+    "diagnostics_stats_crashes": "失敗",
+    "diagnostics_stats_success_rate": "成功率",
+    "diagnostics_stats_avg_first_frame": "初回フレームまでの平均時間",
+    "diagnostics_stats_none": "まだ起動が記録されていません。"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -1071,7 +1111,15 @@
     "guest_mode_title": "Modo convidado",
     "guest_mode_desc": "Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente.",
     "streaming_safe_title": "Modo seguro para transmissão",
-    "streaming_safe_desc": "Oculta nomes de conta, coordenadas do mundo e endereços de servidor nas sobreposições e nas informações de depuração copiadas, para que uma transmissão ou captura não revele onde ou quem você é."
+    "streaming_safe_desc": "Oculta nomes de conta, coordenadas do mundo e endereços de servidor nas sobreposições e nas informações de depuração copiadas, para que uma transmissão ou captura não revele onde ou quem você é.",
+    "diagnostics_section_stats": "Estatísticas de inicialização",
+    "diagnostics_stats_desc": "Contadas apenas neste dispositivo. Nada é enviado.",
+    "diagnostics_stats_launches": "Inicializações",
+    "diagnostics_stats_completed": "Chegou ao jogo",
+    "diagnostics_stats_crashes": "Falhas",
+    "diagnostics_stats_success_rate": "Taxa de sucesso",
+    "diagnostics_stats_avg_first_frame": "Tempo médio até o primeiro quadro",
+    "diagnostics_stats_none": "Nenhuma inicialização registrada ainda."
   },
   "ru": {
     "nav_back": "Назад",
@@ -1250,7 +1298,15 @@
     "guest_mode_title": "Гостевой режим",
     "guest_mode_desc": "Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть.",
     "streaming_safe_title": "Безопасный режим для стрима",
-    "streaming_safe_desc": "Скрывает имена аккаунтов, координаты мира и адреса серверов в оверлеях и скопированной отладочной информации, чтобы стрим или скриншот не выдал, где вы и кто вы."
+    "streaming_safe_desc": "Скрывает имена аккаунтов, координаты мира и адреса серверов в оверлеях и скопированной отладочной информации, чтобы стрим или скриншот не выдал, где вы и кто вы.",
+    "diagnostics_section_stats": "Статистика запусков",
+    "diagnostics_stats_desc": "Учитывается только на этом устройстве. Ничего не загружается.",
+    "diagnostics_stats_launches": "Запуски",
+    "diagnostics_stats_completed": "Достигли игры",
+    "diagnostics_stats_crashes": "Сбои",
+    "diagnostics_stats_success_rate": "Доля успешных",
+    "diagnostics_stats_avg_first_frame": "Среднее время до первого кадра",
+    "diagnostics_stats_none": "Запуски пока не зафиксированы."
   },
   "tr": {
     "nav_back": "Geri",
@@ -1429,7 +1485,15 @@
     "guest_mode_title": "Misafir modu",
     "guest_mode_desc": "Paylaşılan veya ödünç alınan bir cihazda modları, sunucuları ve sesli sohbeti gizler. Hiçbir şey silinmez ve oyun yine başlar; tekrar görmek için kapatın.",
     "streaming_safe_title": "Yayın güvenli modu",
-    "streaming_safe_desc": "Kaplamalarda ve kopyalanan hata ayıklama bilgilerinde hesap adlarını, dünya koordinatlarını ve sunucu adreslerini gizler; böylece bir yayın veya ekran görüntüsü nerede ve kim olduğunuzu açığa çıkarmaz."
+    "streaming_safe_desc": "Kaplamalarda ve kopyalanan hata ayıklama bilgilerinde hesap adlarını, dünya koordinatlarını ve sunucu adreslerini gizler; böylece bir yayın veya ekran görüntüsü nerede ve kim olduğunuzu açığa çıkarmaz.",
+    "diagnostics_section_stats": "Başlatma istatistikleri",
+    "diagnostics_stats_desc": "Yalnızca bu cihazda sayılır. Hiçbir şey yüklenmez.",
+    "diagnostics_stats_launches": "Başlatmalar",
+    "diagnostics_stats_completed": "Oyuna ulaşıldı",
+    "diagnostics_stats_crashes": "Başarısız",
+    "diagnostics_stats_success_rate": "Başarı oranı",
+    "diagnostics_stats_avg_first_frame": "İlk kareye kadar ortalama süre",
+    "diagnostics_stats_none": "Henüz başlatma kaydedilmedi."
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1608,7 +1672,15 @@
     "guest_mode_title": "Chế độ khách",
     "guest_mode_desc": "Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng.",
     "streaming_safe_title": "Chế độ an toàn khi phát trực tiếp",
-    "streaming_safe_desc": "Che tên tài khoản, tọa độ thế giới và địa chỉ máy chủ trong lớp phủ và thông tin gỡ lỗi đã sao chép, để buổi phát hoặc ảnh chụp không tiết lộ bạn ở đâu hay là ai."
+    "streaming_safe_desc": "Che tên tài khoản, tọa độ thế giới và địa chỉ máy chủ trong lớp phủ và thông tin gỡ lỗi đã sao chép, để buổi phát hoặc ảnh chụp không tiết lộ bạn ở đâu hay là ai.",
+    "diagnostics_section_stats": "Thống kê khởi chạy",
+    "diagnostics_stats_desc": "Chỉ được đếm trên thiết bị này. Không có gì được tải lên.",
+    "diagnostics_stats_launches": "Lần khởi chạy",
+    "diagnostics_stats_completed": "Đã vào game",
+    "diagnostics_stats_crashes": "Thất bại",
+    "diagnostics_stats_success_rate": "Tỷ lệ thành công",
+    "diagnostics_stats_avg_first_frame": "Thời gian trung bình đến khung hình đầu tiên",
+    "diagnostics_stats_none": "Chưa có lần khởi chạy nào được ghi lại."
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1787,6 +1859,14 @@
     "guest_mode_title": "访客模式",
     "guest_mode_desc": "在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。",
     "streaming_safe_title": "直播安全模式",
-    "streaming_safe_desc": "在悬浮层和复制的调试信息中遮蔽账户名、世界坐标和服务器地址，让直播或截图不会泄露你在哪里或你是谁。"
+    "streaming_safe_desc": "在悬浮层和复制的调试信息中遮蔽账户名、世界坐标和服务器地址，让直播或截图不会泄露你在哪里或你是谁。",
+    "diagnostics_section_stats": "启动统计",
+    "diagnostics_stats_desc": "仅在本设备上统计。不会上传任何内容。",
+    "diagnostics_stats_launches": "启动次数",
+    "diagnostics_stats_completed": "进入游戏",
+    "diagnostics_stats_crashes": "失败",
+    "diagnostics_stats_success_rate": "成功率",
+    "diagnostics_stats_avg_first_frame": "到首帧的平均时间",
+    "diagnostics_stats_none": "尚未记录任何启动。"
   }
 }

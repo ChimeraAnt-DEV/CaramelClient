@@ -114,6 +114,9 @@ public class DiagnosticsActivity extends BaseActivity {
         List<ModLoadDiagnostics.Record> modRecords = Collections.emptyList();
         /** The last launch that died inside the game activity, or null when none is recorded. */
         LastLaunchFailure.Report lastLaunchFailure;
+        /** Local launch/crash counters (item 282). Never null. */
+        org.chimeramc.client.core.stats.LaunchStats stats =
+                new org.chimeramc.client.core.stats.LaunchStats();
     }
 
     @Override
@@ -244,6 +247,7 @@ public class DiagnosticsActivity extends BaseActivity {
         renderNativeRows();
         renderAccountRows();
         renderModRows();
+        renderStatsRows();
     }
 
     /** Reads every fact the screen shows. Never throws: a failed read degrades to "unknown". */
@@ -305,6 +309,13 @@ public class DiagnosticsActivity extends BaseActivity {
             out.lastLaunchFailure = LastLaunchFailure.read(this);
         } catch (Throwable ignored) {
             out.lastLaunchFailure = null;
+        }
+        // Local launch/crash statistics (item 282). A read failure degrades to an empty record, so
+        // the screen shows "no launches recorded" rather than an error.
+        try {
+            out.stats = org.chimeramc.client.core.stats.LaunchStatsRecorder.load(this);
+        } catch (Throwable ignored) {
+            out.stats = new org.chimeramc.client.core.stats.LaunchStats();
         }
         return out;
     }
@@ -612,6 +623,38 @@ public class DiagnosticsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Renders the local launch/crash statistics (item 282).
+     *
+     * <p>Reads from the same store the launch path writes; the values are shown verbatim and an
+     * unknown average renders as an em dash rather than a zero, so a device that has never
+     * completed a launch is not told its first frame takes 0 ms.
+     */
+    private void renderStatsRows() {
+        LinearLayout rows = findViewById(R.id.diagnostics_stats_rows);
+        if (rows == null) return;
+        rows.removeAllViews();
+
+        org.chimeramc.client.core.stats.LaunchStats stats = current().stats;
+        if (stats.launches() == 0) {
+            TextView empty = new TextView(this);
+            empty.setText(R.string.diagnostics_stats_none);
+            empty.setTextColor(getColor(R.color.text_secondary));
+            empty.setTextSize(12);
+            empty.setPadding(0, 8, 0, 0);
+            rows.addView(empty);
+            return;
+        }
+        addRow(rows, R.string.diagnostics_stats_launches, String.valueOf(stats.launches()));
+        addRow(rows, R.string.diagnostics_stats_completed, String.valueOf(stats.completedLaunches()));
+        addRow(rows, R.string.diagnostics_stats_crashes, String.valueOf(stats.crashes()));
+        addRow(rows, R.string.diagnostics_stats_success_rate,
+                org.chimeramc.client.core.stats.LaunchStats.formatRate(stats.successRate()));
+        addRow(rows, R.string.diagnostics_stats_avg_first_frame,
+                org.chimeramc.client.core.stats.LaunchStats.formatFirstFrame(
+                        stats.averageFirstFrameMs()));
+    }
+
     // ---------------------------------------------------------------- rows
 
     private void addRow(LinearLayout parent, int labelRes, String value) {
@@ -784,6 +827,22 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Skin capture seam: ")
                     .append(data.skinSeam ? "live" : "inactive").append("\n");
         }
+
+        // Item 282: the local counters, so a report carries them without the reporter having to
+        // transcribe a screen. Local-only data; nothing here identifies the device beyond the model
+        // line already printed above.
+        org.chimeramc.client.core.stats.LaunchStats stats = data.stats;
+        sb.append("\nLaunch statistics (local):\n");
+        sb.append("  Launches: ").append(stats.launches()).append("\n");
+        sb.append("  Reached game: ").append(stats.completedLaunches()).append("\n");
+        sb.append("  Failed: ").append(stats.crashes()).append("\n");
+        sb.append("  Success rate: ")
+                .append(org.chimeramc.client.core.stats.LaunchStats.formatRate(stats.successRate()))
+                .append("\n");
+        sb.append("  Average time to first frame: ")
+                .append(org.chimeramc.client.core.stats.LaunchStats.formatFirstFrame(
+                        stats.averageFirstFrameMs()))
+                .append("\n");
 
         sb.append("\nMod load errors:\n");
         if (data.modRecords.isEmpty()) {

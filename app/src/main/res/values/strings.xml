@@ -1594,6 +1594,15 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_preloader_abi_ok">v%1$d (matches client)</string>
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
     <string name="diagnostics_no_mod_errors">No mod load errors on record.</string>
+    <!-- Local launch/crash statistics (item 282). Local data only; nothing is uploaded. -->
+    <string name="diagnostics_section_stats">Launch statistics</string>
+    <string name="diagnostics_stats_desc">Counted on this device only. Nothing is uploaded.</string>
+    <string name="diagnostics_stats_launches">Launches</string>
+    <string name="diagnostics_stats_completed">Reached game</string>
+    <string name="diagnostics_stats_crashes">Failed</string>
+    <string name="diagnostics_stats_success_rate">Success rate</string>
+    <string name="diagnostics_stats_avg_first_frame">Average time to first frame</string>
+    <string name="diagnostics_stats_none">No launches recorded yet.</string>
     <string name="diagnostics_mod_error_line">%1$s (%2$s): %3$s</string>
     <string name="diagnostics_native_loaded">Loaded</string>
     <string name="diagnostics_native_missing">Not loaded</string>
