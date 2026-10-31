@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.OverlayZoomButtonBinding;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
 import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.ZoomMod;
@@ -43,8 +44,9 @@ public class ZoomOverlay extends BaseOverlayButton {
 
     @Override
     protected void configureOverlayView(View view) {
-        iconView = view.findViewById(R.id.zoom_icon);
-        levelView = view.findViewById(R.id.zoom_level);
+        OverlayZoomButtonBinding binding = OverlayZoomButtonBinding.bind(view);
+        iconView = binding.zoomIcon;
+        levelView = binding.zoomLevel;
         updateZoomLevelLabel();
     }
 

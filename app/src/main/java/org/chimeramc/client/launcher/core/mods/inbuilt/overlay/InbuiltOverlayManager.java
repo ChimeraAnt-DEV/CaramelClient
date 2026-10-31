@@ -19,7 +19,14 @@ import java.util.Map;
 
 public class InbuiltOverlayManager {
     public interface HudEditorSelectionListener {
-        void onHudEditorSelectionChanged(int currentSizeDp);
+        /**
+         * Reports the selected overlay's size and opacity.
+         *
+         * <p>Item 221 asks for per-button opacity in the editor. The opacity rides this callback
+         * rather than a second listener so the panel cannot show a size from one overlay and an
+         * opacity from another: both values are read from the same selection in one pass.
+         */
+        void onHudEditorSelectionChanged(int currentSizeDp, int currentOpacity);
     }
 
     private static volatile InbuiltOverlayManager instance;
@@ -1569,7 +1576,8 @@ public class InbuiltOverlayManager {
     public void setHudEditorSelectionListener(HudEditorSelectionListener listener) {
         hudEditorSelectionListener = listener;
         if (listener != null) {
-            listener.onHudEditorSelectionChanged(getSelectedHudEditorButtonSize());
+            listener.onHudEditorSelectionChanged(
+                    getSelectedHudEditorButtonSize(), getSelectedHudEditorOpacity());
         }
     }
 
@@ -1604,7 +1612,8 @@ public class InbuiltOverlayManager {
 
     private void notifySelectionListener() {
         if (hudEditorSelectionListener != null) {
-            hudEditorSelectionListener.onHudEditorSelectionChanged(getSelectedHudEditorButtonSize());
+            hudEditorSelectionListener.onHudEditorSelectionChanged(
+                    getSelectedHudEditorButtonSize(), getSelectedHudEditorOpacity());
         }
     }
 
@@ -1616,6 +1625,34 @@ public class InbuiltOverlayManager {
             return InbuiltModManager.getInstance(activity).getOverlayButtonSize(selectedDisplayModId);
         }
         return 0;
+    }
+
+    /** The selected overlay's opacity, or 0 when nothing is selected (item 221). */
+    public int getSelectedHudEditorOpacity() {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        if (selectedHudEditorOverlay != null) {
+            return manager.getOverlayOpacity(selectedHudEditorOverlay.getOverlayConfigKey());
+        }
+        if (selectedDisplayModId != null) {
+            return manager.getOverlayOpacity(selectedDisplayModId);
+        }
+        return 0;
+    }
+
+    /** Applies an opacity to the selected overlay and refreshes it live (item 221). */
+    public void setSelectedHudEditorOpacity(int opacity) {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        if (selectedHudEditorOverlay != null) {
+            manager.setOverlayOpacity(selectedHudEditorOverlay.getOverlayConfigKey(), opacity);
+            selectedHudEditorOverlay.applyConfigurationChanges();
+        } else if (selectedDisplayModId != null) {
+            manager.setOverlayOpacity(selectedDisplayModId, opacity);
+            if (selectedDisplayModId.equals(ModIds.FPS_DISPLAY) && fpsDisplayOverlay != null) {
+                fpsDisplayOverlay.applyConfigurationChanges();
+            } else if (selectedDisplayModId.equals(ModIds.CPS_DISPLAY) && cpsDisplayOverlay != null) {
+                cpsDisplayOverlay.applyConfigurationChanges();
+            }
+        }
     }
 
     public void setSelectedHudEditorButtonSize(int sizeDp) {

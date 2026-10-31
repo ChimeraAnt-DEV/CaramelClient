@@ -183,10 +183,13 @@ public class ModMenuOverlay {
     private SeekBar modMenuButtonOpacitySeekBar;
     private TextView modMenuButtonOpacityText;
     private SeekBar hudButtonSizeSeekBar;
+    private SeekBar hudButtonOpacitySeekBar;
+    private TextView hudButtonOpacityText;
     private HudSafeAreaView hudSafeAreaView;
     private View hudEditorToolsView;
     private TextView hudButtonSizeText;
     private boolean updatingHudButtonSize = false;
+    private boolean updatingHudButtonOpacity = false;
     private boolean compactMode = false;
     private GridLayoutManager modsLayoutManager;
 
@@ -655,6 +658,8 @@ public class ModMenuOverlay {
         View modMenuContainer = overlayView.findViewById(R.id.mod_menu_container);
         hudButtonSizeSeekBar = overlayView.findViewById(R.id.seekbar_hud_button_size);
         hudButtonSizeText = overlayView.findViewById(R.id.text_hud_button_size);
+        hudButtonOpacitySeekBar = overlayView.findViewById(R.id.seekbar_hud_button_opacity);
+        hudButtonOpacityText = overlayView.findViewById(R.id.text_hud_button_opacity);
 
         if (hudButtonSizeSeekBar != null) {
             hudButtonSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -666,6 +671,27 @@ public class ModMenuOverlay {
                         manager.setSelectedHudEditorButtonSize(progress);
                     }
                     updateHudButtonSizeText(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+            updateHudEditorSizeControls(0);
+        }
+
+        if (hudButtonOpacitySeekBar != null) {
+            hudButtonOpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (!fromUser || updatingHudButtonOpacity) return;
+                    InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
+                    if (manager != null) {
+                        manager.setSelectedHudEditorOpacity(progress);
+                    }
+                    updateHudButtonOpacityText(progress);
                 }
 
                 @Override
@@ -2156,7 +2182,7 @@ public class ModMenuOverlay {
         });
         InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
         if (overlayManager != null) {
-            overlayManager.setHudEditorSelectionListener(this::updateHudEditorSizeControls);
+            overlayManager.setHudEditorSelectionListener(this::onHudEditorSelectionChanged);
             overlayManager.setHudEditorMode(true);
         }
     }
@@ -2197,18 +2223,49 @@ public class ModMenuOverlay {
         showModulesSection();
     }
 
+    private void onHudEditorSelectionChanged(int sizeDp, int opacity) {
+        updateHudEditorSizeControls(sizeDp);
+        updateHudEditorOpacityControls(opacity);
+    }
+
     private void updateHudEditorSizeControls(int sizeDp) {
         if (hudButtonSizeSeekBar == null) return;
         boolean hasSelection = sizeDp > 0;
         hudButtonSizeSeekBar.setEnabled(hasSelection);
+        if (hudButtonOpacitySeekBar != null) {
+            hudButtonOpacitySeekBar.setEnabled(hasSelection);
+        }
         if (!hasSelection) {
             updateHudButtonSizeText(0);
+            updateHudButtonOpacityText(0);
             return;
         }
         updatingHudButtonSize = true;
         hudButtonSizeSeekBar.setProgress(sizeDp);
         updatingHudButtonSize = false;
         updateHudButtonSizeText(sizeDp);
+    }
+
+    private void updateHudEditorOpacityControls(int opacity) {
+        if (hudButtonOpacitySeekBar == null) return;
+        boolean hasSelection = opacity > 0;
+        if (!hasSelection) {
+            updateHudButtonOpacityText(0);
+            return;
+        }
+        updatingHudButtonOpacity = true;
+        hudButtonOpacitySeekBar.setProgress(opacity);
+        updatingHudButtonOpacity = false;
+        updateHudButtonOpacityText(opacity);
+    }
+
+    private void updateHudButtonOpacityText(int opacity) {
+        if (hudButtonOpacityText == null) return;
+        if (opacity <= 0) {
+            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity));
+        } else {
+            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity_value, opacity));
+        }
     }
 
     private void updateHudButtonSizeText(int size) {
