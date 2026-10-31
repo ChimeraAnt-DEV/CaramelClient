@@ -1431,6 +1431,12 @@ public class InbuiltOverlayManager {
 
     public void setHudEditorMode(boolean active) {
         hudEditorMode = active;
+        // Item 210: enable grid snapping for every overlay drag while the editor is open, and clear
+        // it on exit so a gameplay drag is never silently quantised.
+        OverlaySafeArea.setEditorGrid(active
+                ? Math.round(OverlaySafeArea.DEFAULT_GRID_DP
+                        * activity.getResources().getDisplayMetrics().density)
+                : 0);
         for (BaseOverlayButton overlay : overlays) {
             overlay.setHudEditorMode(active);
         }

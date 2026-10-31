@@ -183,6 +183,8 @@ public class ModMenuOverlay {
     private SeekBar modMenuButtonOpacitySeekBar;
     private TextView modMenuButtonOpacityText;
     private SeekBar hudButtonSizeSeekBar;
+    private HudSafeAreaView hudSafeAreaView;
+    private View hudEditorToolsView;
     private TextView hudButtonSizeText;
     private boolean updatingHudButtonSize = false;
     private boolean compactMode = false;
@@ -644,6 +646,8 @@ public class ModMenuOverlay {
         compactModeSwitch = overlayView.findViewById(R.id.switch_compact_mod_menu);
 
         View hudEditorTools = overlayView.findViewById(R.id.hud_editor_tools);
+        hudEditorToolsView = hudEditorTools;
+        hudSafeAreaView = overlayView.findViewById(R.id.hud_safe_area);
         View hudEditorDragHandle = overlayView.findViewById(R.id.hud_editor_drag_handle);
         if (hudEditorDragHandle != null) setupHudEditorDragHandle(hudEditorDragHandle, hudEditorTools);
         View btnHudSave = overlayView.findViewById(R.id.btn_hud_save);
@@ -2069,6 +2073,31 @@ public class ModMenuOverlay {
         }
     }
 
+    /**
+     * Shows or hides the safe-area frame (item 210).
+     *
+     * <p>The frame is measured against the window it will cover, so it is populated after the first
+     * layout pass rather than at inflation, when the window size is still unknown.
+     */
+    private void showHudSafeArea(boolean show) {
+        if (hudSafeAreaView == null) return;
+        if (!show) {
+            hudSafeAreaView.setVisibility(View.GONE);
+            return;
+        }
+        hudSafeAreaView.setVisibility(View.VISIBLE);
+        hudSafeAreaView.post(() -> {
+            if (hudSafeAreaView == null || overlayView == null) return;
+            int width = overlayView.getWidth();
+            int height = overlayView.getHeight();
+            if (width <= 0 || height <= 0) return;
+            OverlaySafeArea.Rect safe = OverlaySafeArea.forView(overlayView, width, height);
+            int gridPx = Math.round(OverlaySafeArea.DEFAULT_GRID_DP
+                    * activity.getResources().getDisplayMetrics().density);
+            hudSafeAreaView.setGeometry(safe, OverlaySafeArea.cutoutBounds(overlayView), gridPx);
+        });
+    }
+
     private void enterHudEditorMode(View modMenuContainer, View hudEditorTools) {
         updateNavigationItems(false, false, true, false, false, false, false);
 
@@ -2080,6 +2109,7 @@ public class ModMenuOverlay {
             hudEditorTools.setAlpha(1f);
             hudEditorTools.setTranslationX(0f);
         }
+        showHudSafeArea(true);
         if (overlayView != null) {
             overlayView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
             overlayView.setClickable(false);
@@ -2119,6 +2149,7 @@ public class ModMenuOverlay {
         if (hudEditorTools != null) {
             hudEditorTools.setVisibility(View.GONE);
         }
+        showHudSafeArea(false);
         if (overlayView != null) {
             overlayView.setClickable(true);
         }
@@ -2715,10 +2746,8 @@ public class ModMenuOverlay {
     /** Enters HUD-editor mode from the rail (the top bar no longer carries that destination). */
     private void showHudEditorSection() {
         if (overlayView == null) return;
-        View modMenuContainer = overlayView.findViewById(R.id.mod_menu_container);
-        View hudEditorTools = overlayView.findViewById(R.id.hud_editor_tools);
-        if (modMenuContainer != null && hudEditorTools != null) {
-            enterHudEditorMode(modMenuContainer, hudEditorTools);
+        if (menuContainer != null && hudEditorToolsView != null) {
+            enterHudEditorMode(menuContainer, hudEditorToolsView);
         }
     }
 

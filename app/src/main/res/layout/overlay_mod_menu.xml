@@ -1497,6 +1497,15 @@
 
     </androidx.cardview.widget.CardView>
 
+    <!-- The HUD editor's safe-area frame, cutout shading and snap grid (item 210). It is a sibling
+         of the tools card and drawn beneath it, and the host keeps it non-touchable so it can never
+         intercept a drag. -->
+    <org.chimeramc.client.core.mods.inbuilt.overlay.HudSafeAreaView
+        android:id="@+id/hud_safe_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/hud_editor_tools"
         android:layout_width="wrap_content"

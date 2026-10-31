@@ -28,9 +28,16 @@ final class OverlayBounds {
         int parentHeight = resolveParentHeight(activity);
         int safeWidth = Math.max(1, width);
         int safeHeight = Math.max(1, height);
-        int maxX = Math.max(0, parentWidth - safeWidth);
-        int maxY = Math.max(0, parentHeight - safeHeight);
-        return new Position(clamp(x, 0, maxX), clamp(y, 0, maxY));
+        // Item 210: clamp into the cutout/system-bar safe area rather than the raw window, so an
+        // overlay dropped near a notch or the gesture bar stays fully visible. The rule lives in
+        // OverlaySafeArea so the HUD editor's frame and this clamp cannot disagree.
+        OverlaySafeArea.Rect safe = OverlaySafeArea.forView(resolveContentView(activity),
+                parentWidth, parentHeight);
+        // Snap then clamp (item 210): the grid is only non-zero inside the HUD editor, and clamping
+        // after the snap means a snap can never push a widget out of the safe area.
+        OverlaySafeArea.Position position = OverlaySafeArea.snapAndClamp(
+                safe, x, y, safeWidth, safeHeight, OverlaySafeArea.editorGrid());
+        return new Position(position.x, position.y);
     }
 
     private static int resolveViewWidth(View view) {
@@ -115,11 +122,4 @@ final class OverlayBounds {
         return activity.getWindow() == null ? null : activity.getWindow().getDecorView();
     }
 
-    private static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
-    }
-
-    private static float clamp(float value, float min, float max) {
-        return Math.max(min, Math.min(max, value));
-    }
 }
