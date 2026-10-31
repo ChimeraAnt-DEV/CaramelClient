@@ -17,6 +17,7 @@ public final class PojavControls {
     public static final String PREFS = "pojav_controls_prefs";
     private static final String KEY_LEFT_HANDED = "left_handed";
     private static final String KEY_TABLET_SCALE = "tablet_scale";
+    private static final String KEY_POINTER_SPEED = "pointer_speed";
 
     private static WeakReference<Activity> attachedActivity = new WeakReference<>(null);
     private static PojavControlOverlay overlay;
@@ -103,6 +104,19 @@ public final class PojavControls {
     public static int smallestWidthDp(Context context) {
         Configuration configuration = context.getResources().getConfiguration();
         return configuration.smallestScreenWidthDp;
+    }
+
+    /** The calibrated pointer-speed multiplier (item 223). */
+    public static float getPointerSpeedMultiplier(Context context) {
+        return preferences(context).getFloat(KEY_POINTER_SPEED, PointerCalibration.DEFAULT_MULTIPLIER);
+    }
+
+    /** Stores a calibrated pointer-speed multiplier, clamped to the playable range. */
+    public static void setPointerSpeedMultiplier(Context context, float multiplier) {
+        preferences(context).edit()
+                .putFloat(KEY_POINTER_SPEED, PointerCalibration.clamp(multiplier))
+                .apply();
+        if (overlay != null) overlay.requestLayout();
     }
 
     private static SharedPreferences preferences(Context context) {

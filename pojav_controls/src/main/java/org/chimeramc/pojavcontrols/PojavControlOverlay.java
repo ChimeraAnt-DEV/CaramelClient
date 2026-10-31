@@ -288,7 +288,10 @@ final class PojavControlOverlay extends ViewGroup {
 
     private float cameraSensitivity() {
         int height = getResources().getDisplayMetrics().heightPixels;
-        return height > 0 ? 1.4f * 1080f / height : 1.4f;
+        float base = height > 0 ? 1.4f * 1080f / height : 1.4f;
+        // The calibrated multiplier is applied on top of the base, so a pointer-speed calibration
+        // (item 223) tunes the feel without changing how the base scales with resolution.
+        return PointerCalibration.apply(base, PojavControls.getPointerSpeedMultiplier(getContext()));
     }
 
     private void setVirtualMouse(boolean enabled) {

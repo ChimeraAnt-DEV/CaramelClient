@@ -43,4 +43,10 @@
     <string name="pojav_controls_left_handed_desc">Mirror the controls so the movement thumb is on the right.</string>
     <string name="pojav_controls_tablet_scale">Tablet size</string>
     <string name="pojav_controls_tablet_scale_desc">Grow the buttons on wide screens. Applied for this session only; the profile keeps its authored sizes.</string>
+    <string name="pojav_controls_calibrate">Pointer speed</string>
+    <string name="pojav_controls_calibration_hint">Drag from the left marker to the right one.</string>
+    <string name="pojav_controls_calibration_value">Speed: %1$d%%</string>
+    <string name="pojav_controls_calibration_title">Pointer speed calibration</string>
+    <string name="pojav_controls_calibration_saved">Pointer speed saved</string>
+    <string name="pojav_controls_calibration_reset">Reset to default</string>
 </resources>
