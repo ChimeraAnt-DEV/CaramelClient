@@ -144,43 +144,49 @@ public final class TrajectoryPredictionOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitboxProjector.Camera camera = camera();
-            if (camera == null) {
-                if (TrajectoryPredictionMod.isAwaitingGameData()) drawAwaitingData(canvas);
-                return;
-            }
-            HitboxProjector.Basis basis = HitboxProjector.basis(camera);
-            if (basis == null) return;
-
-            List<TrajectorySolver.Sample> arc =
-                    TrajectoryPredictionMod.readArc(camera, MAX_SAMPLES);
-            if (arc.isEmpty()) {
-                if (TrajectoryPredictionMod.isAwaitingGameData()) drawAwaitingData(canvas);
-                return;
-            }
-
-            int color = TrajectoryPredictionMod.getColor();
-            dotPaint.setColor(color);
-            float[] last = null;
-            for (TrajectorySolver.Sample sample : arc) {
-                float[] screen = HitboxProjector.projectPoint(
-                        sample.x, sample.y, sample.z, basis);
-                if (screen == null) continue;
-                if (last != null) {
-                    // Dotted line: draw a small dot at each sample rather than connecting them,
-                    // so the arc reads as a trajectory rather than a solid overlay stroke.
-                    canvas.drawCircle(screen[0], screen[1], Math.max(1.5f, 1.6f * density), dotPaint);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitboxProjector.Camera camera = camera();
+                if (camera == null) {
+                    if (TrajectoryPredictionMod.isAwaitingGameData()) drawAwaitingData(canvas);
+                    return;
                 }
-                last = screen;
-            }
-
-            // Landing ring at the arc's final projected point.
-            if (last != null) {
-                ringPaint.setColor(color);
-                canvas.drawCircle(last[0], last[1], 6f * density, ringPaint);
-                dotPaint.setAlpha(60);
-                canvas.drawCircle(last[0], last[1], 3f * density, dotPaint);
-                dotPaint.setAlpha(255);
+                HitboxProjector.Basis basis = HitboxProjector.basis(camera);
+                if (basis == null) return;
+    
+                List<TrajectorySolver.Sample> arc =
+                        TrajectoryPredictionMod.readArc(camera, MAX_SAMPLES);
+                if (arc.isEmpty()) {
+                    if (TrajectoryPredictionMod.isAwaitingGameData()) drawAwaitingData(canvas);
+                    return;
+                }
+    
+                int color = TrajectoryPredictionMod.getColor();
+                dotPaint.setColor(color);
+                float[] last = null;
+                for (TrajectorySolver.Sample sample : arc) {
+                    float[] screen = HitboxProjector.projectPoint(
+                            sample.x, sample.y, sample.z, basis);
+                    if (screen == null) continue;
+                    if (last != null) {
+                        // Dotted line: draw a small dot at each sample rather than connecting them,
+                        // so the arc reads as a trajectory rather than a solid overlay stroke.
+                        canvas.drawCircle(screen[0], screen[1], Math.max(1.5f, 1.6f * density), dotPaint);
+                    }
+                    last = screen;
+                }
+    
+                // Landing ring at the arc's final projected point.
+                if (last != null) {
+                    ringPaint.setColor(color);
+                    canvas.drawCircle(last[0], last[1], 6f * density, ringPaint);
+                    dotPaint.setAlpha(60);
+                    canvas.drawCircle(last[0], last[1], 3f * density, dotPaint);
+                    dotPaint.setAlpha(255);
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("TrajectoryPredictionOverlay", drawStart);
             }
         }
 

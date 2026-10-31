@@ -166,53 +166,59 @@ public final class HitboxOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitboxProjector.Frame frame = HitboxMod.readFrame();
-            if (frame == null) {
-                // No native entity feed -- but the peer feed (voice positions) needs no native
-                // hook, so draw what the network actually reported before falling back to the
-                // "waiting for game data" notice. Showing the notice while peer boxes are
-                // available would claim the module is unwired when it is working.
-                if (drawPeerBoxes(canvas)) return;
-                // Only blame the missing native feed when there is no peer route either: with the
-                // voice link running the module is working, it just has nobody in range, and the
-                // notice would be a lie.
-                if (HitboxMod.isAwaitingGameData() && !HitboxMod.hasPeerFeed()) {
-                    drawAwaitingData(canvas);
-                }
-                return;
-            }
-
-            if (HitboxMod.isShowLookLine() && frame.lookLine != null) {
-                boxPaint.setColor(COLOR_AIMED);
-                boxPaint.setStrokeWidth(2f * density);
-                canvas.drawLine(frame.lookLine.left, frame.lookLine.top,
-                        frame.lookLine.right, frame.lookLine.bottom, boxPaint);
-                boxPaint.setStrokeWidth(Math.max(1.5f, density));
-            }
-
-            for (HitboxProjector.Projected projected : frame.entities) {
-                int color = projected.aimedAt ? COLOR_AIMED : colorFor(projected.kind);
-                boxPaint.setColor(color);
-                canvas.drawRect(projected.box.left, projected.box.top,
-                        projected.box.right, projected.box.bottom, boxPaint);
-
-                if (projected.kind == HitboxProjector.Kind.PLAYER) {
-                    if (HitboxMod.isShowCritLine() && projected.critY != null) {
-                        boxPaint.setColor(projected.aimedAt ? COLOR_AIMED : COLOR_CRIT);
-                        canvas.drawLine(projected.box.left, projected.critY,
-                                projected.box.right, projected.critY, boxPaint);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitboxProjector.Frame frame = HitboxMod.readFrame();
+                if (frame == null) {
+                    // No native entity feed -- but the peer feed (voice positions) needs no native
+                    // hook, so draw what the network actually reported before falling back to the
+                    // "waiting for game data" notice. Showing the notice while peer boxes are
+                    // available would claim the module is unwired when it is working.
+                    if (drawPeerBoxes(canvas)) return;
+                    // Only blame the missing native feed when there is no peer route either: with the
+                    // voice link running the module is working, it just has nobody in range, and the
+                    // notice would be a lie.
+                    if (HitboxMod.isAwaitingGameData() && !HitboxMod.hasPeerFeed()) {
+                        drawAwaitingData(canvas);
                     }
-                    if (HitboxMod.isShowComboBox() && projected.comboBox != null) {
-                        int comboColor = projected.aimedAt ? COLOR_AIMED : COLOR_COMBO;
-                        boxPaint.setColor(comboColor);
-                        HitboxProjector.Rect combo = projected.comboBox;
-                        canvas.drawRect(combo.left, combo.top, combo.right, combo.bottom, boxPaint);
-                        // A faint wash makes the best-combo target readable at a glance without
-                        // hiding the entity behind it.
-                        fillPaint.setColor((comboColor & 0x00FFFFFF) | 0x33000000);
-                        canvas.drawRect(combo.left, combo.top, combo.right, combo.bottom, fillPaint);
+                    return;
+                }
+    
+                if (HitboxMod.isShowLookLine() && frame.lookLine != null) {
+                    boxPaint.setColor(COLOR_AIMED);
+                    boxPaint.setStrokeWidth(2f * density);
+                    canvas.drawLine(frame.lookLine.left, frame.lookLine.top,
+                            frame.lookLine.right, frame.lookLine.bottom, boxPaint);
+                    boxPaint.setStrokeWidth(Math.max(1.5f, density));
+                }
+    
+                for (HitboxProjector.Projected projected : frame.entities) {
+                    int color = projected.aimedAt ? COLOR_AIMED : colorFor(projected.kind);
+                    boxPaint.setColor(color);
+                    canvas.drawRect(projected.box.left, projected.box.top,
+                            projected.box.right, projected.box.bottom, boxPaint);
+    
+                    if (projected.kind == HitboxProjector.Kind.PLAYER) {
+                        if (HitboxMod.isShowCritLine() && projected.critY != null) {
+                            boxPaint.setColor(projected.aimedAt ? COLOR_AIMED : COLOR_CRIT);
+                            canvas.drawLine(projected.box.left, projected.critY,
+                                    projected.box.right, projected.critY, boxPaint);
+                        }
+                        if (HitboxMod.isShowComboBox() && projected.comboBox != null) {
+                            int comboColor = projected.aimedAt ? COLOR_AIMED : COLOR_COMBO;
+                            boxPaint.setColor(comboColor);
+                            HitboxProjector.Rect combo = projected.comboBox;
+                            canvas.drawRect(combo.left, combo.top, combo.right, combo.bottom, boxPaint);
+                            // A faint wash makes the best-combo target readable at a glance without
+                            // hiding the entity behind it.
+                            fillPaint.setColor((comboColor & 0x00FFFFFF) | 0x33000000);
+                            canvas.drawRect(combo.left, combo.top, combo.right, combo.bottom, fillPaint);
+                        }
                     }
                 }
+            
+            } finally {
+                OverlayDrawTimer.finish("HitboxOverlay", drawStart);
             }
         }
 

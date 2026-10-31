@@ -152,37 +152,43 @@ public final class ReachIndicatorOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitboxProjector.Camera camera = camera();
-            ReachIndicator.Reading reading = ReachIndicatorMod.read(camera);
-            if (reading == null) return;
-
-            String text = captionFor(reading);
-            float padX = 10f * density;
-            float padY = 6f * density;
-            float textW = textPaint.measureText(text);
-            float w = textW + padX * 2f;
-            float h = textPaint.getTextSize() + padY * 2f;
-
-            float cx = getWidth() / 2f;
-            float cy = ReachIndicatorMod.isAboveHotbar()
-                    ? getHeight() - 84f * density - h / 2f
-                    : getHeight() / 2f + 46f * density;
-            float left = cx - w / 2f;
-            float top = cy - h / 2f;
-
-            float radius = h / 2f;
-            pill.set(left, top, left + w, top + h);
-            canvas.drawRoundRect(pill, radius, radius, bgPaint);
-
-            // A thin accent border in the module's own colour so the caption reads as a HUD
-            // element rather than a debug label.
-            accentPaint.setColor(0xFF5AD1FF);
-            border.set(left + density, top + density, left + w - density, top + h - density);
-            canvas.drawRoundRect(border, radius - density, radius - density, accentPaint);
-
-            textPaint.setColor(0xFFEAF6FF);
-            float baseline = cy - (textPaint.descent() + textPaint.ascent()) / 2f;
-            canvas.drawText(text, cx, baseline, textPaint);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitboxProjector.Camera camera = camera();
+                ReachIndicator.Reading reading = ReachIndicatorMod.read(camera);
+                if (reading == null) return;
+    
+                String text = captionFor(reading);
+                float padX = 10f * density;
+                float padY = 6f * density;
+                float textW = textPaint.measureText(text);
+                float w = textW + padX * 2f;
+                float h = textPaint.getTextSize() + padY * 2f;
+    
+                float cx = getWidth() / 2f;
+                float cy = ReachIndicatorMod.isAboveHotbar()
+                        ? getHeight() - 84f * density - h / 2f
+                        : getHeight() / 2f + 46f * density;
+                float left = cx - w / 2f;
+                float top = cy - h / 2f;
+    
+                float radius = h / 2f;
+                pill.set(left, top, left + w, top + h);
+                canvas.drawRoundRect(pill, radius, radius, bgPaint);
+    
+                // A thin accent border in the module's own colour so the caption reads as a HUD
+                // element rather than a debug label.
+                accentPaint.setColor(0xFF5AD1FF);
+                border.set(left + density, top + density, left + w - density, top + h - density);
+                canvas.drawRoundRect(border, radius - density, radius - density, accentPaint);
+    
+                textPaint.setColor(0xFFEAF6FF);
+                float baseline = cy - (textPaint.descent() + textPaint.ascent()) / 2f;
+                canvas.drawText(text, cx, baseline, textPaint);
+            
+            } finally {
+                OverlayDrawTimer.finish("ReachIndicatorOverlay", drawStart);
+            }
         }
 
         /** The caption text, rebuilt only when the peer or its distance changes. */

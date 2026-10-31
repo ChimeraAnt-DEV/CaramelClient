@@ -278,108 +278,114 @@ public final class HitTimingOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitTimingSolver.Decision decision =
-                    HitTimingMod.evaluate(SystemClock.uptimeMillis());
-
-            boolean idle = decision.isIdle();
-            int color = idle ? COLOR_READY : (decision.isGreen() ? COLOR_HIT : COLOR_WAIT);
-
-            float w = getWidth();
-            float h = getHeight();
-            float radius = h / 2f;
-
-            // Smooth the bar rather than letting it reset between refresh ticks; the window is
-            // a continuous countdown, so a stepped bar reads as a stutter.
-            float target = decision.progress;
-            shownProgress += (target - shownProgress) * 0.35f;
-
-            // An idle indicator is deliberate: it fades rather than shouting a status it does
-            // not have, so "not in combat yet" cannot be misread as "hit now".
-            paint.setAlpha(idle ? 150 : 255);
-
-            // Soft drop shadow so the pill stays legible over bright terrain.
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(0x55000000);
-            pill.set(0f, 1.5f * density, w, h + 1.5f * density);
-            canvas.drawRoundRect(pill, radius, radius, paint);
-
-            // Body: a dark translucent fill with a subtle top-lit gradient, rebuilt only when the
-            // view height changes rather than on every frame.
-            if (bodyGradient == null || gradientHeight != h) {
-                bodyGradient = new LinearGradient(0f, 0f, 0f, h,
-                        0xE61A1D24, 0xE60E1015, Shader.TileMode.CLAMP);
-                gradientHeight = h;
-            }
-            paint.setShader(bodyGradient);
-            pill.set(0f, 0f, w, h);
-            canvas.drawRoundRect(pill, radius, radius, paint);
-            paint.setShader(null);
-
-            // Progress bar hugging the inside of the pill, growing with the elapsed window.
-            if (HitTimingMod.isShowTimingBar()) {
-                float inset = 3f * density;
-                float trackH = h - inset * 2f;
-                paint.setColor(0x26FFFFFF);
-                bar.set(inset, inset, w - inset, h - inset);
-                canvas.drawRoundRect(bar, trackH / 2f, trackH / 2f, paint);
-                paint.setColor(color);
-                paint.setAlpha(idle ? 90 : 255);
-                bar.set(inset, inset, inset + (w - inset * 2f) * Math.max(0f, Math.min(1f, shownProgress)),
-                        h - inset);
-                canvas.drawRoundRect(bar, trackH / 2f, trackH / 2f, paint);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitTimingSolver.Decision decision =
+                        HitTimingMod.evaluate(SystemClock.uptimeMillis());
+    
+                boolean idle = decision.isIdle();
+                int color = idle ? COLOR_READY : (decision.isGreen() ? COLOR_HIT : COLOR_WAIT);
+    
+                float w = getWidth();
+                float h = getHeight();
+                float radius = h / 2f;
+    
+                // Smooth the bar rather than letting it reset between refresh ticks; the window is
+                // a continuous countdown, so a stepped bar reads as a stutter.
+                float target = decision.progress;
+                shownProgress += (target - shownProgress) * 0.35f;
+    
+                // An idle indicator is deliberate: it fades rather than shouting a status it does
+                // not have, so "not in combat yet" cannot be misread as "hit now".
                 paint.setAlpha(idle ? 150 : 255);
-            }
-
-            // Crisp 2dp border in the state colour, drawn inside the pill.
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(2f * density);
-            paint.setColor(color);
-            border.set(density, density, w - density, h - density);
-            canvas.drawRoundRect(border, radius - density, radius - density, paint);
-            paint.setStyle(Paint.Style.FILL);
-
-            // Label: a short verb in the state colour. The remaining time is drawn as a
-            // separate dim caption so the two do not compete for the same line.
-            // Constants, not built per frame: the label is one of three fixed verbs and drawing
-            // runs on the game's frame tick (item 17).
-            String label = idle ? LABEL_READY : (decision.isGreen() ? LABEL_HIT : LABEL_WAIT);
-            textPaint.setColor(color);
-            float textCenterY = h / 2f - (textPaint.descent() + textPaint.ascent()) / 2f;
-            float labelX = w / 2f;
-            if (!idle && !decision.isGreen() && HitTimingMod.isShowCombo()) {
-                // Shift the verb left to leave room for the countdown caption on the right.
-                labelX = w * 0.38f;
-            }
-            canvas.drawText(label, labelX, textCenterY, textPaint);
-
-            if (!idle && !decision.isGreen()) {
-                labelPaint.setColor(0xCCFFFFFF);
-                if (captionMs != decision.remainingMs) {
-                    captionMs = decision.remainingMs;
-                    captionText = captionMs + "ms";
+    
+                // Soft drop shadow so the pill stays legible over bright terrain.
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(0x55000000);
+                pill.set(0f, 1.5f * density, w, h + 1.5f * density);
+                canvas.drawRoundRect(pill, radius, radius, paint);
+    
+                // Body: a dark translucent fill with a subtle top-lit gradient, rebuilt only when the
+                // view height changes rather than on every frame.
+                if (bodyGradient == null || gradientHeight != h) {
+                    bodyGradient = new LinearGradient(0f, 0f, 0f, h,
+                            0xE61A1D24, 0xE60E1015, Shader.TileMode.CLAMP);
+                    gradientHeight = h;
                 }
-                float capCenterY = h / 2f - (labelPaint.descent() + labelPaint.ascent()) / 2f;
-                canvas.drawText(captionText, w * 0.72f, capCenterY, labelPaint);
-            }
-
-            // Combo badge, drawn as a small pill on the leading edge so a streak is readable
-            // at a glance without widening the main indicator.
-            if (HitTimingMod.isShowCombo() && decision.combo > 1) {
-                if (comboValue != decision.combo) {
-                    comboValue = decision.combo;
-                    comboText = comboValue + "x";
+                paint.setShader(bodyGradient);
+                pill.set(0f, 0f, w, h);
+                canvas.drawRoundRect(pill, radius, radius, paint);
+                paint.setShader(null);
+    
+                // Progress bar hugging the inside of the pill, growing with the elapsed window.
+                if (HitTimingMod.isShowTimingBar()) {
+                    float inset = 3f * density;
+                    float trackH = h - inset * 2f;
+                    paint.setColor(0x26FFFFFF);
+                    bar.set(inset, inset, w - inset, h - inset);
+                    canvas.drawRoundRect(bar, trackH / 2f, trackH / 2f, paint);
+                    paint.setColor(color);
+                    paint.setAlpha(idle ? 90 : 255);
+                    bar.set(inset, inset, inset + (w - inset * 2f) * Math.max(0f, Math.min(1f, shownProgress)),
+                            h - inset);
+                    canvas.drawRoundRect(bar, trackH / 2f, trackH / 2f, paint);
+                    paint.setAlpha(idle ? 150 : 255);
                 }
-                labelPaint.setColor(0xFF0E1015);
-                float cw = labelPaint.measureText(comboText) + 8f * density;
-                float ch = 14f * density;
-                comboPill.set(w - cw - 3f * density, (h - ch) / 2f, w - 3f * density, (h + ch) / 2f);
+    
+                // Crisp 2dp border in the state colour, drawn inside the pill.
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(2f * density);
                 paint.setColor(color);
-                canvas.drawRoundRect(comboPill, ch / 2f, ch / 2f, paint);
-                float comboCenterY = (h / 2f) - (labelPaint.descent() + labelPaint.ascent()) / 2f;
-                canvas.drawText(comboText, comboPill.centerX(), comboCenterY, labelPaint);
+                border.set(density, density, w - density, h - density);
+                canvas.drawRoundRect(border, radius - density, radius - density, paint);
+                paint.setStyle(Paint.Style.FILL);
+    
+                // Label: a short verb in the state colour. The remaining time is drawn as a
+                // separate dim caption so the two do not compete for the same line.
+                // Constants, not built per frame: the label is one of three fixed verbs and drawing
+                // runs on the game's frame tick (item 17).
+                String label = idle ? LABEL_READY : (decision.isGreen() ? LABEL_HIT : LABEL_WAIT);
+                textPaint.setColor(color);
+                float textCenterY = h / 2f - (textPaint.descent() + textPaint.ascent()) / 2f;
+                float labelX = w / 2f;
+                if (!idle && !decision.isGreen() && HitTimingMod.isShowCombo()) {
+                    // Shift the verb left to leave room for the countdown caption on the right.
+                    labelX = w * 0.38f;
+                }
+                canvas.drawText(label, labelX, textCenterY, textPaint);
+    
+                if (!idle && !decision.isGreen()) {
+                    labelPaint.setColor(0xCCFFFFFF);
+                    if (captionMs != decision.remainingMs) {
+                        captionMs = decision.remainingMs;
+                        captionText = captionMs + "ms";
+                    }
+                    float capCenterY = h / 2f - (labelPaint.descent() + labelPaint.ascent()) / 2f;
+                    canvas.drawText(captionText, w * 0.72f, capCenterY, labelPaint);
+                }
+    
+                // Combo badge, drawn as a small pill on the leading edge so a streak is readable
+                // at a glance without widening the main indicator.
+                if (HitTimingMod.isShowCombo() && decision.combo > 1) {
+                    if (comboValue != decision.combo) {
+                        comboValue = decision.combo;
+                        comboText = comboValue + "x";
+                    }
+                    labelPaint.setColor(0xFF0E1015);
+                    float cw = labelPaint.measureText(comboText) + 8f * density;
+                    float ch = 14f * density;
+                    comboPill.set(w - cw - 3f * density, (h - ch) / 2f, w - 3f * density, (h + ch) / 2f);
+                    paint.setColor(color);
+                    canvas.drawRoundRect(comboPill, ch / 2f, ch / 2f, paint);
+                    float comboCenterY = (h / 2f) - (labelPaint.descent() + labelPaint.ascent()) / 2f;
+                    canvas.drawText(comboText, comboPill.centerX(), comboCenterY, labelPaint);
+                }
+    
+                colorPulseIfChanged(color);
+            
+            } finally {
+                OverlayDrawTimer.finish("HitTimingOverlay", drawStart);
             }
-
-            colorPulseIfChanged(color);
         }
 
         /**

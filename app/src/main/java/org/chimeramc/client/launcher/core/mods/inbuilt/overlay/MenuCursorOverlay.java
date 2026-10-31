@@ -122,12 +122,18 @@ public final class MenuCursorOverlay extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (!router.isMenuOpen()) return;
-        float density = getResources().getDisplayMetrics().density;
-        UiDraw.pointerCursor(canvas, paint, paint2,
-                router.cursor().x(), router.cursor().y(), density);
-    }
+            long drawStart = OverlayDrawTimer.start();
+            try {
+            super.onDraw(canvas);
+            if (!router.isMenuOpen()) return;
+            float density = getResources().getDisplayMetrics().density;
+            UiDraw.pointerCursor(canvas, paint, paint2,
+                    router.cursor().x(), router.cursor().y(), density);
+        
+            } finally {
+                OverlayDrawTimer.finish("MenuCursorOverlay", drawStart);
+            }
+        }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

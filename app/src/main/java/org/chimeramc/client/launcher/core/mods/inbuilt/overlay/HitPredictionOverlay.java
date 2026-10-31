@@ -144,42 +144,48 @@ public final class HitPredictionOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitboxProjector.Camera camera = camera();
-            if (camera == null) return;
-            HitboxProjector.Basis basis = HitboxProjector.basis(camera);
-            if (basis == null) return;
-
-            List<HitPredictor.Prediction> markers = HitPredictionMod.readMarkers();
-            if (markers.isEmpty()) return;
-
-            for (HitPredictor.Prediction marker : markers) {
-                HitboxProjector.Entity current = null;
-                // Find the peer's current position so the tether has a start point.
-                for (ReachIndicator.VoicePeerPosition peer : PeerPositions.read()) {
-                    if (peer.id.equals(marker.peerId)) {
-                        current = HitboxProjector.Entity.player(peer.x, peer.y, peer.z);
-                        break;
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitboxProjector.Camera camera = camera();
+                if (camera == null) return;
+                HitboxProjector.Basis basis = HitboxProjector.basis(camera);
+                if (basis == null) return;
+    
+                List<HitPredictor.Prediction> markers = HitPredictionMod.readMarkers();
+                if (markers.isEmpty()) return;
+    
+                for (HitPredictor.Prediction marker : markers) {
+                    HitboxProjector.Entity current = null;
+                    // Find the peer's current position so the tether has a start point.
+                    for (ReachIndicator.VoicePeerPosition peer : PeerPositions.read()) {
+                        if (peer.id.equals(marker.peerId)) {
+                            current = HitboxProjector.Entity.player(peer.x, peer.y, peer.z);
+                            break;
+                        }
+                    }
+                    HitboxProjector.Entity ghost = HitboxProjector.Entity.player(
+                            marker.x, marker.y, marker.z);
+    
+                    HitboxProjector.Projected projected = HitboxProjector.projectEntity(ghost, basis);
+                    if (projected == null) continue;
+                    HitboxProjector.Rect box = projected.box;
+                    canvas.drawRect(box.left, box.top, box.right, box.bottom, fillPaint);
+                    canvas.drawRect(box.left, box.top, box.right, box.bottom, boxPaint);
+    
+                    if (current != null) {
+                        HitboxProjector.Projected from = HitboxProjector.projectEntity(current, basis);
+                        if (from != null) {
+                            float fx = (from.box.left + from.box.right) / 2f;
+                            float fy = (from.box.top + from.box.bottom) / 2f;
+                            float tx = (box.left + box.right) / 2f;
+                            float ty = (box.top + box.bottom) / 2f;
+                            canvas.drawLine(fx, fy, tx, ty, tetherPaint);
+                        }
                     }
                 }
-                HitboxProjector.Entity ghost = HitboxProjector.Entity.player(
-                        marker.x, marker.y, marker.z);
-
-                HitboxProjector.Projected projected = HitboxProjector.projectEntity(ghost, basis);
-                if (projected == null) continue;
-                HitboxProjector.Rect box = projected.box;
-                canvas.drawRect(box.left, box.top, box.right, box.bottom, fillPaint);
-                canvas.drawRect(box.left, box.top, box.right, box.bottom, boxPaint);
-
-                if (current != null) {
-                    HitboxProjector.Projected from = HitboxProjector.projectEntity(current, basis);
-                    if (from != null) {
-                        float fx = (from.box.left + from.box.right) / 2f;
-                        float fy = (from.box.top + from.box.bottom) / 2f;
-                        float tx = (box.left + box.right) / 2f;
-                        float ty = (box.top + box.bottom) / 2f;
-                        canvas.drawLine(fx, fy, tx, ty, tetherPaint);
-                    }
-                }
+            
+            } finally {
+                OverlayDrawTimer.finish("HitPredictionOverlay", drawStart);
             }
         }
 

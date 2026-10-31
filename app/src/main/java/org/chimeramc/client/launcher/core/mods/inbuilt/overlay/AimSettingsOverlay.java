@@ -123,52 +123,58 @@ public class AimSettingsOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            boolean showReticle = AimSettingsMod.isCrosshairEnabled();
-            if (!showReticle && flashStrength <= 0f) return;
-            float cx = getWidth() / 2f;
-            float cy = getHeight() / 2f;
-            int color = AimSettingsMod.getCrosshairColor();
-
-            if (showReticle) {
-                reticle.setColor(color);
-                reticle.setAlpha(230);
-                switch (AimSettingsMod.getCrosshairStyle()) {
-                    case AimSettingsMod.STYLE_DOT:
-                        canvas.drawCircle(cx, cy, 3.2f * density, reticle);
-                        break;
-                    case AimSettingsMod.STYLE_CIRCLE:
-                        ring.setColor(color);
-                        ring.setAlpha(230);
-                        ring.setStyle(Paint.Style.STROKE);
-                        canvas.drawCircle(cx, cy, 14f * density, ring);
-                        canvas.drawCircle(cx, cy, 2f * density, reticle);
-                        break;
-                    case AimSettingsMod.STYLE_CROSS:
-                    default:
-                        float gap = 9f * density;
-                        float arm = 7f * density;
-                        canvas.drawRect(cx - arm, cy - 1.2f * density, cx - gap + 2f * density, cy + 1.2f * density, reticle);
-                        canvas.drawRect(cx + gap - 2f * density, cy - 1.2f * density, cx + arm, cy + 1.2f * density, reticle);
-                        canvas.drawRect(cx - 1.2f * density, cy - arm, cx + 1.2f * density, cy - gap + 2f * density, reticle);
-                        canvas.drawRect(cx - 1.2f * density, cy + gap - 2f * density, cx + 1.2f * density, cy + arm, reticle);
-                        canvas.drawCircle(cx, cy, 2.4f * density, reticle);
-                        ring.setColor(color);
-                        ring.setAlpha(120);
-                        ring.setStyle(Paint.Style.STROKE);
-                        canvas.drawCircle(cx, cy, 22f * density, ring);
-                        break;
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                super.onDraw(canvas);
+                boolean showReticle = AimSettingsMod.isCrosshairEnabled();
+                if (!showReticle && flashStrength <= 0f) return;
+                float cx = getWidth() / 2f;
+                float cy = getHeight() / 2f;
+                int color = AimSettingsMod.getCrosshairColor();
+    
+                if (showReticle) {
+                    reticle.setColor(color);
+                    reticle.setAlpha(230);
+                    switch (AimSettingsMod.getCrosshairStyle()) {
+                        case AimSettingsMod.STYLE_DOT:
+                            canvas.drawCircle(cx, cy, 3.2f * density, reticle);
+                            break;
+                        case AimSettingsMod.STYLE_CIRCLE:
+                            ring.setColor(color);
+                            ring.setAlpha(230);
+                            ring.setStyle(Paint.Style.STROKE);
+                            canvas.drawCircle(cx, cy, 14f * density, ring);
+                            canvas.drawCircle(cx, cy, 2f * density, reticle);
+                            break;
+                        case AimSettingsMod.STYLE_CROSS:
+                        default:
+                            float gap = 9f * density;
+                            float arm = 7f * density;
+                            canvas.drawRect(cx - arm, cy - 1.2f * density, cx - gap + 2f * density, cy + 1.2f * density, reticle);
+                            canvas.drawRect(cx + gap - 2f * density, cy - 1.2f * density, cx + arm, cy + 1.2f * density, reticle);
+                            canvas.drawRect(cx - 1.2f * density, cy - arm, cx + 1.2f * density, cy - gap + 2f * density, reticle);
+                            canvas.drawRect(cx - 1.2f * density, cy + gap - 2f * density, cx + 1.2f * density, cy + arm, reticle);
+                            canvas.drawCircle(cx, cy, 2.4f * density, reticle);
+                            ring.setColor(color);
+                            ring.setAlpha(120);
+                            ring.setStyle(Paint.Style.STROKE);
+                            canvas.drawCircle(cx, cy, 22f * density, ring);
+                            break;
+                    }
                 }
-            }
-
-            if (flashStrength > 0f) {
-                int accent = flashAccent();
-                flashPaint.setStyle(Paint.Style.STROKE);
-                flashPaint.setStrokeWidth(3.2f * density * flashStrength);
-                flashPaint.setColor(accent);
-                flashPaint.setAlpha((int) (200 * flashStrength));
-                canvas.drawCircle(cx, cy, 26f * density, flashPaint);
-                canvas.drawCircle(cx, cy, 12f * density, flashPaint);
+    
+                if (flashStrength > 0f) {
+                    int accent = flashAccent();
+                    flashPaint.setStyle(Paint.Style.STROKE);
+                    flashPaint.setStrokeWidth(3.2f * density * flashStrength);
+                    flashPaint.setColor(accent);
+                    flashPaint.setAlpha((int) (200 * flashStrength));
+                    canvas.drawCircle(cx, cy, 26f * density, flashPaint);
+                    canvas.drawCircle(cx, cy, 12f * density, flashPaint);
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("AimSettingsOverlay", drawStart);
             }
         }
 

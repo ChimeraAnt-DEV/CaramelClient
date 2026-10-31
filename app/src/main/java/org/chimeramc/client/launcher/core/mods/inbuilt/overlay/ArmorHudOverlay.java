@@ -244,16 +244,22 @@ public final class ArmorHudOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            ArmorHudMod.Snapshot snapshot = ArmorHudMod.read();
-            float cellSize = 22f * density;
-            float gap = 4f * density;
-            float pad = 6f * density;
-
-            canvas.drawColor(0x66000000);
-            drawRow(canvas, snapshot.available ? snapshot.self : null, pad, pad, cellSize, gap);
-            if (ArmorHudMod.isShowTarget()) {
-                float y = pad + cellSize + gap;
-                drawRow(canvas, snapshot.available ? snapshot.target : null, pad, y, cellSize, gap);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                ArmorHudMod.Snapshot snapshot = ArmorHudMod.read();
+                float cellSize = 22f * density;
+                float gap = 4f * density;
+                float pad = 6f * density;
+    
+                canvas.drawColor(0x66000000);
+                drawRow(canvas, snapshot.available ? snapshot.self : null, pad, pad, cellSize, gap);
+                if (ArmorHudMod.isShowTarget()) {
+                    float y = pad + cellSize + gap;
+                    drawRow(canvas, snapshot.available ? snapshot.target : null, pad, y, cellSize, gap);
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("ArmorHudOverlay", drawStart);
             }
         }
 

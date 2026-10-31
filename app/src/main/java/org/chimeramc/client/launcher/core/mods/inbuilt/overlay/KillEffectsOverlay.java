@@ -152,36 +152,42 @@ public final class KillEffectsOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            HitboxProjector.Camera camera = camera();
-            if (camera == null) return;
-            HitboxProjector.Basis basis = HitboxProjector.basis(camera);
-            if (basis == null) return;
-
-            long now = SystemClock.uptimeMillis();
-            List<KillEffectsMod.Burst> bursts = KillEffectsMod.activeBursts();
-            if (bursts.isEmpty()) {
-                if (KillEffectsMod.isAwaitingGameData()) drawAwaitingData(canvas);
-                return;
-            }
-
-            for (KillEffectsMod.Burst burst : bursts) {
-                float[] screen = HitboxProjector.projectPoint(burst.x, burst.y, burst.z, basis);
-                if (screen == null) continue;
-                float progress = burst.progress(now);
-                int alpha = (int) (255 * (1f - progress));
-                if (alpha <= 0) continue;
-                switch (burst.style) {
-                    case KillEffectsMod.STYLE_COLUMN:
-                        drawColumn(canvas, screen[0], screen[1], progress, alpha, burst.color);
-                        break;
-                    case KillEffectsMod.STYLE_RING:
-                        drawRing(canvas, screen[0], screen[1], progress, alpha, burst.color);
-                        break;
-                    case KillEffectsMod.STYLE_BURST:
-                    default:
-                        drawBurst(canvas, screen[0], screen[1], progress, alpha, burst.color);
-                        break;
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                HitboxProjector.Camera camera = camera();
+                if (camera == null) return;
+                HitboxProjector.Basis basis = HitboxProjector.basis(camera);
+                if (basis == null) return;
+    
+                long now = SystemClock.uptimeMillis();
+                List<KillEffectsMod.Burst> bursts = KillEffectsMod.activeBursts();
+                if (bursts.isEmpty()) {
+                    if (KillEffectsMod.isAwaitingGameData()) drawAwaitingData(canvas);
+                    return;
                 }
+    
+                for (KillEffectsMod.Burst burst : bursts) {
+                    float[] screen = HitboxProjector.projectPoint(burst.x, burst.y, burst.z, basis);
+                    if (screen == null) continue;
+                    float progress = burst.progress(now);
+                    int alpha = (int) (255 * (1f - progress));
+                    if (alpha <= 0) continue;
+                    switch (burst.style) {
+                        case KillEffectsMod.STYLE_COLUMN:
+                            drawColumn(canvas, screen[0], screen[1], progress, alpha, burst.color);
+                            break;
+                        case KillEffectsMod.STYLE_RING:
+                            drawRing(canvas, screen[0], screen[1], progress, alpha, burst.color);
+                            break;
+                        case KillEffectsMod.STYLE_BURST:
+                        default:
+                            drawBurst(canvas, screen[0], screen[1], progress, alpha, burst.color);
+                            break;
+                    }
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("KillEffectsOverlay", drawStart);
             }
         }
 

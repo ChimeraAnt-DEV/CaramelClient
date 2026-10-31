@@ -126,53 +126,59 @@ public final class CrystalOptimizerOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            CrystalPlacementSolver.Candidate candidate = CrystalOptimizerMod.evaluate();
-
-            String status;
-            if (!CrystalOptimizerMod.isActive()) {
-                status = activity.getString(R.string.crystal_optimizer_status_off);
-            } else if (CrystalOptimizerMod.isAwaitingGameData()) {
-                status = activity.getString(R.string.crystal_optimizer_status_no_data);
-            } else if (candidate == null) {
-                status = activity.getString(R.string.crystal_optimizer_status_no_spot);
-            } else if (CrystalOptimizerMod.isManualAssist()) {
-                status = activity.getString(R.string.crystal_optimizer_status_manual,
-                        candidate.distanceToSelf, Math.round(candidate.targetDamage));
-            } else {
-                status = activity.getString(R.string.crystal_optimizer_status_auto,
-                        candidate.distanceToSelf, Math.round(candidate.targetDamage));
-            }
-
-            // Status strip along the top-left, clear of the crosshair.
-            float pad = 8f * density;
-            text.setTextSize(11f * density);
-            float textWidth = text.measureText(status);
-            float boxHeight = 20f * density;
-            fill.setColor(0x99000000);
-            canvas.drawRoundRect(pad, pad, pad + textWidth + pad * 2, pad + boxHeight,
-                    4f * density, 4f * density, fill);
-            text.setColor(CrystalOptimizerMod.isManualAssist() ? 0xFF80CBC4 : 0xFFFFAB40);
-            canvas.drawText(status, pad * 2, pad + boxHeight * 0.68f, text);
-
-            if (candidate == null) return;
-
-            SpotProjector spotProjector = projector;
-            if (spotProjector == null) return;
-            float[] screen;
+            long drawStart = OverlayDrawTimer.start();
             try {
-                screen = spotProjector.project(candidate.crystalX, candidate.crystalY, candidate.crystalZ);
-            } catch (Throwable t) {
-                return;
+                CrystalPlacementSolver.Candidate candidate = CrystalOptimizerMod.evaluate();
+    
+                String status;
+                if (!CrystalOptimizerMod.isActive()) {
+                    status = activity.getString(R.string.crystal_optimizer_status_off);
+                } else if (CrystalOptimizerMod.isAwaitingGameData()) {
+                    status = activity.getString(R.string.crystal_optimizer_status_no_data);
+                } else if (candidate == null) {
+                    status = activity.getString(R.string.crystal_optimizer_status_no_spot);
+                } else if (CrystalOptimizerMod.isManualAssist()) {
+                    status = activity.getString(R.string.crystal_optimizer_status_manual,
+                            candidate.distanceToSelf, Math.round(candidate.targetDamage));
+                } else {
+                    status = activity.getString(R.string.crystal_optimizer_status_auto,
+                            candidate.distanceToSelf, Math.round(candidate.targetDamage));
+                }
+    
+                // Status strip along the top-left, clear of the crosshair.
+                float pad = 8f * density;
+                text.setTextSize(11f * density);
+                float textWidth = text.measureText(status);
+                float boxHeight = 20f * density;
+                fill.setColor(0x99000000);
+                canvas.drawRoundRect(pad, pad, pad + textWidth + pad * 2, pad + boxHeight,
+                        4f * density, 4f * density, fill);
+                text.setColor(CrystalOptimizerMod.isManualAssist() ? 0xFF80CBC4 : 0xFFFFAB40);
+                canvas.drawText(status, pad * 2, pad + boxHeight * 0.68f, text);
+    
+                if (candidate == null) return;
+    
+                SpotProjector spotProjector = projector;
+                if (spotProjector == null) return;
+                float[] screen;
+                try {
+                    screen = spotProjector.project(candidate.crystalX, candidate.crystalY, candidate.crystalZ);
+                } catch (Throwable t) {
+                    return;
+                }
+                if (screen == null || screen.length < 2) return;
+    
+                float x = screen[0];
+                float y = screen[1];
+                float radius = 10f * density;
+                stroke.setColor(CrystalOptimizerMod.isManualAssist() ? 0xFF80CBC4 : 0xFFFFAB40);
+                canvas.drawCircle(x, y, radius, stroke);
+                canvas.drawLine(x - radius * 1.6f, y, x + radius * 1.6f, y, stroke);
+                canvas.drawLine(x, y - radius * 1.6f, x, y + radius * 1.6f, stroke);
+            
+            } finally {
+                OverlayDrawTimer.finish("CrystalOptimizerOverlay", drawStart);
             }
-            if (screen == null || screen.length < 2) return;
-
-            float x = screen[0];
-            float y = screen[1];
-            float radius = 10f * density;
-            stroke.setColor(CrystalOptimizerMod.isManualAssist() ? 0xFF80CBC4 : 0xFFFFAB40);
-            canvas.drawCircle(x, y, radius, stroke);
-            canvas.drawLine(x - radius * 1.6f, y, x + radius * 1.6f, y, stroke);
-            canvas.drawLine(x, y - radius * 1.6f, x, y + radius * 1.6f, stroke);
         }
     }
 }
