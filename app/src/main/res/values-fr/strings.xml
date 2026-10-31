@@ -1085,4 +1085,8 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="overlay_layout_delete">Supprimer</string>
     <string name="mod_menu_action_manage_layouts">Dispositions de superposition</string>
     <string name="mod_menu_action_manage_layouts_desc">Enregistrer, appliquer et supprimer les dispositions du HUD</string>
+    <string name="mod_menu_action_toggle_hud">Masquer le HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Masquer ou afficher toutes les superpositions (appui à trois doigts)</string>
+    <string name="mod_menu_hud_hidden">Superpositions du HUD masquées</string>
+    <string name="mod_menu_hud_shown">Superpositions du HUD affichées</string>
 </resources>

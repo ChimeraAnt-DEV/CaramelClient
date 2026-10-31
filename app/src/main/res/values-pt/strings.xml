@@ -1085,4 +1085,8 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="overlay_layout_delete">Excluir</string>
     <string name="mod_menu_action_manage_layouts">Layouts de sobreposição</string>
     <string name="mod_menu_action_manage_layouts_desc">Salvar, aplicar e excluir layouts de posição do HUD</string>
+    <string name="mod_menu_action_toggle_hud">Ocultar HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Ocultar ou mostrar todas as sobreposições (toque com três dedos)</string>
+    <string name="mod_menu_hud_hidden">Sobreposições do HUD ocultas</string>
+    <string name="mod_menu_hud_shown">Sobreposições do HUD visíveis</string>
 </resources>

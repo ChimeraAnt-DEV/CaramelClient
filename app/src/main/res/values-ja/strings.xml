@@ -1082,4 +1082,8 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="overlay_layout_delete">削除</string>
     <string name="mod_menu_action_manage_layouts">オーバーレイレイアウト</string>
     <string name="mod_menu_action_manage_layouts_desc">HUD位置レイアウトの保存・適用・削除</string>
+    <string name="mod_menu_action_toggle_hud">HUDを隠す</string>
+    <string name="mod_menu_action_toggle_hud_desc">すべてのオーバーレイを非表示/表示（3本指タップ）</string>
+    <string name="mod_menu_hud_hidden">HUDオーバーレイを非表示にしました</string>
+    <string name="mod_menu_hud_shown">HUDオーバーレイを表示しました</string>
 </resources>

@@ -1116,4 +1116,8 @@
     <string name="overlay_layout_delete">Удалить</string>
     <string name="mod_menu_action_manage_layouts">Раскладки оверлеев</string>
     <string name="mod_menu_action_manage_layouts_desc">Сохранение, применение и удаление раскладок HUD</string>
+    <string name="mod_menu_action_toggle_hud">Скрыть HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Скрыть или показать все оверлеи (касание тремя пальцами)</string>
+    <string name="mod_menu_hud_hidden">Оверлеи HUD скрыты</string>
+    <string name="mod_menu_hud_shown">Оверлеи HUD показаны</string>
 </resources>

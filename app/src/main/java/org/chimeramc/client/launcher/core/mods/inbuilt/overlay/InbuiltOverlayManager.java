@@ -60,6 +60,10 @@ public class InbuiltOverlayManager {
     private String selectedDisplayModId;
     private HudEditorSelectionListener hudEditorSelectionListener;
     private boolean hudEditorMode = false;
+    /** True while the player has hidden the HUD overlays for a screenshot (item 213). */
+    private boolean overlaysHiddenForScreenshot;
+    /** Recognises the three-finger hide-all tap (item 213); UI-thread only. */
+    private final HideAllGestureDetector hideAllGesture = new HideAllGestureDetector();
     private int baseY = 150;
     private static final int SPACING = 70;
     private static final int START_X = 50;
@@ -906,6 +910,9 @@ public class InbuiltOverlayManager {
         if (autoSprintOverlay != null) {
             autoSprintOverlay.onFocusLost();
         }
+        // A gesture that was in flight when the window lost focus must not complete later and
+        // toggle the HUD by surprise (item 213).
+        resetHideAllGesture();
     }
 
     public void hideAllOverlays() {
@@ -925,6 +932,8 @@ public class InbuiltOverlayManager {
         hotbarSlotOverlayMap.clear();
         modActiveStates.clear();
         modPositionMap.clear();
+        overlaysHiddenForScreenshot = false;
+        resetHideAllGesture();
         if (chickPetOverlay != null) {
             chickPetOverlay.hide();
             chickPetOverlay = null;
@@ -1323,10 +1332,55 @@ public class InbuiltOverlayManager {
     }
 
     public boolean handleTouchEvent(MotionEvent event) {
+        // A three-finger tap hides every HUD overlay for a clean screenshot, and the same gesture
+        // brings them back (item 213). It is checked first so the gesture is recognised whatever
+        // else would otherwise consume the event.
+        if (handleHideAllGesture(event)) {
+            return true;
+        }
         if (cpsDisplayOverlay != null) {
             return cpsDisplayOverlay.handleTouchEvent(event);
         }
         return false;
+    }
+
+    /**
+     * Feeds one touch event to the three-finger hide-all detector (item 213).
+     *
+     * @return true when the gesture completed and the overlays were toggled
+     */
+    private boolean handleHideAllGesture(MotionEvent event) {
+        if (event == null) return false;
+        int actionMasked = event.getActionMasked();
+        int index = event.getActionIndex();
+        if (index < 0 || index >= event.getPointerCount()) return false;
+        boolean fired = hideAllGesture.onEvent(actionMasked, event.getPointerCount(),
+                event.getX(index), event.getY(index), event.getEventTime());
+        if (fired) {
+            setOverlaysHiddenForScreenshot(!overlaysHiddenForScreenshot);
+        }
+        return fired;
+    }
+
+    /**
+     * Hides or restores every HUD overlay for a screenshot (item 213).
+     *
+     * <p>The flag is part of the visibility state hash, so the tick that follows re-applies the
+     * change; nothing else has to know the overlays are hidden.
+     */
+    public void setOverlaysHiddenForScreenshot(boolean hidden) {
+        if (overlaysHiddenForScreenshot == hidden) return;
+        overlaysHiddenForScreenshot = hidden;
+        lastVisibilityStateHash = Long.MIN_VALUE;
+    }
+
+    public boolean isOverlaysHiddenForScreenshot() {
+        return overlaysHiddenForScreenshot;
+    }
+
+    /** Forgets an in-flight hide-all gesture, so a resumed activity cannot complete a stale one. */
+    public void resetHideAllGesture() {
+        hideAllGesture.reset();
     }
 
     public boolean handleMouseEvent(MotionEvent event) {
@@ -1835,7 +1889,7 @@ public class InbuiltOverlayManager {
                 || org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive();
         boolean showGameOverlays = OverlayVisibility.showGameOverlays(
                 isHudScreenOpen, isPauseOpen, isShowingMenu, hudEditorMode, gameWorldSeen, sessionActive);
-        boolean inbuiltVisible = hudEditorMode || showGameOverlays;
+        boolean inbuiltVisible = (hudEditorMode || showGameOverlays) && !overlaysHiddenForScreenshot;
         boolean hotbarVisible = inbuiltVisible || manager.isOverlayShowEverywhere(ModIds.HOTBAR_SLOT);
 
         for (BaseOverlayButton overlay : overlays) {
@@ -1865,6 +1919,7 @@ public class InbuiltOverlayManager {
         // flag is unchanged, and a stale hash would leave the overlays hidden.
         stateHash = 31L * stateHash + (gameWorldSeen ? 1L : 0L);
         stateHash = 31L * stateHash + (sessionActive ? 1L : 0L);
+        stateHash = 31L * stateHash + (overlaysHiddenForScreenshot ? 1L : 0L);
         stateHash = 31L * stateHash + overlays.size();
         for (BaseOverlayButton overlay : overlays) {
             stateHash = 31L * stateHash + System.identityHashCode(overlay);
@@ -1889,7 +1944,8 @@ public class InbuiltOverlayManager {
             }
 
             if (hudOverlay != null) {
-                int visibility = hudOverlay.isHudEditorMode() || showGameOverlays
+                int visibility = hudOverlay.isHudEditorMode()
+                        || (showGameOverlays && !overlaysHiddenForScreenshot)
                         ? android.view.View.VISIBLE
                         : android.view.View.GONE;
                 if (hudOverlay.getVisibility() != visibility) {

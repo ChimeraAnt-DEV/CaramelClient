@@ -1109,4 +1109,8 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="overlay_layout_delete">Hapus</string>
     <string name="mod_menu_action_manage_layouts">Tata letak overlay</string>
     <string name="mod_menu_action_manage_layouts_desc">Simpan, terapkan, dan hapus tata letak posisi HUD</string>
+    <string name="mod_menu_action_toggle_hud">Sembunyikan HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Sembunyikan atau tampilkan semua overlay (ketuk tiga jari)</string>
+    <string name="mod_menu_hud_hidden">Overlay HUD disembunyikan</string>
+    <string name="mod_menu_hud_shown">Overlay HUD ditampilkan</string>
 </resources>

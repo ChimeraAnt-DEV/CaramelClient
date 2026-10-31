@@ -1113,4 +1113,8 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="overlay_layout_delete">हटाएं</string>
     <string name="mod_menu_action_manage_layouts">ओवरले लेआउट</string>
     <string name="mod_menu_action_manage_layouts_desc">HUD स्थिति लेआउट सहेजें, लागू करें और हटाएं</string>
+    <string name="mod_menu_action_toggle_hud">HUD छिपाएं</string>
+    <string name="mod_menu_action_toggle_hud_desc">सभी ओवरले छिपाएं या दिखाएं (तीन उंगली टैप)</string>
+    <string name="mod_menu_hud_hidden">HUD ओवरले छिपे हैं</string>
+    <string name="mod_menu_hud_shown">HUD ओवरले दिख रहे हैं</string>
 </resources>

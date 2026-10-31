@@ -995,6 +995,17 @@ public class ModMenuOverlay {
                         org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
                                 .getInstance(activity).getModMenuSettings()));
                 break;
+            case ModMenuActionCatalog.ACTION_TOGGLE_HUD: {
+                InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
+                if (manager != null) {
+                    boolean hidden = !manager.isOverlaysHiddenForScreenshot();
+                    manager.setOverlaysHiddenForScreenshot(hidden);
+                    android.widget.Toast.makeText(activity,
+                            hidden ? R.string.mod_menu_hud_hidden : R.string.mod_menu_hud_shown,
+                            android.widget.Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
             case ModMenuActionCatalog.ACTION_MANAGE_LAYOUTS:
                 OverlayLayoutManagerDialog.show(activity, new ModMenuTheme(activity,
                         org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager

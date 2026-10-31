@@ -1106,4 +1106,8 @@
     <string name="overlay_layout_delete">删除</string>
     <string name="mod_menu_action_manage_layouts">叠加布局</string>
     <string name="mod_menu_action_manage_layouts_desc">保存、应用和删除 HUD 位置布局</string>
+    <string name="mod_menu_action_toggle_hud">隐藏 HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">隐藏或显示所有叠加（三指轻触）</string>
+    <string name="mod_menu_hud_hidden">HUD 叠加已隐藏</string>
+    <string name="mod_menu_hud_shown">HUD 叠加已显示</string>
 </resources>

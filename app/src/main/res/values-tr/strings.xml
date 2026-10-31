@@ -1112,4 +1112,8 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="overlay_layout_delete">Sil</string>
     <string name="mod_menu_action_manage_layouts">Kaplama yerleşimleri</string>
     <string name="mod_menu_action_manage_layouts_desc">HUD konum yerleşimlerini kaydet, uygula ve sil</string>
+    <string name="mod_menu_action_toggle_hud">HUD\'u gizle</string>
+    <string name="mod_menu_action_toggle_hud_desc">Tüm kaplamaları gizle veya göster (üç parmakla dokunma)</string>
+    <string name="mod_menu_hud_hidden">HUD kaplamaları gizlendi</string>
+    <string name="mod_menu_hud_shown">HUD kaplamaları gösterildi</string>
 </resources>

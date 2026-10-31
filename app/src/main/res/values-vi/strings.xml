@@ -1115,4 +1115,8 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="overlay_layout_delete">Xóa</string>
     <string name="mod_menu_action_manage_layouts">Bố cục lớp phủ</string>
     <string name="mod_menu_action_manage_layouts_desc">Lưu, áp dụng và xóa bố cục vị trí HUD</string>
+    <string name="mod_menu_action_toggle_hud">Ẩn HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Ẩn hoặc hiện mọi lớp phủ (chạm ba ngón)</string>
+    <string name="mod_menu_hud_hidden">Đã ẩn lớp phủ HUD</string>
+    <string name="mod_menu_hud_shown">Đã hiện lớp phủ HUD</string>
 </resources>

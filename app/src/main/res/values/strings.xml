@@ -2533,4 +2533,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="overlay_layout_delete">Delete</string>
     <string name="mod_menu_action_manage_layouts">Overlay layouts</string>
     <string name="mod_menu_action_manage_layouts_desc">Save, apply and delete HUD position layouts</string>
+    <string name="mod_menu_action_toggle_hud">Hide HUD</string>
+    <string name="mod_menu_action_toggle_hud_desc">Hide or show every overlay (three-finger tap)</string>
+    <string name="mod_menu_hud_hidden">HUD overlays hidden</string>
+    <string name="mod_menu_hud_shown">HUD overlays shown</string>
 </resources>
