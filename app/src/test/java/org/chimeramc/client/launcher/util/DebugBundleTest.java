@@ -93,4 +93,25 @@ public class DebugBundleTest {
         assertFalse(bundle.contains("secretvalue"));
         assertTrue(bundle.contains("REPORT"));
     }
+
+    @Test
+    public void streamingSafeComposeAlsoMasksCoordinatesAndAddresses() {
+        // The report and the log both carry a world position and a server host; a streamer who
+        // copies the bundle must not leak either (item 277).
+        String report = "Position: X: 12.5 Y: 64.0 Z: -30.2\nServer: play.example.net:19132";
+        String plain = DebugBundle.compose(report, null, false);
+        assertTrue(plain.contains("12.5"));
+        assertTrue(plain.contains("play.example.net:19132"));
+
+        String safe = DebugBundle.compose(report, null, true);
+        assertFalse(safe.contains("12.5"));
+        assertFalse(safe.contains("play.example.net:19132"));
+    }
+
+    @Test
+    public void streamingSafeComposeStillKeepsTheReport() {
+        String safe = DebugBundle.compose("REPORT", "hello world\n", true);
+        assertTrue(safe.contains("REPORT"));
+        assertTrue(safe.contains("hello world"));
+    }
 }
