@@ -1196,4 +1196,6 @@
     <string name="instance_storage_clear_cache">Очистить кэш</string>
     <string name="instance_storage_cleared">Кэш очищен (освобождено %1$s)</string>
     <string name="instance_storage_clear_failed">Не удалось очистить кэш: %1$s</string>
+    <string name="guest_mode_title">Гостевой режим</string>
+    <string name="guest_mode_desc">Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть.</string>
 </resources>

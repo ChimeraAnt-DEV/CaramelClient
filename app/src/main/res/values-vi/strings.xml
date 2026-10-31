@@ -1195,4 +1195,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="instance_storage_clear_cache">Xóa bộ nhớ đệm</string>
     <string name="instance_storage_cleared">Đã xóa bộ nhớ đệm (giải phóng %1$s)</string>
     <string name="instance_storage_clear_failed">Không xóa được bộ nhớ đệm: %1$s</string>
+    <string name="guest_mode_title">Chế độ khách</string>
+    <string name="guest_mode_desc">Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng.</string>
 </resources>

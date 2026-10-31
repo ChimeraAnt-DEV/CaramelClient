@@ -137,6 +137,16 @@ public class ContentListActivity extends BaseActivity {
         DynamicAnim.applyPressScaleRecursively(binding.getRoot());
 
         contentType = getIntent().getIntExtra(EXTRA_CONTENT_TYPE, TYPE_WORLDS);
+
+        // Guest mode removes the server list (item 272). This screen can be reached by a deep link
+        // or a restore as well as from Content Management, so the refusal lives here rather than
+        // only on the button that opens it; showing the category and then failing to load it would
+        // be worse than not opening it at all.
+        if (contentType == TYPE_SERVERS
+                && org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesServers()) {
+            finish();
+            return;
+        }
         contentManager = ContentManager.getInstance(this);
         versionManager = VersionManager.get(this);
         

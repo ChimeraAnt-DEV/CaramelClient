@@ -226,6 +226,11 @@ public class ContentManagementActivity extends BaseActivity {
         binding.behaviorPacksButton.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_BEHAVIOR_PACKS));
         binding.screenshotsButton.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_SCREENSHOTS));
         binding.serversButton.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_SERVERS));
+        // Guest mode removes the server list (item 272): a borrowed device should not show which
+        // servers the owner plays on, and this is the only entry to that category.
+        if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesServers()) {
+            binding.serversButton.setVisibility(View.GONE);
+        }
     }
 
     private void openContentList(int contentType) {

@@ -123,6 +123,29 @@ public enum LauncherTab {
         return null;
     }
 
+    /**
+     * Whether guest mode hides this destination (item 272).
+     *
+     * <p>Mods is the only tab that exposes what the owner installed, so it is the only one guest
+     * mode removes. Keeping the rule on the enum, next to the destination, means the bar, the rail
+     * and the key cycle cannot disagree about which tabs exist.
+     */
+    public boolean hiddenInGuestMode() {
+        return this == MODS;
+    }
+
+    /** Every destination visible under the given privacy mode, in declaration order. */
+    public static LauncherTab[] visibleTabs(org.chimeramc.client.core.privacy.PrivacyMode mode) {
+        boolean guest = mode != null && mode.isGuestMode();
+        if (!guest) return values();
+        LauncherTab[] all = values();
+        java.util.List<LauncherTab> kept = new java.util.ArrayList<>(all.length);
+        for (LauncherTab tab : all) {
+            if (!tab.hiddenInGuestMode()) kept.add(tab);
+        }
+        return kept.toArray(new LauncherTab[0]);
+    }
+
     /** The tab whose activity is [activityClass], or null when it is not a tab. */
     public static LauncherTab forActivity(Class<?> activityClass) {
         for (LauncherTab tab : values()) {

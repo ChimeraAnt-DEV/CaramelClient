@@ -129,6 +129,38 @@ public class LauncherTabTest {
     }
 
     @Test
+    public void guestModeRemovesOnlyTheModsDestination() {
+        // Item 272: guest mode hides what the owner installed, and nothing else. The rule lives on
+        // the enum so the bar, the rail and the bumper cycle cannot disagree about which tabs exist.
+        assertTrue(LauncherTab.MODS.hiddenInGuestMode());
+        assertFalse(LauncherTab.LAUNCH.hiddenInGuestMode());
+        assertFalse(LauncherTab.LIBRARY.hiddenInGuestMode());
+        assertFalse(LauncherTab.SETTINGS.hiddenInGuestMode());
+    }
+
+    @Test
+    public void visibleTabsDropsModsOnlyUnderGuestMode() {
+        assertEquals(LauncherTab.values().length,
+                LauncherTab.visibleTabs(org.chimeramc.client.core.privacy.PrivacyMode.open()).length);
+
+        LauncherTab[] guest = LauncherTab.visibleTabs(
+                new org.chimeramc.client.core.privacy.PrivacyMode(true));
+        assertEquals(LauncherTab.values().length - 1, guest.length);
+        for (LauncherTab tab : guest) {
+            assertFalse(tab.hiddenInGuestMode());
+        }
+        // Launch must always survive, or the launcher would have no home.
+        boolean hasLaunch = false;
+        for (LauncherTab tab : guest) {
+            if (tab == LauncherTab.LAUNCH) hasLaunch = true;
+        }
+        assertTrue(hasLaunch);
+
+        // An absent mode (a caller that could not read the preference) removes nothing.
+        assertEquals(LauncherTab.values().length, LauncherTab.visibleTabs(null).length);
+    }
+
+    @Test
     public void nonNavigationKeysAreIgnored() {
         assertFalse(LauncherTab.shouldHandleKey(KeyEvent.KEYCODE_BUTTON_A, true, false));
         assertFalse(LauncherTab.shouldHandleKey(KeyEvent.KEYCODE_DPAD_UP, true, false));

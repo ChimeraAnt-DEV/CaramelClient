@@ -286,6 +286,10 @@ public class SettingsActivity extends BaseActivity {
             openVoice.setOnClickListener(v -> startActivity(
                     new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
             DynamicAnim.applyPressScale(openVoice);
+            // Guest mode removes voice chat, so its Settings entry goes with it (item 272).
+            openVoice.setVisibility(
+                    org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesVoice()
+                            ? View.GONE : View.VISIBLE);
         }
         View openController = findViewById(R.id.settings_open_controller);
         if (openController != null) {
@@ -467,6 +471,17 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
+        // Guest mode (item 272) hides mods/servers/voice. It is read through PrivacyModes, so the
+        // screens that already drew their shortcuts are refreshed by recreating this one, which is
+        // where the nav bar and the Settings entries are built.
+        SwitchMaterial switchGuest = findViewById(R.id.switch_guest_mode);
+        if (switchGuest != null) {
+            switchGuest.setChecked(fs.isGuestModeEnabled());
+            switchGuest.setOnCheckedChangeListener((btn, checked) -> {
+                fs.setGuestModeEnabled(checked);
+                recreate();
+            });
+        }
         SwitchMaterial switchFpsOptimizer = findViewById(R.id.switch_fps_optimizer);
         if (switchFpsOptimizer != null) {
             switchFpsOptimizer.setChecked(fs.isFpsOptimizerEnabled());

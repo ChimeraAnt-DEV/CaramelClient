@@ -1765,6 +1765,12 @@ import okhttp3.OkHttpClient;
                     new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
             DynamicAnim.applyPressScale(voice);
         }
+        // Guest mode removes the Mods and Voice shortcuts from this tab (item 272). The nav bar
+        // hides the Mods destination, but the Launch tab reaches the same places through these
+        // cards, so both are resolved through the same rule here rather than left as an open door.
+        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
+        setRowVisible(antEgg, !guest);
+        setRowVisible(voice, !guest);
         View replay = findViewById(R.id.launch_toggle_replay);
         if (replay != null) {
             replay.setOnClickListener(v -> LibraryActivity.open(this, LibraryActivity.TAB_REPLAY));
@@ -2095,9 +2101,18 @@ import okhttp3.OkHttpClient;
         startActivity(intent);
     }
 
+    private static void setRowVisible(View view, boolean visible) {
+        if (view != null) view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     private void initMiscellaneousSection() {
         binding.miscCurseforgeRow.setOnClickListener(v -> startActivity(new Intent(this, CurseForgeActivity.class)));
         binding.miscModHubRow.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
+        // Guest mode hides the mod-download rows (item 272); both are binding fields, so this adds
+        // no new lookup.
+        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
+        setRowVisible(binding.miscModHubRow, !guest);
+        setRowVisible(binding.miscCurseforgeRow, !guest);
         if (binding.miscDiscordRow != null) {
             binding.miscDiscordRow.setOnClickListener(v -> openDiscordInvite());
             DynamicAnim.applyPressScale(binding.miscDiscordRow);
@@ -2128,6 +2143,9 @@ import okhttp3.OkHttpClient;
             mods.setOnClickListener(v -> startActivity(new Intent(this, ModsFullscreenActivity.class)));
             DynamicAnim.applyPressScale(mods);
             DynamicAnim.applyHoverBloom(mods);
+            // Guest mode removes the Mods shortcut from the dock too (item 272).
+            setRowVisible(mods, !org.chimeramc.client.core.privacy.PrivacyModes.current(this)
+                    .isGuestMode());
         }
         View cosmetics = findViewById(R.id.quickdock_cosmetics);
         if (cosmetics != null) {

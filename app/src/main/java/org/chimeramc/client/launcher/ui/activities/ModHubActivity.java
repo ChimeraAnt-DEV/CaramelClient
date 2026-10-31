@@ -134,6 +134,13 @@ public class ModHubActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Guest mode removes every mod surface (item 272). The launch rows are hidden, but these
+        // screens are exported and can be started by name, so each refuses rather than showing what
+        // the mode exists to hide.
+        if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_mod_hub);
 
         View root = findViewById(android.R.id.content);

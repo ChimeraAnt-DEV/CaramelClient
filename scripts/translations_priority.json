@@ -172,7 +172,9 @@
     "instance_storage_breakdown": "Total %1$s · Juego %2$s · Mods %3$s · Motor %4$s · Caché %5$s",
     "instance_storage_clear_cache": "Borrar caché",
     "instance_storage_cleared": "Caché borrada (%1$s liberados)",
-    "instance_storage_clear_failed": "No se pudo borrar la caché: %1$s"
+    "instance_storage_clear_failed": "No se pudo borrar la caché: %1$s",
+    "guest_mode_title": "Modo invitado",
+    "guest_mode_desc": "Oculta mods, servidores y chat de voz en un dispositivo compartido o prestado. No se elimina nada y el juego sigue iniciándose; desactívalo para volver a verlos."
   },
   "fr": {
     "nav_back": "Retour",
@@ -347,7 +349,9 @@
     "instance_storage_breakdown": "Total %1$s · Jeu %2$s · Mods %3$s · Moteur %4$s · Cache %5$s",
     "instance_storage_clear_cache": "Vider le cache",
     "instance_storage_cleared": "Cache vidé (%1$s libérés)",
-    "instance_storage_clear_failed": "Impossible de vider le cache : %1$s"
+    "instance_storage_clear_failed": "Impossible de vider le cache : %1$s",
+    "guest_mode_title": "Mode invité",
+    "guest_mode_desc": "Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir."
   },
   "hi": {
     "nav_back": "वापस",
@@ -522,7 +526,9 @@
     "instance_storage_breakdown": "कुल %1$s · गेम %2$s · मॉड्स %3$s · रनटाइम %4$s · कैश %5$s",
     "instance_storage_clear_cache": "कैश साफ़ करें",
     "instance_storage_cleared": "कैश साफ़ हुआ (%1$s मुक्त)",
-    "instance_storage_clear_failed": "कैश साफ़ नहीं हो सका: %1$s"
+    "instance_storage_clear_failed": "कैश साफ़ नहीं हो सका: %1$s",
+    "guest_mode_title": "अतिथि मोड",
+    "guest_mode_desc": "साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।"
   },
   "id": {
     "nav_back": "Kembali",
@@ -697,7 +703,9 @@
     "instance_storage_breakdown": "Total %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Cache %5$s",
     "instance_storage_clear_cache": "Hapus cache",
     "instance_storage_cleared": "Cache dihapus (%1$s dibebaskan)",
-    "instance_storage_clear_failed": "Tidak bisa menghapus cache: %1$s"
+    "instance_storage_clear_failed": "Tidak bisa menghapus cache: %1$s",
+    "guest_mode_title": "Mode tamu",
+    "guest_mode_desc": "Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi."
   },
   "ja": {
     "nav_back": "戻る",
@@ -872,7 +880,9 @@
     "instance_storage_breakdown": "合計 %1$s · ゲーム %2$s · MOD %3$s · ランタイム %4$s · キャッシュ %5$s",
     "instance_storage_clear_cache": "キャッシュを削除",
     "instance_storage_cleared": "キャッシュを削除しました（%1$s 解放）",
-    "instance_storage_clear_failed": "キャッシュを削除できません: %1$s"
+    "instance_storage_clear_failed": "キャッシュを削除できません: %1$s",
+    "guest_mode_title": "ゲストモード",
+    "guest_mode_desc": "共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -1047,7 +1057,9 @@
     "instance_storage_breakdown": "Total %1$s · Jogo %2$s · Mods %3$s · Runtime %4$s · Cache %5$s",
     "instance_storage_clear_cache": "Limpar cache",
     "instance_storage_cleared": "Cache limpo (%1$s liberados)",
-    "instance_storage_clear_failed": "Não foi possível limpar o cache: %1$s"
+    "instance_storage_clear_failed": "Não foi possível limpar o cache: %1$s",
+    "guest_mode_title": "Modo convidado",
+    "guest_mode_desc": "Oculta mods, servidores e chat de voz em um dispositivo compartilhado ou emprestado. Nada é excluído e o jogo ainda inicia; desative para vê-los novamente."
   },
   "ru": {
     "nav_back": "Назад",
@@ -1222,7 +1234,9 @@
     "instance_storage_breakdown": "Всего %1$s · Игра %2$s · Моды %3$s · Рантайм %4$s · Кэш %5$s",
     "instance_storage_clear_cache": "Очистить кэш",
     "instance_storage_cleared": "Кэш очищен (освобождено %1$s)",
-    "instance_storage_clear_failed": "Не удалось очистить кэш: %1$s"
+    "instance_storage_clear_failed": "Не удалось очистить кэш: %1$s",
+    "guest_mode_title": "Гостевой режим",
+    "guest_mode_desc": "Скрывает моды, серверы и голосовой чат на общем или чужом устройстве. Ничего не удаляется, игра по-прежнему запускается; отключите, чтобы снова их увидеть."
   },
   "tr": {
     "nav_back": "Geri",
@@ -1397,7 +1411,9 @@
     "instance_storage_breakdown": "Toplam %1$s · Oyun %2$s · Modlar %3$s · Çalışma zamanı %4$s · Önbellek %5$s",
     "instance_storage_clear_cache": "Önbelleği temizle",
     "instance_storage_cleared": "Önbellek temizlendi (%1$s boşaltıldı)",
-    "instance_storage_clear_failed": "Önbellek temizlenemedi: %1$s"
+    "instance_storage_clear_failed": "Önbellek temizlenemedi: %1$s",
+    "guest_mode_title": "Misafir modu",
+    "guest_mode_desc": "Paylaşılan veya ödünç alınan bir cihazda modları, sunucuları ve sesli sohbeti gizler. Hiçbir şey silinmez ve oyun yine başlar; tekrar görmek için kapatın."
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1572,7 +1588,9 @@
     "instance_storage_breakdown": "Tổng %1$s · Game %2$s · Mod %3$s · Runtime %4$s · Bộ đệm %5$s",
     "instance_storage_clear_cache": "Xóa bộ nhớ đệm",
     "instance_storage_cleared": "Đã xóa bộ nhớ đệm (giải phóng %1$s)",
-    "instance_storage_clear_failed": "Không xóa được bộ nhớ đệm: %1$s"
+    "instance_storage_clear_failed": "Không xóa được bộ nhớ đệm: %1$s",
+    "guest_mode_title": "Chế độ khách",
+    "guest_mode_desc": "Ẩn mod, máy chủ và trò chuyện thoại trên thiết bị dùng chung hoặc mượn. Không có gì bị xóa và trò chơi vẫn khởi chạy; tắt để thấy lại chúng."
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1747,6 +1765,8 @@
     "instance_storage_breakdown": "总计 %1$s · 游戏 %2$s · 模组 %3$s · 运行库 %4$s · 缓存 %5$s",
     "instance_storage_clear_cache": "清除缓存",
     "instance_storage_cleared": "缓存已清除（释放 %1$s）",
-    "instance_storage_clear_failed": "无法清除缓存：%1$s"
+    "instance_storage_clear_failed": "无法清除缓存：%1$s",
+    "guest_mode_title": "访客模式",
+    "guest_mode_desc": "在共享或借用的设备上隐藏模组、服务器和语音聊天。不会删除任何内容，游戏仍可启动；关闭即可重新显示。"
   }
 }

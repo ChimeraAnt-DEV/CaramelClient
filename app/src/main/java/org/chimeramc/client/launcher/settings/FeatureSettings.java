@@ -14,6 +14,14 @@ public class FeatureSettings {
     private boolean fpsOptimizerEnabled = false;
 
     /**
+     * Guest mode (item 272): hide mods, servers and voice chat on a shared or borrowed device.
+     *
+     * <p>Off by default, like the other behaviour-changing switches, so an existing setup is never
+     * altered silently. It hides surfaces only -- it never disables a feature or blocks a launch.
+     */
+    private boolean guestModeEnabled = false;
+
+    /**
      * The top-level destination the user was last on, by {@code LauncherTab} name (item 77).
      *
      * <p>Stored as the enum's name, not its view id: an id is a generated resource number that a
@@ -196,6 +204,9 @@ public class FeatureSettings {
         optifineCrashCounts.clear();
         autoSave();
     }
+
+    public boolean isGuestModeEnabled() { return guestModeEnabled; }
+    public void setGuestModeEnabled(boolean enabled) { this.guestModeEnabled = enabled; autoSave(); }
 
     public boolean isReduceNetworkLatencyEnabled() { return reduceNetworkLatencyEnabled; }
     public void setReduceNetworkLatencyEnabled(boolean enabled) {

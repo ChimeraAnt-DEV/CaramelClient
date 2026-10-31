@@ -1165,4 +1165,6 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="instance_storage_clear_cache">Vider le cache</string>
     <string name="instance_storage_cleared">Cache vidé (%1$s libérés)</string>
     <string name="instance_storage_clear_failed">Impossible de vider le cache : %1$s</string>
+    <string name="guest_mode_title">Mode invité</string>
+    <string name="guest_mode_desc">Masque les mods, les serveurs et le chat vocal sur un appareil partagé ou emprunté. Rien n\'est supprimé et le jeu se lance toujours ; désactivez-le pour les revoir.</string>
 </resources>

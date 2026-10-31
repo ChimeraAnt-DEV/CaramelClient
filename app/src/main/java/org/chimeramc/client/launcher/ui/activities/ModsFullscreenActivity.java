@@ -60,6 +60,13 @@ public class ModsFullscreenActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Guest mode removes the Mods destination (item 272). The tab and every shortcut are hidden,
+        // but the activity is exported and can be started by name or by a stale deep link, so it
+        // refuses here rather than showing what the mode exists to hide.
+        if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
+            finish();
+            return;
+        }
         binding = ActivityModsFullscreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setActiveNavTab(R.id.nav_tab_mods);

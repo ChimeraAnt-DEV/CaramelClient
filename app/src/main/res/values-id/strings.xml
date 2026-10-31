@@ -1189,4 +1189,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="instance_storage_clear_cache">Hapus cache</string>
     <string name="instance_storage_cleared">Cache dihapus (%1$s dibebaskan)</string>
     <string name="instance_storage_clear_failed">Tidak bisa menghapus cache: %1$s</string>
+    <string name="guest_mode_title">Mode tamu</string>
+    <string name="guest_mode_desc">Menyembunyikan mod, server, dan obrolan suara pada perangkat bersama atau pinjaman. Tidak ada yang dihapus dan game tetap diluncurkan; matikan untuk melihatnya lagi.</string>
 </resources>

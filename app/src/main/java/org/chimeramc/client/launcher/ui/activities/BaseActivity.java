@@ -566,7 +566,7 @@ public class BaseActivity extends AppCompatActivity {
                         org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive())) {
             LauncherTab current = LauncherTab.forActivity(getClass());
             LauncherTab next = (current != null)
-                    ? current.offset(LauncherTab.directionForKey(event.getKeyCode()))
+                    ? offsetVisibleTab(current, LauncherTab.directionForKey(event.getKeyCode()))
                     : LauncherTab.LAUNCH;
             if (next != current) {
                 startActivity(new Intent(this, next.activity()));
@@ -575,6 +575,31 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    /**
+     * The next visible destination {@code steps} away from {@code current}, wrapping (item 272).
+     *
+     * <p>{@link LauncherTab#offset} walks the full enum, which under guest mode would step onto the
+     * hidden Mods tab and open it. This walks the visible list instead, so a bumper press can never
+     * land on a destination the mode removed. Falls back to the current tab when the visible list
+     * is empty, which cannot happen while Launch is always visible.
+     */
+    private LauncherTab offsetVisibleTab(LauncherTab current, int steps) {
+        if (current == null || steps == 0) return current;
+        org.chimeramc.client.core.privacy.PrivacyMode privacy =
+                org.chimeramc.client.core.privacy.PrivacyModes.current(this);
+        LauncherTab[] visible = LauncherTab.visibleTabs(privacy);
+        int index = -1;
+        for (int i = 0; i < visible.length; i++) {
+            if (visible[i] == current) {
+                index = i;
+                break;
+            }
+        }
+        if (index < 0) return current;
+        int count = visible.length;
+        return visible[((index + steps) % count + count) % count];
     }
 
     /** True on a narrow window, where only the selected tab shows its label. */
@@ -630,9 +655,23 @@ public class BaseActivity extends AppCompatActivity {
         // by the resource system and cannot be half-applied.
         applyNavCompactMode();
 
+        // Guest mode removes a destination entirely rather than disabling it (item 272): a
+        // greyed-out Mods tab would tell a guest the owner has mods, which is what the mode exists
+        // to avoid. Hidden from the layout, the key cycle and the long-press menu alike, because
+        // all three read `visibleTabs`.
+        org.chimeramc.client.core.privacy.PrivacyMode privacy =
+                org.chimeramc.client.core.privacy.PrivacyModes.current(this);
+        for (LauncherTab destination : LauncherTab.values()) {
+            if (privacy.hides(org.chimeramc.client.core.privacy.PrivacyMode.Surface.MODS)
+                    && destination.hiddenInGuestMode()) {
+                TextView hidden = findViewById(destination.viewId());
+                if (hidden != null) hidden.setVisibility(View.GONE);
+            }
+        }
+
         // Each tab is a single TextView carrying its own icon via drawableStart, so tinting
         // the compound drawable is what colours the icon.
-        for (LauncherTab destination : LauncherTab.values()) {
+        for (LauncherTab destination : LauncherTab.visibleTabs(privacy)) {
             TextView tab = findViewById(destination.viewId());
             if (tab == null) continue;
             // The label and the icon come from the enum, so the two nav layouts and the
@@ -737,6 +776,9 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
         findViewById(R.id.nav_tab_mods).setOnClickListener(v -> {
+            // Guest mode hides the tab, so the click should be unreachable; refusing here as well
+            // keeps a stale layout or a programmatic call from opening what the mode removed.
+            if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) return;
             if (!(this instanceof ModsFullscreenActivity)) {
                 switchNavTab(new Intent(this, ModsFullscreenActivity.class));
             }

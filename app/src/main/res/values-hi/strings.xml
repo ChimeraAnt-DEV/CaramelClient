@@ -1193,4 +1193,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="instance_storage_clear_cache">कैश साफ़ करें</string>
     <string name="instance_storage_cleared">कैश साफ़ हुआ (%1$s मुक्त)</string>
     <string name="instance_storage_clear_failed">कैश साफ़ नहीं हो सका: %1$s</string>
+    <string name="guest_mode_title">अतिथि मोड</string>
+    <string name="guest_mode_desc">साझा या उधार लिए डिवाइस पर मॉड, सर्वर और वॉइस चैट छिपाता है। कुछ भी हटाया नहीं जाता और गेम अब भी लॉन्च होता है; दोबारा देखने के लिए इसे बंद करें।</string>
 </resources>

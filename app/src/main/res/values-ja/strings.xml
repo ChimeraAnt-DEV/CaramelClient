@@ -1162,4 +1162,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="instance_storage_clear_cache">キャッシュを削除</string>
     <string name="instance_storage_cleared">キャッシュを削除しました（%1$s 解放）</string>
     <string name="instance_storage_clear_failed">キャッシュを削除できません: %1$s</string>
+    <string name="guest_mode_title">ゲストモード</string>
+    <string name="guest_mode_desc">共有または借りた端末でMOD、サーバー、ボイスチャットを隠します。何も削除されずゲームも起動できます。元に戻すにはオフにしてください。</string>
 </resources>

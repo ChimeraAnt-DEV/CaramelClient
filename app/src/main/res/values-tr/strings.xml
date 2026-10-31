@@ -1192,4 +1192,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="instance_storage_clear_cache">Önbelleği temizle</string>
     <string name="instance_storage_cleared">Önbellek temizlendi (%1$s boşaltıldı)</string>
     <string name="instance_storage_clear_failed">Önbellek temizlenemedi: %1$s</string>
+    <string name="guest_mode_title">Misafir modu</string>
+    <string name="guest_mode_desc">Paylaşılan veya ödünç alınan bir cihazda modları, sunucuları ve sesli sohbeti gizler. Hiçbir şey silinmez ve oyun yine başlar; tekrar görmek için kapatın.</string>
 </resources>
