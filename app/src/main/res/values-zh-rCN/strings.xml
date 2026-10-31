@@ -1091,4 +1091,5 @@
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">疾跑已开启</string>
     <string name="mod_overlay_autosprint_off">疾跑已关闭</string>
+    <string name="mod_menu_setting_wheel_dead_zone">轮盘死区</string>
 </resources>

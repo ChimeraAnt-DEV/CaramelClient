@@ -363,7 +363,9 @@ public class RadialMenuOverlay {
         long now = android.os.SystemClock.uptimeMillis();
         float dt = lastStickMs == 0L ? 1f / 60f : Math.min(0.1f, (now - lastStickMs) / 1000f);
         lastStickMs = now;
-        float deadZone = CursorController.DEFAULT_DEAD_ZONE;
+        // The centre dead zone is a user setting (item 199): a worn stick needs a wider one than a
+        // new pad, and the value is clamped on read so a bad stored value cannot silence the cursor.
+        float deadZone = InbuiltModManager.getInstance(activity).getWheelCenterDeadZone();
         float curve = CursorController.DEFAULT_CURVE_EXPONENT;
         lastStickSource = stick.source;
         return menuView.handleControllerStick(stick.x, stick.y, dt, precision, fast, deadZone, curve);

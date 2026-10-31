@@ -1344,7 +1344,7 @@ public class RadialMenuView extends View {
         float outer = outerRadius();
         float inner = RadialWheelLayout.ringInnerRadius(outer);
         if (activeProfile != null) {
-            highlightedEntry = profileEntryAt(cursor.x(), cursor.y());
+            setHighlightedEntry(profileEntryAt(cursor.x(), cursor.y()));
         } else {
             Sector s = RadialWheelLayout.sectorAtLinear(
                     cursor.x() - cx, cursor.y() - cy, inner, outer,
@@ -1477,9 +1477,9 @@ public class RadialMenuView extends View {
             if (profile == null || profile.safeEntries().isEmpty()) return;
             int count = WheelLayout.clampSectorCount(profile.safeEntries().size());
             int current = highlightedEntry < 0 ? 0 : highlightedEntry;
-            highlightedEntry = ((current + direction) % count + count) % count;
-            applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
-            invalidate();
+            // Routed through the shared setter so the step ticks once, and only when the slot
+            // actually moved (a one-entry sub-wheel would otherwise buzz on every press).
+            setHighlightedEntry(((current + direction) % count + count) % count);
             return;
         }
         Sector[] order = {Sector.MODS, Sector.CLOSET, Sector.SETTINGS, Sector.HUD};
@@ -1521,7 +1521,7 @@ public class RadialMenuView extends View {
                 setCancelArmed(false);
                 startFlickTracker(event);
                 if (activeProfile != null) {
-                    highlightedEntry = profileEntryAt(event.getX(), event.getY());
+                    setHighlightedEntry(profileEntryAt(event.getX(), event.getY()));
                 } else {
                     setHighlight(RadialWheelLayout.sectorAtLinear(
                             event.getX() - cx, event.getY() - cy, inner, outer, gapPx));
@@ -1540,8 +1540,7 @@ public class RadialMenuView extends View {
                 }
                 if (flickTracker != null) flickTracker.addMovement(event);
                 if (activeProfile != null) {
-                    highlightedEntry = profileEntryAt(event.getX(), event.getY());
-                    invalidate();
+                    setHighlightedEntry(profileEntryAt(event.getX(), event.getY()));
                 } else {
                     setHighlight(RadialWheelLayout.sectorAtLinear(
                             event.getX() - cx, event.getY() - cy, inner, outer, gapPx));
@@ -1708,6 +1707,24 @@ public class RadialMenuView extends View {
             applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
         }
         animateHover(sector);
+        invalidate();
+    }
+
+    /**
+     * Moves the profile-entry highlight, ticking when it lands on a different slot (item 199).
+     *
+     * <p>A profile wheel has no sectors to cross, so the fixed wheel's {@link #setHighlight} tick
+     * never fires on it: without this the wheel is silent while the player steps through the
+     * entries, which is exactly where feedback matters most because the slots are small. The
+     * assignment sites all route through here so the tick cannot be forgotten on one path.
+     */
+    private void setHighlightedEntry(int index) {
+        if (index == highlightedEntry) return;
+        boolean hadSlot = highlightedEntry >= 0;
+        highlightedEntry = index;
+        if (index >= 0 && hadSlot) {
+            applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
+        }
         invalidate();
     }
 

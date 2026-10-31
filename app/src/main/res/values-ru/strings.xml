@@ -1101,4 +1101,5 @@
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Спринт включён</string>
     <string name="mod_overlay_autosprint_off">Спринт выключен</string>
+    <string name="mod_menu_setting_wheel_dead_zone">Мёртвая зона колеса</string>
 </resources>

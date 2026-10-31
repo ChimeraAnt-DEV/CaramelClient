@@ -1070,4 +1070,5 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Correr activado</string>
     <string name="mod_overlay_autosprint_off">Correr desactivado</string>
+    <string name="mod_menu_setting_wheel_dead_zone">Zona muerta de la rueda</string>
 </resources>

@@ -67,6 +67,32 @@ public final class RadialWheelMotion {
     }
 
     /**
+     * The centre dead zone bounds and default, in dp (item 199).
+     *
+     * <p>The dead zone is the radius around the hub in which stick movement is ignored, so a
+     * resting-but-noisy stick cannot drift the cursor off the hub and highlight a slice the player
+     * did not aim at. It is a user setting because pad wear varies widely: a worn stick needs a
+     * larger dead zone than a new one, and a value that is right for one pad makes another feel
+     * unresponsive. The bounds keep the wheel usable at both ends.
+     */
+    public static final float CENTER_DEAD_ZONE_MIN_DP = 0.05f;
+    public static final float CENTER_DEAD_ZONE_MAX_DP = 0.45f;
+    public static final float CENTER_DEAD_ZONE_DEFAULT_DP = 0.15f;
+
+    /**
+     * Clamps a requested centre dead zone into the usable range (item 199).
+     *
+     * <p>A non-finite value reads as the default rather than propagating NaN into the shape maths,
+     * where it would silence the cursor entirely with no diagnosable cause.
+     */
+    public static float clampCenterDeadZone(float requested) {
+        if (Float.isNaN(requested) || Float.isInfinite(requested)) {
+            return CENTER_DEAD_ZONE_DEFAULT_DP;
+        }
+        return Math.max(CENTER_DEAD_ZONE_MIN_DP, Math.min(CENTER_DEAD_ZONE_MAX_DP, requested));
+    }
+
+    /**
      * The haptic for a wheel event.
      *
      * @param opened          the wheel just opened

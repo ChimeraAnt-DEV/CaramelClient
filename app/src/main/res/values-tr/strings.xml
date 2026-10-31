@@ -1097,4 +1097,5 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Koşu açık</string>
     <string name="mod_overlay_autosprint_off">Koşu kapalı</string>
+    <string name="mod_menu_setting_wheel_dead_zone">Tekerlek ölü bölgesi</string>
 </resources>

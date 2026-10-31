@@ -1232,7 +1232,31 @@ public class ModMenuOverlay {
                 current.hudOpacity(), R.string.mod_menu_setting_value_percent,
                 value -> applyMenuSettings(current.withHudOpacity(value)));
 
+        bindWheelDeadZoneSlider();
+
         buildAccentSwatches(current);
+    }
+
+    /**
+     * Binds the radial wheel's centre dead-zone slider (item 199).
+     *
+     * <p>The value lives in the manager's preferences rather than in {@link ModMenuSettings}: that
+     * object is the menu's appearance, and the dead zone is the wheel's input feel, owned by the
+     * overlay that reads it. Writing straight through the manager keeps the running wheel and the
+     * stored value in step, because the wheel reads the preference on every open.
+     */
+    private void bindWheelDeadZoneSlider() {
+        if (overlayView == null) return;
+        final InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        int percent = Math.round(manager.getWheelCenterDeadZone() * 100f);
+        bindAppearanceSlider(R.id.seekbar_mod_setting_wheel_dead_zone,
+                R.id.value_mod_setting_wheel_dead_zone,
+                Math.round(org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                        .CENTER_DEAD_ZONE_MIN_DP * 100f),
+                Math.round(org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                        .CENTER_DEAD_ZONE_MAX_DP * 100f),
+                percent, R.string.mod_menu_setting_value_percent,
+                value -> manager.setWheelCenterDeadZone(value / 100f));
     }
 
     /**

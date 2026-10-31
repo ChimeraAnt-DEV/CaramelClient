@@ -888,6 +888,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_setting_value_dp">%1$d dp</string>
     <string name="mod_menu_setting_value_fps">%1$d fps</string>
     <string name="mod_menu_setting_value_percent">%1$d%%</string>
+    <string name="mod_menu_setting_wheel_dead_zone">Wheel dead zone</string>
     <string name="mod_menu_theme_navy">Navy</string>
     <string name="mod_menu_theme_true_black">True Black</string>
     <string name="mod_menu_theme_system">Follow System</string>

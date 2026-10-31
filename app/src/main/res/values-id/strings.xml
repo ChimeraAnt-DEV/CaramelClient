@@ -1094,4 +1094,5 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Sprint aktif</string>
     <string name="mod_overlay_autosprint_off">Sprint nonaktif</string>
+    <string name="mod_menu_setting_wheel_dead_zone">Zona mati roda</string>
 </resources>

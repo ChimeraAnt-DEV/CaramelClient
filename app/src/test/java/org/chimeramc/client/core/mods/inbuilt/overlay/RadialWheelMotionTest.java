@@ -225,6 +225,34 @@ public class RadialWheelMotionTest {
         assertEquals(48f, RadialWheelMotion.MIN_SEGMENT_ARC_DP, 1e-6);
     }
 
+    // --- The configurable centre dead zone (item 199) -------------------------------------------
+
+    @Test
+    public void theCentreDeadZoneIsClampedIntoTheUsableRange() {
+        assertEquals(RadialWheelMotion.CENTER_DEAD_ZONE_MIN_DP,
+                RadialWheelMotion.clampCenterDeadZone(-1f), 1e-6);
+        assertEquals(RadialWheelMotion.CENTER_DEAD_ZONE_MAX_DP,
+                RadialWheelMotion.clampCenterDeadZone(9f), 1e-6);
+        assertEquals(0.20f, RadialWheelMotion.clampCenterDeadZone(0.20f), 1e-6);
+    }
+
+    @Test
+    public void aNonFiniteCentreDeadZoneFallsBackToTheDefault() {
+        // A NaN would propagate through the stick shaping and silence the cursor with no cause.
+        assertEquals(RadialWheelMotion.CENTER_DEAD_ZONE_DEFAULT_DP,
+                RadialWheelMotion.clampCenterDeadZone(Float.NaN), 1e-6);
+        assertEquals(RadialWheelMotion.CENTER_DEAD_ZONE_DEFAULT_DP,
+                RadialWheelMotion.clampCenterDeadZone(Float.POSITIVE_INFINITY), 1e-6);
+    }
+
+    @Test
+    public void theCentreDeadZoneBoundsAreOrdered() {
+        assertTrue(RadialWheelMotion.CENTER_DEAD_ZONE_MIN_DP
+                < RadialWheelMotion.CENTER_DEAD_ZONE_DEFAULT_DP);
+        assertTrue(RadialWheelMotion.CENTER_DEAD_ZONE_DEFAULT_DP
+                < RadialWheelMotion.CENTER_DEAD_ZONE_MAX_DP);
+    }
+
     // --- The count the wheel actually uses (R1) ------------------------------------------------
 
     @Test
