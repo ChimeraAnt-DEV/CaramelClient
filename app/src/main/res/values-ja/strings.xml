@@ -1062,4 +1062,7 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_overlay_snaplook_off">待機中</string>
     <string name="mod_config_snaplook_keybind">スナップルックキー</string>
     <string name="mod_config_snaplook_return_speed">復帰速度</string>
+    <string name="mod_overlay_gyro_off">ジャイロ オフ</string>
+    <string name="mod_overlay_gyro_calibrating">キャリブレーション中…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Gyro overlay body: the icon with a live state label beneath it (item 194). While the module
+    is active the label shows the raw turn magnitude against the dead-zone threshold, so the dead
+    zone is a live preview rather than a number the player has to guess at; a long press runs the
+    calibration. The root keeps the shared overlay button id so the base class's touch handling is
+    unchanged.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mod_overlay_button"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:contentDescription="@string/inbuilt_mod_gyro">
+
+    <ImageView
+        android:id="@+id/gyro_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/ic_gyro_normal" />
+
+    <TextView
+        android:id="@+id/gyro_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/overlay_scrim"
+        android:paddingStart="@dimen/space_1"
+        android:paddingEnd="@dimen/space_1"
+        android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+        android:textColor="@color/overlay_text_primary"
+        tools:text="0.00 / 0.15" />
+</FrameLayout>

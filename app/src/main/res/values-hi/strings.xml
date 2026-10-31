@@ -1093,4 +1093,7 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_overlay_snaplook_off">निष्क्रिय</string>
     <string name="mod_config_snaplook_keybind">स्नैप-लुक कुंजी</string>
     <string name="mod_config_snaplook_return_speed">वापसी गति</string>
+    <string name="mod_overlay_gyro_off">जायरो बंद</string>
+    <string name="mod_overlay_gyro_calibrating">कैलिब्रेट हो रहा है…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

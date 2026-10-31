@@ -1086,4 +1086,7 @@
     <string name="mod_overlay_snaplook_off">空闲</string>
     <string name="mod_config_snaplook_keybind">快速视角按键</string>
     <string name="mod_config_snaplook_return_speed">回正速度</string>
+    <string name="mod_overlay_gyro_off">陀螺仪已关闭</string>
+    <string name="mod_overlay_gyro_calibrating">正在校准…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

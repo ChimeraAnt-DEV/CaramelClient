@@ -1089,4 +1089,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_overlay_snaplook_off">Diam</string>
     <string name="mod_config_snaplook_keybind">Tombol snap-look</string>
     <string name="mod_config_snaplook_return_speed">Kecepatan kembali</string>
+    <string name="mod_overlay_gyro_off">Giro nonaktif</string>
+    <string name="mod_overlay_gyro_calibrating">Mengkalibrasi…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

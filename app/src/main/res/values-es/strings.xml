@@ -1065,4 +1065,7 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="mod_overlay_snaplook_off">Inactivo</string>
     <string name="mod_config_snaplook_keybind">Tecla de vista rápida</string>
     <string name="mod_config_snaplook_return_speed">Velocidad de retorno</string>
+    <string name="mod_overlay_gyro_off">Giro desactivado</string>
+    <string name="mod_overlay_gyro_calibrating">Calibrando…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

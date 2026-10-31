@@ -1092,4 +1092,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_overlay_snaplook_off">Boşta</string>
     <string name="mod_config_snaplook_keybind">Hızlı bakış tuşu</string>
     <string name="mod_config_snaplook_return_speed">Dönüş hızı</string>
+    <string name="mod_overlay_gyro_off">Jiroskop kapalı</string>
+    <string name="mod_overlay_gyro_calibrating">Kalibre ediliyor…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>

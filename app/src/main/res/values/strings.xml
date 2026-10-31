@@ -1072,6 +1072,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_overlay_snaplook_off">Idle</string>
     <string name="mod_config_snaplook_keybind">Snap-look key</string>
     <string name="mod_config_snaplook_return_speed">Return speed</string>
+    <string name="mod_overlay_gyro_off">Gyro off</string>
+    <string name="mod_overlay_gyro_calibrating">Calibrating…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="cosmetics_skin_source">Skin: %1$s</string>
     <string name="cosmetics_skin_default_steve">Showing Steve, the default character — import a skin in Customize, Skins and it will appear here.</string>
     <string name="cosmetics_skin_fallback">Showing a placeholder character — the skin could not be loaded. Apply a skin pack in Customize, Skins and it will appear here.</string>

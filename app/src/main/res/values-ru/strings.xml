@@ -1096,4 +1096,7 @@
     <string name="mod_overlay_snaplook_off">Неактивно</string>
     <string name="mod_config_snaplook_keybind">Клавиша быстрого взгляда</string>
     <string name="mod_config_snaplook_return_speed">Скорость возврата</string>
+    <string name="mod_overlay_gyro_off">Гироскоп выключен</string>
+    <string name="mod_overlay_gyro_calibrating">Калибровка…</string>
+    <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
 </resources>
