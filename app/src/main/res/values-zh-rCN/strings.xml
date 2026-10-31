@@ -1167,4 +1167,12 @@
     <string name="launch_failure_continue_anyway">仍然继续</string>
     <string name="diagnostics_field_signature_rules_highest">最新支持的版本</string>
     <string name="diagnostics_rules_newer_build">该版本比规则更新 — 最新支持的是 %1$s</string>
+    <string name="changelog_screen_title">更新日志</string>
+    <string name="changelog_empty">此版本未包含更新日志。</string>
+    <string name="settings_open_changelog">查看完整更新日志</string>
+    <string name="diagnostics_copy_debug_info">复制调试信息</string>
+    <string name="diagnostics_debug_info_copied">已复制调试信息。请粘贴到你的报告中。</string>
+    <string name="diagnostics_report_bug">报告问题</string>
+    <string name="diagnostics_report_bug_copied">已复制调试信息。请粘贴到接下来打开的报告中。</string>
+    <string name="diagnostics_report_bug_no_app">已复制调试信息。无法打开 Discord；请手动粘贴到你的报告中。</string>
 </resources>

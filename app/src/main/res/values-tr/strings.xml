@@ -1173,4 +1173,12 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="launch_failure_continue_anyway">Yine de devam et</string>
     <string name="diagnostics_field_signature_rules_highest">Desteklenen en yeni derleme</string>
     <string name="diagnostics_rules_newer_build">Derleme kurallardan daha yeni — desteklenen en yeni sürüm %1$s</string>
+    <string name="changelog_screen_title">Değişiklik günlüğü</string>
+    <string name="changelog_empty">Bu derlemede değişiklik günlüğü yok.</string>
+    <string name="settings_open_changelog">Tam değişiklik günlüğünü görüntüle</string>
+    <string name="diagnostics_copy_debug_info">Hata ayıklama bilgilerini kopyala</string>
+    <string name="diagnostics_debug_info_copied">Hata ayıklama bilgileri kopyalandı. Bildiriminize yapıştırın.</string>
+    <string name="diagnostics_report_bug">Hata bildir</string>
+    <string name="diagnostics_report_bug_copied">Hata ayıklama bilgileri kopyalandı. Açılacak hata bildirimine yapıştırın.</string>
+    <string name="diagnostics_report_bug_no_app">Hata ayıklama bilgileri kopyalandı. Discord açılamadı; bildiriminize elle yapıştırın.</string>
 </resources>

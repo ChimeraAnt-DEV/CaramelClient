@@ -1857,6 +1857,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="changelog_title">What’s new</string>
     <string name="changelog_version" translatable="false">GlowberryClient %1$s</string>
     <string name="changelog_continue">Continue</string>
+    <string name="changelog_screen_title">Changelog</string>
+    <string name="changelog_empty">No changelog is bundled with this build.</string>
+    <string name="settings_open_changelog">View full changelog</string>
     <string name="foreground_service_channel">Minecraft</string>
     <string name="foreground_service_notification_title">Minecraft is running</string>
     <string name="foreground_service_notification_text">Keeping the game alive in the background</string>

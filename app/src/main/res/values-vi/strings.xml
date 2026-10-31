@@ -1176,4 +1176,12 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="launch_failure_continue_anyway">Vẫn tiếp tục</string>
     <string name="diagnostics_field_signature_rules_highest">Bản dựng được hỗ trợ mới nhất</string>
     <string name="diagnostics_rules_newer_build">Bản dựng mới hơn quy tắc — mới nhất được hỗ trợ là %1$s</string>
+    <string name="changelog_screen_title">Nhật ký thay đổi</string>
+    <string name="changelog_empty">Bản dựng này không kèm nhật ký thay đổi.</string>
+    <string name="settings_open_changelog">Xem nhật ký thay đổi đầy đủ</string>
+    <string name="diagnostics_copy_debug_info">Sao chép thông tin gỡ lỗi</string>
+    <string name="diagnostics_debug_info_copied">Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo của bạn.</string>
+    <string name="diagnostics_report_bug">Báo cáo lỗi</string>
+    <string name="diagnostics_report_bug_copied">Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo lỗi sắp mở.</string>
+    <string name="diagnostics_report_bug_no_app">Đã sao chép thông tin gỡ lỗi. Không mở được Discord; hãy dán vào báo cáo của bạn theo cách thủ công.</string>
 </resources>

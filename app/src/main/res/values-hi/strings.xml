@@ -1174,4 +1174,12 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="launch_failure_continue_anyway">फिर भी जारी रखें</string>
     <string name="diagnostics_field_signature_rules_highest">नवीनतम समर्थित बिल्ड</string>
     <string name="diagnostics_rules_newer_build">बिल्ड नियमों से नया है — नवीनतम समर्थित %1$s है</string>
+    <string name="changelog_screen_title">परिवर्तन लॉग</string>
+    <string name="changelog_empty">इस बिल्ड में कोई परिवर्तन लॉग शामिल नहीं है।</string>
+    <string name="settings_open_changelog">पूरा परिवर्तन लॉग देखें</string>
+    <string name="diagnostics_copy_debug_info">डीबग जानकारी कॉपी करें</string>
+    <string name="diagnostics_debug_info_copied">डीबग जानकारी कॉपी हो गई। इसे अपनी रिपोर्ट में पेस्ट करें।</string>
+    <string name="diagnostics_report_bug">बग की रिपोर्ट करें</string>
+    <string name="diagnostics_report_bug_copied">डीबग जानकारी कॉपी हो गई। इसे अगली खुलने वाली बग रिपोर्ट में पेस्ट करें।</string>
+    <string name="diagnostics_report_bug_no_app">डीबग जानकारी कॉपी हो गई। Discord नहीं खुल सका; इसे मैन्युअल रूप से अपनी रिपोर्ट में पेस्ट करें।</string>
 </resources>

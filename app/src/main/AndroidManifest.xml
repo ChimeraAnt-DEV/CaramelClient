@@ -208,6 +208,15 @@
             tools:ignore="DiscouragedApi"
             android:label="@string/diagnostics_title" />
 
+        <!-- The in-app changelog (item 270), rendered from the bundled CHANGELOG.md. -->
+        <activity
+            android:name="org.chimeramc.client.launcher.ui.activities.ChangelogActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
+            tools:ignore="DiscouragedApi"
+            android:label="@string/changelog_screen_title" />
+
         <!-- Hidden UI gallery: reached by tapping the version 7 times in Settings > Updates. -->
         <activity
             android:name="org.chimeramc.client.launcher.ui.activities.UiGalleryActivity"

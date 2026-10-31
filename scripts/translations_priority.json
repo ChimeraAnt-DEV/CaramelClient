@@ -153,7 +153,15 @@
     "launch_failure_newer_game_covered": "La versión más reciente de Minecraft compatible con esta versión es %1$s.",
     "launch_failure_continue_anyway": "Continuar de todos modos",
     "diagnostics_field_signature_rules_highest": "Compilación compatible más reciente",
-    "diagnostics_rules_newer_build": "La compilación es más reciente que las reglas: la más nueva compatible es %1$s"
+    "diagnostics_rules_newer_build": "La compilación es más reciente que las reglas: la más nueva compatible es %1$s",
+    "changelog_screen_title": "Novedades",
+    "changelog_empty": "Esta compilación no incluye un registro de cambios.",
+    "settings_open_changelog": "Ver registro de cambios completo",
+    "diagnostics_copy_debug_info": "Copiar información de depuración",
+    "diagnostics_debug_info_copied": "Información de depuración copiada. Pégala en tu informe.",
+    "diagnostics_report_bug": "Informar de un error",
+    "diagnostics_report_bug_copied": "Información de depuración copiada. Pégala en el informe de error que se abrirá a continuación.",
+    "diagnostics_report_bug_no_app": "Información de depuración copiada. No se pudo abrir Discord; pégala en tu informe manualmente."
   },
   "fr": {
     "nav_back": "Retour",
@@ -309,7 +317,15 @@
     "launch_failure_newer_game_covered": "La version de Minecraft la plus récente prise en charge par cette version est %1$s.",
     "launch_failure_continue_anyway": "Continuer quand même",
     "diagnostics_field_signature_rules_highest": "Version prise en charge la plus récente",
-    "diagnostics_rules_newer_build": "La version est plus récente que les règles : la plus récente prise en charge est %1$s"
+    "diagnostics_rules_newer_build": "La version est plus récente que les règles : la plus récente prise en charge est %1$s",
+    "changelog_screen_title": "Nouveautés",
+    "changelog_empty": "Aucun journal des modifications n'est inclus dans cette version.",
+    "settings_open_changelog": "Voir le journal des modifications complet",
+    "diagnostics_copy_debug_info": "Copier les informations de débogage",
+    "diagnostics_debug_info_copied": "Informations de débogage copiées. Collez-les dans votre rapport.",
+    "diagnostics_report_bug": "Signaler un bug",
+    "diagnostics_report_bug_copied": "Informations de débogage copiées. Collez-les dans le rapport de bug qui va s'ouvrir.",
+    "diagnostics_report_bug_no_app": "Informations de débogage copiées. Impossible d'ouvrir Discord ; collez-les manuellement dans votre rapport."
   },
   "hi": {
     "nav_back": "वापस",
@@ -465,7 +481,15 @@
     "launch_failure_newer_game_covered": "इस संस्करण द्वारा समर्थित नवीनतम Minecraft संस्करण %1$s है।",
     "launch_failure_continue_anyway": "फिर भी जारी रखें",
     "diagnostics_field_signature_rules_highest": "नवीनतम समर्थित बिल्ड",
-    "diagnostics_rules_newer_build": "बिल्ड नियमों से नया है — नवीनतम समर्थित %1$s है"
+    "diagnostics_rules_newer_build": "बिल्ड नियमों से नया है — नवीनतम समर्थित %1$s है",
+    "changelog_screen_title": "परिवर्तन लॉग",
+    "changelog_empty": "इस बिल्ड में कोई परिवर्तन लॉग शामिल नहीं है।",
+    "settings_open_changelog": "पूरा परिवर्तन लॉग देखें",
+    "diagnostics_copy_debug_info": "डीबग जानकारी कॉपी करें",
+    "diagnostics_debug_info_copied": "डीबग जानकारी कॉपी हो गई। इसे अपनी रिपोर्ट में पेस्ट करें।",
+    "diagnostics_report_bug": "बग की रिपोर्ट करें",
+    "diagnostics_report_bug_copied": "डीबग जानकारी कॉपी हो गई। इसे अगली खुलने वाली बग रिपोर्ट में पेस्ट करें।",
+    "diagnostics_report_bug_no_app": "डीबग जानकारी कॉपी हो गई। Discord नहीं खुल सका; इसे मैन्युअल रूप से अपनी रिपोर्ट में पेस्ट करें।"
   },
   "id": {
     "nav_back": "Kembali",
@@ -621,7 +645,15 @@
     "launch_failure_newer_game_covered": "Versi Minecraft terbaru yang didukung versi ini adalah %1$s.",
     "launch_failure_continue_anyway": "Tetap lanjutkan",
     "diagnostics_field_signature_rules_highest": "Build didukung terbaru",
-    "diagnostics_rules_newer_build": "Build lebih baru daripada aturan — terbaru yang didukung adalah %1$s"
+    "diagnostics_rules_newer_build": "Build lebih baru daripada aturan — terbaru yang didukung adalah %1$s",
+    "changelog_screen_title": "Catatan perubahan",
+    "changelog_empty": "Tidak ada catatan perubahan yang disertakan dalam build ini.",
+    "settings_open_changelog": "Lihat catatan perubahan lengkap",
+    "diagnostics_copy_debug_info": "Salin info debug",
+    "diagnostics_debug_info_copied": "Info debug disalin. Tempelkan ke laporan Anda.",
+    "diagnostics_report_bug": "Laporkan bug",
+    "diagnostics_report_bug_copied": "Info debug disalin. Tempelkan ke laporan bug yang akan terbuka berikutnya.",
+    "diagnostics_report_bug_no_app": "Info debug disalin. Tidak dapat membuka Discord; tempelkan ke laporan Anda secara manual."
   },
   "ja": {
     "nav_back": "戻る",
@@ -777,7 +809,15 @@
     "launch_failure_newer_game_covered": "このバージョンが対応する最新のMinecraftは%1$sです。",
     "launch_failure_continue_anyway": "それでも続行",
     "diagnostics_field_signature_rules_highest": "対応する最新ビルド",
-    "diagnostics_rules_newer_build": "ビルドがルールより新しいです — 対応する最新は%1$sです"
+    "diagnostics_rules_newer_build": "ビルドがルールより新しいです — 対応する最新は%1$sです",
+    "changelog_screen_title": "変更履歴",
+    "changelog_empty": "このビルドには変更履歴が含まれていません。",
+    "settings_open_changelog": "完全な変更履歴を表示",
+    "diagnostics_copy_debug_info": "デバッグ情報をコピー",
+    "diagnostics_debug_info_copied": "デバッグ情報をコピーしました。レポートに貼り付けてください。",
+    "diagnostics_report_bug": "バグを報告",
+    "diagnostics_report_bug_copied": "デバッグ情報をコピーしました。次に開くバグ報告に貼り付けてください。",
+    "diagnostics_report_bug_no_app": "デバッグ情報をコピーしました。Discord を開けませんでした。手動でレポートに貼り付けてください。"
   },
   "pt": {
     "nav_back": "Voltar",
@@ -933,7 +973,15 @@
     "launch_failure_newer_game_covered": "A versão mais recente do Minecraft suportada por esta versão é %1$s.",
     "launch_failure_continue_anyway": "Continuar mesmo assim",
     "diagnostics_field_signature_rules_highest": "Build suportada mais recente",
-    "diagnostics_rules_newer_build": "A build é mais recente que as regras — a mais recente suportada é %1$s"
+    "diagnostics_rules_newer_build": "A build é mais recente que as regras — a mais recente suportada é %1$s",
+    "changelog_screen_title": "Novidades",
+    "changelog_empty": "Nenhum registro de alterações está incluído nesta compilação.",
+    "settings_open_changelog": "Ver registro de alterações completo",
+    "diagnostics_copy_debug_info": "Copiar informações de depuração",
+    "diagnostics_debug_info_copied": "Informações de depuração copiadas. Cole-as no seu relatório.",
+    "diagnostics_report_bug": "Reportar um bug",
+    "diagnostics_report_bug_copied": "Informações de depuração copiadas. Cole-as no relatório de bug que será aberto.",
+    "diagnostics_report_bug_no_app": "Informações de depuração copiadas. Não foi possível abrir o Discord; cole-as no seu relatório manualmente."
   },
   "ru": {
     "nav_back": "Назад",
@@ -1089,7 +1137,15 @@
     "launch_failure_newer_game_covered": "Самая новая версия Minecraft, поддерживаемая этой версией: %1$s.",
     "launch_failure_continue_anyway": "Всё равно продолжить",
     "diagnostics_field_signature_rules_highest": "Самая новая поддерживаемая сборка",
-    "diagnostics_rules_newer_build": "Сборка новее правил — самая новая поддерживаемая: %1$s"
+    "diagnostics_rules_newer_build": "Сборка новее правил — самая новая поддерживаемая: %1$s",
+    "changelog_screen_title": "Список изменений",
+    "changelog_empty": "В этой сборке нет списка изменений.",
+    "settings_open_changelog": "Открыть полный список изменений",
+    "diagnostics_copy_debug_info": "Скопировать отладочную информацию",
+    "diagnostics_debug_info_copied": "Отладочная информация скопирована. Вставьте её в отчёт.",
+    "diagnostics_report_bug": "Сообщить об ошибке",
+    "diagnostics_report_bug_copied": "Отладочная информация скопирована. Вставьте её в отчёт об ошибке, который откроется далее.",
+    "diagnostics_report_bug_no_app": "Отладочная информация скопирована. Не удалось открыть Discord; вставьте её в отчёт вручную."
   },
   "tr": {
     "nav_back": "Geri",
@@ -1245,7 +1301,15 @@
     "launch_failure_newer_game_covered": "Bu sürümün desteklediği en yeni Minecraft sürümü %1$s.",
     "launch_failure_continue_anyway": "Yine de devam et",
     "diagnostics_field_signature_rules_highest": "Desteklenen en yeni derleme",
-    "diagnostics_rules_newer_build": "Derleme kurallardan daha yeni — desteklenen en yeni sürüm %1$s"
+    "diagnostics_rules_newer_build": "Derleme kurallardan daha yeni — desteklenen en yeni sürüm %1$s",
+    "changelog_screen_title": "Değişiklik günlüğü",
+    "changelog_empty": "Bu derlemede değişiklik günlüğü yok.",
+    "settings_open_changelog": "Tam değişiklik günlüğünü görüntüle",
+    "diagnostics_copy_debug_info": "Hata ayıklama bilgilerini kopyala",
+    "diagnostics_debug_info_copied": "Hata ayıklama bilgileri kopyalandı. Bildiriminize yapıştırın.",
+    "diagnostics_report_bug": "Hata bildir",
+    "diagnostics_report_bug_copied": "Hata ayıklama bilgileri kopyalandı. Açılacak hata bildirimine yapıştırın.",
+    "diagnostics_report_bug_no_app": "Hata ayıklama bilgileri kopyalandı. Discord açılamadı; bildiriminize elle yapıştırın."
   },
   "vi": {
     "nav_back": "Quay lại",
@@ -1401,7 +1465,15 @@
     "launch_failure_newer_game_covered": "Phiên bản Minecraft mới nhất được hỗ trợ bởi bản này là %1$s.",
     "launch_failure_continue_anyway": "Vẫn tiếp tục",
     "diagnostics_field_signature_rules_highest": "Bản dựng được hỗ trợ mới nhất",
-    "diagnostics_rules_newer_build": "Bản dựng mới hơn quy tắc — mới nhất được hỗ trợ là %1$s"
+    "diagnostics_rules_newer_build": "Bản dựng mới hơn quy tắc — mới nhất được hỗ trợ là %1$s",
+    "changelog_screen_title": "Nhật ký thay đổi",
+    "changelog_empty": "Bản dựng này không kèm nhật ký thay đổi.",
+    "settings_open_changelog": "Xem nhật ký thay đổi đầy đủ",
+    "diagnostics_copy_debug_info": "Sao chép thông tin gỡ lỗi",
+    "diagnostics_debug_info_copied": "Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo của bạn.",
+    "diagnostics_report_bug": "Báo cáo lỗi",
+    "diagnostics_report_bug_copied": "Đã sao chép thông tin gỡ lỗi. Dán vào báo cáo lỗi sắp mở.",
+    "diagnostics_report_bug_no_app": "Đã sao chép thông tin gỡ lỗi. Không mở được Discord; hãy dán vào báo cáo của bạn theo cách thủ công."
   },
   "zh-rCN": {
     "nav_back": "返回",
@@ -1557,6 +1629,14 @@
     "launch_failure_newer_game_covered": "此版本支持的最新 Minecraft 版本为 %1$s。",
     "launch_failure_continue_anyway": "仍然继续",
     "diagnostics_field_signature_rules_highest": "最新支持的版本",
-    "diagnostics_rules_newer_build": "该版本比规则更新 — 最新支持的是 %1$s"
+    "diagnostics_rules_newer_build": "该版本比规则更新 — 最新支持的是 %1$s",
+    "changelog_screen_title": "更新日志",
+    "changelog_empty": "此版本未包含更新日志。",
+    "settings_open_changelog": "查看完整更新日志",
+    "diagnostics_copy_debug_info": "复制调试信息",
+    "diagnostics_debug_info_copied": "已复制调试信息。请粘贴到你的报告中。",
+    "diagnostics_report_bug": "报告问题",
+    "diagnostics_report_bug_copied": "已复制调试信息。请粘贴到接下来打开的报告中。",
+    "diagnostics_report_bug_no_app": "已复制调试信息。无法打开 Discord；请手动粘贴到你的报告中。"
   }
 }

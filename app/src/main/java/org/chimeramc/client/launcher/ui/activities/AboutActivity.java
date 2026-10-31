@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import org.chimeramc.client.databinding.ActivityAboutBinding;
+
 import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.animation.DynamicAnim;
@@ -58,10 +60,13 @@ public class AboutActivity extends BaseActivity {
         return builder.build();
     }
 
+    private ActivityAboutBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        binding = ActivityAboutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setupNavBar();
 
         loadAvatars();
@@ -69,12 +74,12 @@ public class AboutActivity extends BaseActivity {
         styleBadges();
         showBackendStatus();
 
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+        DynamicAnim.applyPressScaleRecursively(binding.getRoot());
     }
 
     private void styleBadges() {
-        TextView authorBadge = findViewById(R.id.author_badge);
-        TextView maintainerBadge = findViewById(R.id.maintainer_badge);
+        TextView authorBadge = binding.authorBadge;
+        TextView maintainerBadge = binding.maintainerBadge;
 
         org.chimeramc.client.util.PersonalizationManager pm = new org.chimeramc.client.util.PersonalizationManager(this);
         int accent = pm.getAccentColor();
@@ -104,7 +109,7 @@ public class AboutActivity extends BaseActivity {
     private void showBackendStatus() {
         // Item 177: name the exact build (version, commit, type) and the native library status, so a
         // screenshot of this screen identifies the revision and says whether the preloader loaded.
-        TextView buildInfo = findViewById(R.id.about_build_info);
+        TextView buildInfo = binding.aboutBuildInfo;
         if (buildInfo != null) {
             buildInfo.setText(getString(R.string.about_build_info,
                     org.chimeramc.client.launcher.util.BuildSummary.describe(
@@ -114,21 +119,21 @@ public class AboutActivity extends BaseActivity {
                             BuildConfig.BUILD_TYPE,
                             BuildConfig.IS_BETA)));
         }
-        TextView nativeStatus = findViewById(R.id.about_native_status);
+        TextView nativeStatus = binding.aboutNativeStatus;
         if (nativeStatus != null) {
             nativeStatus.setText(org.chimeramc.client.launcher.util.BuildSummary.nativeStatus(
                     org.chimeramc.client.preloader.PreloaderInput.EXPECTED_ABI_VERSION,
                     org.chimeramc.client.preloader.PreloaderInput.abiVersion()));
         }
 
-        TextView status = findViewById(R.id.about_backend_status);
+        TextView status = binding.aboutBackendStatus;
         if (status != null) {
             status.setText(getString(R.string.about_backend_status, BerryApi.summary()));
         }
         // The input backend is a second, separate seam: the runtime can be present while nothing is
         // registered to inject input through it. Both lines are shown so "the launcher runs but the
         // controls do nothing" is a state the user can name before reporting it.
-        TextView inputStatus = findViewById(R.id.about_input_backend_status);
+        TextView inputStatus = binding.aboutInputBackendStatus;
         if (inputStatus != null) {
             inputStatus.setText(getString(R.string.about_input_backend_status,
                     GameBridge.statusLine()));
@@ -142,8 +147,8 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void loadAvatars() {
-        com.microsoft.xbox.idp.toolkit.CircleImageView avatar = findViewById(R.id.author_avatar);
-        com.microsoft.xbox.idp.toolkit.CircleImageView maintainerAvatar = findViewById(R.id.maintainer_avatar);
+        com.microsoft.xbox.idp.toolkit.CircleImageView avatar = binding.authorAvatar;
+        com.microsoft.xbox.idp.toolkit.CircleImageView maintainerAvatar = binding.maintainerAvatar;
 
         runOnExecutor(() -> {
             // try-with-resources on Response, not a bare execute(): an OkHttp response holds a
@@ -185,17 +190,16 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void setupLinks() {
-        setupLinkButton(R.id.btn_afdian, URL_AFDIAN);
-        setupLinkButton(R.id.btn_patreon, URL_PATREON);
-        setupLinkButton(R.id.btn_github_repo, URL_REPO);
-        setupLinkButton(R.id.btn_github_org, URL_ORG);
-        setupLinkButton(R.id.btn_issues, URL_ISSUES);
-        setupLinkButton(R.id.btn_star_fork, URL_REPO);
-        setupLinkButton(R.id.btn_youtube_maintainer, URL_YOUTUBE);
+        setupLinkButton(binding.btnAfdian, URL_AFDIAN);
+        setupLinkButton(binding.btnPatreon, URL_PATREON);
+        setupLinkButton(binding.btnGithubRepo, URL_REPO);
+        setupLinkButton(binding.btnGithubOrg, URL_ORG);
+        setupLinkButton(binding.btnIssues, URL_ISSUES);
+        setupLinkButton(binding.btnStarFork, URL_REPO);
+        setupLinkButton(binding.btnYoutubeMaintainer, URL_YOUTUBE);
     }
 
-    private void setupLinkButton(int viewId, String url) {
-        TextView btn = findViewById(viewId);
+    private void setupLinkButton(TextView btn, String url) {
         if (btn == null) return;
         btn.setOnClickListener(v -> {
             try {

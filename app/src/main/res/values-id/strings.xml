@@ -1170,4 +1170,12 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="launch_failure_continue_anyway">Tetap lanjutkan</string>
     <string name="diagnostics_field_signature_rules_highest">Build didukung terbaru</string>
     <string name="diagnostics_rules_newer_build">Build lebih baru daripada aturan — terbaru yang didukung adalah %1$s</string>
+    <string name="changelog_screen_title">Catatan perubahan</string>
+    <string name="changelog_empty">Tidak ada catatan perubahan yang disertakan dalam build ini.</string>
+    <string name="settings_open_changelog">Lihat catatan perubahan lengkap</string>
+    <string name="diagnostics_copy_debug_info">Salin info debug</string>
+    <string name="diagnostics_debug_info_copied">Info debug disalin. Tempelkan ke laporan Anda.</string>
+    <string name="diagnostics_report_bug">Laporkan bug</string>
+    <string name="diagnostics_report_bug_copied">Info debug disalin. Tempelkan ke laporan bug yang akan terbuka berikutnya.</string>
+    <string name="diagnostics_report_bug_no_app">Info debug disalin. Tidak dapat membuka Discord; tempelkan ke laporan Anda secara manual.</string>
 </resources>

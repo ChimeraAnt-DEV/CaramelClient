@@ -1146,4 +1146,12 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="launch_failure_continue_anyway">Continuer quand même</string>
     <string name="diagnostics_field_signature_rules_highest">Version prise en charge la plus récente</string>
     <string name="diagnostics_rules_newer_build">La version est plus récente que les règles : la plus récente prise en charge est %1$s</string>
+    <string name="changelog_screen_title">Nouveautés</string>
+    <string name="changelog_empty">Aucun journal des modifications n\'est inclus dans cette version.</string>
+    <string name="settings_open_changelog">Voir le journal des modifications complet</string>
+    <string name="diagnostics_copy_debug_info">Copier les informations de débogage</string>
+    <string name="diagnostics_debug_info_copied">Informations de débogage copiées. Collez-les dans votre rapport.</string>
+    <string name="diagnostics_report_bug">Signaler un bug</string>
+    <string name="diagnostics_report_bug_copied">Informations de débogage copiées. Collez-les dans le rapport de bug qui va s\'ouvrir.</string>
+    <string name="diagnostics_report_bug_no_app">Informations de débogage copiées. Impossible d\'ouvrir Discord ; collez-les manuellement dans votre rapport.</string>
 </resources>

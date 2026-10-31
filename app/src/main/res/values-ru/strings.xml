@@ -1177,4 +1177,12 @@
     <string name="launch_failure_continue_anyway">Всё равно продолжить</string>
     <string name="diagnostics_field_signature_rules_highest">Самая новая поддерживаемая сборка</string>
     <string name="diagnostics_rules_newer_build">Сборка новее правил — самая новая поддерживаемая: %1$s</string>
+    <string name="changelog_screen_title">Список изменений</string>
+    <string name="changelog_empty">В этой сборке нет списка изменений.</string>
+    <string name="settings_open_changelog">Открыть полный список изменений</string>
+    <string name="diagnostics_copy_debug_info">Скопировать отладочную информацию</string>
+    <string name="diagnostics_debug_info_copied">Отладочная информация скопирована. Вставьте её в отчёт.</string>
+    <string name="diagnostics_report_bug">Сообщить об ошибке</string>
+    <string name="diagnostics_report_bug_copied">Отладочная информация скопирована. Вставьте её в отчёт об ошибке, который откроется далее.</string>
+    <string name="diagnostics_report_bug_no_app">Отладочная информация скопирована. Не удалось открыть Discord; вставьте её в отчёт вручную.</string>
 </resources>

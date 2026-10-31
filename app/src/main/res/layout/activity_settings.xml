@@ -1803,6 +1803,19 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Label"
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
+
+                    <Button
+                        android:id="@+id/settings_open_changelog"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_2"
+                        android:minHeight="44dp"
+                        android:fontFamily="@font/misans"
+                        android:text="@string/settings_open_changelog"
+                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary" />
                 </LinearLayout>
 
                 <LinearLayout

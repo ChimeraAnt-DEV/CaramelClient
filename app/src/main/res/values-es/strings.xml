@@ -1146,4 +1146,12 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="launch_failure_continue_anyway">Continuar de todos modos</string>
     <string name="diagnostics_field_signature_rules_highest">Compilación compatible más reciente</string>
     <string name="diagnostics_rules_newer_build">La compilación es más reciente que las reglas: la más nueva compatible es %1$s</string>
+    <string name="changelog_screen_title">Novedades</string>
+    <string name="changelog_empty">Esta compilación no incluye un registro de cambios.</string>
+    <string name="settings_open_changelog">Ver registro de cambios completo</string>
+    <string name="diagnostics_copy_debug_info">Copiar información de depuración</string>
+    <string name="diagnostics_debug_info_copied">Información de depuración copiada. Pégala en tu informe.</string>
+    <string name="diagnostics_report_bug">Informar de un error</string>
+    <string name="diagnostics_report_bug_copied">Información de depuración copiada. Pégala en el informe de error que se abrirá a continuación.</string>
+    <string name="diagnostics_report_bug_no_app">Información de depuración copiada. No se pudo abrir Discord; pégala en tu informe manualmente.</string>
 </resources>

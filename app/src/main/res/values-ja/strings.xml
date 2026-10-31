@@ -1143,4 +1143,12 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="launch_failure_continue_anyway">それでも続行</string>
     <string name="diagnostics_field_signature_rules_highest">対応する最新ビルド</string>
     <string name="diagnostics_rules_newer_build">ビルドがルールより新しいです — 対応する最新は%1$sです</string>
+    <string name="changelog_screen_title">変更履歴</string>
+    <string name="changelog_empty">このビルドには変更履歴が含まれていません。</string>
+    <string name="settings_open_changelog">完全な変更履歴を表示</string>
+    <string name="diagnostics_copy_debug_info">デバッグ情報をコピー</string>
+    <string name="diagnostics_debug_info_copied">デバッグ情報をコピーしました。レポートに貼り付けてください。</string>
+    <string name="diagnostics_report_bug">バグを報告</string>
+    <string name="diagnostics_report_bug_copied">デバッグ情報をコピーしました。次に開くバグ報告に貼り付けてください。</string>
+    <string name="diagnostics_report_bug_no_app">デバッグ情報をコピーしました。Discord を開けませんでした。手動でレポートに貼り付けてください。</string>
 </resources>

@@ -1423,6 +1423,12 @@ public class SettingsActivity extends BaseActivity {
             openAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
         }
 
+        View openChangelog = findViewById(R.id.settings_open_changelog);
+        if (openChangelog != null) {
+            openChangelog.setOnClickListener(v -> startActivity(new Intent(this,
+                    org.chimeramc.client.launcher.ui.activities.ChangelogActivity.class)));
+        }
+
         View export = findViewById(R.id.settings_export_backup);
         if (export != null) {
             export.setOnClickListener(v ->

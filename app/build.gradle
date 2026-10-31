@@ -270,3 +270,21 @@ dependencies {
     debugImplementation libs.leakcanary.android
     implementation libs.glide
 }
+
+// Item 270: the in-app changelog renders the repo's CHANGELOG.md, so there is one source of truth.
+// This copies it into the packaged assets at build time instead of keeping a second hand-edited
+// copy that drifts.
+def changelogAssetsDir = layout.buildDirectory.dir('generated/changelogAssets')
+
+tasks.register('syncChangelogAsset', Copy) {
+    from(rootProject.file('CHANGELOG.md')) {
+        into 'launcher'
+    }
+    into changelogAssetsDir
+}
+
+android.sourceSets.main.assets.srcDir(changelogAssetsDir)
+
+tasks.matching { it.name == 'preBuild' }.configureEach {
+    dependsOn 'syncChangelogAsset'
+}
