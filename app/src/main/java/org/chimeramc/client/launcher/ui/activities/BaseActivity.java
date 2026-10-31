@@ -48,6 +48,7 @@ import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.navigation.EdgeToEdgeInsets;
 import org.chimeramc.client.ui.navigation.LauncherTab;
 import org.chimeramc.client.ui.navigation.NavLayoutMode;
+import org.chimeramc.client.ui.navigation.NavTabLongPress;
 import org.chimeramc.client.ui.components.UiShape;
 import org.chimeramc.client.ui.components.UiTokens;
 import org.chimeramc.client.ui.components.UiType;
@@ -578,6 +579,7 @@ public class BaseActivity extends AppCompatActivity {
             tab.setTextColor(color);
             TextViewCompat.setCompoundDrawableTintList(tab, ColorStateList.valueOf(color));
             DynamicAnim.applyPressScale(tab);
+            attachTabLongPress(tab, destination);
             if (navLayoutMode.isRail()) applyRailTabShape(tab, false);
         }
 
@@ -675,6 +677,56 @@ public class BaseActivity extends AppCompatActivity {
         });
 
         refreshNavAccountUI();
+    }
+
+    /**
+     * Offers a destination's sections on a long press (item 92).
+     *
+     * <p>A tab is a navigation entry, so its press navigates; the long press is the place for the
+     * sections underneath it (Library holds Instances/Install/Replay, Settings holds Diagnostics).
+     * The actions come from {@link NavTabLongPress}, so what a tab offers is one rule the two nav
+     * layouts share, and a tab with nothing under it gets no listener at all rather than a menu
+     * with one filler row. A long press must not also fire the press effect's click, which is why
+     * the listener returns true.
+     */
+    private void attachTabLongPress(TextView tab, LauncherTab destination) {
+        NavTabLongPress.Action[] actions = NavTabLongPress.actionsFor(destination);
+        if (actions.length == 0) return;
+        tab.setOnLongClickListener(v -> {
+            android.widget.PopupMenu menu = new android.widget.PopupMenu(this, v);
+            for (NavTabLongPress.Action action : actions) {
+                menu.getMenu().add(0, action.ordinal(), action.ordinal(), getString(action.labelRes()));
+            }
+            menu.setOnMenuItemClickListener(item -> {
+                NavTabLongPress.Action action = NavTabLongPress.Action.values()[item.getItemId()];
+                openTabShortcut(action);
+                return true;
+            });
+            menu.show();
+            return true;
+        });
+    }
+
+    /** Opens the screen a long-press shortcut names. */
+    private void openTabShortcut(NavTabLongPress.Action action) {
+        switch (action) {
+            case LIBRARY_INSTANCES:
+                LibraryActivity.open(this, LibraryActivity.TAB_INSTANCES);
+                break;
+            case LIBRARY_INSTALL:
+                LibraryActivity.open(this, LibraryActivity.TAB_INSTALL);
+                break;
+            case LIBRARY_REPLAY:
+                LibraryActivity.open(this, LibraryActivity.TAB_REPLAY);
+                break;
+            case MOD_HUB:
+                startActivity(new Intent(this, ModHubActivity.class));
+                break;
+            case DIAGNOSTICS:
+                startActivity(new Intent(this,
+                        org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity.class));
+                break;
+        }
     }
 
     /**
