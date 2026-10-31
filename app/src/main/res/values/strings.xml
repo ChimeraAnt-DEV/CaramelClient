@@ -1605,6 +1605,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="about_github_repo" translatable="false">GitHub · GlowberryClient</string>
     <string name="about_github_org" translatable="false">ChimeraAnt-DEV</string>
     <string name="about_license_note">See LICENSE in the repository for license details.</string>
+    <string name="about_build_info" translatable="false">Build: %1$s</string>
+    <string name="about_native_status" translatable="false">%1$s</string>
     <string name="about_backend_status">Backend: %1$s</string>
     <string name="about_input_backend_status">Input backend: %1$s</string>
     <string name="about_contribute_title">Contribute</string>

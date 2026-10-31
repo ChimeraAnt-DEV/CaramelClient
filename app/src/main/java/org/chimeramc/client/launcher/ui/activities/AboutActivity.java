@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 
@@ -101,6 +102,25 @@ public class AboutActivity extends BaseActivity {
      * be inactive before a launch rather than after a silent no-op.
      */
     private void showBackendStatus() {
+        // Item 177: name the exact build (version, commit, type) and the native library status, so a
+        // screenshot of this screen identifies the revision and says whether the preloader loaded.
+        TextView buildInfo = findViewById(R.id.about_build_info);
+        if (buildInfo != null) {
+            buildInfo.setText(getString(R.string.about_build_info,
+                    org.chimeramc.client.launcher.util.BuildSummary.describe(
+                            BuildConfig.VERSION_NAME,
+                            BuildConfig.VERSION_CODE,
+                            BuildConfig.GIT_COMMIT,
+                            BuildConfig.BUILD_TYPE,
+                            BuildConfig.IS_BETA)));
+        }
+        TextView nativeStatus = findViewById(R.id.about_native_status);
+        if (nativeStatus != null) {
+            nativeStatus.setText(org.chimeramc.client.launcher.util.BuildSummary.nativeStatus(
+                    org.chimeramc.client.preloader.PreloaderInput.EXPECTED_ABI_VERSION,
+                    org.chimeramc.client.preloader.PreloaderInput.abiVersion()));
+        }
+
         TextView status = findViewById(R.id.about_backend_status);
         if (status != null) {
             status.setText(getString(R.string.about_backend_status, BerryApi.summary()));
