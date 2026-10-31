@@ -752,6 +752,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="logcat_pause">Pause</string>
     <string name="logcat_clear">Clear</string>
     <string name="logcat_copy">Copy log</string>
+    <string name="logcat_share">Share log</string>
+    <string name="logcat_filter_all_description">Show every log level</string>
+    <string name="logcat_filter_level_description">Show only %1$s level lines</string>
     <string name="logcat_copied">Logcat copied</string>
     <string name="logcat_no_log_to_share">No log available to share</string>
     <string name="logcat_share_subject">GlowberryClient — launch debug log</string>

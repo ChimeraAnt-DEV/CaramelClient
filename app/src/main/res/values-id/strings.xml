@@ -430,6 +430,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="logcat_filter">Filter</string>
     <string name="logcat_autoscroll">Auto-scroll</string>
     <string name="logcat_pause">Berhentikan(pause)</string>
+    <string name="logcat_share">Bagikan log</string>
+    <string name="logcat_filter_all_description">Tampilkan semua tingkat log</string>
+    <string name="logcat_filter_level_description">Hanya tampilkan baris tingkat %1$s</string>
     <string name="logcat_clear">Bersihkan</string>
     <string name="logcat_close">Tutup</string>
     <string name="logcat_corner_bottom_left">Ubah ukuran: kiri bawah</string>

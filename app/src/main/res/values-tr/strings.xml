@@ -549,6 +549,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="logcat_filter">Filtrele</string>
     <string name="logcat_autoscroll">Otomatik kaydır</string>
     <string name="logcat_pause">Duraklat</string>
+    <string name="logcat_share">Günlüğü paylaş</string>
+    <string name="logcat_filter_all_description">Tüm günlük düzeylerini göster</string>
+    <string name="logcat_filter_level_description">Yalnızca %1$s düzeyindeki satırları göster</string>
     <string name="logcat_clear">Temizle</string>
     <string name="logcat_close">Kapat</string>
     <string name="logcat_corner_bottom_left">Yeniden boyutlandır: sol alt</string>

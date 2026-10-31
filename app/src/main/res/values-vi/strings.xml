@@ -535,6 +535,9 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="logcat_filter">Bộ lọc</string>
     <string name="logcat_autoscroll">Tự động cuộn</string>
     <string name="logcat_pause">Dừng</string>
+    <string name="logcat_share">Chia sẻ nhật ký</string>
+    <string name="logcat_filter_all_description">Hiển thị mọi mức nhật ký</string>
+    <string name="logcat_filter_level_description">Chỉ hiển thị các dòng mức %1$s</string>
     <string name="logcat_clear">Xóa</string>
     <string name="logcat_close">Đóng</string>
     <string name="logcat_corner_bottom_left">Thay đổi kích thước: góc dưới bên trái</string>

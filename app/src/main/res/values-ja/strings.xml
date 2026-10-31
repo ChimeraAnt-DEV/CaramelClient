@@ -466,6 +466,9 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="logcat_filter">フィルター</string>
     <string name="logcat_autoscroll">自動スクロール</string>
     <string name="logcat_pause">一時停止</string>
+    <string name="logcat_share">ログを共有</string>
+    <string name="logcat_filter_all_description">すべてのログレベルを表示</string>
+    <string name="logcat_filter_level_description">%1$s レベルの行のみを表示</string>
     <string name="logcat_clear">クリア</string>
     <string name="logcat_close">閉じる</string>
     <string name="logcat_corner_bottom_left">サイズ変更: 左下</string>

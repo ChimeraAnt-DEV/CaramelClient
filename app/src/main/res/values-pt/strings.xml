@@ -466,6 +466,9 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="logcat_filter">Filtrar</string>
     <string name="logcat_autoscroll">Auto-scroll</string>
     <string name="logcat_pause">Pausar</string>
+    <string name="logcat_share">Compartilhar registro</string>
+    <string name="logcat_filter_all_description">Mostrar todos os níveis de registro</string>
+    <string name="logcat_filter_level_description">Mostrar apenas linhas de nível %1$s</string>
     <string name="logcat_clear">Limpar</string>
     <string name="logcat_close">Fechar</string>
     <string name="logcat_corner_bottom_left">Redimensionar: inf-esq</string>

@@ -482,6 +482,9 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="logcat_filter">फ़िल्टर</string>
     <string name="logcat_autoscroll">ऑटो-स्क्रॉल</string>
     <string name="logcat_pause">रोकें</string>
+    <string name="logcat_share">लॉग साझा करें</string>
+    <string name="logcat_filter_all_description">सभी लॉग स्तर दिखाएँ</string>
+    <string name="logcat_filter_level_description">केवल %1$s स्तर की पंक्तियाँ दिखाएँ</string>
     <string name="logcat_clear">साफ़ करें</string>
     <string name="logcat_close">बंद करें</string>
     <string name="logcat_corner_bottom_left">आकार बदलें: नीचे-बाएँ</string>

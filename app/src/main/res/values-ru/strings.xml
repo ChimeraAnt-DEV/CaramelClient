@@ -426,6 +426,9 @@
     <string name="logcat_filter">Фильтр</string>
     <string name="logcat_autoscroll">Автопрокрутка</string>
     <string name="logcat_pause">Пауза</string>
+    <string name="logcat_share">Поделиться журналом</string>
+    <string name="logcat_filter_all_description">Показать все уровни журнала</string>
+    <string name="logcat_filter_level_description">Показывать только строки уровня %1$s</string>
     <string name="logcat_clear">Очистить</string>
     <string name="logcat_close">Закрыть</string>
     <string name="logcat_corner_bottom_left">Изменить размер: нижний левый</string>

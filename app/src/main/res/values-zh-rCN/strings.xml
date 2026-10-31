@@ -471,7 +471,10 @@
      <string name="logcat_filter">筛选</string>
      <string name="logcat_autoscroll">自动滚动</string>
      <string name="logcat_pause">暂停</string>
-     <string name="logcat_clear">清空</string>
+     <string name="logcat_share">分享日志</string>
+    <string name="logcat_filter_all_description">显示所有日志级别</string>
+    <string name="logcat_filter_level_description">仅显示 %1$s 级别的行</string>
+    <string name="logcat_clear">清空</string>
      <string name="logcat_close">关闭</string>
      <string name="logcat_corner_bottom_left">调整大小：左下角</string>
      <string name="logcat_corner_bottom_right">调整大小：右下角</string>
