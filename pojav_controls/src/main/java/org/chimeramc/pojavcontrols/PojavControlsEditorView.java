@@ -37,6 +37,8 @@ final class PojavControlsEditorView extends FrameLayout {
     private String profileName;
     private final ControlEditorCanvas canvas;
     private final Spinner profileSpinner;
+    private Button mirrorButton;
+    private Button tabletButton;
     private boolean profileSpinnerBusy;
 
     PojavControlsEditorView(Activity activity, Runnable closeAction) {
@@ -95,6 +97,12 @@ final class PojavControlsEditorView extends FrameLayout {
         });
 
         toolbar.addView(toolbarButton(R.string.pojav_controls_profiles, view -> showProfilesDialog()));
+        mirrorButton = toolbarButton(R.string.pojav_controls_left_handed, view -> toggleLeftHanded());
+        mirrorButton.setSelected(PojavControls.isLeftHanded());
+        toolbar.addView(mirrorButton);
+        tabletButton = toolbarButton(R.string.pojav_controls_tablet_scale, view -> toggleTabletScale());
+        tabletButton.setSelected(PojavControls.isTabletScaleEnabled(activity));
+        toolbar.addView(tabletButton);
         Button hide = toolbarButton(R.string.pojav_controls_hide_toolbar, null);
         toolbar.addView(hide);
         toolbar.addView(toolbarButton(R.string.pojav_controls_add, view -> showAddDialog()));
@@ -491,5 +499,23 @@ final class PojavControlsEditorView extends FrameLayout {
         Intent intent = new Intent(PojavControls.ACTION_PROFILE_CHANGED);
         intent.setPackage(activity.getPackageName());
         activity.sendBroadcast(intent);
+    }
+
+    /** Mirrors the editor preview and the live overlay in one tap (item 222). */
+    private void toggleLeftHanded() {
+        boolean leftHanded = !PojavControls.isLeftHanded();
+        PojavControls.setLeftHanded(activity, leftHanded);
+        canvas.setLeftHanded(leftHanded);
+        if (mirrorButton != null) mirrorButton.setSelected(leftHanded);
+    }
+
+    /** Turns the tablet size scale on or off and reloads the profile (item 222). */
+    private void toggleTabletScale() {
+        boolean enabled = !PojavControls.isTabletScaleEnabled(activity);
+        PojavControls.setTabletScaleEnabled(activity, enabled);
+        if (tabletButton != null) tabletButton.setSelected(enabled);
+        profile = repository.load(profileName);
+        canvas.setProfile(profile);
+        notifyProfileChanged();
     }
 }

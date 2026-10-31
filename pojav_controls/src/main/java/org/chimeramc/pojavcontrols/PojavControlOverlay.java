@@ -36,6 +36,7 @@ final class PojavControlOverlay extends ViewGroup {
     private final Map<View, DrawerPlacement> drawerPlacements = new HashMap<>();
     private ControlSafeZone safeZone = ControlSafeZone.full(0, 0);
     private CustomControls profile;
+    private boolean leftHanded;
     private boolean controlsVisible = true;
     private boolean virtualMouse;
     private float virtualCursorX = Float.NaN;
@@ -136,6 +137,8 @@ final class PojavControlOverlay extends ViewGroup {
         drawers.clear();
         drawerPlacements.clear();
         profile = repository.loadActive();
+        applyTabletScale();
+        leftHanded = PojavControls.isLeftHanded();
         addView(runtimeSurface);
         for (ControlData data : profile.mControlDataList) addRuntimeButton(data);
         for (ControlJoystickData data : profile.mJoystickDataList) {
@@ -197,6 +200,24 @@ final class PojavControlOverlay extends ViewGroup {
         }
     }
 
+    /** Mirrors the controls without a profile reload, so the toggle is instant (item 222). */
+    void setLeftHanded(boolean leftHanded) {
+        this.leftHanded = leftHanded;
+        requestLayout();
+        invalidate();
+    }
+
+    /**
+     * Applies the tablet size scale to the loaded profile (item 222).
+     *
+     * <p>It is applied to the in-memory copy only, never saved, so turning the scale off restores the
+     * authored sizes on the next load instead of baking the multiplier into the profile file.
+     */
+    private void applyTabletScale() {
+        if (!PojavControls.isTabletScaleEnabled(getContext())) return;
+        TouchLayout.apply(profile, PojavControls.smallestWidthDp(getContext()));
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = right - left;
@@ -224,6 +245,13 @@ final class PojavControlOverlay extends ViewGroup {
             int y = evaluatePosition(data.dynamicY, data, width, height, false);
             x = safeZone.clampX(x, child.getMeasuredWidth());
             y = safeZone.clampY(y, child.getMeasuredHeight());
+            if (leftHanded) {
+                // Mirror after the safe-zone clamp, then clamp again, so a reflected control near a
+                // notch cannot land under it (item 222).
+                x = safeZone.clampX(
+                        TouchLayout.mirrorX(x, width, child.getMeasuredWidth()),
+                        child.getMeasuredWidth());
+            }
             child.layout(x, y, x + child.getMeasuredWidth(), y + child.getMeasuredHeight());
         }
         for (Map.Entry<View, DrawerPlacement> entry : drawerPlacements.entrySet()) {
@@ -494,6 +522,11 @@ final class PojavControlOverlay extends ViewGroup {
         }
         x = safeZone.clampX(x, child.getMeasuredWidth());
         y = safeZone.clampY(y, child.getMeasuredHeight());
+        if (leftHanded) {
+            x = safeZone.clampX(
+                    TouchLayout.mirrorX(x, screenWidth, child.getMeasuredWidth()),
+                    child.getMeasuredWidth());
+        }
         child.layout(x, y, x + child.getMeasuredWidth(), y + child.getMeasuredHeight());
     }
 

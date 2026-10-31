@@ -39,4 +39,8 @@
     <string name="pojav_controls_imported">Control profile imported</string>
     <string name="pojav_controls_invalid">Invalid control profile</string>
     <string name="pojav_controls_default_profile">default</string>
+    <string name="pojav_controls_left_handed">Left-handed</string>
+    <string name="pojav_controls_left_handed_desc">Mirror the controls so the movement thumb is on the right.</string>
+    <string name="pojav_controls_tablet_scale">Tablet size</string>
+    <string name="pojav_controls_tablet_scale_desc">Grow the buttons on wide screens. Applied for this session only; the profile keeps its authored sizes.</string>
 </resources>
