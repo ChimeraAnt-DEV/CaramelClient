@@ -21,6 +21,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.widget.NestedScrollView;
 import android.graphics.Canvas;
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ActivityModsFullscreenBinding;
 import org.chimeramc.client.core.mods.FileHandler;
 import org.chimeramc.client.core.mods.Mod;
 import org.chimeramc.client.core.mods.ModCrashAttribution;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ModsFullscreenActivity extends BaseActivity {
+    private ActivityModsFullscreenBinding binding;
     // Owned so an in-flight .antegg link import is torn down with the screen.
     private final java.util.concurrent.ExecutorService worker =
             java.util.concurrent.Executors.newSingleThreadExecutor();
@@ -58,7 +60,8 @@ public class ModsFullscreenActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mods_fullscreen);
+        binding = ActivityModsFullscreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setActiveNavTab(R.id.nav_tab_mods);
 
         View root = findViewById(android.R.id.content);
@@ -114,22 +117,26 @@ public class ModsFullscreenActivity extends BaseActivity {
     }
 
     private void setupViews() {
-        Button addModButton = findViewById(R.id.add_mod_fullscreen_button);
-
+        Button addModButton = binding.addModFullscreenButton;
         addModButton.setVisibility(View.VISIBLE);
         addModButton.setOnClickListener(v -> showImportChooser());
         DynamicAnim.applyPressScale(addModButton);
 
-        Button modHubButton = findViewById(R.id.mod_hub_fullscreen_button);
+        Button modHubButton = binding.modHubFullscreenButton;
         modHubButton.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
         DynamicAnim.applyPressScale(modHubButton);
 
-        Button javaBridgeButton = findViewById(R.id.javabridge_fullscreen_button);
+        Button scriptManagerButton = binding.scriptManagerFullscreenButton;
+        scriptManagerButton.setOnClickListener(v ->
+                startActivity(new Intent(this, ScriptManagerActivity.class)));
+        DynamicAnim.applyPressScale(scriptManagerButton);
+
+        Button javaBridgeButton = binding.javabridgeFullscreenButton;
         javaBridgeButton.setOnClickListener(v ->
                 startActivity(new Intent(this, JavaBridgeActivity.class)));
         DynamicAnim.applyPressScale(javaBridgeButton);
 
-        Button modMenuButton = findViewById(R.id.mod_menu_button);
+        Button modMenuButton = binding.modMenuButton;
         boolean isMenuEnabled = inbuiltModManager.isModMenuEnabled();
         modMenuButton.setText(getString(R.string.mod_menu) + ": " + (isMenuEnabled ? "ON" : "OFF"));
         modMenuButton.setOnClickListener(v -> {
@@ -140,8 +147,8 @@ public class ModsFullscreenActivity extends BaseActivity {
         });
         DynamicAnim.applyPressScale(modMenuButton);
 
-        totalModsCount = findViewById(R.id.total_mods_count);
-        enabledModsCount = findViewById(R.id.enabled_mods_count);
+        totalModsCount = binding.totalModsCount;
+        enabledModsCount = binding.enabledModsCount;
 
         PersonalizationManager personalizationManager = new PersonalizationManager(this);
         View root = findViewById(android.R.id.content);
@@ -179,12 +186,9 @@ public class ModsFullscreenActivity extends BaseActivity {
     }
 
     private void showLoadFailureBanner(List<ModLoadDiagnostics.Record> failures) {
-        View banner = findViewById(R.id.mod_load_diagnostics_banner);
-        if (banner == null) {
-            return;
-        }
-        TextView message = findViewById(R.id.mod_load_diagnostics_message);
-        TextView details = findViewById(R.id.mod_load_diagnostics_details);
+        View banner = binding.modLoadDiagnosticsBanner;
+        TextView message = binding.modLoadDiagnosticsMessage;
+        TextView details = binding.modLoadDiagnosticsDetails;
 
         message.setText(getString(R.string.mod_load_diagnostics_message, failures.size()));
 
@@ -199,16 +203,14 @@ public class ModsFullscreenActivity extends BaseActivity {
         }
         details.setText(lines.toString());
 
-        View dismiss = findViewById(R.id.mod_load_diagnostics_dismiss);
-        if (dismiss != null) {
-            dismiss.setOnClickListener(v -> {
-                banner.setVisibility(View.GONE);
-                ModLoadDiagnostics.clear(this);
-                if (modsAdapter != null) {
-                    modsAdapter.setLoadFailures(java.util.Collections.emptyMap());
-                }
-            });
-        }
+        View dismiss = binding.modLoadDiagnosticsDismiss;
+        dismiss.setOnClickListener(v -> {
+            banner.setVisibility(View.GONE);
+            ModLoadDiagnostics.clear(this);
+            if (modsAdapter != null) {
+                modsAdapter.setLoadFailures(java.util.Collections.emptyMap());
+            }
+        });
         banner.setVisibility(View.VISIBLE);
     }
 
@@ -430,7 +432,7 @@ public class ModsFullscreenActivity extends BaseActivity {
     }
 
     private void setupRecyclerView() {
-        modsRecycler = findViewById(R.id.mods_recycler_fullscreen);
+        modsRecycler = binding.modsRecyclerFullscreen;
         modsAdapter = new ModsAdapter(new ArrayList<>());
         modsRecycler.setLayoutManager(new LinearLayoutManager(this));
         modsRecycler.setAdapter(modsAdapter);
@@ -467,7 +469,7 @@ public class ModsFullscreenActivity extends BaseActivity {
             }
         });
         
-        NestedScrollView nestedScrollView = findViewById(R.id.nested_scroll_view);
+        NestedScrollView nestedScrollView = binding.nestedScrollView;
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
             private long lastScrollTime = 0;
 
@@ -558,19 +560,15 @@ public class ModsFullscreenActivity extends BaseActivity {
             }
         }
 
-        View emptyView = findViewById(R.id.empty_mods);
-        if (emptyView != null) {
-            View menuButton = findViewById(R.id.mod_menu_button);
-            boolean supported = menuButton == null || menuButton.getVisibility() == View.VISIBLE;
-            emptyView.setVisibility(supported && (mods == null || mods.isEmpty()) ? View.VISIBLE : View.GONE);
-        }
+        View emptyView = binding.emptyMods;
+        View menuButton = binding.modMenuButton;
+        boolean supported = menuButton == null || menuButton.getVisibility() == View.VISIBLE;
+        emptyView.setVisibility(supported && (mods == null || mods.isEmpty()) ? View.VISIBLE : View.GONE);
         // The empty state's own action (item 180): it opens the same file-or-link chooser the Add
         // Mod header button does, so the message always has a next step next to it.
-        TextView emptyAction = findViewById(R.id.empty_mods_action);
-        if (emptyAction != null) {
-            emptyAction.setOnClickListener(v -> showImportChooser());
-            DynamicAnim.applyPressScale(emptyAction);
-        }
+        TextView emptyAction = binding.emptyModsAction;
+        emptyAction.setOnClickListener(v -> showImportChooser());
+        DynamicAnim.applyPressScale(emptyAction);
     }
 
     private void updateModsCount() {

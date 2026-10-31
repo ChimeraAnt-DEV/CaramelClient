@@ -1151,4 +1151,24 @@
     <string name="quick_settings_no_instance">Экземпляр не выбран</string>
     <string name="quick_settings_write_failed">Не удалось записать параметр</string>
     <string name="quick_settings_cap_unsupported">На этом дисплее нет режима с такой частотой</string>
+    <string name="script_manager_title">Менеджер скриптов</string>
+    <string name="script_manager_subtitle">Установленные пакеты и порядок их загрузки.</string>
+    <string name="script_manager_empty">Пакеты не установлены. Импортируйте пакет .AntEgg с экрана Mods.</string>
+    <string name="script_manager_reload">Перезагрузить скрипты</string>
+    <string name="script_manager_reload_none">Нет включённых скриптов для запуска</string>
+    <string name="script_manager_reload_done">Перезагружено скриптов: %1$d из %2$d</string>
+    <string name="script_manager_run">Запустить</string>
+    <string name="script_manager_remove">Удалить</string>
+    <string name="script_manager_remove_confirm">Удалить «%1$s» из песочницы?</string>
+    <string name="script_manager_remove_failed">Не удалось удалить пакет</string>
+    <string name="script_manager_run_ok">Выполнено: %1$s</string>
+    <string name="script_manager_run_failed">Не удалось запустить скрипт</string>
+    <string name="script_manager_run_failed_reason">Ошибка скрипта: %1$s</string>
+    <string name="script_manager_unreadable">Не удалось прочитать манифест</string>
+    <string name="script_manager_type_script">Скрипт</string>
+    <string name="script_manager_type_native">Нативный</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">Порядок загрузки %1$d</string>
+    <string name="script_manager_toggle_desc">Включить или отключить этот пакет</string>
+    <string name="script_manager_open">Менеджер скриптов</string>
 </resources>

@@ -1148,4 +1148,24 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="quick_settings_no_instance">कोई इंस्टेंस चयनित नहीं</string>
     <string name="quick_settings_write_failed">विकल्प लिखा नहीं जा सका</string>
     <string name="quick_settings_cap_unsupported">इस डिस्प्ले में उस दर का कोई मोड नहीं है</string>
+    <string name="script_manager_title">स्क्रिप्ट प्रबंधक</string>
+    <string name="script_manager_subtitle">इंस्टॉल किए गए पैकेज और उनके लोड होने का क्रम।</string>
+    <string name="script_manager_empty">कोई पैकेज इंस्टॉल नहीं है। Mods स्क्रीन से .AntEgg पैकेज आयात करें।</string>
+    <string name="script_manager_reload">स्क्रिप्ट पुनः लोड करें</string>
+    <string name="script_manager_reload_none">चलाने के लिए कोई सक्षम स्क्रिप्ट नहीं</string>
+    <string name="script_manager_reload_done">%2$d में से %1$d स्क्रिप्ट पुनः लोड हुईं</string>
+    <string name="script_manager_run">चलाएँ</string>
+    <string name="script_manager_remove">हटाएँ</string>
+    <string name="script_manager_remove_confirm">"%1$s" को सैंडबॉक्स से हटाएँ?</string>
+    <string name="script_manager_remove_failed">पैकेज हटाया नहीं जा सका</string>
+    <string name="script_manager_run_ok">%1$s चलाया गया</string>
+    <string name="script_manager_run_failed">स्क्रिप्ट चलाई नहीं जा सकी</string>
+    <string name="script_manager_run_failed_reason">स्क्रिप्ट त्रुटि: %1$s</string>
+    <string name="script_manager_unreadable">मैनिफ़ेस्ट पढ़ा नहीं जा सका</string>
+    <string name="script_manager_type_script">स्क्रिप्ट</string>
+    <string name="script_manager_type_native">नेटिव</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">लोड क्रम %1$d</string>
+    <string name="script_manager_toggle_desc">इस पैकेज को सक्षम या अक्षम करें</string>
+    <string name="script_manager_open">स्क्रिप्ट प्रबंधक</string>
 </resources>

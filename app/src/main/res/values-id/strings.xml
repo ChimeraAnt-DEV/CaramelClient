@@ -1144,4 +1144,24 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="quick_settings_no_instance">Tidak ada instans yang dipilih</string>
     <string name="quick_settings_write_failed">Tidak dapat menulis opsi</string>
     <string name="quick_settings_cap_unsupported">Layar ini tidak memiliki mode pada laju itu</string>
+    <string name="script_manager_title">Pengelola skrip</string>
+    <string name="script_manager_subtitle">Paket terpasang dan urutan pemuatannya.</string>
+    <string name="script_manager_empty">Tidak ada paket terpasang. Impor paket .AntEgg dari layar Mods.</string>
+    <string name="script_manager_reload">Muat ulang skrip</string>
+    <string name="script_manager_reload_none">Tidak ada skrip aktif untuk dijalankan</string>
+    <string name="script_manager_reload_done">%1$d dari %2$d skrip dimuat ulang</string>
+    <string name="script_manager_run">Jalankan</string>
+    <string name="script_manager_remove">Hapus</string>
+    <string name="script_manager_remove_confirm">Hapus "%1$s" dari sandbox?</string>
+    <string name="script_manager_remove_failed">Tidak dapat menghapus paket</string>
+    <string name="script_manager_run_ok">%1$s dijalankan</string>
+    <string name="script_manager_run_failed">Tidak dapat menjalankan skrip</string>
+    <string name="script_manager_run_failed_reason">Kesalahan skrip: %1$s</string>
+    <string name="script_manager_unreadable">Manifes tidak dapat dibaca</string>
+    <string name="script_manager_type_script">Skrip</string>
+    <string name="script_manager_type_native">Native</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">Urutan muat %1$d</string>
+    <string name="script_manager_toggle_desc">Aktifkan atau nonaktifkan paket ini</string>
+    <string name="script_manager_open">Pengelola skrip</string>
 </resources>

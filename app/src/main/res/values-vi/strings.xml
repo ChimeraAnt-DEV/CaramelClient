@@ -1150,4 +1150,24 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="quick_settings_no_instance">Chưa chọn phiên bản</string>
     <string name="quick_settings_write_failed">Không thể ghi tùy chọn</string>
     <string name="quick_settings_cap_unsupported">Màn hình này không có chế độ ở tốc độ đó</string>
+    <string name="script_manager_title">Trình quản lý script</string>
+    <string name="script_manager_subtitle">Các gói đã cài và thứ tự tải.</string>
+    <string name="script_manager_empty">Chưa có gói nào. Nhập gói .AntEgg từ màn hình Mods.</string>
+    <string name="script_manager_reload">Tải lại script</string>
+    <string name="script_manager_reload_none">Không có script nào được bật để chạy</string>
+    <string name="script_manager_reload_done">Đã tải lại %1$d trong %2$d script</string>
+    <string name="script_manager_run">Chạy</string>
+    <string name="script_manager_remove">Xóa</string>
+    <string name="script_manager_remove_confirm">Xóa "%1$s" khỏi sandbox?</string>
+    <string name="script_manager_remove_failed">Không thể xóa gói</string>
+    <string name="script_manager_run_ok">Đã chạy %1$s</string>
+    <string name="script_manager_run_failed">Không thể chạy script</string>
+    <string name="script_manager_run_failed_reason">Lỗi script: %1$s</string>
+    <string name="script_manager_unreadable">Không thể đọc manifest</string>
+    <string name="script_manager_type_script">Script</string>
+    <string name="script_manager_type_native">Gốc</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">Thứ tự tải %1$d</string>
+    <string name="script_manager_toggle_desc">Bật hoặc tắt gói này</string>
+    <string name="script_manager_open">Trình quản lý script</string>
 </resources>

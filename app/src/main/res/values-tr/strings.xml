@@ -1147,4 +1147,24 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="quick_settings_no_instance">Örnek seçilmedi</string>
     <string name="quick_settings_write_failed">Ayar yazılamadı</string>
     <string name="quick_settings_cap_unsupported">Bu ekranda bu hızda bir mod yok</string>
+    <string name="script_manager_title">Betik yöneticisi</string>
+    <string name="script_manager_subtitle">Yüklü paketler ve yüklenme sıraları.</string>
+    <string name="script_manager_empty">Yüklü paket yok. Mods ekranından bir .AntEgg paketi içe aktarın.</string>
+    <string name="script_manager_reload">Betikleri yenile</string>
+    <string name="script_manager_reload_none">Çalıştırılacak etkin betik yok</string>
+    <string name="script_manager_reload_done">%2$d betikten %1$d tanesi yenilendi</string>
+    <string name="script_manager_run">Çalıştır</string>
+    <string name="script_manager_remove">Kaldır</string>
+    <string name="script_manager_remove_confirm">"%1$s" sanal alandan kaldırılsın mı?</string>
+    <string name="script_manager_remove_failed">Paket kaldırılamadı</string>
+    <string name="script_manager_run_ok">%1$s çalıştırıldı</string>
+    <string name="script_manager_run_failed">Betik çalıştırılamadı</string>
+    <string name="script_manager_run_failed_reason">Betik hatası: %1$s</string>
+    <string name="script_manager_unreadable">Manifest okunamadı</string>
+    <string name="script_manager_type_script">Betik</string>
+    <string name="script_manager_type_native">Yerel</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">Yükleme sırası %1$d</string>
+    <string name="script_manager_toggle_desc">Bu paketi etkinleştir veya devre dışı bırak</string>
+    <string name="script_manager_open">Betik yöneticisi</string>
 </resources>

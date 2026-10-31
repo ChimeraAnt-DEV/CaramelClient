@@ -1141,4 +1141,24 @@
     <string name="quick_settings_no_instance">未选择实例</string>
     <string name="quick_settings_write_failed">无法写入该选项</string>
     <string name="quick_settings_cap_unsupported">此显示器没有该刷新率的模式</string>
+    <string name="script_manager_title">脚本管理器</string>
+    <string name="script_manager_subtitle">已安装的软件包及其加载顺序。</string>
+    <string name="script_manager_empty">未安装任何软件包。请从 Mods 界面导入 .AntEgg 软件包。</string>
+    <string name="script_manager_reload">重新加载脚本</string>
+    <string name="script_manager_reload_none">没有可运行已启用的脚本</string>
+    <string name="script_manager_reload_done">已重新加载 %2$d 个脚本中的 %1$d 个</string>
+    <string name="script_manager_run">运行</string>
+    <string name="script_manager_remove">移除</string>
+    <string name="script_manager_remove_confirm">从沙盒中移除“%1$s”？</string>
+    <string name="script_manager_remove_failed">无法移除该软件包</string>
+    <string name="script_manager_run_ok">已运行 %1$s</string>
+    <string name="script_manager_run_failed">无法运行该脚本</string>
+    <string name="script_manager_run_failed_reason">脚本错误：%1$s</string>
+    <string name="script_manager_unreadable">无法读取清单</string>
+    <string name="script_manager_type_script">脚本</string>
+    <string name="script_manager_type_native">原生</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">加载顺序 %1$d</string>
+    <string name="script_manager_toggle_desc">启用或禁用此软件包</string>
+    <string name="script_manager_open">脚本管理器</string>
 </resources>

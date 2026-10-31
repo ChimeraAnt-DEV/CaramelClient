@@ -1117,4 +1117,24 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="quick_settings_no_instance">インスタンスが選択されていません</string>
     <string name="quick_settings_write_failed">オプションを書き込めませんでした</string>
     <string name="quick_settings_cap_unsupported">このディスプレイにはそのレートのモードがありません</string>
+    <string name="script_manager_title">スクリプト管理</string>
+    <string name="script_manager_subtitle">インストール済みパッケージと読み込み順。</string>
+    <string name="script_manager_empty">パッケージがありません。Mods画面から.AntEggパッケージをインポートしてください。</string>
+    <string name="script_manager_reload">スクリプトを再読み込み</string>
+    <string name="script_manager_reload_none">実行する有効なスクリプトがありません</string>
+    <string name="script_manager_reload_done">%2$d件中%1$d件のスクリプトを再読み込みしました</string>
+    <string name="script_manager_run">実行</string>
+    <string name="script_manager_remove">削除</string>
+    <string name="script_manager_remove_confirm">"%1$s" をサンドボックスから削除しますか?</string>
+    <string name="script_manager_remove_failed">パッケージを削除できませんでした</string>
+    <string name="script_manager_run_ok">%1$s を実行しました</string>
+    <string name="script_manager_run_failed">スクリプトを実行できませんでした</string>
+    <string name="script_manager_run_failed_reason">スクリプトエラー: %1$s</string>
+    <string name="script_manager_unreadable">マニフェストを読み取れませんでした</string>
+    <string name="script_manager_type_script">スクリプト</string>
+    <string name="script_manager_type_native">ネイティブ</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">読み込み順 %1$d</string>
+    <string name="script_manager_toggle_desc">このパッケージを有効または無効にする</string>
+    <string name="script_manager_open">スクリプト管理</string>
 </resources>

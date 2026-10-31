@@ -1120,4 +1120,24 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="quick_settings_no_instance">Aucune instance sélectionnée</string>
     <string name="quick_settings_write_failed">Impossible d\'écrire l\'option</string>
     <string name="quick_settings_cap_unsupported">Cet écran n\'a pas de mode à cette fréquence</string>
+    <string name="script_manager_title">Gestionnaire de scripts</string>
+    <string name="script_manager_subtitle">Paquets installés et leur ordre de chargement.</string>
+    <string name="script_manager_empty">Aucun paquet installé. Importez un paquet .AntEgg depuis l\'écran Mods.</string>
+    <string name="script_manager_reload">Recharger les scripts</string>
+    <string name="script_manager_reload_none">Aucun script activé à exécuter</string>
+    <string name="script_manager_reload_done">%1$d scripts sur %2$d rechargés</string>
+    <string name="script_manager_run">Exécuter</string>
+    <string name="script_manager_remove">Supprimer</string>
+    <string name="script_manager_remove_confirm">Supprimer « %1$s » du bac à sable ?</string>
+    <string name="script_manager_remove_failed">Impossible de supprimer le paquet</string>
+    <string name="script_manager_run_ok">%1$s exécuté</string>
+    <string name="script_manager_run_failed">Impossible d\'exécuter le script</string>
+    <string name="script_manager_run_failed_reason">Erreur de script : %1$s</string>
+    <string name="script_manager_unreadable">Manifeste illisible</string>
+    <string name="script_manager_type_script">Script</string>
+    <string name="script_manager_type_native">Natif</string>
+    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
+    <string name="script_manager_load_order">Ordre de chargement %1$d</string>
+    <string name="script_manager_toggle_desc">Activer ou désactiver ce paquet</string>
+    <string name="script_manager_open">Gestionnaire de scripts</string>
 </resources>
