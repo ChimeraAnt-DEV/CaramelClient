@@ -22,6 +22,7 @@ import org.chimeramc.client.core.minecraft.NativeLibraryVersionGate
 import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
 import org.chimeramc.client.util.AtomicFiles
 import org.chimeramc.client.core.minecraft.LibraryHashManifest
+import org.chimeramc.client.core.minecraft.ExtractionSpaceBudget
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -293,6 +294,13 @@ class GamePackageManager private constructor(
         }
         report("Minecraft library cache miss: extracting libraries")
 
+        // Refuse before the first byte is written when the volume cannot hold the extraction. A
+        // full disk half-way through leaves a partial cache that the presence check then treats as
+        // a miss and retries on every launch, so this is the one check that has to come first
+        // (item 304). An unreadable free-space figure never blocks: the write failures report
+        // themselves and refusing would break a launch that would have worked.
+        requireExtractionSpace(outputDir, apkFiles)
+
         val abi: String
         if (version != null && !version.isInstalled) {
             // Resolve once: getDeviceAbi scans every APK, so calling it per file would
@@ -386,6 +394,31 @@ class GamePackageManager private constructor(
                 report("Extracted library hash check failed: re-extracting")
                 false
             }
+        }
+    }
+
+    /**
+     * Fails with a named, actionable reason when the extraction cannot fit (item 304).
+     *
+     * <p>The message names both figures, because "not enough storage" without the numbers leaves the
+     * user guessing how much to free. The free-space reading comes from the volume the libraries are
+     * extracted into, which is not always the volume the APK lives on.
+     */
+    private fun requireExtractionSpace(outputDir: File, apkFiles: List<File>) {
+        val needed = ExtractionSpaceBudget.neededBytes(apkFiles.map { it.length() })
+        val free = try {
+            android.os.StatFs(outputDir.absolutePath).availableBytes
+        } catch (e: Exception) {
+            // Unknown, which the budget treats as "do not block".
+            -1L
+        }
+        if (ExtractionSpaceBudget.check(free, needed) == ExtractionSpaceBudget.Verdict.INSUFFICIENT) {
+            val message = "Not enough free storage to extract this version: " +
+                ExtractionSpaceBudget.formatBytes(free) + " available, about " +
+                ExtractionSpaceBudget.formatBytes(needed) + " needed"
+            mirrorLogcat('E', message)
+            report(message)
+            throw IllegalStateException(message)
         }
     }
 
