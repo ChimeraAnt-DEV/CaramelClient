@@ -50,6 +50,27 @@ jobs:
       id-token: write
       pages: write
     steps:
+      - name: Check whether GitHub Pages is enabled
+        id: pages_check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # GitHub Pages has to be enabled once in the repository settings. Until then the deploy
+          # API answers 404 and this job would fail on every push, so probe first and skip the
+          # deploy when no site exists rather than reporting a failure that is not a code problem.
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pages")
+          if [ "$status" = "200" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GitHub Pages is not enabled (HTTP ${status}); skipping the deploy. Enable it under Settings > Pages to publish the docs site."
+          fi
+
       - name: Deploy to GitHub Pages
         id: deployment
+        if: steps.pages_check.outputs.available == 'true'
         uses: actions/deploy-pages@v5
