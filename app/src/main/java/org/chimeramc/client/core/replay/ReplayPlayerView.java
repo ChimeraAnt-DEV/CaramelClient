@@ -717,7 +717,7 @@ public final class ReplayPlayerView {
         row.setGravity(Gravity.CENTER_VERTICAL);
 
         playPause = new ImageView(activity);
-        // Vector transport icons, never the ▶/⏸ glyphs: those are emoji and render inconsistently.
+        // Vector transport icons, never the play/pause symbol glyphs: those are emoji and render inconsistently.
         showPlayIcon(false);
         playPause.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         playPause.setBackground(ReplayStyle.rippled(

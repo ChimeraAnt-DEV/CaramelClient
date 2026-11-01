@@ -6,9 +6,9 @@ package org.chimeramc.client.core.minecraft;
  * <p>The launcher bridges the Android IME into the game. Two paths carry a character:
  *
  * <ul>
- *   <li>{@code commitText} → a registered mod text callback, or, with none, a synthetic key
+ *   <li>{@code commitText} -> a registered mod text callback, or, with none, a synthetic key
  *       press carrying the code point ({@link #isKeyFallbackCodePoint}).
- *   <li>a hardware key → {@code KeyEvent.getUnicodeChar()}, forwarded verbatim to the game.
+ *   <li>a hardware key -> {@code KeyEvent.getUnicodeChar()}, forwarded verbatim to the game.
  * </ul>
  *
  * <p>The game's key handler takes a plain printable code and treats everything else as an

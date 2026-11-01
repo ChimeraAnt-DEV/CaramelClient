@@ -187,6 +187,11 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             // Fail-closed and never fatal: a missing library or no usable hook backend returns
             // false and the dependent features stay greyed rather than half-installed.
             org.chimeramc.client.preloader.BerryApi.ensureAttached()
+            // Bind the launcher's local-player seam once BerryAPI is attached, so its World
+            // module can read the local player's position and view rotation instead of failing
+            // closed. Fail-closed and never fatal: a library without the seam ABI, or a struct
+            // mismatch, leaves the world feed off and the dependent modules unavailable.
+            org.chimeramc.client.preloader.BerryApi.bindWorldSeam()
             val storageProfileId = intent.getStringExtra(MinecraftLauncher.EXTRA_STORAGE_PROFILE_ID)
             // A per-instance controller binding takes precedence over plain pad detection, so
             // an instance can bring its own controller setup into the session.

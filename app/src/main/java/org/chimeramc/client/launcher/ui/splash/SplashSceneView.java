@@ -442,7 +442,7 @@ public final class SplashSceneView extends View {
     /**
      * Projects and paints one shaded voxel cube.
      *
-     * <p>A rotate → perspective-divide → back-face-cull → depth-sort pass over eight corners. The
+     * <p>A rotate -> perspective-divide -> back-face-cull -> depth-sort pass over eight corners. The
      * cull and the sort are what make it a solid block: a face turned away is skipped, and the rest
      * are painted far to near. Each visible face is filled with its material's shade for the face's
      * normal, which is the flat-shaded look Minecraft's own blocks have.

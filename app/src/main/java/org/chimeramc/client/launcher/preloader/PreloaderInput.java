@@ -783,7 +783,7 @@ public class PreloaderInput {
     // custom cape is handed to the engine at upload time and the engine still owns the lifetime.
     // Each call is guarded, so a build without the native library degrades to the pack path.
 
-    /** Native declaration: registers a source-bytes → replacement-RGBA substitution. */
+    /** Native declaration: registers a source-bytes -> replacement-RGBA substitution. */
     public static native void nativeSetContentSubstitution(byte[] sourceBytes, byte[] rgba,
                                                            int width, int height);
 
@@ -814,7 +814,7 @@ public class PreloaderInput {
     /** Native declaration: requests a texture-cache refresh; true when a flusher ran. */
     public static native boolean nativeRequestTextureCacheFlush();
 
-    /** Registers a source → replacement substitution, or clears it when rgba is null. */
+    /** Registers a source -> replacement substitution, or clears it when rgba is null. */
     public static void setContentSubstitution(byte[] sourceBytes, byte[] rgba,
                                               int width, int height) {
         try {

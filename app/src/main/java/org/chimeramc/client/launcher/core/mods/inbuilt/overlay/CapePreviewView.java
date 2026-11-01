@@ -995,7 +995,7 @@ public class CapePreviewView extends View {
      * order: {@code [TL, TR, BL, BR]}.
      *
      * <p>Traversing the array in order would draw a bow-tie, so the perimeter is walked
-     * TL → TR → BR → BL instead. That order is correct for both the flat accessory fills and the
+     * TL -> TR -> BR -> BL instead. That order is correct for both the flat accessory fills and the
      * character's shading overlay; the textured pass uses {@code drawBitmapMesh}, which wants the
      * grid order directly.
      */

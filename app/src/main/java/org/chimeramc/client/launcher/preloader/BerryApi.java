@@ -18,8 +18,9 @@ public final class BerryApi {
     public static final int CAP_LIBRARY_LOADED = 1;
     public static final int CAP_ATTACHED = 1 << 1;
     /**
-     * A world/entity seam is bound. Deliberately never set today: BerryAPI ships no Bedrock
-     * signature table, so its world and combat reads have nothing to read from.
+     * A world/entity seam is bound. Set once {@link #bindWorldSeam()} has bound the launcher's
+     * local-player seam into BerryAPI; until then the world/entity reads have nothing to read from
+     * and the dependent modules stay unavailable.
      */
     public static final int CAP_WORLD_FEED = 1 << 2;
 
@@ -70,6 +71,31 @@ public final class BerryApi {
     public static boolean ensureAttached() {
         try {
             return nativeEnsureAttached();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
+     * Binds the launcher's local-player seam into BerryAPI, so its world/entity reads can return
+     * real values instead of failing closed.
+     *
+     * <p>Idempotent and fail-closed: a missing library, a missing seam symbol, or a struct-layout
+     * mismatch returns false and leaves {@link #CAP_WORLD_FEED} clear. Call once at session start,
+     * after {@link #ensureAttached()}. The world feed turns on only after a successful bind.
+     */
+    public static boolean bindWorldSeam() {
+        try {
+            return nativeBindWorldSeam();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /** True when the launcher's local-player seam is bound into BerryAPI. */
+    public static boolean isWorldSeamBound() {
+        try {
+            return nativeWorldSeamBound();
         } catch (UnsatisfiedLinkError e) {
             return false;
         }
@@ -133,4 +159,8 @@ public final class BerryApi {
     private static native int nativeCapabilities();
 
     private static native String nativeSummary();
+
+    private static native boolean nativeBindWorldSeam();
+
+    private static native boolean nativeWorldSeamBound();
 }

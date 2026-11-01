@@ -14,10 +14,10 @@ import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.RotationSmootherM
  * decides the shape once and calls the matching helper:
  *
  * <ul>
- *   <li>a <b>readout</b> → {@link CatalogModuleRuntime#showReadout}</li>
- *   <li>an <b>action</b> → performed immediately on enable, nothing to show</li>
- *   <li>an <b>options write</b> → written to the instance's options file</li>
- *   <li>an <b>input-shaping</b> module → owned by the controller/look path, nothing to show here</li>
+ *   <li>a <b>readout</b> -> {@link CatalogModuleRuntime#showReadout}</li>
+ *   <li>an <b>action</b> -> performed immediately on enable, nothing to show</li>
+ *   <li>an <b>options write</b> -> written to the instance's options file</li>
+ *   <li>an <b>input-shaping</b> module -> owned by the controller/look path, nothing to show here</li>
  * </ul>
  *
  * <p>Keeping the decision here means the manager's own switches stay about the shipped modules, and

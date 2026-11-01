@@ -451,7 +451,7 @@ public final class NativeCosmeticsBridge {
         return PreloaderInput.imageLoaderAddress();
     }
 
-    /** True when the engine can build an image, so the PNG→image→swap path can run. */
+    /** True when the engine can build an image, so the PNG->image->swap path can run. */
     public static boolean canBuildImages() {
         return imageLoaderAddress() != 0L;
     }
