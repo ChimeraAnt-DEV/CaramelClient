@@ -529,9 +529,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_unknown_version">Unknown version</string>
     <string name="mod_all_versions">All supported versions</string>
     <string name="mod_no_config_files">No editable config</string>
-    <string name="mod_config_badge">CONFIG</string>
+    <string name="mod_config_badge" translatable="false">CONFIG</string>
     <string name="mod_config_badge_with_count">CONFIG · %d</string>
-    <string name="mod_verified_badge">VERIFIED</string>
+    <string name="mod_verified_badge" translatable="false">VERIFIED</string>
     <string name="mod_verified_badge_desc">Hash matches the author\'s pin</string>
     <string name="mod_config_title_format">%s Config</string>
     <string name="mod_config_not_found">No editable config found</string>
@@ -636,7 +636,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_device_code_instructions">Open Microsoft’s device sign-in page, enter this code, then approve access. GlowberryClient will finish automatically.</string>
     <string name="ms_device_code_label">Microsoft device code</string>
     <string name="ms_device_code_requesting">Requesting a secure code…</string>
-    <string name="ms_device_code_waiting_code">--------</string>
+    <string name="ms_device_code_waiting_code" translatable="false">--------</string>
     <string name="ms_device_code_waiting">Waiting for you to finish in the browser…</string>
     <string name="ms_device_code_checking">Checking the Microsoft sign-in result…</string>
     <string name="ms_device_code_reconnecting">Connection changed. Retrying automatically…</string>
@@ -723,7 +723,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="fps_optimizer_desc">While a game is running, keeps the launcher out of the way: serves cached news and update data instead of polling, and steps further back automatically when the device gets hot, low on memory, or battery saver is on. It only reduces work the launcher itself does — it never changes Minecraft\'s own graphics or framerate.</string>
 
     <string name="optifine_mode_title">Game Performance Mode</string>
-    <string name="optifine_badge_text">FPS+</string>
+    <string name="optifine_badge_text" translatable="false">FPS+</string>
     <string name="optifine_mode_desc">Applies host-level performance changes to the game process through the preloader: a faster allocator, a real-time render thread, performance-core pinning and the panel\'s top refresh rate. Every item is listed below with what it actually did, and can be turned off on its own if your device does not like it. It never claims a frame rate.</string>
     <string name="optifine_tier1_header">Host optimizations (safe)</string>
     <string name="optifine_tier2_header">Game hooks (advanced)</string>
@@ -823,7 +823,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="inbuilt_mod_pojav_controls_desc">Replaces the touch controls with custom ones.</string>
     <string name="inbuilt_mod_more_buttons">More Buttons</string>
     <string name="inbuilt_mod_more_buttons_desc">Adds custom on-screen buttons you can map.</string>
-    <string name="inbuilt_badge">INBUILT</string>
+    <string name="inbuilt_badge" translatable="false">INBUILT</string>
     <string name="autosprint_keybind_label">Auto Sprint Keybind:</string>
     <string name="autosprint_keybind_press">Press any key…</string>
     <string name="configure">Configure</string>
@@ -868,7 +868,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_row_reason_dismiss">Close</string>
 
     <!-- Mod Menu actions (M3). An action fires once and is drawn with a chevron, never a switch. -->
-    <string name="mod_menu_actions_header">ACTIONS</string>
+    <string name="mod_menu_actions_header" translatable="false">ACTIONS</string>
     <string name="mod_menu_action_reset_hud">Reset HUD Position</string>
     <string name="mod_menu_action_reset_hud_desc">Centre every HUD overlay back to its default spot</string>
     <string name="mod_menu_action_reload_mods">Reload Modules</string>
@@ -927,9 +927,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_filter_enabled">Enabled</string>
     <string name="mod_menu_filter_inbuilt">Inbuilt</string>
     <string name="mod_menu_filter_external">External</string>
-    <string name="mod_menu_filter_pvp">PvP</string>
-    <string name="mod_menu_group_pvp">PvP</string>
-    <string name="mod_menu_filter_hud">HUD</string>
+    <string name="mod_menu_filter_pvp" translatable="false">PvP</string>
+    <string name="mod_menu_group_pvp" translatable="false">PvP</string>
+    <string name="mod_menu_filter_hud" translatable="false">HUD</string>
     <string name="wheel_customize_title">Which thing would you like to customize?</string>
     <string name="mod_menu_search_hint">Search mods…</string>
     <string name="mod_stats_fps_placeholder">— FPS</string>
@@ -1119,7 +1119,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="third_person_hint">Switch to third person to see cosmetics — in first person the game does not render your player model.</string>
     <string name="cosmetics_diagnostics_live_overlay">Show live render debug overlay</string>
     <string name="vip_controller_step_failed">Controller settings step failed — see diagnostics</string>
-    <string name="mod_menu_version">v1.0</string>
+    <string name="mod_menu_version" translatable="false">v1.0</string>
     <string name="mod_menu_enabled">Mod Menu enabled</string>
     <string name="mod_menu_disabled">Mod Menu disabled</string>
     <string name="empty_instances_title">No instances yet</string>
@@ -1232,10 +1232,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_config_gyro_deadzone">Dead Zone</string>
     <string name="mod_config_press_any_key">Press any key to bind...</string>
     <string name="mod_config_key_unknown">UNKNOWN</string>
-    <string name="mod_config_color_alpha_short">A</string>
-    <string name="mod_config_color_red_short">R</string>
-    <string name="mod_config_color_green_short">G</string>
-    <string name="mod_config_color_blue_short">B</string>
+    <string name="mod_config_color_alpha_short" translatable="false">A</string>
+    <string name="mod_config_color_red_short" translatable="false">R</string>
+    <string name="mod_config_color_green_short" translatable="false">G</string>
+    <string name="mod_config_color_blue_short" translatable="false">B</string>
     <string name="mod_config_color_hex_hint" formatted="false">#AARRGGBB</string>
     <string name="hud_editor_drag_hint">Drag to move panel</string>
     <string name="hud_editor_drag_description">HUD Editor. Drag this area to move the panel.</string>
@@ -1315,7 +1315,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="quick_launch_menu_subtitle">Launch with URI actions</string>
 
     <!-- CurseForge -->
-    <string name="curseforge_title">CurseForge</string>
+    <string name="curseforge_title" translatable="false">CurseForge</string>
     <string name="curseforge_subtitle">Browse and download contents</string>
     <string name="curseforge_search_hint">Search contents…</string>
     <string name="curseforge_download">Download</string>
@@ -1628,7 +1628,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_extraction_stale">Stale — will re-extract on next launch</string>
     <string name="diagnostics_repair_error">Repair failed: %1$s</string>
     <string name="about_authors_title">Authors &amp; Maintainers</string>
-    <string name="about_author_name">DreamGuXiang</string>
+    <string name="about_author_name" translatable="false">DreamGuXiang</string>
     <string name="about_author_badge">Author</string>
     <string name="about_author_role">GlowberryClient Authors</string>
     <string name="about_afdian">Afdian</string>
@@ -1724,7 +1724,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_loadout_applied">Loadout \"%1$s\" applied</string>
     <string name="mod_menu_loadout_deleted">Loadout \"%1$s\" deleted</string>
     <string name="mod_menu_loadout_name_hint">Loadout name</string>
-    <string name="mod_menu_loadout_preset_pvp">PvP</string>
+    <string name="mod_menu_loadout_preset_pvp" translatable="false">PvP</string>
     <string name="mod_menu_loadout_preset_survival">Survival</string>
     <string name="mod_menu_loadout_preset_building">Building</string>
     <string name="mod_menu_loadout_delete_confirm">Delete the loadout \"%1$s\"?</string>
@@ -1765,8 +1765,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="description">Description</string>
     <string name="category">Category</string>
     <string name="maintainer">Maintainer</string>
-    <string name="youtube">YouTube</string>
-    <string name="github">GitHub</string>
+    <string name="youtube" translatable="false">YouTube</string>
+    <string name="github" translatable="false">GitHub</string>
     <string name="discord">Discord</string>
     <string name="discord_join">Join our Discord</string>
     <string name="discord_join_url" translatable="false">https://discord.gg/r8d7ckEG53</string>
@@ -1849,8 +1849,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="more_buttons_lock_position">Lock position</string>
     <string name="more_buttons_show_outside_hud">Show outside gameplay HUD</string>
     <string name="more_buttons_position_help">The whole button can still be repositioned from the HUD Editor. Icon X/Y only moves the artwork inside the button in small 512px-canvas steps.</string>
-    <string name="more_buttons_unit_px">px</string>
-    <string name="more_buttons_unit_dp">dp</string>
+    <string name="more_buttons_unit_px" translatable="false">px</string>
+    <string name="more_buttons_unit_dp" translatable="false">dp</string>
     <string name="more_buttons_invalid_svg">That file does not contain a valid SVG document.</string>
     <string name="more_buttons_svg_read_failed">Could not read the SVG file.</string>
     <string name="more_buttons_cannot_open_file">Cannot open file.</string>
@@ -2205,12 +2205,12 @@ GlowberryClient must complete the migration before continuing.</string>
     </plurals>
 
     <!-- ABI / bitness -->
-    <string name="abi_64_bit">64-bit</string>
-    <string name="abi_32_bit">32-bit</string>
-    <string name="abi_arm64">arm64</string>
-    <string name="abi_arm">arm32</string>
-    <string name="abi_x86_64">x86_64</string>
-    <string name="abi_x86">x86</string>
+    <string name="abi_64_bit" translatable="false">64-bit</string>
+    <string name="abi_32_bit" translatable="false">32-bit</string>
+    <string name="abi_arm64" translatable="false">arm64</string>
+    <string name="abi_arm" translatable="false">arm32</string>
+    <string name="abi_x86_64" translatable="false">x86_64</string>
+    <string name="abi_x86" translatable="false">x86</string>
     <string name="abi_unknown">ABI ?</string>
 
     <!-- Latency boost -->
@@ -2226,7 +2226,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="modrinth_title">Modrinth</string>
     <string name="modrinth_hub_search_hint">Search Modrinth for projects</string>
     <string name="modrinth_downloads_format">%s downloads</string>
-    <string name="modrinth_loader">%s</string>
+    <string name="modrinth_loader" translatable="false">%s</string>
     <string name="modrinth_updated">Updated %s</string>
     <string name="modrinth_java_warning_title">Mostly Java Edition</string>
     <string name="modrinth_java_warning">Modrinth indexes Java Edition mods, modpacks and resource packs. This launcher runs Bedrock Edition, so only some resource packs and add-ons here can actually be installed. Check the file type before importing.</string>
@@ -2372,7 +2372,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_scope_note">Clips are saved to this app\'s private ChimeraAnt-DEV/replays folder and removed with the app. Recording is a video capture of your screen: the transport now supports pause, scrub, slow motion and reverse, and each clip can carry an authored cinematic camera path, but this build has no block-level world capture, so a replay is the recorded video rather than a re-simulated world. Highlight capture flags the clip being recorded; it does not rewind an encoded buffer. Metadata is burned into the video, so it cannot be removed afterwards.</string>
     <string name="replay_playback_hint">This clip could not be played</string>
     <string name="replay_player_close">Close</string>
-    <string name="replay_player_speed_1x">1x</string>
+    <string name="replay_player_speed_1x" translatable="false">1x</string>
     <string name="replay_player_speed">%1$.1fx</string>
     <string name="replay_player_recording_note">Recording stopped so playback and capture do not share the decoder</string>
     <string name="replay_player_step_back">Step back one frame</string>
@@ -2419,7 +2419,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_capture_failed">Recording could not start</string>
     <string name="replay_clip_saved">Clip saved</string>
     <!-- JavaBridge: Java mod auto-porter -->
-    <string name="javabridge_title">JavaBridge</string>
+    <string name="javabridge_title" translatable="false">JavaBridge</string>
     <string name="javabridge_subtitle">Import a Java Edition .jar and generate a Bedrock .AntEgg mod from it.</string>
     <string name="javabridge_reimplementation_warning">This is a reimplementation, not the original mod. The generated mod is written from scratch and may behave differently.</string>
     <string name="javabridge_import_jar">Import .jar mod</string>
@@ -2603,8 +2603,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_login_azure_note">Note: You must register your own Azure AD application and replace the client ID in the code.</string>
     <string name="shader_compat_title">Shader compatibility fixer</string>
     <string name="shader_compat_desc">Fixes shader/materialbin compatibility for resource packs</string>
-    <string name="about_maintainer_name">MrPokeG</string>
-    <string name="server_sample_address">play.example.com</string>
+    <string name="about_maintainer_name" translatable="false">MrPokeG</string>
+    <string name="server_sample_address" translatable="false">play.example.com</string>
 
     <string name="overlay_layout_title">Overlay layouts</string>
     <string name="overlay_layout_save_current">Save current</string>
