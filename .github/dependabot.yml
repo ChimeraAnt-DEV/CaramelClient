@@ -28,11 +28,15 @@ updates:
       # edit, never an automated PR.
       - dependency-name: "org.cloudburstmc.protocol:bedrock-connection"
       - dependency-name: "com.github.RaphiMC:MinecraftAuth"
-      # The Gradle wrapper moves together with the Android Gradle Plugin, never on its own: AGP 8.13.x
+      # The Gradle wrapper and the Android Gradle Plugin move together, never one at a time. AGP 8.13.x
       # relies on the Gradle internal InternalProblems API, which Gradle 9.6.0 removed, so a wrapper
-      # bump to 9.6+ cannot even apply `com.android.application` (see the build failure this caused).
-      # Raising Gradle therefore means raising AGP in the same change, which is a deliberate edit.
+      # bump to 9.6+ cannot apply `com.android.application`; and a lone AGP bump to 9.x needs a
+      # matching Gradle wrapper and a Kotlin/KSP sweep, which is a deliberate migration, not a
+      # maintenance update. Both are edited by hand, with the wrapper and AGP raised together.
       - dependency-name: "gradle-wrapper"
+      - dependency-name: "com.android.tools.build:gradle"
+      - dependency-name: "com.android.application"
+      - dependency-name: "com.android.library"
 
   # The GitHub Actions the workflows use.
   - package-ecosystem: "github-actions"
