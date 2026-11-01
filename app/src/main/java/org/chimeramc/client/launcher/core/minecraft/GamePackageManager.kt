@@ -1063,7 +1063,7 @@ class GamePackageManager private constructor(
             progressListener: MinecraftRuntimePreparer.ProgressListener? = null
         ): GamePackageManager {
             return synchronized(this) {
-                val newVersionKey = buildVersionKey(version)
+                val newVersionKey = buildVersionKey(context, version)
                 val current = instance
                 if (current == null || newVersionKey != lastVersionKey) {
                     val created = GamePackageManager(
@@ -1083,16 +1083,52 @@ class GamePackageManager private constructor(
             }
         }
 
-        private fun buildVersionKey(version: GameVersion?): String {
+        /**
+         * The cache key for the reused instance.
+         *
+         * <p>The version's own fields are not enough. For the device-installed Minecraft package the
+         * launch reads the APK out of the installed package, and Play can update that package while
+         * the launcher sits in the background. The version record on disk does not change, so the
+         * key used to match, the cached instance was reused, and the launch kept reading the old
+         * `sourceDir` and native-library directory of a package that no longer existed - a stale
+         * path (item 305).
+         *
+         * <p>The installed package's `lastUpdateTime` is the fingerprint that catches it: it changes
+         * exactly when the package changes, so an update during a session invalidates the cache and
+         * the next launch re-resolves everything. An imported instance has no installed package, so
+         * it keeps the version-only key and does not pay for a package query.
+         */
+        private fun buildVersionKey(context: Context, version: GameVersion?): String {
             if (version == null) return "installed-default"
+            val installedFingerprint = if (version.isInstalled) installedPackageFingerprint(context, version) else ""
             return listOf(
                 version.isInstalled.toString(),
                 version.packageName.orEmpty(),
                 version.versionCode.orEmpty(),
                 version.directoryName.orEmpty(),
                 version.versionDir?.absolutePath.orEmpty(),
-                version.abiList.orEmpty()
+                version.abiList.orEmpty(),
+                installedFingerprint
             ).joinToString("|")
+        }
+
+        /**
+         * A fingerprint of the device-installed package, or an empty string when it cannot be read.
+         *
+         * <p>`lastUpdateTime` and `versionName` together: the timestamp catches a reinstall or an
+         * update, and the name catches the rare case of a same-timestamp replacement. An unreadable
+         * package yields an empty string, which keeps the old key behaviour rather than inventing a
+         * new one on every launch - a key that changed every time would re-run the extraction setup
+         * on every launch for a package that is actually fine.
+         */
+        private fun installedPackageFingerprint(context: Context, version: GameVersion): String {
+            val packageName = version.packageName ?: MinecraftLauncher.MC_PACKAGE_NAME
+            return try {
+                val info = context.packageManager.getPackageInfo(packageName, 0)
+                info.lastUpdateTime.toString() + ":" + (info.versionName ?: "")
+            } catch (e: Exception) {
+                ""
+            }
         }
 
         fun isInitialized() = instance != null
