@@ -1237,4 +1237,11 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_import_link_done_digest">%1$s içe aktarıldı.\n%2$s</string>
     <string name="nav_rail_collapse">Rayı daralt</string>
     <string name="nav_rail_expand">Rayı genişlet</string>
+    <string name="launch_watchdog_stalled">Bu başlatma bir süredir ilerlemiyor. Hâlâ çalışıyor olabilir; ne yaptığını görmek için günlükleri açın.</string>
+    <string name="launch_watchdog_dead">Bu başlatma uzun süredir hiç kare çizmedi. Bir modu elemek için modsuz yeniden başlatın.</string>
+    <string name="launch_watchdog_open_logs">Günlükleri aç</string>
+    <string name="launch_watchdog_restart_without_mods">Modsuz yeniden başlat</string>
+    <string name="performance_preset_thermal_message">Bu cihaz ısı nedeniyle kısıtlanmış. Pil modu CPU\'ya daha az iş verir.</string>
+    <string name="performance_preset_thermal_apply">Pil kullan</string>
+    <string name="instance_size_on_disk">Diskte %1$s</string>
 </resources>

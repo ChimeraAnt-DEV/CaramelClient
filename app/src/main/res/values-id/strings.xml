@@ -1234,4 +1234,11 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_import_link_done_digest">%1$s diimpor.\n%2$s</string>
     <string name="nav_rail_collapse">Ciutkan rel</string>
     <string name="nav_rail_expand">Bentangkan rel</string>
+    <string name="launch_watchdog_stalled">Peluncuran ini tidak mengalami kemajuan selama beberapa waktu. Mungkin masih berjalan; buka log untuk melihat apa yang sedang dilakukannya.</string>
+    <string name="launch_watchdog_dead">Peluncuran ini sudah lama tidak menggambar satu bingkai pun. Mulai ulang tanpa mod untuk menyingkirkan kemungkinan mod.</string>
+    <string name="launch_watchdog_open_logs">Buka log</string>
+    <string name="launch_watchdog_restart_without_mods">Mulai ulang tanpa mod</string>
+    <string name="performance_preset_thermal_message">Perangkat ini dibatasi suhu. Mode Baterai akan memberi CPU lebih sedikit pekerjaan.</string>
+    <string name="performance_preset_thermal_apply">Gunakan Baterai</string>
+    <string name="instance_size_on_disk">%1$s di disk</string>
 </resources>

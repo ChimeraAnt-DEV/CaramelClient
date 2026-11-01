@@ -1231,4 +1231,11 @@
     <string name="mod_import_link_done_digest">已导入 %1$s。\n%2$s</string>
     <string name="nav_rail_collapse">收起侧栏</string>
     <string name="nav_rail_expand">展开侧栏</string>
+    <string name="launch_watchdog_stalled">本次启动已有一段时间没有进展。它可能仍在运行；打开日志查看它正在做什么。</string>
+    <string name="launch_watchdog_dead">本次启动长时间没有绘制任何画面。请在没有模组的情况下重新启动，以排除模组问题。</string>
+    <string name="launch_watchdog_open_logs">打开日志</string>
+    <string name="launch_watchdog_restart_without_mods">在没有模组的情况下重新启动</string>
+    <string name="performance_preset_thermal_message">此设备因温度过高而降速。电池模式会减轻 CPU 的负担。</string>
+    <string name="performance_preset_thermal_apply">使用电池模式</string>
+    <string name="instance_size_on_disk">磁盘上 %1$s</string>
 </resources>

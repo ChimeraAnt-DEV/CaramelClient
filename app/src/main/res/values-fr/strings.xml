@@ -1210,4 +1210,11 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_import_link_done_digest">%1$s importé.\n%2$s</string>
     <string name="nav_rail_collapse">Réduire le rail</string>
     <string name="nav_rail_expand">Développer le rail</string>
+    <string name="launch_watchdog_stalled">Ce lancement n\'a pas progressé depuis un moment. Il fonctionne peut-être encore ; ouvrez les journaux pour voir ce qu\'il fait.</string>
+    <string name="launch_watchdog_dead">Ce lancement n\'a dessiné aucune image depuis longtemps. Redémarrez sans mods pour écarter un mod.</string>
+    <string name="launch_watchdog_open_logs">Ouvrir les journaux</string>
+    <string name="launch_watchdog_restart_without_mods">Redémarrer sans mods</string>
+    <string name="performance_preset_thermal_message">Cet appareil est limité par la température. Le mode Batterie donnerait moins de travail au processeur.</string>
+    <string name="performance_preset_thermal_apply">Utiliser Batterie</string>
+    <string name="instance_size_on_disk">%1$s sur le disque</string>
 </resources>

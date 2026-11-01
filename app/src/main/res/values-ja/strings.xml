@@ -1207,4 +1207,11 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_import_link_done_digest">%1$s をインポートしました。\n%2$s</string>
     <string name="nav_rail_collapse">レールを折りたたむ</string>
     <string name="nav_rail_expand">レールを展開</string>
+    <string name="launch_watchdog_stalled">この起動はしばらく進んでいません。まだ動作中の可能性があります。ログを開いて何をしているか確認してください。</string>
+    <string name="launch_watchdog_dead">この起動は長時間フレームを描画していません。mod を除外するため、mod なしで再起動してください。</string>
+    <string name="launch_watchdog_open_logs">ログを開く</string>
+    <string name="launch_watchdog_restart_without_mods">mod なしで再起動</string>
+    <string name="performance_preset_thermal_message">このデバイスは熱によって制限されています。バッテリーモードなら CPU の負担が減ります。</string>
+    <string name="performance_preset_thermal_apply">バッテリーを使う</string>
+    <string name="instance_size_on_disk">ディスク上 %1$s</string>
 </resources>

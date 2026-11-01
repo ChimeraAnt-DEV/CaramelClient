@@ -1241,4 +1241,11 @@
     <string name="mod_import_link_done_digest">%1$s импортирован.\n%2$s</string>
     <string name="nav_rail_collapse">Свернуть панель</string>
     <string name="nav_rail_expand">Развернуть панель</string>
+    <string name="launch_watchdog_stalled">Этот запуск давно не продвигается. Возможно, он ещё работает; откройте журналы, чтобы увидеть, что происходит.</string>
+    <string name="launch_watchdog_dead">Этот запуск давно не отрисовал ни одного кадра. Перезапустите без модов, чтобы исключить мод.</string>
+    <string name="launch_watchdog_open_logs">Открыть журналы</string>
+    <string name="launch_watchdog_restart_without_mods">Перезапустить без модов</string>
+    <string name="performance_preset_thermal_message">Это устройство ограничено из-за нагрева. Режим «Батарея» даст процессору меньше работы.</string>
+    <string name="performance_preset_thermal_apply">Использовать «Батарея»</string>
+    <string name="instance_size_on_disk">%1$s на диске</string>
 </resources>

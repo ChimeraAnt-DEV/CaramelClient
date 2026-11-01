@@ -1238,4 +1238,11 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_import_link_done_digest">%1$s आयात किया गया।\n%2$s</string>
     <string name="nav_rail_collapse">रेल छोटा करें</string>
     <string name="nav_rail_expand">रेल बड़ा करें</string>
+    <string name="launch_watchdog_stalled">यह लॉन्च कुछ समय से आगे नहीं बढ़ा है। यह अभी भी काम कर रहा हो सकता है; देखने के लिए लॉग खोलें कि यह क्या कर रहा है।</string>
+    <string name="launch_watchdog_dead">यह लॉन्च बहुत देर से कोई फ़्रेम नहीं बनाया है। किसी मॉड को बाहर करने के लिए बिना मॉड्स के पुनः आरंभ करें।</string>
+    <string name="launch_watchdog_open_logs">लॉग खोलें</string>
+    <string name="launch_watchdog_restart_without_mods">बिना मॉड्स के पुनः आरंभ करें</string>
+    <string name="performance_preset_thermal_message">यह डिवाइस गर्मी के कारण धीमा है। बैटरी मोड CPU को कम काम देगा।</string>
+    <string name="performance_preset_thermal_apply">बैटरी का उपयोग करें</string>
+    <string name="instance_size_on_disk">डिस्क पर %1$s</string>
 </resources>

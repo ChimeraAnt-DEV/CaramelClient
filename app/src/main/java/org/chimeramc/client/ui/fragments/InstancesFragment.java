@@ -47,6 +47,7 @@ import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.components.ListDiff;
 import org.chimeramc.client.ui.components.ListDiffDispatch;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
+import org.chimeramc.client.databinding.ItemInstanceCardBinding;
 import org.chimeramc.client.ui.dialogs.InstallProgressDialog;
 import org.chimeramc.client.ui.activities.InstanceSettingsActivity;
 import org.chimeramc.client.util.ApkImportManager;
@@ -1097,8 +1098,8 @@ public class InstancesFragment extends Fragment {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance_card, parent, false);
-            return new VH(v);
+            return new VH(ItemInstanceCardBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false));
         }
 
         @Override
@@ -1249,20 +1250,22 @@ public class InstancesFragment extends Fragment {
         }
 
         static class VH extends RecyclerView.ViewHolder {
+            final ItemInstanceCardBinding binding;
             TextView versionCode, typeTag, displayName, playtime, notes, size;
             TextView abiBadge;
             ImageView settingsIcon;
 
-            VH(View v) {
-                super(v);
-                versionCode = v.findViewById(R.id.card_version_code);
-                typeTag = v.findViewById(R.id.card_type_tag);
-                displayName = v.findViewById(R.id.card_display_name);
-                playtime = v.findViewById(R.id.card_playtime);
-                notes = v.findViewById(R.id.card_notes);
-                size = v.findViewById(R.id.card_size);
-                abiBadge = v.findViewById(R.id.card_abi_badge);
-                settingsIcon = v.findViewById(R.id.card_settings_icon);
+            VH(ItemInstanceCardBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+                versionCode = binding.cardVersionCode;
+                typeTag = binding.cardTypeTag;
+                displayName = binding.cardDisplayName;
+                playtime = binding.cardPlaytime;
+                notes = binding.cardNotes;
+                size = binding.cardSize;
+                abiBadge = binding.cardAbiBadge;
+                settingsIcon = binding.cardSettingsIcon;
             }
         }
     }
