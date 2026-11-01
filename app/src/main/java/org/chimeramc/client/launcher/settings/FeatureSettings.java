@@ -42,6 +42,16 @@ public class FeatureSettings {
      */
     private String lastNavTab = null;
 
+    /**
+     * Whether the user collapsed the wide navigation rail to icon-only (item 85).
+     *
+     * <p>A tablet user who prefers the icons to a labelled rail can fold it, and the choice is
+     * remembered across launches. It is a presentation preference only: it never changes which
+     * destination exists, only whether the expanded rail shows its labels. Default false, so an
+     * existing setup keeps the shape its window width already gives it.
+     */
+    private boolean navRailCollapsed = false;
+
     // --- Game Performance Mode -------------------------------------------------------------
     // The master switch plus one toggle per optimization, so a user can isolate an item that
     // misbehaves on their device. Tier-1 (host) items default on; Tier-2 (game hook) items
@@ -145,6 +155,14 @@ public class FeatureSettings {
     public String getLastNavTab() { return lastNavTab; }
 
     public void setLastNavTab(String tabName) { this.lastNavTab = tabName; autoSave(); }
+
+    /** Whether the wide rail is folded to icons only (item 85). */
+    public boolean isNavRailCollapsed() { return navRailCollapsed; }
+
+    public void setNavRailCollapsed(boolean collapsed) {
+        this.navRailCollapsed = collapsed;
+        autoSave();
+    }
 
     // --- Game Performance Mode accessors ---------------------------------------------------
 
