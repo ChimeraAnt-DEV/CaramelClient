@@ -38,6 +38,7 @@ public final class ModSafeMode {
     private static final String KEY_LOADED_MODS = "loaded_mods";
     private static final String KEY_LAST_CRASH_TIME = "last_crash_time";
     private static final String KEY_SAFE_MODE_ACTIVE = "safe_mode_active";
+    private static final String KEY_SUPPRESS_MODS = "suppress_mods_next_launch";
     private static final char SEPARATOR = '\n';
 
     private ModSafeMode() {
@@ -111,6 +112,40 @@ public final class ModSafeMode {
                 .putBoolean(KEY_SAFE_MODE_ACTIVE, disabledSuspects)
                 .putLong(KEY_LAST_CRASH_TIME, System.currentTimeMillis());
         editor.apply();
+    }
+
+    /**
+     * Requests that the next launch load no mods at all (item 285).
+     *
+     * <p>This is the "restart without mods" action the launch watchdog offers: a one-shot flag, not
+     * a persisted per-mod change, because the point is to answer one question ("is a mod causing
+     * this?") and then let the user's real configuration come back on the launch after. Persisting
+     * a mass-disable would silently rewrite their setup for a diagnostic they may only have wanted
+     * to run once.
+     */
+    public static void suppressModsForNextLaunch(Context context) {
+        if (context == null) {
+            return;
+        }
+        prefs(context).edit().putBoolean(KEY_SUPPRESS_MODS, true).apply();
+    }
+
+    /**
+     * Reads and clears the suppress-mods flag.
+     *
+     * <p>Consumed, not just read, so a single "restart without mods" suppresses exactly one launch
+     * and the next one loads mods again unless the user asks for it again.
+     */
+    public static boolean consumeSuppressMods(Context context) {
+        if (context == null) {
+            return false;
+        }
+        SharedPreferences prefs = prefs(context);
+        if (!prefs.getBoolean(KEY_SUPPRESS_MODS, false)) {
+            return false;
+        }
+        prefs.edit().putBoolean(KEY_SUPPRESS_MODS, false).apply();
+        return true;
     }
 
     /** True when the user chose to keep suspect mods disabled after a crash. */

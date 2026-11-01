@@ -581,6 +581,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="minecraft_loading_log_title">Launch Log</string>
     <string name="minecraft_loading_complete">Game ready</string>
     <string name="minecraft_loading_entering_game">Entering Minecraft</string>
+    <string name="launch_watchdog_stalled">This launch has not progressed for a while. It may still be working; open the logs to see what it is doing.</string>
+    <string name="launch_watchdog_dead">This launch has not drawn a frame for a long time. Restart without mods to rule a mod out.</string>
+    <string name="launch_watchdog_open_logs">Open logs</string>
+    <string name="launch_watchdog_restart_without_mods">Restart without mods</string>
     <string name="minecraft_loading_failed">Launch failed</string>
     <string name="minecraft_loading_return">Back to Launcher</string>
     <string name="launcher_restart_title">Back to Launcher</string>

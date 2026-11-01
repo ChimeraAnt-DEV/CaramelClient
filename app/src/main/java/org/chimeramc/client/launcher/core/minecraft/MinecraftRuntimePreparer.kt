@@ -479,7 +479,17 @@ object MinecraftRuntimePreparer {
                 trace.warning("Mod auto-disabled (crash attribution)", mod.displayName)
             }
         }
-        ModSafeMode.beginLaunch(context, modManager.mods.filter { it.isEnabled }.map { it.id })
+        // Item 285: "restart without mods" from the launch watchdog sets a one-shot flag. Consuming
+        // it here means the diagnostic launch loads nothing, and the launch after it returns to the
+        // user's real configuration without them having to re-enable anything by hand.
+        val suppressMods = ModSafeMode.consumeSuppressMods(context)
+        if (suppressMods) {
+            listener.onLog("Loading no mods (restart without mods)")
+            trace.warning("Mods suppressed for this launch", "launch watchdog restart without mods")
+        }
+        ModSafeMode.beginLaunch(context,
+            if (suppressMods) emptyList() else modManager.mods.filter { it.isEnabled }.map { it.id })
+        if (!suppressMods) {
         ModNativeLoader.loadEnabledSoMods(
             modManager,
             cacheDir,
@@ -546,6 +556,7 @@ object MinecraftRuntimePreparer {
                 }
             }
         )
+        }
         listener.onProgress(96, "Native mods ready")
         listener.onLog("Native mods ready")
         ModLoadDiagnostics.record(context, failedModRecords)
