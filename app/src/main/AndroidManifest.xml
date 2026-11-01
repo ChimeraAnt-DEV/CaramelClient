@@ -113,6 +113,20 @@
             android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
             tools:ignore="DiscouragedApi" />
 
+        <!-- Item 268: a Quick Settings tile that cycles the performance preset. TileService is
+             API 24, so at minSdk 28 no fallback is needed. BIND_QUICK_SETTINGS_TILE is the
+             permission the system uses to bind it; the tile is not exported. -->
+        <service
+            android:name="org.chimeramc.client.launcher.settings.PerformanceTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_glowberry_mono"
+            android:label="@string/performance_preset_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
         <service
             android:name="org.chimeramc.client.util.StorageMigrationService"
             android:exported="false"
