@@ -157,6 +157,21 @@ public class BaseActivity extends AppCompatActivity {
         wrapWithNavBar(contentView);
     }
 
+    /**
+     * Inflates the screen's layout off the main thread, then wraps it in the nav (item 130).
+     *
+     * <p>A screen whose XML is thousands of lines blocks its first frame on the parse. The heavy
+     * screens call this instead of {@link #setContentView(int)}; the layout is built on a
+     * background thread and the nav wrap (which needs the main thread) runs when it arrives.
+     * {@code onAttached} runs after the content is live, so view lookups belong there.
+     *
+     * <p>Registration of activity-result launchers must stay in {@code onCreate} before this: the
+     * callback can land after {@code onStart}, and registering then would throw.
+     */
+    protected void setContentViewAsync(int layoutResID, @Nullable Runnable onAttached) {
+        org.chimeramc.client.util.AsyncInflate.setContentView(this, layoutResID, onAttached);
+    }
+
     @Override
     public void setContentView(View view) {
         wrapWithNavBar(view);

@@ -41,6 +41,8 @@ simpleXml = "2.7.1"
 billing = "8.3.0"
 sqliteFramework = "2.6.2"
 dynamicanimation = "1.1.0"
+transition = "1.5.0"
+asynclayoutinflater = "1.1.0"
 xcrash = "3.1.2"
 # Pure-Java Opus (BSD-3), so the voice relay needs no per-ABI native codec build. JitPack's
 # immutable build coordinate (`master-<sha>-1`) is unusable: its POM still declares
@@ -102,6 +104,8 @@ prov = { module = "com.madgag.spongycastle:prov", version.ref = "core" }
 simple-xml = { group = "org.simpleframework", name = "simple-xml", version.ref = "simpleXml" }
 billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 androidx-dynamicanimation = { module = "androidx.dynamicanimation:dynamicanimation", version.ref = "dynamicanimation" }
+androidx-transition = { module = "androidx.transition:transition", version.ref = "transition" }
+androidx-asynclayoutinflater = { module = "androidx.asynclayoutinflater:asynclayoutinflater", version.ref = "asynclayoutinflater" }
 xcrash = { module = "com.github.RadiantByte:xCrash", version.ref = "xcrash" }
 concentus = { module = "com.github.lostromb.concentus:Concentus", version.ref = "concentus" }
 cfr = { module = "org.benf:cfr", version.ref = "cfr" }

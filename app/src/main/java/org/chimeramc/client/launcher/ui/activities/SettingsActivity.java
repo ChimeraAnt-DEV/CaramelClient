@@ -31,6 +31,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
@@ -124,15 +126,16 @@ public class SettingsActivity extends BaseActivity {
     private TextView worldBackupStatus;
     private WorldBackupConfig worldBackupConfig;
 
+    /** The container of the settings sections, animated on a tab change (item 124). */
+    private ViewGroup settingsContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
-
-        setupNavBar();
-
+        // Everything that does not need a view runs first, because the layout is inflated off the
+        // main thread (item 130) and the activity-result launchers must be registered before
+        // onStart - registering them from the inflate callback would throw if it landed late.
         personalizationManager = new PersonalizationManager(this);
 
         if (savedInstanceState != null) {
@@ -185,6 +188,16 @@ public class SettingsActivity extends BaseActivity {
                 }
         );
 
+        // Item 130: this layout is over two thousand lines, so it is parsed on a background thread.
+        setContentViewAsync(R.layout.activity_settings, this::onContentReady);
+    }
+
+    /** Runs once the asynchronously inflated settings tree is attached (item 130). */
+    private void onContentReady() {
+        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+
+        setupNavBar();
+
         initTabs();
         setupBasicSection();
         setupPersonalizeSection();
@@ -219,6 +232,8 @@ public class SettingsActivity extends BaseActivity {
         sectionMigration = findViewById(R.id.section_migration);
         sectionAbout = findViewById(R.id.section_about);
 
+        settingsContent = findViewById(R.id.settings_content);
+
         tabBasic.setOnClickListener(v -> { selectedTabIndex = 0; selectTab(tabBasic); });
         tabPersonalize.setOnClickListener(v -> { selectedTabIndex = 1; selectTab(tabPersonalize); });
         tabUpdates.setOnClickListener(v -> { selectedTabIndex = 2; selectTab(tabUpdates); });
@@ -231,6 +246,15 @@ public class SettingsActivity extends BaseActivity {
         View[] sections = {sectionBasic, sectionPersonalize, sectionUpdates, sectionAbout, sectionMigration};
 
         int accent = personalizationManager.getAccentColor();
+
+        // Item 124: animate the swap of the visible section. TransitionManager works on every
+        // supported version and needs no shared-element plumbing; the removed alpha tween did not
+        // animate the size change, so a tall section appeared with a jump. Under reduced motion the
+        // transition is skipped and the swap is instant.
+        if (DynamicAnim.areAnimationsEnabled() && settingsContent != null) {
+            TransitionManager.beginDelayedTransition(settingsContent, new AutoTransition()
+                    .setDuration(DynamicAnim.motionDurationMs(200)));
+        }
 
         for (int i = 0; i < tabs.length; i++) {
             boolean isSelected = tabs[i] == selectedTab;
@@ -254,8 +278,6 @@ public class SettingsActivity extends BaseActivity {
 
             if (isSelected) {
                 sections[i].setVisibility(View.VISIBLE);
-                sections[i].setAlpha(0f);
-                sections[i].animate().alpha(1f).setDuration(200).start();
             } else {
                 sections[i].setVisibility(View.GONE);
             }

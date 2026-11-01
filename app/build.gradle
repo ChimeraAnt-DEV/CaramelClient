@@ -249,6 +249,10 @@ dependencies {
     implementation libs.androidx.games.activity
     implementation libs.okhttp
     implementation libs.androidx.dynamicanimation
+    // Item 124: TransitionManager drives the settings section change without a re-inflate.
+    implementation libs.androidx.transition
+    // Item 130: heavy screens inflate off the main thread.
+    implementation libs.androidx.asynclayoutinflater
     implementation libs.androidx.browser
     implementation libs.bedrock.connection
     implementation libs.xcrash
