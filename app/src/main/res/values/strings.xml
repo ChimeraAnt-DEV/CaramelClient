@@ -1,7 +1,7 @@
 <resources>
     <!-- Common -->
     <string name="app_name" translatable="false">GlowberryClient</string>
-    <string name="minecraft">Minecraft</string>
+    <string name="minecraft" translatable="false">Minecraft</string>
     <string name="launch">Launch</string>
     <string name="beta_badge">Beta</string>
     <string name="debug_badge">Debug</string>
@@ -1773,7 +1773,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="maintainer">Maintainer</string>
     <string name="youtube" translatable="false">YouTube</string>
     <string name="github" translatable="false">GitHub</string>
-    <string name="discord">Discord</string>
+    <string name="discord" translatable="false">Discord</string>
     <string name="discord_join">Join our Discord</string>
     <string name="discord_join_url" translatable="false">https://discord.gg/r8d7ckEG53</string>
     <string name="discord_join_failed">No app can open that link.</string>
@@ -1905,7 +1905,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="instance_storage_clear_cache">Clear cache</string>
     <string name="instance_storage_cleared">Cache cleared (%1$s freed)</string>
     <string name="instance_storage_clear_failed">Could not clear the cache: %1$s</string>
-    <string name="foreground_service_channel">Minecraft</string>
+    <string name="foreground_service_channel" translatable="false">Minecraft</string>
     <string name="foreground_service_notification_title">Minecraft is running</string>
     <string name="foreground_service_notification_text">Keeping the game alive in the background</string>
     <string name="mod_config_category_slots">Slots</string>
@@ -2230,7 +2230,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_hub_title">Mod Hub</string>
     <string name="mod_hub_subtitle">Browse Modrinth and import what you download</string>
     <string name="mod_hub_search_hint">Search Modrinth</string>
-    <string name="modrinth_title">Modrinth</string>
+    <string name="modrinth_title" translatable="false">Modrinth</string>
     <string name="modrinth_hub_search_hint">Search Modrinth for projects</string>
     <string name="modrinth_downloads_format">%s downloads</string>
     <string name="modrinth_loader" translatable="false">%s</string>

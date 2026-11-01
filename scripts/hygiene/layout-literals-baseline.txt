@@ -1,0 +1,2 @@
+# Hardcoded android:text and colour literals in res/layout.
+
