@@ -93,6 +93,11 @@ public class ContentDetailsActivity extends BaseActivity {
         client = CurseForgeClient.getInstance(this);
         
     initViews();
+        // Item 123: match the names the list row declared, so the icon and title fly across.
+        org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
+                icon, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_ICON);
+        org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
+                title, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
         initWebView();
         bindData();
         loadDescription();

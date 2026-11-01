@@ -28,6 +28,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.launcher.ui.util.SceneTransitions;
 import org.chimeramc.client.core.content.ContentImporter;
 import org.chimeramc.client.core.downloads.DownloadsScanner;
 import org.chimeramc.client.core.modrinth.ModrinthClient;
@@ -396,9 +397,15 @@ public class ModHubActivity extends BaseActivity {
     }
 
     private void openProject(ModrinthProject project) {
+        openProject(project, null, null);
+    }
+
+    private void openProject(ModrinthProject project, View icon, View title) {
         Intent intent = new Intent(this, ModrinthDetailActivity.class);
         intent.putExtra(ModrinthDetailActivity.EXTRA_PROJECT, project);
-        startActivity(intent);
+        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        SceneTransitions.start(this, intent,
+                SceneTransitions.icon(icon), SceneTransitions.title(title));
     }
 
     private void scanDownloads() {

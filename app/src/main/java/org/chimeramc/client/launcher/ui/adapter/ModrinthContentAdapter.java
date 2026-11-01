@@ -30,6 +30,15 @@ public class ModrinthContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface OnProjectClickListener {
         void onProjectClick(ModrinthProject project);
+
+        /**
+         * The same click with the row's own views, so the host can run a shared-element
+         * transition from them (item 123). Defaulted to the plain call so an existing
+         * implementation keeps working.
+         */
+        default void onProjectClick(ModrinthProject project, View icon, View title) {
+            onProjectClick(project);
+        }
     }
 
     public interface OnPageChangeListener {
@@ -141,7 +150,11 @@ public class ModrinthContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
             new org.chimeramc.client.util.PersonalizationManager(ctx).applyGlassToView(itemView);
-            itemView.setOnClickListener(v -> listener.onProjectClick(project));
+
+            // Item 123: the names the detail screen matches for a shared-element transition.
+            icon.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_ICON);
+            title.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
+            itemView.setOnClickListener(v -> listener.onProjectClick(project, icon, title));
         }
 
         private static String buildMetadata(android.content.Context ctx, ModrinthProject project) {

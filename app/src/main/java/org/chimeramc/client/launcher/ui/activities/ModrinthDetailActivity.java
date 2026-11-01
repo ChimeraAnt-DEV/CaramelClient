@@ -22,6 +22,7 @@ import org.chimeramc.client.core.modrinth.models.ModrinthVersion;
 import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.settings.FeatureSettings;
+import org.chimeramc.client.util.AsyncText;
 import org.chimeramc.client.util.LauncherStorage;
 import org.chimeramc.client.ui.adapter.ModrinthVersionAdapter;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
@@ -95,10 +96,14 @@ public class ModrinthDetailActivity extends BaseActivity {
         TextView author = findViewById(R.id.modrinth_detail_author);
         TextView description = findViewById(R.id.modrinth_detail_description);
 
+        // Item 123: the name the list row declared, so the title flies across.
+        org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
+                title, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
         title.setText(project.displayName());
         author.setText(getString(R.string.modrinth_downloads_format, formatCount(project.downloads))
                 + (project.author != null ? " • " + project.author : ""));
-        description.setText(project.description);
+        // Item 127: a project description is long; measure it off the main thread.
+        AsyncText.apply(description, project.description);
     }
 
     private void setupRecycler() {

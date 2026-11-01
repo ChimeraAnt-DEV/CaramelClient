@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.launcher.ui.util.SceneTransitions;
 import org.chimeramc.client.core.curseforge.CurseForgeClient;
 import org.chimeramc.client.core.curseforge.CurseForgeKeyDialog;
 import org.chimeramc.client.core.curseforge.models.Content;
@@ -300,8 +301,14 @@ public class CurseForgeActivity extends BaseActivity {
     }
 
     private void onContentClick(Content content) {
+        onContentClick(content, null, null);
+    }
+
+    private void onContentClick(Content content, View icon, View title) {
         Intent intent = new Intent(this, ContentDetailsActivity.class);
         intent.putExtra(ContentDetailsActivity.EXTRA_CONTENT, content);
-        startActivity(intent);
+        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        SceneTransitions.start(this, intent,
+                SceneTransitions.icon(icon), SceneTransitions.title(title));
     }
 }
