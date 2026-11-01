@@ -50,6 +50,7 @@ import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.navigation.EdgeToEdgeInsets;
 import org.chimeramc.client.ui.navigation.LauncherTab;
 import org.chimeramc.client.ui.navigation.NavLayoutMode;
+import org.chimeramc.client.ui.navigation.NavRailPolicy;
 import org.chimeramc.client.ui.navigation.NavTabLongPress;
 import org.chimeramc.client.ui.components.UiShape;
 import org.chimeramc.client.ui.components.UiTokens;
@@ -369,6 +370,71 @@ public class BaseActivity extends AppCompatActivity {
         return NavLayoutMode.forWindow(currentWidthDp(), currentWindowWidthDp());
     }
 
+    /** The user's fold choice for the wide rail (item 85). */
+    private boolean railCollapsed() {
+        return org.chimeramc.client.settings.FeatureSettings.getInstance().isNavRailCollapsed();
+    }
+
+    /**
+     * Whether the rail currently shows its destination labels (item 85).
+     *
+     * <p>One reading of the policy, used by the wordmark, the label text and the compact-mode flag,
+     * so the three cannot disagree about whether the rail is folded.
+     */
+    private boolean railShowsLabels() {
+        return NavRailPolicy.showsLabels(navLayoutMode, railCollapsed());
+    }
+
+    /**
+     * Applies the rail width for the current fold choice (item 85).
+     *
+     * <p>The width comes from a resource qualifier ({@code values-sw840dp}) that a runtime fold
+     * cannot change, so the rail's layout params are set here from {@link NavRailPolicy}. Only the
+     * rail is touched; the bar's width is match_parent and needs no override.
+     */
+    private void applyRailWidth() {
+        View rail = navShapeView;
+        if (rail == null || !navLayoutMode.isRail()) return;
+        int widthPx = (int) (NavRailPolicy.railWidthDp(navLayoutMode, railCollapsed())
+                * getResources().getDisplayMetrics().density);
+        ViewGroup.LayoutParams params = rail.getLayoutParams();
+        if (params != null && params.width != widthPx) {
+            params.width = widthPx;
+            rail.setLayoutParams(params);
+        }
+    }
+
+    /**
+     * Shows or hides the rail fold control (item 85).
+     *
+     * <p>The control is offered only where it does something - on an expanded rail - and its icon
+     * and description name the action it performs, so a screen reader announces "Collapse rail"
+     * while the labels are shown and "Expand rail" once they are folded.
+     */
+    private void setupRailToggle() {
+        View toggle = navShapeView == null ? null : navShapeView.findViewById(R.id.nav_rail_toggle);
+        if (toggle == null) return;
+        if (!NavRailPolicy.canCollapse(navLayoutMode)) {
+            toggle.setVisibility(View.GONE);
+            return;
+        }
+        boolean collapsed = railCollapsed();
+        toggle.setVisibility(View.VISIBLE);
+        toggle.setContentDescription(getString(
+                collapsed ? R.string.nav_rail_expand : R.string.nav_rail_collapse));
+        toggle.setRotation(collapsed ? 180f : 0f);
+        toggle.setOnClickListener(v -> {
+            org.chimeramc.client.settings.FeatureSettings settings =
+                    org.chimeramc.client.settings.FeatureSettings.getInstance();
+            settings.setNavRailCollapsed(!settings.isNavRailCollapsed());
+            applyRailWidth();
+            applyNavCompactMode();
+            setupRailToggle();
+            LauncherTab own = LauncherTab.forActivity(getClass());
+            if (own != null) setActiveNavTab(own.viewId());
+        });
+    }
+
     /**
      * Outlines every nav entry's real bounds and logs them, on a debug build (item 80).
      *
@@ -640,12 +706,14 @@ public class BaseActivity extends AppCompatActivity {
             // the icon-only tabs, so the brand was invisible even where it fit; the bar's own
             // constraints (the wordmark is pinned between the logo and the tab strip) are what
             // keep it off the tabs, so a width threshold is safe to introduce.
-            boolean showWordmark = navLayoutMode.showsWordmark(currentWindowWidthDp());
+            boolean showWordmark = navLayoutMode.isRail()
+                    ? railShowsLabels()
+                    : navLayoutMode.showsWordmark(currentWindowWidthDp());
             appName.setVisibility(showWordmark ? View.VISIBLE : View.GONE);
         }
         // On a rail the row is wide enough for its label, so the label is all-or-nothing: the
         // expanded rail names every destination, the icon-only rail names none.
-        compactNavTabs = !navLayoutMode.showsAllLabels();
+        compactNavTabs = !railShowsLabels();
         LauncherTab own = LauncherTab.forActivity(getClass());
         int ownTabId = own != null ? own.viewId() : 0;
         for (int id : LauncherTab.viewIds()) {
@@ -666,6 +734,10 @@ public class BaseActivity extends AppCompatActivity {
     private void setupBaseNavBar() {
         PersonalizationManager pm = new PersonalizationManager(this);
 
+        // Item 85: the rail's width and the fold control follow the user's choice, applied before
+        // the label configuration so the two agree on whether the rail is folded.
+        applyRailWidth();
+        setupRailToggle();
         // The wordmark is dropped entirely on a narrow window rather than left to shrink, and
         // the tab strips are icon-only there with just the selected label shown. Both come from
         // values/bools.xml (overridden in values-w600dp), so the two configurations are resolved
@@ -1022,7 +1094,7 @@ public class BaseActivity extends AppCompatActivity {
             UiType.applyWeight(tab, active ? UiTokens.TITLE_WEIGHT : UiTokens.ROW_TITLE_WEIGHT);
             if (navLayoutMode.isRail()) applyRailTabShape(tab, active);
             if (navLayoutMode.isRail()) {
-                tab.setText(navLayoutMode.showsAllLabels() ? getString(labelForTab(id)) : "");
+                tab.setText(railShowsLabels() ? getString(labelForTab(id)) : "");
             } else if (compactNavTabs) {
                 tab.setText(id == activeTabId ? getString(labelForTab(id)) : "");
             }
@@ -1378,6 +1450,7 @@ public class BaseActivity extends AppCompatActivity {
 
         applyEdgeToEdgeInsets(navShapeView, navContentView, rail);
         logNavDecision();
+        applyRailWidth();
         setupBaseNavBar();
         installNavDebugBounds();
         // The content was already visible, so it must not replay its arrival animation; only the
