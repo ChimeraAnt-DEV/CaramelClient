@@ -196,6 +196,8 @@ Every push to `main` and every pull request triggers [`.github/workflows/build.y
 
 Full user guide (English and 简体中文), developer docs, and the Preloader API reference live under [`docs/`](docs/) — start at [`docs/index.md`](docs/index.md).
 
+Project pages: [Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Device compatibility](docs/COMPATIBILITY.md) · [Accessibility](docs/ACCESSIBILITY.md).
+
 ---
 
 ## Contribution Guidelines

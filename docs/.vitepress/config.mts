@@ -19,6 +19,7 @@ function buildEnglishSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
       items: [
         { text: "Native Mod Quick Start", link: `${localePrefix}guide/developer` },
         { text: "Build from Source", link: `${localePrefix}guide/build` },
+        { text: "Architecture", link: `${localePrefix}ARCHITECTURE` },
         { text: "Mod Entry API", link: `${localePrefix}api/mod` },
         { text: "Mod Menu API", link: `${localePrefix}api/mod-menu` },
         { text: "Config API", link: `${localePrefix}api/config` },
@@ -77,6 +78,7 @@ function buildEnglishNav(): DefaultTheme.NavItem[] {
         { text: "Native Mod Quick Start", link: "/guide/developer" },
         { text: "API Reference", link: "/api/mod" },
         { text: "Build from Source", link: "/guide/build" },
+        { text: "Architecture", link: "/ARCHITECTURE" },
       ],
     },
     { text: "Privacy Policy", link: "/privacy-policy" },
