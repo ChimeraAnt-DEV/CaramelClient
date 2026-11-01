@@ -98,6 +98,26 @@ public class NavShellResourcesTest {
     }
 
     @Test
+    public void theRailFoldControlStartsHiddenAndIsATouchTarget() throws IOException {
+        // Item 85. The control is shown only on an expanded rail, so it must be declared gone (the
+        // first frame on a phone must not flash it) and must meet the 48dp target when it is shown.
+        String rail = read("app/src/main/res/layout/nav_rail.xml");
+        Matcher m = Pattern.compile(
+                "<ImageView[^>]*@\\+id/nav_rail_toggle.*?/>", Pattern.DOTALL).matcher(rail);
+        assertTrue("nav_rail_toggle missing from nav_rail.xml", m.find());
+        String view = m.group();
+        assertTrue("the rail fold control must start hidden, because only an expanded rail offers it",
+                view.contains("android:visibility=\"gone\""));
+        Matcher w = Pattern.compile("android:layout_width=\"([0-9]+)dp\"").matcher(view);
+        Matcher h = Pattern.compile("android:layout_height=\"([0-9]+)dp\"").matcher(view);
+        assertTrue("the rail fold control has no explicit size", w.find() && h.find());
+        assertTrue("the rail fold control must be a 48dp touch target",
+                Integer.parseInt(w.group(1)) >= 48 && Integer.parseInt(h.group(1)) >= 48);
+        assertTrue("the rail fold control needs a content description so it is not an unlabelled "
+                + "icon-only button", view.contains("android:contentDescription="));
+    }
+
+    @Test
     public void theBackButtonIsATouchTarget() throws IOException {
         for (String layout : new String[]{"nav_bar.xml", "nav_rail.xml"}) {
             String xml = read("app/src/main/res/layout/" + layout);

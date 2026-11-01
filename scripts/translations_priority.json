@@ -201,7 +201,9 @@
   "setup_compat_perm_blocking": "Denegado; concede el acceso para poder escribir los datos del juego",
   "setup_compat_fix": "Solucionar",
   "backup_retention_title": "Retención de copias de instancia",
-  "backup_retention_desc": "Cuántas copias se conservan por instancia. Las copias más antiguas que superen este número se eliminan automáticamente tras cada nueva copia."
+  "backup_retention_desc": "Cuántas copias se conservan por instancia. Las copias más antiguas que superen este número se eliminan automáticamente tras cada nueva copia.",
+  "nav_rail_collapse": "Contraer barra",
+  "nav_rail_expand": "Expandir barra"
  },
  "fr": {
   "nav_back": "Retour",
@@ -405,7 +407,9 @@
   "setup_compat_perm_blocking": "Refusé ; accordez l'accès pour écrire les données du jeu",
   "setup_compat_fix": "Corriger",
   "backup_retention_title": "Conservation des sauvegardes d'instance",
-  "backup_retention_desc": "Combien de sauvegardes conserver par instance. Les sauvegardes plus anciennes que ce nombre sont supprimées automatiquement après chaque nouvelle sauvegarde."
+  "backup_retention_desc": "Combien de sauvegardes conserver par instance. Les sauvegardes plus anciennes que ce nombre sont supprimées automatiquement après chaque nouvelle sauvegarde.",
+  "nav_rail_collapse": "Réduire le rail",
+  "nav_rail_expand": "Développer le rail"
  },
  "hi": {
   "nav_back": "वापस",
@@ -609,7 +613,9 @@
   "setup_compat_perm_blocking": "अस्वीकृत; गेम डेटा लिखने के लिए पहुँच दें",
   "setup_compat_fix": "ठीक करें",
   "backup_retention_title": "इंस्टेंस बैकअप रिटेंशन",
-  "backup_retention_desc": "प्रति इंस्टेंस कितने बैकअप रखें। इस संख्या से पुराने बैकअप हर नए बैकअप के बाद स्वचालित रूप से हटा दिए जाते हैं।"
+  "backup_retention_desc": "प्रति इंस्टेंस कितने बैकअप रखें। इस संख्या से पुराने बैकअप हर नए बैकअप के बाद स्वचालित रूप से हटा दिए जाते हैं।",
+  "nav_rail_collapse": "रेल छोटा करें",
+  "nav_rail_expand": "रेल बड़ा करें"
  },
  "id": {
   "nav_back": "Kembali",
@@ -813,7 +819,9 @@
   "setup_compat_perm_blocking": "Ditolak; berikan akses agar data game dapat ditulis",
   "setup_compat_fix": "Perbaiki",
   "backup_retention_title": "Retensi cadangan instans",
-  "backup_retention_desc": "Berapa banyak cadangan yang disimpan per instans. Cadangan lama yang melebihi jumlah ini dihapus otomatis setelah setiap cadangan baru."
+  "backup_retention_desc": "Berapa banyak cadangan yang disimpan per instans. Cadangan lama yang melebihi jumlah ini dihapus otomatis setelah setiap cadangan baru.",
+  "nav_rail_collapse": "Ciutkan rel",
+  "nav_rail_expand": "Bentangkan rel"
  },
  "ja": {
   "nav_back": "戻る",
@@ -1017,7 +1025,9 @@
   "setup_compat_perm_blocking": "拒否されました。ゲームデータを書き込むにはアクセスを許可してください",
   "setup_compat_fix": "修正",
   "backup_retention_title": "インスタンスバックアップの保存件数",
-  "backup_retention_desc": "インスタンスごとに保存するバックアップの件数。この件数を超えた古いバックアップは、新しいバックアップごとに自動的に削除されます。"
+  "backup_retention_desc": "インスタンスごとに保存するバックアップの件数。この件数を超えた古いバックアップは、新しいバックアップごとに自動的に削除されます。",
+  "nav_rail_collapse": "レールを折りたたむ",
+  "nav_rail_expand": "レールを展開"
  },
  "pt": {
   "nav_back": "Voltar",
@@ -1221,7 +1231,9 @@
   "setup_compat_perm_blocking": "Negado; conceda acesso para que os dados do jogo possam ser gravados",
   "setup_compat_fix": "Corrigir",
   "backup_retention_title": "Retenção de backups de instância",
-  "backup_retention_desc": "Quantos backups manter por instância. Backups mais antigos que este número são excluídos automaticamente após cada novo backup."
+  "backup_retention_desc": "Quantos backups manter por instância. Backups mais antigos que este número são excluídos automaticamente após cada novo backup.",
+  "nav_rail_collapse": "Recolher a barra",
+  "nav_rail_expand": "Expandir a barra"
  },
  "ru": {
   "nav_back": "Назад",
@@ -1425,7 +1437,9 @@
   "setup_compat_perm_blocking": "Отклонён; предоставьте доступ, чтобы записывать данные игры",
   "setup_compat_fix": "Исправить",
   "backup_retention_title": "Хранение резервных копий экземпляра",
-  "backup_retention_desc": "Сколько резервных копий хранить для каждого экземпляра. Копии старше этого числа автоматически удаляются после каждой новой копии."
+  "backup_retention_desc": "Сколько резервных копий хранить для каждого экземпляра. Копии старше этого числа автоматически удаляются после каждой новой копии.",
+  "nav_rail_collapse": "Свернуть панель",
+  "nav_rail_expand": "Развернуть панель"
  },
  "tr": {
   "nav_back": "Geri",
@@ -1629,7 +1643,9 @@
   "setup_compat_perm_blocking": "Reddedildi; oyun verisi yazılabilmesi için erişim verin",
   "setup_compat_fix": "Düzelt",
   "backup_retention_title": "Örnek yedek saklama",
-  "backup_retention_desc": "Her örnek için kaç yedek saklanacağı. Bu sayıyı aşan eski yedekler her yeni yedekten sonra otomatik olarak silinir."
+  "backup_retention_desc": "Her örnek için kaç yedek saklanacağı. Bu sayıyı aşan eski yedekler her yeni yedekten sonra otomatik olarak silinir.",
+  "nav_rail_collapse": "Rayı daralt",
+  "nav_rail_expand": "Rayı genişlet"
  },
  "vi": {
   "nav_back": "Quay lại",
@@ -1833,7 +1849,9 @@
   "setup_compat_perm_blocking": "Bị từ chối; hãy cấp quyền để ghi dữ liệu game",
   "setup_compat_fix": "Khắc phục",
   "backup_retention_title": "Giữ bản sao lưu phiên bản",
-  "backup_retention_desc": "Số bản sao lưu giữ cho mỗi phiên bản. Các bản cũ hơn số này sẽ tự động bị xóa sau mỗi lần sao lưu mới."
+  "backup_retention_desc": "Số bản sao lưu giữ cho mỗi phiên bản. Các bản cũ hơn số này sẽ tự động bị xóa sau mỗi lần sao lưu mới.",
+  "nav_rail_collapse": "Thu gọn thanh",
+  "nav_rail_expand": "Mở rộng thanh"
  },
  "zh-rCN": {
   "nav_back": "返回",
@@ -2037,6 +2055,8 @@
   "setup_compat_perm_blocking": "已拒绝；请授予权限以便写入游戏数据",
   "setup_compat_fix": "修复",
   "backup_retention_title": "实例备份保留",
-  "backup_retention_desc": "每个实例保留多少份备份。超过此数量的旧备份会在每次新备份后自动删除。"
+  "backup_retention_desc": "每个实例保留多少份备份。超过此数量的旧备份会在每次新备份后自动删除。",
+  "nav_rail_collapse": "收起侧栏",
+  "nav_rail_expand": "展开侧栏"
  }
 }

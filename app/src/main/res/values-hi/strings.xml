@@ -1236,4 +1236,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_import_link_confirm_title">इस पैकेज को आयात करें?</string>
     <string name="mod_import_link_confirm_go">डाउनलोड और आयात करें</string>
     <string name="mod_import_link_done_digest">%1$s आयात किया गया।\n%2$s</string>
+    <string name="nav_rail_collapse">रेल छोटा करें</string>
+    <string name="nav_rail_expand">रेल बड़ा करें</string>
 </resources>

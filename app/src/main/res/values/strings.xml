@@ -1351,6 +1351,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="nav_skins">Skins</string>
     <string name="nav_customize">Customize</string>
     <string name="nav_back">Back</string>
+    <!-- Item 85: the wide rail can be folded to icons only; the control names the action it
+         performs, not the state, so it reads correctly to a screen reader. -->
+    <string name="nav_rail_collapse">Collapse rail</string>
+    <string name="nav_rail_expand">Expand rail</string>
     <string name="nav_logo_home">GlowberryClient home</string>
     <string name="customize_tab_controller">Controller</string>
     <string name="customize_tab_skins">Skins</string>

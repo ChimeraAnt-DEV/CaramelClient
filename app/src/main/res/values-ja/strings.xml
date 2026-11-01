@@ -1205,4 +1205,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_import_link_confirm_title">このパッケージをインポートしますか？</string>
     <string name="mod_import_link_confirm_go">ダウンロードしてインポート</string>
     <string name="mod_import_link_done_digest">%1$s をインポートしました。\n%2$s</string>
+    <string name="nav_rail_collapse">レールを折りたたむ</string>
+    <string name="nav_rail_expand">レールを展開</string>
 </resources>

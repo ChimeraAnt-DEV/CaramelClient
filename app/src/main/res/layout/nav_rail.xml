@@ -56,6 +56,25 @@
             android:layout_marginTop="@dimen/space_1"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_glowberry_logo" />
+
+        <!--
+            Item 85: on an expanded rail the user can fold the labels away and keep the icons.
+            Hidden unless the rail actually shows labels (BaseActivity gates it on
+            NavRailPolicy.canCollapse), so it is never a control that does nothing.
+        -->
+        <ImageView
+            android:id="@+id/nav_rail_toggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/nav_rail_collapse"
+            android:focusable="true"
+            android:padding="@dimen/space_2"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron_right"
+            android:visibility="gone"
+            app:tint="@color/text_secondary" />
     </LinearLayout>
 
     <!-- The wordmark is a rail-only extra: the bar hides it on a narrow window, and the rail has

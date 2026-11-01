@@ -1238,4 +1238,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="mod_import_link_confirm_title">Nhập gói này?</string>
     <string name="mod_import_link_confirm_go">Tải xuống và nhập</string>
     <string name="mod_import_link_done_digest">Đã nhập %1$s.\n%2$s</string>
+    <string name="nav_rail_collapse">Thu gọn thanh</string>
+    <string name="nav_rail_expand">Mở rộng thanh</string>
 </resources>

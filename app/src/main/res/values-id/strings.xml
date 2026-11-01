@@ -1232,4 +1232,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_import_link_confirm_title">Impor paket ini?</string>
     <string name="mod_import_link_confirm_go">Unduh dan impor</string>
     <string name="mod_import_link_done_digest">%1$s diimpor.\n%2$s</string>
+    <string name="nav_rail_collapse">Ciutkan rel</string>
+    <string name="nav_rail_expand">Bentangkan rel</string>
 </resources>

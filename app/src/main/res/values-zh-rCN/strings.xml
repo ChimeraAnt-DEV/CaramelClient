@@ -1229,4 +1229,6 @@
     <string name="mod_import_link_confirm_title">导入此包？</string>
     <string name="mod_import_link_confirm_go">下载并导入</string>
     <string name="mod_import_link_done_digest">已导入 %1$s。\n%2$s</string>
+    <string name="nav_rail_collapse">收起侧栏</string>
+    <string name="nav_rail_expand">展开侧栏</string>
 </resources>

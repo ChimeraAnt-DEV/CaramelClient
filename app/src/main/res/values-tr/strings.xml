@@ -1235,4 +1235,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_import_link_confirm_title">Bu paket içe aktarılsın mı?</string>
     <string name="mod_import_link_confirm_go">İndir ve içe aktar</string>
     <string name="mod_import_link_done_digest">%1$s içe aktarıldı.\n%2$s</string>
+    <string name="nav_rail_collapse">Rayı daralt</string>
+    <string name="nav_rail_expand">Rayı genişlet</string>
 </resources>

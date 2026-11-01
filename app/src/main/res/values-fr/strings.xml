@@ -1208,4 +1208,6 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_import_link_confirm_title">Importer ce paquet ?</string>
     <string name="mod_import_link_confirm_go">Télécharger et importer</string>
     <string name="mod_import_link_done_digest">%1$s importé.\n%2$s</string>
+    <string name="nav_rail_collapse">Réduire le rail</string>
+    <string name="nav_rail_expand">Développer le rail</string>
 </resources>
