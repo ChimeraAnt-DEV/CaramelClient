@@ -24,6 +24,8 @@ import org.chimeramc.client.util.AtomicFiles
 import org.chimeramc.client.core.minecraft.LibraryHashManifest
 import org.chimeramc.client.core.minecraft.ExtractionSpaceBudget
 import org.chimeramc.client.core.minecraft.ExtractionControl
+import org.chimeramc.client.core.minecraft.LibraryNames
+import org.chimeramc.client.core.minecraft.LibraryLoadPlan
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -997,34 +999,32 @@ class GamePackageManager private constructor(
         excludeReasons: Map<String, String> = emptyMap()
     ): List<LibraryLoadResult> {
         val deviceSupports64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
-        val allLibs = (requiredLibs + systemLoadedLibs).filterNot { lib ->
-            // PlayFab/maesdk are arm64-only closed-source prebuilts; on a 32-bit
-            // device they aren't bundled, so exclude them up front instead of letting
-            // System.loadLibrary fail mid-launch.
-            systemLoadedLibs.contains(lib) && !deviceSupports64Bit
-        }
-        val loadableLibs = allLibs.filterNot { lib ->
-            val libName = normalizeLibraryName(lib)
-            excludeLibs.contains(libName) || excludeLibs.contains(lib)
-        }
-        val total = loadableLibs.size.coerceAtLeast(1)
-        var loadIndex = 0
+        val allLibs = requiredLibs + systemLoadedLibs
+        // The plan (which libraries load, which are skipped and why, and the progress arithmetic)
+        // is a pure class so the rules are testable without a device (item 301).
+        val plan = LibraryLoadPlan.plan(
+            allLibs.asList(), systemLoadedLibs.asList(), excludeLibs, deviceSupports64Bit
+        )
+        val skips = LibraryLoadPlan.skipReasons(
+            allLibs.asList(), systemLoadedLibs.asList(), excludeLibs, deviceSupports64Bit, excludeReasons
+        )
         val results = mutableListOf<LibraryLoadResult>()
 
-        allLibs.forEach { lib ->
-            val libName = normalizeLibraryName(lib)
-            if (excludeLibs.contains(libName) || excludeLibs.contains(lib)) {
-                val reason = excludeReasons[libName]
-                    ?: excludeReasons[lib]
-                    ?: "not required in this launch path"
+        for (lib in allLibs) {
+            val skipReason = skips[lib]
+            if (skipReason != null) {
                 listener?.onLog("Skipped native library: $lib")
-                trace?.mark("System.load skipped", "$lib - $reason")
-                return@forEach
+                trace?.mark("System.load skipped", "$lib - $skipReason")
             }
+        }
 
-            loadIndex += 1
-            val progress = progressStart + ((progressEnd - progressStart) * (loadIndex - 1) / total)
-            listener?.onProgress(progress, "Loading Minecraft", "$loadIndex/$total")
+        for (step in plan) {
+            val lib = step.name
+            val libName = normalizeLibraryName(lib)
+            val progress = LibraryLoadPlan.progressFor(
+                step.index, step.total, progressStart, progressEnd
+            )
+            listener?.onProgress(progress, "Loading Minecraft", "${step.index}/${step.total}")
             listener?.onLog("Loading native library: $lib")
             trace?.mark("System.load started", lib)
 
@@ -1046,13 +1046,9 @@ class GamePackageManager private constructor(
         return results
     }
 
-    private fun toLibraryFileName(name: String): String {
-        return if (name.startsWith("lib") && name.endsWith(".so")) name else "lib${normalizeLibraryName(name)}.so"
-    }
+    private fun toLibraryFileName(name: String): String = LibraryNames.fileName(name)
 
-    private fun normalizeLibraryName(name: String): String {
-        return name.removePrefix("lib").removeSuffix(".so")
-    }
+    private fun normalizeLibraryName(name: String): String = LibraryNames.normalize(name)
 
     private fun elapsedSince(startedAt: Long): Long {
         return SystemClock.elapsedRealtime() - startedAt
