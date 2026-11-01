@@ -55,6 +55,9 @@ public final class AppExecutors {
     private static final ScheduledExecutorService TIMERS =
             Executors.newScheduledThreadPool(1, factory("timer"));
 
+    /** CPU-bound work: text measurement, layout prep. Sized to the device's cores, capped low. */
+    private static final ThreadPoolExecutor COMPUTE = computePool();
+
     private AppExecutors() {
     }
 
@@ -79,6 +82,23 @@ public final class AppExecutors {
     /** A pool for one serialised stream of work that also needs delays. */
     public static ScheduledExecutorService scheduled(String name) {
         return Executors.newSingleThreadScheduledExecutor(factory(name));
+    }
+
+    /**
+     * Submits {@code work} to the CPU pool and returns its future, or {@code null} when the pool is
+     * shut down.
+     *
+     * <p>This is the compute side of {@link org.chimeramc.client.util.AsyncText}: text measurement
+     * runs here so a long description does not lay out on the frame that binds it. Returning null
+     * rather than throwing lets the caller fall back to doing the work inline.
+     */
+    public static <T> java.util.concurrent.Future<T> submitCompute(java.util.concurrent.Callable<T> work) {
+        if (work == null) return null;
+        try {
+            return COMPUTE.submit(work);
+        } catch (java.util.concurrent.RejectedExecutionException e) {
+            return null;
+        }
     }
 
     /** The shared timer, for a one-off delay or a repeating tick that has no owner of its own. */
@@ -135,6 +155,11 @@ public final class AppExecutors {
                 current.setName(previous);
             }
         };
+    }
+
+    private static ThreadPoolExecutor computePool() {
+        int threads = Math.max(1, Math.min(2, Runtime.getRuntime().availableProcessors() - 1));
+        return bounded("compute", threads);
     }
 
     private static ThreadPoolExecutor bounded(String prefix, int threads) {

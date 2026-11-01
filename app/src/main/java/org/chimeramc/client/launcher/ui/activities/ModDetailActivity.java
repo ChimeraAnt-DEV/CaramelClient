@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.AsyncText;
 import org.chimeramc.client.core.mods.Mod;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.ui.views.MainViewModel;
@@ -158,7 +159,9 @@ public class ModDetailActivity extends BaseActivity {
                 modDescriptionText.setVisibility(View.GONE);
             } else {
                 modDescriptionText.setVisibility(View.VISIBLE);
-                modDescriptionText.setText(description);
+                // Item 127: a mod description can be several paragraphs; measure it off the main
+                // thread so binding it does not lay the whole thing out on this frame.
+                AsyncText.apply(modDescriptionText, description);
             }
 
             versionRow.set(R.string.mod_version_label, version);
