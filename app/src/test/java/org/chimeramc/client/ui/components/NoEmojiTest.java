@@ -155,6 +155,7 @@ public class NoEmojiTest {
         if (Files.exists(docs)) {
             try (Stream<Path> walk = Files.walk(docs)) {
                 walk.filter(Files::isRegularFile)
+                        .filter(p -> !isVendoredOrGenerated(p))
                         .filter(p -> p.toString().endsWith(".md"))
                         .forEach(out::add);
             }
@@ -190,6 +191,7 @@ public class NoEmojiTest {
         List<Path> out = new ArrayList<>();
         try (Stream<Path> walk = Files.walk(root)) {
             walk.filter(Files::isRegularFile)
+                    .filter(p -> !isVendoredOrGenerated(p))
                     .filter(p -> p.toString().endsWith(".java") || p.toString().endsWith(".kt"))
                     .forEach(out::add);
         }
@@ -201,10 +203,31 @@ public class NoEmojiTest {
         List<Path> out = new ArrayList<>();
         try (Stream<Path> walk = Files.walk(root)) {
             walk.filter(Files::isRegularFile)
+                    .filter(p -> !isVendoredOrGenerated(p))
                     .filter(p -> p.toString().endsWith(".xml"))
                     .forEach(out::add);
         }
         return out;
+    }
+
+    /**
+     * True when a path is third-party or generated rather than first-party content.
+     *
+     * <p>The docs site pulls its VitePress theme and every Markdown plugin into {@code
+     * docs/node_modules}, and Gradle writes {@code build/} and the CMake {@code .cxx} cache. Those
+     * trees are full of the authors' own emoji, and none of it is content this repository ships to a
+     * user, so scanning them reports a failure for someone else's README. The gate exists to keep
+     * <em>this</em> project clean, so vendored and generated trees are skipped by name.
+     */
+    private static boolean isVendoredOrGenerated(Path p) {
+        for (Path part : p) {
+            String name = part.toString();
+            if (name.equals("node_modules") || name.equals("build")
+                    || name.equals(".cxx") || name.equals("dist")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static Path resolve(String relativePath) throws IOException {
