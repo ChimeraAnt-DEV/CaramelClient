@@ -82,4 +82,17 @@ public class RadialWheelRoutingTest {
         assertNotNull(ModMenuOverlay.ModuleFilter.valueOf("ALL"));
         assertNotNull(ModMenuOverlay.ModuleFilter.valueOf("HUD"));
     }
+
+    @Test
+    public void theCustomizeChooserOffersTheModMenuPagesItOpens() {
+        // 13.1: the chooser's two buttons must name the pages they lead to. Building each button
+        // from the page itself is what keeps the icon and the label in step with the tab, so the
+        // test pins the two pages rather than a loose icon choice.
+        assertTrue("the settings page has a title", ModMenuPage.SETTINGS.getTitleRes() != 0);
+        assertTrue("the settings page has an icon", ModMenuPage.SETTINGS.getIconRes() != 0);
+        assertTrue("the cosmetics page has a title", ModMenuPage.COSMETICS.getTitleRes() != 0);
+        assertTrue("the cosmetics page has an icon", ModMenuPage.COSMETICS.getIconRes() != 0);
+        assertFalse("the two choices are distinct pages",
+                ModMenuPage.SETTINGS == ModMenuPage.COSMETICS);
+    }
 }

@@ -10,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.animation.DynamicAnim;
-import org.chimeramc.client.ui.components.UiIconView;
-import org.chimeramc.client.ui.components.UiIcons;
 import org.chimeramc.client.ui.components.UiTokens;
 
 /**
@@ -24,8 +23,9 @@ import org.chimeramc.client.ui.components.UiTokens;
  *
  * <p>The sector asks a question rather than picking for the player: a small rounded panel, lifted
  * above the screen centre, with a header and two icon buttons — the Mod Menu's settings page and the
- * cosmetics wardrobe. Each button carries the same glyph the Mod Menu uses for that page, so the
- * choice is recognisable from the wheel alone.
+ * cosmetics wardrobe. Each button carries the exact drawable the Mod Menu's own rail uses for that
+ * page ({@link ModMenuPage#getIconRes()}) and that page's title, so the choice is recognisable from
+ * the wheel alone and cannot drift from the tab it opens.
  *
  * <p>It is a plain {@link Dialog} rather than an overlay window, so it inherits the standard
  * back-dismiss and dim behaviour and needs no manual attach/detach bookkeeping. The two callbacks
@@ -97,19 +97,17 @@ public class CustomizeChooser extends Dialog {
         buttons.setOrientation(LinearLayout.HORIZONTAL);
         buttons.setGravity(Gravity.CENTER);
 
-        buttons.addView(choiceButton(R.string.wheel_customize_mod_settings, UiIcons.Icon.GEAR,
-                accent, () -> {
-                    dismiss();
-                    if (onSettings != null) onSettings.run();
-                }));
+        buttons.addView(choiceButton(ModMenuPage.SETTINGS, accent, () -> {
+            dismiss();
+            if (onSettings != null) onSettings.run();
+        }));
         LinearLayout.LayoutParams cosmeticsParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         cosmeticsParams.leftMargin = dp(UiTokens.SPACE_3);
-        View cosmetics = choiceButton(R.string.wheel_customize_cosmetics, UiIcons.Icon.HANGER,
-                accent, () -> {
-                    dismiss();
-                    if (onCosmetics != null) onCosmetics.run();
-                });
+        View cosmetics = choiceButton(ModMenuPage.COSMETICS, accent, () -> {
+            dismiss();
+            if (onCosmetics != null) onCosmetics.run();
+        });
         cosmetics.setLayoutParams(cosmeticsParams);
         buttons.addView(cosmetics);
 
@@ -117,7 +115,14 @@ public class CustomizeChooser extends Dialog {
         return root;
     }
 
-    private View choiceButton(int labelRes, UiIcons.Icon icon, int accent, Runnable action) {
+    /**
+     * One choice, built from a Mod Menu page so its icon and label are the page's own.
+     *
+     * <p>Taking the {@link ModMenuPage} rather than a loose icon keeps the two in step: renaming a
+     * page or swapping its drawable updates this chooser for free, which is the property that stops
+     * the wheel teaching a glyph the tab no longer uses.
+     */
+    private View choiceButton(ModMenuPage page, int accent, Runnable action) {
         LinearLayout button = new LinearLayout(activity);
         button.setOrientation(LinearLayout.VERTICAL);
         button.setGravity(Gravity.CENTER);
@@ -131,14 +136,14 @@ public class CustomizeChooser extends Dialog {
         bg.setStroke(Math.max(1, dp(1)), accent);
         button.setBackground(bg);
 
-        UiIconView iconView = new UiIconView(activity);
+        ImageView iconView = new ImageView(activity);
         int iconSize = dp(28);
         button.addView(iconView, new LinearLayout.LayoutParams(iconSize, iconSize));
-        iconView.setIcon(icon);
-        iconView.setIconColor(accent);
+        iconView.setImageResource(page.getIconRes());
+        iconView.setImageTintList(android.content.res.ColorStateList.valueOf(accent));
 
         TextView label = new TextView(activity);
-        label.setText(labelRes);
+        label.setText(page.getTitleRes());
         label.setTextColor(UiTokens.TEXT_PRIMARY);
         label.setTextSize(12f);
         label.setGravity(Gravity.CENTER_HORIZONTAL);
