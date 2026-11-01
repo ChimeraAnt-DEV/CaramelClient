@@ -79,5 +79,5 @@ app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/gameversionselect/Ult
 app/src/main/java/org/chimeramc/client/launcher/ui/fragments/SkinsSettingsFragment.java 10
 app/src/main/java/org/chimeramc/client/launcher/util/PersonalizationManager.java 5
 app/src/main/java/org/chimeramc/client/ui/fragments/InstallationsFragment.java 19
-app/src/main/java/org/chimeramc/client/ui/fragments/InstancesFragment.java 18
+app/src/main/java/org/chimeramc/client/ui/fragments/InstancesFragment.java 10
 app/src/main/java/org/chimeramc/client/ui/fragments/ReplayFragment.java 1

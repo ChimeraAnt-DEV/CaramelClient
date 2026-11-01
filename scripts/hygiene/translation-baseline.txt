@@ -543,7 +543,6 @@ values-es:instance_shortcut_missing
 values-es:instance_shortcut_name
 values-es:instance_shortcut_not_supported
 values-es:instance_shortcut_title
-values-es:instance_size_on_disk
 values-es:javabridge_ai_ported_badge
 values-es:javabridge_ai_ported_badge_desc
 values-es:javabridge_cancel
@@ -620,10 +619,6 @@ values-es:launch_toggle_replay
 values-es:launch_toggle_voice
 values-es:launch_voice_status_off
 values-es:launch_voice_status_on
-values-es:launch_watchdog_dead
-values-es:launch_watchdog_open_logs
-values-es:launch_watchdog_restart_without_mods
-values-es:launch_watchdog_stalled
 values-es:logcat_copied
 values-es:logcat_copy
 values-es:logcat_no_log_to_share
@@ -944,8 +939,6 @@ values-es:performance_preset_balanced
 values-es:performance_preset_battery
 values-es:performance_preset_note
 values-es:performance_preset_performance
-values-es:performance_preset_thermal_apply
-values-es:performance_preset_thermal_message
 values-es:performance_preset_title
 values-es:playtime_label
 values-es:profile_sheet_description
@@ -1827,7 +1820,6 @@ values-fr:instance_shortcut_missing
 values-fr:instance_shortcut_name
 values-fr:instance_shortcut_not_supported
 values-fr:instance_shortcut_title
-values-fr:instance_size_on_disk
 values-fr:javabridge_ai_ported_badge
 values-fr:javabridge_ai_ported_badge_desc
 values-fr:javabridge_cancel
@@ -1904,10 +1896,6 @@ values-fr:launch_toggle_replay
 values-fr:launch_toggle_voice
 values-fr:launch_voice_status_off
 values-fr:launch_voice_status_on
-values-fr:launch_watchdog_dead
-values-fr:launch_watchdog_open_logs
-values-fr:launch_watchdog_restart_without_mods
-values-fr:launch_watchdog_stalled
 values-fr:logcat_copied
 values-fr:logcat_copy
 values-fr:logcat_no_log_to_share
@@ -2228,8 +2216,6 @@ values-fr:performance_preset_balanced
 values-fr:performance_preset_battery
 values-fr:performance_preset_note
 values-fr:performance_preset_performance
-values-fr:performance_preset_thermal_apply
-values-fr:performance_preset_thermal_message
 values-fr:performance_preset_title
 values-fr:playtime_label
 values-fr:profile_sheet_description
@@ -3111,7 +3097,6 @@ values-hi:instance_shortcut_missing
 values-hi:instance_shortcut_name
 values-hi:instance_shortcut_not_supported
 values-hi:instance_shortcut_title
-values-hi:instance_size_on_disk
 values-hi:javabridge_ai_ported_badge
 values-hi:javabridge_ai_ported_badge_desc
 values-hi:javabridge_cancel
@@ -3188,10 +3173,6 @@ values-hi:launch_toggle_replay
 values-hi:launch_toggle_voice
 values-hi:launch_voice_status_off
 values-hi:launch_voice_status_on
-values-hi:launch_watchdog_dead
-values-hi:launch_watchdog_open_logs
-values-hi:launch_watchdog_restart_without_mods
-values-hi:launch_watchdog_stalled
 values-hi:logcat_copied
 values-hi:logcat_copy
 values-hi:logcat_no_log_to_share
@@ -3512,8 +3493,6 @@ values-hi:performance_preset_balanced
 values-hi:performance_preset_battery
 values-hi:performance_preset_note
 values-hi:performance_preset_performance
-values-hi:performance_preset_thermal_apply
-values-hi:performance_preset_thermal_message
 values-hi:performance_preset_title
 values-hi:playtime_label
 values-hi:profile_sheet_description
@@ -4395,7 +4374,6 @@ values-id:instance_shortcut_missing
 values-id:instance_shortcut_name
 values-id:instance_shortcut_not_supported
 values-id:instance_shortcut_title
-values-id:instance_size_on_disk
 values-id:javabridge_ai_ported_badge
 values-id:javabridge_ai_ported_badge_desc
 values-id:javabridge_cancel
@@ -4472,10 +4450,6 @@ values-id:launch_toggle_replay
 values-id:launch_toggle_voice
 values-id:launch_voice_status_off
 values-id:launch_voice_status_on
-values-id:launch_watchdog_dead
-values-id:launch_watchdog_open_logs
-values-id:launch_watchdog_restart_without_mods
-values-id:launch_watchdog_stalled
 values-id:logcat_copied
 values-id:logcat_copy
 values-id:logcat_no_log_to_share
@@ -4796,8 +4770,6 @@ values-id:performance_preset_balanced
 values-id:performance_preset_battery
 values-id:performance_preset_note
 values-id:performance_preset_performance
-values-id:performance_preset_thermal_apply
-values-id:performance_preset_thermal_message
 values-id:performance_preset_title
 values-id:playtime_label
 values-id:profile_sheet_description
@@ -5679,7 +5651,6 @@ values-ja:instance_shortcut_missing
 values-ja:instance_shortcut_name
 values-ja:instance_shortcut_not_supported
 values-ja:instance_shortcut_title
-values-ja:instance_size_on_disk
 values-ja:javabridge_ai_ported_badge
 values-ja:javabridge_ai_ported_badge_desc
 values-ja:javabridge_cancel
@@ -5756,10 +5727,6 @@ values-ja:launch_toggle_replay
 values-ja:launch_toggle_voice
 values-ja:launch_voice_status_off
 values-ja:launch_voice_status_on
-values-ja:launch_watchdog_dead
-values-ja:launch_watchdog_open_logs
-values-ja:launch_watchdog_restart_without_mods
-values-ja:launch_watchdog_stalled
 values-ja:logcat_copied
 values-ja:logcat_copy
 values-ja:logcat_no_log_to_share
@@ -6080,8 +6047,6 @@ values-ja:performance_preset_balanced
 values-ja:performance_preset_battery
 values-ja:performance_preset_note
 values-ja:performance_preset_performance
-values-ja:performance_preset_thermal_apply
-values-ja:performance_preset_thermal_message
 values-ja:performance_preset_title
 values-ja:playtime_label
 values-ja:profile_sheet_description
@@ -6963,7 +6928,6 @@ values-pt:instance_shortcut_missing
 values-pt:instance_shortcut_name
 values-pt:instance_shortcut_not_supported
 values-pt:instance_shortcut_title
-values-pt:instance_size_on_disk
 values-pt:javabridge_ai_ported_badge
 values-pt:javabridge_ai_ported_badge_desc
 values-pt:javabridge_cancel
@@ -7040,10 +7004,6 @@ values-pt:launch_toggle_replay
 values-pt:launch_toggle_voice
 values-pt:launch_voice_status_off
 values-pt:launch_voice_status_on
-values-pt:launch_watchdog_dead
-values-pt:launch_watchdog_open_logs
-values-pt:launch_watchdog_restart_without_mods
-values-pt:launch_watchdog_stalled
 values-pt:logcat_copied
 values-pt:logcat_copy
 values-pt:logcat_no_log_to_share
@@ -7364,8 +7324,6 @@ values-pt:performance_preset_balanced
 values-pt:performance_preset_battery
 values-pt:performance_preset_note
 values-pt:performance_preset_performance
-values-pt:performance_preset_thermal_apply
-values-pt:performance_preset_thermal_message
 values-pt:performance_preset_title
 values-pt:playtime_label
 values-pt:profile_sheet_description
@@ -8247,7 +8205,6 @@ values-ru:instance_shortcut_missing
 values-ru:instance_shortcut_name
 values-ru:instance_shortcut_not_supported
 values-ru:instance_shortcut_title
-values-ru:instance_size_on_disk
 values-ru:javabridge_ai_ported_badge
 values-ru:javabridge_ai_ported_badge_desc
 values-ru:javabridge_cancel
@@ -8324,10 +8281,6 @@ values-ru:launch_toggle_replay
 values-ru:launch_toggle_voice
 values-ru:launch_voice_status_off
 values-ru:launch_voice_status_on
-values-ru:launch_watchdog_dead
-values-ru:launch_watchdog_open_logs
-values-ru:launch_watchdog_restart_without_mods
-values-ru:launch_watchdog_stalled
 values-ru:logcat_copied
 values-ru:logcat_copy
 values-ru:logcat_no_log_to_share
@@ -8648,8 +8601,6 @@ values-ru:performance_preset_balanced
 values-ru:performance_preset_battery
 values-ru:performance_preset_note
 values-ru:performance_preset_performance
-values-ru:performance_preset_thermal_apply
-values-ru:performance_preset_thermal_message
 values-ru:performance_preset_title
 values-ru:playtime_label
 values-ru:profile_sheet_description
@@ -9531,7 +9482,6 @@ values-tr:instance_shortcut_missing
 values-tr:instance_shortcut_name
 values-tr:instance_shortcut_not_supported
 values-tr:instance_shortcut_title
-values-tr:instance_size_on_disk
 values-tr:javabridge_ai_ported_badge
 values-tr:javabridge_ai_ported_badge_desc
 values-tr:javabridge_cancel
@@ -9608,10 +9558,6 @@ values-tr:launch_toggle_replay
 values-tr:launch_toggle_voice
 values-tr:launch_voice_status_off
 values-tr:launch_voice_status_on
-values-tr:launch_watchdog_dead
-values-tr:launch_watchdog_open_logs
-values-tr:launch_watchdog_restart_without_mods
-values-tr:launch_watchdog_stalled
 values-tr:logcat_copied
 values-tr:logcat_copy
 values-tr:logcat_no_log_to_share
@@ -9932,8 +9878,6 @@ values-tr:performance_preset_balanced
 values-tr:performance_preset_battery
 values-tr:performance_preset_note
 values-tr:performance_preset_performance
-values-tr:performance_preset_thermal_apply
-values-tr:performance_preset_thermal_message
 values-tr:performance_preset_title
 values-tr:playtime_label
 values-tr:profile_sheet_description
@@ -10815,7 +10759,6 @@ values-vi:instance_shortcut_missing
 values-vi:instance_shortcut_name
 values-vi:instance_shortcut_not_supported
 values-vi:instance_shortcut_title
-values-vi:instance_size_on_disk
 values-vi:javabridge_ai_ported_badge
 values-vi:javabridge_ai_ported_badge_desc
 values-vi:javabridge_cancel
@@ -10892,10 +10835,6 @@ values-vi:launch_toggle_replay
 values-vi:launch_toggle_voice
 values-vi:launch_voice_status_off
 values-vi:launch_voice_status_on
-values-vi:launch_watchdog_dead
-values-vi:launch_watchdog_open_logs
-values-vi:launch_watchdog_restart_without_mods
-values-vi:launch_watchdog_stalled
 values-vi:logcat_copied
 values-vi:logcat_copy
 values-vi:logcat_no_log_to_share
@@ -11216,8 +11155,6 @@ values-vi:performance_preset_balanced
 values-vi:performance_preset_battery
 values-vi:performance_preset_note
 values-vi:performance_preset_performance
-values-vi:performance_preset_thermal_apply
-values-vi:performance_preset_thermal_message
 values-vi:performance_preset_title
 values-vi:playtime_label
 values-vi:profile_sheet_description
@@ -12097,7 +12034,6 @@ values-zh-rCN:instance_shortcut_missing
 values-zh-rCN:instance_shortcut_name
 values-zh-rCN:instance_shortcut_not_supported
 values-zh-rCN:instance_shortcut_title
-values-zh-rCN:instance_size_on_disk
 values-zh-rCN:javabridge_ai_ported_badge
 values-zh-rCN:javabridge_ai_ported_badge_desc
 values-zh-rCN:javabridge_cancel
@@ -12174,10 +12110,6 @@ values-zh-rCN:launch_toggle_replay
 values-zh-rCN:launch_toggle_voice
 values-zh-rCN:launch_voice_status_off
 values-zh-rCN:launch_voice_status_on
-values-zh-rCN:launch_watchdog_dead
-values-zh-rCN:launch_watchdog_open_logs
-values-zh-rCN:launch_watchdog_restart_without_mods
-values-zh-rCN:launch_watchdog_stalled
 values-zh-rCN:logcat_copied
 values-zh-rCN:logcat_copy
 values-zh-rCN:logcat_no_log_to_share
@@ -12497,8 +12429,6 @@ values-zh-rCN:performance_preset_balanced
 values-zh-rCN:performance_preset_battery
 values-zh-rCN:performance_preset_note
 values-zh-rCN:performance_preset_performance
-values-zh-rCN:performance_preset_thermal_apply
-values-zh-rCN:performance_preset_thermal_message
 values-zh-rCN:performance_preset_title
 values-zh-rCN:playtime_label
 values-zh-rCN:profile_sheet_description

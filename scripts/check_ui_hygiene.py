@@ -124,6 +124,27 @@ def compare(name: str, current: list[str], label: str) -> list[str]:
     return new
 
 
+def compare_findviewbyid(current: list[str]) -> list[str]:
+    """The findViewById budget is a count per file, so a *lower* count is progress, not a new
+    offender. Comparing the raw lines treats "InstancesFragment 18" becoming "InstancesFragment
+    10" as a new entry, which would make every conversion fail the gate that exists to encourage
+    it. A file's count may only fall; a file that was not in the baseline may only appear below
+    the ceiling its entry would have had, i.e. it must be genuinely new (not a rename)."""
+    baseline: dict[str, int] = {}
+    for line in load_baseline("findviewbyid-baseline.txt"):
+        path, _, count = line.rpartition(" ")
+        if count.isdigit():
+            baseline[path] = int(count)
+    offenders = []
+    for line in current:
+        path, _, count = line.rpartition(" ")
+        if not count.isdigit():
+            continue
+        if int(count) > baseline.get(path, 0):
+            offenders.append(line)
+    return sorted(offenders)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--update", action="store_true",
@@ -147,7 +168,6 @@ def main() -> int:
     for name, current, label in (
         ("translation-baseline.txt", translations, "untranslated strings"),
         ("layout-literals-baseline.txt", literals, "layout literals"),
-        ("findviewbyid-baseline.txt", findviewbyid, "findViewById"),
     ):
         new = compare(name, current, label)
         if new:
@@ -157,6 +177,20 @@ def main() -> int:
                 print(f"  {entry}")
             if len(new) > 40:
                 print(f"  ... and {len(new) - 40} more")
+
+    # The findViewById budget is a per-file count, so it is compared as counts: a conversion that
+    # lowers a file's number is the point of the gate, not a new offender.
+    baseline_files = {line.rpartition(" ")[0] for line in load_baseline("findviewbyid-baseline.txt")}
+    current_files = {line.rpartition(" ")[0] for line in findviewbyid}
+    for gone in sorted(baseline_files - current_files):
+        print(f"findViewById: {gone} no longer calls findViewById "
+              f"(run with --update to retire it)")
+    new_findviewbyid = compare_findviewbyid(findviewbyid)
+    if new_findviewbyid:
+        failed = True
+        print(f"\nfindViewById: {len(new_findviewbyid)} file(s) rose above their baseline:")
+        for entry in new_findviewbyid[:40]:
+            print(f"  {entry}")
 
     if failed:
         print("\nA new offender must be fixed, marked translatable=\"false\", or added to the "
