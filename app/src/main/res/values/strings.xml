@@ -703,6 +703,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="guest_mode_title">Guest mode</string>
     <string name="guest_mode_desc">Hides mods, servers and voice chat on a shared or borrowed device. Nothing is deleted and the game still launches; turn it off to see them again.</string>
     <string name="streaming_safe_title">Streaming-safe mode</string>
+    <string name="backup_retention_title">Instance backup retention</string>
+    <string name="backup_retention_desc">How many backups to keep per instance. Older backups past this number are deleted automatically after each new backup.</string>
     <string name="streaming_safe_desc">Masks account names, world coordinates and server addresses in overlays and in copied debug info, so a stream or a screenshot does not reveal where you are or who you are.</string>
     <string name="low_input_delay_title">Low Input Delay</string>
     <string name="low_input_delay_desc">Reduces input lag the launcher controls: controller profiles use a tightened dead zone and a faster response curve so the same stick travel turns further, controller event handling does no locking, and idle overlay redraws are skipped</string>

@@ -73,11 +73,23 @@ public class InstanceBackupManager {
     private final Handler mainHandler = MainThread.handler();
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    /**
+     * Set when the user cancels a running backup or restore (item 144). The zip loops check it and
+     * abort by throwing, so a cancel stops promptly instead of waiting out a multi-gigabyte copy;
+     * the partial archive is then deleted by the existing failure path.
+     */
+    private final java.util.concurrent.atomic.AtomicBoolean cancelled =
+            new java.util.concurrent.atomic.AtomicBoolean(false);
+
     public interface BackupCallback {
         void onStarted();
         void onProgress(int progress);
         void onSuccess(String displayPath);
         void onError(String message);
+        /** Called instead of onError when the user cancelled; the partial file is already removed. */
+        default void onCancelled() {
+            onError("Cancelled");
+        }
     }
 
     public interface RestoreCallback {
@@ -85,6 +97,10 @@ public class InstanceBackupManager {
         void onProgress(int progress);
         void onSuccess(String restoredName);
         void onError(String message);
+        /** Called instead of onError when the user cancelled. */
+        default void onCancelled() {
+            onError("Cancelled");
+        }
     }
 
     public static class BackupManifest {
@@ -134,6 +150,15 @@ public class InstanceBackupManager {
         executor.shutdownNow();
     }
 
+    /** Requests cancellation of the running backup or restore. Idempotent and thread-safe. */
+    public void cancel() {
+        cancelled.set(true);
+    }
+
+    private void checkCancelled() throws IOException {
+        if (cancelled.get()) throw new IOException("Cancelled");
+    }
+
     /**
      * Submits backup work, tolerating a pool {@link #close()} has shut down.
      *
@@ -146,6 +171,7 @@ public class InstanceBackupManager {
     }
 
     public void backup(GameVersion version, BackupCallback callback) {
+        cancelled.set(false);
         if (!submit(() -> {
             postStarted(callback);
             OutputTarget target = null;
@@ -189,6 +215,17 @@ public class InstanceBackupManager {
 
                 finishOutputTarget(target, true);
                 postProgress(callback, 100, lastProgress);
+
+                // Verify the archive we just wrote before reporting success (item 144): an archive
+                // that cannot be reopened reads as a backup that exists but cannot be restored, so
+                // a silent corruption would only surface the day the player needs it. A failure
+                // here is reported as a failed backup, not a success.
+                verifyWrittenBackup(target);
+
+                // Enforce the per-instance retention now that the new backup is safely on disk, so
+                // the sweep never races the file it just wrote (item 144).
+                sweepOldBackups(manifest);
+
                 postBackupSuccess(callback, target.displayPath);
             } catch (Throwable e) {
                 // Throwable, not Exception: this handler is the only thing that dismisses the progress
@@ -197,7 +234,11 @@ public class InstanceBackupManager {
                 if (target != null) {
                     finishOutputTarget(target, false);
                 }
-                postBackupError(callback, e.getMessage());
+                if (cancelled.get()) {
+                    postBackupCancelled(callback);
+                } else {
+                    postBackupError(callback, e.getMessage());
+                }
             }
         })) {
             postBackupError(callback, "The backup manager has been shut down");
@@ -205,6 +246,7 @@ public class InstanceBackupManager {
     }
 
     public void restore(Uri backupUri, RestoreCallback callback) {
+        cancelled.set(false);
         if (!submit(() -> {
             postStarted(callback);
             File tempFile = new File(context.getCacheDir(), "instance_restore_" + System.currentTimeMillis() + ".zip");
@@ -229,7 +271,11 @@ public class InstanceBackupManager {
                 // Throwable, not Exception: this handler is the only thing that dismisses the progress
                 // dialog. An instance backup is a large zip copy, so an OutOfMemoryError is realistic.
                 Log.e(TAG, "Failed to restore instance backup", e);
-                postRestoreError(callback, e.getMessage());
+                if (cancelled.get()) {
+                    postRestoreCancelled(callback);
+                } else {
+                    postRestoreError(callback, e.getMessage());
+                }
             } finally {
                 if (tempFile.exists()) {
                     tempFile.delete();
@@ -407,6 +453,94 @@ public class InstanceBackupManager {
         }
     }
 
+    /**
+     * Reopens the archive that was just written and checks it still carries its manifest (item 144).
+     *
+     * <p>A backup that cannot be reopened is worse than no backup: it looks like success until the
+     * day it is needed. Only the file-backed target can be reopened here (a MediaStore uri is
+     * verified by its entry existing), and the check is deliberately shallow - it confirms the zip
+     * structure and the manifest entry, not every payload byte, because reading the whole archive
+     * back doubles the write cost for a large instance.
+     */
+    private void verifyWrittenBackup(OutputTarget target) throws IOException {
+        if (target == null) {
+            throw new IOException("Backup produced no output");
+        }
+        File toCheck = target.file;
+        if (toCheck == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && target.uri != null) {
+            // MediaStore: read the pending entry back through the resolver into a temp file.
+            File temp = new File(context.getCacheDir(),
+                    "verify_backup_" + System.currentTimeMillis() + BACKUP_EXTENSION);
+            try (InputStream in = context.getContentResolver().openInputStream(target.uri);
+                 OutputStream out = new FileOutputStream(temp)) {
+                if (in == null) throw new IOException("Backup archive is not readable");
+                copyStream(in, out);
+            }
+            toCheck = temp;
+        }
+        if (toCheck == null || !toCheck.isFile() || toCheck.length() <= 0L) {
+            throw new IOException("Backup archive is empty or missing");
+        }
+        try (ZipFile zipFile = new ZipFile(toCheck)) {
+            validateZipFile(zipFile);
+            BackupManifest manifest = readManifest(zipFile);
+            validateManifest(manifest);
+        }
+    }
+
+    /**
+     * Deletes backups past the configured retention for the instance that was just backed up
+     * (item 144). Never deletes the newest backup, so a retention of zero cannot wipe the only copy.
+     * Best-effort: a failure to delete is logged, not reported as a failed backup.
+     */
+    private void sweepOldBackups(BackupManifest manifest) {
+        try {
+            File dir = backupDirectory();
+            if (dir == null || !dir.isDirectory()) return;
+            File[] files = dir.listFiles();
+            if (files == null || files.length == 0) return;
+
+            List<BackupRetention.Candidate> candidates = new ArrayList<>();
+            for (File file : files) {
+                if (file == null || !file.isFile()) continue;
+                if (!BackupRetention.isManagedBackupName(file.getName())) continue;
+                BackupManifest read = readManifestIfPossible(file);
+                if (read == null) continue;
+                String key = firstNonEmpty(read.directoryName, read.profileId, "");
+                candidates.add(new BackupRetention.Candidate(file, key, read.createdAt));
+            }
+
+            int keep = org.chimeramc.client.settings.FeatureSettings.getInstance()
+                    .getBackupRetentionKeep();
+            List<File> stale = BackupRetention.selectForDeletion(candidates, keep);
+            for (File file : stale) {
+                if (file != null && file.exists() && !file.delete()) {
+                    AppLog.warnOnce(TAG, "backup-sweep",
+                            "Could not delete an old backup: " + file.getName(), null);
+                }
+            }
+        } catch (Throwable t) {
+            // Retention is housekeeping; it must never turn a good backup into a reported failure.
+            AppLog.warnOnce(TAG, "backup-sweep-failed", "Backup retention sweep failed", t);
+        }
+    }
+
+    /** Reads a backup file's manifest, or null when it is not a readable backup. */
+    private BackupManifest readManifestIfPossible(File file) {
+        try (ZipFile zipFile = new ZipFile(file)) {
+            return readManifest(zipFile);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** The folder the file-backed backups are written to, or null when MediaStore owns them. */
+    private File backupDirectory() {
+        return new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "GlowberryClient/Backups");
+    }
+
     private File getProfileRoot(GameVersion version) {
         if (version.versionDir != null) {
             return version.versionDir;
@@ -579,6 +713,7 @@ public class InstanceBackupManager {
             byte[] buffer = new byte[BUFFER_SIZE];
             int len;
             while ((len = input.read(buffer)) != -1) {
+                checkCancelled();
                 zos.write(buffer, 0, len);
                 copiedBytes[0] += len;
                 postProgressFromBytes(callback, copiedBytes[0], totalBytes, 2, 99, lastProgress);
@@ -833,6 +968,7 @@ public class InstanceBackupManager {
             byte[] buffer = new byte[BUFFER_SIZE];
             int len;
             while ((len = input.read(buffer)) != -1) {
+                checkCancelled();
                 output.write(buffer, 0, len);
                 copiedBytes[0] += len;
                 postProgressFromBytes(callback, copiedBytes[0], totalBytes, 10, 99, lastProgress);
@@ -920,6 +1056,14 @@ public class InstanceBackupManager {
             return entryName.substring(PACKAGE_PREFIX.length());
         }
         return null;
+    }
+
+    private void copyStream(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int read;
+        while ((read = input.read(buffer)) != -1) {
+            output.write(buffer, 0, read);
+        }
     }
 
     private byte[] readAllBytes(InputStream input, long expectedSize) throws IOException {
@@ -1017,6 +1161,18 @@ public class InstanceBackupManager {
     private void postBackupSuccess(BackupCallback callback, String displayPath) {
         if (callback != null) {
             mainHandler.post(() -> callback.onSuccess(displayPath));
+        }
+    }
+
+    private void postBackupCancelled(BackupCallback callback) {
+        if (callback != null) {
+            mainHandler.post(callback::onCancelled);
+        }
+    }
+
+    private void postRestoreCancelled(RestoreCallback callback) {
+        if (callback != null) {
+            mainHandler.post(callback::onCancelled);
         }
     }
 

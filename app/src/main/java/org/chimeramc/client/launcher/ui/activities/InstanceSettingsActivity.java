@@ -628,6 +628,10 @@ public class InstanceSettingsActivity extends BaseActivity {
         backupProgressDialog.setTitleText(getString(R.string.instance_backup_title));
         backupProgressDialog.setStatusText(getString(R.string.instance_backup_in_progress));
         backupProgressDialog.setProgress(0);
+        // A large instance backup can be cancelled part-way (item 144).
+        backupProgressDialog.setCancelAction(() -> {
+            if (backupManager != null) backupManager.cancel();
+        });
         backupProgressDialog.show();
 
         backupManager.backup(version, new InstanceBackupManager.BackupCallback() {
@@ -664,6 +668,13 @@ public class InstanceSettingsActivity extends BaseActivity {
                         .setMessage(getString(R.string.instance_backup_failed_message, message))
                         .setPositiveButton(getString(R.string.confirm), null)
                         .show();
+            }
+
+            @Override
+            public void onCancelled() {
+                // The partial archive is already removed by the manager's failure path, so a cancel
+                // reads as a cancel, not as a backup failure.
+                finishBackupProgress();
             }
         });
     }

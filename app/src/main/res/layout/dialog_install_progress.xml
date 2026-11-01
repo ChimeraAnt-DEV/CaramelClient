@@ -61,4 +61,21 @@
         android:progress="0"
         android:progressDrawable="@drawable/bg_libs_repair_progress" />
 
+    <!--
+        Cancel (item 144). Hidden until a caller opts in with setCancelAction, so the install flow
+        that must run to completion keeps its non-cancellable behaviour.
+    -->
+    <Button
+        android:id="@+id/btn_cancel_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/space_4"
+        android:minHeight="@dimen/min_touch_target"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/cancel"
+        android:textColor="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>

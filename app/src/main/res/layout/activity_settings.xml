@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -471,6 +472,77 @@
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
                                 android:trackTint="@color/track_inactive" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
+                        <!--
+                            Backup retention (item 144): how many instance backups to keep per
+                            instance. A slider rather than free text, so the value cannot be typed
+                            out of range; the rule clamps it again on the way in.
+                        -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/backup_retention_title"
+                                        android:fontFamily="@font/misans"
+                                        android:textColor="@color/on_surface"
+                                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/space_hairline"
+                                        android:text="@string/backup_retention_desc"
+                                        android:fontFamily="@font/misans"
+                                        android:textColor="@color/text_secondary_light"
+                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/value_backup_retention"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:minWidth="@dimen/space_align_inset"
+                                    android:gravity="end"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/primary"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textStyle="bold"
+                                    tools:text="5" />
+                            </LinearLayout>
+
+                            <SeekBar
+                                android:id="@+id/seek_backup_retention"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:max="9"
+                                android:progress="4" />
                         </LinearLayout>
 
                         <View

@@ -9,11 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.LayoutInflater;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.DialogInstallProgressBinding;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.util.PersonalizationManager;
 
@@ -21,10 +20,7 @@ import java.util.Locale;
 
 public class InstallProgressDialog extends Dialog {
 
-    private ProgressBar progressBar;
-    private TextView progressText;
-    private TextView titleText;
-    private TextView statusText;
+    private DialogInstallProgressBinding binding;
     private CharSequence pendingTitle;
     private CharSequence pendingStatus;
     private ValueAnimator progressAnimator;
@@ -39,17 +35,14 @@ public class InstallProgressDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_install_progress);
+        binding = DialogInstallProgressBinding.inflate(LayoutInflater.from(getContext()));
+        setContentView(binding.getRoot());
 
-        progressBar = findViewById(R.id.progress_bar);
-        progressText = findViewById(R.id.tv_progress_percent);
-        titleText = findViewById(R.id.tv_title);
-        statusText = findViewById(R.id.tv_progress_status);
-        if (pendingTitle != null && titleText != null) {
-            titleText.setText(pendingTitle);
+        if (pendingTitle != null) {
+            binding.tvTitle.setText(pendingTitle);
         }
-        if (pendingStatus != null && statusText != null) {
-            statusText.setText(pendingStatus);
+        if (pendingStatus != null) {
+            binding.tvProgressStatus.setText(pendingStatus);
         }
         applyPersonalization();
 
@@ -73,9 +66,22 @@ public class InstallProgressDialog extends Dialog {
         }
     }
 
+    /**
+     * Shows a Cancel button that runs [onCancel] (item 144). A long instance backup or restore can
+     * be cancelled part-way; the install flow never calls this, so it stays non-cancellable.
+     */
+    public void setCancelAction(Runnable onCancel) {
+        if (binding == null) return;
+        binding.btnCancelProgress.setVisibility(View.VISIBLE);
+        binding.btnCancelProgress.setOnClickListener(v -> {
+            binding.btnCancelProgress.setEnabled(false);
+            if (onCancel != null) onCancel.run();
+        });
+    }
+
     public void setProgress(int progress) {
         int targetProgress = Math.max(0, Math.min(100, progress));
-        if (progressBar == null) {
+        if (binding == null) {
             currentProgress = targetProgress;
             return;
         }
@@ -87,7 +93,7 @@ public class InstallProgressDialog extends Dialog {
         }
 
         if (targetProgress == 100) {
-            progressBar.setProgress(targetProgress);
+            binding.progressBar.setProgress(targetProgress);
             currentProgress = targetProgress;
             updateProgressText(targetProgress);
             return;
@@ -98,7 +104,8 @@ public class InstallProgressDialog extends Dialog {
         progressAnimator.setInterpolator(new DecelerateInterpolator());
         progressAnimator.addUpdateListener(animation -> {
             int animatedProgress = (int) animation.getAnimatedValue();
-            progressBar.setProgress(animatedProgress);
+            if (binding == null) return;
+            binding.progressBar.setProgress(animatedProgress);
             currentProgress = animatedProgress;
             updateProgressText(animatedProgress);
         });
@@ -107,21 +114,21 @@ public class InstallProgressDialog extends Dialog {
 
     public void setTitleText(CharSequence title) {
         pendingTitle = title;
-        if (titleText != null) {
-            titleText.setText(title);
+        if (binding != null) {
+            binding.tvTitle.setText(title);
         }
     }
 
     public void setStatusText(CharSequence status) {
         pendingStatus = status;
-        if (statusText != null) {
-            statusText.setText(status);
+        if (binding != null) {
+            binding.tvProgressStatus.setText(status);
         }
     }
 
     private void updateProgressText(int progress) {
-        if (progressText != null) {
-            progressText.setText(String.format(Locale.getDefault(), "%d%%", progress));
+        if (binding != null) {
+            binding.tvProgressPercent.setText(String.format(Locale.getDefault(), "%d%%", progress));
         }
     }
 
@@ -131,17 +138,12 @@ public class InstallProgressDialog extends Dialog {
             int accent = pm.getAccentColor();
             if (accent == 0) return;
 
-            if (titleText != null) {
-                titleText.setTextColor(accent);
-            }
-            if (progressText != null) {
-                progressText.setTextColor(accent);
-            }
-            if (progressBar != null) {
-                progressBar.setProgressTintList(ColorStateList.valueOf(accent));
-                progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 42)));
-                progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
-            }
+            if (binding == null) return;
+            binding.tvTitle.setTextColor(accent);
+            binding.tvProgressPercent.setTextColor(accent);
+            binding.progressBar.setProgressTintList(ColorStateList.valueOf(accent));
+            binding.progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 42)));
+            binding.progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
         } catch (Exception ignored) {}
     }
 

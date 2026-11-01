@@ -217,6 +217,24 @@ public class FeatureSettings {
     public boolean isStreamingSafeModeEnabled() { return streamingSafeModeEnabled; }
     public void setStreamingSafeModeEnabled(boolean enabled) { this.streamingSafeModeEnabled = enabled; autoSave(); }
 
+    /**
+     * How many instance backups to keep per instance (item 144). {@code 0} means "use the default"
+     * ({@link org.chimeramc.client.util.BackupRetention#DEFAULT_KEEP}); the rule itself clamps the
+     * value, so a bad stored number cannot leave thousands of archives on disk.
+     */
+    private int backupRetentionKeep = 0;
+
+    public int getBackupRetentionKeep() {
+        return org.chimeramc.client.util.BackupRetention.clampKeep(backupRetentionKeep);
+    }
+
+    public void setBackupRetentionKeep(int keep) {
+        int clamped = org.chimeramc.client.util.BackupRetention.clampKeep(keep);
+        if (this.backupRetentionKeep == clamped) return;
+        this.backupRetentionKeep = clamped;
+        autoSave();
+    }
+
     public boolean isReduceNetworkLatencyEnabled() { return reduceNetworkLatencyEnabled; }
     public void setReduceNetworkLatencyEnabled(boolean enabled) {
         if (this.reduceNetworkLatencyEnabled == enabled) return;

@@ -1222,4 +1222,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="setup_compat_perm_ok">प्रदान की गई</string>
     <string name="setup_compat_perm_blocking">अस्वीकृत; गेम डेटा लिखने के लिए पहुँच दें</string>
     <string name="setup_compat_fix">ठीक करें</string>
+    <string name="backup_retention_title">इंस्टेंस बैकअप रिटेंशन</string>
+    <string name="backup_retention_desc">प्रति इंस्टेंस कितने बैकअप रखें। इस संख्या से पुराने बैकअप हर नए बैकअप के बाद स्वचालित रूप से हटा दिए जाते हैं।</string>
 </resources>

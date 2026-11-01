@@ -1218,4 +1218,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="setup_compat_perm_ok">Diberikan</string>
     <string name="setup_compat_perm_blocking">Ditolak; berikan akses agar data game dapat ditulis</string>
     <string name="setup_compat_fix">Perbaiki</string>
+    <string name="backup_retention_title">Retensi cadangan instans</string>
+    <string name="backup_retention_desc">Berapa banyak cadangan yang disimpan per instans. Cadangan lama yang melebihi jumlah ini dihapus otomatis setelah setiap cadangan baru.</string>
 </resources>

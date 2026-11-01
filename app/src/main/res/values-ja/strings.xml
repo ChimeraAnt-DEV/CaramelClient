@@ -1191,4 +1191,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="setup_compat_perm_ok">許可済み</string>
     <string name="setup_compat_perm_blocking">拒否されました。ゲームデータを書き込むにはアクセスを許可してください</string>
     <string name="setup_compat_fix">修正</string>
+    <string name="backup_retention_title">インスタンスバックアップの保存件数</string>
+    <string name="backup_retention_desc">インスタンスごとに保存するバックアップの件数。この件数を超えた古いバックアップは、新しいバックアップごとに自動的に削除されます。</string>
 </resources>

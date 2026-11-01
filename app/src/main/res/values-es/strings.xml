@@ -1194,4 +1194,6 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="setup_compat_perm_ok">Concedido</string>
     <string name="setup_compat_perm_blocking">Denegado; concede el acceso para poder escribir los datos del juego</string>
     <string name="setup_compat_fix">Solucionar</string>
+    <string name="backup_retention_title">Retención de copias de instancia</string>
+    <string name="backup_retention_desc">Cuántas copias se conservan por instancia. Las copias más antiguas que superen este número se eliminan automáticamente tras cada nueva copia.</string>
 </resources>

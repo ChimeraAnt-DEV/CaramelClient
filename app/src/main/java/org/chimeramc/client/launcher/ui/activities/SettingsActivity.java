@@ -490,6 +490,37 @@ public class SettingsActivity extends BaseActivity {
                     (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
         }
 
+        // Backup retention (item 144): the slider maps 0..9 to 1..10 backups kept per instance.
+        SeekBar seekBackupRetention = findViewById(R.id.seek_backup_retention);
+        TextView valueBackupRetention = findViewById(R.id.value_backup_retention);
+        if (seekBackupRetention != null) {
+            int current = fs.getBackupRetentionKeep();
+            seekBackupRetention.setProgress(Math.max(0, Math.min(9, current - 1)));
+            if (valueBackupRetention != null) {
+                valueBackupRetention.setText(String.valueOf(current));
+            }
+            seekBackupRetention.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    int keep = Math.max(1, Math.min(10, progress + 1));
+                    if (valueBackupRetention != null) {
+                        valueBackupRetention.setText(String.valueOf(keep));
+                    }
+                    if (fromUser) {
+                        fs.setBackupRetentionKeep(keep);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
+
         SwitchMaterial switchFpsOptimizer = findViewById(R.id.switch_fps_optimizer);
         if (switchFpsOptimizer != null) {
             switchFpsOptimizer.setChecked(fs.isFpsOptimizerEnabled());

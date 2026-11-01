@@ -1215,4 +1215,6 @@
     <string name="setup_compat_perm_ok">已授予</string>
     <string name="setup_compat_perm_blocking">已拒绝；请授予权限以便写入游戏数据</string>
     <string name="setup_compat_fix">修复</string>
+    <string name="backup_retention_title">实例备份保留</string>
+    <string name="backup_retention_desc">每个实例保留多少份备份。超过此数量的旧备份会在每次新备份后自动删除。</string>
 </resources>
