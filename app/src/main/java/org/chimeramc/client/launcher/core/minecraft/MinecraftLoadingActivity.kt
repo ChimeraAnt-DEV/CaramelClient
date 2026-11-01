@@ -211,6 +211,11 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                     showFailure(throwable)
                 }
             }
+        } catch (cancelled: org.chimeramc.client.core.minecraft.ExtractionControl.ExtractionCancelledException) {
+            // The user gave up on the launch while it was extracting. That is not a failure to
+            // report: the loading screen is already on its way back to the launcher, and showing
+            // a "launch failed" dialog on top of it would read as a bug (item 306).
+            appendLog("Extraction cancelled")
         } catch (throwable: Throwable) {
             mainHandler.post {
                 showFailure(throwable)
@@ -415,6 +420,15 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     }
 
     override fun onBackPressed() {
+        // A launch that is still extracting can be given up on. The signal is checked between
+        // files, so the copy stops at the next safe boundary instead of running to completion for
+        // a user who has already left (item 306). The instance is cleared inside returnToLauncher,
+        // so a cancel that lands after the extraction finished is a no-op.
+        try {
+            org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()
+        } catch (ignored: Throwable) {
+            // Cancelling is best effort; returning to the launcher must not depend on it.
+        }
         appendLog("Returning to launcher")
         returnToLauncher()
     }

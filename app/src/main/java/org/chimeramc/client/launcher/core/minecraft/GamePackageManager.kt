@@ -23,6 +23,7 @@ import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
 import org.chimeramc.client.util.AtomicFiles
 import org.chimeramc.client.core.minecraft.LibraryHashManifest
 import org.chimeramc.client.core.minecraft.ExtractionSpaceBudget
+import org.chimeramc.client.core.minecraft.ExtractionControl
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -42,6 +43,15 @@ class GamePackageManager private constructor(
      */
     private var launchTrace: LaunchTrace? = launchTrace
     private var progressListener: MinecraftRuntimePreparer.ProgressListener? = progressListener
+
+    /**
+     * The cancellation signal for the extraction in flight, or null when none is running (item 306).
+     *
+     * <p>Re-pointed by {@code getInstance} on reuse for the same reason the two sinks above are: the
+     * instance outlives a launch, so a signal left from the previous launch would cancel this one.
+     */
+    @Volatile
+    private var extractionControl: ExtractionControl? = null
 
     private val packageContext: Context
     private val assetManager: AssetManager
@@ -229,6 +239,20 @@ class GamePackageManager private constructor(
 
     private fun extractLibraries() {
         report("Preparing Minecraft library cache")
+        // A fresh signal per extraction. The instance outlives a launch, so a signal from the
+        // previous one must not cancel this one (item 306).
+        val control = ExtractionControl()
+        extractionControl = control
+        try {
+            extractLibrariesInternal(control)
+        } finally {
+            // Cleared so a cancel arriving after the extraction finished is a no-op rather than
+            // arming the next launch.
+            extractionControl = null
+        }
+    }
+
+    private fun extractLibrariesInternal(control: ExtractionControl) {
         val outputDir = File(nativeLibDir)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
@@ -301,20 +325,32 @@ class GamePackageManager private constructor(
         // themselves and refusing would break a launch that would have worked.
         requireExtractionSpace(outputDir, apkFiles)
 
+        // Item 137: real progress, counted in files rather than a spinner. The total is only
+        // known once the first package is open, so the count is reported as a running number and
+        // the loading screen renders it against its own indeterminate bar.
+        var filesDone = 0
+        val onFile: () -> Unit = {
+            filesDone++
+            if (filesDone % 8 == 0) {
+                report("Extracted $filesDone libraries so far")
+            }
+        }
+
         val abi: String
         if (version != null && !version.isInstalled) {
             // Resolve once: getDeviceAbi scans every APK, so calling it per file would
             // re-open all of them for each one.
             abi = getDeviceAbi(apkFiles)
-            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi) }
+            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi, control, onFile) }
         } else {
             val appInfo = packageContext.applicationInfo
             if (File(appInfo.nativeLibraryDir).exists()) {
-                copyFromNativeDir(appInfo.nativeLibraryDir, outputDir)
+                copyFromNativeDir(appInfo.nativeLibraryDir, outputDir, control, onFile)
             }
             abi = getDeviceAbi(apkFiles)
-            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi) }
+            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi, control, onFile) }
         }
+        report("Extracted $filesDone libraries")
         // The STL fallback runs before the completeness check, not after. libc++_shared.so is in
         // the required list, and a package that ships no copy is supplied from the launcher's own
         // native dir - so checking first would refuse a perfectly launchable version for a library
@@ -505,7 +541,12 @@ class GamePackageManager private constructor(
         )
     }
 
-    private fun copyFromNativeDir(sourceDir: String, destDir: File) {
+    private fun copyFromNativeDir(
+        sourceDir: String,
+        destDir: File,
+        control: ExtractionControl,
+        onFile: () -> Unit
+    ) {
         val source = File(sourceDir)
         if (!source.exists()) {
             mirrorLogcat('W', "Source native library directory does not exist: $sourceDir")
@@ -532,6 +573,10 @@ class GamePackageManager private constructor(
         }
 
         for (lib in toCopy) {
+            if (control.isCancelled()) {
+                report("Extraction cancelled by the user")
+                throw ExtractionControl.ExtractionCancelledException()
+            }
             val srcFile = File(source, lib)
             val dstFile = File(destDir, lib)
             if (srcFile.exists() && srcFile.length() > 0) {
@@ -539,8 +584,11 @@ class GamePackageManager private constructor(
                     srcFile.inputStream().use { input ->
                         copyStreamToReadOnlyFile(input, dstFile)
                     }
+                    onFile()
                     report("Copied $lib from native lib directory")
                     logFileOperation("Copied", lib)
+                } catch (e: ExtractionControl.ExtractionCancelledException) {
+                    throw e
                 } catch (e: Exception) {
                     logFileOperation("Failed to copy", lib, e = e)
                 }
@@ -550,7 +598,13 @@ class GamePackageManager private constructor(
         }
     }
 
-    private fun extractFromApk(apkPath: String, outputDir: File, abi: String) {
+    private fun extractFromApk(
+        apkPath: String,
+        outputDir: File,
+        abi: String,
+        control: ExtractionControl,
+        onFile: () -> Unit
+    ) {
         val apkFile = File(apkPath)
         if (!apkFile.exists()) {
             mirrorLogcat('W', "APK file does not exist: $apkPath")
@@ -571,6 +625,12 @@ class GamePackageManager private constructor(
                 val entries = zip.entries()
                 val extracted = mutableListOf<String>()
                 while (entries.hasMoreElements()) {
+                    // Between entries is the safe boundary: a library is written through a temp
+                    // file and renamed, so stopping here never leaves a torn one (item 306).
+                    if (control.isCancelled()) {
+                        report("Extraction cancelled by the user")
+                        throw ExtractionControl.ExtractionCancelledException()
+                    }
                     val entry = entries.nextElement()
                     if (entry.isDirectory || entry.name.isEmpty()) continue
                     if (!entry.name.startsWith(abiPath) || !entry.name.endsWith(".so")) continue
@@ -585,7 +645,12 @@ class GamePackageManager private constructor(
                             copyStreamToReadOnlyFile(input, output)
                         }
                         extracted += libName
+                        onFile()
                         report("Extracted $libName from ${apkFile.name} for $abi")
+                    } catch (e: ExtractionControl.ExtractionCancelledException) {
+                        // A cancellation is not a file failure; it must reach the caller, not be
+                        // logged as "this one file did not copy" and stepped over (item 306).
+                        throw e
                     } catch (e: Exception) {
                         mirrorLogcat('W', "Failed to extract ${output.name} from $apkPath: ${e.message}")
                     }
@@ -594,6 +659,8 @@ class GamePackageManager private constructor(
                     mirrorLogcat('W', "No .so files found under $abiPath in $apkPath")
                 }
             }
+        } catch (e: ExtractionControl.ExtractionCancelledException) {
+            throw e
         } catch (e: Exception) {
             mirrorLogcat('W', "Failed to extract libraries from $apkPath: ${e.message}")
         }
@@ -756,6 +823,16 @@ class GamePackageManager private constructor(
             if (e != null) append(": ${e.message}")
         }
         if (e != null) mirrorLogcat('W', message)
+    }
+
+    /**
+     * Signals the extraction in flight to stop at the next safe boundary (item 306).
+     *
+     * <p>Private because the callers reach it through the companion's static entry point; a public
+     * instance method of the same name would clash with it at the JVM signature level.
+     */
+    private fun cancelExtractionInFlight() {
+        extractionControl?.cancel()
     }
 
     private fun report(message: String) {
@@ -1132,6 +1209,18 @@ class GamePackageManager private constructor(
         }
 
         fun isInitialized() = instance != null
+
+        /**
+         * Signals the extraction in flight to stop at the next safe boundary (item 306).
+         *
+         * <p>Static so a caller that only wants to give up on a launch does not have to hold - or
+         * re-resolve - the manager instance. A no-op when none exists or none is extracting, which
+         * is the common case for a launch that already got past extraction.
+         */
+        @JvmStatic
+        fun cancelExtraction() {
+            instance?.cancelExtractionInFlight()
+        }
 
         /** Manual extractor pipeline version; bump when the extraction logic changes. */
         @JvmStatic
