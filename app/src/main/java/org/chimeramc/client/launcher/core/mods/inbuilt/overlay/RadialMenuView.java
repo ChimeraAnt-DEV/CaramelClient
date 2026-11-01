@@ -23,6 +23,7 @@ import org.chimeramc.client.core.cosmetics.PreviewRaster;
 import org.chimeramc.client.core.cosmetics.PreviewScene;
 import org.chimeramc.client.core.cosmetics.SkinModel;
 import org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelLayout.Sector;
+import org.chimeramc.client.ui.components.PointerCursorRenderer;
 import org.chimeramc.client.ui.components.UiChip;
 import org.chimeramc.client.ui.components.UiDraw;
 import org.chimeramc.client.ui.components.UiIcons;
@@ -126,6 +127,8 @@ public class RadialMenuView extends View {
     private CursorController cursor;
     /** The chip currently under the controller cursor, or -1. */
     private int cursorChip = -1;
+    /** Caches the pointer outline so a per-frame draw allocates nothing (Phase 12). */
+    private final PointerCursorRenderer cursorRenderer = new PointerCursorRenderer();
     /** True while the cursor is visible (a touch hides it). */
     private boolean cursorVisible;
 
@@ -662,7 +665,9 @@ public class RadialMenuView extends View {
         if (!isCursorVisible()) return;
         Paint shadow = iconPaint;
         Paint arrow = chipPaint;
-        UiDraw.pointerCursor(canvas, shadow, arrow, cursor.x(), cursor.y(), density);
+        cursorRenderer.prepare(cursor.x(), cursor.y(),
+                PointerCursorRenderer.HEIGHT_DP * density);
+        UiDraw.pointerCursor(canvas, cursorRenderer.path(), shadow, arrow, density);
     }
 
     private void drawSector(Canvas canvas, float cx, float cy, float rInner, float rOuter,

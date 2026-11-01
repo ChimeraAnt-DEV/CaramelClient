@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.chimeramc.client.core.mods.inbuilt.overlay.CursorController;
+import org.chimeramc.client.ui.components.PointerCursorRenderer;
 import org.chimeramc.client.ui.components.UiDraw;
 
 /**
@@ -32,6 +33,7 @@ public final class LauncherCursorOverlay extends View {
 
     private final Paint shadow = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint body = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final PointerCursorRenderer cursorRenderer = new PointerCursorRenderer();
     private final CursorController cursor;
 
     private boolean visible;
@@ -166,7 +168,8 @@ public final class LauncherCursorOverlay extends View {
         super.onDraw(canvas);
         if (!visible) return;
         float density = getResources().getDisplayMetrics().density;
-        UiDraw.pointerCursor(canvas, shadow, body, cursor.x(), cursor.y(), density);
+        cursorRenderer.prepare(cursor.x(), cursor.y(), PointerCursorRenderer.HEIGHT_DP * density);
+        UiDraw.pointerCursor(canvas, cursorRenderer.path(), shadow, body, density);
     }
 
     @Override

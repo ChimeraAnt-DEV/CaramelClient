@@ -52,6 +52,26 @@ public final class PointerCursorGeometry {
         return out;
     }
 
+    /**
+     * The outline scaled to {@code height}, written into a caller-owned buffer.
+     *
+     * <p>The allocating overload returns a fresh array so a one-shot caller can keep it; a renderer
+     * that draws every frame passes its own buffer here so the hot path allocates nothing (see
+     * {@link PointerCursorRenderer}). {@code out} must be at least {@code 2 * POINT_COUNT} long;
+     * a shorter buffer is filled only as far as it reaches rather than overrunning.
+     *
+     * @param out the buffer to fill, {@code x0,y0,x1,y1,...}
+     * @return {@code out}
+     */
+    public static float[] points(float x, float y, float height, float[] out) {
+        int n = Math.min(out.length, UNIT.length);
+        for (int i = 0; i + 1 < n; i += 2) {
+            out[i] = x + UNIT[i] * height;
+            out[i + 1] = y + UNIT[i + 1] * height;
+        }
+        return out;
+    }
+
     /** The unscaled outline, for a caller that wants to build its own transform. */
     public static float[] unitOutline() {
         return UNIT.clone();

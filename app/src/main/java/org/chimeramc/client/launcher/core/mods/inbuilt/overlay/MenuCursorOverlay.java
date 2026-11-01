@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.chimeramc.client.ui.components.PointerCursorRenderer;
 import org.chimeramc.client.ui.components.UiDraw;
 import org.chimeramc.client.ui.components.UiTokens;
 
@@ -31,6 +32,7 @@ public final class MenuCursorOverlay extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint paint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final PointerCursorRenderer cursorRenderer = new PointerCursorRenderer();
     private long lastMs;
 
     public MenuCursorOverlay(Context context) {
@@ -127,8 +129,9 @@ public final class MenuCursorOverlay extends View {
             super.onDraw(canvas);
             if (!router.isMenuOpen()) return;
             float density = getResources().getDisplayMetrics().density;
-            UiDraw.pointerCursor(canvas, paint, paint2,
-                    router.cursor().x(), router.cursor().y(), density);
+            cursorRenderer.prepare(router.cursor().x(), router.cursor().y(),
+                    PointerCursorRenderer.HEIGHT_DP * density);
+            UiDraw.pointerCursor(canvas, cursorRenderer.path(), paint, paint2, density);
         
             } finally {
                 OverlayDrawTimer.finish("MenuCursorOverlay", drawStart);

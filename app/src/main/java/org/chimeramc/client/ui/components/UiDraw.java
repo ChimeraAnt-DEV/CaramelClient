@@ -74,7 +74,20 @@ public final class UiDraw {
             shape.lineTo(pts[i], pts[i + 1]);
         }
         shape.close();
+        pointerCursor(canvas, shape, shadowFill, arrowFill, density);
+    }
 
+    /**
+     * Draws the pointer from an already-built outline path.
+     *
+     * <p>The path-building overload allocates a {@code float[]} and a {@code Path} on every call,
+     * and the cursor is drawn in {@code onDraw} — so a menu that paints each frame was allocating
+     * two objects per frame on the input-to-photon path. A view that repaints continuously keeps
+     * one {@code Path} and one {@code PointerCursorRenderer} and calls this instead; the shape is
+     * rebuilt only when the cursor moves, by the caller's own {@code renderer.prepare(x, y, ...)}.
+     */
+    public static void pointerCursor(Canvas canvas, Path shape, Paint shadowFill, Paint arrowFill,
+                                     float density) {
         // A soft offset shadow so the pointer reads on a bright world frame, without a blur layer.
         shadowFill.reset();
         shadowFill.setAntiAlias(true);
