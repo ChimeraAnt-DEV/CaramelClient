@@ -107,7 +107,7 @@ jobs:
           distribution: temurin
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4.0.1
+        uses: android-actions/setup-android@v4.0.4
         with:
           # setup-android's default package list includes the legacy `tools` package,
           # which Google removed from the SDK repo in 2025; only install platform-tools.
