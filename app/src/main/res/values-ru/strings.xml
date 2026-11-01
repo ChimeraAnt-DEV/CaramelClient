@@ -1248,4 +1248,5 @@
     <string name="performance_preset_thermal_message">Это устройство ограничено из-за нагрева. Режим «Батарея» даст процессору меньше работы.</string>
     <string name="performance_preset_thermal_apply">Использовать «Батарея»</string>
     <string name="instance_size_on_disk">%1$s на диске</string>
+    <string name="nav_tab_needs_attention">, требует внимания</string>
 </resources>

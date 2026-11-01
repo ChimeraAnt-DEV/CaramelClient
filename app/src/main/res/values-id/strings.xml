@@ -1241,4 +1241,5 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="performance_preset_thermal_message">Perangkat ini dibatasi suhu. Mode Baterai akan memberi CPU lebih sedikit pekerjaan.</string>
     <string name="performance_preset_thermal_apply">Gunakan Baterai</string>
     <string name="instance_size_on_disk">%1$s di disk</string>
+    <string name="nav_tab_needs_attention">, perlu perhatian</string>
 </resources>

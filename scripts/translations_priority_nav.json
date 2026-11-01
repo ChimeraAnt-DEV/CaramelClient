@@ -1,0 +1,32 @@
+{
+ "es": {
+  "nav_tab_needs_attention": ", requiere atención"
+ },
+ "fr": {
+  "nav_tab_needs_attention": ", nécessite votre attention"
+ },
+ "hi": {
+  "nav_tab_needs_attention": ", ध्यान देने की आवश्यकता है"
+ },
+ "id": {
+  "nav_tab_needs_attention": ", perlu perhatian"
+ },
+ "ja": {
+  "nav_tab_needs_attention": "、対応が必要です"
+ },
+ "pt": {
+  "nav_tab_needs_attention": ", precisa de atenção"
+ },
+ "ru": {
+  "nav_tab_needs_attention": ", требует внимания"
+ },
+ "tr": {
+  "nav_tab_needs_attention": ", ilgi bekliyor"
+ },
+ "vi": {
+  "nav_tab_needs_attention": ", cần chú ý"
+ },
+ "zh-rCN": {
+  "nav_tab_needs_attention": "，需要处理"
+ }
+}

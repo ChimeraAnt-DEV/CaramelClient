@@ -1245,4 +1245,5 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="performance_preset_thermal_message">यह डिवाइस गर्मी के कारण धीमा है। बैटरी मोड CPU को कम काम देगा।</string>
     <string name="performance_preset_thermal_apply">बैटरी का उपयोग करें</string>
     <string name="instance_size_on_disk">डिस्क पर %1$s</string>
+    <string name="nav_tab_needs_attention">, ध्यान देने की आवश्यकता है</string>
 </resources>

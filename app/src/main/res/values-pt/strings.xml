@@ -1217,4 +1217,5 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="performance_preset_thermal_message">Este dispositivo está limitado por temperatura. O modo Bateria daria menos trabalho à CPU.</string>
     <string name="performance_preset_thermal_apply">Usar Bateria</string>
     <string name="instance_size_on_disk">%1$s no disco</string>
+    <string name="nav_tab_needs_attention">, precisa de atenção</string>
 </resources>

@@ -1214,4 +1214,5 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="performance_preset_thermal_message">このデバイスは熱によって制限されています。バッテリーモードなら CPU の負担が減ります。</string>
     <string name="performance_preset_thermal_apply">バッテリーを使う</string>
     <string name="instance_size_on_disk">ディスク上 %1$s</string>
+    <string name="nav_tab_needs_attention">、対応が必要です</string>
 </resources>
