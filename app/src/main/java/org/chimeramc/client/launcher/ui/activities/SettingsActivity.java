@@ -41,6 +41,8 @@ import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
 import org.chimeramc.client.settings.PerformancePresetManager;
+import org.chimeramc.client.core.minecraft.ThermalPresetAdvisor;
+import org.chimeramc.client.settings.ThermalGovernor;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
 import org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity;
 import org.chimeramc.client.ui.animation.DynamicAnim;
@@ -129,6 +131,18 @@ public class SettingsActivity extends BaseActivity {
 
     /** The container of the settings sections, animated on a tab change (item 124). */
     private ViewGroup settingsContent;
+
+    /** Held so the thermal advice can be re-evaluated in {@link #onResume()} (item 260). */
+    private MaterialButtonToggleGroup performancePresetGroup;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // A device that heats up after the screen opened must still see the advice (item 260).
+        if (performancePresetGroup != null) {
+            refreshThermalPresetAdvice();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -674,6 +688,46 @@ public class SettingsActivity extends BaseActivity {
             }
             syncPerformanceDependentSwitches();
         });
+        setupThermalPresetAdvice(group);
+        this.performancePresetGroup = group;
+    }
+
+    /**
+     * Shows the thermal-throttle suggestion (item 260).
+     *
+     * <p>The reading is only meaningful while the screen is open, so it is refreshed in
+     * {@link #onResume()} as well as here: a device that heats up after the screen was opened
+     * would otherwise never see the advice. The user accepts with one tap, which is the whole
+     * point of a suggestion — the launcher never switches the preset on its own.
+     */
+    private void setupThermalPresetAdvice(MaterialButtonToggleGroup group) {
+        refreshThermalPresetAdvice();
+        View apply = findViewById(R.id.performance_preset_thermal_apply);
+        if (apply != null) {
+            apply.setOnClickListener(v -> {
+                String suggestion = ThermalPresetAdvisor.suggestedPresetName(
+                        PerformancePresetManager.current(this).name());
+                if (suggestion == null) return;
+                PerformancePresetManager.Preset preset =
+                        PerformancePresetManager.Preset.valueOf(suggestion);
+                PerformancePresetManager.apply(this, preset);
+                if (group != null) {
+                    group.check(buttonIdFor(preset));
+                }
+                syncPerformanceDependentSwitches();
+            });
+        }
+    }
+
+    /** Re-evaluates the thermal advice against the current preset and updates the row. */
+    private void refreshThermalPresetAdvice() {
+        View warning = findViewById(R.id.performance_preset_thermal_warning);
+        if (warning == null) return;
+        String currentName = PerformancePresetManager.current(this).name();
+        ThermalPresetAdvisor.Advice advice =
+                ThermalPresetAdvisor.advise(ThermalGovernor.severity(), currentName);
+        warning.setVisibility(advice == ThermalPresetAdvisor.Advice.SUGGEST_LIGHTER
+                ? View.VISIBLE : View.GONE);
     }
 
     /** Mirrors the preset's settings back into the individual switches on the same screen. */

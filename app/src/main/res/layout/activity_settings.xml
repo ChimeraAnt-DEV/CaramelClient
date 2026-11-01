@@ -225,6 +225,36 @@
                             android:text="@string/performance_preset_note"
                             android:textColor="@color/text_secondary"
                             android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <LinearLayout
+                            android:id="@+id/performance_preset_thermal_warning"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_3"
+                            android:background="@drawable/chimera_card_small"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/space_3"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/performance_preset_thermal_message"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/on_surface"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/performance_preset_thermal_apply"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:text="@string/performance_preset_thermal_apply"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout

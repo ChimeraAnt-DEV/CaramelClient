@@ -1154,6 +1154,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="performance_preset_balanced">Balanced</string>
     <string name="performance_preset_performance">Performance</string>
     <string name="performance_preset_note">This sets the toggles below. Change any of them individually and it keeps your choice.</string>
+    <string name="performance_preset_thermal_message">This device is thermally throttled. Battery mode would give the CPU less to do.</string>
+    <string name="performance_preset_thermal_apply">Use Battery</string>
     <string name="skins_loading">Scanning skin packs…</string>
     <string name="skins_cape_note">Cape support is not available yet - skin packs apply skins only.</string>
 
