@@ -119,9 +119,11 @@ public final class CosmeticSyncModule {
     /** Wakes the cloud poll loop's interval wait so stop() joins immediately. */
     private final SignalGate cloudGate = new SignalGate();
 
-    /** How often the cloud topic is polled. The relay has no push, so this bounds a manifest's age. */
-    private static final long CLOUD_POLL_INTERVAL_MS = 1000L;
+    /** How often the cloud topic is polled while the relay is healthy (item 244). */
+    private static final long CLOUD_POLL_INTERVAL_MS = CloudPollBackoff.BASE_DELAY_MS;
     private volatile long cloudSinceSeconds;
+    /** Backs the poll interval off while the cloud relay is unreachable (item 244). */
+    private final CloudPollBackoff cloudBackoff = new CloudPollBackoff();
     private CosmeticSyncCache cache;
 
     /**
@@ -407,6 +409,7 @@ public final class CosmeticSyncModule {
         // Start the cursor an hour back so a peer that advertised before we joined is picked up on
         // the first poll; ntfy caches messages for a window, so this is cheap and finite.
         cloudSinceSeconds = System.currentTimeMillis() / 1000L - 3600L;
+        cloudBackoff.reset();
         cloudThread = AppExecutors.thread("cosmetic-sync-cloud", this::cloudLoop);
         cloudThread.start();
     }
@@ -460,11 +463,14 @@ public final class CosmeticSyncModule {
                 }
                 // Advance the cursor so the next poll only returns newer messages.
                 cloudSinceSeconds = now;
+                cloudBackoff.onSuccess();
             } catch (Throwable t) {
-                // A network blip must not kill the route; the next loop retries.
+                // A network blip must not kill the route; the next loop retries, but backs off so a
+                // relay that is down for the whole session is not polled once a second forever.
+                cloudBackoff.onFailure();
                 Log.w(TAG, "Cloud poll failed", t);
             }
-            if (!cloudGate.await(CLOUD_POLL_INTERVAL_MS)) break;
+            if (!cloudGate.await(cloudBackoff.nextDelayMs())) break;
         }
     }
 
