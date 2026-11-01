@@ -1058,8 +1058,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="keyboard_title">Klavye</string>
     <string name="mod_menu_filter_hud">HUD</string>
     <string name="wheel_customize_title">Neyi özelleştirmek istersiniz?</string>
-    <string name="wheel_customize_mod_settings">Mod Menüsü Ayarları</string>
-    <string name="wheel_customize_cosmetics">Kozmetikler</string>
     <string name="mod_menu_action_manage_wheel">Radyal menüyü yönet</string>
     <string name="mod_menu_action_manage_wheel_desc">Radyal menü profillerini oluştur, yeniden adlandır, sırala ve sil</string>
     <string name="wheel_manager_title">Radyal menü profilleri</string>

@@ -1059,8 +1059,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="keyboard_title">कीबोर्ड</string>
     <string name="mod_menu_filter_hud">HUD</string>
     <string name="wheel_customize_title">आप किसे अनुकूलित करना चाहेंगे?</string>
-    <string name="wheel_customize_mod_settings">मॉड मेनू सेटिंग्स</string>
-    <string name="wheel_customize_cosmetics">कॉस्मेटिक्स</string>
     <string name="mod_menu_action_manage_wheel">रेडियल मेनू प्रबंधित करें</string>
     <string name="mod_menu_action_manage_wheel_desc">रेडियल मेनू प्रोफ़ाइल बनाएँ, नाम बदलें, क्रम बदलें और हटाएँ</string>
     <string name="wheel_manager_title">रेडियल मेनू प्रोफ़ाइल</string>

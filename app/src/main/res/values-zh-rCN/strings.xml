@@ -1052,8 +1052,6 @@
     <string name="keyboard_title">键盘</string>
     <string name="mod_menu_filter_hud">HUD</string>
     <string name="wheel_customize_title">你想自定义什么？</string>
-    <string name="wheel_customize_mod_settings">模组菜单设置</string>
-    <string name="wheel_customize_cosmetics">外观</string>
     <string name="mod_menu_action_manage_wheel">管理径向菜单</string>
     <string name="mod_menu_action_manage_wheel_desc">创建、重命名、重新排序和删除径向菜单配置</string>
     <string name="wheel_manager_title">径向菜单配置</string>

@@ -1031,8 +1031,6 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="keyboard_title">Clavier</string>
     <string name="mod_menu_filter_hud">HUD</string>
     <string name="wheel_customize_title">Que souhaitez-vous personnaliser ?</string>
-    <string name="wheel_customize_mod_settings">Paramètres du menu de mods</string>
-    <string name="wheel_customize_cosmetics">Cosmétiques</string>
     <string name="mod_menu_action_manage_wheel">Gérer le menu radial</string>
     <string name="mod_menu_action_manage_wheel_desc">Créer, renommer, réorganiser et supprimer des profils du menu radial</string>
     <string name="wheel_manager_title">Profils du menu radial</string>
