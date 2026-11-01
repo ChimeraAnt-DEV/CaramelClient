@@ -50,7 +50,7 @@ public class CurseForgeActivity extends BaseActivity {
     private com.google.android.material.button.MaterialButton btnSort;
     private SortOption currentSort;
     private RecyclerView recyclerView;
-    private ProgressBar loadingProgress;
+    private org.chimeramc.client.ui.components.SkeletonView loadingProgress;
     private CurseForgeContentAdapter adapter;
     private CurseForgeClient client;
     private Handler handler = MainThread.handler();

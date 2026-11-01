@@ -72,7 +72,7 @@ public final class ReplayPanel {
     private final TextView emptyTitle;
     private final TextView emptyMessage;
     private final ReplayEmptyArtView emptyArt;
-    private final ReplaySkeletonView skeleton;
+    private final org.chimeramc.client.ui.components.SkeletonView skeleton;
     private TextView recordButton;
     private TextView timer;
     private TextView qualityBadge;
@@ -171,7 +171,7 @@ public final class ReplayPanel {
         contentFrame.addView(scroll, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        skeleton = new ReplaySkeletonView(activity);
+        skeleton = new org.chimeramc.client.ui.components.SkeletonView(activity);
         skeleton.setVisibility(View.GONE);
         contentFrame.addView(skeleton, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

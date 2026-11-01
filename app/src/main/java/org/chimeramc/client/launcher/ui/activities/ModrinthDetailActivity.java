@@ -57,7 +57,7 @@ public class ModrinthDetailActivity extends BaseActivity {
     private ModrinthProject project;
     private ModrinthClient client;
     private RecyclerView recycler;
-    private ProgressBar progress;
+    private org.chimeramc.client.ui.components.SkeletonView progress;
     private View empty;
     private ModrinthVersionAdapter adapter;
     private ContentImporter contentImporter;

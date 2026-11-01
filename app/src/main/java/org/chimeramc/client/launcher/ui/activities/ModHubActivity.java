@@ -76,13 +76,13 @@ public class ModHubActivity extends BaseActivity {
     private MaterialButton sortButton;
     private RadioGroup typeGroup;
     private RecyclerView modrinthRecycler;
-    private ProgressBar modrinthProgress;
+    private org.chimeramc.client.ui.components.SkeletonView modrinthProgress;
     private View modrinthEmpty;
     private ModrinthContentAdapter modrinthAdapter;
     private ModrinthClient modrinthClient;
 
     private RecyclerView downloadsRecycler;
-    private ProgressBar downloadsProgress;
+    private org.chimeramc.client.ui.components.SkeletonView downloadsProgress;
     private View downloadsEmpty;
     private android.widget.TextView downloadsSummary;
     private MaterialButton downloadsScanButton;
