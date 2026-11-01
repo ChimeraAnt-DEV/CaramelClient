@@ -762,7 +762,15 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
      * is the path the game's input handler already reads.
      */
     private fun registerGameBackend() {
-        GameBridge.register(LauncherGameBackend(AndroidGameInputHost(this)))
+        // The render-hook frame counter gives a real game frame rate when the hook is live; the
+        // tick source reads -1 when it is not, and the backend then reports no FPS so the overlay
+        // falls back to its host-side meter instead of a fabricated number.
+        GameBridge.register(
+            LauncherGameBackend(
+                AndroidGameInputHost(this),
+                org.chimeramc.client.core.backend.PreloaderFrameTickSource(),
+            ),
+        )
     }
 
     override fun onPause() {

@@ -14,20 +14,34 @@ import java.util.concurrent.ConcurrentHashMap;
  * implemented here against the game's own entry points instead.
  *
  * <p>Capabilities that genuinely need native code the launcher does not have — a field-of-view
- * change for zoom, a game frame-rate counter, and reading an item out of a hotbar slot — are
- * reported as <b>not supported</b> rather than faked, so the UI greys them out and the overlay
- * falls back to its host-side meter instead of appearing to work (see {@link GameBackend#supports}).
- * The rest are provided by injecting the same key/mouse events a physical device would produce.
+ * change for zoom and reading an item out of a hotbar slot — are reported as <b>not supported</b>
+ * rather than faked, so the UI greys them out rather than appearing to work (see
+ * {@link GameBackend#supports}). The rest are provided by injecting the same key/mouse events a
+ * physical device would produce.
+ *
+ * <p>The frame rate is provided when a {@link FrameTickSource} is supplied: the preloader's render
+ * hook counts one tick per frame the game actually draws, and {@link GameFrameRate} turns that into
+ * a rate. With no tick source (a build without the hook) the capability is not advertised and the
+ * overlay keeps its host-side meter, so the number is never invented.
  */
 public final class LauncherGameBackend implements GameBackend {
 
     public static final String NAME = "Launcher Input";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1";
 
     /** The forward key's Bedrock code, used for the sprint double-tap. */
     private static final int BEDROCK_KEY_W = 87;
 
     private final GameInputHost host;
+    /** Supplies the game's frame tick when the render hook is live; null when there is none. */
+    private final FrameTickSource frameTickSource;
+    /** Derives the frame rate from the tick source; only sampled when the source exists. */
+    private final GameFrameRate frameRate = new GameFrameRate();
+    /**
+     * The monotonic clock the frame-rate window is measured against. Injectable so the rate path is
+     * unit-tested on the JVM, where {@code android.os.SystemClock} is a stub that throws.
+     */
+    private java.util.function.LongSupplier clock = android.os.SystemClock::uptimeMillis;
     /** Capabilities this backend provides; everything else is reported unsupported. */
     private final Set<Feature> supported = EnumSet.of(
             Feature.KEY, Feature.MOUSE_BUTTON, Feature.SCROLL, Feature.LOOK_DELTA, Feature.POINTER,
@@ -50,10 +64,23 @@ public final class LauncherGameBackend implements GameBackend {
     private final Set<Integer> heldButtons = ConcurrentHashMap.newKeySet();
 
     public LauncherGameBackend(GameInputHost host) {
+        this(host, null);
+    }
+
+    /**
+     * @param host the input dispatcher; required
+     * @param frameTickSource the game's frame-tick supplier, or null when the render hook is not
+     *     available (in which case the {@link Feature#FPS} capability is not advertised)
+     */
+    public LauncherGameBackend(GameInputHost host, FrameTickSource frameTickSource) {
         if (host == null) {
             throw new IllegalArgumentException("host");
         }
         this.host = host;
+        this.frameTickSource = frameTickSource;
+        if (frameTickSource != null) {
+            supported.add(Feature.FPS);
+        }
     }
 
     @Override
@@ -114,16 +141,40 @@ public final class LauncherGameBackend implements GameBackend {
     }
 
     /**
-     * The game's frame rate, which this backend cannot read.
+     * The game's frame rate, derived from the preloader's render-hook frame counter.
      *
-     * <p>Reading it needs a hook into the game's own frame counter, which the launcher does not
-     * have; the FPS overlay's host-side {@link org.chimeramc.client.launcher.core.mods.inbuilt
-     * .overlay.FrameRateMeter} is the reading it shows instead. Returning a fabricated number here
-     * would be the same class of over-claim as promising a ping, so this reports "unknown".
+     * <p>The render hook increments one tick per frame the game actually draws, so counting ticks
+     * over a wall-clock window is the game's own frame rate — not the host's vsync rate and not a
+     * guess. {@link GameFrameRate} owns the windowing and returns "unknown" while the hook is not
+     * drawing, so a loading screen does not freeze the last reading.
+     *
+     * <p>Returns {@link GameFrameRate#UNKNOWN} when no tick source was supplied (a build without
+     * the hook), which the overlay treats as "fall back to the host-side meter".
      */
     @Override
     public int readFps() {
-        return -1;
+        if (frameTickSource == null) {
+            return GameFrameRate.UNKNOWN;
+        }
+        long tick;
+        try {
+            tick = frameTickSource.renderTick();
+        } catch (Throwable t) {
+            return GameFrameRate.UNKNOWN;
+        }
+        return frameRate.sample(tick, clock.getAsLong());
+    }
+
+    /**
+     * Replaces the clock the frame-rate window is measured against.
+     *
+     * <p>Tests only: on a device the default {@code SystemClock.uptimeMillis} is the correct
+     * monotonic source. Kept package-visible rather than public so production code cannot swap it.
+     */
+    void setClock(java.util.function.LongSupplier clock) {
+        if (clock != null) {
+            this.clock = clock;
+        }
     }
 
     /**

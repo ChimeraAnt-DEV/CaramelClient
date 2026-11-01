@@ -66,13 +66,38 @@ public class LauncherGameBackendTest {
     }
 
     @Test
-    public void capabilitiesNeedingAGameHookAreNotClaimed() {
+    public void capabilitiesNeedingAGameHookAreNotClaimedWithoutASource() {
         LauncherGameBackend backend = new LauncherGameBackend(new RecordingHost());
         assertFalse("zoom needs a FOV change the launcher cannot make",
                 backend.supports(GameBackend.Feature.ZOOM));
-        assertFalse("a game frame counter needs a hook the launcher does not have",
+        assertFalse("without a tick source there is no game frame counter",
                 backend.supports(GameBackend.Feature.FPS));
-        assertEquals(-1, backend.readFps());
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
+    }
+
+    @Test
+    public void aTickSourceAdvertisesAndReportsTheGameFrameRate() {
+        long[] tick = {0L};
+        long[] now = {0L};
+        LauncherGameBackend backend = new LauncherGameBackend(
+                new RecordingHost(), () -> tick[0]);
+        backend.setClock(() -> now[0]);
+        assertTrue("a tick source is what makes FPS available",
+                backend.supports(GameBackend.Feature.FPS));
+        // First sample anchors the window and reports unknown.
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
+        // Sixty frames one second later is the game's own 60 fps.
+        tick[0] = 60L;
+        now[0] = 1000L;
+        assertEquals(60, backend.readFps());
+    }
+
+    @Test
+    public void aThrowingTickSourceReadsUnknownNotACrash() {
+        LauncherGameBackend backend = new LauncherGameBackend(new RecordingHost(), () -> {
+            throw new IllegalStateException("hook gone");
+        });
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
     }
 
     @Test
