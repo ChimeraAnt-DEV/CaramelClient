@@ -43,6 +43,14 @@ public class BerryApiTest {
     }
 
     @Test
+    public void attachingWithoutTheNativeLibraryFailsClosed() {
+        // Off-device the native call throws UnsatisfiedLinkError; ensureAttached() must swallow it
+        // and return false, never throw. The launcher calls it on the session-start path, so a
+        // throw here would take the launch down instead of leaving the features greyed.
+        assertFalse(BerryApi.ensureAttached());
+    }
+
+    @Test
     public void theSummaryIsNeverEmptyWithoutTheNativeLibrary() {
         // Off-device the native call throws UnsatisfiedLinkError; summary() must still return a
         // non-empty, human-readable line so the Diagnostics row is never blank.
