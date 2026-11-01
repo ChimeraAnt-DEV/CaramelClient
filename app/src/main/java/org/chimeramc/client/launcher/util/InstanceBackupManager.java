@@ -935,7 +935,11 @@ public class InstanceBackupManager {
                 if (resolver.resolve(entryName, relativePath) == null) {
                     continue;
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                // A single entry that cannot be resolved is skipped rather than failing the whole
+                // restore, but the reason is logged so a systematic resolution failure is visible.
+                AppLog.warnOnce(TAG, "restore-count-entry",
+                        "Skipping an unresolvable backup entry: " + entryName, e);
                 continue;
             }
             long size = entry.getSize();
@@ -1095,7 +1099,11 @@ public class InstanceBackupManager {
             if (cursor == null || !cursor.moveToFirst()) return null;
             int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
             return nameIndex >= 0 ? cursor.getString(nameIndex) : null;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            // The display name is cosmetic; a failure falls back to the file name at the call site,
+            // but it is logged once so a provider that never answers is diagnosable.
+            AppLog.warnOnce(TAG, "backup-display-name",
+                    "Could not read the display name of a backup", e);
             return null;
         }
     }
