@@ -483,17 +483,41 @@ public class SettingsActivity extends BaseActivity {
         // so rather than pretend.
         boolean crashUploadConfigured = CrashReportUploader.isConfigured();
         switchCrashUpload.setEnabled(crashUploadConfigured);
+        // Item 518: turning the switch on is the opt-in, so it shows what would be sent first and
+        // only records consent once the user confirms. Turning it off is immediate - a withdrawal
+        // of consent must never be gated behind a dialog.
         switchCrashUpload.setOnCheckedChangeListener((btn, checked) -> {
-            fs.setCrashUploadEnabled(checked);
-            if (checked && crashUploadConfigured) {
-                Toast.makeText(this, R.string.crash_upload_sending, Toast.LENGTH_SHORT).show();
-                AppExecutors.run(AppExecutors.Kind.NETWORK, "crash-report-upload", () ->
-                        CrashReportUploader.uploadPending(getApplicationContext()));
+            if (!checked) {
+                fs.setCrashUploadEnabled(false);
+                return;
             }
+            if (!crashUploadConfigured) {
+                fs.setCrashUploadEnabled(false);
+                btn.setChecked(false);
+                return;
+            }
+            new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                    .setTitleText(getString(R.string.crash_upload_preview_title))
+                    .setMessage(CrashReportUploader.describeNextUpload(this))
+                    .setPositiveButton(getString(R.string.crash_upload), v -> {
+                        fs.setCrashUploadEnabled(true);
+                        Toast.makeText(this, R.string.crash_upload_sending, Toast.LENGTH_SHORT).show();
+                        AppExecutors.run(AppExecutors.Kind.NETWORK, "crash-report-upload", () ->
+                                CrashReportUploader.uploadPending(getApplicationContext()));
+                    })
+                    .setNegativeButton(getString(R.string.cancel), v -> btn.setChecked(false))
+                    .show();
         });
         View crashUploadUnavailable = findViewById(R.id.crash_upload_unavailable);
         if (crashUploadUnavailable != null) {
             crashUploadUnavailable.setVisibility(crashUploadConfigured ? View.GONE : View.VISIBLE);
+        }
+
+        // Item 518: consent is only meaningful if the user can see what they are consenting to, so
+        // the report's headers and body are shown before anything is sent.
+        View crashUploadPreview = findViewById(R.id.button_crash_upload_preview);
+        if (crashUploadPreview != null) {
+            crashUploadPreview.setOnClickListener(v -> showCrashUploadPreview());
         }
 
         SwitchMaterial switchManagedLogin = findViewById(R.id.switch_managed_login);
@@ -1432,6 +1456,16 @@ public class SettingsActivity extends BaseActivity {
         } else {
             migrationCleanupStatus.setText(R.string.migration_cleanup_ready);
         }
+    }
+
+    /** Shows exactly what a crash report upload would contain (item 518). */
+    private void showCrashUploadPreview() {
+        String preview = CrashReportUploader.describeNextUpload(this);
+        new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                .setTitleText(getString(R.string.crash_upload_preview_title))
+                .setMessage(preview)
+                .setPositiveButton(getString(R.string.crash_upload_preview_close), null)
+                .show();
     }
 
     private void confirmCleanupLegacyDir() {

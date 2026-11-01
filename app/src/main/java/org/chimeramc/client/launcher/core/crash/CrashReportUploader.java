@@ -74,6 +74,34 @@ public final class CrashReportUploader {
     }
 
     /**
+     * Describes the report that would be sent next, for the consent preview (item 518).
+     *
+     * <p>Reads the same newest-unsent report the uploader would send and renders it through
+     * {@link CrashReportPreview}, so what the user is shown is what the request carries. Never
+     * throws: a preview that fails shows the reason rather than blocking the settings screen.
+     */
+    public static String describeNextUpload(Context context) {
+        String endpoint = BuildConfig.CRASH_UPLOAD_ENDPOINT;
+        if (context == null) {
+            return CrashReportPreview.describe(endpoint, BuildConfig.VERSION_NAME, "", false, null);
+        }
+        try {
+            File dir = LauncherStorage.getCrashLogsDir(context.getApplicationContext());
+            File newest = CrashReportStore.newestReportFile(dir);
+            CrashReportStore.Report report = CrashReportStore.read(newest);
+            return CrashReportPreview.describe(
+                    endpoint,
+                    BuildConfig.VERSION_NAME,
+                    newest == null ? "" : newest.getName(),
+                    report.truncated,
+                    report.text);
+        } catch (Throwable error) {
+            return CrashReportPreview.describe(endpoint, BuildConfig.VERSION_NAME, "", false,
+                    "Could not read a saved report: " + describe(error));
+        }
+    }
+
+    /**
      * Uploads every report that has not been sent yet.
      *
      * <p>Call from a background thread. Never throws: a failure to report a crash must not become a

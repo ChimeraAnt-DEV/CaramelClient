@@ -348,6 +348,16 @@
                             android:textAppearance="@style/TextAppearance.Glowberry.Caption"
                             android:visibility="gone" />
 
+                        <!-- Item 518: show exactly what a crash report contains before it is sent. -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_crash_upload_preview"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_1"
+                            android:minHeight="@dimen/min_touch_target"
+                            android:text="@string/crash_upload_preview" />
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"

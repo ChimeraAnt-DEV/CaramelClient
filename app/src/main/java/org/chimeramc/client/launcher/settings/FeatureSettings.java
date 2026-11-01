@@ -8,7 +8,12 @@ public class FeatureSettings {
     private boolean launcherManagedMcLoginEnabled = false;
     private boolean logcatOverlayEnabled = false;
     private boolean lowInputDelayEnabled = false;
-    private Boolean crashUploadEnabled = true;
+    /**
+     * Crash report upload (item 518). Off until the user opts in: a report carries a stack trace
+     * and the app version, and sending it is a disclosure the user must make deliberately. The
+     * Settings row shows exactly what would be sent before the switch is turned on.
+     */
+    private Boolean crashUploadEnabled = false;
     private boolean foregroundServiceEnabled = false;
     private boolean reduceNetworkLatencyEnabled = false;
     private boolean fpsOptimizerEnabled = false;
@@ -111,7 +116,7 @@ public class FeatureSettings {
     public boolean isLowInputDelayEnabled() { return lowInputDelayEnabled; }
     public void setLowInputDelayEnabled(boolean enabled) { this.lowInputDelayEnabled = enabled; autoSave(); }
 
-    public boolean isCrashUploadEnabled() { return crashUploadEnabled == null || crashUploadEnabled; }
+    public boolean isCrashUploadEnabled() { return crashUploadEnabled != null && crashUploadEnabled; }
     public void setCrashUploadEnabled(boolean enabled) { this.crashUploadEnabled = enabled; autoSave(); }
 
     public boolean isForegroundServiceEnabled() { return foregroundServiceEnabled; }
