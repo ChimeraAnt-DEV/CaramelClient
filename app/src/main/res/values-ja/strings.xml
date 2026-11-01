@@ -1052,6 +1052,7 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="diagnostics_preloader_abi_mismatch">v%1$d（クライアントはv%2$dを期待）</string>
     <string name="about_input_backend_status">入力バックエンド: %1$s</string>
     <string name="diagnostics_field_input_backend">入力バックエンド</string>
+    <string name="diagnostics_field_hooks">プリローダーフック</string>
     <string name="crash_exit_reason_label">前回の終了理由:</string>
     <string name="crash_disable_last_mod">クラッシュしたModを無効にする</string>
     <string name="crash_disable_no_suspects">このクラッシュに記録されたModはありません。</string>

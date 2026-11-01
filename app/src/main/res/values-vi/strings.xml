@@ -1085,6 +1085,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (ứng dụng mong đợi v%2$d)</string>
     <string name="about_input_backend_status">Phần phụ trợ nhập: %1$s</string>
     <string name="diagnostics_field_input_backend">Phần phụ trợ nhập</string>
+    <string name="diagnostics_field_hooks">Hook trình tải trước</string>
     <string name="crash_exit_reason_label">Lý do thoát lần trước:</string>
     <string name="crash_disable_last_mod">Tắt mod gây lỗi</string>
     <string name="crash_disable_no_suspects">Không có mod nào được ghi nhận cho lỗi này.</string>

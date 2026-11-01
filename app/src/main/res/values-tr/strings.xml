@@ -1082,6 +1082,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (istemci v%2$d bekliyor)</string>
     <string name="about_input_backend_status">Giriş arka ucu: %1$s</string>
     <string name="diagnostics_field_input_backend">Giriş arka ucu</string>
+    <string name="diagnostics_field_hooks">Önyükleyici kancaları</string>
     <string name="crash_exit_reason_label">Son çıkış nedeni:</string>
     <string name="crash_disable_last_mod">Çökmeye neden olan modu devre dışı bırak</string>
     <string name="crash_disable_no_suspects">Bu çökme için kayıtlı mod yok.</string>

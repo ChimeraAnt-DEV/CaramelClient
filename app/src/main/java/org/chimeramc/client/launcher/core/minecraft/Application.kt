@@ -29,6 +29,23 @@ class LauncherApplication : Application() {
         // active for it, so a hook that kills the process cannot trap the user in a crash loop.
         org.chimeramc.client.core.minecraft.OptifineModeManager.reconcileOnStartup(applicationContext)
         CrashReporter.init(this)
+        // Item 493: one table a script or a module can ask before it draws, so a feature whose
+        // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
+        // probe is a cached native read, so this is cheap enough to leave installed for the process.
+        org.chimeramc.client.core.backend.HookAvailability.install { hook ->
+            when (hook) {
+                org.chimeramc.client.core.backend.HookAvailability.Hook.PLAYER_RENDER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isPlayerRenderHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.MCE_IMAGE ->
+                    org.chimeramc.client.preloader.PreloaderInput.isMceImageHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.COSMETICS_RENDER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isCosmeticsHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.LOCAL_PLAYER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isLocalPlayerAvailable()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.TEXTURE_FLUSH ->
+                    org.chimeramc.client.preloader.PreloaderInput.isTextureCacheFlushAvailable()
+            }
+        }
         // Send any crash report captured by a previous run, but only when the user's own
         // "Crash report upload" switch is on and this build has a collector configured. Off the
         // main thread: it reads files and performs a network request, and a launcher that stalls
