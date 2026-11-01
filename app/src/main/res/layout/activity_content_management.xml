@@ -127,6 +127,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_world"
@@ -158,6 +159,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_tshirt"
@@ -189,6 +191,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_screenshot"
@@ -228,6 +231,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_photo"
@@ -259,6 +263,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_behavior"
@@ -290,6 +295,7 @@
                 android:focusable="true">
 
                 <ImageView
+                    android:importantForAccessibility="no"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_server"
