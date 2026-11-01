@@ -1900,6 +1900,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="instance_storage_title">Storage</string>
     <string name="instance_storage_desc">How much disk this instance uses. Clearing the cache is always safe: it is rebuilt on the next launch.</string>
     <string name="instance_storage_calculating">Calculating…</string>
+    <string name="instance_size_on_disk">%1$s on disk</string>
     <string name="instance_storage_breakdown">Total %1$s · Game %2$s · Mods %3$s · Runtime %4$s · Cache %5$s</string>
     <string name="instance_storage_clear_cache">Clear cache</string>
     <string name="instance_storage_cleared">Cache cleared (%1$s freed)</string>
