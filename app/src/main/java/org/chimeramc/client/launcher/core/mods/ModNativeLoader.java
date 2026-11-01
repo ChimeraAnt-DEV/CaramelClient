@@ -144,11 +144,23 @@ public class ModNativeLoader {
                 // platform path, not the package directory, so the siblings are loaded first in
                 // dependency order. A package with a single library is unaffected.
                 try {
-                    loadLibraryDependencies(packageRootOf(targetFile, mod.getEntryPath()), targetFile, mod);
+                    loadLibraryDependencies(packageRootOf(targetFile, mod.getEntryPath()), targetFile,
+                            mod, cacheModsDir);
                 } catch (IOException dependencyError) {
                     Log.e(TAG, "Can't load dependencies of " + mod.getDisplayName() + ": "
                             + dependencyError.getMessage(), dependencyError);
                     notifyFailure(listener, mod, dependencyError);
+                    continue;
+                }
+
+                // Item 512: a native library is loaded with the launcher's own privileges, so the
+                // path it comes from is a security boundary. The entry was copied into the app's
+                // private cache above; prove it is still inside that root before it reaches the
+                // linker, so a symlink or a shared path cannot smuggle a library in.
+                String refusal = NativeLoadPolicy.describeRefusal(targetFile, cacheModsDir);
+                if (refusal != null) {
+                    Log.e(TAG, "Refusing " + mod.getDisplayName() + ": " + refusal);
+                    notifyFailure(listener, mod, new IOException("refusing to load: " + refusal));
                     continue;
                 }
 
@@ -270,7 +282,8 @@ public class ModNativeLoader {
      * dynamic section, is loaded in file order rather than dropped, because a statically linked
      * sibling may still be needed and only the linker can say otherwise.
      */
-    private static void loadLibraryDependencies(File targetDirectory, File entryFile, Mod mod)
+    private static void loadLibraryDependencies(File targetDirectory, File entryFile, Mod mod,
+                                                File allowedRoot)
             throws IOException {
         List<File> libraries = new ArrayList<>();
         collectSharedLibraries(targetDirectory, libraries);
@@ -303,6 +316,13 @@ public class ModNativeLoader {
             if (mismatch != null) {
                 throw new IOException("dependency of " + mod.getDisplayName()
                         + " cannot load here: " + mismatch);
+            }
+            // Item 512: a dependency is loaded from the same private root as the entry; a sibling
+            // that escaped it (a symlink out of the package) is refused before the linker sees it.
+            String rootRefusal = NativeLoadPolicy.describeRefusal(library, allowedRoot);
+            if (rootRefusal != null) {
+                throw new IOException("refusing dependency " + fileName + " of "
+                        + mod.getDisplayName() + ": " + rootRefusal);
             }
             try {
                 System.load(library.getAbsolutePath());
