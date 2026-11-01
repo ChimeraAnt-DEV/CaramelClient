@@ -672,8 +672,11 @@ public class VersionManager {
                             .trim().equals(expectedMarker)) {
                         return true;
                     }
-                } catch (IOException ignored) {
-                    // An unreadable marker is not evidence of a current one.
+                } catch (IOException e) {
+                    // An unreadable marker is not evidence of a current one, but a silent failure
+                    // here is indistinguishable from a genuinely stale cache (item 300).
+                    org.chimeramc.client.util.AppLog.warnOnce("VersionManager", "marker-read",
+                            "Could not read the extraction marker", e);
                 }
             }
         }
@@ -1275,8 +1278,12 @@ public class VersionManager {
             // below fails, however the child's own mode is set.
             try {
                 file.setWritable(true, true);
-            } catch (SecurityException ignored) {
-                // Fall through: the deletes below are the authority on whether it worked.
+            } catch (SecurityException e) {
+                // Fall through: the deletes below are the authority on whether it worked. Logged
+                // once so a permissions problem is visible rather than looking like a dead delete
+                // loop (item 300).
+                org.chimeramc.client.util.AppLog.warnOnce("VersionManager", "set-writable",
+                        "Could not make a directory writable before deleting it", e);
             }
             File[] files = file.listFiles();
             if (files != null)
