@@ -28,6 +28,8 @@ public final class ReplayClip {
     private boolean highlight;
     /** The authored cinematic camera path stored in the sidecar, or null when none was saved. */
     private ReplayCameraPath cameraPath;
+    /** The recorded gameplay track (the player's own state over the clip), or null when none. */
+    private ReplayTrack track;
 
     public ReplayCameraPath cameraPath() {
         return cameraPath;
@@ -35,6 +37,15 @@ public final class ReplayClip {
 
     public void setCameraPath(ReplayCameraPath cameraPath) {
         this.cameraPath = cameraPath;
+    }
+
+    /** The recorded gameplay track, or null when the clip carries none (an old clip). */
+    public ReplayTrack track() {
+        return track;
+    }
+
+    public void setTrack(ReplayTrack track) {
+        this.track = track != null && !track.isEmpty() ? track : null;
     }
 
     public ReplayClip(File file, long durationMs, long sizeBytes, long recordedAtMs,

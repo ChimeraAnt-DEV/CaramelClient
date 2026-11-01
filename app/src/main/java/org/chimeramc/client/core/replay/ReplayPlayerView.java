@@ -289,8 +289,28 @@ public final class ReplayPlayerView {
     public void toggleFreeCamera() {
         freeCamera = !freeCamera;
         looking = false;
+        if (freeCamera) seedCameraFromTrack();
         updateCameraLabel();
         updateFlyStick();
+    }
+
+    /**
+     * Seeds the spectator camera from the recorded gameplay track at the current position.
+     *
+     * <p>Detaching should start where the player actually was, not at an origin. The track records
+     * the player's own pose (the same local-player feed the HUD reads), so the free camera opens on
+     * the recorded view; a clip with no track (an old clip, or a session with no live feed) keeps
+     * the camera where it was rather than snapping to a fabricated origin.
+     */
+    private void seedCameraFromTrack() {
+        if (clip == null) return;
+        ReplayTrack track = clip.track();
+        if (track == null || track.isEmpty()) return;
+        ReplayTrack.Frame frame = track.at(timeline.positionMs());
+        if (frame == null || !frame.hasPosition()) return;
+        camera.set(frame.x, frame.y, frame.z,
+                frame.hasRotation() ? frame.yawDeg : camera.yawDeg(),
+                frame.hasRotation() ? frame.pitchDeg : camera.pitchDeg());
     }
 
     /** True while the interactive spectator flight is available (free camera, no authored shot). */

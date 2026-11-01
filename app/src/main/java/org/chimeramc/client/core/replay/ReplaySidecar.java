@@ -25,6 +25,7 @@ public final class ReplaySidecar {
     private static final String KEY_FAVORITE = "favorite";
     private static final String KEY_HIGHLIGHT = "highlight";
     private static final String KEY_CAMERA_PATH = "cameraPath";
+    private static final String KEY_TRACK = "track";
 
     private final Map<String, String> values = new LinkedHashMap<>();
 
@@ -107,6 +108,16 @@ public final class ReplaySidecar {
     public ReplaySidecar setCameraPath(ReplayCameraPath path) {
         String encoded = ReplayCameraPathCodec.serialize(path);
         return set(KEY_CAMERA_PATH, encoded);
+    }
+
+    /** The recorded gameplay track, or an empty track when the clip carries none. */
+    public ReplayTrack track() {
+        return ReplayTrack.parse(get(KEY_TRACK, ""));
+    }
+
+    /** Stores the gameplay track; an empty track clears the key. */
+    public ReplaySidecar setTrack(ReplayTrack track) {
+        return set(KEY_TRACK, track == null ? "" : track.serializeLine());
     }
 
     public String serialize() {
