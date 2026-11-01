@@ -10,7 +10,7 @@ package org.chimeramc.client.core.cosmetics;
  *   <li>Only the standard skin sizes are accepted: 64x32, 64x64, 128x128, 256x256.</li>
  *   <li>A buffer that is entirely zero (a failed read) is rejected.</li>
  *   <li>A skin with no opaque pixel at all is rejected.</li>
- *   <li>Non-64x64 skins are downscaled by an exact integer ratio (128→64 is /2, 256→64 is /4,
+ *   <li>Non-64x64 skins are downscaled by an exact integer ratio (128->64 is /2, 256->64 is /4,
  *       64x32 keeps its height in the top half).</li>
  *   <li>The arm model (wide/slim) is carried through, defaulting to wide when unknown.</li>
  * </ul>

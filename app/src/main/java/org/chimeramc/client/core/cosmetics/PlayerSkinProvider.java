@@ -97,7 +97,7 @@ public final class PlayerSkinProvider {
 
     /**
      * Resolves the player's skin, in the fallback chain the preview promises:
-     * imported skin → account skin → the game's captured skin → applied pack → Steve → grey
+     * imported skin -> account skin -> the game's captured skin -> applied pack -> Steve -> grey
      * placeholder.
      *
      * <p>Phase 1: the game capture is <em>content, not attribution</em> — the image-loader seam

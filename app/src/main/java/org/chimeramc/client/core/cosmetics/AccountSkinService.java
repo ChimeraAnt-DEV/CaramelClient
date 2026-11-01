@@ -19,15 +19,15 @@ import java.util.Base64;
  * atlas so the preview (and the radial wheel's hub head) shows the player's own character rather
  * than a stand-in.
  *
- * <p><b>Pipeline.</b> The launcher already completes the Microsoft OAuth → Xbox Live (XSTS) →
+ * <p><b>Pipeline.</b> The launcher already completes the Microsoft OAuth -> Xbox Live (XSTS) ->
  * Bedrock certificate handshake, which yields the player's XUID ({@code MsftAccountStore}). That
  * XUID identifies the account to a Bedrock skin service:
  *
  * <pre>
- *   Microsoft OAuth → XSTS token + XUID → skin service (by XUID) → texture id → PNG atlas
+ *   Microsoft OAuth -> XSTS token + XUID -> skin service (by XUID) -> texture id -> PNG atlas
  * </pre>
  *
- * <p><b>Why a service is needed at all.</b> Bedrock has no public XUID → skin endpoint of its own;
+ * <p><b>Why a service is needed at all.</b> Bedrock has no public XUID -> skin endpoint of its own;
  * Mojang's {@code textures.minecraft.net} CDN hosts the PNG but only once a texture id is known, and
  * there is no official way to get that id from a XUID. The GeyserMC global API exposes exactly that
  * mapping for players its servers have seen, returning a Texture Data {value, signature} pair whose

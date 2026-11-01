@@ -16,7 +16,7 @@ import org.chimeramc.client.util.PersonalizationManager;
  * class is what makes that true: the cards, pills and washes are drawn from the same ramp, so the
  * feature
  * cannot look like two different products depending on how it was opened. It is a four-tier
- * surface ramp (canvas → surface → elevated → hairline), a text ramp and a fixed status palette,
+ * surface ramp (canvas -> surface -> elevated -> hairline), a text ramp and a fixed status palette,
  * plus factories for the rounded / stroked / rippled drawables the panel reuses.
  */
 public final class ReplayStyle {

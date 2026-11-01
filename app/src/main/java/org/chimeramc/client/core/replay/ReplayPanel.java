@@ -1173,8 +1173,8 @@ public final class ReplayPanel {
      *
      * <p>This is the single place an action turns into behaviour. The in-game Mod Menu and the
      * Library's Replay tab both route through it, so a mapping cannot do one thing on one screen
-     * and something else on the other. {@link ReplayControls} owns the key→action table; this owns
-     * action→behaviour.
+     * and something else on the other. {@link ReplayControls} owns the key->action table; this owns
+     * action->behaviour.
      *
      * @return true when the action applied. {@code PLAY_PAUSE} is false when no clip is open, which
      *         is what lets the in-game menu fall through to its own Start binding.

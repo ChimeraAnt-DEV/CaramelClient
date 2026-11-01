@@ -31,7 +31,7 @@ import okhttp3.ResponseBody;
  * slider — a control whose only effect is on itself.
  *
  * <p>The endpoint is a build-time property ({@code crash.upload.endpoint} in {@code local.properties}
- * → {@link BuildConfig#CRASH_UPLOAD_ENDPOINT}), the same shape the voice relay address uses. It is
+ * -> {@link BuildConfig#CRASH_UPLOAD_ENDPOINT}), the same shape the voice relay address uses. It is
  * empty in the shipped source, and the source holds no collector address, so:
  *
  * <ul>

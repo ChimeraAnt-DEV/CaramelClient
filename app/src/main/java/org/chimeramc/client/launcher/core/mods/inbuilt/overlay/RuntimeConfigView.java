@@ -438,7 +438,7 @@ final class RuntimeConfigView {
         row.setOrientation(LinearLayout.VERTICAL);
         row.setPadding(dp(4), dp(10), dp(4), dp(5));
         TextView title = new TextView(context);
-        // A vector chevron rather than a ▸/▾ glyph: the spec bans emoji/symbol glyphs, and a
+        // A vector chevron rather than a triangle-glyph text marker: the spec bans emoji/symbol glyphs, and a
         // compound drawable keeps the indicator with the title at any font scale.
         title.setText(node.title);
         if (node.collapsible) {
