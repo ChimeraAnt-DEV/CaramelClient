@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.crash;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
@@ -52,7 +54,7 @@ public final class ProcessExitReasons {
      * <p>Never throws: a diagnostics read must not be the thing that takes the process down.
      */
     public static LastExit read(Context context) {
-        if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+        if (context == null || ApiLevels.belowR()) {
             return null;
         }
         try {

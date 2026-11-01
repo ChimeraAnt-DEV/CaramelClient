@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -528,7 +530,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void syncSystemLocale() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (ApiLevels.atLeastTiramisu()) {
             try {
                 android.app.LocaleManager localeManager = getSystemService(android.app.LocaleManager.class);
                 if (localeManager != null) {

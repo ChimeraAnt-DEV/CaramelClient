@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -371,7 +373,7 @@ public class CustomAlertDialog extends Dialog {
     }
 
     private void clearBackdrop(Window window) {
-        if (mBlurBackground && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (mBlurBackground && ApiLevels.atLeastS()) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         }
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);

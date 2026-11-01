@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.fragments;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.Manifest;
 import android.content.Context;
@@ -624,7 +626,7 @@ public class InstancesFragment extends Fragment {
 
     private void startBatchBackupWithPermissionCheck(List<GameVersion> versionsToBackup) {
         pendingBatchBackupVersions = new ArrayList<>(versionsToBackup);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+        if (ApiLevels.belowQ()
                 && ContextCompat.checkSelfPermission(ctx(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(

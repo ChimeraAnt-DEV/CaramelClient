@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.setup;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
@@ -87,7 +89,7 @@ public final class CompatibilityProbe {
         // therefore reports the device's real state (all-files access, or the legacy permission on
         // older releases) and lets CompatibilityCheck decide how much it matters.
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (ApiLevels.atLeastR()) {
                 return Environment.isExternalStorageManager();
             }
             PermissionsHandler handler = PermissionsHandler.getInstance();

@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -635,7 +637,7 @@ import okhttp3.OkHttpClient;
         }
         popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         popup.setOutsideTouchable(true);
-        if (android.os.Build.VERSION.SDK_INT >= 21) popup.setElevation(8f);
+        if (ApiLevels.atLeast(21)) popup.setElevation(8f);
 
         final ViewGroup root = findViewById(android.R.id.content);
         final View scrim = new View(this);
@@ -1108,7 +1110,7 @@ import okhttp3.OkHttpClient;
     }
 
     private void requestNotificationPermissionForMigration() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || notificationPermissionLauncher == null) return;
+        if (ApiLevels.belowTiramisu() || notificationPermissionLauncher == null) return;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
             return;

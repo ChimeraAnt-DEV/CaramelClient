@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -211,7 +213,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
      * the window is left untouched.
      */
     private fun applyHighRefreshRateMode() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
+        if (ApiLevels.belowR()) return
         if (!PerformancePresetManager.shouldRequestHighRefresh(this)) return
         try {
             val current = display?.mode ?: return

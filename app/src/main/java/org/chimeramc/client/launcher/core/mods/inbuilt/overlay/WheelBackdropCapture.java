@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
@@ -49,7 +51,7 @@ public final class WheelBackdropCapture {
 
     /** True when the platform can capture at all ({@code PixelCopy} is API 24+, guarded for minSdk). */
     public static boolean isSupported() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+        return ApiLevels.atLeastO();
     }
 
     /** The refresh schedule, so the caller can drive the rate limit (R3). */

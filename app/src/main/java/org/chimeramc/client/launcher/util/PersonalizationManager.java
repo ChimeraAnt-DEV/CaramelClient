@@ -513,7 +513,7 @@ public class PersonalizationManager {
     }
 
     public boolean supportsRealtimeBackgroundBlur() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
+        return ApiLevels.atLeastS();
     }
 
     public boolean applyBackgroundImageToView(ImageView bgView) {
@@ -521,7 +521,7 @@ public class PersonalizationManager {
         if (bmp == null) return false;
 
         Bitmap displayBitmap = bmp;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && getBackgroundImageBlur() > 0) {
+        if (ApiLevels.belowS() && getBackgroundImageBlur() > 0) {
             Bitmap blurredBitmap = createBlurredBitmap(bmp, getBackgroundImageBlur());
             if (blurredBitmap != null) {
                 displayBitmap = blurredBitmap;
@@ -537,7 +537,7 @@ public class PersonalizationManager {
     }
 
     public void refreshBackgroundImageView(ImageView bgView) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        if (ApiLevels.belowS()) {
             applyBackgroundImageToView(bgView);
         } else {
             applyBackgroundImageEffects(bgView);
@@ -546,7 +546,7 @@ public class PersonalizationManager {
 
     public void applyBackgroundImageEffects(ImageView bgView) {
         int blurRadius = getBackgroundImageBlur();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (ApiLevels.atLeastS()) {
             if (blurRadius > 0) {
                 bgView.setRenderEffect(RenderEffect.createBlurEffect(
                         blurRadius, blurRadius, Shader.TileMode.CLAMP));

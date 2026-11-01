@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -35,7 +37,7 @@ class MinecraftForegroundService : Service() {
 
         acquireBackgroundLocks()
         val notification = createNotification()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (ApiLevels.atLeastUpsideDownCake()) {
 
             startForeground(
                 NOTIFICATION_ID,

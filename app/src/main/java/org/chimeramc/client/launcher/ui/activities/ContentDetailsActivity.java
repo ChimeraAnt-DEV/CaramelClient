@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -326,7 +328,7 @@ public class ContentDetailsActivity extends BaseActivity {
                             | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             );
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            if (ApiLevels.atLeastR()) {
                 dialog.getWindow().setDecorFitsSystemWindows(false);
                 android.view.WindowInsetsController controller = decorView.getWindowInsetsController();
                 if (controller != null) {

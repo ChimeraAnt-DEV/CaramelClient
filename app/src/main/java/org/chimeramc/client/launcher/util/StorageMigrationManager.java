@@ -143,7 +143,7 @@ public class StorageMigrationManager {
     }
 
     public boolean canReadLegacyRoot() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R
+        if (ApiLevels.atLeastR()
                 && !Environment.isExternalStorageManager()) {
             return false;
         }

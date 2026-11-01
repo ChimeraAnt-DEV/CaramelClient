@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -608,7 +610,7 @@ public class InstanceSettingsActivity extends BaseActivity {
     }
 
     private void startBackupWithPermissionCheck() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+        if (ApiLevels.belowQ()
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,

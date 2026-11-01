@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -175,7 +177,7 @@ public class ModMenuSwitchView extends View {
         boolean next = !checked;
         setChecked(next, true);
         if (hapticsEnabled && ModMenuSwitch.hapticsOnStateChange()) {
-            performHapticFeedback(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+            performHapticFeedback(ApiLevels.atLeastO()
                     ? HapticFeedbackConstants.CLOCK_TICK
                     : HapticFeedbackConstants.VIRTUAL_KEY);
         }

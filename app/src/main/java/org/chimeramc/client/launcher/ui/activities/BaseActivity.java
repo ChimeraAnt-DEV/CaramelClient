@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.content.Context;
 import android.content.Intent;
@@ -1384,12 +1386,12 @@ public class BaseActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             getWindow().setStatusBarContrastEnforced(false);
             getWindow().setNavigationBarContrastEnforced(false);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (ApiLevels.atLeastR()) {
             getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController controller = decorView.getWindowInsetsController();
             if (controller != null) {

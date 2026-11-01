@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -92,7 +94,7 @@ public final class ControllerToastView {
                              final String profileName, final ControllerType type,
                              final boolean allowTapToSettings, final boolean keyboard) {
         if (activity == null || activity.isFinishing()) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed()) {
+        if (ApiLevels.atLeast(17) && activity.isDestroyed()) {
             return;
         }
         final ViewGroup root = activity.findViewById(android.R.id.content);

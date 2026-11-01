@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.animation;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
@@ -76,14 +78,14 @@ public final class UiTouchFeedback {
         try {
             if (context == null) return;
             Vibrator vibrator = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ApiLevels.atLeastS()) {
                 VibratorManager manager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
                 if (manager != null) vibrator = manager.getDefaultVibrator();
             } else {
                 vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             }
             if (vibrator == null || !vibrator.hasVibrator()) return;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ApiLevels.atLeastQ()) {
                 try {
                     vibrator.vibrate(VibrationEffect.createPredefined(predefined));
                     return;
@@ -91,7 +93,7 @@ public final class UiTouchFeedback {
                     // Some OEM vibrators reject predefined effects; fall through to a one-shot.
                 }
                 vibrator.vibrate(VibrationEffect.createOneShot(fallbackMs, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            } else if (ApiLevels.atLeastO()) {
                 vibrator.vibrate(VibrationEffect.createOneShot(fallbackMs, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 vibrator.vibrate(fallbackMs);

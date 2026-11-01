@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.Api28Compat;
 import android.app.Activity;
 import android.content.Context;
@@ -214,7 +216,7 @@ public class MinecraftLauncher {
         Intent launchIntent = sourceIntent == null ? new Intent() : new Intent(sourceIntent);
         LaunchTrace trace = LaunchTrace.ensure(launchIntent);
         trace.mark("Building MinecraftLoadingActivity intent");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        if (ApiLevels.belowS()) {
             launchIntent.putExtra("DISABLE_SPLASH_SCREEN", true);
         }
         fillIntentWithStoragePaths(launchIntent, version);

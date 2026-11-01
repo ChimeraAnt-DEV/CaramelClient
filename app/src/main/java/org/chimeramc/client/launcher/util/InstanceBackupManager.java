@@ -397,7 +397,7 @@ public class InstanceBackupManager {
 
     private OutputTarget createOutputTarget(String fileName) throws IOException {
         OutputTarget target = new OutputTarget();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             ContentValues values = new ContentValues();
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
             values.put(MediaStore.MediaColumns.MIME_TYPE, "application/zip");
@@ -439,7 +439,7 @@ public class InstanceBackupManager {
             AppLog.warnOnce(TAG, "backup-close", "Closing the backup archive failed", ignored);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && target.uri != null) {
+        if (ApiLevels.atLeastQ() && target.uri != null) {
             ContentResolver resolver = context.getContentResolver();
             if (success) {
                 ContentValues values = new ContentValues();
@@ -467,7 +467,7 @@ public class InstanceBackupManager {
             throw new IOException("Backup produced no output");
         }
         File toCheck = target.file;
-        if (toCheck == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && target.uri != null) {
+        if (toCheck == null && ApiLevels.atLeastQ() && target.uri != null) {
             // MediaStore: read the pending entry back through the resolver into a temp file.
             File temp = new File(context.getCacheDir(),
                     "verify_backup_" + System.currentTimeMillis() + BACKUP_EXTENSION);

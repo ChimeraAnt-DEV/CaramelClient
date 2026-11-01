@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -406,7 +408,7 @@ public class DiagnosticsActivity extends BaseActivity {
         addRow(rows, R.string.diagnostics_field_app_version, BuildConfig.VERSION_NAME
                 + " (" + BuildConfig.VERSION_CODE + ")");
         addRow(rows, R.string.diagnostics_field_android_version, Build.VERSION.RELEASE
-                + " (API " + Build.VERSION.SDK_INT + ")");
+                + " (API " + ApiLevels.sdkInt() + ")");
         addRow(rows, R.string.diagnostics_field_device, Build.MANUFACTURER + " " + Build.MODEL);
         // The app's real target SDK, read from the installed package. The old value guessed from the
         // device API (>= 33 ? "35" : "28"), so it was wrong on every device that was not on exactly
@@ -749,7 +751,7 @@ public class DiagnosticsActivity extends BaseActivity {
         sb.append("GlowberryClient Diagnostics\n");
         sb.append("===========================\n\n");
         sb.append("App version: ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n");
-        sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(Build.VERSION.SDK_INT).append(")\n");
+        sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(ApiLevels.sdkInt()).append(")\n");
         sb.append("Device: ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL).append("\n");
         sb.append("Target SDK: ").append(getApplicationInfo().targetSdkVersion).append("\n");
         sb.append("ABIs: ").append(String.join(", ", Build.SUPPORTED_ABIS)).append("\n");

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -258,7 +260,7 @@ object MinecraftRuntimePreparer {
 
     @JvmStatic
     fun resolveGameVersion(intent: Intent): GameVersion? {
-        val parcelableVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val parcelableVersion = if (ApiLevels.atLeastTiramisu()) {
             intent.getParcelableExtra(MinecraftLauncher.EXTRA_GAME_VERSION, GameVersion::class.java)
         } else {
             @Suppress("DEPRECATION")

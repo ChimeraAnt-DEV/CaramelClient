@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
@@ -43,7 +45,7 @@ public final class ReplayExporter {
     /** Copies a clip into the shared gallery. Returns the resulting Uri, or null on failure. */
     public static Uri exportToGallery(Context context, ReplayClip clip) {
         if (clip == null || clip.file() == null || !clip.file().isFile()) return null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             return exportViaMediaStore(context, clip.file());
         }
         return exportViaFileCopy(context, clip.file());

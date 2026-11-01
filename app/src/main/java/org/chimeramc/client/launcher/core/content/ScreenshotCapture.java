@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.content;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -64,7 +66,7 @@ public final class ScreenshotCapture {
             if (callback != null) callback.onFailed();
             return;
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (ApiLevels.belowO()) {
             if (callback != null) callback.onFailed();
             return;
         }

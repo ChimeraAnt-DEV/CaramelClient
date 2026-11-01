@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -87,7 +89,7 @@ object MinecraftProcessRestarter {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
         val flags = PendingIntent.FLAG_NO_CREATE or
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ApiLevels.atLeastM()) {
                 PendingIntent.FLAG_IMMUTABLE
             } else {
                 0
@@ -190,7 +192,7 @@ class LauncherRestartActivity : BaseActivity() {
         }, RELAUNCH_AFTER_KILL_DELAY_MS)
     }
 
-    private fun isFinishingOrGone(): Boolean = isFinishing || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed)
+    private fun isFinishingOrGone(): Boolean = isFinishing || (ApiLevels.atLeast(17) && isDestroyed)
 
     private fun registerCloseReceiver() {
         if (closeReceiverRegistered) return
@@ -212,7 +214,7 @@ class LauncherRestartActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.statusBarColor = baseBackground
         window.navigationBarColor = baseBackground
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             window.isStatusBarContrastEnforced = false
             window.isNavigationBarContrastEnforced = false
         }

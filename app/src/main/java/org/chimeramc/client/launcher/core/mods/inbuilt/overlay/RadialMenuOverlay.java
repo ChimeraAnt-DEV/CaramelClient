@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -287,7 +289,7 @@ public class RadialMenuOverlay {
                         | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+        if (ApiLevels.atLeastP()) {
             wmParams.layoutInDisplayCutoutMode =
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
@@ -446,7 +448,7 @@ public class RadialMenuOverlay {
      */
     private static RadialWheelMaterial.Env buildMaterialEnv(Activity activity) {
         RadialWheelMaterial.Env env = new RadialWheelMaterial.Env();
-        env.apiLevel(android.os.Build.VERSION.SDK_INT);
+        env.apiLevel(ApiLevels.sdkInt());
         try {
             PersonalizationManager personalization = new PersonalizationManager(activity);
             env.reduceMotion(personalization.isReduceMotion());

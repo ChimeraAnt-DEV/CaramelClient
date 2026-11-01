@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -321,7 +323,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         progressBar.progressTintList = accentTint
         progressBar.progressBackgroundTintList = ColorStateList.valueOf(withAlpha(accent, TRACK_ALPHA))
         progressBar.indeterminateTintList = accentTint
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             progressBar.progressDrawable?.colorFilter = null
         }
 
@@ -444,12 +446,12 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             window.isStatusBarContrastEnforced = false
             window.isNavigationBarContrastEnforced = false
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (ApiLevels.atLeastR()) {
             window.setDecorFitsSystemWindows(false)
             decorView.windowInsetsController?.let { controller ->
                 controller.systemBarsBehavior =

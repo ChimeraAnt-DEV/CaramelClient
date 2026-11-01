@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
@@ -424,7 +426,7 @@ public class LogcatOverlay extends FrameLayout {
                 List<String> cmd = new ArrayList<>();
                 cmd.add("logcat");
                 cmd.add("-v"); cmd.add("threadtime");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (ApiLevels.atLeastN()) {
                     cmd.add("--pid");
                     cmd.add(String.valueOf(android.os.Process.myPid()));
                 }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
@@ -420,7 +422,7 @@ public class ModMenuOverlay {
                     | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT
             );
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            if (ApiLevels.atLeastP()) {
                 wmParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             wmParams.gravity = Gravity.CENTER;
@@ -3085,7 +3087,7 @@ public class ModMenuOverlay {
     private void showBackdropBitmap(android.widget.ImageView layer, android.graphics.Bitmap capture) {
         try {
             layer.setVisibility(android.view.View.VISIBLE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (ApiLevels.atLeastS()) {
                 layer.setImageBitmap(capture);
                 // The blur radius is the regular tier's, matching the wheel's panel backdrop. The
                 // RenderEffect type is reached only through the renderer's guarded holder.
