@@ -45,6 +45,11 @@ public final class ManifestExportAudit {
         out.add(new Exported(".ui.activities.IntentHandler",
                 "Opens a game package or an .AntEgg from another app (ACTION_VIEW). Every extra is "
                         + "validated and size-limited by IntentHandler before it is used."));
+        out.add(new Exported("org.chimeramc.client.launcher.settings.PerformanceTileService",
+                "Quick Settings tile (item 268). Started by the system Quick Settings panel with "
+                        + "BIND_QUICK_SETTINGS_TILE, which the platform holds; the service only "
+                        + "cycles the performance preset through FeatureSettings and reads no "
+                        + "caller-supplied extras."));
         out.add(new Exported("com.microsoft.xal.browser.IntentHandler",
                 "Xbox sign-in redirect (ms-xal-...://auth). Third-party SDK component: the scheme is "
                         + "the app's own XAL redirect, so only the sign-in flow can reach it."));
