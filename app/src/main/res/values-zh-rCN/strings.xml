@@ -1223,4 +1223,10 @@
     <string name="crash_upload_preview">发送的内容</string>
     <string name="crash_upload_preview_title">崩溃报告内容</string>
     <string name="crash_upload_preview_close">关闭</string>
+    <string name="mod_integrity_label">完整性</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\n来源：%2$s</string>
+    <string name="mod_integrity_unpinned">未固定 \u2014 此模组未发布校验和。来源：%1$s</string>
+    <string name="mod_import_link_confirm_title">导入此包？</string>
+    <string name="mod_import_link_confirm_go">下载并导入</string>
+    <string name="mod_import_link_done_digest">已导入 %1$s。\n%2$s</string>
 </resources>

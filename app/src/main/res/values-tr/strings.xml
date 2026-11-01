@@ -1229,4 +1229,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="crash_upload_preview">Neler gönderilir</string>
     <string name="crash_upload_preview_title">Çökme raporu içeriği</string>
     <string name="crash_upload_preview_close">Kapat</string>
+    <string name="mod_integrity_label">Bütünlük</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nKaynak: %2$s</string>
+    <string name="mod_integrity_unpinned">Sabitlenmemiş \u2014 bu mod için bir sağlama toplamı yayımlanmadı. Kaynak: %1$s</string>
+    <string name="mod_import_link_confirm_title">Bu paket içe aktarılsın mı?</string>
+    <string name="mod_import_link_confirm_go">İndir ve içe aktar</string>
+    <string name="mod_import_link_done_digest">%1$s içe aktarıldı.\n%2$s</string>
 </resources>

@@ -75,6 +75,15 @@ public final class AntEggLinkDownloader {
         void onSuccess(File staged, String fileName);
 
         void onError(String message);
+
+        /**
+         * The declared size of the download, reported once the response headers arrive (item 233).
+         *
+         * <p>A negative value means the server declared no length. Defaulted so an existing caller
+         * needs no change; a caller that shows a preview overrides it.
+         */
+        default void onDeclaredSize(long sizeBytes) {
+        }
     }
 
     /**
@@ -105,6 +114,10 @@ public final class AntEggLinkDownloader {
                     if (body == null) throw new IOException("The download returned no content.");
 
                     long total = body.contentLength();
+                    if (listener != null || callback != null) {
+                        final long declared = total;
+                        post(() -> callback.onDeclaredSize(declared));
+                    }
                     if (total > MAX_BYTES) {
                         throw new IOException("That package is larger than the "
                                 + (MAX_BYTES / (1024 * 1024)) + " MB limit.");

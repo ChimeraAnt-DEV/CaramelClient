@@ -1226,4 +1226,10 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="crash_upload_preview">Apa yang dikirim</string>
     <string name="crash_upload_preview_title">Isi laporan kerusakan</string>
     <string name="crash_upload_preview_close">Tutup</string>
+    <string name="mod_integrity_label">Integritas</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nSumber: %2$s</string>
+    <string name="mod_integrity_unpinned">Tidak dipatok \u2014 tidak ada checksum yang diterbitkan untuk mod ini. Sumber: %1$s</string>
+    <string name="mod_import_link_confirm_title">Impor paket ini?</string>
+    <string name="mod_import_link_confirm_go">Unduh dan impor</string>
+    <string name="mod_import_link_done_digest">%1$s diimpor.\n%2$s</string>
 </resources>

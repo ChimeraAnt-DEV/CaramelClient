@@ -1199,4 +1199,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="crash_upload_preview">送信される内容</string>
     <string name="crash_upload_preview_title">クラッシュレポートの内容</string>
     <string name="crash_upload_preview_close">閉じる</string>
+    <string name="mod_integrity_label">整合性</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nソース: %2$s</string>
+    <string name="mod_integrity_unpinned">固定されていません \u2014 このModのチェックサムは公開されていません。ソース: %1$s</string>
+    <string name="mod_import_link_confirm_title">このパッケージをインポートしますか？</string>
+    <string name="mod_import_link_confirm_go">ダウンロードしてインポート</string>
+    <string name="mod_import_link_done_digest">%1$s をインポートしました。\n%2$s</string>
 </resources>

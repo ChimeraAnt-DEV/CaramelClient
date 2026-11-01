@@ -289,6 +289,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_import_link_downloading">Downloading the package…</string>
     <string name="mod_import_link_done">Imported %1$s.</string>
     <string name="mod_import_link_failed">Could not import from that link: %1$s</string>
+    <string name="mod_import_link_confirm_title">Import this package?</string>
+    <string name="mod_import_link_confirm_go">Download and import</string>
+    <string name="mod_import_link_done_digest">Imported %1$s.\n%2$s</string>
     <string name="invalid_mod_file_reason">Only .antegg packages, .so files or .zip mod packages are accepted. The selected file is not a valid native mod import package.</string>
     <string name="invalid_zip_mod_package_title">Invalid ZIP Mod Package</string>
     <string name="invalid_zip_mod_package_message">The ZIP mod package must contain manifest.json and a .so file.</string>
@@ -519,6 +522,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_entry_label">Entry File</string>
     <string name="mod_id_label">Mod ID</string>
     <string name="mod_config_files_label">Config Files</string>
+    <string name="mod_integrity_label">Integrity</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nSource: %2$s</string>
+    <string name="mod_integrity_unpinned">Not pinned \u2014 no checksum was published for this mod. Source: %1$s</string>
     <string name="mod_unknown_author">Unknown author</string>
     <string name="mod_unknown_version">Unknown version</string>
     <string name="mod_all_versions">All supported versions</string>

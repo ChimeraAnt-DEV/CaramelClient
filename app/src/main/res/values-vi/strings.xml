@@ -1232,4 +1232,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="crash_upload_preview">Nội dung được gửi</string>
     <string name="crash_upload_preview_title">Nội dung báo cáo lỗi</string>
     <string name="crash_upload_preview_close">Đóng</string>
+    <string name="mod_integrity_label">Toàn vẹn</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nNguồn: %2$s</string>
+    <string name="mod_integrity_unpinned">Chưa ghim \u2014 không có tổng kiểm tra nào được công bố cho mod này. Nguồn: %1$s</string>
+    <string name="mod_import_link_confirm_title">Nhập gói này?</string>
+    <string name="mod_import_link_confirm_go">Tải xuống và nhập</string>
+    <string name="mod_import_link_done_digest">Đã nhập %1$s.\n%2$s</string>
 </resources>

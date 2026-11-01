@@ -1233,4 +1233,10 @@
     <string name="crash_upload_preview">Что отправляется</string>
     <string name="crash_upload_preview_title">Содержимое отчёта о сбое</string>
     <string name="crash_upload_preview_close">Закрыть</string>
+    <string name="mod_integrity_label">Целостность</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nИсточник: %2$s</string>
+    <string name="mod_integrity_unpinned">Не закреплено \u2014 для этого мода не опубликована контрольная сумма. Источник: %1$s</string>
+    <string name="mod_import_link_confirm_title">Импортировать этот пакет?</string>
+    <string name="mod_import_link_confirm_go">Скачать и импортировать</string>
+    <string name="mod_import_link_done_digest">%1$s импортирован.\n%2$s</string>
 </resources>

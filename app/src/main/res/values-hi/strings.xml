@@ -1230,4 +1230,10 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="crash_upload_preview">क्या भेजा जाता है</string>
     <string name="crash_upload_preview_title">क्रैश रिपोर्ट की सामग्री</string>
     <string name="crash_upload_preview_close">बंद करें</string>
+    <string name="mod_integrity_label">अखंडता</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nस्रोत: %2$s</string>
+    <string name="mod_integrity_unpinned">पिन नहीं किया गया \u2014 इस मॉड के लिए कोई चेकसम प्रकाशित नहीं किया गया। स्रोत: %1$s</string>
+    <string name="mod_import_link_confirm_title">इस पैकेज को आयात करें?</string>
+    <string name="mod_import_link_confirm_go">डाउनलोड और आयात करें</string>
+    <string name="mod_import_link_done_digest">%1$s आयात किया गया।\n%2$s</string>
 </resources>

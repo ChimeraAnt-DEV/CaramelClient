@@ -1202,4 +1202,10 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="crash_upload_preview">O que é enviado</string>
     <string name="crash_upload_preview_title">Conteúdo do relatório de falha</string>
     <string name="crash_upload_preview_close">Fechar</string>
+    <string name="mod_integrity_label">Integridade</string>
+    <string name="mod_integrity_verified">SHA-256 %1$s\nOrigem: %2$s</string>
+    <string name="mod_integrity_unpinned">Não fixado \u2014 nenhuma soma de verificação foi publicada para este mod. Origem: %1$s</string>
+    <string name="mod_import_link_confirm_title">Importar este pacote?</string>
+    <string name="mod_import_link_confirm_go">Baixar e importar</string>
+    <string name="mod_import_link_done_digest">%1$s importado.\n%2$s</string>
 </resources>

@@ -14,7 +14,13 @@
   "replay_markers_count": "%1$d marcadores",
   "crash_upload_preview": "Qué se envía",
   "crash_upload_preview_title": "Contenido del informe de fallo",
-  "crash_upload_preview_close": "Cerrar"
+  "crash_upload_preview_close": "Cerrar",
+  "mod_integrity_label": "Integridad",
+  "mod_integrity_verified": "SHA-256 %1$s\\nOrigen: %2$s",
+  "mod_integrity_unpinned": "Sin fijar \\u2014 no se publicó ninguna suma de comprobación para este mod. Origen: %1$s",
+  "mod_import_link_confirm_title": "¿Importar este paquete?",
+  "mod_import_link_confirm_go": "Descargar e importar",
+  "mod_import_link_done_digest": "Se importó %1$s.\\n%2$s"
  },
  "fr": {
   "launch_failure_message_play_store": "Il s’agit soit d’une version Google Play de Minecraft, soit d’une version à laquelle il manque un fichier nécessaire au lancement du jeu.\\n\\nLe lanceur doit charger directement la bibliothèque native du jeu, et la version Play Store la garde à l’intérieur de l’application installée, où ce lanceur ne peut pas l’atteindre.\\n\\nPour jouer, importez un APK Minecraft depuis la Bibliothèque. Une installation Play Store peut rester sur votre appareil : vous n’avez pas à la supprimer.",
@@ -31,7 +37,13 @@
   "replay_markers_count": "%1$d marqueurs",
   "crash_upload_preview": "Ce qui est envoyé",
   "crash_upload_preview_title": "Contenu du rapport de plantage",
-  "crash_upload_preview_close": "Fermer"
+  "crash_upload_preview_close": "Fermer",
+  "mod_integrity_label": "Intégrité",
+  "mod_integrity_verified": "SHA-256 %1$s\\nSource : %2$s",
+  "mod_integrity_unpinned": "Non épinglé \\u2014 aucune somme de contrôle n'a été publiée pour ce mod. Source : %1$s",
+  "mod_import_link_confirm_title": "Importer ce paquet ?",
+  "mod_import_link_confirm_go": "Télécharger et importer",
+  "mod_import_link_done_digest": "%1$s importé.\\n%2$s"
  },
  "hi": {
   "launch_failure_message_play_store": "यह या तो Minecraft का Google Play संस्करण है, या ऐसा संस्करण जिसमें गेम शुरू करने के लिए ज़रूरी एक फ़ाइल नहीं है।\\n\\nलॉन्चर को गेम की नेटिव लाइब्रेरी सीधे लोड करनी होती है, और Play Store संस्करण उसे इंस्टॉल किए गए ऐप के अंदर रखता है, जहाँ यह लॉन्चर पहुँच नहीं सकता।\\n\\nखेलने के लिए लाइब्रेरी से Minecraft APK इंपोर्ट करें। Play Store इंस्टॉल आपके डिवाइस पर रह सकता है — उसे हटाना ज़रूरी नहीं है।",
@@ -48,7 +60,13 @@
   "replay_markers_count": "%1$d मार्कर",
   "crash_upload_preview": "क्या भेजा जाता है",
   "crash_upload_preview_title": "क्रैश रिपोर्ट की सामग्री",
-  "crash_upload_preview_close": "बंद करें"
+  "crash_upload_preview_close": "बंद करें",
+  "mod_integrity_label": "अखंडता",
+  "mod_integrity_verified": "SHA-256 %1$s\\nस्रोत: %2$s",
+  "mod_integrity_unpinned": "पिन नहीं किया गया \\u2014 इस मॉड के लिए कोई चेकसम प्रकाशित नहीं किया गया। स्रोत: %1$s",
+  "mod_import_link_confirm_title": "इस पैकेज को आयात करें?",
+  "mod_import_link_confirm_go": "डाउनलोड और आयात करें",
+  "mod_import_link_done_digest": "%1$s आयात किया गया।\\n%2$s"
  },
  "id": {
   "launch_failure_message_play_store": "Ini adalah versi Minecraft dari Google Play, atau versi yang kehilangan file tertentu yang diperlukan untuk memulai game.\\n\\nPeluncur harus memuat pustaka native game secara langsung, dan versi Play Store menyimpannya di dalam aplikasi yang terpasang, tempat peluncur ini tidak dapat menjangkaunya.\\n\\nUntuk bermain, impor APK Minecraft dari Pustaka. Pemasangan dari Play Store boleh tetap ada di perangkat Anda — Anda tidak perlu menghapusnya.",
@@ -65,7 +83,13 @@
   "replay_markers_count": "%1$d penanda",
   "crash_upload_preview": "Apa yang dikirim",
   "crash_upload_preview_title": "Isi laporan kerusakan",
-  "crash_upload_preview_close": "Tutup"
+  "crash_upload_preview_close": "Tutup",
+  "mod_integrity_label": "Integritas",
+  "mod_integrity_verified": "SHA-256 %1$s\\nSumber: %2$s",
+  "mod_integrity_unpinned": "Tidak dipatok \\u2014 tidak ada checksum yang diterbitkan untuk mod ini. Sumber: %1$s",
+  "mod_import_link_confirm_title": "Impor paket ini?",
+  "mod_import_link_confirm_go": "Unduh dan impor",
+  "mod_import_link_done_digest": "%1$s diimpor.\\n%2$s"
  },
  "ja": {
   "launch_failure_message_play_store": "これは Google Play 版の Minecraft か、ゲームの起動に必要なファイルが欠けているバージョンです。\\n\\nランチャーはゲームのネイティブライブラリを直接読み込む必要がありますが、Play ストア版はそれをインストール済みアプリの内部に保持しており、このランチャーからはアクセスできません。\\n\\nプレイするには、ライブラリから Minecraft の APK を読み込んでください。Play ストア版は端末に残したままでかまいません。削除する必要はありません。",
@@ -82,7 +106,13 @@
   "replay_markers_count": "%1$d 個のマーカー",
   "crash_upload_preview": "送信される内容",
   "crash_upload_preview_title": "クラッシュレポートの内容",
-  "crash_upload_preview_close": "閉じる"
+  "crash_upload_preview_close": "閉じる",
+  "mod_integrity_label": "整合性",
+  "mod_integrity_verified": "SHA-256 %1$s\\nソース: %2$s",
+  "mod_integrity_unpinned": "固定されていません \\u2014 このModのチェックサムは公開されていません。ソース: %1$s",
+  "mod_import_link_confirm_title": "このパッケージをインポートしますか？",
+  "mod_import_link_confirm_go": "ダウンロードしてインポート",
+  "mod_import_link_done_digest": "%1$s をインポートしました。\\n%2$s"
  },
  "pt": {
   "launch_failure_message_play_store": "Esta é uma versão do Minecraft da Google Play, ou uma versão sem um arquivo necessário para iniciar o jogo.\\n\\nO iniciador precisa carregar a biblioteca nativa do jogo diretamente, e a versão da Play Store a mantém dentro do app instalado, onde este iniciador não consegue alcançar.\\n\\nPara jogar, importe um APK do Minecraft pela Biblioteca. Uma instalação da Play Store pode continuar no seu dispositivo — você não precisa removê-la.",
@@ -99,7 +129,13 @@
   "replay_markers_count": "%1$d marcadores",
   "crash_upload_preview": "O que é enviado",
   "crash_upload_preview_title": "Conteúdo do relatório de falha",
-  "crash_upload_preview_close": "Fechar"
+  "crash_upload_preview_close": "Fechar",
+  "mod_integrity_label": "Integridade",
+  "mod_integrity_verified": "SHA-256 %1$s\\nOrigem: %2$s",
+  "mod_integrity_unpinned": "Não fixado \\u2014 nenhuma soma de verificação foi publicada para este mod. Origem: %1$s",
+  "mod_import_link_confirm_title": "Importar este pacote?",
+  "mod_import_link_confirm_go": "Baixar e importar",
+  "mod_import_link_done_digest": "%1$s importado.\\n%2$s"
  },
  "ru": {
   "launch_failure_message_play_store": "Это либо версия Minecraft из Google Play, либо версия, в которой отсутствует нужный для запуска игры файл.\\n\\nЛаунчер должен загрузить нативную библиотеку игры напрямую, а версия из Play Store держит её внутри установленного приложения, куда лаунчер не может попасть.\\n\\nЧтобы играть, импортируйте APK Minecraft из Библиотеки. Установку из Play Store можно оставить на устройстве — удалять её не нужно.",
@@ -116,7 +152,13 @@
   "replay_markers_count": "%1$d меток",
   "crash_upload_preview": "Что отправляется",
   "crash_upload_preview_title": "Содержимое отчёта о сбое",
-  "crash_upload_preview_close": "Закрыть"
+  "crash_upload_preview_close": "Закрыть",
+  "mod_integrity_label": "Целостность",
+  "mod_integrity_verified": "SHA-256 %1$s\\nИсточник: %2$s",
+  "mod_integrity_unpinned": "Не закреплено \\u2014 для этого мода не опубликована контрольная сумма. Источник: %1$s",
+  "mod_import_link_confirm_title": "Импортировать этот пакет?",
+  "mod_import_link_confirm_go": "Скачать и импортировать",
+  "mod_import_link_done_digest": "%1$s импортирован.\\n%2$s"
  },
  "tr": {
   "launch_failure_message_play_store": "Bu ya Google Play sürümü bir Minecraft ya da oyunu başlatmak için gereken bir dosyası eksik bir sürüm.\\n\\nBaşlatıcı, oyunun yerel kitaplığını doğrudan yüklemek zorunda, ancak Play Store sürümü onu yüklü uygulamanın içinde tutar ve bu başlatıcı oraya erişemez.\\n\\nOynamak için Kitaplık’tan bir Minecraft APK’sı içe aktarın. Play Store kurulumu cihazınızda kalabilir — kaldırmanız gerekmez.",
@@ -133,7 +175,13 @@
   "replay_markers_count": "%1$d işaret",
   "crash_upload_preview": "Neler gönderilir",
   "crash_upload_preview_title": "Çökme raporu içeriği",
-  "crash_upload_preview_close": "Kapat"
+  "crash_upload_preview_close": "Kapat",
+  "mod_integrity_label": "Bütünlük",
+  "mod_integrity_verified": "SHA-256 %1$s\\nKaynak: %2$s",
+  "mod_integrity_unpinned": "Sabitlenmemiş \\u2014 bu mod için bir sağlama toplamı yayımlanmadı. Kaynak: %1$s",
+  "mod_import_link_confirm_title": "Bu paket içe aktarılsın mı?",
+  "mod_import_link_confirm_go": "İndir ve içe aktar",
+  "mod_import_link_done_digest": "%1$s içe aktarıldı.\\n%2$s"
  },
  "vi": {
   "launch_failure_message_play_store": "Đây là bản Minecraft từ Google Play, hoặc một phiên bản thiếu tệp cần thiết để khởi chạy trò chơi.\\n\\nTrình khởi chạy phải tải trực tiếp thư viện gốc của trò chơi, còn bản Play Store giữ nó bên trong ứng dụng đã cài, nơi trình khởi chạy này không thể truy cập.\\n\\nĐể chơi, hãy nhập APK Minecraft từ Thư viện. Bản cài từ Play Store có thể vẫn nằm trên thiết bị — bạn không cần gỡ nó.",
@@ -150,7 +198,13 @@
   "replay_markers_count": "%1$d điểm đánh dấu",
   "crash_upload_preview": "Nội dung được gửi",
   "crash_upload_preview_title": "Nội dung báo cáo lỗi",
-  "crash_upload_preview_close": "Đóng"
+  "crash_upload_preview_close": "Đóng",
+  "mod_integrity_label": "Toàn vẹn",
+  "mod_integrity_verified": "SHA-256 %1$s\\nNguồn: %2$s",
+  "mod_integrity_unpinned": "Chưa ghim \\u2014 không có tổng kiểm tra nào được công bố cho mod này. Nguồn: %1$s",
+  "mod_import_link_confirm_title": "Nhập gói này?",
+  "mod_import_link_confirm_go": "Tải xuống và nhập",
+  "mod_import_link_done_digest": "Đã nhập %1$s.\\n%2$s"
  },
  "zh-rCN": {
   "launch_failure_message_play_store": "这可能是 Google Play 版本的 Minecraft，也可能是缺少启动游戏所需文件的版本。\\n\\n启动器必须直接加载游戏的本机库，而 Play 商店版本将它保留在已安装的应用内部，启动器无法访问。\\n\\n如需游玩，请从资源库导入 Minecraft APK。Play 商店安装可以保留在设备上——你无需卸载它。",
@@ -167,6 +221,12 @@
   "replay_markers_count": "%1$d 个标记",
   "crash_upload_preview": "发送的内容",
   "crash_upload_preview_title": "崩溃报告内容",
-  "crash_upload_preview_close": "关闭"
+  "crash_upload_preview_close": "关闭",
+  "mod_integrity_label": "完整性",
+  "mod_integrity_verified": "SHA-256 %1$s\\n来源：%2$s",
+  "mod_integrity_unpinned": "未固定 \\u2014 此模组未发布校验和。来源：%1$s",
+  "mod_import_link_confirm_title": "导入此包？",
+  "mod_import_link_confirm_go": "下载并导入",
+  "mod_import_link_done_digest": "已导入 %1$s。\\n%2$s"
  }
 }

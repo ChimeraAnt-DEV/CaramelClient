@@ -358,6 +358,18 @@ public class ModsFullscreenActivity extends BaseActivity {
      * servers that send a length is not worth a second widget.
      */
     private void importFromLink(String url) {
+        // Item 233: the source and the size are shown before anything is fetched, so a link import
+        // is a deliberate choice rather than a surprise download from a pasted string.
+        new CustomAlertDialog(this)
+                .setTitleText(getString(R.string.mod_import_link_confirm_title))
+                .setMessage(org.chimeramc.client.core.antegg.AntEggLinkPreview.describe(url, -1L))
+                .setPositiveButton(getString(R.string.mod_import_link_confirm_go),
+                        v -> startLinkDownload(url))
+                .setNegativeButton(getString(R.string.cancel), v -> { })
+                .show();
+    }
+
+    private void startLinkDownload(String url) {
         Toast.makeText(this, R.string.mod_import_link_downloading, Toast.LENGTH_SHORT).show();
         new org.chimeramc.client.core.antegg.AntEggLinkDownloader().download(
                 this, url, null, new org.chimeramc.client.core.antegg
@@ -377,8 +389,14 @@ public class ModsFullscreenActivity extends BaseActivity {
                             runOnUiThread(() -> {
                                 if (isFinishing() || isDestroyed()) return;
                                 if (result.success) {
+                                    // Item 233: show the digest of what actually arrived so it can
+                                    // be compared with the publisher's own value.
+                                    String digest = org.chimeramc.client.core.antegg.AntEggLinkPreview
+                                            .describeDigest(org.chimeramc.client.core.antegg.ModHash
+                                                    .sha256(staged));
                                     Toast.makeText(ModsFullscreenActivity.this,
-                                            getString(R.string.mod_import_link_done, fileName),
+                                            getString(R.string.mod_import_link_done_digest, fileName,
+                                                    digest),
                                             Toast.LENGTH_LONG).show();
                                     viewModel.reloadMods();
                                 } else {

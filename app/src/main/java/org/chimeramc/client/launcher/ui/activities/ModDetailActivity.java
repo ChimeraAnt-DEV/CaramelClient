@@ -49,6 +49,7 @@ public class ModDetailActivity extends BaseActivity {
     private MetaRow versionRow;
     private MetaRow minecraftVersionsRow;
     private MetaRow configFilesRow;
+    private MetaRow integrityRow;
     private Switch modSwitch;
     private Button configureButton;
     private View headerContainer;
@@ -95,6 +96,7 @@ public class ModDetailActivity extends BaseActivity {
         versionRow = MetaRow.bind(findViewById(R.id.mod_version_row));
         minecraftVersionsRow = MetaRow.bind(findViewById(R.id.mod_minecraft_versions_row));
         configFilesRow = MetaRow.bind(findViewById(R.id.mod_config_files_row));
+        integrityRow = MetaRow.bind(findViewById(R.id.mod_integrity_row));
         modSwitch = findViewById(R.id.mod_switch_detail);
         headerContainer = findViewById(R.id.mod_detail_title);
         View heroContainer = findViewById(R.id.mod_detail_header_container);
@@ -167,12 +169,33 @@ public class ModDetailActivity extends BaseActivity {
             versionRow.set(R.string.mod_version_label, version);
             minecraftVersionsRow.set(R.string.mod_minecraft_versions_label, formatMinecraftVersions(mod));
             configFilesRow.set(R.string.mod_config_files_label, formatConfigFiles(mod));
+            // Item 511: a pinned hash is only meaningful if it is visible. Show the verified digest
+            // and the source file, or say the mod is unpinned, so the screen never implies a check
+            // that did not run.
+            integrityRow.set(R.string.mod_integrity_label, formatIntegrity(mod));
             loadModIcon(mod);
 
             if (configureButton != null) {
                 configureButton.setVisibility(mod.hasEditableConfig() ? View.VISIBLE : View.GONE);
             }
         }
+    }
+
+    /**
+     * The integrity line: the verified hash and source file, or an explicit "not pinned" (item 511).
+     *
+     * <p>A mod that declares {@code sha256} is verified against it at load; showing the digest lets a
+     * user compare it with the publisher's own value. A mod that declares none is not verified, and
+     * the row says so rather than staying blank.
+     */
+    private String formatIntegrity(Mod mod) {
+        String file = trimToNull(mod.getFileName());
+        String source = file == null ? "" : file;
+        String declared = mod.getDeclaredSha256();
+        if (declared != null && !declared.isEmpty()) {
+            return getString(R.string.mod_integrity_verified, declared, source);
+        }
+        return getString(R.string.mod_integrity_unpinned, source);
     }
 
     private void applyPersonalization(@Nullable View heroContainer) {
