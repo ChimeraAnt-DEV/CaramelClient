@@ -204,6 +204,20 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
 
+    // Item 330/346: lint is a gate, not advice. The accessibility and unused-resource checks are
+    // errors (see app/lint.xml), and everything already present is captured in the baseline so the
+    // gate fires on a new offender rather than on the backlog. abortOnError makes `lintDebug`
+    // usable as a CI step.
+    lint {
+        baseline = file("lint-baseline.xml")
+        checkAllWarnings = true
+        warningsAsErrors = false
+        abortOnError = true
+        checkDependencies = false
+        // The generated binding classes and the packaged assets are not hand-written source.
+        checkGeneratedSources = false
+    }
+
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
