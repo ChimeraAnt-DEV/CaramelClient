@@ -8,11 +8,49 @@ public class FeatureSettings {
     private boolean launcherManagedMcLoginEnabled = false;
     private boolean logcatOverlayEnabled = false;
     private boolean lowInputDelayEnabled = false;
-    private Boolean crashUploadEnabled = true;
+    /**
+     * Crash report upload (item 518). Off until the user opts in: a report carries a stack trace
+     * and the app version, and sending it is a disclosure the user must make deliberately. The
+     * Settings row shows exactly what would be sent before the switch is turned on.
+     */
+    private Boolean crashUploadEnabled = false;
     private boolean foregroundServiceEnabled = false;
-    private Boolean gxcoreEnabled = false;
     private boolean reduceNetworkLatencyEnabled = false;
     private boolean fpsOptimizerEnabled = false;
+
+    /**
+     * Guest mode (item 272): hide mods, servers and voice chat on a shared or borrowed device.
+     *
+     * <p>Off by default, like the other behaviour-changing switches, so an existing setup is never
+     * altered silently. It hides surfaces only -- it never disables a feature or blocks a launch.
+     */
+    private boolean guestModeEnabled = false;
+
+    /**
+     * Streaming-safe mode (item 277): mask account names, coordinates and server addresses in
+     * overlays and in any text that leaves the app.
+     */
+    private boolean streamingSafeModeEnabled = false;
+
+    /**
+     * The top-level destination the user was last on, by {@code LauncherTab} name (item 77).
+     *
+     * <p>Stored as the enum's name, not its view id: an id is a generated resource number that a
+     * later build can renumber, so a stored id would silently point at a different tab after an
+     * update. A name this build does not know reads as "no preference" and the launcher opens on
+     * Play.
+     */
+    private String lastNavTab = null;
+
+    /**
+     * Whether the user collapsed the wide navigation rail to icon-only (item 85).
+     *
+     * <p>A tablet user who prefers the icons to a labelled rail can fold it, and the choice is
+     * remembered across launches. It is a presentation preference only: it never changes which
+     * destination exists, only whether the expanded rail shows its labels. Default false, so an
+     * existing setup keeps the shape its window width already gives it.
+     */
+    private boolean navRailCollapsed = false;
 
     // --- Game Performance Mode -------------------------------------------------------------
     // The master switch plus one toggle per optimization, so a user can isolate an item that
@@ -88,14 +126,12 @@ public class FeatureSettings {
     public boolean isLowInputDelayEnabled() { return lowInputDelayEnabled; }
     public void setLowInputDelayEnabled(boolean enabled) { this.lowInputDelayEnabled = enabled; autoSave(); }
 
-    public boolean isCrashUploadEnabled() { return crashUploadEnabled == null || crashUploadEnabled; }
+    public boolean isCrashUploadEnabled() { return crashUploadEnabled != null && crashUploadEnabled; }
     public void setCrashUploadEnabled(boolean enabled) { this.crashUploadEnabled = enabled; autoSave(); }
 
     public boolean isForegroundServiceEnabled() { return foregroundServiceEnabled; }
     public void setForegroundServiceEnabled(boolean enabled) { this.foregroundServiceEnabled = enabled; autoSave(); }
 
-    public boolean isGxCoreEnabled() { return gxcoreEnabled != null && gxcoreEnabled; }
-    public void setGxCoreEnabled(boolean enabled) { this.gxcoreEnabled = enabled; autoSave(); }
 
     /**
      * Whether the FPS optimization module may quiet the host during a session.
@@ -107,6 +143,26 @@ public class FeatureSettings {
      */
     public boolean isFpsOptimizerEnabled() { return fpsOptimizerEnabled; }
     public void setFpsOptimizerEnabled(boolean enabled) { this.fpsOptimizerEnabled = enabled; autoSave(); }
+
+    /**
+     * The last top-level destination the user visited, or null when there is none (item 77).
+     *
+     * <p>Persisting the tab is what makes the launcher reopen where the user left off instead of
+     * always resetting to Play, which matters most on a device where the launcher is used as the
+     * game's own front end. The value is a {@code LauncherTab} name so it survives a renumbering
+     * of resource ids, and an unknown name is treated as no preference rather than a failure.
+     */
+    public String getLastNavTab() { return lastNavTab; }
+
+    public void setLastNavTab(String tabName) { this.lastNavTab = tabName; autoSave(); }
+
+    /** Whether the wide rail is folded to icons only (item 85). */
+    public boolean isNavRailCollapsed() { return navRailCollapsed; }
+
+    public void setNavRailCollapsed(boolean collapsed) {
+        this.navRailCollapsed = collapsed;
+        autoSave();
+    }
 
     // --- Game Performance Mode accessors ---------------------------------------------------
 
@@ -175,6 +231,30 @@ public class FeatureSettings {
     public void clearOptifineCrashCounts() {
         if (optifineCrashCounts == null || optifineCrashCounts.isEmpty()) return;
         optifineCrashCounts.clear();
+        autoSave();
+    }
+
+    public boolean isGuestModeEnabled() { return guestModeEnabled; }
+    public void setGuestModeEnabled(boolean enabled) { this.guestModeEnabled = enabled; autoSave(); }
+
+    public boolean isStreamingSafeModeEnabled() { return streamingSafeModeEnabled; }
+    public void setStreamingSafeModeEnabled(boolean enabled) { this.streamingSafeModeEnabled = enabled; autoSave(); }
+
+    /**
+     * How many instance backups to keep per instance (item 144). {@code 0} means "use the default"
+     * ({@link org.chimeramc.client.util.BackupRetention#DEFAULT_KEEP}); the rule itself clamps the
+     * value, so a bad stored number cannot leave thousands of archives on disk.
+     */
+    private int backupRetentionKeep = 0;
+
+    public int getBackupRetentionKeep() {
+        return org.chimeramc.client.util.BackupRetention.clampKeep(backupRetentionKeep);
+    }
+
+    public void setBackupRetentionKeep(int keep) {
+        int clamped = org.chimeramc.client.util.BackupRetention.clampKeep(keep);
+        if (this.backupRetentionKeep == clamped) return;
+        this.backupRetentionKeep = clamped;
         autoSave();
     }
 

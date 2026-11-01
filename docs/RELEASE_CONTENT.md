@@ -20,7 +20,7 @@ git push origin v1.5.16
 
 The version is written only in the Git tag. `app/build.gradle` turns the most recent `v...` tag into `BuildConfig.VERSION_NAME`, so the version is not duplicated in the changelog file. The Android release workflow also converts the same changelog JSON into the GitHub Release description.
 
-Every release is dated and carries a support window. `releasedAt` and `supportUntil` are required (UTC, ending in `Z`) and `supportUntil` must be after `releasedAt`; `scripts/render_release_notes.py` prints "Released <date> · supported until <date>" at the top of the release notes, and the in-app What's new dialog shows the same line. That is the published answer to "which versions do you still fix?" — a release without the two fields fails validation rather than shipping undated.
+Every release is dated and carries a support window. `releasedAt` and `supportUntil` are required (UTC, ending in `Z`) and `supportUntil` must be after `releasedAt`; `scripts/render_release_notes.py` prints `Released <date> · supported until <date>` at the top of the release notes, and the in-app What's new dialog shows the same line. That is the published answer to "which versions do you still fix?" — a release without the two fields fails validation rather than shipping undated.
 
 The What’s new dialog is skipped on a clean installation. It appears once when Android reports that an existing installation was updated, and later updates are tracked with the APK version code.
 

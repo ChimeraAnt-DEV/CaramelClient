@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import org.chimeramc.client.core.voice.VoiceChatModule;
 import org.chimeramc.client.core.voice.VoicePeer;
+import org.chimeramc.client.util.MainThread;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public final class VoiceNametagOverlay {
 
     private final Activity activity;
     private final WindowManager windowManager;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
 
     private View overlayView;
     private WindowManager.LayoutParams wmParams;
@@ -181,32 +182,38 @@ public final class VoiceNametagOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            if (!VoiceNametagMod.isActive()) return;
-            CameraSource source = cameraSource;
-            if (source == null) return;
-            HitboxProjector.Camera camera;
+            long drawStart = OverlayDrawTimer.start();
             try {
-                camera = source.camera(getWidth(), getHeight());
-            } catch (Throwable t) {
-                return;
-            }
-            if (camera == null) return;
-
-            List<NametagIconProjector.Tag> tags = VoiceNametagMod.readTags();
-            if (tags.isEmpty()) return;
-            List<NametagIconProjector.Placed> placed =
-                    NametagIconProjector.project(camera, tags, listenerChannel());
-            if (placed.isEmpty()) return;
-
-            VoiceChatModule module = VoiceChatModule.peek();
-            for (NametagIconProjector.Placed icon : placed) {
-                VoicePeer peer = module == null ? null : module.findPeer(icon.peerId);
-                float level = peer == null ? 0f : peer.level;
-                boolean selfMuted = peer != null && peer.selfMuted;
-                boolean mutedByYou = module != null && module.isMuted(icon.peerId);
-                NametagMicState.State resolved =
-                        NametagMicState.resolve(level, selfMuted, mutedByYou);
-                drawIcon(canvas, icon, resolved, level);
+                if (!VoiceNametagMod.isActive()) return;
+                CameraSource source = cameraSource;
+                if (source == null) return;
+                HitboxProjector.Camera camera;
+                try {
+                    camera = source.camera(getWidth(), getHeight());
+                } catch (Throwable t) {
+                    return;
+                }
+                if (camera == null) return;
+    
+                List<NametagIconProjector.Tag> tags = VoiceNametagMod.readTags();
+                if (tags.isEmpty()) return;
+                List<NametagIconProjector.Placed> placed =
+                        NametagIconProjector.project(camera, tags, listenerChannel());
+                if (placed.isEmpty()) return;
+    
+                VoiceChatModule module = VoiceChatModule.peek();
+                for (NametagIconProjector.Placed icon : placed) {
+                    VoicePeer peer = module == null ? null : module.findPeer(icon.peerId);
+                    float level = peer == null ? 0f : peer.level;
+                    boolean selfMuted = peer != null && peer.selfMuted;
+                    boolean mutedByYou = module != null && module.isMuted(icon.peerId);
+                    NametagMicState.State resolved =
+                            NametagMicState.resolve(level, selfMuted, mutedByYou);
+                    drawIcon(canvas, icon, resolved, level);
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("VoiceNametagOverlay", drawStart);
             }
         }
 

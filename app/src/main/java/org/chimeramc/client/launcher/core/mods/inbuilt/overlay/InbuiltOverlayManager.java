@@ -8,7 +8,7 @@ import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.manager.MoreButtonsManager;
 import org.chimeramc.client.core.mods.inbuilt.model.MoreButtonConfig;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
-import org.levimc.launcher.core.mods.inbuilt.nativemod.PojavControlsMod;
+import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.PojavControlsMod;
 import org.chimeramc.pojavcontrols.PojavControls;
 import org.chimeramc.pojavcontrols.PojavControlsHost;
 
@@ -19,7 +19,14 @@ import java.util.Map;
 
 public class InbuiltOverlayManager {
     public interface HudEditorSelectionListener {
-        void onHudEditorSelectionChanged(int currentSizeDp);
+        /**
+         * Reports the selected overlay's size and opacity.
+         *
+         * <p>Item 221 asks for per-button opacity in the editor. The opacity rides this callback
+         * rather than a second listener so the panel cannot show a size from one overlay and an
+         * opacity from another: both values are read from the same selection in one pass.
+         */
+        void onHudEditorSelectionChanged(int currentSizeDp, int currentOpacity);
     }
 
     private static volatile InbuiltOverlayManager instance;
@@ -33,6 +40,7 @@ public class InbuiltOverlayManager {
     private boolean moreButtonsEditorOpen;
     private final Map<String, Integer> modPositionMap = new HashMap<>();
     private ChickPetOverlay chickPetOverlay;
+    private AutoSprintOverlay autoSprintOverlay;
     private ZoomOverlay zoomOverlay;
     private SnaplookOverlay snaplookOverlay;
     private GyroOverlay gyroOverlay;
@@ -54,11 +62,16 @@ public class InbuiltOverlayManager {
     private CatalogModuleRuntime catalogRuntime;
     private org.chimeramc.client.core.cosmetics.CosmeticSyncModule cosmeticSyncModule;
     private ModMenuButton modMenuButton;
+    private PauseMenuRow pauseMenuRow;
     private HudOverlay hudOverlay;
     private BaseOverlayButton selectedHudEditorOverlay;
     private String selectedDisplayModId;
     private HudEditorSelectionListener hudEditorSelectionListener;
     private boolean hudEditorMode = false;
+    /** True while the player has hidden the HUD overlays for a screenshot (item 213). */
+    private boolean overlaysHiddenForScreenshot;
+    /** Recognises the three-finger hide-all tap (item 213); UI-thread only. */
+    private final HideAllGestureDetector hideAllGesture = new HideAllGestureDetector();
     private int baseY = 150;
     private static final int SPACING = 70;
     private static final int START_X = 50;
@@ -87,6 +100,10 @@ public class InbuiltOverlayManager {
     public void showEnabledOverlays() {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         if (!manager.isModMenuEnabled()) return;
+
+        // Overlay positions are stored as fractions of the surface (item 211); record the surface
+        // they are relative to before any position is read or written.
+        manager.setOverlaySurfaceMetrics(activity.getResources().getDisplayMetrics());
 
         // The in-game pack changer must be able to nudge the live session whether or not voice
         // chat happens to be running, so the reloader is installed here, not as a side effect of
@@ -192,12 +209,31 @@ public class InbuiltOverlayManager {
 
         modMenuButton = new ModMenuButton(activity);
         modMenuButton.show(START_X, nextY);
+        // The pause-menu button row (item 224) attaches with the session and is shown only while
+        // the game's pause menu is open, so it never competes with gameplay.
+        if (pauseMenuRow == null) {
+            pauseMenuRow = new PauseMenuRow(activity);
+        }
+        pauseMenuRow.show();
         // A catalogue module that was on when the last session ended comes back with this one. The
         // shipped modules are restored by the calls above; the catalogue ones are restored here so
         // a saved readout does not silently vanish on the next launch.
         CatalogModuleHost.restoreEnabled(activity, this, manager);
         refreshExternalButtons();
+        // A layout the player had active comes back with this session, so a PvP arrangement
+        // survives a relaunch without a trip through the manager (item 212).
+        restoreActiveOverlayLayout(manager);
         refreshRuntimeVisibility();
+    }
+
+    /** Re-applies the stored active layout, if any; a missing one is simply not applied. */
+    private void restoreActiveOverlayLayout(InbuiltModManager manager) {
+        OverlayLayoutStore store = new OverlayLayoutStore(activity);
+        String activeId = store.getActiveId();
+        if (activeId.isEmpty()) return;
+        OverlayLayout layout = OverlayLayoutStore.findById(store.load(), activeId);
+        if (layout == null) return;
+        applyOverlayLayout(layout);
     }
 
     private void restorePersistedInbuiltModState(InbuiltModManager manager, String modId) {
@@ -279,10 +315,12 @@ public class InbuiltOverlayManager {
                 modOverlayMap.put(modId, hud);
                 break;
             case ModIds.AUTO_SPRINT:
-                AutoSprintOverlay sprint = new AutoSprintOverlay(activity);
-                sprint.show(savedX, savedY);
-                overlays.add(sprint);
-                modOverlayMap.put(modId, sprint);
+                if (autoSprintOverlay == null) {
+                    autoSprintOverlay = new AutoSprintOverlay(activity);
+                }
+                autoSprintOverlay.show(savedX, savedY);
+                overlays.add(autoSprintOverlay);
+                modOverlayMap.put(modId, autoSprintOverlay);
                 break;
             case ModIds.CHICK_PET:
                 if (chickPetOverlay == null) {
@@ -875,6 +913,22 @@ public class InbuiltOverlayManager {
     }
 
 
+    /**
+     * Tells the overlays the game window lost focus (item 195).
+     *
+     * <p>A module that holds a key for the player must not stay armed while another app owns the
+     * window: the backend releases the key, and the overlay drops its own flag so the indicator and
+     * the real state agree when the player returns.
+     */
+    public void onWindowFocusLost() {
+        if (autoSprintOverlay != null) {
+            autoSprintOverlay.onFocusLost();
+        }
+        // A gesture that was in flight when the window lost focus must not complete later and
+        // toggle the HUD by surprise (item 213).
+        resetHideAllGesture();
+    }
+
     public void hideAllOverlays() {
         PojavControls.setEnabled(activity,
                 activity instanceof PojavControlsHost ? (PojavControlsHost) activity : null,
@@ -892,6 +946,8 @@ public class InbuiltOverlayManager {
         hotbarSlotOverlayMap.clear();
         modActiveStates.clear();
         modPositionMap.clear();
+        overlaysHiddenForScreenshot = false;
+        resetHideAllGesture();
         if (chickPetOverlay != null) {
             chickPetOverlay.hide();
             chickPetOverlay = null;
@@ -899,6 +955,10 @@ public class InbuiltOverlayManager {
         if (zoomOverlay != null) {
             zoomOverlay.hide();
             zoomOverlay = null;
+        }
+        if (autoSprintOverlay != null) {
+            autoSprintOverlay.hide();
+            autoSprintOverlay = null;
         }
         if (fpsDisplayOverlay != null) {
             fpsDisplayOverlay.hide();
@@ -977,6 +1037,10 @@ public class InbuiltOverlayManager {
         if (modMenuButton != null) {
             modMenuButton.hide();
             modMenuButton = null;
+        }
+        if (pauseMenuRow != null) {
+            pauseMenuRow.hide();
+            pauseMenuRow = null;
         }
         if (hudOverlay != null) {
             hudOverlay.hide();
@@ -1207,7 +1271,7 @@ public class InbuiltOverlayManager {
 
         boolean snaplookEnabled = modActiveStates.getOrDefault(ModIds.SNAPLOOK, false);
 
-        if (snaplookEnabled && keyCode == android.view.KeyEvent.KEYCODE_X) {
+        if (snaplookEnabled && keyCode == manager.getSnaplookKeybind()) {
             if (snaplookOverlay != null) {
                 if (action == android.view.KeyEvent.ACTION_DOWN) {
                     snaplookOverlay.onKeyDown();
@@ -1286,10 +1350,55 @@ public class InbuiltOverlayManager {
     }
 
     public boolean handleTouchEvent(MotionEvent event) {
+        // A three-finger tap hides every HUD overlay for a clean screenshot, and the same gesture
+        // brings them back (item 213). It is checked first so the gesture is recognised whatever
+        // else would otherwise consume the event.
+        if (handleHideAllGesture(event)) {
+            return true;
+        }
         if (cpsDisplayOverlay != null) {
             return cpsDisplayOverlay.handleTouchEvent(event);
         }
         return false;
+    }
+
+    /**
+     * Feeds one touch event to the three-finger hide-all detector (item 213).
+     *
+     * @return true when the gesture completed and the overlays were toggled
+     */
+    private boolean handleHideAllGesture(MotionEvent event) {
+        if (event == null) return false;
+        int actionMasked = event.getActionMasked();
+        int index = event.getActionIndex();
+        if (index < 0 || index >= event.getPointerCount()) return false;
+        boolean fired = hideAllGesture.onEvent(actionMasked, event.getPointerCount(),
+                event.getX(index), event.getY(index), event.getEventTime());
+        if (fired) {
+            setOverlaysHiddenForScreenshot(!overlaysHiddenForScreenshot);
+        }
+        return fired;
+    }
+
+    /**
+     * Hides or restores every HUD overlay for a screenshot (item 213).
+     *
+     * <p>The flag is part of the visibility state hash, so the tick that follows re-applies the
+     * change; nothing else has to know the overlays are hidden.
+     */
+    public void setOverlaysHiddenForScreenshot(boolean hidden) {
+        if (overlaysHiddenForScreenshot == hidden) return;
+        overlaysHiddenForScreenshot = hidden;
+        lastVisibilityStateHash = Long.MIN_VALUE;
+    }
+
+    public boolean isOverlaysHiddenForScreenshot() {
+        return overlaysHiddenForScreenshot;
+    }
+
+    /** Forgets an in-flight hide-all gesture, so a resumed activity cannot complete a stale one. */
+    public void resetHideAllGesture() {
+        hideAllGesture.reset();
     }
 
     public boolean handleMouseEvent(MotionEvent event) {
@@ -1411,6 +1520,12 @@ public class InbuiltOverlayManager {
 
     public void setHudEditorMode(boolean active) {
         hudEditorMode = active;
+        // Item 210: enable grid snapping for every overlay drag while the editor is open, and clear
+        // it on exit so a gameplay drag is never silently quantised.
+        OverlaySafeArea.setEditorGrid(active
+                ? Math.round(OverlaySafeArea.DEFAULT_GRID_DP
+                        * activity.getResources().getDisplayMetrics().density)
+                : 0);
         for (BaseOverlayButton overlay : overlays) {
             overlay.setHudEditorMode(active);
         }
@@ -1472,7 +1587,8 @@ public class InbuiltOverlayManager {
     public void setHudEditorSelectionListener(HudEditorSelectionListener listener) {
         hudEditorSelectionListener = listener;
         if (listener != null) {
-            listener.onHudEditorSelectionChanged(getSelectedHudEditorButtonSize());
+            listener.onHudEditorSelectionChanged(
+                    getSelectedHudEditorButtonSize(), getSelectedHudEditorOpacity());
         }
     }
 
@@ -1507,7 +1623,8 @@ public class InbuiltOverlayManager {
 
     private void notifySelectionListener() {
         if (hudEditorSelectionListener != null) {
-            hudEditorSelectionListener.onHudEditorSelectionChanged(getSelectedHudEditorButtonSize());
+            hudEditorSelectionListener.onHudEditorSelectionChanged(
+                    getSelectedHudEditorButtonSize(), getSelectedHudEditorOpacity());
         }
     }
 
@@ -1519,6 +1636,34 @@ public class InbuiltOverlayManager {
             return InbuiltModManager.getInstance(activity).getOverlayButtonSize(selectedDisplayModId);
         }
         return 0;
+    }
+
+    /** The selected overlay's opacity, or 0 when nothing is selected (item 221). */
+    public int getSelectedHudEditorOpacity() {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        if (selectedHudEditorOverlay != null) {
+            return manager.getOverlayOpacity(selectedHudEditorOverlay.getOverlayConfigKey());
+        }
+        if (selectedDisplayModId != null) {
+            return manager.getOverlayOpacity(selectedDisplayModId);
+        }
+        return 0;
+    }
+
+    /** Applies an opacity to the selected overlay and refreshes it live (item 221). */
+    public void setSelectedHudEditorOpacity(int opacity) {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        if (selectedHudEditorOverlay != null) {
+            manager.setOverlayOpacity(selectedHudEditorOverlay.getOverlayConfigKey(), opacity);
+            selectedHudEditorOverlay.applyConfigurationChanges();
+        } else if (selectedDisplayModId != null) {
+            manager.setOverlayOpacity(selectedDisplayModId, opacity);
+            if (selectedDisplayModId.equals(ModIds.FPS_DISPLAY) && fpsDisplayOverlay != null) {
+                fpsDisplayOverlay.applyConfigurationChanges();
+            } else if (selectedDisplayModId.equals(ModIds.CPS_DISPLAY) && cpsDisplayOverlay != null) {
+                cpsDisplayOverlay.applyConfigurationChanges();
+            }
+        }
     }
 
     public void setSelectedHudEditorButtonSize(int sizeDp) {
@@ -1639,6 +1784,111 @@ public class InbuiltOverlayManager {
         tick();
     }
 
+    // --- Overlay layouts (item 212) -----------------------------------------------------------
+    //
+    // A layout is a named set of overlay positions, so a player can keep a PvP arrangement and a
+    // survival one and switch between them from the wheel. Only positions are captured: which
+    // modules are on belongs to the module list, and switching a layout must not change it.
+
+    /** Every overlay key this session can position, so a capture covers what is on screen. */
+    private java.util.Set<String> layoutKeys() {
+        java.util.Set<String> keys = new java.util.LinkedHashSet<>(modOverlayMap.keySet());
+        for (Integer slot : hotbarSlotOverlayMap.keySet()) {
+            keys.add(ModIds.HOTBAR_SLOT + ":" + slot);
+        }
+        if (fpsDisplayOverlay != null) keys.add(ModIds.FPS_DISPLAY);
+        if (armorHudOverlay != null) keys.add(ModIds.ARMOR_HUD);
+        if (hitTimingOverlay != null) keys.add(ModIds.HIT_TIMING);
+        if (cpsDisplayOverlay != null) keys.add(ModIds.CPS_DISPLAY);
+        if (voiceChatOverlay != null) keys.add(ModIds.VOICE_CHAT);
+        return keys;
+    }
+
+    /**
+     * Captures the current overlay positions into a layout.
+     *
+     * <p>Reads the fractions the manager persists rather than the live window params, so a widget
+     * that is not currently shown is still captured (its last position is what a switch should
+     * restore) and the capture and the restore agree about the units.
+     */
+    public OverlayLayout captureOverlayLayout(String name) {
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        String id = OverlayLayoutStore.uniqueId(
+                new OverlayLayoutStore(activity).load(), name);
+        OverlayLayout layout = new OverlayLayout(id, name);
+        for (String key : layoutKeys()) {
+            float fx = manager.getOverlayFractionX(key, Float.NaN);
+            float fy = manager.getOverlayFractionY(key, Float.NaN);
+            if (Float.isNaN(fx) || Float.isNaN(fy)) continue;
+            layout.put(key, fx, fy);
+        }
+        return layout;
+    }
+
+    /**
+     * Applies a layout: writes every stored fraction and moves the live widgets that are on screen.
+     *
+     * <p>A key the layout does not name is left alone, so a layout saved before a new widget existed
+     * does not move that widget to the origin. Returns true when the layout had anything to apply.
+     */
+    public boolean applyOverlayLayout(OverlayLayout layout) {
+        if (layout == null || layout.isEmpty()) return false;
+        android.util.DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
+        InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        for (java.util.Map.Entry<String, float[]> entry : layout.positions.entrySet()) {
+            String key = entry.getKey();
+            float[] fraction = entry.getValue();
+            if (key == null || fraction == null || fraction.length < 2) continue;
+            manager.setOverlayPositionFraction(key, fraction[0], fraction[1]);
+            int px = Math.round(fraction[0] * metrics.widthPixels);
+            int py = Math.round(fraction[1] * metrics.heightPixels);
+            moveLiveOverlay(key, px, py);
+        }
+        return true;
+    }
+
+    /**
+     * Moves whichever live widget owns {@code key}.
+     *
+     * <p>The button map covers most widgets, but the FPS/CPS/armour/hit-timing readouts and the mic
+     * indicator keep their own fields, so a layout apply that only walked the map would leave those
+     * on screen where they were and the switch would look half applied.
+     */
+    private void moveLiveOverlay(String key, int px, int py) {
+        BaseOverlayButton button = modOverlayMap.get(key);
+        if (button != null) {
+            button.updatePosition(px, py);
+            return;
+        }
+        if (ModIds.FPS_DISPLAY.equals(key) && fpsDisplayOverlay != null) {
+            fpsDisplayOverlay.updatePosition(px, py);
+        } else if (ModIds.CPS_DISPLAY.equals(key) && cpsDisplayOverlay != null) {
+            cpsDisplayOverlay.updatePosition(px, py);
+        } else if (ModIds.ARMOR_HUD.equals(key) && armorHudOverlay != null) {
+            armorHudOverlay.updatePosition(px, py);
+        } else if (ModIds.HIT_TIMING.equals(key) && hitTimingOverlay != null) {
+            hitTimingOverlay.updatePosition(px, py);
+        } else if (ModIds.VOICE_CHAT.equals(key) && voiceChatOverlay != null) {
+            voiceChatOverlay.updatePosition(px, py);
+        }
+    }
+
+    /**
+     * Switches to a stored layout and returns its name, or null when the id is unknown.
+     *
+     * <p>The wheel's SWITCH_LAYOUT entry routes here. Setting the active id first means a later
+     * session can restore the same layout, and the apply is what makes the change visible now.
+     */
+    public String switchOverlayLayout(String layoutId) {
+        if (layoutId == null || layoutId.isEmpty()) return null;
+        OverlayLayoutStore store = new OverlayLayoutStore(activity);
+        OverlayLayout layout = OverlayLayoutStore.findById(store.load(), layoutId);
+        if (layout == null) return null;
+        store.setActiveId(layoutId);
+        applyOverlayLayout(layout);
+        return layout.name;
+    }
+
     public void tick() {
         // Hold-to-repeat runs off the game's own frame tick, so a held button injects at a
         // steady rate rather than in bursts when some other timer happened to fire.
@@ -1687,7 +1937,7 @@ public class InbuiltOverlayManager {
                 || org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive();
         boolean showGameOverlays = OverlayVisibility.showGameOverlays(
                 isHudScreenOpen, isPauseOpen, isShowingMenu, hudEditorMode, gameWorldSeen, sessionActive);
-        boolean inbuiltVisible = hudEditorMode || showGameOverlays;
+        boolean inbuiltVisible = (hudEditorMode || showGameOverlays) && !overlaysHiddenForScreenshot;
         boolean hotbarVisible = inbuiltVisible || manager.isOverlayShowEverywhere(ModIds.HOTBAR_SLOT);
 
         for (BaseOverlayButton overlay : overlays) {
@@ -1717,6 +1967,7 @@ public class InbuiltOverlayManager {
         // flag is unchanged, and a stale hash would leave the overlays hidden.
         stateHash = 31L * stateHash + (gameWorldSeen ? 1L : 0L);
         stateHash = 31L * stateHash + (sessionActive ? 1L : 0L);
+        stateHash = 31L * stateHash + (overlaysHiddenForScreenshot ? 1L : 0L);
         stateHash = 31L * stateHash + overlays.size();
         for (BaseOverlayButton overlay : overlays) {
             stateHash = 31L * stateHash + System.identityHashCode(overlay);
@@ -1728,6 +1979,10 @@ public class InbuiltOverlayManager {
         stateHash = 31L * stateHash + (hudOverlay == null ? 0L : System.identityHashCode(hudOverlay));
         if (stateHash == lastVisibilityStateHash) return;
         lastVisibilityStateHash = stateHash;
+
+        if (pauseMenuRow != null) {
+            pauseMenuRow.setPauseMenuOpen(isPauseOpen, isShowingMenu);
+        }
 
         activity.runOnUiThread(() -> {
             if (modMenuButton != null) {
@@ -1741,7 +1996,8 @@ public class InbuiltOverlayManager {
             }
 
             if (hudOverlay != null) {
-                int visibility = hudOverlay.isHudEditorMode() || showGameOverlays
+                int visibility = hudOverlay.isHudEditorMode()
+                        || (showGameOverlays && !overlaysHiddenForScreenshot)
                         ? android.view.View.VISIBLE
                         : android.view.View.GONE;
                 if (hudOverlay.getVisibility() != visibility) {

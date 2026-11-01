@@ -38,7 +38,7 @@ GlowberryClient is an open-source Android launcher for **Minecraft: Bedrock Edit
 
 It is built for legitimate players: it runs the copy of Minecraft you already own, it does not ship the game, and it does not bypass licensing.
 
-> **Independent project:** GlowberryClient has its own architecture, branding, feature set, and maintenance. It is not a fork of any other launcher — no code in this repository is copied from another launcher. Its native-modding layer does build on conventions and one live data dependency from the wider open-source Bedrock modding ecosystem: the **LeviLamina / Levilamina-Android** mod-template conventions, and the **LeviLaunchroid** signature-rules source it fetches at runtime and falls back on. Both are credited under [Acknowledgements](#acknowledgements). Every component here is developed and maintained as part of GlowberryClient.
+> **Independent project:** GlowberryClient has its own architecture, branding, feature set, and maintenance. It is not a fork of any other launcher — no code in this repository is copied from another launcher. Its native-modding layer does build on conventions and one live data dependency from the wider open-source Bedrock modding ecosystem: the **LeviLamina / Levilamina-Android** mod-template conventions, and the **LeviLaunchroid** signature-rules source its own signed rule file derives from. Both are credited under [Acknowledgements](#acknowledgements). Every component here is developed and maintained as part of GlowberryClient.
 
 **Jump to:** [Screenshots](#screenshots) · [Quick start](#quick-start-players) · [Features](#key-features) · [Status](#project-status--compatibility) · [Developers](#for-developers) · [Docs](#documentation)
 
@@ -196,6 +196,8 @@ Every push to `main` and every pull request triggers [`.github/workflows/build.y
 
 Full user guide (English and 简体中文), developer docs, and the Preloader API reference live under [`docs/`](docs/) — start at [`docs/index.md`](docs/index.md).
 
+Project pages: [Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Device compatibility](docs/COMPATIBILITY.md) · [Accessibility](docs/ACCESSIBILITY.md).
+
 ---
 
 ## Contribution Guidelines
@@ -247,7 +249,7 @@ GlowberryClient is an independent project that stands on the shoulders of the op
 
 - **Chimera Team** – For designing, building, and maintaining GlowberryClient and providing infrastructure support.
 - **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the GlowberryClient native-modding layer builds upon and adapts as `.AntEgg`.
-- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that GlowberryClient fetches and falls back on at runtime. This is a live runtime dependency, not only a convention: `PreloaderSignatureRulesManager` resolves the rules from the host's own copy first, then this upstream repository, then a bundled offline snapshot. Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
+- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that GlowberryClient's bundled snapshot is derived from. The rules are a data dependency, not code: `PreloaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](docs/preloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
 - **Open-Source Bedrock Modding Community** – For the shared knowledge, tooling conventions, and ecosystem research that inform how native modules are packaged, loaded, and kept safe.
 - **Android Community** – For the documentation, libraries, and tools that made this launcher possible.
 - **Open Source Community** – For the libraries, frameworks, and tools that power this project.
@@ -269,15 +271,15 @@ GlowberryClient is an independent project that stands on the shoulders of the op
 
 <div align="center">
 
-<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest"><img src="https://img.shields.io/badge/⬇%20DOWNLOAD-LATEST%20RELEASE-7E32AA?style=for-the-badge&logo=github&logoColor=white" alt="Download"></a>
-<a href="docs/guide/getting-started.md"><img src="https://img.shields.io/badge/📖%20READ-THE%20DOCS-0F5BE4?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"></a>
-<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/issues/new"><img src="https://img.shields.io/badge/🐛%20REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
+<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest"><img src="https://img.shields.io/badge/DOWNLOAD-LATEST%20RELEASE-7E32AA?style=for-the-badge&logo=github&logoColor=white" alt="Download"></a>
+<a href="docs/guide/getting-started.md"><img src="https://img.shields.io/badge/READ-THE%20DOCS-0F5BE4?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"></a>
+<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/issues/new"><img src="https://img.shields.io/badge/REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
 
 <img src="docs/assets/glowberry_mark.png" alt="GlowberryClient" width="72">
 
 [![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg)](https://hub.xerj.org/contributors/ChimeraAnt-DEV)
 
-**Made with ❤️ by the Chimera Team Community**
+**Made by the Chimera Team Community**
 
 <sub>Licensed under the Apache License 2.0.</sub>
 <sub>This account is shared among the 20 members of the Official ChimeraTeam.</sub>

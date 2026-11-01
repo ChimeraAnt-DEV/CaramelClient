@@ -9,6 +9,26 @@ if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
 }
 
+def getGitCommit() {
+    // The short commit hash, so a report names the exact revision. A shallow checkout still has the
+    // single commit it was fetched at, so this succeeds where `git describe --tags` does not; a
+    // failure falls back to "unknown" rather than breaking the build.
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short=7', 'HEAD'
+            standardOutput = stdout
+            errorOutput = new ByteArrayOutputStream()
+        }
+        def commit = stdout.toString().trim()
+        if (commit != null && !commit.isEmpty()) {
+            return commit
+        }
+    } catch (ignored) {
+    }
+    return "unknown"
+}
+
 def getGitTag() {
     def tag = "unknown"
     try {
@@ -101,6 +121,9 @@ android {
         // sets the property the upload runs for real. The switch is disabled while this is empty
         // rather than pretending to send something.
         buildConfigField "String", "CRASH_UPLOAD_ENDPOINT", "\"${localProperties.getProperty('crash.upload.endpoint', '')}\""
+        // Item 177: the About screen names the build's commit, so a screenshot of it identifies the
+        // revision even when the version name is a moving tag.
+        buildConfigField "String", "GIT_COMMIT", "\"${getGitCommit()}\""
         ndk {
             // 64-bit only: 32-bit (armeabi-v7a) instances cannot run in this app
             // (Android processes lock in one bitness), so only ship arm64-v8a.
@@ -116,24 +139,30 @@ android {
 
     buildFeatures {
         viewBinding true
-    }
-    buildFeatures {
         prefab true
-    }
-    buildFeatures {
         buildConfig true
     }
     sourceSets {
         main {
             assets.srcDirs += rootProject.file('resources')
+            // Item 292: the baseline profile is packaged so ProfileInstaller can install it at first
+            // run. AGP compiles it into the APK's dexopt profile; on device it is applied without a
+            // Play Store update.
+            baselineProfiles.srcDirs += 'src/main/baselineProfiles'
         }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // R8 shrinks and obfuscates the release build. JNI-bound classes are kept by
+            // proguard-rules.pro; JniBindingParityTest runs against the minified build in CI so a
+            // stripped native binding fails the build rather than the app at runtime.
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
-                debugSymbolLevel 'FULL'
+                // Only the symbol table ships; full debug info goes out as a separate symbol file
+                // for crash decoding instead of into every APK.
+                debugSymbolLevel 'SYMBOL_TABLE'
             }
             buildConfigField "boolean", "IS_BETA", "false"
         }
@@ -147,20 +176,19 @@ android {
         }
         beta {
             initWith release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            resValue "string", "app_name", "Chimera Client Beta"
+            // The beta channel is the release build under a different name, so it inherits R8 and
+            // the symbol-table level from release rather than redeclaring them.
+            resValue "string", "app_name", "Glowberry Client Beta"
             buildConfigField "boolean", "IS_BETA", "true"
             matchingFallbacks = ["release"]
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
         }
 
     }
     packagingOptions {
+        // Item 9: legacy packaging extracts the .so files to the app's lib dir on install, which
+        // the launcher's own extractor and the preloader's file-based hooks rely on. Re-check
+        // before turning this off.
         jniLibs.useLegacyPackaging = true
-        doNotStrip "**/*.so"
         resources.excludes += [
                 "DebugProbesKt.bin"
         ]
@@ -183,6 +211,18 @@ android {
     }
 
     ndkVersion = "28.2.13676358"
+
+    // Item 286: simple-xml (used by the bundled Xbox XLE serialization) drags in xpp3, which ships
+    // its own org.xmlpull.v1.XmlPullParser. Android already provides that class in the platform, so
+    // R8 refuses the program/library clash ("Library class android.content.res.XmlResourceParser
+    // implements program class org.xmlpull.v1.XmlPullParser") and the release build cannot be
+    // minified at all. Excluding the bundled pull parser leaves the platform copy, which is the
+    // implementation the runtime actually uses.
+    configurations.configureEach {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'stax', module: 'stax-api'
+    }
 }
 
 dependencies {
@@ -203,9 +243,16 @@ dependencies {
     // can be sent to an LLM for reimplementation. No Android APIs, plain jar.
     implementation libs.cfr
     implementation libs.androidx.preference.ktx
+    // Item 292: ProfileInstaller ships the baseline profile in the APK and installs it at first run,
+    // so the startup path is compiled ahead of time on device. Works on every supported version.
+    implementation libs.androidx.profileinstaller
     implementation libs.androidx.games.activity
     implementation libs.okhttp
     implementation libs.androidx.dynamicanimation
+    // Item 124: TransitionManager drives the settings section change without a re-inflate.
+    implementation libs.androidx.transition
+    // Item 130: heavy screens inflate off the main thread.
+    implementation libs.androidx.asynclayoutinflater
     implementation libs.androidx.browser
     implementation libs.bedrock.connection
     implementation libs.xcrash
@@ -214,7 +261,34 @@ dependencies {
     // Microsoft Authentication Library (MSAL) for official OAuth
     implementation 'com.microsoft.identity.client:msal:2.2.3'
     testImplementation libs.junit
+    // Android ships org.json in the platform, so the local unit-test runtime has stubs that
+    // throw "not mocked". org.json:json is the same API as a plain jar, so a JSON-parsing
+    // rule stays unit-testable without an instrumented test.
+    testImplementation 'org.json:json:20240303'
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // Item 297: LeakCanary watches for activity-context leaks in debug builds only. Its own
+    // AppInitializer installs it via the AndroidX startup provider, so no code change is needed in
+    // the application class; a release build never sees the dependency.
+    debugImplementation libs.leakcanary.android
     implementation libs.glide
+}
+
+// Item 270: the in-app changelog renders the repo's CHANGELOG.md, so there is one source of truth.
+// This copies it into the packaged assets at build time instead of keeping a second hand-edited
+// copy that drifts.
+def changelogAssetsDir = layout.buildDirectory.dir('generated/changelogAssets')
+
+tasks.register('syncChangelogAsset', Copy) {
+    from(rootProject.file('CHANGELOG.md')) {
+        into 'launcher'
+    }
+    into changelogAssetsDir
+}
+
+android.sourceSets.main.assets.srcDir(changelogAssetsDir)
+
+tasks.matching { it.name == 'preBuild' }.configureEach {
+    dependsOn 'syncChangelogAsset'
 }

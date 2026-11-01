@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
@@ -29,8 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.ListPopupWindow;
-import androidx.core.content.ContextCompat;
 
 import org.chimeramc.client.R;
 
@@ -51,9 +51,15 @@ import java.util.regex.Pattern;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.chimeramc.client.util.AppLog;
+import org.chimeramc.client.util.TouchTargetHelper;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 
 public class LogcatOverlay extends FrameLayout {
+
+    private static final String TAG = "LogcatOverlay";
 
     private View overlayContainer;
     private RecyclerView recyclerView;
@@ -61,14 +67,15 @@ public class LogcatOverlay extends FrameLayout {
     private LinearLayoutManager layoutManager;
     private EditText filterInput;
     private EditText excludeInput;
-    private TextView levelFilterView;
-    private ListPopupWindow levelPopup;
+    private LinearLayout levelChips;
+    /** One chip per level, index 0 being ALL; rebuilt once and recoloured on selection. */
+    private final List<TextView> levelChipViews = new ArrayList<>();
     private View filterBar;
     private ImageButton pauseButton, clearButton, autoScrollButton, closeButton, minimizeBubble;
-    private ImageButton filterButton, filterClearButton, copyButton;
+    private ImageButton filterButton, filterClearButton, copyButton, shareButton;
     private View overlayHeader, bottomResizeBar, cornerBottomLeft, cornerBottomRight;
 
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = MainThread.handler();
     private final SharedPreferences prefs;
 
     private final ArrayDeque<String> logBuffer = new ArrayDeque<>(2000);
@@ -111,11 +118,12 @@ public class LogcatOverlay extends FrameLayout {
         recyclerView = findViewById(R.id.log_scroll);
         filterInput = findViewById(R.id.filter_input);
         excludeInput = findViewById(R.id.exclude_input);
-        levelFilterView = findViewById(R.id.level_filter);
+        levelChips = findViewById(R.id.level_chips);
         filterBar = findViewById(R.id.filter_bar);
         clearButton = findViewById(R.id.btn_clear);
         pauseButton = findViewById(R.id.btn_pause);
         copyButton = findViewById(R.id.btn_copy);
+        shareButton = findViewById(R.id.btn_share);
         autoScrollButton = findViewById(R.id.btn_autoscroll);
         closeButton = findViewById(R.id.btn_close);
         minimizeBubble = findViewById(R.id.minimize_bubble);
@@ -125,6 +133,15 @@ public class LogcatOverlay extends FrameLayout {
         bottomResizeBar = findViewById(R.id.bottom_resize_bar);
         cornerBottomLeft = findViewById(R.id.corner_bottom_left);
         cornerBottomRight = findViewById(R.id.corner_bottom_right);
+
+        // The header holds seven 32dp buttons in one row. They are the right size to draw and too
+        // small to press, so each gets a 48dp touch area through the header's single delegate.
+        for (int id : new int[]{R.id.btn_filter, R.id.btn_autoscroll, R.id.btn_pause,
+                R.id.btn_copy, R.id.btn_share, R.id.btn_clear, R.id.btn_close,
+                R.id.btn_filter_clear}) {
+            TouchTargetHelper.expand(findViewById(id));
+        }
+        TouchTargetHelper.expand(minimizeBubble);
 
         layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setStackFromEnd(true);
@@ -157,11 +174,11 @@ public class LogcatOverlay extends FrameLayout {
         });
 
         if (copyButton != null) {
-            copyButton.setOnClickListener(v -> copyFullLogToClipboard());
-            copyButton.setOnLongClickListener(v -> {
-                shareLogFile();
-                return true;
-            });
+            copyButton.setOnClickListener(v -> copyVisibleLogToClipboard());
+        }
+        // Item 209: share is its own button, not a hidden long press, so a tester can find it.
+        if (shareButton != null) {
+            shareButton.setOnClickListener(v -> shareLogFile());
         }
 
         pauseButton.setOnClickListener(v -> {
@@ -176,32 +193,7 @@ public class LogcatOverlay extends FrameLayout {
             autoScrollButton.setAlpha(enabled ? 1f : 0.5f);
         });
 
-        String[] levels = {getContext().getString(R.string.logcat_filter_all), "V", "D", "I", "W", "E", "F"};
-        ArrayAdapter<String> levelAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_dropdown_item_dark, levels);
-        levelFilterView.setText(levels[0]);
-        levelFilterView.setOnClickListener(v -> {
-            if (levelPopup == null) {
-                levelPopup = new ListPopupWindow(getContext());
-                levelPopup.setAdapter(levelAdapter);
-                levelPopup.setAnchorView(levelFilterView);
-                levelPopup.setModal(true);
-                levelPopup.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.bg_spinner_popup_dark));
-                levelPopup.setOnItemClickListener((parent, itemView, pos, id) -> {
-                    levelFilterChar = pos == 0 ? 0 : levels[pos].charAt(0);
-                    levelFilterView.setText(levels[pos]);
-                    levelPopup.dismiss();
-                    scheduleFilterRefresh();
-                });
-            } else {
-                levelPopup.setAdapter(levelAdapter);
-                levelPopup.setAnchorView(levelFilterView);
-            }
-            int gap = dpToPx(4);
-            levelPopup.setHorizontalOffset(levelFilterView.getWidth() + gap);
-            levelPopup.setVerticalOffset(0);
-            levelPopup.setWidth(Math.max(levelFilterView.getWidth(), dpToPx(96)));
-            levelPopup.show();
-        });
+        buildLevelChips();
 
         filterInput.addTextChangedListener(SimpleTextWatcher.after(s -> {
             filterTextLower = s.toString().toLowerCase(Locale.ROOT).trim();
@@ -231,8 +223,7 @@ public class LogcatOverlay extends FrameLayout {
 
         if (filterClearButton != null) {
             filterClearButton.setOnClickListener(v -> {
-                levelFilterChar = 0;
-                if (levelFilterView != null) levelFilterView.setText(R.string.logcat_filter_all);
+                setLevelFilter(LogcatLevelFilter.ALL);
                 filterInput.setText("");
                 excludeInput.setText("");
                 scheduleFilterRefresh();
@@ -430,12 +421,12 @@ public class LogcatOverlay extends FrameLayout {
     }
 
     private void startReader() {
-        readerThread = new Thread(() -> {
+        readerThread = AppExecutors.thread("logcat-reader", () -> {
             try {
                 List<String> cmd = new ArrayList<>();
                 cmd.add("logcat");
                 cmd.add("-v"); cmd.add("threadtime");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (ApiLevels.atLeastN()) {
                     cmd.add("--pid");
                     cmd.add(String.valueOf(android.os.Process.myPid()));
                 }
@@ -447,9 +438,9 @@ public class LogcatOverlay extends FrameLayout {
                     if (!paused) pendingLines.offer(line);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                AppLog.warn(TAG, "The logcat reader stopped unexpectedly", e);
             }
-        }, "LogcatReader");
+        });
         readerThread.start();
     }
 
@@ -457,7 +448,9 @@ public class LogcatOverlay extends FrameLayout {
         try {
             if (logcatProc != null) logcatProc.destroy();
             if (readerThread != null && readerThread.isAlive()) readerThread.interrupt();
-        } catch (Throwable ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "logcat-stop", "Stopping the logcat reader failed", ignored);
+        }
         logcatProc = null;
         readerThread = null;
     }
@@ -468,6 +461,11 @@ public class LogcatOverlay extends FrameLayout {
         ioExecutor.submit(() -> {
             StringBuilder sb = new StringBuilder();
             List<String> batch = new ArrayList<>(MAX_BATCH_LINES);
+            // Item 208: coalesce the UI flush. The reader appends to the bounded queue and this loop
+            // drains it; posting a rebuild per drain tick put up to ten main-thread rebuilds a
+            // second on the UI thread. The flush now happens at most every FLUSH_INTERVAL_MS, or
+            // immediately once the batch is full so a burst is never truncated.
+            long lastFlushMs = android.os.SystemClock.uptimeMillis();
             while (true) {
                 try {
                     String ln = pendingLines.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS);
@@ -490,9 +488,12 @@ public class LogcatOverlay extends FrameLayout {
                         }
                     }
 
-                    if (sb.length() > 0) {
+                    long now = android.os.SystemClock.uptimeMillis();
+                    if (LogcatBatchPolicy.shouldFlush(now, lastFlushMs, batch.size(), MAX_BATCH_LINES)
+                            && sb.length() > 0) {
                         final String chunk = sb.toString();
                         sb.setLength(0);
+                        lastFlushMs = now;
                         mainHandler.post(() -> appendChunk(chunk));
                     }
                 } catch (InterruptedException e) {
@@ -551,10 +552,62 @@ public class LogcatOverlay extends FrameLayout {
         }
     }
 
+    /**
+     * Builds the level chips once (item 209).
+     *
+     * <p>A row of chips replaces the old list popup: the options are visible instead of hidden
+     * behind a tap, there is no second window to outlive the overlay, and selecting one is a single
+     * touch. The chips are built once and only recoloured afterwards, so a filter change allocates
+     * nothing.
+     */
+    private void buildLevelChips() {
+        if (levelChips == null || !levelChipViews.isEmpty()) return;
+        levelChipViews.clear();
+        levelChips.removeAllViews();
+        String all = getContext().getString(R.string.logcat_filter_all);
+        for (int i = 0; i <= LogcatLevelFilter.LEVELS.length; i++) {
+            final int index = i;
+            TextView chip = new TextView(getContext());
+            chip.setText(i == 0 ? all : String.valueOf(LogcatLevelFilter.LEVELS[i - 1]));
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+            chip.setGravity(Gravity.CENTER);
+            chip.setPadding(dpToPx(10), dpToPx(5), dpToPx(10), dpToPx(5));
+            chip.setBackgroundResource(R.drawable.bg_filter_chip);
+            chip.setContentDescription(i == 0
+                    ? getContext().getString(R.string.logcat_filter_all_description)
+                    : getContext().getString(R.string.logcat_filter_level_description,
+                            String.valueOf(LogcatLevelFilter.LEVELS[i - 1])));
+            TouchTargetHelper.expand(chip);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.setMarginEnd(dpToPx(4));
+            chip.setLayoutParams(lp);
+            chip.setOnClickListener(v -> {
+                setLevelFilter(LogcatLevelFilter.levelAt(index));
+                scheduleFilterRefresh();
+            });
+            levelChipViews.add(chip);
+            levelChips.addView(chip);
+        }
+        setLevelFilter(levelFilterChar);
+    }
+
+    /** Applies a level filter and repaints the chips to match. */
+    private void setLevelFilter(char level) {
+        levelFilterChar = level;
+        int selected = LogcatLevelFilter.indexOf(level);
+        for (int i = 0; i < levelChipViews.size(); i++) {
+            TextView chip = levelChipViews.get(i);
+            boolean on = i == selected;
+            chip.setSelected(on);
+            chip.setTextColor(on ? getContext().getColor(R.color.on_primary)
+                    : getContext().getColor(R.color.on_surface));
+        }
+    }
+
     private boolean passesFilter(@NonNull String line) {
-        if (levelFilterChar != 0) {
-            char c = detectLevelChar(line);
-            if (c == 0 || c != levelFilterChar) return false;
+        if (levelFilterChar != LogcatLevelFilter.ALL) {
+            if (!LogcatLevelFilter.passes(levelFilterChar, detectLevelChar(line))) return false;
         }
         String lower = line.toLowerCase(Locale.ROOT);
         if (!filterTextLower.isEmpty() && !lower.contains(filterTextLower)) return false;
@@ -715,15 +768,35 @@ public class LogcatOverlay extends FrameLayout {
             notifyItemRangeInserted(items.size() - more.size(), more.size());
         }
 
+        /**
+         * Replaces the visible lines, usually after a filter change.
+         *
+         * <p>A log line has no stable identity — the same text legitimately appears twice — so this
+         * is a genuine replacement rather than a diff. It is still reported as a remove run and an
+         * insert run rather than a dataset change, which keeps the RecyclerView's own bookkeeping
+         * (and any running item animations) consistent while the list is swapped.
+         */
         void setItems(@NonNull List<CharSequence> newItems) {
-            items.clear();
+            int oldCount = items.size();
+            if (oldCount > 0) {
+                items.clear();
+                notifyItemRangeRemoved(0, oldCount);
+            }
+            if (newItems.isEmpty()) return;
             items.addAll(newItems);
-            notifyDataSetChanged();
+            notifyItemRangeInserted(0, items.size());
         }
 
+        /** A snapshot of the visible lines, for copying exactly what is shown (item 209). */
+        @NonNull
+        List<CharSequence> snapshot() {
+            return new ArrayList<>(items);
+        }
         void clear() {
+            int oldCount = items.size();
+            if (oldCount == 0) return;
             items.clear();
-            notifyDataSetChanged();
+            notifyItemRangeRemoved(0, oldCount);
         }
     }
 
@@ -818,8 +891,36 @@ public class LogcatOverlay extends FrameLayout {
                         pendingHistoryTrimLines = 0;
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce(TAG, "logcat-trim", "Trimming the persisted logcat history failed", ignored);
+            }
         }
+    }
+
+    /**
+     * Copies what the overlay is actually showing (item 209).
+     *
+     * <p>With a level chip or a keyword filter active, copying the whole buffer hands over lines
+     * the user filtered out on purpose, so a report ends up full of noise. This copies the adapter's
+     * current items; with no filter those are the whole buffer anyway. Falls back to the full log
+     * when nothing is shown.
+     */
+    private void copyVisibleLogToClipboard() {
+        List<CharSequence> visible = logAdapter != null ? logAdapter.snapshot() : Collections.emptyList();
+        if (visible.isEmpty()) {
+            copyFullLogToClipboard();
+            return;
+        }
+        StringBuilder sb = new StringBuilder(visible.size() * 96);
+        for (CharSequence line : visible) {
+            sb.append(line).append('\n');
+        }
+        android.content.ClipboardManager cm =
+                (android.content.ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(android.content.ClipData.newPlainText("logcat", sb.toString()));
+        }
+        Toast.makeText(getContext(), R.string.logcat_copied, Toast.LENGTH_SHORT).show();
     }
 
     private void copyFullLogToClipboard() {
@@ -886,7 +987,9 @@ public class LogcatOverlay extends FrameLayout {
                     }
                     pendingHistoryTrimLines = 0;
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce(TAG, "logcat-trim2", "Trimming the persisted logcat history failed", ignored);
+            }
         }
     }
 

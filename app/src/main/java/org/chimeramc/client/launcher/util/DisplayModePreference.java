@@ -68,4 +68,39 @@ public final class DisplayModePreference {
         }
         return bestId;
     }
+
+    /**
+     * Picks the fastest same-resolution mode at or below {@code capHz} (item 225).
+     *
+     * <p>This is the frame-cap counterpart to {@link #selectHighRefreshModeId}: a cap asks for a
+     * mode no faster than the requested rate, and the same-resolution rule still applies so honouring
+     * a cap never quietly lowers the picture's sharpness. When the current mode is already at or
+     * below the cap there is nothing to change and the current mode id is returned, which the caller
+     * reads as "already applied".
+     *
+     * @param modes          every mode the display advertises; may be null or empty
+     * @param currentWidth   width of the mode the device is currently using
+     * @param currentHeight  height of the mode the device is currently using
+     * @param capHz          the highest acceptable refresh rate
+     * @return the chosen mode id, or {@link #NO_MODE} when no same-resolution mode honours the cap
+     */
+    public static int selectModeAtOrBelow(List<Mode> modes, int currentWidth, int currentHeight,
+                                          int capHz) {
+        if (modes == null || modes.isEmpty()) return NO_MODE;
+        if (currentWidth <= 0 || currentHeight <= 0) return NO_MODE;
+        if (capHz <= 0) return NO_MODE;
+
+        int bestId = NO_MODE;
+        float bestRate = 0f;
+        for (Mode mode : modes) {
+            if (mode == null) continue;
+            if (mode.width != currentWidth || mode.height != currentHeight) continue;
+            if (mode.refreshRate > capHz) continue;
+            if (mode.refreshRate > bestRate) {
+                bestRate = mode.refreshRate;
+                bestId = mode.id;
+            }
+        }
+        return bestId;
+    }
 }

@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.animation.DynamicAnim;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,9 +60,7 @@ public final class ReplayPanel {
     private final boolean compact;
     private final ReplayClipRepository repository;
     private final ExecutorService io = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "replay-panel-io");
-        thread.setDaemon(true);
-        return thread;
+        return AppExecutors.thread("replay-panel-io", r);
     });
 
     private final LinearLayout root;
@@ -72,7 +72,7 @@ public final class ReplayPanel {
     private final TextView emptyTitle;
     private final TextView emptyMessage;
     private final ReplayEmptyArtView emptyArt;
-    private final ReplaySkeletonView skeleton;
+    private final org.chimeramc.client.ui.components.SkeletonView skeleton;
     private TextView recordButton;
     private TextView timer;
     private TextView qualityBadge;
@@ -98,7 +98,7 @@ public final class ReplayPanel {
     private TextView hintView;
     private ReplayPlayerView playerView;
 
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = MainThread.handler();
     private final ReplayManager.Listener stateListener = new ReplayManager.Listener() {
         @Override
         public void onReplayStateChanged(ReplayManager.State state, long elapsed,
@@ -171,7 +171,7 @@ public final class ReplayPanel {
         contentFrame.addView(scroll, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        skeleton = new ReplaySkeletonView(activity);
+        skeleton = new org.chimeramc.client.ui.components.SkeletonView(activity);
         skeleton.setVisibility(View.GONE);
         contentFrame.addView(skeleton, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -746,14 +746,23 @@ public final class ReplayPanel {
                 highlightSelection();
                 showClipActions(clip);
             });
+            // Item 206: one throttle per card, so a fast drag cannot queue a decode per touch
+            // move. `frameAt` decodes at the drag position, so the preview follows the finger
+            // without the queue growing behind it.
+            final ReplayScrubThrottle scrubThrottle = new ReplayScrubThrottle();
             card.setScrubListener(new ClipCardView.ScrubListener() {
                 @Override
                 public void onScrubStart(ReplayClip c) {
                     // A scrub is a preview, not a selection; it must not disturb the selected card.
+                    scrubThrottle.reset();
                 }
 
                 @Override
                 public void onScrub(ReplayClip c, float fraction) {
+                    if (!scrubThrottle.shouldDecode(
+                            android.os.SystemClock.uptimeMillis(), fraction, c.durationMs())) {
+                        return;
+                    }
                     runOnIo(() -> {
                         final android.graphics.Bitmap frame = ReplayThumbnails.frameAt(c, fraction);
                         if (frame == null) return;
@@ -767,6 +776,7 @@ public final class ReplayPanel {
 
                 @Override
                 public void onScrubEnd(ReplayClip c) {
+                    scrubThrottle.reset();
                     card.clearScrubPreview();
                 }
             });
@@ -1195,9 +1205,39 @@ public final class ReplayPanel {
                 return scrubPlayback(0.1f);
             case SPEED:
                 return stepPlaybackSpeed();
+            case FRAME_STEP_BACK:
+                return stepFrame(false);
+            case FRAME_STEP_FORWARD:
+                return stepFrame(true);
+            case MARKER_PREV:
+                return jumpToMarker(false);
+            case MARKER_NEXT:
+                return jumpToMarker(true);
             default:
                 return false;
         }
+    }
+
+    /** Steps the open clip one frame, for the Replay controller/keyboard route (item 242). */
+    public boolean stepFrame(boolean forward) {
+        if (playerView == null) return false;
+        playerView.stepFrame(forward);
+        return true;
+    }
+
+    /**
+     * Jumps to the previous or next recorded marker (item 241).
+     *
+     * @return false when no clip is open or it carries no markers, so a caller can fall through.
+     */
+    public boolean jumpToMarker(boolean forward) {
+        if (playerView == null || !playerView.hasMarkers()) return false;
+        if (forward) {
+            playerView.jumpToNextMarker();
+        } else {
+            playerView.jumpToPreviousMarker();
+        }
+        return true;
     }
 
     private static int indexOfName(List<ReplayClip> clips, ReplayClip target) {

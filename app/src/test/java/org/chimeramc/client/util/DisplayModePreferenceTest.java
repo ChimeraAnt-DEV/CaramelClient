@@ -84,4 +84,49 @@ public class DisplayModePreferenceTest {
         List<Mode> modes = Arrays.asList(null, mode(2, 120f, 1080, 2400));
         assertEquals(2, DisplayModePreference.selectHighRefreshModeId(modes, 1080, 2400));
     }
+
+    // --- Frame cap (item 225) --------------------------------------------------------------
+
+    @Test
+    public void aCapPicksTheFastestSameResolutionModeAtOrBelowIt() {
+        List<Mode> modes = Arrays.asList(
+                mode(0, 60f, 1080, 2400),
+                mode(1, 90f, 1080, 2400),
+                mode(2, 120f, 1080, 2400));
+        assertEquals(1, DisplayModePreference.selectModeAtOrBelow(modes, 1080, 2400, 90));
+    }
+
+    @Test
+    public void aCapNeverLowersTheResolutionToHonourTheRate() {
+        List<Mode> modes = Arrays.asList(
+                mode(0, 60f, 1080, 2400),
+                mode(9, 60f, 720, 1600));
+        // The 720p mode at 60Hz is at the cap, but changing resolution is not allowed, so only
+        // the same-resolution 60Hz mode qualifies.
+        assertEquals(0, DisplayModePreference.selectModeAtOrBelow(modes, 1080, 2400, 60));
+    }
+
+    @Test
+    public void aCapBelowEverySameResolutionModeYieldsNoMode() {
+        List<Mode> modes = Arrays.asList(mode(0, 60f, 1080, 2400), mode(1, 90f, 1080, 2400));
+        assertEquals(DisplayModePreference.NO_MODE,
+                DisplayModePreference.selectModeAtOrBelow(modes, 1080, 2400, 30));
+    }
+
+    @Test
+    public void aNonPositiveCapYieldsNoMode() {
+        List<Mode> modes = Arrays.asList(mode(0, 60f, 1080, 2400));
+        assertEquals(DisplayModePreference.NO_MODE,
+                DisplayModePreference.selectModeAtOrBelow(modes, 1080, 2400, 0));
+        assertEquals(DisplayModePreference.NO_MODE,
+                DisplayModePreference.selectModeAtOrBelow(modes, 1080, 2400, -1));
+    }
+
+    @Test
+    public void aCapIgnoresNullAndEmptyModeLists() {
+        assertEquals(DisplayModePreference.NO_MODE,
+                DisplayModePreference.selectModeAtOrBelow(null, 1080, 2400, 60));
+        assertEquals(DisplayModePreference.NO_MODE,
+                DisplayModePreference.selectModeAtOrBelow(new ArrayList<>(), 1080, 2400, 60));
+    }
 }

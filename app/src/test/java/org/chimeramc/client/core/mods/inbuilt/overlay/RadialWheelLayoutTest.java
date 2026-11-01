@@ -215,4 +215,72 @@ public class RadialWheelLayoutTest {
             }
         }
     }
+
+    // --- Flick-to-select (spec: "flicking your mouse toward a segment") ----------------------
+
+    private static Sector flick(double deg, float speed) {
+        double rad = Math.toRadians(deg);
+        return RadialWheelLayout.flickSector((float) (Math.cos(rad) * speed),
+                (float) (Math.sin(rad) * speed), OUTER, GAP);
+    }
+
+    @Test
+    public void aFastThrowTowardASliceSelectsIt() {
+        // A flick straight up (screen space -90) lands on MODS, the top sector.
+        assertEquals(Sector.MODS, flick(-90.0, 2500f));
+        assertEquals(Sector.CLOSET, flick(0.0, 2500f));
+        assertEquals(Sector.SETTINGS, flick(90.0, 2500f));
+        assertEquals(Sector.HUD, flick(180.0, 2500f));
+    }
+
+    @Test
+    public void aSlowReleaseIsNotAFlick() {
+        // Below the threshold the release is a placement, so the pointer hit test decides.
+        assertEquals(Sector.NONE, flick(-90.0, RadialWheelLayout.FLICK_MIN_SPEED_PX_S - 1f));
+        assertEquals(Sector.NONE, flick(-90.0, 0f));
+        assertEquals(Sector.NONE, RadialWheelLayout.flickSector(0f, 0f, OUTER, GAP));
+    }
+
+    @Test
+    public void aFlickStraightAtABoundarySelectsNothing() {
+        // A throw at exactly 45 degrees sits in the gap, so it is a coin flip and must be refused.
+        assertEquals(Sector.NONE, flick(45.0, 2500f));
+        assertEquals(Sector.NONE, flick(-45.0, 2500f));
+        assertEquals(Sector.NONE, flick(135.0, 2500f));
+    }
+
+    // --- The screen-reader slot targets (item 200) ----------------------------------------------
+
+    @Test
+    public void everySlotCentreSitsOnTheRingBand() {
+        float cx = 200f, cy = 150f, inner = 100f, outer = 160f;
+        for (int i = 0; i < 4; i++) {
+            float[] c = RadialWheelLayout.slotCenter(i, 4, cx, cy, inner, outer);
+            float r = (float) Math.hypot(c[0] - cx, c[1] - cy);
+            assertEquals((inner + outer) / 2f, r, 0.01f);
+        }
+    }
+
+    @Test
+    public void slotCentresAreDistinctAndSpreadAroundTheWheel() {
+        float[] a = RadialWheelLayout.slotCenter(0, 4, 0f, 0f, 100f, 160f);
+        float[] b = RadialWheelLayout.slotCenter(1, 4, 0f, 0f, 100f, 160f);
+        assertTrue(Math.hypot(a[0] - b[0], a[1] - b[1]) > 10f);
+    }
+
+    @Test
+    public void aSingleSlotIsStillPlacedOnTheBand() {
+        // The profile wheel can open a one-entry sub-wheel; a divide-by-zero or a NaN here would
+        // make the slot unreachable to a screen reader.
+        float[] c = RadialWheelLayout.slotCenter(0, 1, 10f, 20f, 100f, 160f);
+        assertTrue(Float.isFinite(c[0]) && Float.isFinite(c[1]));
+        assertEquals(130f, (float) Math.hypot(c[0] - 10f, c[1] - 20f), 0.01f);
+    }
+
+    @Test
+    public void theFlickThresholdMatchesTheRule() {
+        // At exactly the threshold the flick counts; the boundary is inclusive so a deliberate
+        // throw at the documented speed is never silently dropped.
+        assertEquals(Sector.MODS, flick(-90.0, RadialWheelLayout.FLICK_MIN_SPEED_PX_S));
+    }
 }

@@ -188,6 +188,11 @@ public final class ControllerProfileCodec {
                 clean.setRepeatRate(entry.getKey(), entry.getValue());
             }
         }
+        for (java.util.Map.Entry<Integer, Integer> entry : raw.getClickLimits().entrySet()) {
+            if (entry.getKey() != null && entry.getValue() != null) {
+                clean.setClickLimit(entry.getKey(), entry.getValue());
+            }
+        }
         return clean;
     }
 }

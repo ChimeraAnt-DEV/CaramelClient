@@ -15,6 +15,11 @@ class LauncherApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        // Point the failure reporter at the application context before anything else can fail, so
+        // the first failure is durable rather than only reaching logcat.
+        org.chimeramc.client.util.AppLog.install(applicationContext)
+        // Item 296: catch main-thread disk/network work in debug builds. A no-op in release.
+        org.chimeramc.client.util.StrictModeSetup.install(org.chimeramc.client.BuildConfig.DEBUG)
         FeatureSettings.init(applicationContext)
         LowLatencyNetworkManager.init(applicationContext)
         ThermalGovernor.init(applicationContext)

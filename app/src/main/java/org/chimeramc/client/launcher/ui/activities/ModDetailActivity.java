@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.AsyncText;
 import org.chimeramc.client.core.mods.Mod;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.ui.views.MainViewModel;
@@ -29,6 +30,10 @@ import org.chimeramc.client.util.PersonalizationManager;
 import java.io.File;
 
 public class ModDetailActivity extends BaseActivity {
+
+    /** The lifetime of the staggered entrance posts, closed in onDestroy. */
+    private final org.chimeramc.client.util.MainThread.Scope staggerScope =
+            org.chimeramc.client.util.MainThread.scope();
 
     private MainViewModel viewModel;
     private Mod currentMod;
@@ -44,6 +49,7 @@ public class ModDetailActivity extends BaseActivity {
     private MetaRow versionRow;
     private MetaRow minecraftVersionsRow;
     private MetaRow configFilesRow;
+    private MetaRow integrityRow;
     private Switch modSwitch;
     private Button configureButton;
     private View headerContainer;
@@ -90,6 +96,7 @@ public class ModDetailActivity extends BaseActivity {
         versionRow = MetaRow.bind(findViewById(R.id.mod_version_row));
         minecraftVersionsRow = MetaRow.bind(findViewById(R.id.mod_minecraft_versions_row));
         configFilesRow = MetaRow.bind(findViewById(R.id.mod_config_files_row));
+        integrityRow = MetaRow.bind(findViewById(R.id.mod_integrity_row));
         modSwitch = findViewById(R.id.mod_switch_detail);
         headerContainer = findViewById(R.id.mod_detail_title);
         View heroContainer = findViewById(R.id.mod_detail_header_container);
@@ -154,18 +161,41 @@ public class ModDetailActivity extends BaseActivity {
                 modDescriptionText.setVisibility(View.GONE);
             } else {
                 modDescriptionText.setVisibility(View.VISIBLE);
-                modDescriptionText.setText(description);
+                // Item 127: a mod description can be several paragraphs; measure it off the main
+                // thread so binding it does not lay the whole thing out on this frame.
+                AsyncText.apply(modDescriptionText, description);
             }
 
             versionRow.set(R.string.mod_version_label, version);
             minecraftVersionsRow.set(R.string.mod_minecraft_versions_label, formatMinecraftVersions(mod));
             configFilesRow.set(R.string.mod_config_files_label, formatConfigFiles(mod));
+            // Item 511: a pinned hash is only meaningful if it is visible. Show the verified digest
+            // and the source file, or say the mod is unpinned, so the screen never implies a check
+            // that did not run.
+            integrityRow.set(R.string.mod_integrity_label, formatIntegrity(mod));
             loadModIcon(mod);
 
             if (configureButton != null) {
                 configureButton.setVisibility(mod.hasEditableConfig() ? View.VISIBLE : View.GONE);
             }
         }
+    }
+
+    /**
+     * The integrity line: the verified hash and source file, or an explicit "not pinned" (item 511).
+     *
+     * <p>A mod that declares {@code sha256} is verified against it at load; showing the digest lets a
+     * user compare it with the publisher's own value. A mod that declares none is not verified, and
+     * the row says so rather than staying blank.
+     */
+    private String formatIntegrity(Mod mod) {
+        String file = trimToNull(mod.getFileName());
+        String source = file == null ? "" : file;
+        String declared = mod.getDeclaredSha256();
+        if (declared != null && !declared.isEmpty()) {
+            return getString(R.string.mod_integrity_verified, declared, source);
+        }
+        return getString(R.string.mod_integrity_unpinned, source);
     }
 
     private void applyPersonalization(@Nullable View heroContainer) {
@@ -252,7 +282,6 @@ public class ModDetailActivity extends BaseActivity {
     private void runEnterAnimations() {
         float density = getResources().getDisplayMetrics().density;
         float dy = 16f * density;
-        android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
 
         View heroContainer = findViewById(R.id.mod_detail_header_container);
         View[] cards = new View[]{headerContainer, heroContainer, infoContainer, actionsContainer};
@@ -262,13 +291,22 @@ public class ModDetailActivity extends BaseActivity {
             card.setAlpha(0f);
             card.setTranslationY(dy);
             final int delay = 100 + i * 80;
-            handler.postDelayed(() -> {
+            // Staggered through the activity's scope, so backing out mid-entrance removes the
+            // pending posts instead of firing them into a detached tree (items 14, 295).
+            staggerScope.postDelayed(() -> {
                 DynamicAnim.springAlphaTo(card, 1f).start();
                 DynamicAnim.springTranslationYTo(card, 0f).start();
             }, delay);
         }
 
         // 不对 mod 名称做入场动画，保持静态
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Removes any entrance animation still waiting to fire.
+        staggerScope.close();
+        super.onDestroy();
     }
 
     private void confirmDeleteMod() {

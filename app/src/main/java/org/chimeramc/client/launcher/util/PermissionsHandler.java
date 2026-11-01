@@ -60,7 +60,7 @@ public class PermissionsHandler {
         if (activity == null) return false;
         switch (type) {
             case STORAGE:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (ApiLevels.atLeastR()) {
                     return Environment.isExternalStorageManager();
                 } else {
                     return ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -69,7 +69,7 @@ public class PermissionsHandler {
             case OVERLAY:
                 return Settings.canDrawOverlays(activity);
             case UNKNOWN_SOURCES:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (ApiLevels.atLeastO()) {
                     return activity.getPackageManager().canRequestPackageInstalls();
                 }
                 return true;
@@ -103,7 +103,7 @@ public class PermissionsHandler {
 
     private void requestStoragePermission() {
         if (!hasPermission(PermissionType.STORAGE)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (ApiLevels.atLeastR()) {
                 runOnUiThread(() -> {
                     new CustomAlertDialog(activity)
                             .setTitleText(activity.getString(R.string.storage_permission_title))
@@ -153,7 +153,7 @@ public class PermissionsHandler {
 
     private void requestUnknownSourcesPermission() {
         if (!hasPermission(PermissionType.UNKNOWN_SOURCES)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (ApiLevels.atLeastO()) {
                 runOnUiThread(() -> {
                     new CustomAlertDialog(activity)
                             .setTitleText(activity.getString(R.string.unknown_sources_permission_title))
@@ -218,7 +218,7 @@ public class PermissionsHandler {
 
     private void runOnUiThread(Runnable r) {
         if (activity != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ApiLevels.atLeastM()) {
                 if (activity.isDestroyed() || activity.isFinishing()) return;
             }
             activity.runOnUiThread(r);

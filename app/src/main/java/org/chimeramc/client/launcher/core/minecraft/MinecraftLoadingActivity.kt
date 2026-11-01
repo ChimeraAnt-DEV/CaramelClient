@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.ApiLevels
+
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -56,6 +58,9 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private var lastLogMessage: String? = null
     private var logRenderScheduled = false
     private var statusRenderScheduled = false
+    // Time to the loading screen's first drawn frame, or NO_FIRST_FRAME when it was never observed
+    // (the fallback path fired before a draw). Fed into the local statistics (item 282).
+    private var firstFrameMs = org.chimeramc.client.core.stats.LaunchStats.NO_FIRST_FRAME
     private var lastRenderedStatus: String? = null
     private var lastRenderedDetail: String? = null
     // The cap and the render live in a pure, tested class; the view is assigned its whole output
@@ -91,6 +96,10 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         applyLaunchTheme()
 
         MinecraftLaunchSession.clear()
+        // Item 282: count the launch the moment the launch screen is reached. This is the widest
+        // point a launch can be observed from -- before it can fail in runtime preparation -- so a
+        // failure later still leaves the launch counted.
+        org.chimeramc.client.core.stats.LaunchStatsRecorder.recordLaunch(this)
         trace.milestone("Launch screen ready")
         appendLog("Preparing launch")
         appendLog("Preparing game files")
@@ -118,6 +127,9 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                 if (content.viewTreeObserver.isAlive) {
                     content.viewTreeObserver.removeOnPreDrawListener(this)
                 }
+                // The loading screen's first draw is the only "first frame" the launcher can time
+                // for a launch; the game's own first frame is not observable from here.
+                firstFrameMs = trace.elapsedMs()
                 content.post {
                     hideSystemUi()
                     startPreparingOnce("loading first frame drawn")
@@ -182,6 +194,10 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                     getString(R.string.minecraft_loading_entering_game)
                 )
                 trace.milestone("Entering game")
+                // The launch reached the game, so it counts as a completed launch and its first-frame
+                // time joins the local mean (item 282).
+                org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCompletedLaunch(
+                    this, firstFrameMs)
                 appendLog("Entering Minecraft")
                 // Starting the game activity is the last thing that can fail, and it failed
                 // outside any guard: a throw from startActivity (a missing target, a
@@ -279,6 +295,9 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // the restart. The report is stored as announced and any earlier pending report is dropped:
         // this screen is authoritative whenever it can be shown.
         LastLaunchFailure.write(this, throwable, true)
+        // A launch that died here never reached a session, so it is a failed launch in the local
+        // statistics (item 282).
+        org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCrash(this)
         returnButton.visibility = View.VISIBLE
     }
 
@@ -304,7 +323,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         progressBar.progressTintList = accentTint
         progressBar.progressBackgroundTintList = ColorStateList.valueOf(withAlpha(accent, TRACK_ALPHA))
         progressBar.indeterminateTintList = accentTint
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             progressBar.progressDrawable?.colorFilter = null
         }
 
@@ -427,12 +446,12 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             window.isStatusBarContrastEnforced = false
             window.isNavigationBarContrastEnforced = false
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (ApiLevels.atLeastR()) {
             window.setDecorFitsSystemWindows(false)
             decorView.windowInsetsController?.let { controller ->
                 controller.systemBarsBehavior =

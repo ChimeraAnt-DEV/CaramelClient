@@ -98,4 +98,36 @@ public class ReplayTimelineTest {
         timeline.setDurationMs(1_000L);
         assertEquals(1_000L, timeline.positionMs());
     }
+
+    @Test
+    public void theSpeedCycleReachesQuarterSpeed() {
+        ReplayTimeline timeline = new ReplayTimeline(10_000L);
+        timeline.setSpeed(0.25f);
+        assertEquals(0.25f, timeline.speed(), 0.001f);
+        timeline.setSpeed(-0.25f);
+        assertEquals(-0.25f, timeline.speed(), 0.001f);
+    }
+
+    @Test
+    public void frameSteppingMovesByOneFrameAndPauses() {
+        ReplayTimeline timeline = new ReplayTimeline(10_000L);
+        timeline.play();
+        timeline.stepFrame(true);
+        assertFalse("a frame step is a paused operation", timeline.isPlaying());
+        assertEquals(ReplayTimeline.FRAME_STEP_MS, timeline.positionMs());
+        timeline.stepFrame(true);
+        assertEquals(2 * ReplayTimeline.FRAME_STEP_MS, timeline.positionMs());
+        timeline.stepFrame(false);
+        assertEquals(ReplayTimeline.FRAME_STEP_MS, timeline.positionMs());
+    }
+
+    @Test
+    public void frameSteppingClampsAtBothEnds() {
+        ReplayTimeline timeline = new ReplayTimeline(50L);
+        timeline.stepFrame(false);
+        assertEquals(0L, timeline.positionMs());
+        timeline.seekMs(50L);
+        timeline.stepFrame(true);
+        assertEquals(50L, timeline.positionMs());
+    }
 }

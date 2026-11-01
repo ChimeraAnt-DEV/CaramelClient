@@ -20,6 +20,8 @@ public class ControllerProfileManager {
     private static final String KEY_LIST_PREFIX = "profiles_";
     private static final String KEY_ACTIVE_PREFIX = "active_";
     private static final String KEY_BINDING_PREFIX = "instance_binding_";
+    /** Per-device (vendor/product) profile binding, so two pads of one family can differ. */
+    private static final String KEY_DEVICE_PREFIX = "device_slot_";
     private static final Gson GSON = new Gson();
     private static final Type LIST_TYPE = new TypeToken<List<ControllerProfile>>() {}.getType();
 
@@ -107,6 +109,59 @@ public class ControllerProfileManager {
             return null;
         }
         return new Binding(type, Math.max(0, Math.min(ControllerProfile.MAX_SLOTS - 1, slot)));
+    }
+
+    /**
+     * Binds a profile slot to one physical controller model (item 219).
+     *
+     * <p>A {@link ControllerType} is a family, so without this two Xbox pads share one active
+     * profile. The binding is keyed by vendor/product, which is stable across reconnects, so a
+     * pad the user has tuned keeps its profile even after the launcher is killed.
+     */
+    public void bindDevice(ControllerDeviceKey device, int slot) {
+        if (device == null) return;
+        int clamped = Math.max(0, Math.min(ControllerProfile.MAX_SLOTS - 1, slot));
+        prefs.edit().putInt(KEY_DEVICE_PREFIX + device.storageKey(), clamped).apply();
+    }
+
+    /** Removes a device's binding, so it falls back to the type's active slot. */
+    public void clearDeviceBinding(ControllerDeviceKey device) {
+        if (device == null) return;
+        prefs.edit().remove(KEY_DEVICE_PREFIX + device.storageKey()).apply();
+    }
+
+    /**
+     * The slot bound to a device, or -1 when nothing is bound.
+     *
+     * <p>Returns the raw slot rather than a profile so the caller can decide what to do when the
+     * slot no longer exists — a deleted profile must not make the pad unusable.
+     */
+    public int getDeviceSlot(ControllerDeviceKey device) {
+        if (device == null) return -1;
+        return prefs.getInt(KEY_DEVICE_PREFIX + device.storageKey(), -1);
+    }
+
+    /** True when the device has a binding. */
+    public boolean hasDeviceBinding(ControllerDeviceKey device) {
+        return getDeviceSlot(device) >= 0;
+    }
+
+    /**
+     * The profile for a device, or the type's active profile when it has no binding.
+     *
+     * <p>This is the resolution the input path uses at startup: a bound device wins, and a binding
+     * whose slot was deleted falls back rather than throwing, so removing a profile can never make a
+     * pad stop working.
+     */
+    public ControllerProfile getProfileForDevice(ControllerType type, ControllerDeviceKey device) {
+        int slot = getDeviceSlot(device);
+        if (slot >= 0) {
+            List<ControllerProfile> profiles = getProfiles(type);
+            if (slot < profiles.size()) {
+                return profiles.get(slot);
+            }
+        }
+        return getActiveProfile(type);
     }
 
     private static ControllerType parseType(String name) {

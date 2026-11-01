@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_1"
+    style="@style/Widget.Chimera.Card"
+    android:orientation="vertical"
+    android:padding="@dimen/space_3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/script_row_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/misans"
+                android:maxLines="1"
+                android:textColor="@color/on_surface"
+                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/script_row_meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_hairline"
+                android:ellipsize="end"
+                android:fontFamily="@font/misans"
+                android:maxLines="1"
+                android:textColor="@color/text_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+            <TextView
+                android:id="@+id/script_row_load_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_1"
+                android:fontFamily="@font/misans"
+                android:textColor="@color/primary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/script_row_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_3"
+            android:minWidth="@dimen/min_touch_target"
+            android:minHeight="@dimen/min_touch_target"
+            android:contentDescription="@string/script_manager_toggle_desc" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/script_row_dependencies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_2"
+        android:fontFamily="@font/misans"
+        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/script_row_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_2"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/script_row_run"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            android:fontFamily="@font/misans"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="@dimen/min_touch_target"
+            android:minWidth="0dp"
+            android:paddingHorizontal="@dimen/space_4"
+            android:text="@string/script_manager_run"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textColor="@color/on_primary"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/script_row_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            android:backgroundTint="@color/error"
+            android:fontFamily="@font/misans"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minHeight="@dimen/min_touch_target"
+            android:minWidth="0dp"
+            android:paddingHorizontal="@dimen/space_4"
+            android:text="@string/script_manager_remove"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textColor="@color/on_error"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

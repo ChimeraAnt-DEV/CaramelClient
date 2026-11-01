@@ -280,7 +280,7 @@ public class GithubReleaseUpdater {
                             try {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 Uri apkUri;
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                if (ApiLevels.atLeastN()) {
                                     apkUri = FileProvider.getUriForFile(
                                             activity,
                                             activity.getPackageName() + ".fileprovider",

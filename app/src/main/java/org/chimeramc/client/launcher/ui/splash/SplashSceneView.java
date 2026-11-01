@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.ui.splash;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.BlendMode;
@@ -108,7 +110,7 @@ public final class SplashSceneView extends View {
         blockPaint.setStyle(Paint.Style.FILL);
         shootingPaint.setStyle(Paint.Style.STROKE);
         shootingPaint.setStrokeCap(Paint.Cap.ROUND);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             // Additive light on the embers and stars is what makes them read as glowing motes
             // rather than flat dots. Below Q the plain fill still looks correct, just less luminous.
             emberPaint.setBlendMode(BlendMode.PLUS);

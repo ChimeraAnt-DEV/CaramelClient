@@ -59,6 +59,15 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/logcat_copy"
                 android:tint="@android:color/white"
+                android:src="@drawable/ic_code" />
+
+            <ImageButton
+                android:id="@+id/btn_share"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/logcat_share"
+                android:tint="@android:color/white"
                 android:src="@android:drawable/ic_menu_share" />
 
             <ImageButton
@@ -89,18 +98,19 @@
             android:paddingBottom="@dimen/space_1"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/level_filter"
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="32dp"
-                android:minWidth="72dp"
-                android:gravity="center_vertical|start"
-                android:paddingStart="@dimen/space_2"
-                android:paddingEnd="@dimen/space_2"
-                android:textColor="@android:color/white"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-                android:background="@drawable/bg_spinner_dark" />
+                android:scrollbars="none"
+                android:overScrollMode="never">
+
+                <LinearLayout
+                    android:id="@+id/level_chips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical" />
+            </HorizontalScrollView>
 
             <EditText
                 android:id="@+id/filter_input"
@@ -111,7 +121,7 @@
                 android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption"
                 android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF" />
+                android:textColorHint="@color/overlay_text_hint" />
 
             <EditText
                 android:id="@+id/exclude_input"
@@ -122,7 +132,7 @@
                 android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption"
                 android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF" />
+                android:textColorHint="@color/overlay_text_hint" />
 
             <ImageButton
                 android:id="@+id/btn_filter_clear"

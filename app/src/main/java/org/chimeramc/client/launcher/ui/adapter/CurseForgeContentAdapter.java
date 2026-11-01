@@ -14,6 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.curseforge.models.Content;
+import org.chimeramc.client.ui.components.ListDiff;
+import org.chimeramc.client.ui.components.ListDiffDispatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,15 @@ public class CurseForgeContentAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public interface OnContentClickListener {
         void onContentClick(Content content);
+
+        /**
+         * The same click with the row's own views, so the host can run a shared-element
+         * transition from them (item 123). Defaulted to the plain call so an existing
+         * implementation keeps working.
+         */
+        default void onContentClick(Content content, View icon, View title) {
+            onContentClick(content);
+        }
     }
 
     public interface OnPageChangeListener {
@@ -46,11 +57,29 @@ public class CurseForgeContentAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
 
+    /**
+     * Replaces the page, animating only what changed.
+     *
+     * <p>The footer is a synthetic last row, so the diff runs over the projects and the footer is
+     * told separately: a page change that keeps a project keeps its row, and the footer's own
+     * content (the page numbers) is refreshed in place.
+     */
     public void setContents(List<Content> contents, int currentPage, int totalPages) {
-        this.contents = contents;
+        List<Content> next = contents != null ? contents : new ArrayList<>();
+        ListDiff.Result diff = ListDiff.compute(this.contents, next,
+                content -> content.id,
+                (old, fresh) -> java.util.Objects.equals(old.name, fresh.name)
+                        && java.util.Objects.equals(old.summary, fresh.summary)
+                        && old.downloadCount == fresh.downloadCount
+                        && java.util.Objects.equals(old.dateModified, fresh.dateModified));
+        boolean footerChanged = this.currentPage != currentPage || this.totalPages != totalPages;
+        this.contents = next;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
-        notifyDataSetChanged();
+        ListDiffDispatch.apply(this, diff);
+        if (footerChanged && !diff.fullRedraw && getItemCount() > 0) {
+            notifyItemChanged(next.size());
+        }
     }
 
 
@@ -157,7 +186,11 @@ public class CurseForgeContentAdapter extends RecyclerView.Adapter<RecyclerView.
 
             new org.chimeramc.client.util.PersonalizationManager(itemView.getContext()).applyGlassToView(itemView);
 
-            itemView.setOnClickListener(v -> listener.onContentClick(content));
+            // Item 123: the names the detail screen matches for a shared-element transition.
+            icon.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_ICON);
+            title.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
+
+            itemView.setOnClickListener(v -> listener.onContentClick(content, icon, title));
         }
     }
 

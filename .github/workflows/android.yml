@@ -24,6 +24,11 @@ jobs:
       - name: Validate release content
         run: python3 scripts/validate_release_content.py
 
+      # A submodule that tracks a branch can move under the build; the pin must be a commit bumped
+      # in a dedicated commit (item 324).
+      - name: Check submodules are pinned
+        run: ./scripts/check_submodules.sh
+
       - name: Prepare google-services.json
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
@@ -151,6 +156,13 @@ jobs:
           python3 tools/tests/verify_binary_test.py
           python3 scripts/tests/compute_checksums_test.py
           python3 scripts/tests/release_notes_test.py
+          python3 scripts/tests/sign_preloader_rules_test.py
+
+      - name: Verify the shipped rule signature
+        # The rule file decides which addresses the preloader patches, so a signature that does not
+        # match the file would silently disable every remote rule set (item 257). This checks the
+        # pair the app actually bundles, with the public key the app ships.
+        run: python3 scripts/sign_preloader_rules.py --verify
 
       - name: Inject API Keys
         env:
@@ -263,7 +275,7 @@ jobs:
           APK_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ChimeraClient-${{ github.ref_name }}-release.apk"
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          EMBED_TITLE="🚀 ChimeraClient Update!"
+          EMBED_TITLE="ChimeraClient Update!"
           EMBED_DESC="A new version of **ChimeraClient** is ready."
           EMBED_COLOR=5814783
           THUMB_URL='https://avatars.githubusercontent.com/u/78095377?s=200&v=4'
@@ -277,12 +289,12 @@ jobs:
               \"thumbnail\": { \"url\": \"$THUMB_URL\" },
               \"fields\": [
                 {
-                  \"name\": \"📦 Version\",
+                  \"name\": \"Version\",
                   \"value\": \"\`$TAG_NAME\`\",
                   \"inline\": true
                 },
                 {
-                  \"name\": \"🔗 Download\",
+                  \"name\": \"Download\",
                   \"value\": \"[**Click here to download APK**]($APK_URL)\",
                   \"inline\": true
                 }

@@ -1,10 +1,13 @@
 package org.chimeramc.client.launcher.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,13 +39,17 @@ import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
 import org.chimeramc.client.ui.activities.BaseActivity;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
+import org.chimeramc.client.util.AppLog;
 import org.chimeramc.client.util.PersonalizationManager;
+import org.chimeramc.client.util.MainThread;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.chimeramc.client.core.backend.GameBridge;
+import org.chimeramc.client.preloader.BerryApi;
 
 /**
  * In-app diagnostics (U16) plus the "Repair installation" action (G2).
@@ -69,7 +76,7 @@ public class DiagnosticsActivity extends BaseActivity {
 
     /** Runs the read-only probes. A single thread, so two taps cannot overlap two gathers. */
     private final ExecutorService probeExecutor = Executors.newSingleThreadExecutor();
-    private final Handler uiHandler = new Handler(Looper.getMainLooper());
+    private final Handler uiHandler = MainThread.handler();
 
     /** The most recently gathered reading. Written on the UI thread only, so the paint path is safe. */
     private Snapshot snapshot;
@@ -94,6 +101,13 @@ public class DiagnosticsActivity extends BaseActivity {
         int rulesRevision = -1;
         /** Non-null when the rule DB has no entry covering the selected build. */
         String coverageFailure;
+        /**
+         * True when the selected build is newer than every rule's range (item 256), as opposed to
+         * merely uncovered. The diagnostics row says which, because the two need different actions.
+         */
+        boolean rulesNewerBuild;
+        /** The newest build any rule covers, or "" when coverage is open-ended/unreadable. */
+        String highestCoveredVersion = "";
         boolean nativeLoaded;
         boolean skinSeam;
         /** Whether the preloader's player-render hook is live (read once, off the UI thread). */
@@ -102,6 +116,9 @@ public class DiagnosticsActivity extends BaseActivity {
         List<ModLoadDiagnostics.Record> modRecords = Collections.emptyList();
         /** The last launch that died inside the game activity, or null when none is recorded. */
         LastLaunchFailure.Report lastLaunchFailure;
+        /** Local launch/crash counters (item 282). Never null. */
+        org.chimeramc.client.core.stats.LaunchStats stats =
+                new org.chimeramc.client.core.stats.LaunchStats();
     }
 
     @Override
@@ -143,6 +160,66 @@ public class DiagnosticsActivity extends BaseActivity {
             refresh.setOnClickListener(v -> refresh());
             DynamicAnim.applyPressScale(refresh);
         }
+        // Item 262: the whole bundle (report + recent, redacted log) in one tap.
+        Button copyDebug = findViewById(R.id.diagnostics_copy_debug_button);
+        if (copyDebug != null) {
+            copyDebug.setOnClickListener(v -> copyDebugInfo());
+            DynamicAnim.applyPressScale(copyDebug);
+        }
+        // Item 263: the same bundle, copied and then the community invite opened so the report can
+        // be pasted where it will be read.
+        Button reportBug = findViewById(R.id.diagnostics_report_bug_button);
+        if (reportBug != null) {
+            reportBug.setOnClickListener(v -> reportBug());
+            DynamicAnim.applyPressScale(reportBug);
+        }
+    }
+
+    /** Builds the full debug bundle: the report plus the recent, redacted log (item 262). */
+    private String buildDebugBundle() {
+        String log;
+        try {
+            log = org.chimeramc.client.core.minecraft.LaunchLog.readAll(this);
+        } catch (Throwable t) {
+            AppLog.warn(TAG, "Reading the launch log for the debug bundle failed", t);
+            log = null;
+        }
+        boolean streamingSafe = org.chimeramc.client.core.privacy.PrivacyModes.current(this)
+                .isStreamingSafeMode();
+        return org.chimeramc.client.launcher.util.DebugBundle.compose(buildReport(), log, streamingSafe);
+    }
+
+    private void copyDebugInfo() {
+        String bundle = buildDebugBundle();
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            Toast.makeText(this, R.string.diagnostics_debug_info_copied, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Copies the debug bundle and opens the community invite so the report can be pasted there.
+     *
+     * <p>The copy happens first on purpose: opening another app backgrounds this one, so a failure
+     * to resolve the link must not lose the bundle the user was about to paste.
+     */
+    private void reportBug() {
+        String bundle = buildDebugBundle();
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+        }
+        String url = getString(R.string.discord_join_url);
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            Toast.makeText(this, R.string.diagnostics_report_bug_copied, Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            // The bundle is already on the clipboard, so the user can still paste it somewhere
+            // else; the message says so rather than claiming the flow failed.
+            AppLog.warn(TAG, "Opening the bug-report link failed", t);
+            Toast.makeText(this, R.string.diagnostics_report_bug_no_app, Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -172,6 +249,7 @@ public class DiagnosticsActivity extends BaseActivity {
         renderNativeRows();
         renderAccountRows();
         renderModRows();
+        renderStatsRows();
     }
 
     /** Reads every fact the screen shows. Never throws: a failed read degrades to "unknown". */
@@ -199,6 +277,10 @@ public class DiagnosticsActivity extends BaseActivity {
                 && !out.version.versionCode.isEmpty()) {
             out.coverageFailure = PreloaderSignatureRulesManager
                     .describeCoverageFailure(this, out.version.versionCode);
+            out.rulesNewerBuild = PreloaderSignatureRulesManager
+                    .installedBuildNewerThanRules(this, out.version.versionCode);
+            out.highestCoveredVersion = PreloaderSignatureRulesManager
+                    .highestCoveredVersion(this);
         }
         try {
             out.nativeLoaded = PreloaderInput.readRenderDiagnostics() != null;
@@ -229,6 +311,13 @@ public class DiagnosticsActivity extends BaseActivity {
             out.lastLaunchFailure = LastLaunchFailure.read(this);
         } catch (Throwable ignored) {
             out.lastLaunchFailure = null;
+        }
+        // Local launch/crash statistics (item 282). A read failure degrades to an empty record, so
+        // the screen shows "no launches recorded" rather than an error.
+        try {
+            out.stats = org.chimeramc.client.core.stats.LaunchStatsRecorder.load(this);
+        } catch (Throwable ignored) {
+            out.stats = new org.chimeramc.client.core.stats.LaunchStats();
         }
         return out;
     }
@@ -319,7 +408,7 @@ public class DiagnosticsActivity extends BaseActivity {
         addRow(rows, R.string.diagnostics_field_app_version, BuildConfig.VERSION_NAME
                 + " (" + BuildConfig.VERSION_CODE + ")");
         addRow(rows, R.string.diagnostics_field_android_version, Build.VERSION.RELEASE
-                + " (API " + Build.VERSION.SDK_INT + ")");
+                + " (API " + ApiLevels.sdkInt() + ")");
         addRow(rows, R.string.diagnostics_field_device, Build.MANUFACTURER + " " + Build.MODEL);
         // The app's real target SDK, read from the installed package. The old value guessed from the
         // device API (>= 33 ? "35" : "28"), so it was wrong on every device that was not on exactly
@@ -374,7 +463,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String sourceLabel;
         if (data.rulesSource == null) {
             sourceLabel = getString(R.string.diagnostics_rules_unknown);
-        } else if ("remote".equals(data.rulesSource)) {
+        } else if (PreloaderSignatureRulesManager.SOURCE_REMOTE.equals(data.rulesSource)) {
             sourceLabel = getString(R.string.diagnostics_rules_remote);
         } else {
             sourceLabel = getString(R.string.diagnostics_rules_bundled);
@@ -388,9 +477,26 @@ public class DiagnosticsActivity extends BaseActivity {
         // build, every byte-pattern hook is off; the report must say that explicitly.
         if (data.version != null && data.version.versionCode != null
                 && !data.version.versionCode.isEmpty()) {
-            addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
-                    data.coverageFailure == null ? getString(R.string.diagnostics_rules_covers_build)
-                            : getString(R.string.diagnostics_rules_no_coverage));
+            if (data.coverageFailure == null) {
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_covers_build));
+            } else if (data.rulesNewerBuild) {
+                // "Newer than the rules" and "no rule for this exact build" are different
+                // statements; the row must not collapse them into one.
+                String covered = data.highestCoveredVersion == null
+                        || data.highestCoveredVersion.isEmpty()
+                        ? getString(R.string.diagnostics_rules_unknown)
+                        : data.highestCoveredVersion;
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_newer_build, covered));
+            } else {
+                addRow(rows, R.string.diagnostics_field_signature_rules_coverage,
+                        getString(R.string.diagnostics_rules_no_coverage));
+            }
+            if (!data.highestCoveredVersion.isEmpty()) {
+                addRow(rows, R.string.diagnostics_field_signature_rules_highest,
+                        data.highestCoveredVersion);
+            }
         }
     }
 
@@ -407,6 +513,23 @@ public class DiagnosticsActivity extends BaseActivity {
         addRow(rows, R.string.diagnostics_field_skin_seam,
                 data.skinSeam ? getString(R.string.diagnostics_hook_live)
                               : getString(R.string.diagnostics_hook_inactive));
+        // The script/runtime backend is a separate native library with its own version, so the
+        // screen reports what the preloader actually found rather than assuming it is present. A
+        // missing backend is then visible here before a launch, not only when a feature does nothing.
+        addRow(rows, R.string.diagnostics_field_berry_api, BerryApi.summary());
+        // The input backend is a separate seam from the runtime: the library can be present while
+        // nothing is registered to inject input through it, which is a distinct failure state.
+        addRow(rows, R.string.diagnostics_field_input_backend, GameBridge.statusLine());
+        // The preloader is a separate library with its own C ABI version. Reporting it here makes a
+        // client/native mismatch visible before a launch, rather than as a feature that silently
+        // does nothing because the two were built from different ABI revisions.
+        addRow(rows, R.string.diagnostics_field_preloader_abi,
+                PreloaderInput.abiMatches(PreloaderInput.abiVersion())
+                        ? getString(R.string.diagnostics_preloader_abi_ok,
+                                PreloaderInput.abiVersion())
+                        : getString(R.string.diagnostics_preloader_abi_mismatch,
+                                PreloaderInput.abiVersion(),
+                                PreloaderInput.EXPECTED_ABI_VERSION));
     }
 
     /**
@@ -500,6 +623,38 @@ public class DiagnosticsActivity extends BaseActivity {
             addRow(rows, record.modName != null ? record.modName : (record.modId != null ? record.modId : "?"),
                     record.reason != null ? record.reason : "?");
         }
+    }
+
+    /**
+     * Renders the local launch/crash statistics (item 282).
+     *
+     * <p>Reads from the same store the launch path writes; the values are shown verbatim and an
+     * unknown average renders as an em dash rather than a zero, so a device that has never
+     * completed a launch is not told its first frame takes 0 ms.
+     */
+    private void renderStatsRows() {
+        LinearLayout rows = findViewById(R.id.diagnostics_stats_rows);
+        if (rows == null) return;
+        rows.removeAllViews();
+
+        org.chimeramc.client.core.stats.LaunchStats stats = current().stats;
+        if (stats.launches() == 0) {
+            TextView empty = new TextView(this);
+            empty.setText(R.string.diagnostics_stats_none);
+            empty.setTextColor(getColor(R.color.text_secondary));
+            empty.setTextSize(12);
+            empty.setPadding(0, 8, 0, 0);
+            rows.addView(empty);
+            return;
+        }
+        addRow(rows, R.string.diagnostics_stats_launches, String.valueOf(stats.launches()));
+        addRow(rows, R.string.diagnostics_stats_completed, String.valueOf(stats.completedLaunches()));
+        addRow(rows, R.string.diagnostics_stats_crashes, String.valueOf(stats.crashes()));
+        addRow(rows, R.string.diagnostics_stats_success_rate,
+                org.chimeramc.client.core.stats.LaunchStats.formatRate(stats.successRate()));
+        addRow(rows, R.string.diagnostics_stats_avg_first_frame,
+                org.chimeramc.client.core.stats.LaunchStats.formatFirstFrame(
+                        stats.averageFirstFrameMs()));
     }
 
     // ---------------------------------------------------------------- rows
@@ -596,7 +751,7 @@ public class DiagnosticsActivity extends BaseActivity {
         sb.append("GlowberryClient Diagnostics\n");
         sb.append("===========================\n\n");
         sb.append("App version: ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n");
-        sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(Build.VERSION.SDK_INT).append(")\n");
+        sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(ApiLevels.sdkInt()).append(")\n");
         sb.append("Device: ").append(Build.MANUFACTURER).append(" ").append(Build.MODEL).append("\n");
         sb.append("Target SDK: ").append(getApplicationInfo().targetSdkVersion).append("\n");
         sb.append("ABIs: ").append(String.join(", ", Build.SUPPORTED_ABIS)).append("\n");
@@ -624,6 +779,12 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Last launch failure: (none recorded)\n");
         }
 
+        // Item 307: name the slowest stages of the last launch, so a "the launcher takes ages to
+        // start" report says which stage is slow instead of only that it is.
+        sb.append("Slowest launch stages:\n");
+        sb.append(org.chimeramc.client.core.minecraft.LaunchTrace.lastLaunchStages().describeSlowest(3))
+                .append("\n");
+
         sb.append("Extraction version: ")
                 .append(data.extractionCurrent ? "up to date" : "stale")
                 .append(" (expected ").append(data.extractionExpected).append(")\n");
@@ -633,8 +794,14 @@ public class DiagnosticsActivity extends BaseActivity {
         sb.append("Signature rules revision: ").append(data.rulesRevision).append("\n");
         if (version != null && version.versionCode != null && !version.versionCode.isEmpty()) {
             sb.append("Signature rule coverage: ")
-                    .append(data.coverageFailure == null
-                            ? "covered" : "NOT COVERED (byte-pattern hooks disabled)").append("\n");
+                    .append(data.coverageFailure == null ? "covered"
+                            : data.rulesNewerBuild
+                                    ? "build NEWER than the rules (byte-pattern hooks disabled)"
+                                    : "NOT COVERED (byte-pattern hooks disabled)")
+                    .append("\n");
+            if (!data.highestCoveredVersion.isEmpty()) {
+                sb.append("Newest covered build: ").append(data.highestCoveredVersion).append("\n");
+            }
         }
 
         AccountDiagnostics.Snapshot account = data.account;
@@ -662,6 +829,22 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Skin capture seam: ")
                     .append(data.skinSeam ? "live" : "inactive").append("\n");
         }
+
+        // Item 282: the local counters, so a report carries them without the reporter having to
+        // transcribe a screen. Local-only data; nothing here identifies the device beyond the model
+        // line already printed above.
+        org.chimeramc.client.core.stats.LaunchStats stats = data.stats;
+        sb.append("\nLaunch statistics (local):\n");
+        sb.append("  Launches: ").append(stats.launches()).append("\n");
+        sb.append("  Reached game: ").append(stats.completedLaunches()).append("\n");
+        sb.append("  Failed: ").append(stats.crashes()).append("\n");
+        sb.append("  Success rate: ")
+                .append(org.chimeramc.client.core.stats.LaunchStats.formatRate(stats.successRate()))
+                .append("\n");
+        sb.append("  Average time to first frame: ")
+                .append(org.chimeramc.client.core.stats.LaunchStats.formatFirstFrame(
+                        stats.averageFirstFrameMs()))
+                .append("\n");
 
         sb.append("\nMod load errors:\n");
         if (data.modRecords.isEmpty()) {

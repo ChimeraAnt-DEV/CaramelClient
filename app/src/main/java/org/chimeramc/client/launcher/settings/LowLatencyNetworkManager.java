@@ -1,5 +1,7 @@
 package org.chimeramc.client.settings;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -159,7 +161,7 @@ public final class LowLatencyNetworkManager {
      * no-ops, leaving the plain TCP_NODELAY socket functional.
      */
     private static void enableQuickAck(Socket socket) {
-        if (socket == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (socket == null || ApiLevels.belowM()) return;
         try {
             Object fd = callGetter(callGetter(socket, "getImpl"), "getFileDescriptor");
             if (fd instanceof java.io.FileDescriptor) {
@@ -234,7 +236,7 @@ public final class LowLatencyNetworkManager {
                         (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 if (wifiManager == null) return;
                 if (sWifiLock == null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    if (ApiLevels.atLeastQ()) {
                         sWifiLock = wifiManager.createWifiLock(
                                 WifiManager.WIFI_MODE_FULL_LOW_LATENCY,
                                 "ChimeraClient:GameLowLatencyLock");

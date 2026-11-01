@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.launcher.ui.util.SceneTransitions;
 import org.chimeramc.client.core.curseforge.CurseForgeClient;
 import org.chimeramc.client.core.curseforge.CurseForgeKeyDialog;
 import org.chimeramc.client.core.curseforge.models.Content;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
+import org.chimeramc.client.util.MainThread;
 
 public class CurseForgeActivity extends BaseActivity {
 
@@ -48,10 +50,10 @@ public class CurseForgeActivity extends BaseActivity {
     private com.google.android.material.button.MaterialButton btnSort;
     private SortOption currentSort;
     private RecyclerView recyclerView;
-    private ProgressBar loadingProgress;
+    private org.chimeramc.client.ui.components.SkeletonView loadingProgress;
     private CurseForgeContentAdapter adapter;
     private CurseForgeClient client;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private Handler handler = MainThread.handler();
     private int currentPage = 1;
     private int totalPages = 1;
     private static final int PAGE_SIZE = 20;
@@ -83,6 +85,13 @@ public class CurseForgeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Guest mode removes every mod surface (item 272). The launch rows are hidden, but these
+        // screens are exported and can be started by name, so each refuses rather than showing what
+        // the mode exists to hide.
+        if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_curseforge);
         DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
 
@@ -292,8 +301,14 @@ public class CurseForgeActivity extends BaseActivity {
     }
 
     private void onContentClick(Content content) {
+        onContentClick(content, null, null);
+    }
+
+    private void onContentClick(Content content, View icon, View title) {
         Intent intent = new Intent(this, ContentDetailsActivity.class);
         intent.putExtra(ContentDetailsActivity.EXTRA_CONTENT, content);
-        startActivity(intent);
+        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        SceneTransitions.start(this, intent,
+                SceneTransitions.icon(icon), SceneTransitions.title(title));
     }
 }

@@ -1,5 +1,6 @@
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="@dimen/space_6"
     android:background="@drawable/dialog_background_black_border"
@@ -43,7 +44,7 @@
             android:fontFamily="@font/misans"
             android:gravity="end"
             android:minWidth="54dp"
-            android:text="0%"
+            tools:text="0%"
             android:textColor="?attr/colorPrimary"
             android:textAppearance="@style/TextAppearance.Glowberry.Title"
             android:textStyle="bold" />
@@ -59,5 +60,22 @@
         android:max="100"
         android:progress="0"
         android:progressDrawable="@drawable/bg_libs_repair_progress" />
+
+    <!--
+        Cancel (item 144). Hidden until a caller opts in with setCancelAction, so the install flow
+        that must run to completion keeps its non-cancellable behaviour.
+    -->
+    <Button
+        android:id="@+id/btn_cancel_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/space_4"
+        android:minHeight="@dimen/min_touch_target"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/cancel"
+        android:textColor="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>

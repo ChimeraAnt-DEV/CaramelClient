@@ -71,7 +71,7 @@ public class WheelBackdropCaptureTest {
     public void supportFollowsThePixelCopyApiLevel() {
         // PixelCopy is API 24+; the class reports the platform's own answer rather than a literal,
         // so a minSdk change cannot leave a stale claim behind.
-        assertEquals(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O,
+        assertEquals(org.chimeramc.client.util.ApiLevels.atLeastO(),
                 WheelBackdropCapture.isSupported());
     }
 }

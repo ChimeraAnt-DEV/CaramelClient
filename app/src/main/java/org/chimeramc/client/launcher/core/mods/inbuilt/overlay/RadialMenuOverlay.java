@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -41,16 +43,23 @@ public class RadialMenuOverlay {
     /** The backdrop capture, so the wheel's glass can blur what is behind it (R3/R12). */
     private WheelBackdropCapture backdropCapture;
 
-    /** How the wheel reaches its destinations; supplied by whoever owns the other screens. */
+    /**
+     * How the wheel reaches its destinations; supplied by whoever owns the other screens.
+     *
+     * <p>Each method names the destination, not the sector, so the wheel's sectors and the profile
+     * entries share one routing table. The MODS and HUD sectors open the one Mod Menu on the
+     * matching section (a filter over the module list, never a second list); CLOSET asks which of
+     * the two customization surfaces to open; SETTINGS opens the Mod Menu's settings page.
+     */
     public interface Destinations {
-        /** Open the module list (the MODS sector). */
+        /** The module list (the MODS sector). */
         void openMods();
-        /** Open the cosmetics wardrobe (the CLOSET sector). */
-        void openCloset();
-        /** Open the general settings (the SETTINGS sector). */
+        /** The HUD section of the module list (the HUD sector). */
+        void openHud();
+        /** Ask which customization surface to open (the CLOSET sector). */
+        void openCustomize();
+        /** The Mod Menu's settings page (the SETTINGS sector). */
         void openSettings();
-        /** Enter the HUD editor (the HUD sector). */
-        void openHudEditor();
     }
 
     private Destinations destinations;
@@ -77,13 +86,20 @@ public class RadialMenuOverlay {
             }
 
             @Override
-            public void openCloset() {
-                android.content.Intent intent = new android.content.Intent(
-                        activity, org.chimeramc.client.ui.activities.CustomizeActivity.class);
-                intent.putExtra(
-                        org.chimeramc.client.ui.activities.CustomizeActivity.EXTRA_INITIAL_TAB,
-                        org.chimeramc.client.ui.activities.CustomizeActivity.TAB_SKINS);
-                activity.startActivity(intent);
+            public void openHud() {
+                // Over the launcher there is no game HUD, so the HUD section is the launcher's own
+                // HUD-related screen. It is reached through the same activity the Mods sector opens
+                // rather than silently doing nothing.
+                openMods();
+            }
+
+            @Override
+            public void openCustomize() {
+                // The same chooser the in-game wheel shows, so the two homes behave identically.
+                new CustomizeChooser(activity,
+                        () -> activity.startActivity(new android.content.Intent(activity,
+                                org.chimeramc.client.ui.activities.SettingsActivity.class)),
+                        () -> openCosmetics(activity)).show();
             }
 
             @Override
@@ -91,16 +107,18 @@ public class RadialMenuOverlay {
                 activity.startActivity(new android.content.Intent(
                         activity, org.chimeramc.client.ui.activities.SettingsActivity.class));
             }
-
-            @Override
-            public void openHudEditor() {
-                // Over the launcher there is no game HUD; the HUD section lives in the Mod Menu,
-                // which needs a session, so this sector opens the Mod Menu's module list instead
-                // of silently doing nothing.
-                openMods();
-            }
         });
         overlay.show();
+    }
+
+    /** Opens the cosmetics wardrobe: the Customize host on its Skins tab. */
+    private static void openCosmetics(Activity activity) {
+        android.content.Intent intent = new android.content.Intent(
+                activity, org.chimeramc.client.ui.activities.CustomizeActivity.class);
+        intent.putExtra(
+                org.chimeramc.client.ui.activities.CustomizeActivity.EXTRA_INITIAL_TAB,
+                org.chimeramc.client.ui.activities.CustomizeActivity.TAB_SKINS);
+        activity.startActivity(intent);
     }
 
     public void setDestinations(Destinations destinations) {
@@ -205,6 +223,14 @@ public class RadialMenuOverlay {
                 @Override
                 public void onEntry(WheelEntry entry) {
                     if (entry == null) return;
+                    if (entry.action == WheelEntry.Action.SWITCH_LAYOUT) {
+                        InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
+                        if (overlayManager != null) {
+                            overlayManager.switchOverlayLayout(entry.target);
+                        }
+                        menuView.invalidate();
+                        return;
+                    }
                     if (entry.action == WheelEntry.Action.TOGGLE_MODULE) {
                         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
                         boolean next = !manager.resolveInbuiltModEnabled(entry.target, false);
@@ -263,7 +289,7 @@ public class RadialMenuOverlay {
                         | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                         | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+        if (ApiLevels.atLeastP()) {
             wmParams.layoutInDisplayCutoutMode =
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
@@ -347,7 +373,9 @@ public class RadialMenuOverlay {
         long now = android.os.SystemClock.uptimeMillis();
         float dt = lastStickMs == 0L ? 1f / 60f : Math.min(0.1f, (now - lastStickMs) / 1000f);
         lastStickMs = now;
-        float deadZone = CursorController.DEFAULT_DEAD_ZONE;
+        // The centre dead zone is a user setting (item 199): a worn stick needs a wider one than a
+        // new pad, and the value is clamped on read so a bad stored value cannot silence the cursor.
+        float deadZone = InbuiltModManager.getInstance(activity).getWheelCenterDeadZone();
         float curve = CursorController.DEFAULT_CURVE_EXPONENT;
         lastStickSource = stick.source;
         return menuView.handleControllerStick(stick.x, stick.y, dt, precision, fast, deadZone, curve);
@@ -369,13 +397,13 @@ public class RadialMenuOverlay {
                 destinations.openMods();
                 break;
             case CLOSET:
-                destinations.openCloset();
+                destinations.openCustomize();
                 break;
             case SETTINGS:
                 destinations.openSettings();
                 break;
             case HUD:
-                destinations.openHudEditor();
+                destinations.openHud();
                 break;
             default:
                 break;
@@ -397,13 +425,13 @@ public class RadialMenuOverlay {
                 destinations.openMods();
                 break;
             case OPEN_CLOSET:
-                destinations.openCloset();
+                destinations.openCustomize();
                 break;
             case OPEN_SETTINGS:
                 destinations.openSettings();
                 break;
             case OPEN_HUD:
-                destinations.openHudEditor();
+                destinations.openHud();
                 break;
             default:
                 break;
@@ -420,7 +448,7 @@ public class RadialMenuOverlay {
      */
     private static RadialWheelMaterial.Env buildMaterialEnv(Activity activity) {
         RadialWheelMaterial.Env env = new RadialWheelMaterial.Env();
-        env.apiLevel(android.os.Build.VERSION.SDK_INT);
+        env.apiLevel(ApiLevels.sdkInt());
         try {
             PersonalizationManager personalization = new PersonalizationManager(activity);
             env.reduceMotion(personalization.isReduceMotion());
@@ -522,7 +550,7 @@ public class RadialMenuOverlay {
     }
 
     private final android.os.Handler mainHandler =
-            new android.os.Handler(android.os.Looper.getMainLooper());
+            org.chimeramc.client.util.MainThread.handler();
     private final Runnable detachRunnable = this::detachQuietly;
 
     private void detachQuietly() {

@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.content.Context;
 import android.hardware.input.InputManager;
 import android.os.Build;
@@ -26,7 +28,7 @@ public final class ControllerRumble {
      */
     public static boolean play(Context context, ControllerType type, int amplitude) {
         if (context == null || amplitude <= 0) return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return false;
+        if (ApiLevels.belowS()) return false;
         InputDevice device = findPad(context, type);
         if (device == null) return false;
         try {

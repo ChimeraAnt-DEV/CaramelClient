@@ -14,6 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.modrinth.models.ModrinthProject;
+import org.chimeramc.client.ui.components.ListDiff;
+import org.chimeramc.client.ui.components.ListDiffDispatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,15 @@ public class ModrinthContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface OnProjectClickListener {
         void onProjectClick(ModrinthProject project);
+
+        /**
+         * The same click with the row's own views, so the host can run a shared-element
+         * transition from them (item 123). Defaulted to the plain call so an existing
+         * implementation keeps working.
+         */
+        default void onProjectClick(ModrinthProject project, View icon, View title) {
+            onProjectClick(project);
+        }
     }
 
     public interface OnPageChangeListener {
@@ -44,11 +55,28 @@ public class ModrinthContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.pageChangeListener = pageChangeListener;
     }
 
+    /**
+     * Replaces the page, animating only what changed.
+     *
+     * <p>The footer is a synthetic last row, so the diff runs over the projects and the footer is
+     * told separately: a page change that keeps a project keeps its row, and the footer's own
+     * content (the page numbers) is refreshed in place.
+     */
     public void setProjects(List<ModrinthProject> projects, int currentPage, int totalPages) {
-        this.projects = projects != null ? projects : new ArrayList<ModrinthProject>();
+        List<ModrinthProject> next = projects != null ? projects : new ArrayList<>();
+        ListDiff.Result diff = ListDiff.compute(this.projects, next,
+                project -> project.projectId,
+                (old, fresh) -> java.util.Objects.equals(old.title, fresh.title)
+                        && java.util.Objects.equals(old.description, fresh.description)
+                        && java.util.Objects.equals(old.author, fresh.author));
+        boolean footerChanged = this.currentPage != currentPage || this.totalPages != totalPages;
+        this.projects = next;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
-        notifyDataSetChanged();
+        ListDiffDispatch.apply(this, diff);
+        if (footerChanged && !diff.fullRedraw && getItemCount() > 0) {
+            notifyItemChanged(next.size());
+        }
     }
 
     @NonNull
@@ -122,7 +150,11 @@ public class ModrinthContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
             new org.chimeramc.client.util.PersonalizationManager(ctx).applyGlassToView(itemView);
-            itemView.setOnClickListener(v -> listener.onProjectClick(project));
+
+            // Item 123: the names the detail screen matches for a shared-element transition.
+            icon.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_ICON);
+            title.setTransitionName(org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
+            itemView.setOnClickListener(v -> listener.onProjectClick(project, icon, title));
         }
 
         private static String buildMetadata(android.content.Context ctx, ModrinthProject project) {

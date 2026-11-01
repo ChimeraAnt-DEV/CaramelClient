@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.animation.DynamicAnim;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 
@@ -67,10 +68,14 @@ public final class ReplayPlayerView {
     private ImageView playPause;
     private TextView speedButton;
     private TextView cameraButton;
+    private TextView stepBackButton;
+    private TextView stepForwardButton;
+    private TextView markerPreviousButton;
+    private TextView markerNextButton;
     private SeekBar seekBar;
     private TextView positionText;
 
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = MainThread.handler();
 
     /** The transport state (position, speed, play/pause) shared with the camera path. */
     private final ReplayTimeline timeline = new ReplayTimeline(0L);
@@ -85,6 +90,11 @@ public final class ReplayPlayerView {
     private MediaPlayer player;
     private ReplayClip clip;
     private boolean prepared;
+    /**
+     * The clip's markers (item 241), copied once when the clip opens so the transport can jump to
+     * the next one without re-reading the sidecar per tap. Null when the clip carries none.
+     */
+    private ReplayMarkers markers;
     /** Whether the gate is currently latched by this view, so callbacks alternate. */
     private boolean gateLatched;
     /** True while the user drags the scrub bar, so the tick does not fight the thumb. */
@@ -241,6 +251,10 @@ public final class ReplayPlayerView {
         // A clip may carry an authored cinematic camera path in its sidecar; load it so the free
         // camera can play the shot, otherwise the camera starts from the recorded view.
         cameraPath = loadCameraPath(clip);
+        // The markers are copied once, alongside the camera path, so the transport can jump between
+        // them without re-reading the sidecar on every tap.
+        markers = clip == null ? null : clip.markers();
+        updateMarkerButtons();
         freeCamera = false;
         looking = false;
         updateCameraLabel();
@@ -288,8 +302,28 @@ public final class ReplayPlayerView {
     public void toggleFreeCamera() {
         freeCamera = !freeCamera;
         looking = false;
+        if (freeCamera) seedCameraFromTrack();
         updateCameraLabel();
         updateFlyStick();
+    }
+
+    /**
+     * Seeds the spectator camera from the recorded gameplay track at the current position.
+     *
+     * <p>Detaching should start where the player actually was, not at an origin. The track records
+     * the player's own pose (the same local-player feed the HUD reads), so the free camera opens on
+     * the recorded view; a clip with no track (an old clip, or a session with no live feed) keeps
+     * the camera where it was rather than snapping to a fabricated origin.
+     */
+    private void seedCameraFromTrack() {
+        if (clip == null) return;
+        ReplayTrack track = clip.track();
+        if (track == null || track.isEmpty()) return;
+        ReplayTrack.Frame frame = track.at(timeline.positionMs());
+        if (frame == null || !frame.hasPosition()) return;
+        camera.set(frame.x, frame.y, frame.z,
+                frame.hasRotation() ? frame.yawDeg : camera.yawDeg(),
+                frame.hasRotation() ? frame.pitchDeg : camera.pitchDeg());
     }
 
     /** True while the interactive spectator flight is available (free camera, no authored shot). */
@@ -322,6 +356,59 @@ public final class ReplayPlayerView {
         if (player == null || !prepared) return;
         timeline.seekFraction(fraction);
         player.seekTo((int) timeline.positionMs());
+        updateProgress();
+    }
+
+    /**
+     * Steps one frame forward or backward (item 242), for a button or controller route.
+     *
+     * <p>The step pauses the transport (see {@link ReplayTimeline#stepFrame}), so the frame the
+     * player lands on stays on screen. The decoder is re-seeked to the new position and the transport
+     * glyph follows, so a step out of playing reads as a pause.
+     */
+    public void stepFrame(boolean forward) {
+        if (player == null || !prepared) return;
+        timeline.stepFrame(forward);
+        player.pause();
+        player.seekTo((int) timeline.positionMs());
+        unlatchGate();
+        showPlayIcon(true);
+        mainHandler.removeCallbacks(progressTick);
+        updateProgress();
+    }
+
+    /** True when the open clip carries at least one marker (item 241). */
+    public boolean hasMarkers() {
+        return markers != null && !markers.isEmpty();
+    }
+
+    /**
+     * Jumps to the next marker at or after the current position (item 241).
+     *
+     * <p>Wraps to the first marker when none is later, so a repeated tap cycles through them rather
+     * than sticking at the end. A no-op when the clip carries none.
+     */
+    public void jumpToNextMarker() {
+        if (!hasMarkers()) return;
+        ReplayMarkers.Marker next = markers.next(timeline.positionMs() + 1L);
+        if (next == null) next = markers.at(0);
+        seekToMarker(next);
+    }
+
+    /** Jumps to the previous marker at or before the current position (item 241), wrapping. */
+    public void jumpToPreviousMarker() {
+        if (!hasMarkers()) return;
+        ReplayMarkers.Marker previous = markers.previous(timeline.positionMs() - 1L);
+        if (previous == null) previous = markers.at(markers.size() - 1);
+        seekToMarker(previous);
+    }
+
+    private void seekToMarker(ReplayMarkers.Marker marker) {
+        if (marker == null) return;
+        timeline.seekMs(marker.tMs);
+        if (player != null && prepared) {
+            player.seekTo((int) timeline.positionMs());
+        }
         updateProgress();
     }
 
@@ -465,6 +552,46 @@ public final class ReplayPlayerView {
         timeline.cycleSpeed();
         applySpeed();
         updateSpeedLabel();
+    }
+
+    /**
+     * Builds a small pill button with the shared style, press feedback and ripple.
+     *
+     * <p>The transport's step and marker controls are all the same shape, so they are built by one
+     * helper rather than four near-identical blocks that drift.
+     */
+    private TextView makePillButton(int textRes, Runnable action) {
+        TextView button = new TextView(activity);
+        button.setText(textRes);
+        button.setTextColor(style.textPrimary());
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        button.setTypeface(null, Typeface.BOLD);
+        button.setBackground(ReplayStyle.rippled(
+                ReplayStyle.pill(style.surfaceElevated(), activity), style.accentFill(60), activity));
+        button.setPadding(ReplayStyle.dpInt(activity, 10), ReplayStyle.dpInt(activity, 5),
+                ReplayStyle.dpInt(activity, 10), ReplayStyle.dpInt(activity, 5));
+        button.setOnClickListener(v -> action.run());
+        DynamicAnim.applyPressScale(button);
+        return button;
+    }
+
+    private LinearLayout.LayoutParams pillParams() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMarginStart(ReplayStyle.dpInt(activity, 8));
+        return params;
+    }
+
+    /**
+     * Shows the marker-jump buttons only when the open clip carries markers (item 241).
+     *
+     * <p>A clip with no markers would give the two buttons nothing to jump to, so they are hidden
+     * rather than left to do nothing. {@link #show} re-evaluates this per clip.
+     */
+    private void updateMarkerButtons() {
+        int visibility = hasMarkers() ? View.VISIBLE : View.GONE;
+        if (markerPreviousButton != null) markerPreviousButton.setVisibility(visibility);
+        if (markerNextButton != null) markerNextButton.setVisibility(visibility);
     }
 
     private void updateSpeedLabel() {
@@ -651,6 +778,23 @@ public final class ReplayPlayerView {
         speedParams.setMarginStart(ReplayStyle.dpInt(activity, 8));
         row.addView(speedButton, speedParams);
 
+        // Frame stepping (item 242): one tap nudges the paused position by a single frame, which is
+        // how a player lands on an exact moment the scrub bar is too coarse to hit.
+        stepBackButton = makePillButton(R.string.replay_player_step_back, () -> stepFrame(false));
+        row.addView(stepBackButton, pillParams());
+        stepForwardButton = makePillButton(R.string.replay_player_step_forward, () -> stepFrame(true));
+        row.addView(stepForwardButton, pillParams());
+
+        // Marker jumps (item 241): cycle through the recorded death/streak/combo/join ticks. The
+        // buttons are only meaningful for a clip that carries markers, so they start hidden and
+        // show() re-evaluates that per clip.
+        markerPreviousButton = makePillButton(R.string.replay_marker_previous,
+                this::jumpToPreviousMarker);
+        row.addView(markerPreviousButton, pillParams());
+        markerNextButton = makePillButton(R.string.replay_marker_next, this::jumpToNextMarker);
+        row.addView(markerNextButton, pillParams());
+        updateMarkerButtons();
+
         // The free-camera toggle: detaches the view from the recorded first-person pose so the clip
         // can be watched like a spectator, and replays the clip's authored camera path when it has
         // one. Its label always names the active mode so the state is never ambiguous.
@@ -699,6 +843,11 @@ public final class ReplayPlayerView {
         private final Paint padPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint thumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Paint railPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // The boost ring is drawn while the stick is deflected, which is exactly when the player is
+        // looking at it, so its Paint and geometry are fields rather than per-frame allocations.
+        private final Paint boostPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final float boostRingRadius;
+        private final float padCenterX;
         private final int railWidth;
         private final float padRadius;
         private final float thumbRadius;
@@ -723,6 +872,11 @@ public final class ReplayPlayerView {
             padPaint.setColor(style.accentFill(44));
             thumbPaint.setColor(style.accent());
             railPaint.setColor(style.accentFill(50));
+            boostPaint.setStyle(Paint.Style.STROKE);
+            boostPaint.setStrokeWidth(ReplayStyle.dpInt(activity, 2));
+            boostPaint.setColor(style.statusReady());
+            boostRingRadius = padRadius + ReplayStyle.dpInt(activity, 3);
+            padCenterX = padRadius + railWidth + ReplayStyle.dpInt(activity, 6);
             thumbX = padRadius;
             thumbY = padRadius;
             railY = padRadius;
@@ -778,7 +932,7 @@ public final class ReplayPlayerView {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            float cx = padRadius + railWidth + ReplayStyle.dpInt(getContext(), 6);
+            float cx = padCenterX;
             float cy = getHeight() / 2f;
 
             canvas.drawRoundRect(railX, cy - padRadius, railX + railWidth, cy + padRadius,
@@ -791,11 +945,7 @@ public final class ReplayPlayerView {
             float tY = cy + (thumbY - padRadius);
             canvas.drawCircle(tX, tY, thumbRadius, thumbPaint);
             if (boost()) {
-                Paint ring = new Paint(Paint.ANTI_ALIAS_FLAG);
-                ring.setStyle(Paint.Style.STROKE);
-                ring.setStrokeWidth(ReplayStyle.dpInt(getContext(), 2));
-                ring.setColor(style.statusReady());
-                canvas.drawCircle(cx, cy, padRadius + ReplayStyle.dpInt(getContext(), 3), ring);
+                canvas.drawCircle(cx, cy, boostRingRadius, boostPaint);
             }
         }
 
@@ -803,7 +953,7 @@ public final class ReplayPlayerView {
         public boolean onTouchEvent(MotionEvent event) {
             float x = event.getX();
             float y = event.getY();
-            float cx = padRadius + railWidth + ReplayStyle.dpInt(getContext(), 6);
+            float cx = padCenterX;
             float cy = getHeight() / 2f;
 
             switch (event.getActionMasked()) {

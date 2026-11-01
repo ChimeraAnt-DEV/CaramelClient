@@ -31,6 +31,9 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
@@ -58,6 +61,9 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import org.chimeramc.client.util.AppLog;
+import org.chimeramc.client.util.TouchTargetHelper;
+import org.chimeramc.client.util.AppExecutors;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -121,15 +127,16 @@ public class SettingsActivity extends BaseActivity {
     private TextView worldBackupStatus;
     private WorldBackupConfig worldBackupConfig;
 
+    /** The container of the settings sections, animated on a tab change (item 124). */
+    private ViewGroup settingsContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
-
-        setupNavBar();
-
+        // Everything that does not need a view runs first, because the layout is inflated off the
+        // main thread (item 130) and the activity-result launchers must be registered before
+        // onStart - registering them from the inflate callback would throw if it landed late.
         personalizationManager = new PersonalizationManager(this);
 
         if (savedInstanceState != null) {
@@ -182,6 +189,16 @@ public class SettingsActivity extends BaseActivity {
                 }
         );
 
+        // Item 130: this layout is over two thousand lines, so it is parsed on a background thread.
+        setContentViewAsync(R.layout.activity_settings, this::onContentReady);
+    }
+
+    /** Runs once the asynchronously inflated settings tree is attached (item 130). */
+    private void onContentReady() {
+        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+
+        setupNavBar();
+
         initTabs();
         setupBasicSection();
         setupPersonalizeSection();
@@ -203,6 +220,31 @@ public class SettingsActivity extends BaseActivity {
         outState.putInt(KEY_SELECTED_TAB, selectedTabIndex);
     }
 
+    /**
+     * Shows or hides a section, animating the size change when motion is allowed (item 124).
+     *
+     * <p>{@code TransitionManager} animates the container's own layout, so a section that grows
+     * from hidden to visible slides its siblings down instead of appearing at full height in one
+     * frame. Under reduced motion the change is applied directly, because the accessibility switch
+     * exists to remove exactly this kind of motion.
+     *
+     * <p>The transition is started on the section's parent, not the section: a {@code GONE} view has
+     * no bounds to animate from, so the animation has to be driven by the container that re-lays
+     * out around it.
+     */
+    private void animateSectionVisibility(@Nullable View section, boolean visible) {
+        if (section == null) return;
+        int target = visible ? View.VISIBLE : View.GONE;
+        if (section.getVisibility() == target) return;
+        ViewGroup parent = section.getParent() instanceof ViewGroup
+                ? (ViewGroup) section.getParent() : null;
+        if (parent != null && DynamicAnim.areAnimationsEnabled()) {
+            TransitionManager.beginDelayedTransition(parent, new AutoTransition()
+                    .setDuration(DynamicAnim.motionDurationMs(200)));
+        }
+        section.setVisibility(target);
+    }
+
     private void initTabs() {
         tabBasic = findViewById(R.id.tab_basic);
         tabPersonalize = findViewById(R.id.tab_personalize);
@@ -216,6 +258,8 @@ public class SettingsActivity extends BaseActivity {
         sectionMigration = findViewById(R.id.section_migration);
         sectionAbout = findViewById(R.id.section_about);
 
+        settingsContent = findViewById(R.id.settings_content);
+
         tabBasic.setOnClickListener(v -> { selectedTabIndex = 0; selectTab(tabBasic); });
         tabPersonalize.setOnClickListener(v -> { selectedTabIndex = 1; selectTab(tabPersonalize); });
         tabUpdates.setOnClickListener(v -> { selectedTabIndex = 2; selectTab(tabUpdates); });
@@ -228,6 +272,15 @@ public class SettingsActivity extends BaseActivity {
         View[] sections = {sectionBasic, sectionPersonalize, sectionUpdates, sectionAbout, sectionMigration};
 
         int accent = personalizationManager.getAccentColor();
+
+        // Item 124: animate the swap of the visible section. TransitionManager works on every
+        // supported version and needs no shared-element plumbing; the removed alpha tween did not
+        // animate the size change, so a tall section appeared with a jump. Under reduced motion the
+        // transition is skipped and the swap is instant.
+        if (DynamicAnim.areAnimationsEnabled() && settingsContent != null) {
+            TransitionManager.beginDelayedTransition(settingsContent, new AutoTransition()
+                    .setDuration(DynamicAnim.motionDurationMs(200)));
+        }
 
         for (int i = 0; i < tabs.length; i++) {
             boolean isSelected = tabs[i] == selectedTab;
@@ -251,8 +304,6 @@ public class SettingsActivity extends BaseActivity {
 
             if (isSelected) {
                 sections[i].setVisibility(View.VISIBLE);
-                sections[i].setAlpha(0f);
-                sections[i].animate().alpha(1f).setDuration(200).start();
             } else {
                 sections[i].setVisibility(View.GONE);
             }
@@ -283,6 +334,10 @@ public class SettingsActivity extends BaseActivity {
             openVoice.setOnClickListener(v -> startActivity(
                     new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
             DynamicAnim.applyPressScale(openVoice);
+            // Guest mode removes voice chat, so its Settings entry goes with it (item 272).
+            openVoice.setVisibility(
+                    org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesVoice()
+                            ? View.GONE : View.VISIBLE);
         }
         View openController = findViewById(R.id.settings_open_controller);
         if (openController != null) {
@@ -428,17 +483,41 @@ public class SettingsActivity extends BaseActivity {
         // so rather than pretend.
         boolean crashUploadConfigured = CrashReportUploader.isConfigured();
         switchCrashUpload.setEnabled(crashUploadConfigured);
+        // Item 518: turning the switch on is the opt-in, so it shows what would be sent first and
+        // only records consent once the user confirms. Turning it off is immediate - a withdrawal
+        // of consent must never be gated behind a dialog.
         switchCrashUpload.setOnCheckedChangeListener((btn, checked) -> {
-            fs.setCrashUploadEnabled(checked);
-            if (checked && crashUploadConfigured) {
-                Toast.makeText(this, R.string.crash_upload_sending, Toast.LENGTH_SHORT).show();
-                new Thread(() -> CrashReportUploader.uploadPending(getApplicationContext()),
-                        "crash-report-upload").start();
+            if (!checked) {
+                fs.setCrashUploadEnabled(false);
+                return;
             }
+            if (!crashUploadConfigured) {
+                fs.setCrashUploadEnabled(false);
+                btn.setChecked(false);
+                return;
+            }
+            new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                    .setTitleText(getString(R.string.crash_upload_preview_title))
+                    .setMessage(CrashReportUploader.describeNextUpload(this))
+                    .setPositiveButton(getString(R.string.crash_upload), v -> {
+                        fs.setCrashUploadEnabled(true);
+                        Toast.makeText(this, R.string.crash_upload_sending, Toast.LENGTH_SHORT).show();
+                        AppExecutors.run(AppExecutors.Kind.NETWORK, "crash-report-upload", () ->
+                                CrashReportUploader.uploadPending(getApplicationContext()));
+                    })
+                    .setNegativeButton(getString(R.string.cancel), v -> btn.setChecked(false))
+                    .show();
         });
         View crashUploadUnavailable = findViewById(R.id.crash_upload_unavailable);
         if (crashUploadUnavailable != null) {
             crashUploadUnavailable.setVisibility(crashUploadConfigured ? View.GONE : View.VISIBLE);
+        }
+
+        // Item 518: consent is only meaningful if the user can see what they are consenting to, so
+        // the report's headers and body are shown before anything is sent.
+        View crashUploadPreview = findViewById(R.id.button_crash_upload_preview);
+        if (crashUploadPreview != null) {
+            crashUploadPreview.setOnClickListener(v -> showCrashUploadPreview());
         }
 
         SwitchMaterial switchManagedLogin = findViewById(R.id.switch_managed_login);
@@ -455,10 +534,6 @@ public class SettingsActivity extends BaseActivity {
             org.chimeramc.client.launcher.controller.ControllerInputProcessor.reload(this);
         });
 
-        SwitchMaterial switchGxCore = findViewById(R.id.switch_gxcore);
-        switchGxCore.setChecked(fs.isGxCoreEnabled());
-        switchGxCore.setOnCheckedChangeListener((btn, checked) -> fs.setGxCoreEnabled(checked));
-
         SwitchMaterial switchReduceNetworkLatency = findViewById(R.id.switch_reduce_network_latency);
         switchReduceNetworkLatency.setChecked(fs.isReduceNetworkLatencyEnabled());
         switchReduceNetworkLatency.setOnCheckedChangeListener((btn, checked) -> {
@@ -467,6 +542,56 @@ public class SettingsActivity extends BaseActivity {
                 LowLatencyNetworkManager.prefetchDnsOnBackground();
             }
         });
+
+        // Privacy modes (items 272, 277). Guest mode hides mods/servers/voice; streaming-safe
+        // masks names, coordinates and server addresses. Both are read through PrivacyModes, so a
+        // screen that already drew its shortcuts is refreshed by recreating this one, which is
+        // where the nav bar and the Settings entries are built.
+        SwitchMaterial switchGuest = findViewById(R.id.switch_guest_mode);
+        if (switchGuest != null) {
+            switchGuest.setChecked(fs.isGuestModeEnabled());
+            switchGuest.setOnCheckedChangeListener((btn, checked) -> {
+                fs.setGuestModeEnabled(checked);
+                recreate();
+            });
+        }
+        SwitchMaterial switchStreamingSafe = findViewById(R.id.switch_streaming_safe);
+        if (switchStreamingSafe != null) {
+            switchStreamingSafe.setChecked(fs.isStreamingSafeModeEnabled());
+            switchStreamingSafe.setOnCheckedChangeListener(
+                    (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
+        }
+
+        // Backup retention (item 144): the slider maps 0..9 to 1..10 backups kept per instance.
+        SeekBar seekBackupRetention = findViewById(R.id.seek_backup_retention);
+        TextView valueBackupRetention = findViewById(R.id.value_backup_retention);
+        if (seekBackupRetention != null) {
+            int current = fs.getBackupRetentionKeep();
+            seekBackupRetention.setProgress(Math.max(0, Math.min(9, current - 1)));
+            if (valueBackupRetention != null) {
+                valueBackupRetention.setText(String.valueOf(current));
+            }
+            seekBackupRetention.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    int keep = Math.max(1, Math.min(10, progress + 1));
+                    if (valueBackupRetention != null) {
+                        valueBackupRetention.setText(String.valueOf(keep));
+                    }
+                    if (fromUser) {
+                        fs.setBackupRetentionKeep(keep);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
 
         SwitchMaterial switchFpsOptimizer = findViewById(R.id.switch_fps_optimizer);
         if (switchFpsOptimizer != null) {
@@ -504,12 +629,8 @@ public class SettingsActivity extends BaseActivity {
 
         FeatureSettings fs = FeatureSettings.getInstance();
         master.setChecked(fs.isOptifineModeEnabled());
-        if (details != null) {
-            details.setVisibility(fs.isOptifineModeEnabled() ? View.VISIBLE : View.GONE);
-        }
-        if (badge != null) {
-            badge.setVisibility(fs.isOptifineModeEnabled() ? View.VISIBLE : View.GONE);
-        }
+        animateSectionVisibility(details, fs.isOptifineModeEnabled());
+        animateSectionVisibility(badge, fs.isOptifineModeEnabled());
 
         optifineController = new org.chimeramc.client.core.minecraft.OptifineSettingsController(
                 this, items, summary);
@@ -517,12 +638,8 @@ public class SettingsActivity extends BaseActivity {
 
         master.setOnCheckedChangeListener((btn, checked) -> {
             fs.setOptifineModeEnabled(checked);
-            if (details != null) {
-                details.setVisibility(checked ? View.VISIBLE : View.GONE);
-            }
-            if (badge != null) {
-                badge.setVisibility(checked ? View.VISIBLE : View.GONE);
-            }
+            animateSectionVisibility(details, checked);
+            animateSectionVisibility(badge, checked);
             org.chimeramc.client.core.minecraft.OptifineModeManager.apply(this);
             if (optifineController != null) {
                 optifineController.refreshStatus();
@@ -1341,6 +1458,16 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
+    /** Shows exactly what a crash report upload would contain (item 518). */
+    private void showCrashUploadPreview() {
+        String preview = CrashReportUploader.describeNextUpload(this);
+        new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                .setTitleText(getString(R.string.crash_upload_preview_title))
+                .setMessage(preview)
+                .setPositiveButton(getString(R.string.crash_upload_preview_close), null)
+                .show();
+    }
+
     private void confirmCleanupLegacyDir() {
         new android.app.AlertDialog.Builder(this)
                 .setTitle(R.string.migration_cleanup_confirm_title)
@@ -1409,6 +1536,10 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void setupAboutSection() {
+        // 28dp brand icons. Enlarging the drawable would move them off the row's baseline, so the
+        // touch area grows instead.
+        TouchTargetHelper.expand(findViewById(R.id.settings_btn_github));
+        TouchTargetHelper.expand(findViewById(R.id.settings_btn_discord));
         findViewById(R.id.settings_btn_github).setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraAnt-DEV/GlowberryClient"))));
 
@@ -1418,6 +1549,12 @@ public class SettingsActivity extends BaseActivity {
         View openAbout = findViewById(R.id.settings_open_about);
         if (openAbout != null) {
             openAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+        }
+
+        View openChangelog = findViewById(R.id.settings_open_changelog);
+        if (openChangelog != null) {
+            openChangelog.setOnClickListener(v -> startActivity(new Intent(this,
+                    org.chimeramc.client.launcher.ui.activities.ChangelogActivity.class)));
         }
 
         View export = findViewById(R.id.settings_export_backup);
@@ -1502,7 +1639,7 @@ public class SettingsActivity extends BaseActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         } catch (Exception e) {
-            e.printStackTrace();
+            AppLog.warn(TAG, "Opening the Easter-egg link failed", e);
         }
     }
 

@@ -134,11 +134,11 @@
                     android:clipToPadding="false"
                     android:paddingBottom="@dimen/space_3" />
 
-                <ProgressBar
+                <!-- Item 125: a skeleton reads as "a list is coming"; a spinner reads as a stall. -->
+                <org.chimeramc.client.ui.components.SkeletonView
                     android:id="@+id/modrinth_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:visibility="gone" />
 
                 <LinearLayout
@@ -229,11 +229,11 @@
                     android:clipToPadding="false"
                     android:paddingBottom="@dimen/space_3" />
 
-                <ProgressBar
+                <!-- Item 125: a skeleton reads as "a list is coming"; a spinner reads as a stall. -->
+                <org.chimeramc.client.ui.components.SkeletonView
                     android:id="@+id/downloads_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:visibility="gone" />
 
                 <LinearLayout

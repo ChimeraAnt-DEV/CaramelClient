@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -50,8 +52,11 @@ import java.util.concurrent.Executors;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.chimeramc.client.util.AppLog;
 
 public class ContentDetailsActivity extends BaseActivity {
+
+    private static final String TAG = "ContentDetailsActivity";
 
     public static final String EXTRA_CONTENT = "extra_content";
 
@@ -88,6 +93,11 @@ public class ContentDetailsActivity extends BaseActivity {
         client = CurseForgeClient.getInstance(this);
         
     initViews();
+        // Item 123: match the names the list row declared, so the icon and title fly across.
+        org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
+                icon, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_ICON);
+        org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
+                title, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
         initWebView();
         bindData();
         loadDescription();
@@ -163,7 +173,7 @@ public class ContentDetailsActivity extends BaseActivity {
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(ContentDetailsActivity.this, getString(R.string.cannot_open_link, uri.toString()), Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    AppLog.warn(TAG, "Opening the content link failed", e);
                 }
                 return true;
             }
@@ -323,7 +333,7 @@ public class ContentDetailsActivity extends BaseActivity {
                             | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             );
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            if (ApiLevels.atLeastR()) {
                 dialog.getWindow().setDecorFitsSystemWindows(false);
                 android.view.WindowInsetsController controller = decorView.getWindowInsetsController();
                 if (controller != null) {

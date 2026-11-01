@@ -1,5 +1,7 @@
 package org.chimeramc.client.settings;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.content.Context;
 import android.os.Build;
 
@@ -33,7 +35,7 @@ public final class ThermalGovernor {
     public static void init(Context context) {
         if (context == null) return;
         sAppContext = context.getApplicationContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ApiLevels.atLeastQ()) {
             Api29.startListener(sAppContext);
         }
     }
@@ -47,7 +49,7 @@ public final class ThermalGovernor {
      */
     public static int severity() {
         Context context = sAppContext;
-        if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (context == null || ApiLevels.belowQ()) {
             return ThermalPolicy.SEVERITY_NONE;
         }
         try {
@@ -80,7 +82,7 @@ public final class ThermalGovernor {
     private static final class Api29 {
 
         private static final android.os.Handler MAIN =
-                new android.os.Handler(android.os.Looper.getMainLooper());
+                org.chimeramc.client.util.MainThread.handler();
 
         private static final android.os.PowerManager.OnThermalStatusChangedListener LISTENER =
                 status -> { };

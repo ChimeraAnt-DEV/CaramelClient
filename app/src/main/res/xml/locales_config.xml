@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The languages the app ships, for the system's per-app language picker (item 329).
+
+    On API 33 and up the platform reads this file and shows the app in Settings > System >
+    Languages > App languages, so a user can change the launcher's language without opening it.
+    Older releases ignore both the file and the manifest attribute that points at it, which is why
+    the in-app picker (LanguageManager) remains the fallback for every version below 33.
+
+    The list must match the shipped resource folders exactly; LocaleConfigTest fails if a locale
+    folder is added without an entry here, or an entry names a locale with no resources.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="es" />
+    <locale android:name="fr" />
+    <locale android:name="hi" />
+    <locale android:name="id" />
+    <locale android:name="ja" />
+    <locale android:name="pt" />
+    <locale android:name="ru" />
+    <locale android:name="tr" />
+    <locale android:name="vi" />
+    <locale android:name="zh-CN" />
+</locale-config>

@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.fragments;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.Manifest;
 import android.content.Context;
@@ -42,6 +44,8 @@ import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.util.PersonalizationManager;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.ui.animation.DynamicAnim;
+import org.chimeramc.client.ui.components.ListDiff;
+import org.chimeramc.client.ui.components.ListDiffDispatch;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.ui.dialogs.InstallProgressDialog;
 import org.chimeramc.client.ui.activities.InstanceSettingsActivity;
@@ -196,7 +200,9 @@ public class InstancesFragment extends Fragment {
         adapter.setOnItemClickListener(version -> {
             versionManager.selectVersion(version);
             adapter.setSelectedVersion(version);
-            adapter.notifyDataSetChanged();
+            // The selection is one highlighted card, so only the two cards that changed need a
+            // redraw: the newly selected one and the one that was selected before it.
+            adapter.notifySelectionChanged();
         });
 
         adapter.setOnSettingsClickListener(version -> {
@@ -620,7 +626,7 @@ public class InstancesFragment extends Fragment {
 
     private void startBatchBackupWithPermissionCheck(List<GameVersion> versionsToBackup) {
         pendingBatchBackupVersions = new ArrayList<>(versionsToBackup);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+        if (ApiLevels.belowQ()
                 && ContextCompat.checkSelfPermission(ctx(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
@@ -838,6 +844,13 @@ public class InstancesFragment extends Fragment {
         if (emptyView != null) {
             emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
         }
+        // The empty state's own action (item 180): a message with no way forward is a dead end, so
+        // the button in the empty view runs the same import the toolbar button does.
+        TextView emptyAction = root.findViewById(R.id.empty_instances_action);
+        if (emptyAction != null) {
+            emptyAction.setOnClickListener(v -> startApkFilePicker());
+            DynamicAnim.applyPressScale(emptyAction);
+        }
     }
 
     private void updateCount() {
@@ -939,9 +952,46 @@ public class InstancesFragment extends Fragment {
             this.selectedVersion = v;
         }
 
+        /**
+         * Redraws the card that lost the selection and the one that gained it.
+         *
+         * <p>Tracking the previous selection is what makes this two redraws rather than a loop over
+         * the grid: the caller has already set the new selection, so the old one is only known if
+         * it was recorded when it changed.
+         */
+        void notifySelectionChanged() {
+            String nextKey = selectedVersion != null ? selectedVersion.directoryName : null;
+            for (int i = 0; i < items.size(); i++) {
+                String key = items.get(i).directoryName;
+                if (java.util.Objects.equals(key, nextKey)
+                        || java.util.Objects.equals(key, lastNotifiedSelection)) {
+                    notifyItemChanged(i);
+                }
+            }
+            lastNotifiedSelection = nextKey;
+        }
+
+        /** The selection the rows were last drawn with, so the losing card can be repainted. */
+        private String lastNotifiedSelection;
+
+        /**
+         * Replaces the list, animating only what changed (item 142).
+         *
+         * <p>An instance's identity is its directory, so a rescan that finds a new import inserts
+         * one card instead of rebuilding the grid and losing the scroll position. A version whose
+         * enabled/selected state or playtime changed is a change on that card.
+         */
         void updateData(List<GameVersion> newItems) {
-            this.items = new ArrayList<>(newItems);
-            notifyDataSetChanged();
+            List<GameVersion> next = newItems != null ? new ArrayList<>(newItems) : new ArrayList<>();
+            ListDiff.Result diff = ListDiff.compute(this.items, next,
+                    version -> version.directoryName,
+                    (old, fresh) -> java.util.Objects.equals(old.displayName, fresh.displayName)
+                            && java.util.Objects.equals(old.versionCode, fresh.versionCode)
+                            && java.util.Objects.equals(old.abiList, fresh.abiList)
+                            && old.isInstalled == fresh.isInstalled
+                            && old.needsRepair == fresh.needsRepair);
+            this.items = next;
+            ListDiffDispatch.apply(this, diff);
         }
 
         @Override
@@ -1063,6 +1113,18 @@ public class InstancesFragment extends Fragment {
             vh.playtime.setText(holder.itemView.getContext().getString(R.string.playtime_label,
                     org.chimeramc.client.core.minecraft.PlaytimeManager.formatPlaytime(playtimeMs)));
 
+            // Item 278: the note is shown on the card, and the line is hidden entirely when there
+            // is none rather than left as a blank row.
+            if (vh.notes != null) {
+                String note = org.chimeramc.client.core.versions.InstanceNotes.normalize(v.notes);
+                if (note == null) {
+                    vh.notes.setVisibility(View.GONE);
+                } else {
+                    vh.notes.setText(note);
+                    vh.notes.setVisibility(View.VISIBLE);
+                }
+            }
+
             DynamicAnim.applyPressScale(holder.itemView);
         }
 
@@ -1086,7 +1148,7 @@ public class InstancesFragment extends Fragment {
         }
 
         static class VH extends RecyclerView.ViewHolder {
-            TextView versionCode, typeTag, displayName, playtime;
+            TextView versionCode, typeTag, displayName, playtime, notes;
             TextView abiBadge;
             ImageView settingsIcon;
 
@@ -1096,6 +1158,7 @@ public class InstancesFragment extends Fragment {
                 typeTag = v.findViewById(R.id.card_type_tag);
                 displayName = v.findViewById(R.id.card_display_name);
                 playtime = v.findViewById(R.id.card_playtime);
+                notes = v.findViewById(R.id.card_notes);
                 abiBadge = v.findViewById(R.id.card_abi_badge);
                 settingsIcon = v.findViewById(R.id.card_settings_icon);
             }

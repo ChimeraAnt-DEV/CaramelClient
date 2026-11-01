@@ -36,12 +36,14 @@ public final class WheelEntry {
         OPEN_HUD,
         /** Open another wheel profile as a nested sub-wheel. */
         OPEN_SUBWHEEL,
+        /** Switch the active overlay layout (item 212). The target is the layout id. */
+        SWITCH_LAYOUT,
     }
 
     /** The entry's action. */
     public Action action = Action.TOGGLE_MODULE;
-    /** The module id for {@link Action#TOGGLE_MODULE}, or the target profile id for
-     * {@link Action#OPEN_SUBWHEEL}. */
+    /** The module id for {@link Action#TOGGLE_MODULE}, the target profile id for
+     * {@link Action#OPEN_SUBWHEEL}, or the layout id for {@link Action#SWITCH_LAYOUT}. */
     public String target = "";
     /** The label drawn under the sector's icon. */
     public String label = "";

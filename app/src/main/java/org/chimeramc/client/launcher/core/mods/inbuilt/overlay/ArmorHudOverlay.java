@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
+import org.chimeramc.client.util.MainThread;
 
 /**
  * On-screen armor durability readout for the player and, optionally, the current target.
@@ -36,7 +37,7 @@ public final class ArmorHudOverlay {
 
     private final Activity activity;
     private final WindowManager windowManager;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
 
     private View overlayView;
     private WindowManager.LayoutParams wmParams;
@@ -243,16 +244,22 @@ public final class ArmorHudOverlay {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            ArmorHudMod.Snapshot snapshot = ArmorHudMod.read();
-            float cellSize = 22f * density;
-            float gap = 4f * density;
-            float pad = 6f * density;
-
-            canvas.drawColor(0x66000000);
-            drawRow(canvas, snapshot.available ? snapshot.self : null, pad, pad, cellSize, gap);
-            if (ArmorHudMod.isShowTarget()) {
-                float y = pad + cellSize + gap;
-                drawRow(canvas, snapshot.available ? snapshot.target : null, pad, y, cellSize, gap);
+            long drawStart = OverlayDrawTimer.start();
+            try {
+                ArmorHudMod.Snapshot snapshot = ArmorHudMod.read();
+                float cellSize = 22f * density;
+                float gap = 4f * density;
+                float pad = 6f * density;
+    
+                canvas.drawColor(0x66000000);
+                drawRow(canvas, snapshot.available ? snapshot.self : null, pad, pad, cellSize, gap);
+                if (ArmorHudMod.isShowTarget()) {
+                    float y = pad + cellSize + gap;
+                    drawRow(canvas, snapshot.available ? snapshot.target : null, pad, y, cellSize, gap);
+                }
+            
+            } finally {
+                OverlayDrawTimer.finish("ArmorHudOverlay", drawStart);
             }
         }
 

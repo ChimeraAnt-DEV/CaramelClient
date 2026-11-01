@@ -28,6 +28,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.launcher.ui.util.SceneTransitions;
 import org.chimeramc.client.core.content.ContentImporter;
 import org.chimeramc.client.core.downloads.DownloadsScanner;
 import org.chimeramc.client.core.modrinth.ModrinthClient;
@@ -42,6 +43,7 @@ import org.chimeramc.client.ui.adapter.DownloadsAdapter;
 import org.chimeramc.client.ui.adapter.ModrinthContentAdapter;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.util.UIHelper;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,13 +76,13 @@ public class ModHubActivity extends BaseActivity {
     private MaterialButton sortButton;
     private RadioGroup typeGroup;
     private RecyclerView modrinthRecycler;
-    private ProgressBar modrinthProgress;
+    private org.chimeramc.client.ui.components.SkeletonView modrinthProgress;
     private View modrinthEmpty;
     private ModrinthContentAdapter modrinthAdapter;
     private ModrinthClient modrinthClient;
 
     private RecyclerView downloadsRecycler;
-    private ProgressBar downloadsProgress;
+    private org.chimeramc.client.ui.components.SkeletonView downloadsProgress;
     private View downloadsEmpty;
     private android.widget.TextView downloadsSummary;
     private MaterialButton downloadsScanButton;
@@ -88,7 +90,7 @@ public class ModHubActivity extends BaseActivity {
     private DownloadsAdapter downloadsAdapter;
     private ContentImporter contentImporter;
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
     // Owned so a Downloads walk in progress is torn down with the screen instead of posting its
     // result to a destroyed Activity.
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
@@ -133,6 +135,13 @@ public class ModHubActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Guest mode removes every mod surface (item 272). The launch rows are hidden, but these
+        // screens are exported and can be started by name, so each refuses rather than showing what
+        // the mode exists to hide.
+        if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_mod_hub);
 
         View root = findViewById(android.R.id.content);
@@ -388,9 +397,15 @@ public class ModHubActivity extends BaseActivity {
     }
 
     private void openProject(ModrinthProject project) {
+        openProject(project, null, null);
+    }
+
+    private void openProject(ModrinthProject project, View icon, View title) {
         Intent intent = new Intent(this, ModrinthDetailActivity.class);
         intent.putExtra(ModrinthDetailActivity.EXTRA_PROJECT, project);
-        startActivity(intent);
+        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        SceneTransitions.start(this, intent,
+                SceneTransitions.icon(icon), SceneTransitions.title(title));
     }
 
     private void scanDownloads() {

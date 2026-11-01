@@ -19,6 +19,12 @@ public final class ModMenuActionCatalog {
     public static final String ACTION_RESET_HUD = "reset_hud";
     /** Re-scan and re-register every module without restarting the session. */
     public static final String ACTION_RELOAD_MODULES = "reload_modules";
+    /** Open the radial wheel's profile manager. */
+    public static final String ACTION_MANAGE_WHEEL = "manage_wheel";
+    /** Open the overlay layout manager (item 212). */
+    public static final String ACTION_MANAGE_LAYOUTS = "manage_layouts";
+    /** Toggle the screenshot hide-all state, the same action the three-finger tap performs. */
+    public static final String ACTION_TOGGLE_HUD = "toggle_hud";
 
     private static final List<ModMenuAction> ACTIONS = Collections.unmodifiableList(build());
 
@@ -39,6 +45,21 @@ public final class ModMenuActionCatalog {
                 R.string.mod_menu_action_reload_mods_desc,
                 "inbuilt",
                 R.drawable.ic_reload));
+        actions.add(new ModMenuAction(ACTION_MANAGE_WHEEL,
+                R.string.mod_menu_action_manage_wheel,
+                R.string.mod_menu_action_manage_wheel_desc,
+                "inbuilt",
+                R.drawable.ic_wheel));
+        actions.add(new ModMenuAction(ACTION_MANAGE_LAYOUTS,
+                R.string.mod_menu_action_manage_layouts,
+                R.string.mod_menu_action_manage_layouts_desc,
+                "inbuilt",
+                R.drawable.ic_hud));
+        actions.add(new ModMenuAction(ACTION_TOGGLE_HUD,
+                R.string.mod_menu_action_toggle_hud,
+                R.string.mod_menu_action_toggle_hud_desc,
+                "inbuilt",
+                R.drawable.ic_screenshot));
         return actions;
     }
 

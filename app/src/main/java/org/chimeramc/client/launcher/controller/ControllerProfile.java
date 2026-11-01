@@ -291,6 +291,16 @@ public class ControllerProfile {
         return new HashMap<>(repeatRates);
     }
 
+    /**
+     * Buttons with a clicks-per-second cap configured.
+     *
+     * <p>Exposed as a copy for the same reason as {@link #getRepeatRates()}: the settings screen and
+     * the profile codec both need to read it, and neither may hold the live map.
+     */
+    public Map<Integer, Integer> getClickLimits() {
+        return new HashMap<>(clickLimits);
+    }
+
     /** Rumble magnitude as a percentage; 0 means off even when vibration is enabled. */
     public int getRumbleStrength() {
         return rumbleStrength;

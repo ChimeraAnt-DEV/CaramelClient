@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -63,7 +65,7 @@ public final class WheelGlassRenderer {
                               Bitmap capture, float density) {
         if (layer == null) return;
         boolean usable = capture != null && !capture.isRecycled()
-                && RadialWheelMaterial.blurRoute(Build.VERSION.SDK_INT, material)
+                && RadialWheelMaterial.blurRoute(ApiLevels.sdkInt(), material)
                         == RadialWheelMaterial.BlurRoute.RENDER_EFFECT;
         if (!usable) {
             releaseBackdrop(layer);
@@ -94,7 +96,7 @@ public final class WheelGlassRenderer {
 
     /** Clears any render effect on a view. Safe on every API level. */
     public void clearViewEffect(View target) {
-        if (target == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
+        if (target == null || ApiLevels.belowS()) return;
         try {
             target.setRenderEffect(null);
         } catch (Throwable ignored) {
@@ -109,7 +111,7 @@ public final class WheelGlassRenderer {
      * reached from exactly one place, behind this class's API guard.
      */
     public void applyLayerBlur(ImageView layer, float radiusPx) {
-        if (layer == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return;
+        if (layer == null || ApiLevels.belowS()) return;
         Api31.applyBlur(layer, radiusPx);
     }
 
@@ -188,7 +190,7 @@ public final class WheelGlassRenderer {
 
         // API 28-30 only: no RenderEffect exists, so the capture is blurred in the canvas.
         if (capture != null && !capture.isRecycled()
-                && RadialWheelMaterial.blurRoute(Build.VERSION.SDK_INT, material)
+                && RadialWheelMaterial.blurRoute(ApiLevels.sdkInt(), material)
                         == RadialWheelMaterial.BlurRoute.STACK) {
             drawStackBlur(canvas, capture, cx, cy, radius, a);
         }

@@ -16,11 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.chimeramc.client.ui.components.ListDiff;
+import org.chimeramc.client.ui.components.ListDiffDispatch;
+
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.UnifiedMod;
 import org.chimeramc.client.core.mods.inbuilt.model.ModAvailability;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.components.UiTokens;
+import org.chimeramc.client.util.TouchTargetHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +55,13 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String reorderSectionId;
     /** Per-module row state, from the registry (M10). Absent means "derive from availability". */
     private final Map<String, ModMenuRowState> rowStates = new HashMap<>();
+    /**
+     * The row states the visible rows were last bound with (item 202).
+     *
+     * <p>Distinct from {@link #rowStates}, which is what the next bind will use: the diff needs both
+     * sides to notice a module the crash guard disabled without the user's toggle changing.
+     */
+    private final Map<String, ModMenuRowState> boundRowStates = new HashMap<>();
     /** The index a controller has moved the selection to, or NONE. -1 because position 0 is valid. */
     private int controllerFocus = ModMenuNavigation.NONE;
     private RecyclerView recycler;
@@ -262,9 +273,17 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
         if (reordered.isEmpty()) return;
         reordered.addAll(actionBlock);
+        // A saved order usually moves one module, and the rows around it are the same rows. Diffing
+        // lets the list animate that one move instead of rebuilding every card while the user is
+        // looking at the arrangement they just chose.
+        ListDiff.Result diff = ListDiff.compute(items, reordered,
+                MenuItem::stableKey,
+                (oldItem, freshItem) -> oldItem.showGroupLabel == freshItem.showGroupLabel
+                        && Objects.equals(oldItem.mod == null ? null : oldItem.mod.getName(),
+                                freshItem.mod == null ? null : freshItem.mod.getName()));
         items.clear();
         items.addAll(reordered);
-        notifyDataSetChanged();
+        ListDiffDispatch.apply(this, diff);
     }
 
     @Override
@@ -369,13 +388,25 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (previous >= 0 && previous < items.size()) notifyItemChanged(previous);
     }
 
+    /**
+     * Switches between the grid and the single-column list.
+     *
+     * <p>Every card changes its view type, so the rows are all re-created: this is a range change
+     * over the whole list rather than a dataset change, which keeps the RecyclerView's item
+     * animations and its stable ids working across the switch.
+     */
     public void setCompactMode(boolean compactMode) {
         if (this.compactMode == compactMode) return;
         this.compactMode = compactMode;
         items.clear();
         toggleStates.clear();
         favoriteStates.clear();
-        notifyDataSetChanged();
+        // Every row is re-created on the next bind, so the bound snapshot is meaningless; clear it
+        // or the next diff would compare against a list that no longer matches what is on screen.
+        boundRowStates.clear();
+        if (getItemCount() > 0) {
+            notifyItemRangeChanged(0, getItemCount());
+        }
     }
 
     /**
@@ -457,14 +488,24 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
                 String oldKey = oldItem.mod.getStableKey();
                 String newKey = newItem.mod.getStableKey();
-                return Objects.equals(oldItem.mod.getName(), newItem.mod.getName())
-                    && Objects.equals(oldItem.mod.getDescription(), newItem.mod.getDescription())
-                    && oldItem.mod.hasConfig() == newItem.mod.hasConfig()
-                    && oldItem.showGroupLabel == newItem.showGroupLabel
-                    && oldToggleStates.getOrDefault(oldKey, false)
-                        .equals(nextToggleStates.getOrDefault(newKey, false))
-                    && oldFavoriteStates.getOrDefault(oldKey, false)
-                        .equals(nextFavoriteStates.getOrDefault(newKey, false));
+                boolean oldEnabled = oldToggleStates.getOrDefault(oldKey, false);
+                boolean newEnabled = nextToggleStates.getOrDefault(newKey, false);
+                // The content rule lives in ModMenuRowContent so it is unit-tested; the row state is
+                // compared as "what the old row was bound with" against "what the new row will bind
+                // with", which is what catches a module the crash guard disabled without the user's
+                // toggle changing (item 202).
+                return ModMenuRowContent.sameContent(
+                        oldItem.mod.getName(), newItem.mod.getName(),
+                        oldItem.mod.getDescription(), newItem.mod.getDescription(),
+                        oldItem.mod.hasConfig(), newItem.mod.hasConfig(),
+                        oldItem.showGroupLabel, newItem.showGroupLabel,
+                        oldEnabled, newEnabled,
+                        ModMenuRowContent.resolve(boundRowStates, oldKey,
+                                ModAvailability.isInteractive(oldItem.mod.getId()), oldEnabled),
+                        ModMenuRowContent.resolve(rowStates, newKey,
+                                ModAvailability.isInteractive(newItem.mod.getId()), newEnabled),
+                        oldFavoriteStates.getOrDefault(oldKey, false),
+                        nextFavoriteStates.getOrDefault(newKey, false));
             }
         }, false);
 
@@ -476,6 +517,10 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         toggleStates.putAll(nextToggleStates);
         favoriteStates.clear();
         favoriteStates.putAll(nextFavoriteStates);
+        // The rows about to be bound use the current states; record them so the next diff compares
+        // against what is actually on screen rather than against itself (item 202).
+        boundRowStates.clear();
+        boundRowStates.putAll(rowStates);
         diff.dispatchUpdatesTo(this);
         // A filter change or a refresh renumbers every position, so the controller selection would
         // point at a different card than the one that was highlighted. Drop it rather than let the
@@ -487,9 +532,12 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return position >= 0 && position < items.size() && items.get(position).isGroup();
     }
 
+    /** The theme is baked into every card, so every row's content changed. */
     public void setTheme(ModMenuTheme theme) {
         this.theme = theme != null ? theme : new ModMenuTheme(null);
-        notifyDataSetChanged();
+        if (getItemCount() > 0) {
+            notifyItemRangeChanged(0, getItemCount());
+        }
     }
 
     @NonNull
@@ -854,6 +902,8 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return ModMenuRowState.of(true, available, false, enabled);
     }
 
+
+
     /**
      * Renders the failure surfacing for a row (M10).
      *
@@ -1103,6 +1153,10 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             statusDot = itemView.findViewById(R.id.mod_card_status_dot);
             chevron = itemView.findViewById(R.id.mod_card_chevron);
             switchView = itemView.findViewById(R.id.mod_card_switch);
+            // 27dp config and favourite buttons in a card. Enlarging the draw would push the row
+            // apart, so the touch area is grown instead and the visuals stay as designed.
+            TouchTargetHelper.expand(favoriteBtn);
+            TouchTargetHelper.expand(configBtn);
         }
     }
 }

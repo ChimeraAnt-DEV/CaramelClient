@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ActivityAccountsBinding;
 import org.chimeramc.client.core.auth.MsftAccountStore;
 import org.chimeramc.client.core.auth.MsftAuthManager;
 import org.chimeramc.client.ui.adapter.AccountsAdapter;
@@ -39,14 +39,13 @@ import net.raphimc.minecraftauth.bedrock.BedrockAuthManager;
 
 public class AccountsActivity extends BaseActivity {
 
+    private ActivityAccountsBinding binding;
     private TextView gamertagText;
     private TextView privilegesText;
     private TextView xuidText;
-    private TextView emptyStateText;
     private View emptyStateContainer;
     private Button bottomAddButton;
     private androidx.recyclerview.widget.RecyclerView accountsRecyclerView;
-    private ImageButton leftAddButton;
     private com.microsoft.xbox.idp.toolkit.CircleImageView xboxAvatar;
     private ProgressBar avatarProgress;
     private View rightCardContainer;
@@ -83,19 +82,19 @@ public class AccountsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accounts);
+        binding = ActivityAccountsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 
-        gamertagText = findViewById(R.id.gamertag_text);
-        privilegesText = findViewById(R.id.privileges_text);
-        xuidText = findViewById(R.id.xuid_text);
-        emptyStateText = findViewById(R.id.empty_state_text);
-        emptyStateContainer = findViewById(R.id.empty_state_container);
-        accountsRecyclerView = findViewById(R.id.accounts_recycler_view);
-        bottomAddButton = findViewById(R.id.bottom_add_button);
-        xboxAvatar = findViewById(R.id.xbox_avatar);
-        avatarProgress = findViewById(R.id.avatar_progress);
-        rightCardContainer = findViewById(R.id.right_card_container);
+        gamertagText = binding.gamertagText;
+        privilegesText = binding.privilegesText;
+        xuidText = binding.xuidText;
+        emptyStateContainer = binding.emptyStateContainer;
+        accountsRecyclerView = binding.accountsRecyclerView;
+        bottomAddButton = binding.bottomAddButton;
+        xboxAvatar = binding.xboxAvatar;
+        avatarProgress = binding.avatarProgress;
+        rightCardContainer = binding.rightCardContainer;
         applyAccountAccent();
 
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -206,8 +205,8 @@ public class AccountsActivity extends BaseActivity {
 
     private void refreshUI() {
         boolean enabled = org.chimeramc.client.settings.FeatureSettings.getInstance().isLauncherManagedMcLoginEnabled();
-        View mainContent = findViewById(R.id.main_content_container);
-        View disabledState = findViewById(R.id.disabled_state_container);
+        View mainContent = binding.mainContentContainer;
+        View disabledState = binding.disabledStateContainer;
         
         if (mainContent != null) mainContent.setVisibility(enabled ? View.VISIBLE : View.GONE);
         if (disabledState != null) disabledState.setVisibility(enabled ? View.GONE : View.VISIBLE);

@@ -73,6 +73,38 @@ public final class RadialWheelLayout {
     }
 
     /**
+     * The minimum pointer speed, in px/s, that counts as a flick rather than a placement.
+     *
+     * <p>Below this a release is a click and the sector under the pointer wins; above it the
+     * flick's own direction picks the sector, so a quick throw toward a slice commits it even if the
+     * pointer stopped short of the ring. Set so a deliberate throw is a flick and a slow drag is not.
+     */
+    public static final float FLICK_MIN_SPEED_PX_S = 900f;
+
+    /**
+     * The sector a flick selects, from the release velocity.
+     *
+     * <p>Spec: "make a selection by flicking your mouse toward a segment or by clicking it
+     * directly." A flick is resolved by the velocity's direction only: its magnitude must clear
+     * {@link #FLICK_MIN_SPEED_PX_S}, and the direction must leave the hub so an ambiguous throw at
+     * the centre does not pick a slice. The angular gap is applied the same way the pointer path
+     * applies it, so a flick straight at a boundary reads as no selection rather than a coin flip.
+     *
+     * @param vx,vy  release velocity in px/s (screen space, y down)
+     * @param radius the ring radius used for the angular gap, so the flick and the pointer agree
+     * @param gapPx  the constant linear gap between sectors
+     * @return the flicked sector, or {@link Sector#NONE} when the throw is too slow or too central
+     */
+    public static Sector flickSector(float vx, float vy, float radius, float gapPx) {
+        float speed = (float) Math.hypot(vx, vy);
+        if (!(speed >= FLICK_MIN_SPEED_PX_S)) return Sector.NONE;
+        double deg = Math.toDegrees(Math.atan2(vy, vx));
+        if (deg < -180.0) deg += 360.0;
+        if (nearestBoundaryDistance(deg) < angularHalfGapDegrees(radius, gapPx)) return Sector.NONE;
+        return quadrantFor(deg);
+    }
+
+    /**
      * The angular half-gap at a radius for a constant linear gap. A fixed linear gap is
      * parallel-sided; a fixed angular gap widens with radius (the cheap pie-chart look).
      */
@@ -99,6 +131,31 @@ public final class RadialWheelLayout {
         double halfGap = angularHalfGapDegrees(distance, gapPx);
         if (nearestBoundaryDistance(deg) < halfGap) return Sector.NONE;
         return quadrantFor(deg);
+    }
+
+    /**
+     * The centre point of a ring slot's touch target, in view coordinates (item 200).
+     *
+     * <p>Screen-reader virtual nodes need a rectangle per slot, and the wheel draws its sectors on
+     * a band, so the centre of the band at the sector's mid-angle is the one point every slot has in
+     * common. Kept here with the rest of the geometry so the accessibility targets and the painted
+     * sectors cannot disagree about where a slot is.
+     *
+     * @param index        the slot index
+     * @param count        the number of slots
+     * @param centerX      the wheel centre x
+     * @param centerY      the wheel centre y
+     * @param innerRadius  the ring's inner radius
+     * @param outerRadius  the ring's outer radius
+     * @return {x, y} of the slot centre
+     */
+    public static float[] slotCenter(int index, int count, float centerX, float centerY,
+                                     float innerRadius, float outerRadius) {
+        double deg = WheelLayout.sectorCenterDegrees(index, count);
+        float radius = (innerRadius + outerRadius) / 2f;
+        double a = Math.toRadians(deg);
+        return new float[]{centerX + (float) (Math.cos(a) * radius),
+                centerY + (float) (Math.sin(a) * radius)};
     }
 
     /** The quadrant sector for an angle in degrees (screen space, y down). */

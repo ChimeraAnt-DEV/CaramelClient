@@ -1,11 +1,14 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.PixelCopy;
 import android.view.Window;
+import org.chimeramc.client.util.MainThread;
 
 /**
  * Captures a downscaled copy of the window behind the wheel, for the glass backdrop (R3, R12).
@@ -48,7 +51,7 @@ public final class WheelBackdropCapture {
 
     /** True when the platform can capture at all ({@code PixelCopy} is API 24+, guarded for minSdk). */
     public static boolean isSupported() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+        return ApiLevels.atLeastO();
     }
 
     /** The refresh schedule, so the caller can drive the rate limit (R3). */
@@ -115,7 +118,7 @@ public final class WheelBackdropCapture {
             return false;
         }
         try {
-            if (mainHandler == null) mainHandler = new Handler(Looper.getMainLooper());
+            if (mainHandler == null) mainHandler = MainThread.handler();
             PixelCopy.request(window, buffer, result -> {
                 schedule.markCaptured(nowMs);
                 if (result == PixelCopy.SUCCESS) {

@@ -299,6 +299,55 @@ public final class PreloaderRules {
         return mergeRuleForVersion(content, version) != null;
     }
 
+    /**
+     * True when [version] is newer than every rule's coverage, i.e. the installed game is ahead of
+     * the signature set rather than merely falling in a gap between rules (item 256).
+     *
+     * <p>This is a stricter statement than "no rule covers it": a version can be uncovered because
+     * it sits between two ranges, or because it is beyond the newest range. The two read very
+     * differently to a player — "your game is newer than this build supports" versus "this exact
+     * build has no rule" — so the launcher distinguishes them. A rule with an open {@code max}
+     * means coverage is unbounded above, so nothing is newer than the rules in that case.
+     */
+    public static boolean newerThanRules(String content, String version) {
+        if (version == null || version.trim().isEmpty()) {
+            return false;
+        }
+        boolean sawBounded = false;
+        for (JsonObject rule : rules(content)) {
+            String max = optionalString(rule, "max");
+            if (max.isEmpty()) {
+                // An open-ended rule covers everything above it, so the version cannot be newer.
+                return false;
+            }
+            sawBounded = true;
+            if (compareVersions(version, max) <= 0) {
+                return false;
+            }
+        }
+        return sawBounded;
+    }
+
+    /**
+     * The newest version any rule covers, or "" when coverage is open-ended or the DB is empty.
+     *
+     * <p>Reported by the diagnostics screen and the "newer than rules" warning so the user can see
+     * exactly which build the launcher was tested against.
+     */
+    public static String highestCoveredVersion(String content) {
+        String highest = "";
+        for (JsonObject rule : rules(content)) {
+            String max = optionalString(rule, "max");
+            if (max.isEmpty()) {
+                return "";
+            }
+            if (highest.isEmpty() || compareVersions(max, highest) > 0) {
+                highest = max;
+            }
+        }
+        return highest;
+    }
+
     /** True when [merged] carries a usable {@code playerRenderVtableIndex} (skin/cosmetic slot). */
     public static boolean hasPlayerRenderIndex(JsonObject merged) {
         return hasIndex(merged, "playerRenderVtableIndex");

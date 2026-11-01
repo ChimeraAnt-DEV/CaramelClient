@@ -50,7 +50,13 @@ public class InbuiltModManager {
     private static final String KEY_ZOOM_LEVEL = "zoom_level";
     private static final String KEY_ZOOM_KEYBIND = "zoom_keybind";
     private static final String KEY_ZOOM_TRANSITION_DURATION = "zoom_transition_duration";
+    private static final String KEY_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
+    private static final String KEY_ZOOM_SMOOTHING = "zoom_smoothing";
+    private static final String KEY_SNAPLOOK_KEYBIND = "snaplook_keybind";
+    private static final String KEY_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
+    /** The radial wheel's centre dead zone, as a percentage of full stick travel (item 199). */
+    private static final String KEY_WHEEL_CENTER_DEAD_ZONE = "wheel_center_dead_zone_percent";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String KEY_GYRO_INVERT_X = "gyro_invert_x";
@@ -63,8 +69,26 @@ public class InbuiltModManager {
     private static final String KEY_OFFHAND_KEYBIND = "offhand_keybind";
     private static final String KEY_OVERLAY_POSITION_X_PREFIX = "overlay_pos_x_";
     private static final String KEY_OVERLAY_POSITION_Y_PREFIX = "overlay_pos_y_";
+    /**
+     * The same position stored as a fraction of the surface (item 211).
+     *
+     * <p>The pixel keys above are kept so a position saved before this change still reads back, but
+     * every new save also writes the fraction, and a read prefers the fraction when present. A pixel
+     * position is only meaningful for the surface it was measured on, so a resolution-scale change
+     * or a rotation moved a widget; the fraction keeps it where the user put it.
+     */
+    private static final String KEY_OVERLAY_POSITION_XF_PREFIX = "overlay_pos_xf_";
+    private static final String KEY_OVERLAY_POSITION_YF_PREFIX = "overlay_pos_yf_";
     private static final String KEY_OVERLAY_LOCK_PREFIX = "overlay_lock_";
     private static final String KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX = "overlay_show_everywhere_";
+    private static final String KEY_FRAME_GRAPH_PREFIX = "overlay_frame_graph_";
+    private static final String KEY_FPS_STATS_PREFIX = "overlay_fps_stats_";
+    private static final String KEY_FPS_STATS_WINDOW_PREFIX = "overlay_fps_stats_window_";
+
+    /** The window bounds for the FPS overlay's average and 1% low (item 190). */
+    public static final int FPS_STATS_WINDOW_MIN = 10;
+    public static final int FPS_STATS_WINDOW_MAX = 120;
+    public static final int FPS_STATS_WINDOW_DEFAULT = 60;
     private static final String KEY_HOTBAR_ITEM_ICONS = "hotbar_item_icons";
     private static final String KEY_HOTBAR_SLOT_ENABLED_PREFIX = "hotbar_slot_enabled_";
     private static final String KEY_AIM_SMOOTHING = "aim_smoothing";
@@ -147,7 +171,17 @@ public class InbuiltModManager {
     private static final int MIN_MOD_MENU_OPACITY = 70;
     private static final int DEFAULT_ZOOM_LEVEL = 10;
     private static final int DEFAULT_ZOOM_TRANSITION_DURATION = 150;
+    private static final int DEFAULT_ZOOM_SCROLL_SENSITIVITY = 100;
+    private static final int DEFAULT_ZOOM_SMOOTHING = 0;
+    /** Bounds for the zoom scroll knobs (item 192); the smoothing cap stays below 100. */
+    public static final int MIN_ZOOM_SCROLL_SENSITIVITY = 10;
+    public static final int MAX_ZOOM_SCROLL_SENSITIVITY = 300;
+    public static final int MAX_ZOOM_SMOOTHING = 90;
+    private static final int DEFAULT_SNAPLOOK_RETURN_SPEED = 50;
+    /** The snap-look return-speed slider bounds (item 193). */
+    public static final int MAX_SNAPLOOK_RETURN_SPEED = 100;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
+    private static final int DEFAULT_WHEEL_DEAD_ZONE_PERCENT = 15;
     private static final int DEFAULT_GYRO_SENSITIVITY = 100;
     private static final int DEFAULT_GYRO_DEADZONE = 5;
     private static final float DEFAULT_VOICE_RANGE = 24f;
@@ -160,6 +194,8 @@ public class InbuiltModManager {
     private final SharedPreferences prefs;
     private final AtomicLong overlayVisibilityRevision = new AtomicLong(1L);
     private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener;
+    /** The surface the fractional overlay positions are relative to; null until a session sets it. */
+    private volatile android.util.DisplayMetrics overlayMetrics;
 
     private InbuiltModManager(Context context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -583,6 +619,55 @@ public class InbuiltModManager {
         prefs.edit().putInt(KEY_ZOOM_TRANSITION_DURATION, Math.max(0, Math.min(1000, duration))).apply();
     }
 
+    /** How far one scroll notch moves the zoom, as a percentage of the default (item 192). */
+    public int getZoomScrollSensitivity() {
+        return prefs.getInt(KEY_ZOOM_SCROLL_SENSITIVITY, DEFAULT_ZOOM_SCROLL_SENSITIVITY);
+    }
+
+    public void setZoomScrollSensitivity(int percent) {
+        prefs.edit().putInt(KEY_ZOOM_SCROLL_SENSITIVITY,
+                Math.max(MIN_ZOOM_SCROLL_SENSITIVITY, Math.min(MAX_ZOOM_SCROLL_SENSITIVITY, percent))).apply();
+    }
+
+    /**
+     * How much the scroll zoom is smoothed, 0..90 (item 192).
+     *
+     * <p>A higher value keeps more of the previous frame's zoom, so a coarse wheel notch eases in
+     * rather than stepping. Bounded below 100 so the zoom can always reach its target.
+     */
+    public int getZoomSmoothing() {
+        return prefs.getInt(KEY_ZOOM_SMOOTHING, DEFAULT_ZOOM_SMOOTHING);
+    }
+
+    public void setZoomSmoothing(int percent) {
+        prefs.edit().putInt(KEY_ZOOM_SMOOTHING,
+                Math.max(0, Math.min(MAX_ZOOM_SMOOTHING, percent))).apply();
+    }
+
+    /** The snap-look key, default X (item 193). */
+    public int getSnaplookKeybind() {
+        return prefs.getInt(KEY_SNAPLOOK_KEYBIND, KeyEvent.KEYCODE_X);
+    }
+
+    public void setSnaplookKeybind(int keyCode) {
+        prefs.edit().putInt(KEY_SNAPLOOK_KEYBIND, keyCode).apply();
+    }
+
+    /**
+     * How fast the camera returns to the stored heading on a snap-look, 0..100 (item 193).
+     *
+     * <p>0 is instant, 100 is the slowest eased return. Kept here rather than hard-coded so a
+     * player can match it to their look sensitivity.
+     */
+    public int getSnaplookReturnSpeed() {
+        return prefs.getInt(KEY_SNAPLOOK_RETURN_SPEED, DEFAULT_SNAPLOOK_RETURN_SPEED);
+    }
+
+    public void setSnaplookReturnSpeed(int percent) {
+        prefs.edit().putInt(KEY_SNAPLOOK_RETURN_SPEED,
+                Math.max(0, Math.min(MAX_SNAPLOOK_RETURN_SPEED, percent))).apply();
+    }
+
     public int getCursorSensitivity() {
         return prefs.getInt(KEY_CURSOR_SENSITIVITY, DEFAULT_CURSOR_SENSITIVITY);
     }
@@ -591,19 +676,126 @@ public class InbuiltModManager {
         prefs.edit().putInt(KEY_CURSOR_SENSITIVITY, Math.max(10, Math.min(300, sensitivity))).apply();
     }
 
+    /**
+     * The radial wheel's centre dead zone, as a fraction of full stick travel (item 199).
+     *
+     * <p>Stored as a percentage so the settings slider has integers, and read through
+     * {@link RadialWheelMotion#clampCenterDeadZone} so a stored value from an older build, or a
+     * hand-edited preference file, cannot drive the cursor with an out-of-range dead zone.
+     */
+    public float getWheelCenterDeadZone() {
+        int percent = prefs.getInt(KEY_WHEEL_CENTER_DEAD_ZONE, DEFAULT_WHEEL_DEAD_ZONE_PERCENT);
+        return org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                .clampCenterDeadZone(percent / 100f);
+    }
+
+    public void setWheelCenterDeadZone(float fraction) {
+        float clamped = org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                .clampCenterDeadZone(fraction);
+        prefs.edit().putInt(KEY_WHEEL_CENTER_DEAD_ZONE, Math.round(clamped * 100f)).apply();
+    }
+
     public int getOverlayPositionX(String modId, int defaultX) {
-        return prefs.getInt(KEY_OVERLAY_POSITION_X_PREFIX + modId, defaultX);
+        return resolveAxis(modId, KEY_OVERLAY_POSITION_XF_PREFIX, KEY_OVERLAY_POSITION_X_PREFIX,
+                defaultX, true);
     }
 
     public int getOverlayPositionY(String modId, int defaultY) {
-        return prefs.getInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, defaultY);
+        return resolveAxis(modId, KEY_OVERLAY_POSITION_YF_PREFIX, KEY_OVERLAY_POSITION_Y_PREFIX,
+                defaultY, false);
     }
 
     public void setOverlayPosition(String modId, int x, int y) {
-        prefs.edit()
+        android.util.DisplayMetrics metrics = overlayMetrics;
+        android.content.SharedPreferences.Editor editor = prefs.edit()
             .putInt(KEY_OVERLAY_POSITION_X_PREFIX + modId, x)
-            .putInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, y)
-            .apply();
+            .putInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, y);
+        // Store the fraction too, so a later read on a different surface size keeps the widget in
+        // the same relative place (item 211). Without metrics there is nothing to divide by, so the
+        // pixel value alone is written and a later read falls back to it.
+        if (metrics != null && metrics.widthPixels > 0 && metrics.heightPixels > 0) {
+            editor.putFloat(KEY_OVERLAY_POSITION_XF_PREFIX + modId,
+                    org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .fraction(x, metrics.widthPixels));
+            editor.putFloat(KEY_OVERLAY_POSITION_YF_PREFIX + modId,
+                    org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .fraction(y, metrics.heightPixels));
+        }
+        editor.apply();
+    }
+
+    /** Remembers the surface size the fractional positions are relative to. */
+    public void setOverlaySurfaceMetrics(android.util.DisplayMetrics metrics) {
+        overlayMetrics = metrics;
+    }
+
+    /** The stored fraction for the x axis, or {@code fallback} when the overlay has no position. */
+    public float getOverlayFractionX(String modId, float fallback) {
+        return resolveFraction(modId, KEY_OVERLAY_POSITION_XF_PREFIX,
+                KEY_OVERLAY_POSITION_X_PREFIX, fallback, true);
+    }
+
+    /** The stored fraction for the y axis, or {@code fallback} when the overlay has no position. */
+    public float getOverlayFractionY(String modId, float fallback) {
+        return resolveFraction(modId, KEY_OVERLAY_POSITION_YF_PREFIX,
+                KEY_OVERLAY_POSITION_Y_PREFIX, fallback, false);
+    }
+
+    /** Writes a position as a fraction, so a layout restore does not need a pixel value. */
+    public void setOverlayPositionFraction(String modId, float xFraction, float yFraction) {
+        if (modId == null || modId.isEmpty()) return;
+        prefs.edit()
+                .putFloat(KEY_OVERLAY_POSITION_XF_PREFIX + modId, clampFraction(xFraction))
+                .putFloat(KEY_OVERLAY_POSITION_YF_PREFIX + modId, clampFraction(yFraction))
+                .apply();
+    }
+
+    private static float clampFraction(float value) {
+        if (Float.isNaN(value)) return 0f;
+        return Math.max(0f, Math.min(1f, value));
+    }
+
+    private float resolveFraction(String modId, String fractionKey, String pixelKey, float fallback,
+                                  boolean horizontal) {
+        String key = fractionKey + modId;
+        if (prefs.contains(key)) {
+            float stored = prefs.getFloat(key, Float.NaN);
+            if (org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .isValid(stored)) {
+                return stored;
+            }
+        }
+        // No fraction yet (a position saved before item 211): derive one from the pixel value.
+        android.util.DisplayMetrics metrics = overlayMetrics;
+        String pxKey = pixelKey + modId;
+        if (metrics != null && prefs.contains(pxKey)) {
+            int surface = horizontal ? metrics.widthPixels : metrics.heightPixels;
+            return org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .fraction(prefs.getInt(pxKey, 0), surface);
+        }
+        return fallback;
+    }
+
+    /**
+     * Reads one axis: the fraction wins when it is present and valid, so a widget follows a
+     * resolution-scale change; otherwise the legacy pixel value, otherwise the caller's default.
+     */
+    private int resolveAxis(String modId, String fractionKey, String pixelKey, int defaultPx,
+                            boolean horizontal) {
+        String key = fractionKey + modId;
+        if (prefs.contains(key)) {
+            float fraction = prefs.getFloat(key, Float.NaN);
+            android.util.DisplayMetrics metrics = overlayMetrics;
+            if (org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                    .isValid(fraction) && metrics != null) {
+                int surface = horizontal ? metrics.widthPixels : metrics.heightPixels;
+                if (surface > 0) {
+                    return org.chimeramc.client.core.mods.inbuilt.overlay.OverlayPositionStore
+                            .pixel(fraction, surface);
+                }
+            }
+        }
+        return prefs.getInt(pixelKey + modId, defaultPx);
     }
 
     public boolean isOverlayLocked(String modId) {
@@ -622,6 +814,48 @@ public class InbuiltModManager {
         prefs.edit().putBoolean(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + sharedOverlaySettingsId(modId), showEverywhere).apply();
     }
 
+    /**
+     * Whether the FPS overlay draws its frame-time graph (item 191).
+     *
+     * <p>A per-module overlay option like the others, stored under the same shared-settings id so a
+     * module that shares its overlay appearance (the hotbar slots) also shares this. Off by default:
+     * the graph is an addition, and a user who never asked for it keeps the plain readout.
+     */
+    public boolean isFrameTimeGraphEnabled(String modId) {
+        return prefs.getBoolean(KEY_FRAME_GRAPH_PREFIX + sharedOverlaySettingsId(modId), false);
+    }
+
+    public void setFrameTimeGraphEnabled(String modId, boolean enabled) {
+        prefs.edit().putBoolean(KEY_FRAME_GRAPH_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
+    }
+
+    /**
+     * Whether the FPS overlay prints its average and 1% low beside the rate (item 190).
+     *
+     * <p>Off by default: the average and the low are extra detail, and a user who wants just the
+     * number keeps it. Both are computed over {@link #getFpsStatsWindow(String)} frames.
+     */
+    public boolean isFpsStatsEnabled(String modId) {
+        return prefs.getBoolean(KEY_FPS_STATS_PREFIX + sharedOverlaySettingsId(modId), false);
+    }
+
+    public void setFpsStatsEnabled(String modId, boolean enabled) {
+        prefs.edit().putBoolean(KEY_FPS_STATS_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
+    }
+
+    /** The number of frames the FPS overlay averages over (item 190); clamped to 10..120. */
+    public int getFpsStatsWindow(String modId) {
+        return Math.max(FPS_STATS_WINDOW_MIN,
+                Math.min(FPS_STATS_WINDOW_MAX,
+                        prefs.getInt(KEY_FPS_STATS_WINDOW_PREFIX + sharedOverlaySettingsId(modId),
+                                FPS_STATS_WINDOW_DEFAULT)));
+    }
+
+    public void setFpsStatsWindow(String modId, int frames) {
+        prefs.edit().putInt(KEY_FPS_STATS_WINDOW_PREFIX + sharedOverlaySettingsId(modId),
+                Math.max(FPS_STATS_WINDOW_MIN, Math.min(FPS_STATS_WINDOW_MAX, frames))).apply();
+    }
+
     public void clearOverlaySettings(String modId) {
         if (modId == null || modId.isEmpty()) return;
         prefs.edit()
@@ -629,8 +863,13 @@ public class InbuiltModManager {
                 .remove(KEY_OVERLAY_OPACITY_PREFIX + modId)
                 .remove(KEY_OVERLAY_POSITION_X_PREFIX + modId)
                 .remove(KEY_OVERLAY_POSITION_Y_PREFIX + modId)
+                .remove(KEY_OVERLAY_POSITION_XF_PREFIX + modId)
+                .remove(KEY_OVERLAY_POSITION_YF_PREFIX + modId)
                 .remove(KEY_OVERLAY_LOCK_PREFIX + modId)
                 .remove(KEY_OVERLAY_SHOW_EVERYWHERE_PREFIX + modId)
+                .remove(KEY_FRAME_GRAPH_PREFIX + modId)
+                .remove(KEY_FPS_STATS_PREFIX + modId)
+                .remove(KEY_FPS_STATS_WINDOW_PREFIX + modId)
                 .apply();
         overlayVisibilityRevision.incrementAndGet();
     }

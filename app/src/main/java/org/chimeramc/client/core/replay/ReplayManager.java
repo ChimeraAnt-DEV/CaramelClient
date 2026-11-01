@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import org.chimeramc.client.preloader.PreloaderInput;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.util.List;
@@ -85,7 +88,7 @@ public final class ReplayManager {
     private static volatile ReplayManager instance;
 
     private final Context appContext;
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = MainThread.handler();
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
     private final ReplayClipRepository repository;
 
@@ -95,6 +98,31 @@ public final class ReplayManager {
     private ReplayHighlightTrigger trigger;
     private Activity foregroundActivity;
     private ReplayMetadataOverlay metadataOverlay;
+
+    /** Samples the local-player feed into the clip's gameplay track while a capture runs. */
+    private ReplayTrackRecorder trackRecorder;
+
+    /**
+     * The markers recorded for the clip in flight (item 241).
+     *
+     * <p>A marker is added by the same trigger that flags a highlight — a death, a kill streak, a
+     * combo — plus a {@link ReplayMarkers.Kind#JOIN} at the start of the recording. They live on the
+     * main thread with the rest of the recording state and are written into the sidecar when the
+     * clip is finalised, so the timeline can draw a tick at each one.
+     */
+    private ReplayMarkers markers = ReplayMarkers.empty();
+
+    private final Runnable trackTick = new Runnable() {
+        @Override
+        public void run() {
+            ReplayTrackRecorder recorder = trackRecorder;
+            if (recorder == null || state != State.RECORDING) return;
+            recorder.tick(elapsedMs());
+            // Re-arm on the same cadence the track stores at, so the loop does no work the track
+            // would drop.
+            mainHandler.postDelayed(this, ReplayTrack.MIN_SAMPLE_INTERVAL_MS);
+        }
+    };
 
     private ReplayManager(Context context) {
         this.appContext = context.getApplicationContext();
@@ -184,8 +212,44 @@ public final class ReplayManager {
         this.profile = profile;
         this.state = State.RECORDING;
         this.trigger = ReplaySettings.get(appContext).newTrigger();
+        this.markers = ReplayMarkers.empty();
+        // The clip starts when the world it is recording was already joined, so the opening marker
+        // is the start of the recording itself — the one moment the client knows for certain.
+        this.markers.add(0L, ReplayMarkers.Kind.JOIN, "");
+        startTrackRecording();
         attachMetadataOverlay(startedAtMs);
         notifyState();
+    }
+
+    /**
+     * Starts sampling the local-player feed into the clip's gameplay track.
+     *
+     * <p>This is what turns the capture into a replay: the video shows what the player saw, the
+     * track records where they were so the free camera has a pose to detach from and the timeline
+     * can be read as movement. It reads the same feed the HUD uses and degrades to an empty track
+     * (the clip still plays as video) when no live read is available.
+     */
+    private void startTrackRecording() {
+        trackRecorder = new ReplayTrackRecorder(new ReplayTrackRecorder.Source() {
+            @Override
+            public float[] position() {
+                return PreloaderInput.readLocalPlayerPosition();
+            }
+
+            @Override
+            public float[] rotation() {
+                return PreloaderInput.readLocalPlayerRotation();
+            }
+
+            @Override
+            public float[] health() {
+                return PreloaderInput.readLocalPlayerHealth();
+            }
+        });
+        // Sample immediately so a short clip still carries a starting pose, then keep sampling.
+        trackRecorder.tick(0L);
+        mainHandler.removeCallbacks(trackTick);
+        mainHandler.postDelayed(trackTick, ReplayTrack.MIN_SAMPLE_INTERVAL_MS);
     }
 
     /**
@@ -220,13 +284,17 @@ public final class ReplayManager {
 
     public void onRecordingFinished(File file, long durationMs) {
         detachMetadataOverlay();
+        ReplayTrack finishedTrack = stopTrackRecording();
+        // The markers are captured before the state resets so the sidecar writes the set that
+        // belongs to this clip, not whatever a later recording leaves behind.
+        ReplayMarkers finishedMarkers = markers;
         this.state = State.SAVING;
         notifyState();
         final ReplayQuality.Profile finishedProfile = profile;
         // The sidecar and the storage prune are file work; keep them off the main thread.
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "replay-finalize", () -> {
             try {
-                writeSidecar(file, durationMs, finishedProfile);
+                writeSidecar(file, durationMs, finishedProfile, finishedTrack, finishedMarkers);
                 pruneIfNeeded();
             } catch (Throwable t) {
                 Log.w(TAG, "Post-recording bookkeeping failed", t);
@@ -237,15 +305,31 @@ public final class ReplayManager {
                     notifyState();
                 });
             }
-        }, "replay-finalize").start();
+        });
     }
 
     public void onRecordingFailed() {
         detachMetadataOverlay();
+        stopTrackRecording();
+        this.markers = ReplayMarkers.empty();
         state = State.IDLE;
         profile = null;
         notifyState();
         notifyCaptureFailed();
+    }
+
+    /**
+     * Stops sampling and returns the track captured so far.
+     *
+     * <p>The tick is cancelled first so no sample lands after this point, then the recorder is
+     * released. Returns an empty track when no recording was in flight, which the sidecar writes as
+     * "no track" rather than an empty string that would look like a corrupt one.
+     */
+    private ReplayTrack stopTrackRecording() {
+        mainHandler.removeCallbacks(trackTick);
+        ReplayTrackRecorder recorder = trackRecorder;
+        trackRecorder = null;
+        return recorder == null ? ReplayTrack.empty() : recorder.track();
     }
 
     private void notifyCaptureFailed() {
@@ -260,11 +344,18 @@ public final class ReplayManager {
         });
     }
 
-    private void writeSidecar(File file, long durationMs, ReplayQuality.Profile profile) {
+    private void writeSidecar(File file, long durationMs, ReplayQuality.Profile profile,
+                              ReplayTrack track, ReplayMarkers clipMarkers) {
         ReplaySidecar sidecar = ReplaySidecar.of(System.currentTimeMillis(),
                 "", "", "");
         sidecar.set("durationMs", String.valueOf(durationMs));
         sidecar.set("resolution", profile == null ? "" : profile.label());
+        if (track != null && !track.isEmpty()) {
+            sidecar.setTrack(track);
+        }
+        if (clipMarkers != null && !clipMarkers.isEmpty()) {
+            sidecar.setMarkers(clipMarkers);
+        }
         ReplayStorage.writeSidecar(file, sidecar.serialize());
     }
 
@@ -284,15 +375,30 @@ public final class ReplayManager {
     // ---------------------------------------------------------------------------------------------
 
     public void onDeath() {
+        recordMarker(ReplayMarkers.Kind.DEATH, "");
         fireHighlight(ReplayHighlightTrigger.Event.death());
     }
 
     public void onKillStreak(int streak) {
+        recordMarker(ReplayMarkers.Kind.KILL_STREAK, streak > 0 ? String.valueOf(streak) : "");
         fireHighlight(ReplayHighlightTrigger.Event.killStreak(streak));
     }
 
     public void onCombo(int hits) {
+        recordMarker(ReplayMarkers.Kind.COMBO, hits > 0 ? String.valueOf(hits) : "");
         fireHighlight(ReplayHighlightTrigger.Event.combo(hits));
+    }
+
+    /**
+     * Records a marker at the current elapsed time while a capture is running (item 241).
+     *
+     * <p>Only a live recording carries markers: a trigger that fires with no capture in flight has
+     * no clip to attach to, and adding it to the next recording would put an event on a timeline it
+     * did not happen on.
+     */
+    private void recordMarker(ReplayMarkers.Kind kind, String detail) {
+        if (state != State.RECORDING) return;
+        markers.add(elapsedMs(), kind, detail);
     }
 
     /**

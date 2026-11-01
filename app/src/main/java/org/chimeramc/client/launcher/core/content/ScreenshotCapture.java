@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.content;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -7,6 +9,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.PixelCopy;
 import android.view.Window;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -62,7 +66,7 @@ public final class ScreenshotCapture {
             if (callback != null) callback.onFailed();
             return;
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (ApiLevels.belowO()) {
             if (callback != null) callback.onFailed();
             return;
         }
@@ -81,7 +85,7 @@ public final class ScreenshotCapture {
                     return;
                 }
                 writeAsync(bitmap, screenshotsDir, callback);
-            }, new Handler(Looper.getMainLooper()));
+            }, MainThread.handler());
         } catch (Throwable t) {
             bitmap.recycle();
             if (callback != null) callback.onFailed();
@@ -89,7 +93,7 @@ public final class ScreenshotCapture {
     }
 
     private static void writeAsync(Bitmap bitmap, File dir, Callback callback) {
-        Thread writer = new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "glowberry-screenshot", () -> {
             File file = null;
             try {
                 if (!dir.exists()) dir.mkdirs();
@@ -104,13 +108,11 @@ public final class ScreenshotCapture {
             }
             final File saved = file;
             if (callback != null) {
-                new Handler(Looper.getMainLooper()).post(() -> {
+                MainThread.post(() -> {
                     if (saved != null) callback.onSaved(saved);
                     else callback.onFailed();
                 });
             }
-        }, "glowberry-screenshot");
-        writer.setDaemon(true);
-        writer.start();
+        });
     }
 }

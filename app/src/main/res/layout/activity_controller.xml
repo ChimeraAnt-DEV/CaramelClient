@@ -67,6 +67,13 @@
                 android:textColor="@color/text_secondary"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
 
+            <org.chimeramc.client.launcher.ui.views.StickPreviewView
+                android:id="@+id/controller_stick_preview"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="top|start"
+                android:contentDescription="@string/controller_stick_preview_description" />
+
         </FrameLayout>
 
         <TextView
@@ -372,6 +379,46 @@
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
             android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/controller_bind_device"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/space_2"
+                android:gravity="center"
+                android:fontFamily="@font/misans"
+                android:text="@string/controller_bind_device"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textColor="@color/on_surface"
+                android:background="@drawable/bg_filter_chip"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/controller_bind_device_clear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:fontFamily="@font/misans"
+                android:text="@string/controller_bind_device_clear"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textColor="@color/on_surface"
+                android:background="@drawable/bg_filter_chip"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

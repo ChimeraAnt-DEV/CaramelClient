@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.ApiLevels;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.PixelFormat;
@@ -32,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.ui.components.UiTokens;
+import org.chimeramc.client.util.TouchTargetHelper;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.core.mods.inbuilt.ExternalModuleProvider;
 import org.chimeramc.client.core.mods.inbuilt.InbuiltModuleProvider;
@@ -44,6 +47,7 @@ import org.chimeramc.client.core.mods.pvp.PvpSectionPolicy;
 import org.chimeramc.client.core.mods.inbuilt.model.ModLoadoutStore;
 import org.chimeramc.client.core.mods.inbuilt.vip.ModCategory;
 import org.chimeramc.client.launcher.controller.ControllerConnectionMonitor;
+import org.chimeramc.client.util.MainThread;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -53,29 +57,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class ModMenuOverlay {
-    private enum ModuleFilter {
-        ALL,
-        FAVORITES,
-        ENABLED,
-        INBUILT,
-        EXTERNAL,
-        PVP,
-        // The category split the VIP window used to own. With one menu (U4) they are filters of
-        // this menu, and their predicates come from the tested ModCategory rather than a second
-        // implementation.
-        VISUALS,
-        MISC
-    }
 
     private final Activity activity;
     private View overlayView;
     private WindowManager windowManager;
     private WindowManager.LayoutParams wmParams;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
     private boolean isShowing = false;
 
     private RecyclerView modsRecycler;
-    private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final android.os.Handler searchHandler = MainThread.handler();
     private final Runnable searchRunnable = this::applyFilters;
     private ModMenuAdapter adapter;
     private ModMenuTheme theme;
@@ -85,6 +76,8 @@ public class ModMenuOverlay {
     private ModMenuPage activePage;
     /** The page to open on, set when showPage() has to open the menu first. */
     private ModMenuPage pendingPage;
+    /** A section filter asked for before the views existed; consumed by {@link #setupViews}. */
+    private ModuleFilter pendingFilter;
     private boolean hasStaggeredOnce = false;
     private EditText searchInput;
     private ImageButton clearSearchBtn;
@@ -93,7 +86,7 @@ public class ModMenuOverlay {
     /** The icon rail. Built from ModMenuPage.pages(), the one page registry the whole menu reads. */
     private ModMenuRail rail;
     private TextView filterAll, filterFavorites, filterEnabled, filterInbuilt, filterExternal,
-            filterPvp, filterVisuals, filterMisc;
+            filterPvp, filterVisuals, filterMisc, filterHud;
     private TextView moduleCountText, emptyStateText;
     private TextView compactFilterSelector, compactModuleCount;
 
@@ -192,8 +185,13 @@ public class ModMenuOverlay {
     private SeekBar modMenuButtonOpacitySeekBar;
     private TextView modMenuButtonOpacityText;
     private SeekBar hudButtonSizeSeekBar;
+    private SeekBar hudButtonOpacitySeekBar;
+    private TextView hudButtonOpacityText;
+    private HudSafeAreaView hudSafeAreaView;
+    private View hudEditorToolsView;
     private TextView hudButtonSizeText;
     private boolean updatingHudButtonSize = false;
+    private boolean updatingHudButtonOpacity = false;
     private boolean compactMode = false;
     private GridLayoutManager modsLayoutManager;
 
@@ -340,6 +338,45 @@ public class ModMenuOverlay {
         selectPage(target);
     }
 
+    /**
+     * Opens the module list already filtered to a section, for the radial wheel's MODS and HUD
+     * sectors.
+     *
+     * <p>The wheel and the menu are two views of one screen, so a sector must land on the same
+     * filtered list the filter chip would produce rather than a second, hand-built list. The filter
+     * is applied after the views exist (a pending filter is honoured by {@link #setupViews}), so a
+     * cold open and an already-open menu behave identically.
+     */
+    public void showModulesFiltered(ModuleFilter filter) {
+        ModuleFilter target = filter == null ? ModuleFilter.ALL : filter;
+        if (!isShowing) {
+            pendingPage = ModMenuPage.GENERAL;
+            pendingFilter = target;
+            show();
+            return;
+        }
+        selectPage(ModMenuPage.GENERAL);
+        setModuleFilter(target);
+    }
+
+    /** The section filters a caller outside this class may ask for. */
+    public enum ModuleFilter {
+        ALL,
+        FAVORITES,
+        ENABLED,
+        INBUILT,
+        EXTERNAL,
+        PVP,
+        // The category split the VIP window used to own. With one menu (U4) they are filters of
+        // this menu, and their predicates come from the tested ModCategory rather than a second
+        // implementation.
+        VISUALS,
+        MISC,
+        // The HUD section. Its predicate is ModIds.isHudModule, so the radial wheel's HUD sector
+        // and this filter name the same set and cannot drift apart.
+        HUD
+    }
+
     private void showInternal() {
         if (isShowing || activity.isFinishing() || activity.isDestroyed()) return;
 
@@ -385,7 +422,7 @@ public class ModMenuOverlay {
                     | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT
             );
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            if (ApiLevels.atLeastP()) {
                 wmParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             wmParams.gravity = Gravity.CENTER;
@@ -490,8 +527,8 @@ public class ModMenuOverlay {
         if (statsFps != null) {
             int fps = 0;
             try {
-                if (org.levimc.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeIsInitialized()) {
-                    fps = org.levimc.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
+                if (org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeIsInitialized()) {
+                    fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
                 }
             } catch (Throwable ignored) {
                 // A native read must never take the menu down; the em dash is the honest fallback.
@@ -594,6 +631,7 @@ public class ModMenuOverlay {
         filterPvp = overlayView.findViewById(R.id.filter_pvp);
         filterVisuals = overlayView.findViewById(R.id.filter_visuals);
         filterMisc = overlayView.findViewById(R.id.filter_misc);
+        filterHud = overlayView.findViewById(R.id.filter_hud);
         moduleCountText = overlayView.findViewById(R.id.module_count_text);
         statsFps = overlayView.findViewById(R.id.mod_stats_fps);
         statsPing = overlayView.findViewById(R.id.mod_stats_ping);
@@ -613,6 +651,8 @@ public class ModMenuOverlay {
         compactModeSwitch = overlayView.findViewById(R.id.switch_compact_mod_menu);
 
         View hudEditorTools = overlayView.findViewById(R.id.hud_editor_tools);
+        hudEditorToolsView = hudEditorTools;
+        hudSafeAreaView = overlayView.findViewById(R.id.hud_safe_area);
         View hudEditorDragHandle = overlayView.findViewById(R.id.hud_editor_drag_handle);
         if (hudEditorDragHandle != null) setupHudEditorDragHandle(hudEditorDragHandle, hudEditorTools);
         View btnHudSave = overlayView.findViewById(R.id.btn_hud_save);
@@ -620,6 +660,8 @@ public class ModMenuOverlay {
         View modMenuContainer = overlayView.findViewById(R.id.mod_menu_container);
         hudButtonSizeSeekBar = overlayView.findViewById(R.id.seekbar_hud_button_size);
         hudButtonSizeText = overlayView.findViewById(R.id.text_hud_button_size);
+        hudButtonOpacitySeekBar = overlayView.findViewById(R.id.seekbar_hud_button_opacity);
+        hudButtonOpacityText = overlayView.findViewById(R.id.text_hud_button_opacity);
 
         if (hudButtonSizeSeekBar != null) {
             hudButtonSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -642,6 +684,27 @@ public class ModMenuOverlay {
             updateHudEditorSizeControls(0);
         }
 
+        if (hudButtonOpacitySeekBar != null) {
+            hudButtonOpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (!fromUser || updatingHudButtonOpacity) return;
+                    InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
+                    if (manager != null) {
+                        manager.setSelectedHudEditorOpacity(progress);
+                    }
+                    updateHudButtonOpacityText(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+            updateHudEditorSizeControls(0);
+        }
+
         // Touch feedback on the stable chrome (filter chips + close). Recycler rows get their own
         // feedback in the adapter, since they are recycled and rebound; the rail tiles get theirs
         // from ModMenuRail's own click handling.
@@ -649,6 +712,15 @@ public class ModMenuOverlay {
                 filterAll, filterFavorites, filterEnabled, filterInbuilt, filterExternal, filterPvp,
                 filterVisuals, filterMisc, closeBtn, clearSearchBtn}) {
             if (v != null) DynamicAnim.applyPressScale(v);
+        }
+
+        // The chrome icons draw at 22-36dp. They stay that size and gain a 48dp touch area, which
+        // is the difference between a control a player hits first time and one they miss while a
+        // game is running behind the menu.
+        for (int id : new int[]{R.id.btn_close_menu, R.id.btn_clear_search,
+                R.id.btn_back_to_modules, R.id.btn_hud_save, R.id.btn_hud_reset,
+                R.id.btn_hud_cancel}) {
+            TouchTargetHelper.expand(overlayView.findViewById(id));
         }
 
         if (btnHudSave != null) {
@@ -894,6 +966,14 @@ public class ModMenuOverlay {
         ModMenuPage initial = pendingPage;
         pendingPage = null;
         selectPage(initial == null ? ModMenuPage.GENERAL : initial);
+        // A caller that also asked for a section filter (the wheel's MODS/HUD sectors) has it
+        // applied last, so the list is filtered on the first frame rather than after a flash of
+        // the unfiltered list.
+        ModuleFilter initialFilter = pendingFilter;
+        pendingFilter = null;
+        if (initialFilter != null) {
+            setModuleFilter(initialFilter);
+        }
     }
 
     private void showModulesSection() {
@@ -937,6 +1017,27 @@ public class ModMenuOverlay {
                 break;
             case ModMenuActionCatalog.ACTION_RELOAD_MODULES:
                 reloadModules();
+                break;
+            case ModMenuActionCatalog.ACTION_MANAGE_WHEEL:
+                WheelProfileManagerDialog.show(activity, new ModMenuTheme(activity,
+                        org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
+                                .getInstance(activity).getModMenuSettings()));
+                break;
+            case ModMenuActionCatalog.ACTION_TOGGLE_HUD: {
+                InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
+                if (manager != null) {
+                    boolean hidden = !manager.isOverlaysHiddenForScreenshot();
+                    manager.setOverlaysHiddenForScreenshot(hidden);
+                    android.widget.Toast.makeText(activity,
+                            hidden ? R.string.mod_menu_hud_hidden : R.string.mod_menu_hud_shown,
+                            android.widget.Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case ModMenuActionCatalog.ACTION_MANAGE_LAYOUTS:
+                OverlayLayoutManagerDialog.show(activity, new ModMenuTheme(activity,
+                        org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
+                                .getInstance(activity).getModMenuSettings()));
                 break;
             default:
                 break;
@@ -1179,7 +1280,31 @@ public class ModMenuOverlay {
                 current.hudOpacity(), R.string.mod_menu_setting_value_percent,
                 value -> applyMenuSettings(current.withHudOpacity(value)));
 
+        bindWheelDeadZoneSlider();
+
         buildAccentSwatches(current);
+    }
+
+    /**
+     * Binds the radial wheel's centre dead-zone slider (item 199).
+     *
+     * <p>The value lives in the manager's preferences rather than in {@link ModMenuSettings}: that
+     * object is the menu's appearance, and the dead zone is the wheel's input feel, owned by the
+     * overlay that reads it. Writing straight through the manager keeps the running wheel and the
+     * stored value in step, because the wheel reads the preference on every open.
+     */
+    private void bindWheelDeadZoneSlider() {
+        if (overlayView == null) return;
+        final InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+        int percent = Math.round(manager.getWheelCenterDeadZone() * 100f);
+        bindAppearanceSlider(R.id.seekbar_mod_setting_wheel_dead_zone,
+                R.id.value_mod_setting_wheel_dead_zone,
+                Math.round(org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                        .CENTER_DEAD_ZONE_MIN_DP * 100f),
+                Math.round(org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
+                        .CENTER_DEAD_ZONE_MAX_DP * 100f),
+                percent, R.string.mod_menu_setting_value_percent,
+                value -> manager.setWheelCenterDeadZone(value / 100f));
     }
 
     /**
@@ -1304,8 +1429,12 @@ public class ModMenuOverlay {
         applyMenuOpacity();
         // The controls are rebuilt so the active chip/swatch reflects the new value.
         setupModMenuAppearanceSettings();
-        if (modsRecycler != null && modsRecycler.getAdapter() != null) {
-            modsRecycler.getAdapter().notifyDataSetChanged();
+        if (modsRecycler != null && modsRecycler.getAdapter() != null
+                && modsRecycler.getAdapter().getItemCount() > 0) {
+            // An appearance change repaints every card, but the rows are the same rows: a range
+            // change keeps the list's scroll position and animates the repaint.
+            modsRecycler.getAdapter().notifyItemRangeChanged(
+                    0, modsRecycler.getAdapter().getItemCount());
         }
     }
 
@@ -1988,6 +2117,31 @@ public class ModMenuOverlay {
         }
     }
 
+    /**
+     * Shows or hides the safe-area frame (item 210).
+     *
+     * <p>The frame is measured against the window it will cover, so it is populated after the first
+     * layout pass rather than at inflation, when the window size is still unknown.
+     */
+    private void showHudSafeArea(boolean show) {
+        if (hudSafeAreaView == null) return;
+        if (!show) {
+            hudSafeAreaView.setVisibility(View.GONE);
+            return;
+        }
+        hudSafeAreaView.setVisibility(View.VISIBLE);
+        hudSafeAreaView.post(() -> {
+            if (hudSafeAreaView == null || overlayView == null) return;
+            int width = overlayView.getWidth();
+            int height = overlayView.getHeight();
+            if (width <= 0 || height <= 0) return;
+            OverlaySafeArea.Rect safe = OverlaySafeArea.forView(overlayView, width, height);
+            int gridPx = Math.round(OverlaySafeArea.DEFAULT_GRID_DP
+                    * activity.getResources().getDisplayMetrics().density);
+            hudSafeAreaView.setGeometry(safe, OverlaySafeArea.cutoutBounds(overlayView), gridPx);
+        });
+    }
+
     private void enterHudEditorMode(View modMenuContainer, View hudEditorTools) {
         updateNavigationItems(false, false, true, false, false, false, false);
 
@@ -1999,6 +2153,7 @@ public class ModMenuOverlay {
             hudEditorTools.setAlpha(1f);
             hudEditorTools.setTranslationX(0f);
         }
+        showHudSafeArea(true);
         if (overlayView != null) {
             overlayView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
             overlayView.setClickable(false);
@@ -2029,7 +2184,7 @@ public class ModMenuOverlay {
         });
         InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
         if (overlayManager != null) {
-            overlayManager.setHudEditorSelectionListener(this::updateHudEditorSizeControls);
+            overlayManager.setHudEditorSelectionListener(this::onHudEditorSelectionChanged);
             overlayManager.setHudEditorMode(true);
         }
     }
@@ -2038,6 +2193,7 @@ public class ModMenuOverlay {
         if (hudEditorTools != null) {
             hudEditorTools.setVisibility(View.GONE);
         }
+        showHudSafeArea(false);
         if (overlayView != null) {
             overlayView.setClickable(true);
         }
@@ -2069,18 +2225,49 @@ public class ModMenuOverlay {
         showModulesSection();
     }
 
+    private void onHudEditorSelectionChanged(int sizeDp, int opacity) {
+        updateHudEditorSizeControls(sizeDp);
+        updateHudEditorOpacityControls(opacity);
+    }
+
     private void updateHudEditorSizeControls(int sizeDp) {
         if (hudButtonSizeSeekBar == null) return;
         boolean hasSelection = sizeDp > 0;
         hudButtonSizeSeekBar.setEnabled(hasSelection);
+        if (hudButtonOpacitySeekBar != null) {
+            hudButtonOpacitySeekBar.setEnabled(hasSelection);
+        }
         if (!hasSelection) {
             updateHudButtonSizeText(0);
+            updateHudButtonOpacityText(0);
             return;
         }
         updatingHudButtonSize = true;
         hudButtonSizeSeekBar.setProgress(sizeDp);
         updatingHudButtonSize = false;
         updateHudButtonSizeText(sizeDp);
+    }
+
+    private void updateHudEditorOpacityControls(int opacity) {
+        if (hudButtonOpacitySeekBar == null) return;
+        boolean hasSelection = opacity > 0;
+        if (!hasSelection) {
+            updateHudButtonOpacityText(0);
+            return;
+        }
+        updatingHudButtonOpacity = true;
+        hudButtonOpacitySeekBar.setProgress(opacity);
+        updatingHudButtonOpacity = false;
+        updateHudButtonOpacityText(opacity);
+    }
+
+    private void updateHudButtonOpacityText(int opacity) {
+        if (hudButtonOpacityText == null) return;
+        if (opacity <= 0) {
+            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity));
+        } else {
+            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity_value, opacity));
+        }
     }
 
     private void updateHudButtonSizeText(int size) {
@@ -2108,6 +2295,7 @@ public class ModMenuOverlay {
         popup.getMenu().add(0, 105, 5, R.string.mod_menu_filter_pvp);
         popup.getMenu().add(0, 106, 6, R.string.vip_category_visuals);
         popup.getMenu().add(0, 107, 7, R.string.vip_category_misc);
+        popup.getMenu().add(0, 108, 8, R.string.mod_menu_filter_hud);
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case 101:
@@ -2131,6 +2319,9 @@ public class ModMenuOverlay {
                 case 107:
                     setModuleFilter(ModuleFilter.MISC);
                     break;
+                case 108:
+                    setModuleFilter(ModuleFilter.HUD);
+                    break;
                 case 100:
                 default:
                     setModuleFilter(ModuleFilter.ALL);
@@ -2144,7 +2335,10 @@ public class ModMenuOverlay {
     private void setCompactMode(boolean compact) {
         compactMode = compact;
         if (modsLayoutManager != null) {
-            modsLayoutManager.setSpanCount(compact ? 1 : 4);
+            // Two columns on a wide window, one below the 560dp threshold — the same rule the
+            // layout manager is built with. A different number here would make the density toggle
+            // and the initial layout disagree.
+            modsLayoutManager.setSpanCount(compact ? 1 : 2);
         }
         if (adapter != null) {
             adapter.setCompactMode(compact);
@@ -2244,6 +2438,8 @@ public class ModMenuOverlay {
                 return R.string.vip_category_visuals;
             case MISC:
                 return R.string.vip_category_misc;
+            case HUD:
+                return R.string.mod_menu_filter_hud;
             case ALL:
             default:
                 return R.string.filter_all;
@@ -2278,6 +2474,9 @@ public class ModMenuOverlay {
         }
         if (filterMisc != null) {
             filterMisc.setOnClickListener(v -> setModuleFilter(ModuleFilter.MISC));
+        }
+        if (filterHud != null) {
+            filterHud.setOnClickListener(v -> setModuleFilter(ModuleFilter.HUD));
         }
         updateFilterButtons();
     }
@@ -2370,6 +2569,8 @@ public class ModMenuOverlay {
                 return ModCategory.matches(ModCategory.Tab.VISUALS, mod, null);
             case MISC:
                 return ModCategory.matches(ModCategory.Tab.MISC, mod, null);
+            case HUD:
+                return ModIds.isHudModule(mod.getId());
             case ALL:
             default:
                 return true;
@@ -2406,6 +2607,7 @@ public class ModMenuOverlay {
         updateFilterButton(filterPvp, activeFilter == ModuleFilter.PVP);
         updateFilterButton(filterVisuals, activeFilter == ModuleFilter.VISUALS);
         updateFilterButton(filterMisc, activeFilter == ModuleFilter.MISC);
+        updateFilterButton(filterHud, activeFilter == ModuleFilter.HUD);
         updateCompactFilterSelector();
     }
 
@@ -2591,6 +2793,9 @@ public class ModMenuOverlay {
         if (keep != cosmeticsContainer) hideCosmetics();
         if (keep != replayContainer) hideReplay();
         if (keep != voiceContainer) hideVoice();
+        // The keyboard page arms a key-capture timeout; leaving the page must cancel it, or it
+        // fires into a detached tree and holds the section alive (item 183).
+        if (keep != keyboardContainer && keyboardSection != null) keyboardSection.onHidden();
         if (keep != packsContainer && packsContainer != null) {
             packsContainer.setVisibility(View.GONE);
         }
@@ -2616,10 +2821,8 @@ public class ModMenuOverlay {
     /** Enters HUD-editor mode from the rail (the top bar no longer carries that destination). */
     private void showHudEditorSection() {
         if (overlayView == null) return;
-        View modMenuContainer = overlayView.findViewById(R.id.mod_menu_container);
-        View hudEditorTools = overlayView.findViewById(R.id.hud_editor_tools);
-        if (modMenuContainer != null && hudEditorTools != null) {
-            enterHudEditorMode(modMenuContainer, hudEditorTools);
+        if (menuContainer != null && hudEditorToolsView != null) {
+            enterHudEditorMode(menuContainer, hudEditorToolsView);
         }
     }
 
@@ -2884,7 +3087,7 @@ public class ModMenuOverlay {
     private void showBackdropBitmap(android.widget.ImageView layer, android.graphics.Bitmap capture) {
         try {
             layer.setVisibility(android.view.View.VISIBLE);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (ApiLevels.atLeastS()) {
                 layer.setImageBitmap(capture);
                 // The blur radius is the regular tier's, matching the wheel's panel backdrop. The
                 // RenderEffect type is reached only through the renderer's guarded holder.

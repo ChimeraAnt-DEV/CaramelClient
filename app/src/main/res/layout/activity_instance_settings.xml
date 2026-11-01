@@ -219,7 +219,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -259,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -279,7 +279,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Shader compatibility fixer"
+                                    android:text="@string/shader_compat_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
@@ -289,7 +289,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/space_hairline"
-                                    android:text="Fixes shader/materialbin compatibility for resource packs"
+                                    android:text="@string/shader_compat_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
@@ -300,7 +300,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -341,7 +341,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -543,7 +543,59 @@
                                 android:textColor="@color/on_primary"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Label" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/instance_notes_title"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/on_surface"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_hairline"
+                                android:text="@string/instance_notes_desc"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/text_secondary"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                            <EditText
+                                android:id="@+id/edit_instance_notes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="48dp"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:background="@drawable/bg_edit_text"
+                                android:fontFamily="@font/misans"
+                                android:gravity="top|start"
+                                android:hint="@string/instance_notes_hint"
+                                android:inputType="textCapSentences|textMultiLine"
+                                android:maxLength="500"
+                                android:maxLines="4"
+                                android:minLines="2"
+                                android:padding="@dimen/space_3"
+                                android:textColor="@color/on_surface"
+                                android:textColorHint="@color/text_secondary"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        </LinearLayout>
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -592,6 +644,58 @@
                             android:backgroundTint="@color/primary"
                             android:textAllCaps="false" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        style="@style/Widget.Chimera.Card.Compact"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_4">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/instance_storage_title"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/on_surface"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_hairline"
+                            android:text="@string/instance_storage_desc"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/text_secondary"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <TextView
+                            android:id="@+id/instance_storage_value"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_3"
+                            android:text="@string/instance_storage_calculating"
+                            android:fontFamily="@font/misans"
+                            android:textColor="@color/on_surface"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+
+                        <Button
+                            android:id="@+id/btn_clear_instance_cache"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="36dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:paddingHorizontal="@dimen/space_6"
+                            android:text="@string/instance_storage_clear_cache"
+                            android:fontFamily="@font/misans"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textColor="@color/on_primary"
+                            android:backgroundTint="@color/primary"
+                            android:textAllCaps="false" />
+                    </LinearLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -663,7 +767,7 @@
                                     android:layout_marginTop="@dimen/space_hairline"
                                     android:text="@string/instance_delete_warning"
                                     android:fontFamily="@font/misans"
-                                    android:textColor="#E53935"
+                                    android:textColor="@color/status_danger"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
                             </LinearLayout>
 
@@ -676,8 +780,8 @@
                                 android:text="@string/delete"
                                 android:fontFamily="@font/misans"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Label"
-                                android:textColor="#FFFFFF"
-                                android:backgroundTint="#E53935"
+                                android:textColor="@color/on_error"
+                                android:backgroundTint="@color/status_danger"
                                 android:textAllCaps="false" />
                         </LinearLayout>
                     </LinearLayout>

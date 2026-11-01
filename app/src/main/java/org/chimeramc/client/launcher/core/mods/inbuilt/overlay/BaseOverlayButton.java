@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
+import org.chimeramc.client.util.MainThread;
 
 public abstract class BaseOverlayButton {
     protected final Activity activity;
@@ -30,10 +31,13 @@ public abstract class BaseOverlayButton {
     private float initialTouchX, initialTouchY;
     private boolean isDragging = false;
     private boolean isLocked = false;
+    // Item 221: the corner being resized in the HUD editor, or null while moving.
+    private OverlayResizeHandle.Corner resizeCorner = null;
+    private OverlayResizeHandle.Geometry resizeStart;
     private long touchDownTime = 0;
     private static final long TAP_TIMEOUT = 200;
     private static final float DRAG_THRESHOLD = 10f;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
     private boolean isShowing = false;
     private boolean isHiding = false;
     private Runnable pendingShowRunnable;
@@ -240,11 +244,64 @@ public abstract class BaseOverlayButton {
             isHudEditorSelected = false;
         }
         refreshHudEditorBackground();
+        refreshResizeHandles();
     }
 
     public void setHudEditorSelected(boolean selected) {
         isHudEditorSelected = selected;
         refreshHudEditorBackground();
+        refreshResizeHandles();
+    }
+
+    /**
+     * Shows the corner handles only on the selected overlay (item 221).
+     *
+     * <p>Painting handles on every widget at once would cover the HUD the player is trying to place;
+     * showing them on the selection is what makes "grab the corner" discoverable without clutter.
+     */
+    private void refreshResizeHandles() {
+        if (overlayView == null) return;
+        if (isHudEditorMode && isHudEditorSelected) {
+            float density = activity.getResources().getDisplayMetrics().density;
+            OverlayResizeHandles.attach(overlayView, density, 0xFF3E6FF0);
+        } else {
+            OverlayResizeHandles.detach(overlayView);
+        }
+    }
+
+    /** The dp size currently stored for this overlay. */
+    protected int getStoredSizeDp() {
+        return InbuiltModManager.getInstance(activity).getOverlayButtonSize(getModId());
+    }
+
+    /** Stores a new dp size and re-applies it to the live view. */
+    protected void applySizeDp(int sizeDp) {
+        InbuiltModManager.getInstance(activity).setOverlayButtonSize(getModId(), sizeDp);
+        if (wmParams != null && windowManager != null && overlayView != null && isShowing) {
+            int newWidth = getButtonWidthPx();
+            int newHeight = getButtonHeightPx();
+            wmParams.width = newWidth;
+            wmParams.height = newHeight;
+            OverlayBounds.Position position = OverlayBounds.clampPosition(
+                    activity, wmParams.x, wmParams.y, newWidth, newHeight);
+            wmParams.x = position.x;
+            wmParams.y = position.y;
+            try {
+                windowManager.updateViewLayout(overlayView, wmParams);
+            } catch (Exception ignored) {
+            }
+            notifyOverlayGeometryChanged();
+        } else if (overlayView != null && isShowing) {
+            ViewGroup.LayoutParams params = overlayView.getLayoutParams();
+            if (params != null) {
+                params.width = getButtonWidthPx();
+                params.height = getButtonHeightPx();
+                overlayView.setLayoutParams(params);
+                notifyOverlayGeometryChanged();
+            }
+        }
+        onButtonSizeChanged();
+        refreshResizeHandles();
     }
 
     public String getOverlayConfigKey() {
@@ -290,6 +347,9 @@ public abstract class BaseOverlayButton {
                     if (manager != null) {
                         manager.selectHudEditorOverlay(this);
                     }
+                    // A press on a corner starts a resize, not a move, so the widget grows from the
+                    // corner the player grabbed instead of sliding (item 221).
+                    beginResize(event.getX(), event.getY());
                 }
                 initialX = wmParams.x;
                 initialY = wmParams.y;
@@ -306,6 +366,10 @@ public abstract class BaseOverlayButton {
             case MotionEvent.ACTION_MOVE:
                 float dx = event.getRawX() - initialTouchX;
                 float dy = event.getRawY() - initialTouchY;
+                if (resizeCorner != null) {
+                    updateResize(dx, dy);
+                    return true;
+                }
                 if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
                     if (isHudEditorMode) {
                         isDragging = true;
@@ -327,7 +391,9 @@ public abstract class BaseOverlayButton {
                 float totalDy = event.getRawY() - initialTouchY;
                 boolean wasDragging = Math.abs(totalDx) > DRAG_THRESHOLD || Math.abs(totalDy) > DRAG_THRESHOLD;
 
-                if (!wasDragging && elapsed < TAP_TIMEOUT && !isHudEditorMode) {
+                if (resizeCorner != null) {
+                    commitResize();
+                } else if (!wasDragging && elapsed < TAP_TIMEOUT && !isHudEditorMode) {
                     handler.post(this::onButtonClick);
                 } else if (isDragging && isHudEditorMode) {
                     savePosition(wmParams.x, wmParams.y);
@@ -344,11 +410,65 @@ public abstract class BaseOverlayButton {
                 if (!isHudEditorMode) {
                     onButtonPressEnd();
                 }
+                resizeCorner = null;
                 isDragging = false;
                 v.getParent().requestDisallowInterceptTouchEvent(false);
                 return false;
         }
         return false;
+    }
+
+    /**
+     * Starts a resize if the press landed on a corner handle (item 221).
+     *
+     * <p>Only in the HUD editor and only on the selected overlay, so a gameplay tap is never turned
+     * into a resize and an unselected widget still moves when dragged.
+     */
+    private void beginResize(float localX, float localY) {
+        if (!isHudEditorMode || !isHudEditorSelected || overlayView == null || wmParams == null) {
+            resizeCorner = null;
+            return;
+        }
+        float density = activity.getResources().getDisplayMetrics().density;
+        resizeCorner = OverlayResizeHandle.cornerAt(
+                localX, localY, wmParams.width, wmParams.height, density);
+        if (resizeCorner != null) {
+            resizeStart = new OverlayResizeHandle.Geometry(
+                    wmParams.x, wmParams.y, wmParams.width, wmParams.height);
+        }
+    }
+
+    /** Applies a resize drag to the live view. */
+    private void updateResize(float dx, float dy) {
+        if (resizeStart == null || overlayView == null || wmParams == null) return;
+        float density = activity.getResources().getDisplayMetrics().density;
+        OverlayResizeHandle.Geometry next = OverlayResizeHandle.resize(
+                resizeCorner, resizeStart, (int) dx, (int) dy,
+                getWidthScale(), getHeightScale(), density);
+        wmParams.x = next.x;
+        wmParams.y = next.y;
+        wmParams.width = next.width;
+        wmParams.height = next.height;
+        try {
+            windowManager.updateViewLayout(overlayView, wmParams);
+        } catch (Exception ignored) {
+            return;
+        }
+        notifyOverlayGeometryChanged();
+    }
+
+    /** Stores the size the drag settled on, so the slider and the handle agree afterwards. */
+    private void commitResize() {
+        if (resizeStart != null && wmParams != null) {
+            float density = activity.getResources().getDisplayMetrics().density;
+            int sizeDp = OverlayResizeHandle.sizeDpFor(
+                    wmParams.width, wmParams.height, getWidthScale(), getHeightScale(), density);
+            InbuiltModManager.getInstance(activity).setOverlayButtonSize(getModId(), sizeDp);
+            onButtonSizeChanged();
+        }
+        resizeCorner = null;
+        resizeStart = null;
+        savePosition(wmParams == null ? 0 : wmParams.x, wmParams == null ? 0 : wmParams.y);
     }
 
     protected void savePosition(int x, int y) {
@@ -497,6 +617,7 @@ public abstract class BaseOverlayButton {
         updateLockState();
         notifyOverlayGeometryChanged();
         onButtonSizeChanged();
+        refreshResizeHandles();
     }
 
     protected void onButtonSizeChanged() {}

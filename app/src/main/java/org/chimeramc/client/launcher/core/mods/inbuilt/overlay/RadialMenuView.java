@@ -23,6 +23,7 @@ import org.chimeramc.client.core.cosmetics.PreviewRaster;
 import org.chimeramc.client.core.cosmetics.PreviewScene;
 import org.chimeramc.client.core.cosmetics.SkinModel;
 import org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelLayout.Sector;
+import org.chimeramc.client.ui.components.PointerCursorRenderer;
 import org.chimeramc.client.ui.components.UiChip;
 import org.chimeramc.client.ui.components.UiDraw;
 import org.chimeramc.client.ui.components.UiIcons;
@@ -80,7 +81,7 @@ public class RadialMenuView extends View {
      * wheel tells the player what is active without opening the module grid. Selecting a row toggles
      * its module, which is how the wheel switches things off again.
      */
-    private static final class Chip {
+    static final class Chip {
         final String moduleId;
         final String label;
 
@@ -126,10 +127,17 @@ public class RadialMenuView extends View {
     private CursorController cursor;
     /** The chip currently under the controller cursor, or -1. */
     private int cursorChip = -1;
+    /** Caches the pointer outline so a per-frame draw allocates nothing (Phase 12). */
+    private final PointerCursorRenderer cursorRenderer = new PointerCursorRenderer();
     /** True while the cursor is visible (a touch hides it). */
     private boolean cursorVisible;
 
+    /** Tracks release velocity so a flick toward a slice can commit it (R: flick-to-select). */
+    private android.view.VelocityTracker flickTracker;
+
     private float density;
+    /** The screen-reader virtual-view bridge for the wheel's slots (item 200). */
+    private RadialWheelAccessibilityHelper a11yHelper;
 
     private Bitmap skinHead;
 
@@ -237,6 +245,21 @@ public class RadialMenuView extends View {
                 RadialWheelMotion.LABEL_WEIGHT, false));
         labelPaint.setTextSize(RadialWheelMotion.LABEL_SP * density);
         applyLabelWeight(labelPaint, RadialWheelMotion.LABEL_WEIGHT);
+        a11yHelper = new RadialWheelAccessibilityHelper(this);
+        setFocusable(true);
+    }
+
+    /** The accessibility bridge, exposed so the host can forward hover events (item 200). */
+    RadialWheelAccessibilityHelper accessibilityHelper() {
+        return a11yHelper;
+    }
+
+    @Override
+    protected boolean dispatchHoverEvent(android.view.MotionEvent event) {
+        // The bridge needs the hover stream to resolve which virtual slot the pointer is over; a
+        // touch-exploring screen reader drives the wheel through this path, not through onTouchEvent.
+        if (a11yHelper != null && a11yHelper.dispatchHoverEvent(event)) return true;
+        return super.dispatchHoverEvent(event);
     }
 
     public void setListener(Listener listener) {
@@ -551,6 +574,7 @@ public class RadialMenuView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         cancelAnimators();
+        stopFlickTracker();
     }
 
     // --- Geometry helpers (shared by draw and touch) ----------------------------------------
@@ -641,7 +665,9 @@ public class RadialMenuView extends View {
         if (!isCursorVisible()) return;
         Paint shadow = iconPaint;
         Paint arrow = chipPaint;
-        UiDraw.pointerCursor(canvas, shadow, arrow, cursor.x(), cursor.y(), density);
+        cursorRenderer.prepare(cursor.x(), cursor.y(),
+                PointerCursorRenderer.HEIGHT_DP * density);
+        UiDraw.pointerCursor(canvas, cursorRenderer.path(), shadow, arrow, density);
     }
 
     private void drawSector(Canvas canvas, float cx, float cy, float rInner, float rOuter,
@@ -897,6 +923,7 @@ public class RadialMenuView extends View {
             case OPEN_SETTINGS: return UiIcons.Icon.GEAR;
             case OPEN_HUD: return UiIcons.Icon.PENCIL;
             case OPEN_SUBWHEEL: return UiIcons.Icon.CHEVRON;
+            case SWITCH_LAYOUT: return UiIcons.Icon.HUD;
             default: return UiIcons.Icon.CUBE;
         }
     }
@@ -1167,6 +1194,114 @@ public class RadialMenuView extends View {
         return -1;
     }
 
+    // --- Accessibility surface (item 200) -------------------------------------------------------
+    //
+    // The bridge in RadialWheelAccessibilityHelper reads these; keeping them here means the
+    // helper needs no reflection and the wheel's own fields stay private.
+
+    /** The number of virtual slots (ring destinations or profile entries). */
+    int a11ySlotCount() {
+        if (activeProfile != null) {
+            WheelEntry.Profile profile = currentProfile();
+            return profile == null ? 0 : profile.safeEntries().size();
+        }
+        return SECTORS.length;
+    }
+
+    /** The spoken label of a ring slot. */
+    String a11ySlotLabel(int index) {
+        if (activeProfile != null) {
+            WheelEntry.Profile profile = currentProfile();
+            if (profile == null) return null;
+            List<WheelEntry> entries = profile.safeEntries();
+            return index >= 0 && index < entries.size() ? entries.get(index).label : null;
+        }
+        if (index < 0 || index >= SECTORS.length) return null;
+        return sectorLabel(SECTORS[index]);
+    }
+
+    /** The centre of a ring slot's touch target, in view coordinates. */
+    float[] a11ySlotCenter(int index) {
+        float outer = outerRadius();
+        return RadialWheelLayout.slotCenter(index, Math.max(1, a11ySlotCount()),
+                centerX(), centerY(), ringInnerRadius(), outer);
+    }
+
+    /** Whether a ring slot is the current selection. */
+    boolean a11ySlotSelected(int index) {
+        if (activeProfile != null) return index == highlightedEntry;
+        return index >= 0 && index < SECTORS.length && SECTORS[index] == highlighted;
+    }
+
+    /** Activates a ring slot exactly as a tap or a stick commit would. */
+    void a11yActivateSlot(int index) {
+        if (activeProfile != null) {
+            activateProfileEntry(index);
+            return;
+        }
+        if (index < 0 || index >= SECTORS.length) return;
+        Sector s = SECTORS[index];
+        if (!RadialWheelLayout.isDestination(s)) return;
+        applyHaptic(RadialWheelMotion.hapticFor(false, false, true));
+        if (listener != null) listener.onSector(s);
+    }
+
+    /** The module chips shown on the wheel, left column first then the right column. */
+    List<Chip> a11yChips() {
+        List<Chip> all = new ArrayList<>(quickChips.size() + chips.size());
+        all.addAll(quickChips);
+        all.addAll(chips);
+        return all;
+    }
+
+    /**
+     * The combined-index chip (left column first, then right) under a point, or -1 (item 200).
+     *
+     * <p>{@link #a11yChips} concatenates the two columns, so the bridge needs the same numbering;
+     * {@link #chipHit} numbers each column separately, and translating here keeps that knowledge in
+     * the view rather than in the accessibility helper.
+     */
+    int a11yChipIndexAt(float x, float y) {
+        int[] hit = chipHit(x, y, getWidth(), getHeight());
+        if (hit == null) return -1;
+        return hit[0] == 0 ? hit[1] : quickChips.size() + hit[1];
+    }
+
+    /** The bounds of a combined-index chip, in view coordinates. */
+    android.graphics.Rect a11yChipBounds(int combinedIndex) {
+        android.graphics.Rect out = new android.graphics.Rect();
+        int quick = quickChips.size();
+        List<Chip> list = combinedIndex < quick ? quickChips : chips;
+        boolean fromRight = combinedIndex >= quick;
+        int index = fromRight ? combinedIndex - quick : combinedIndex;
+        if (index < 0 || index >= list.size()) return out;
+        float[][] centers = RadialWheelLayout.moduleListCenters(
+                getWidth(), getHeight(), list.size(), density, fromRight);
+        if (index >= centers.length) return out;
+        chipTextPaint.setTextSize(UiChip.LABEL_SP * density);
+        float cw = UiChip.width(chipTextPaint.measureText(list.get(index).label), density);
+        float ch = UiChip.HEIGHT_DP * density;
+        float left = fromRight ? centers[index][0] - cw : centers[index][0] - cw / 2f;
+        float right = fromRight ? centers[index][0] : centers[index][0] + cw / 2f;
+        out.set(Math.round(left), Math.round(centers[index][1] - ch / 2f),
+                Math.round(right), Math.round(centers[index][1] + ch / 2f));
+        return out;
+    }
+
+    /** Whether a chip's module is currently enabled. */
+    boolean a11yChipOn(Chip chip) {
+        return chipToggle != null && chip != null && chipToggle.isChipOn(chip.moduleId);
+    }
+
+    /** Toggles a chip's module, the same path a tap takes. */
+    void a11yActivateChip(Chip chip) {
+        if (chip == null || chipToggle == null) return;
+        chipToggle.onChipToggled(chip.moduleId);
+        applyHaptic(RadialWheelMotion.hapticFor(false, false, true));
+        rebuildEnabledList();
+        invalidate();
+    }
+
     /** The right-column index under a point, or -1 (kept for the controller cursor's highlight). */
     int chipAt(float x, float y, int w, int h) {
         return chipAtIn(chips, x, y, w, h, true);
@@ -1175,7 +1310,7 @@ public class RadialMenuView extends View {
     private static String sectorLabel(Sector s) {
         switch (s) {
             case MODS: return "MODS";
-            case CLOSET: return "CLOSET";
+            case CLOSET: return "CUSTOMIZE";
             case SETTINGS: return "SETTINGS";
             case HUD: return "HUD";
             default: return "";
@@ -1340,7 +1475,7 @@ public class RadialMenuView extends View {
         float outer = outerRadius();
         float inner = RadialWheelLayout.ringInnerRadius(outer);
         if (activeProfile != null) {
-            highlightedEntry = profileEntryAt(cursor.x(), cursor.y());
+            setHighlightedEntry(profileEntryAt(cursor.x(), cursor.y()));
         } else {
             Sector s = RadialWheelLayout.sectorAtLinear(
                     cursor.x() - cx, cursor.y() - cy, inner, outer,
@@ -1473,9 +1608,9 @@ public class RadialMenuView extends View {
             if (profile == null || profile.safeEntries().isEmpty()) return;
             int count = WheelLayout.clampSectorCount(profile.safeEntries().size());
             int current = highlightedEntry < 0 ? 0 : highlightedEntry;
-            highlightedEntry = ((current + direction) % count + count) % count;
-            applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
-            invalidate();
+            // Routed through the shared setter so the step ticks once, and only when the slot
+            // actually moved (a one-entry sub-wheel would otherwise buzz on every press).
+            setHighlightedEntry(((current + direction) % count + count) % count);
             return;
         }
         Sector[] order = {Sector.MODS, Sector.CLOSET, Sector.SETTINGS, Sector.HUD};
@@ -1515,8 +1650,9 @@ public class RadialMenuView extends View {
                     return true;
                 }
                 setCancelArmed(false);
+                startFlickTracker(event);
                 if (activeProfile != null) {
-                    highlightedEntry = profileEntryAt(event.getX(), event.getY());
+                    setHighlightedEntry(profileEntryAt(event.getX(), event.getY()));
                 } else {
                     setHighlight(RadialWheelLayout.sectorAtLinear(
                             event.getX() - cx, event.getY() - cy, inner, outer, gapPx));
@@ -1533,9 +1669,9 @@ public class RadialMenuView extends View {
                     updateHeadLook(event.getX(), event.getY(), 1f / 60f);
                     return true;
                 }
+                if (flickTracker != null) flickTracker.addMovement(event);
                 if (activeProfile != null) {
-                    highlightedEntry = profileEntryAt(event.getX(), event.getY());
-                    invalidate();
+                    setHighlightedEntry(profileEntryAt(event.getX(), event.getY()));
                 } else {
                     setHighlight(RadialWheelLayout.sectorAtLinear(
                             event.getX() - cx, event.getY() - cy, inner, outer, gapPx));
@@ -1544,6 +1680,7 @@ public class RadialMenuView extends View {
                 return true;
             case MotionEvent.ACTION_UP:
                 if (cancelArmed) {
+                    stopFlickTracker();
                     setCancelArmed(false);
                     highlighted = Sector.NONE;
                     highlightedEntry = -1;
@@ -1552,6 +1689,11 @@ public class RadialMenuView extends View {
                     if (listener != null) listener.onDismiss();
                     return true;
                 }
+                // A flick toward a slice commits it even if the pointer stopped short of the ring;
+                // a slow release falls through to the sector under the pointer, which is the click
+                // path. Profile wheels resolve by the entry under the pointer, so the flick only
+                // applies to the fixed wheel, where the slices are the four fixed destinations.
+                Sector flicked = activeProfile == null ? takeFlickSector(outer, gapPx) : Sector.NONE;
                 if (activeProfile != null) {
                     int hit = profileEntryAt(event.getX(), event.getY());
                     highlightedEntry = -1;
@@ -1563,7 +1705,7 @@ public class RadialMenuView extends View {
                     }
                     return true;
                 }
-                Sector s = RadialWheelLayout.sectorAtLinear(
+                Sector s = flicked != Sector.NONE ? flicked : RadialWheelLayout.sectorAtLinear(
                         event.getX() - cx, event.getY() - cy, inner, outer, gapPx);
                 highlighted = Sector.NONE;
                 animateHover(null);
@@ -1579,6 +1721,7 @@ public class RadialMenuView extends View {
                 }
                 return true;
             case MotionEvent.ACTION_CANCEL:
+                stopFlickTracker();
                 setCancelArmed(false);
                 highlighted = Sector.NONE;
                 highlightedEntry = -1;
@@ -1587,6 +1730,41 @@ public class RadialMenuView extends View {
             default:
                 return super.onTouchEvent(event);
         }
+    }
+
+    /** Starts tracking a gesture's velocity for the flick test. */
+    private void startFlickTracker(MotionEvent event) {
+        if (flickTracker == null) {
+            flickTracker = android.view.VelocityTracker.obtain();
+        } else {
+            flickTracker.clear();
+        }
+        flickTracker.addMovement(event);
+    }
+
+    /** Stops and recycles the flick tracker. */
+    private void stopFlickTracker() {
+        if (flickTracker != null) {
+            flickTracker.recycle();
+            flickTracker = null;
+        }
+    }
+
+    /**
+     * The sector a release flick selects, or {@link Sector#NONE} for a slow release.
+     *
+     * <p>The velocity is read before the tracker is recycled so the rule sees the real release
+     * speed. Everything else is {@link RadialWheelLayout#flickSector}, which owns the threshold and
+     * the gap so the flick and the pointer hit test cannot disagree.
+     */
+    private Sector takeFlickSector(float outer, float gapPx) {
+        if (flickTracker == null) return Sector.NONE;
+        flickTracker.computeCurrentVelocity(1000);
+        float vx = flickTracker.getXVelocity();
+        float vy = flickTracker.getYVelocity();
+        Sector sector = RadialWheelLayout.flickSector(vx, vy, outer, gapPx);
+        stopFlickTracker();
+        return sector;
     }
 
     /** The profile-entry index under a point, or -1. */
@@ -1660,6 +1838,24 @@ public class RadialMenuView extends View {
             applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
         }
         animateHover(sector);
+        invalidate();
+    }
+
+    /**
+     * Moves the profile-entry highlight, ticking when it lands on a different slot (item 199).
+     *
+     * <p>A profile wheel has no sectors to cross, so the fixed wheel's {@link #setHighlight} tick
+     * never fires on it: without this the wheel is silent while the player steps through the
+     * entries, which is exactly where feedback matters most because the slots are small. The
+     * assignment sites all route through here so the tick cannot be forgotten on one path.
+     */
+    private void setHighlightedEntry(int index) {
+        if (index == highlightedEntry) return;
+        boolean hadSlot = highlightedEntry >= 0;
+        highlightedEntry = index;
+        if (index >= 0 && hadSlot) {
+            applyHaptic(RadialWheelMotion.hapticFor(false, true, false));
+        }
         invalidate();
     }
 

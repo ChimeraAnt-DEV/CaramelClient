@@ -97,11 +97,17 @@ public final class CosmeticsPanel {
     private final CosmeticStore store;
     private final LinearLayout root;
     private final CapePreviewView preview;
+    private TextView previewPlaceholder;
     private final boolean compact;
 
     private final LinearLayout railColumn;
     private final LinearLayout gridContainer;
+    private final ScrollView gridScroll;
     private final TextView gridTitle;
+    /** How many cards of the current category are built so far (item 205). */
+    private int builtCount;
+    /** The cards of the current category, so a later page can append without recomputing them. */
+    private List<Card> currentCards = new ArrayList<>();
     /** The per-category route note: whether the pieces on this card grid reach the game or not. */
     private final TextView routeNote;
     private final TextView equipButton;
@@ -157,10 +163,18 @@ public final class CosmeticsPanel {
         routeNote = bodyLine();
         routeNote.setTextColor(UiTokens.TEXT_SECONDARY);
         centre.addView(routeNote);
-        ScrollView gridScroll = new ScrollView(activity);
+        gridScroll = new ScrollView(activity);
         gridContainer = new LinearLayout(activity);
         gridContainer.setOrientation(LinearLayout.VERTICAL);
         gridScroll.addView(gridContainer);
+        // Lazy paging (item 205): the first page is built on open, later pages as the player scrolls
+        // near the end, so opening the Closet does not render a bitmap per cosmetic up front.
+        gridScroll.getViewTreeObserver().addOnScrollChangedListener(() -> {
+            View child = gridScroll.getChildAt(0);
+            if (child == null) return;
+            int remaining = child.getHeight() - (gridScroll.getScrollY() + gridScroll.getHeight());
+            if (remaining < dp(240)) appendNextPage();
+        });
         centre.addView(gridScroll, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
@@ -170,12 +184,28 @@ public final class CosmeticsPanel {
         LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.MATCH_PARENT, compact ? 0.5f : 0.4f);
         root.addView(previewColumn, previewParams);
+        // The preview sits in a FrameLayout so a "preparing preview" placeholder can cover it until
+        // the first frame is rendered (item 205), instead of showing an empty box while the software
+        // rasteriser builds the scene and decodes atlases.
+        FrameLayout previewHolder = new FrameLayout(activity);
         preview = new CapePreviewView(activity);
         preview.setCape(store.getEquippedCapeForDisplay());
         preview.setAccessory(store.getEquippedAccessory());
         preview.setPet(store.getEquippedPet());
         preview.setContentDescription(activity.getString(R.string.cosmetics_preview_description));
-        previewColumn.addView(preview, new LinearLayout.LayoutParams(
+        previewHolder.addView(preview, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        previewPlaceholder = new TextView(activity);
+        previewPlaceholder.setText(R.string.cosmetics_preview_preparing);
+        previewPlaceholder.setTextSize(UiTokens.TEXT_CAPTION);
+        previewPlaceholder.setTextColor(UiTokens.TEXT_SECONDARY);
+        previewPlaceholder.setGravity(Gravity.CENTER);
+        previewHolder.addView(previewPlaceholder, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        preview.runAfterFirstFrame(() -> {
+            if (previewPlaceholder != null) previewPlaceholder.setVisibility(View.GONE);
+        });
+        previewColumn.addView(previewHolder, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
         TextView skinLine = new TextView(activity);
@@ -365,19 +395,35 @@ public final class CosmeticsPanel {
 
     private void rebuildGrid() {
         gridContainer.removeAllViews();
-        List<Card> cards = cardsFor(category);
+        builtCount = 0;
+        currentCards = cardsFor(category);
+        appendNextPage();
+    }
+
+    /**
+     * Builds the next page of cards (item 205). A row is only opened when a card is added to it, so
+     * a page that does not end on a column boundary still renders (the partial last row is fine);
+     * the running {@link #builtCount} is the single source of how much has been built, so a scroll
+     * callback and the initial build cannot double-add.
+     */
+    private void appendNextPage() {
+        int total = currentCards.size();
+        if (builtCount >= total) return;
         int columns = compact ? 2 : 3;
+        int end = Math.min(total, builtCount + CosmeticPaging.PAGE_SIZE);
         LinearLayout row = null;
-        for (int i = 0; i < cards.size(); i++) {
-            if (i % columns == 0) {
+        for (int i = builtCount; i < end; i++) {
+            if (row == null) {
                 row = new LinearLayout(activity);
                 row.setOrientation(LinearLayout.HORIZONTAL);
                 gridContainer.addView(row, new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
-            row.addView(buildCard(cards.get(i)), new LinearLayout.LayoutParams(
+            row.addView(buildCard(currentCards.get(i)), new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            if (row.getChildCount() == columns) row = null;
         }
+        builtCount = end;
     }
 
     private View buildCard(Card card) {
@@ -1032,8 +1078,12 @@ public final class CosmeticsPanel {
      */
     public void onShown() {
         if (preview != null) {
+            if (previewPlaceholder != null) previewPlaceholder.setVisibility(View.VISIBLE);
             preview.refreshSkin();
             preview.startPreview();
+            preview.runAfterFirstFrame(() -> {
+                if (previewPlaceholder != null) previewPlaceholder.setVisibility(View.GONE);
+            });
         }
     }
 

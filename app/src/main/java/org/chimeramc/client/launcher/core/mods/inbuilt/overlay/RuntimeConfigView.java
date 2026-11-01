@@ -38,6 +38,7 @@ import com.google.android.material.slider.RangeSlider;
 
 import org.json.JSONArray;
 import org.chimeramc.client.core.mods.inbuilt.ExternalModBridge;
+import org.chimeramc.client.core.mods.inbuilt.RuntimeConfigControl;
 import org.chimeramc.client.core.mods.inbuilt.RuntimeConfigSchema;
 import org.chimeramc.client.core.mods.inbuilt.UnifiedMod;
 
@@ -50,6 +51,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.WeakHashMap;
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.MainThread;
 
 final class RuntimeConfigView {
     private static final WeakHashMap<ViewGroup, RuntimeConfigView> ACTIVE = new WeakHashMap<>();
@@ -64,7 +66,7 @@ final class RuntimeConfigView {
     private final UnifiedMod mod;
     private final boolean compact;
     private final Runnable onConfigChanged;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
     private final Set<String> collapsedSections = new HashSet<>();
     private RuntimeConfigSchema schema;
     private String selectedCategory = "";
@@ -233,7 +235,12 @@ final class RuntimeConfigView {
             result.add(node);
         }
         nodeAdapter.submit(result);
-        categoryAdapter.notifyDataSetChanged();
+        // Selecting a category repaints every tile (the selected one loses its highlight and the
+        // new one gains it), but the tiles are the same rows, so a range change keeps the strip's
+        // scroll position.
+        if (categoryAdapter.getItemCount() > 0) {
+            categoryAdapter.notifyItemRangeChanged(0, categoryAdapter.getItemCount());
+        }
     }
 
     private boolean matches(List<RuntimeConfigSchema.Condition> conditions) {
@@ -332,7 +339,9 @@ final class RuntimeConfigView {
             holder.label.setOnClickListener(v -> {
                 if (category.id.equals(selectedCategory)) return;
                 selectedCategory = category.id;
-                notifyDataSetChanged();
+                if (getItemCount() > 0) {
+                    notifyItemRangeChanged(0, getItemCount());
+                }
                 refreshNodes();
                 contentRecycler.scrollToPosition(0);
             });
@@ -411,8 +420,10 @@ final class RuntimeConfigView {
             case "ordered_list": buildOrderedList(card, node); break;
             case "color": buildColor(card, node); break;
             case "keybind": buildKeybind(card, node); break;
-            case "text": buildText(card, node, false); break;
-            case "multiline_text": buildText(card, node, true); break;
+            // Both text kinds share one builder; the multi-line rule lives in the pure control
+            // rules (item 203) so the type check is not repeated here.
+            case "text":
+            case "multiline_text": buildText(card, node, RuntimeConfigControl.multiline(node)); break;
             case "button": buildButton(card, node); break;
             case "info": break;
             default: break;
@@ -487,23 +498,21 @@ final class RuntimeConfigView {
     }
 
     private void buildIntSlider(LinearLayout parent, RuntimeConfigSchema.Node node) {
-        int min = parseInt(node.minValue, 0);
-        int max = Math.max(min, parseInt(node.maxValue, 100));
-        int step = Math.max(1, parseInt(node.step, 1));
-        int current = clamp(parseInt(mod.getConfigValue(node.key, node.defaultValue), min), min, max);
-        TextView value = valueText(formatNumber(current, node.unit));
+        // The bounds/step/value rules live in RuntimeConfigControl so they are unit-tested (item
+        // 203); the view only places the widget.
+        RuntimeConfigControl.IntRange range = RuntimeConfigControl.intRange(
+                node, mod.getConfigValue(node.key, node.defaultValue));
+        TextView value = valueText(formatNumber(range.value, node.unit));
         parent.addView(value, alignEnd());
         SeekBar seek = new SeekBar(context);
-        int range = max - min;
-        int count = Math.max(1, (range + step - 1) / step);
         seek.setMin(0);
-        seek.setMax(count);
-        seek.setProgress(Math.min(count, Math.round((current - min) / (float) step)));
+        seek.setMax(range.steps());
+        seek.setProgress(range.positionOf(range.value));
         tintSeek(seek);
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (!fromUser) return;
-                int next = Math.min(max, min + progress * step);
+                int next = range.valueAt(progress);
                 value.setText(formatNumber(next, node.unit));
                 setValue(node.key, String.valueOf(next));
             }
@@ -514,11 +523,13 @@ final class RuntimeConfigView {
     }
 
     private void buildFloatSlider(LinearLayout parent, RuntimeConfigSchema.Node node) {
-        float min = parseFloat(node.minValue, 0f);
-        float max = Math.max(min, parseFloat(node.maxValue, 1f));
+        RuntimeConfigControl.FloatRange bounds = RuntimeConfigControl.floatRange(
+                node, mod.getConfigValue(node.key, node.defaultValue));
+        float min = bounds.min;
+        float max = bounds.max;
         float step = parseFloat(node.step, 0f);
         if (step <= 0f) step = Math.max((max - min) / 100f, 0.001f);
-        float current = clamp(parseFloat(mod.getConfigValue(node.key, node.defaultValue), min), min, max);
+        float current = bounds.value;
         int count = Math.min(1000, Math.max(1, Math.round((max - min) / step)));
         final float actualStep = (max - min) / count;
         TextView value = valueText(formatFloat(current, node.unit));
@@ -576,16 +587,14 @@ final class RuntimeConfigView {
 
     private void buildChoice(LinearLayout parent, RuntimeConfigSchema.Node node) {
         String current = mod.getConfigValue(node.key, node.defaultValue);
-        String style = node.style;
-        if ("auto".equals(style)) style = node.options.size() <= 4 ? "segmented" : "dropdown";
+        // The style rule and the selected-option index are pure (item 203), so the view asks rather
+        // than re-deriving them; a schema with no matching option reads index 0 on both paths.
+        String style = RuntimeConfigControl.choiceStyle(node);
         if ("dropdown".equals(style)) {
             Spinner spinner = new Spinner(context);
             List<String> labels = new ArrayList<>();
-            int selected = 0;
-            for (int i = 0; i < node.options.size(); i++) {
-                labels.add(node.options.get(i).label);
-                if (node.options.get(i).value.equals(current)) selected = i;
-            }
+            for (int i = 0; i < node.options.size(); i++) labels.add(node.options.get(i).label);
+            int selected = RuntimeConfigControl.choiceIndex(node.options, current);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, labels) {
                 @Override public boolean isEnabled(int position) {
                     return position >= 0 && position < node.options.size() && !node.options.get(position).disabled;
@@ -858,8 +867,12 @@ final class RuntimeConfigView {
             label.setTextSize(12);
             row.addView(label, new LinearLayout.LayoutParams(0, dp(38), 1f));
             Button remove = new Button(context);
-            remove.setText("×");
-            remove.setTextSize(16);
+            // A vector close glyph, never the "×" text character: a text glyph changes shape with
+            // the device font and reads as a bullet or a math sign on some builds. The spec bans
+            // symbol glyphs in the UI, so the button carries the shared close icon.
+            remove.setText("");
+            remove.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_close, 0, 0, 0);
+            remove.setCompoundDrawableTintList(ColorStateList.valueOf(TEXT_PRIMARY));
             remove.setMinWidth(0);
             remove.setMinimumWidth(0);
             remove.setPadding(dp(8), 0, dp(8), 0);
@@ -868,7 +881,17 @@ final class RuntimeConfigView {
         }
         @Override public void onBindViewHolder(OrderedHolder holder, int position) {
             String value = values.get(position);
-            holder.label.setText((position + 1) + ".  " + optionLabel(node, value) + (node.allowReorder ? "   ≡" : ""));
+            // The reorder affordance is a vector handle, not the "≡" character: a text glyph is a
+            // symbol, not an icon, and the spec bans it. It is appended to the row's own text view
+            // through a compound drawable so it keeps the row's baseline at any font scale.
+            holder.label.setText((position + 1) + ".  " + optionLabel(node, value));
+            if (node.allowReorder) {
+                holder.label.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_drag_handle, 0);
+                holder.label.setCompoundDrawablePadding(dp(6));
+                holder.label.setCompoundDrawableTintList(ColorStateList.valueOf(TEXT_SECONDARY));
+            } else {
+                holder.label.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
             holder.remove.setOnClickListener(v -> {
                 int pos = holder.getBindingAdapterPosition();
                 if (pos < 0 || pos >= values.size()) return;
@@ -979,8 +1002,10 @@ final class RuntimeConfigView {
         input.setHint(node.placeholder);
         input.setSingleLine(!multiline);
         input.setMinLines(multiline ? 3 : 1);
-        if (node.maxLength > 0) {
-            input.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(node.maxLength)});
+        int maxLength = RuntimeConfigControl.maxLength(node);
+        if (maxLength > 0) {
+            input.setFilters(new android.text.InputFilter[]{
+                    new android.text.InputFilter.LengthFilter(maxLength)});
         }
         input.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

@@ -39,6 +39,8 @@ public class PojavControlsEditorActivity extends AppCompatActivity {
     private String profileName;
     private ControlEditorCanvas canvas;
     private Spinner profileSpinner;
+    private Button mirrorButton;
+    private Button tabletButton;
     private boolean profileSpinnerBusy;
 
     @Override
@@ -150,6 +152,12 @@ public class PojavControlsEditorActivity extends AppCompatActivity {
         });
 
         toolbar.addView(toolbarButton(R.string.pojav_controls_profiles, view -> showProfilesDialog()));
+        mirrorButton = toolbarButton(R.string.pojav_controls_left_handed, view -> toggleLeftHanded());
+        mirrorButton.setSelected(PojavControls.isLeftHanded());
+        toolbar.addView(mirrorButton);
+        tabletButton = toolbarButton(R.string.pojav_controls_tablet_scale, view -> toggleTabletScale());
+        tabletButton.setSelected(PojavControls.isTabletScaleEnabled(this));
+        toolbar.addView(tabletButton);
         toolbar.addView(toolbarButton(R.string.pojav_controls_add, view -> showAddDialog()));
         toolbar.addView(toolbarButton(R.string.pojav_controls_save, view -> saveCurrent(true)));
         toolbar.addView(toolbarButton(R.string.pojav_controls_import, view -> startImport()));
@@ -488,6 +496,24 @@ public class PojavControlsEditorActivity extends AppCompatActivity {
         intent.setType("application/json");
         intent.putExtra(Intent.EXTRA_TITLE, profileName + ".json");
         startActivityForResult(intent, REQUEST_EXPORT);
+    }
+
+    /** Mirrors the editor preview and the live overlay in one tap (item 222). */
+    private void toggleLeftHanded() {
+        boolean leftHanded = !PojavControls.isLeftHanded();
+        PojavControls.setLeftHanded(this, leftHanded);
+        if (canvas != null) canvas.setLeftHanded(leftHanded);
+        if (mirrorButton != null) mirrorButton.setSelected(leftHanded);
+    }
+
+    /** Turns the tablet size scale on or off and reloads the profile (item 222). */
+    private void toggleTabletScale() {
+        boolean enabled = !PojavControls.isTabletScaleEnabled(this);
+        PojavControls.setTabletScaleEnabled(this, enabled);
+        if (tabletButton != null) tabletButton.setSelected(enabled);
+        profile = repository.load(profileName);
+        if (canvas != null) canvas.setProfile(profile);
+        notifyProfileChanged();
     }
 
     private void notifyProfileChanged() {

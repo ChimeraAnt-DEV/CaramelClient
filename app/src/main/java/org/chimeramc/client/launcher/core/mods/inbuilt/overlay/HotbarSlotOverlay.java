@@ -16,8 +16,8 @@ import android.widget.ImageButton;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
-import org.levimc.launcher.core.mods.inbuilt.nativemod.HotbarSlotMod;
-import org.levimc.launcher.core.mods.inbuilt.nativemod.MoreButtonsMod;
+import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.HotbarSlotMod;
+import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.MoreButtonsMod;
 
 public final class HotbarSlotOverlay extends BaseOverlayButton {
     private static final float PRESSED_Y = 8f;
@@ -41,6 +41,20 @@ public final class HotbarSlotOverlay extends BaseOverlayButton {
     private volatile int nativeSurfaceHeight;
     private volatile boolean hasItem;
     private volatile boolean lastBitmapItemState;
+    /**
+     * The last state handed to the backend, so a repeated call with nothing changed is skipped
+     * (item 196). The slot's state is pushed from several paths (geometry, press, visibility,
+     * config) and those can fire back to back; without this guard the backend would be told the
+     * same thing more than once for one visible state.
+     */
+    private final HotbarSlotSync slotSync = new HotbarSlotSync();
+    /**
+     * Minimum gap between backend item polls (item 196). {@link #tick()} runs on the game's frame
+     * tick, so polling every frame would call the backend ~60-120 times a second to learn something
+     * that changes only when the player swaps an item; 250ms is imperceptible for an icon.
+     */
+    private static final long ITEM_POLL_INTERVAL_MS = 250L;
+    private long lastItemPollMs;
 
     public HotbarSlotOverlay(Activity activity, int slot) {
         super(activity);
@@ -118,6 +132,9 @@ public final class HotbarSlotOverlay extends BaseOverlayButton {
     @Override
     public void tick() {
         if (!itemIconsEnabled()) return;
+        long now = android.os.SystemClock.uptimeMillis();
+        if (now - lastItemPollMs < ITEM_POLL_INTERVAL_MS) return;
+        lastItemPollMs = now;
         boolean current = HotbarSlotMod.hasItem(slot - 1);
         hasItem = current;
         if (current != lastBitmapItemState) {
@@ -148,6 +165,8 @@ public final class HotbarSlotOverlay extends BaseOverlayButton {
         pressed = false;
         renderVisible = false;
         HotbarSlotMod.clearSlot(slot - 1);
+        slotSync.reset();
+        lastItemPollMs = 0L;
         super.hide();
         recycleBitmaps();
     }
@@ -172,8 +191,12 @@ public final class HotbarSlotOverlay extends BaseOverlayButton {
 
     private void syncNativeState() {
         if (!itemIconsEnabled()) return;
+        float opacity = getButtonOpacity();
+        String key = HotbarSlotSync.key(nativeX, nativeY, nativeWidth, nativeHeight,
+                nativeSurfaceWidth, nativeSurfaceHeight, opacity, renderVisible, pressed);
+        if (!slotSync.shouldPush(key)) return;
         HotbarSlotMod.setSlotState(slot - 1, nativeX, nativeY, nativeWidth, nativeHeight,
-                nativeSurfaceWidth, nativeSurfaceHeight, getButtonOpacity(), renderVisible, pressed);
+                nativeSurfaceWidth, nativeSurfaceHeight, opacity, renderVisible, pressed);
     }
 
     private void sendSlotKey(boolean down) {

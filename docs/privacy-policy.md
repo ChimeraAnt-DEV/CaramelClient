@@ -22,6 +22,20 @@ Voice chat is off until you accept the notice on the Voice tab; the app never op
 * **Your controls.** You can turn voice chat off at any time, mute or block any individual player (mutes and blocks are applied on your device and the other player is not told), and withdraw your consent from the Voice tab, which also turns the feature off.
 * **Reports.** Reporting a player composes a message in your own email or messaging app; the Application does not upload it for you. The message includes your per-session voice id so a report can be matched to a session, and nothing else that identifies you.
 
+## What each request sends (data flows)
+
+For a concrete list of every network request the Application makes - the endpoint, what it sends,
+what it receives and how to turn it off - see [Data flows: what leaves your device](/privacy-data-flows).
+That page is kept in step with the code, so it names the actual hosts rather than describing them in
+the abstract.
+
+In particular:
+
+* The update check and the signature-rule refresh send no account or device identifier.
+* Crash report upload is **off by default**; when it is on, the Application shows exactly what would
+  be sent before anything is uploaded.
+* Cosmetic sync transmits catalogue **ids** only, never a gamertag or account id.
+
 ## Cookies and Tracking Technologies
 
 The Application or its third-party SDKs may use cookies, SDKs, pixels, and similar technologies to support functionality, analytics, or service delivery. Where required by applicable law, the Service Provider will obtain consent before using non-essential tracking technologies.

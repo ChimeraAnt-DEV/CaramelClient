@@ -28,11 +28,18 @@ public final class InbuiltModuleProvider {
     private static final String CFG_OVERLAY_OPACITY = "overlay_opacity";
     private static final String CFG_OVERLAY_LOCK = "overlay_lock";
     private static final String CFG_OVERLAY_SHOW_EVERYWHERE = "overlay_show_everywhere";
+    private static final String CFG_FRAME_GRAPH = "overlay_frame_graph";
+    private static final String CFG_FPS_STATS = "overlay_fps_stats";
+    private static final String CFG_FPS_STATS_WINDOW = "overlay_fps_stats_window";
     private static final String CFG_AUTO_SPRINT_KEYBIND = "auto_sprint_keybind";
     private static final String CFG_CURSOR_SENSITIVITY = "cursor_sensitivity";
     private static final String CFG_ZOOM_LEVEL = "zoom_level";
     private static final String CFG_ZOOM_TRANSITION = "zoom_transition";
     private static final String CFG_ZOOM_KEYBIND = "zoom_keybind";
+    private static final String CFG_ZOOM_SCROLL_SENSITIVITY = "zoom_scroll_sensitivity";
+    private static final String CFG_ZOOM_SMOOTHING = "zoom_smoothing";
+    private static final String CFG_SNAPLOOK_KEYBIND = "snaplook_keybind";
+    private static final String CFG_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String CFG_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String CFG_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String CFG_GYRO_INVERT_X = "gyro_invert_x";
@@ -963,6 +970,28 @@ public final class InbuiltModuleProvider {
                     String.valueOf(manager.isOverlayShowEverywhere(modId))));
         }
 
+        // The frame-time graph is an FPS-overlay-only option (item 191): it needs the FPS meter,
+        // which only that overlay runs.
+        if (ModIds.FPS_DISPLAY.equals(modId)) {
+            configs.add(config(CFG_FRAME_GRAPH,
+                    context.getString(R.string.mod_config_fps_frame_graph),
+                    UnifiedMod.ConfigType.TOGGLE,
+                    "false", "", "",
+                    String.valueOf(manager.isFrameTimeGraphEnabled(modId))));
+            configs.add(config(CFG_FPS_STATS,
+                    context.getString(R.string.mod_config_fps_stats),
+                    UnifiedMod.ConfigType.TOGGLE,
+                    "false", "", "",
+                    String.valueOf(manager.isFpsStatsEnabled(modId))));
+            configs.add(config(CFG_FPS_STATS_WINDOW,
+                    context.getString(R.string.mod_config_fps_stats_window),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_DEFAULT),
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_MIN),
+                    String.valueOf(InbuiltModManager.FPS_STATS_WINDOW_MAX),
+                    String.valueOf(manager.getFpsStatsWindow(modId))));
+        }
+
         if (ModIds.HOTBAR_SLOT.equals(modId)) {
             configs.add(config(CFG_HOTBAR_ITEM_ICONS,
                     context.getString(R.string.mod_config_hotbar_item_icons),
@@ -1041,6 +1070,31 @@ public final class InbuiltModuleProvider {
                     UnifiedMod.ConfigType.KEYBIND,
                     "", "", "",
                     String.valueOf(manager.getZoomKeybind())));
+            configs.add(config(CFG_ZOOM_SCROLL_SENSITIVITY,
+                    context.getString(R.string.mod_config_zoom_scroll_sensitivity),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    String.valueOf(100),
+                    String.valueOf(InbuiltModManager.MIN_ZOOM_SCROLL_SENSITIVITY),
+                    String.valueOf(InbuiltModManager.MAX_ZOOM_SCROLL_SENSITIVITY),
+                    String.valueOf(manager.getZoomScrollSensitivity())));
+            configs.add(config(CFG_ZOOM_SMOOTHING,
+                    context.getString(R.string.mod_config_zoom_smoothing),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    "0", "0",
+                    String.valueOf(InbuiltModManager.MAX_ZOOM_SMOOTHING),
+                    String.valueOf(manager.getZoomSmoothing())));
+        } else if (ModIds.SNAPLOOK.equals(modId)) {
+            configs.add(config(CFG_SNAPLOOK_KEYBIND,
+                    context.getString(R.string.mod_config_snaplook_keybind),
+                    UnifiedMod.ConfigType.KEYBIND,
+                    "", "", "",
+                    String.valueOf(manager.getSnaplookKeybind())));
+            configs.add(config(CFG_SNAPLOOK_RETURN_SPEED,
+                    context.getString(R.string.mod_config_snaplook_return_speed),
+                    UnifiedMod.ConfigType.SLIDER_INT,
+                    "50", "0",
+                    String.valueOf(InbuiltModManager.MAX_SNAPLOOK_RETURN_SPEED),
+                    String.valueOf(manager.getSnaplookReturnSpeed())));
         } else if (ModIds.GYRO.equals(modId)) {
             configs.add(config(CFG_GYRO_SENSITIVITY_X,
                     context.getString(R.string.mod_config_gyro_sensitivity_x),
@@ -1377,6 +1431,15 @@ public final class InbuiltModuleProvider {
             case CFG_OVERLAY_SHOW_EVERYWHERE:
                 manager.setOverlayShowEverywhere(mod.getId(), parseBoolean(value));
                 break;
+            case CFG_FRAME_GRAPH:
+                manager.setFrameTimeGraphEnabled(mod.getId(), parseBoolean(value));
+                break;
+            case CFG_FPS_STATS:
+                manager.setFpsStatsEnabled(mod.getId(), parseBoolean(value));
+                break;
+            case CFG_FPS_STATS_WINDOW:
+                manager.setFpsStatsWindow(mod.getId(), parseInt(value, manager.getFpsStatsWindow(mod.getId())));
+                break;
             case CFG_AUTO_SPRINT_KEYBIND:
                 manager.setAutoSprintKeybind(parseInt(value, manager.getAutoSprintKeybind()));
                 break;
@@ -1391,6 +1454,18 @@ public final class InbuiltModuleProvider {
                 break;
             case CFG_ZOOM_KEYBIND:
                 manager.setZoomKeybind(parseInt(value, manager.getZoomKeybind()));
+                break;
+            case CFG_ZOOM_SCROLL_SENSITIVITY:
+                manager.setZoomScrollSensitivity(parseInt(value, manager.getZoomScrollSensitivity()));
+                break;
+            case CFG_ZOOM_SMOOTHING:
+                manager.setZoomSmoothing(parseInt(value, manager.getZoomSmoothing()));
+                break;
+            case CFG_SNAPLOOK_KEYBIND:
+                manager.setSnaplookKeybind(parseInt(value, manager.getSnaplookKeybind()));
+                break;
+            case CFG_SNAPLOOK_RETURN_SPEED:
+                manager.setSnaplookReturnSpeed(parseInt(value, manager.getSnaplookReturnSpeed()));
                 break;
             case CFG_GYRO_SENSITIVITY_X:
                 manager.setGyroSensitivityX(parseInt(value, manager.getGyroSensitivityX()));

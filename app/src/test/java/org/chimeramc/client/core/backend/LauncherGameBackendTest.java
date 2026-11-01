@@ -1,0 +1,272 @@
+package org.chimeramc.client.core.backend;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Pins the launcher backend against a recording host: which capabilities it claims, that input
+ * reaches the host, and that the capabilities it cannot provide are reported as unsupported rather
+ * than silently doing nothing.
+ */
+public class LauncherGameBackendTest {
+
+    private static final class RecordingHost implements GameInputHost {
+        final List<String> calls = new ArrayList<>();
+
+        @Override
+        public boolean injectKey(int bedrockKeyCode, boolean down) {
+            calls.add("key:" + bedrockKeyCode + ":" + down);
+            return true;
+        }
+
+        @Override
+        public boolean injectMouseButton(int androidButton, boolean down) {
+            calls.add("mouse:" + androidButton + ":" + down);
+            return true;
+        }
+
+        @Override
+        public boolean injectScroll(float vertical) {
+            calls.add("scroll:" + vertical);
+            return true;
+        }
+
+        @Override
+        public boolean injectLookDelta(float deltaX, float deltaY) {
+            calls.add("look:" + deltaX + ":" + deltaY);
+            return true;
+        }
+
+        @Override
+        public boolean injectPointer(float x, float y) {
+            calls.add("pointer:" + x + ":" + y);
+            return true;
+        }
+    }
+
+    @Test
+    public void inputCapabilitiesAreReportedAsSupported() {
+        LauncherGameBackend backend = new LauncherGameBackend(new RecordingHost());
+        assertTrue(backend.supports(GameBackend.Feature.KEY));
+        assertTrue(backend.supports(GameBackend.Feature.MOUSE_BUTTON));
+        assertTrue(backend.supports(GameBackend.Feature.SCROLL));
+        assertTrue(backend.supports(GameBackend.Feature.LOOK_DELTA));
+        assertTrue(backend.supports(GameBackend.Feature.POINTER));
+        assertTrue(backend.supports(GameBackend.Feature.AUTO_SPRINT));
+        assertTrue(backend.supports(GameBackend.Feature.HOTBAR_SLOT));
+    }
+
+    @Test
+    public void capabilitiesNeedingAGameHookAreNotClaimedWithoutASource() {
+        LauncherGameBackend backend = new LauncherGameBackend(new RecordingHost());
+        assertFalse("zoom needs a FOV change the launcher cannot make",
+                backend.supports(GameBackend.Feature.ZOOM));
+        assertFalse("without a tick source there is no game frame counter",
+                backend.supports(GameBackend.Feature.FPS));
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
+    }
+
+    @Test
+    public void aTickSourceAdvertisesAndReportsTheGameFrameRate() {
+        long[] tick = {0L};
+        long[] now = {0L};
+        LauncherGameBackend backend = new LauncherGameBackend(
+                new RecordingHost(), () -> tick[0]);
+        backend.setClock(() -> now[0]);
+        assertTrue("a tick source is what makes FPS available",
+                backend.supports(GameBackend.Feature.FPS));
+        // First sample anchors the window and reports unknown.
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
+        // Sixty frames one second later is the game's own 60 fps.
+        tick[0] = 60L;
+        now[0] = 1000L;
+        assertEquals(60, backend.readFps());
+    }
+
+    @Test
+    public void aThrowingTickSourceReadsUnknownNotACrash() {
+        LauncherGameBackend backend = new LauncherGameBackend(new RecordingHost(), () -> {
+            throw new IllegalStateException("hook gone");
+        });
+        assertEquals(GameFrameRate.UNKNOWN, backend.readFps());
+    }
+
+    @Test
+    public void keyAndLookCallsReachTheHost() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertTrue(backend.sendKey('W', true));
+        assertTrue(backend.sendLookDelta(4f, -2f));
+        assertEquals(Arrays.asList("key:87:true", "look:4.0:-2.0"), host.calls);
+    }
+
+    @Test
+    public void aHotbarSlotPressesItsNumberKey() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertTrue(backend.selectHotbarSlot(3));
+        assertEquals(Arrays.asList("key:51:true", "key:51:false"), host.calls);
+    }
+
+    @Test
+    public void anOutOfRangeHotbarSlotIsRefused() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertFalse(backend.selectHotbarSlot(0));
+        assertFalse(backend.selectHotbarSlot(10));
+        assertTrue(host.calls.isEmpty());
+    }
+
+    @Test
+    public void autoSprintDoubleTapsForwardAndReleases() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertTrue(backend.setAutoSprint(true));
+        assertEquals(Arrays.asList("key:87:true", "key:87:false", "key:87:true"), host.calls);
+        assertTrue(backend.isAutoSprintActive());
+
+        host.calls.clear();
+        assertTrue(backend.setAutoSprint(false));
+        assertEquals(Collections.singletonList("key:87:false"), host.calls);
+        assertFalse(backend.isAutoSprintActive());
+    }
+
+    @Test
+    public void releaseAllClearsTheSprintState() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.setAutoSprint(true);
+        backend.releaseAll();
+        assertFalse(backend.isAutoSprintActive());
+    }
+
+    @Test
+    public void aHeldKeyIsReleasedWhenTheWindowLosesFocus() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        assertEquals(1, backend.heldKeyCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("key:87:false"), host.calls);
+        assertEquals(0, backend.heldKeyCount());
+    }
+
+    @Test
+    public void aReleasedKeyIsNotReleasedAgain() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        backend.sendKey(87, false);
+        assertEquals(0, backend.heldKeyCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertTrue("a key already released must not be sent again", host.calls.isEmpty());
+    }
+
+    @Test
+    public void aHeldMouseButtonIsReleasedWhenTheWindowLosesFocus() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendMouseButton(1, true);
+        assertEquals(1, backend.heldButtonCount());
+
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("mouse:1:false"), host.calls);
+        assertEquals(0, backend.heldButtonCount());
+    }
+
+    @Test
+    public void releaseAllIsIdempotent() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.sendKey(87, true);
+        backend.releaseAll();
+        host.calls.clear();
+        backend.releaseAll();
+        assertTrue("the second release must find nothing to do", host.calls.isEmpty());
+    }
+
+    @Test
+    public void aSprintStartedByAutoSprintIsReleased() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        backend.setAutoSprint(true);
+        // The double-tap leaves forward held, so a focus loss must release it.
+        assertEquals(1, backend.heldKeyCount());
+        host.calls.clear();
+        backend.releaseAll();
+        assertEquals(Collections.singletonList("key:87:false"), host.calls);
+    }
+
+    @Test
+    public void aThrowingHostDuringReleaseDoesNotEscape() {
+        GameInputHost throwing = new GameInputHost() {
+            @Override
+            public boolean injectKey(int bedrockKeyCode, boolean down) {
+                throw new IllegalStateException("host is gone");
+            }
+
+            @Override
+            public boolean injectMouseButton(int androidButton, boolean down) {
+                throw new IllegalStateException("host is gone");
+            }
+
+            @Override
+            public boolean injectScroll(float vertical) {
+                return false;
+            }
+
+            @Override
+            public boolean injectLookDelta(float deltaX, float deltaY) {
+                return false;
+            }
+
+            @Override
+            public boolean injectPointer(float x, float y) {
+                return false;
+            }
+        };
+        LauncherGameBackend backend = new LauncherGameBackend(throwing);
+        try {
+            throwing.injectKey(87, true);
+        } catch (IllegalStateException expected) {
+            // The recording host above throws on every call; the point is the release path.
+        }
+        backend.releaseAll();
+        assertEquals(0, backend.heldKeyCount());
+    }
+
+    @Test
+    public void aHotbarSelectionDoesNotLeaveAKeyHeld() {
+        RecordingHost host = new RecordingHost();
+        LauncherGameBackend backend = new LauncherGameBackend(host);
+        assertTrue(backend.selectHotbarSlot(3));
+        assertEquals("the press and its release both go through sendKey",
+                0, backend.heldKeyCount());
+        assertEquals(Arrays.asList("key:51:true", "key:51:false"), host.calls);
+    }
+
+    @Test
+    public void aNullHostIsRefusedAtConstruction() {
+        try {
+            new LauncherGameBackend(null);
+            fail("expected IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+            // The backend cannot function without a host; failing loudly at construction beats a
+            // NullPointerException on the first input event.
+        }
+    }
+}

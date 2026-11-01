@@ -114,6 +114,55 @@ public class LauncherTabTest {
     }
 
     @Test
+    public void aStoredTabNameRoundTripsAndAnUnknownOneIsNoPreference() {
+        // Item 77: the last destination is persisted so a cold start reopens where the user left
+        // off. It is stored by name, so a name this build does not have reads as "no preference"
+        // rather than opening a wrong tab - which is what storing a resource id would risk.
+        for (LauncherTab tab : LauncherTab.values()) {
+            assertSame(tab, LauncherTab.fromStoredName(tab.name()));
+        }
+        assertNull(LauncherTab.fromStoredName(null));
+        assertNull(LauncherTab.fromStoredName(""));
+        assertNull(LauncherTab.fromStoredName("COSMETICS"));
+        // A numeric id from an older build's settings file is not a name either.
+        assertNull(LauncherTab.fromStoredName("2131362345"));
+    }
+
+    @Test
+    public void guestModeRemovesOnlyTheModsDestination() {
+        // Item 272: guest mode hides what the owner installed, and nothing else. The rule lives on
+        // the enum so the bar, the rail and the bumper cycle cannot disagree about which tabs exist.
+        assertTrue(LauncherTab.MODS.hiddenInGuestMode());
+        assertFalse(LauncherTab.LAUNCH.hiddenInGuestMode());
+        assertFalse(LauncherTab.LIBRARY.hiddenInGuestMode());
+        assertFalse(LauncherTab.SETTINGS.hiddenInGuestMode());
+    }
+
+    @Test
+    public void visibleTabsDropsModsOnlyUnderGuestMode() {
+        assertEquals(LauncherTab.values().length,
+                LauncherTab.visibleTabs(org.chimeramc.client.core.privacy.PrivacyMode.open()).length);
+
+        LauncherTab[] guest = LauncherTab.visibleTabs(
+                new org.chimeramc.client.core.privacy.PrivacyMode(true, false));
+        assertEquals(LauncherTab.values().length - 1, guest.length);
+        for (LauncherTab tab : guest) {
+            assertFalse(tab.hiddenInGuestMode());
+        }
+        // Launch must always survive, or the launcher would have no home.
+        boolean hasLaunch = false;
+        for (LauncherTab tab : guest) {
+            if (tab == LauncherTab.LAUNCH) hasLaunch = true;
+        }
+        assertTrue(hasLaunch);
+
+        // Streaming-safe mode alone does not remove a destination.
+        assertEquals(LauncherTab.values().length, LauncherTab.visibleTabs(
+                new org.chimeramc.client.core.privacy.PrivacyMode(false, true)).length);
+        assertEquals(LauncherTab.values().length, LauncherTab.visibleTabs(null).length);
+    }
+
+    @Test
     public void nonNavigationKeysAreIgnored() {
         assertFalse(LauncherTab.shouldHandleKey(KeyEvent.KEYCODE_BUTTON_A, true, false));
         assertFalse(LauncherTab.shouldHandleKey(KeyEvent.KEYCODE_DPAD_UP, true, false));

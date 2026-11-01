@@ -28,7 +28,15 @@ public final class ReplayControls {
         SCRUB_BACK,
         SCRUB_FORWARD,
         /** Steps the playback speed of the open clip. */
-        SPEED
+        SPEED,
+        /** Steps one frame toward the start (item 242). */
+        FRAME_STEP_BACK,
+        /** Steps one frame toward the end (item 242). */
+        FRAME_STEP_FORWARD,
+        /** Jumps to the previous recorded marker (item 241). */
+        MARKER_PREV,
+        /** Jumps to the next recorded marker (item 241). */
+        MARKER_NEXT
     }
 
     private ReplayControls() {
@@ -87,6 +95,14 @@ public final class ReplayControls {
                 return Action.SCRUB_BACK;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 return Action.SCRUB_FORWARD;
+            case KeyEvent.KEYCODE_COMMA:
+                return Action.FRAME_STEP_BACK;
+            case KeyEvent.KEYCODE_PERIOD:
+                return Action.FRAME_STEP_FORWARD;
+            case KeyEvent.KEYCODE_LEFT_BRACKET:
+                return Action.MARKER_PREV;
+            case KeyEvent.KEYCODE_RIGHT_BRACKET:
+                return Action.MARKER_NEXT;
             default:
                 return null;
         }

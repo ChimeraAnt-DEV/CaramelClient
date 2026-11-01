@@ -219,7 +219,7 @@ public class StorageMigrationService extends Service {
                 .apply();
         Intent intent = new Intent(context, StorageMigrationService.class);
         intent.setAction(ACTION_START);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (ApiLevels.atLeastO()) {
             appContext.startForegroundService(intent);
         } else {
             appContext.startService(intent);
@@ -469,7 +469,7 @@ public class StorageMigrationService extends Service {
     }
 
     private void showFinalNotification(MigrationState state) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (ApiLevels.atLeastN()) {
             stopForeground(STOP_FOREGROUND_REMOVE);
         } else {
             stopForeground(true);
@@ -535,12 +535,12 @@ public class StorageMigrationService extends Service {
 
     private Notification.Builder newNotificationBuilder() {
         Notification.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (ApiLevels.atLeastO()) {
             builder = new Notification.Builder(this, CHANNEL_ID);
         } else {
             builder = new Notification.Builder(this);
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (ApiLevels.belowO()) {
             builder.setPriority(Notification.PRIORITY_LOW);
         }
         return builder;
@@ -550,7 +550,7 @@ public class StorageMigrationService extends Service {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (ApiLevels.atLeastM()) {
             flags |= PendingIntent.FLAG_IMMUTABLE;
         }
         return PendingIntent.getActivity(this, 0, intent, flags);
@@ -617,7 +617,7 @@ public class StorageMigrationService extends Service {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+        if (ApiLevels.belowO()) return;
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
                 getString(R.string.storage_migration_progress_title),

@@ -65,6 +65,21 @@ public class LaunchReadinessTest {
     }
 
     @Test
+    public void aBuildNewerThanTheRulesIsAWarningNotAGap() {
+        // The two uncovered cases read differently: a newer game is "wait for an update", an
+        // uncovered build is "this exact build has no rule". Both still launch.
+        LaunchReadiness.Facts newer = allGood()
+                .signatureRulesCoverBuild(false)
+                .signatureRulesNewerBuild(true);
+        assertEquals(LaunchReadiness.State.GAME_NEWER_THAN_RULES, LaunchReadiness.evaluate(newer));
+        assertFalse(LaunchReadiness.blocksLaunch(LaunchReadiness.State.GAME_NEWER_THAN_RULES));
+
+        // The newer flag is only consulted when coverage is actually missing.
+        LaunchReadiness.Facts covered = allGood().signatureRulesNewerBuild(true);
+        assertEquals(LaunchReadiness.State.READY, LaunchReadiness.evaluate(covered));
+    }
+
+    @Test
     public void signInIsNotRequiredWhenTheFeatureIsOff() {
         assertEquals(LaunchReadiness.State.READY,
                 LaunchReadiness.evaluate(allGood().signInRequired(false).signedIn(false)));
@@ -76,6 +91,7 @@ public class LaunchReadinessTest {
         // Both of these are repairable or degrade only optional hooks, so the launch proceeds.
         assertFalse(LaunchReadiness.blocksLaunch(LaunchReadiness.State.STALE_NATIVE_LIBS));
         assertFalse(LaunchReadiness.blocksLaunch(LaunchReadiness.State.SIGNATURE_RULES_MISSING));
+        assertFalse(LaunchReadiness.blocksLaunch(LaunchReadiness.State.GAME_NEWER_THAN_RULES));
 
         assertTrue(LaunchReadiness.blocksLaunch(LaunchReadiness.State.NO_VERSION_SELECTED));
         assertTrue(LaunchReadiness.blocksLaunch(LaunchReadiness.State.PLAY_STORE_PACKAGE));

@@ -54,6 +54,7 @@ final class ControlEditorCanvas extends ViewGroup {
     private final Paint safeZonePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private ControlSafeZone safeZone = ControlSafeZone.full(0, 0);
     private CustomControls profile;
+    private boolean leftHanded;
     private int guideX = NO_GUIDE;
     private int guideY = NO_GUIDE;
 
@@ -72,7 +73,15 @@ final class ControlEditorCanvas extends ViewGroup {
 
     void setProfile(CustomControls profile) {
         this.profile = profile;
+        leftHanded = PojavControls.isLeftHanded();
         rebuild();
+    }
+
+    /** Mirrors the preview without a rebuild, so the toggle is instant (item 222). */
+    void setLeftHanded(boolean leftHanded) {
+        this.leftHanded = leftHanded;
+        requestLayout();
+        invalidate();
     }
 
     void rebuild() {
@@ -135,6 +144,13 @@ final class ControlEditorCanvas extends ViewGroup {
             int y = evaluate(data.dynamicY, data, width, height, false);
             x = safeZone.clampX(x, child.getMeasuredWidth());
             y = safeZone.clampY(y, child.getMeasuredHeight());
+            if (leftHanded) {
+                // The editor must show the mirrored placement the game will use, or a left-handed
+                // player tunes one layout and plays another (item 222).
+                x = safeZone.clampX(
+                        TouchLayout.mirrorX(x, width, child.getMeasuredWidth()),
+                        child.getMeasuredWidth());
+            }
             child.layout(x, y, x + child.getMeasuredWidth(), y + child.getMeasuredHeight());
         }
     }

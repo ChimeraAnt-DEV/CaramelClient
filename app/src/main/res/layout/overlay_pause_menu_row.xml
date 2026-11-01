@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The in-game pause-menu button row (item 224). One horizontal glass strip holding the four
+    actions a player reaches for while paused: screenshot, hide HUD, switch layout, open logs.
+    The buttons are built in code from PauseMenuActions so the row and its tests cannot disagree
+    about what exists; this layout only provides the strip and the container.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pause_menu_row"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_vip_surface"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_2"
+    android:paddingTop="@dimen/space_2"
+    android:paddingEnd="@dimen/space_2"
+    android:paddingBottom="@dimen/space_2">
+
+    <LinearLayout
+        android:id="@+id/pause_menu_row_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" />
+
+</LinearLayout>

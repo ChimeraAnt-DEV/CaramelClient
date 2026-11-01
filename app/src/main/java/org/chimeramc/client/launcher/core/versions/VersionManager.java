@@ -24,7 +24,6 @@ import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
 import org.chimeramc.client.ui.dialogs.LibsRepairDialog;
 import org.chimeramc.client.util.ApkUtils;
 import org.chimeramc.client.util.LauncherStorage;
-import org.levimc.launcher.util.NativeImageGuard;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -36,6 +35,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
+import org.chimeramc.client.util.AppLog;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 public class VersionManager {
     private static final String TAG = "VersionManager";
@@ -114,11 +116,11 @@ public class VersionManager {
 
     public static void initializeAsync(Context ctx, InitCallback callback) {
         Context appContext = ctx.getApplicationContext();
-        new Thread(() -> {
-            // The build is disk I/O over the instances directory, so it can fail. A failure has to
-            // reach the caller: the screen that started this disabled its Launch control and only
-            // re-arms it on a callback, so an uncaught throw would strand it disabled with no
-            // message. Reported through onFailed rather than swallowed.
+        // The build is disk I/O over the instances directory, so it can fail. A failure has to
+        // reach the caller: the screen that started this disabled its Launch control and only
+        // re-arms it on a callback, so an uncaught throw would strand it disabled with no message.
+        // Reported through onFailed rather than swallowed.
+        AppExecutors.run(AppExecutors.Kind.DISK, "version-manager-init", () -> {
             try {
                 VersionManager manager = get(appContext);
                 if (callback != null) {
@@ -130,7 +132,7 @@ public class VersionManager {
                     callback.onFailed(error);
                 }
             }
-        }, "version-manager-init").start();
+        });
     }
 
     public static String getSelectedModsDir(Context ctx) {
@@ -251,6 +253,9 @@ public class VersionManager {
                 return pi.versionName;
             }
         } catch (Exception ignored) {
+            // An APK whose manifest cannot be read has no readable version name; the caller falls
+            // back to the directory name. Logged once so a package that always fails is visible.
+            AppLog.warnOnce(TAG, "apk-version-name", "Reading a version name from an APK failed", ignored);
         }
         return "unknown";
     }
@@ -299,7 +304,7 @@ public class VersionManager {
     }
 
     public void repairLibsAsync(GameVersion version, LibsRepairCallback callback) {
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "version-repair", () -> {
             callback.onRepairStarted();
             try {
                 File versionDir = version.versionDir;
@@ -386,9 +391,6 @@ public class VersionManager {
                                             }
                                         }
                                     }
-                                    if (!NativeImageGuard.processRequired(outFile)) {
-                                        throw new IOException("Failed to prepare native library: " + outFile.getName());
-                                    }
                                 }
                             }
                         }
@@ -428,7 +430,7 @@ public class VersionManager {
                 // attemptRepairLibs refused every later repair for the life of the process.
                 callback.onRepairFailed(e);
             }
-        }).start();
+        });
     }
 
     /**
@@ -534,9 +536,14 @@ public class VersionManager {
             gv.shaderCompatEnabled = metadata.shaderCompatEnabled;
             gv.inGamePackChangerEnabled = metadata.inGamePackChangerEnabled;
             gv.boundAccountId = metadata.boundAccountId;
+            gv.notes = metadata.notes;
 
             installedVersions.add(gv);
         } catch (PackageManager.NameNotFoundException ignored) {
+            // A directory holding no installed package is skipped rather than listed; the skip is
+            // deliberate, but a repeated failure means an instance that will never load.
+            AppLog.warnOnce(TAG, "load-package-missing",
+                    "Skipped a version directory with no matching installed package", ignored);
         }
 
         File[] dirs = baseDir.listFiles(File::isDirectory);
@@ -587,6 +594,7 @@ public class VersionManager {
                         metadata.shaderCompatEnabled = current.shaderCompatEnabled;
                         metadata.inGamePackChangerEnabled = current.inGamePackChangerEnabled;
                         metadata.boundAccountId = current.boundAccountId;
+                        metadata.notes = current.notes;
                     }
             );
         } catch (IOException ignored) {
@@ -705,6 +713,8 @@ public class VersionManager {
                         }
                 );
             } catch (IOException ignored) {
+                AppLog.warnOnce(TAG, "load-profile-id",
+                        "Could not persist a profile id while loading versions", ignored);
             }
         }
         String versionCode = safeValue(metadata.versionName, dir.getName());
@@ -730,6 +740,7 @@ public class VersionManager {
         gv.shaderCompatEnabled = metadata.shaderCompatEnabled;
         gv.inGamePackChangerEnabled = metadata.inGamePackChangerEnabled;
         gv.boundAccountId = metadata.boundAccountId;
+        gv.notes = metadata.notes;
 
         return gv;
     }
@@ -745,7 +756,9 @@ public class VersionManager {
                     metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
                     metadata -> metadata.versionIsolation = enabled
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-isolation", "Persisting the per-instance isolation flag failed", ignored);
+        }
     }
 
     public void setInstanceLaunchVertically(GameVersion version, boolean enabled) {
@@ -759,7 +772,9 @@ public class VersionManager {
                     metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
                     metadata -> metadata.launchVertically = enabled
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-vertical", "Persisting the per-instance launch orientation failed", ignored);
+        }
     }
 
     public void setInstanceShaderCompatEnabled(GameVersion version, boolean enabled) {
@@ -773,7 +788,9 @@ public class VersionManager {
                     metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
                     metadata -> metadata.shaderCompatEnabled = enabled
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-shader", "Persisting the per-instance shader compatibility flag failed", ignored);
+        }
     }
 
     /**
@@ -794,7 +811,9 @@ public class VersionManager {
                     metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
                     metadata -> metadata.inGamePackChangerEnabled = enabled
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-packchanger", "Persisting the per-instance pack-changer flag failed", ignored);
+        }
     }
 
     public boolean isInstanceInGamePackChangerEnabled(GameVersion version) {
@@ -822,12 +841,42 @@ public class VersionManager {
                     metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
                     metadata -> metadata.boundAccountId = value
             );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-account", "Persisting the per-instance account binding failed", ignored);
+        }
     }
 
     /** The account id bound to an instance, or null when it uses the active account. */
     public String getInstanceBoundAccount(GameVersion version) {
         return version == null ? null : version.boundAccountId;
+    }
+
+    /**
+     * Stores a free-form note for an instance (item 278).
+     *
+     * <p>The text is normalised by {@link InstanceNotes} before it is written, so a pasted newline
+     * cannot break the JSON metadata and an empty note is stored as null rather than {@code ""}.
+     */
+    public void setInstanceNotes(GameVersion version, String notes) {
+        if (version == null) return;
+        String value = InstanceNotes.normalize(notes);
+        version.notes = value;
+        updateCachedInstance(version, cached -> cached.notes = value);
+        try {
+            File metadataDir = LauncherStorage.getProfileMetadataDir(context, getMetadataDirectoryName(version));
+            metadataStore.update(
+                    metadataDir,
+                    metadataDefaults(version.isInstalled, version.directoryName, version.packageName, version.versionCode),
+                    metadata -> metadata.notes = value
+            );
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "meta-notes", "Persisting the per-instance note failed", ignored);
+        }
+    }
+
+    /** The note kept for an instance (item 278), or null when none is set. */
+    public String getInstanceNotes(GameVersion version) {
+        return version == null ? null : version.notes;
     }
 
     public boolean setInstanceDisplayName(GameVersion version, String displayName) {
@@ -964,7 +1013,7 @@ public class VersionManager {
         }
         libsRepairFlowActive = true;
         LibsRepairDialog repairDialog = new LibsRepairDialog(activity);
-        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Handler mainHandler = MainThread.handler();
 
         VersionManager.LibsRepairCallback callback = new VersionManager.LibsRepairCallback() {
             @Override
@@ -1106,7 +1155,7 @@ public class VersionManager {
             return;
         }
 
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "version-rename", () -> {
             try {
                 String metaDirName = getMetadataDirectoryName(version);
                 File metadataDir = LauncherStorage.getProfileMetadataDir(context, metaDirName);
@@ -1122,7 +1171,7 @@ public class VersionManager {
                 if (callback != null)
                     callback.onRenameFailed(e);
             }
-        }).start();
+        });
     }
 
     public void deleteCustomVersion(GameVersion version, OnDeleteVersionCallback callback) {
@@ -1140,7 +1189,7 @@ public class VersionManager {
 
         boolean isSelected = version.equals(selectedVersion);
 
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "version-delete", () -> {
             try {
                 File extDir = version.versionDir;
                 if (extDir != null && extDir.exists()) {
@@ -1185,7 +1234,7 @@ public class VersionManager {
                 if (callback != null)
                     callback.onDeleteFailed(e);
             }
-        }).start();
+        });
     }
 
     private void copyDirectory(File sourceDir, File targetDir) throws IOException {
@@ -1260,7 +1309,7 @@ public class VersionManager {
     }
 
     public void importGameFile(File gameFile, VersionCallback callback) {
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "version-import", () -> {
             try {
                 String fileName = gameFile.getName().toLowerCase();
                 
@@ -1270,10 +1319,10 @@ public class VersionManager {
                     callback.onError("Unsupported file format. Please use .apk or .xapk files.");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                AppLog.error(TAG, "Importing the game file failed", e);
                 callback.onError(UserFacingError.shortReasonForText(context, "Import failed", e.getMessage()));
             }
-        }).start();
+        });
     }
 
     private void extractAndSplit(File gameFile, VersionCallback callback) throws IOException {
@@ -1427,7 +1476,7 @@ public class VersionManager {
                 fos.write(buffer, 0, len);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            AppLog.warn(TAG, "Copying " + source.getName() + " failed", e);
         }
     }
 

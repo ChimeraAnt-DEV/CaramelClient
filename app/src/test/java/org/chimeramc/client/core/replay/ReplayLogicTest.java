@@ -313,6 +313,28 @@ public class ReplayLogicTest {
     }
 
     @Test
+    public void keyboardMapStepsFramesAndJumpsMarkers() {
+        assertEquals(ReplayControls.Action.FRAME_STEP_BACK,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_COMMA));
+        assertEquals(ReplayControls.Action.FRAME_STEP_FORWARD,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_PERIOD));
+        assertEquals(ReplayControls.Action.MARKER_PREV,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_LEFT_BRACKET));
+        assertEquals(ReplayControls.Action.MARKER_NEXT,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_RIGHT_BRACKET));
+    }
+
+    @Test
+    public void theControllerDpadStaysReservedForNavigation() {
+        // The D-pad belongs to the shared grid navigation, so no D-pad key may carry a Replay
+        // action — the frame step lives on the keyboard's , and . instead.
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_LEFT));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_RIGHT));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_UP));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_DOWN));
+    }
+
+    @Test
     public void cycleActionsDoNotNeedASelection() {
         assertFalse(ReplayControls.requiresSelection(ReplayControls.Action.CYCLE_NEXT));
         assertTrue(ReplayControls.requiresSelection(ReplayControls.Action.DELETE));
@@ -410,6 +432,37 @@ public class ReplayLogicTest {
         String rewritten = parsed.serialize();
         assertTrue(rewritten.contains("futureField=keepme"));
         assertTrue(rewritten.contains("favorite=1"));
+    }
+
+    /**
+     * The gameplay track round-trips through the line-oriented sidecar and comes back on the clip.
+     *
+     * <p>This is the Phase 9 link: the video is only half a replay, so a clip saved with a track
+     * must load it back so the free camera can seed from the recorded pose.
+     */
+    @Test
+    public void theGameplayTrackRoundTripsThroughTheSidecar() {
+        ReplayTrack track = ReplayTrack.empty();
+        track.sample(0L, 10f, 64f, -5f, 90f, -3f, 20f);
+        track.sample(500L, 11f, 64f, -6f, 91f, -3f, 19f);
+        ReplaySidecar sidecar = ReplaySidecar.of(1L, "world", "1.26.60", "survival")
+                .setTrack(track);
+        ReplaySidecar parsed = ReplaySidecar.parse(sidecar.serialize());
+        assertEquals(2, parsed.track().size());
+        assertEquals(10f, parsed.track().frameAt(0).x, 1e-3f);
+
+        // And it reaches the clip through the repository merge.
+        File file = new File("/replays/tracked.mp4");
+        ReplayClip clip = clipWithSidecar(file, 2_000L, 500L, sidecar.serialize());
+        assertNotNull(clip.track());
+        assertEquals(2, clip.track().size());
+    }
+
+    @Test
+    public void aClipWithoutATrackLoadsAsNull() {
+        File file = new File("/replays/old.mp4");
+        ReplayClip clip = clipWithSidecar(file, 2_000L, 500L, "version=1\nfavorite=0\n");
+        assertNull(clip.track());
     }
 
     @Test

@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,7 +52,7 @@ public final class AntEggLinkDownloader {
     private static final int BUFFER_SIZE = 65536;
 
     private final OkHttpClient client;
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = MainThread.handler();
 
     public AntEggLinkDownloader() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -73,6 +75,15 @@ public final class AntEggLinkDownloader {
         void onSuccess(File staged, String fileName);
 
         void onError(String message);
+
+        /**
+         * The declared size of the download, reported once the response headers arrive (item 233).
+         *
+         * <p>A negative value means the server declared no length. Defaulted so an existing caller
+         * needs no change; a caller that shows a preview overrides it.
+         */
+        default void onDeclaredSize(long sizeBytes) {
+        }
     }
 
     /**
@@ -88,7 +99,7 @@ public final class AntEggLinkDownloader {
         }
         final String fileName = AntEggLink.fileNameOf(url);
         final Context appContext = context.getApplicationContext();
-        new Thread(() -> {
+        AppExecutors.run(AppExecutors.Kind.NETWORK, "antegg-download", () -> {
             File staged = null;
             try {
                 Request request = new Request.Builder()
@@ -103,6 +114,10 @@ public final class AntEggLinkDownloader {
                     if (body == null) throw new IOException("The download returned no content.");
 
                     long total = body.contentLength();
+                    if (listener != null || callback != null) {
+                        final long declared = total;
+                        post(() -> callback.onDeclaredSize(declared));
+                    }
                     if (total > MAX_BYTES) {
                         throw new IOException("That package is larger than the "
                                 + (MAX_BYTES / (1024 * 1024)) + " MB limit.");
@@ -141,7 +156,7 @@ public final class AntEggLinkDownloader {
                 String message = e.getMessage() == null ? "The download failed." : e.getMessage();
                 post(() -> callback.onError(message));
             }
-        }, "antegg-link-download").start();
+        });
     }
 
     private void post(Runnable runnable) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -301,7 +302,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <View
@@ -333,7 +334,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <TextView
@@ -346,6 +347,16 @@
                             android:textColor="@color/mod_menu_text_tertiary"
                             android:textAppearance="@style/TextAppearance.Glowberry.Caption"
                             android:visibility="gone" />
+
+                        <!-- Item 518: show exactly what a crash report contains before it is sent. -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_crash_upload_preview"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_1"
+                            android:minHeight="@dimen/min_touch_target"
+                            android:text="@string/crash_upload_preview" />
 
                         <View
                             android:layout_width="match_parent"
@@ -376,7 +387,172 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/guest_mode_title"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/on_surface"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_hairline"
+                                    android:text="@string/guest_mode_desc"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/text_secondary_light"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            </LinearLayout>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_guest_mode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:thumbTint="@color/primary"
+                                android:trackTint="@color/track_inactive" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/streaming_safe_title"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/on_surface"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_hairline"
+                                    android:text="@string/streaming_safe_desc"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/text_secondary_light"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            </LinearLayout>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_streaming_safe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:thumbTint="@color/primary"
+                                android:trackTint="@color/track_inactive" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
+                        <!--
+                            Backup retention (item 144): how many instance backups to keep per
+                            instance. A slider rather than free text, so the value cannot be typed
+                            out of range; the rule clamps it again on the way in.
+                        -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/backup_retention_title"
+                                        android:fontFamily="@font/misans"
+                                        android:textColor="@color/on_surface"
+                                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/space_hairline"
+                                        android:text="@string/backup_retention_desc"
+                                        android:fontFamily="@font/misans"
+                                        android:textColor="@color/text_secondary_light"
+                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/value_backup_retention"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:minWidth="@dimen/space_align_inset"
+                                    android:gravity="end"
+                                    android:fontFamily="@font/misans"
+                                    android:textColor="@color/primary"
+                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textStyle="bold"
+                                    tools:text="5" />
+                            </LinearLayout>
+
+                            <SeekBar
+                                android:id="@+id/seek_backup_retention"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:max="9"
+                                android:progress="4" />
                         </LinearLayout>
 
                         <View
@@ -423,54 +599,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="@dimen/space_4"
-                            android:layout_marginBottom="@dimen/space_4"
-                            android:background="@color/divider"
-                            android:alpha="0.3" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/gxcore_title"
-                                    android:fontFamily="@font/misans"
-                                    android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/space_hairline"
-                                    android:text="@string/gxcore_desc"
-                                    android:fontFamily="@font/misans"
-                                    android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
-                            </LinearLayout>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/switch_gxcore"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <View
@@ -517,7 +646,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <View
@@ -564,7 +693,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <View
@@ -683,7 +812,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -896,7 +1025,9 @@
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_monitor"
-                                    app:tint="@color/text_secondary" />
+                                    app:tint="@color/text_secondary" 
+                                    android:importantForAccessibility="no"
+                                    />
                                 <TextView
                                     android:id="@+id/theme_text_system"
                                     android:layout_width="wrap_content"
@@ -931,7 +1062,9 @@
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_sun"
-                                    app:tint="@color/text_secondary" />
+                                    app:tint="@color/text_secondary" 
+                                    android:importantForAccessibility="no"
+                                    />
                                 <TextView
                                     android:id="@+id/theme_text_light"
                                     android:layout_width="wrap_content"
@@ -966,7 +1099,9 @@
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
                                     android:src="@drawable/ic_moon"
-                                    app:tint="@color/text_secondary" />
+                                    app:tint="@color/text_secondary" 
+                                    android:importantForAccessibility="no"
+                                    />
                                 <TextView
                                     android:id="@+id/theme_text_dark"
                                     android:layout_width="wrap_content"
@@ -1013,7 +1148,9 @@
                             android:layout_height="120dp"
                             android:layout_marginTop="@dimen/space_3"
                             android:scaleType="centerCrop"
-                            android:visibility="gone" />
+                            android:visibility="gone" 
+                            android:importantForAccessibility="no"
+                            />
 
                         <LinearLayout
                             android:id="@+id/bg_image_effect_controls"
@@ -1488,7 +1625,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
 
@@ -1537,7 +1674,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <!-- Dynamic Color Toggle -->
@@ -1585,7 +1722,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <!-- Reset Button -->
@@ -1842,6 +1979,19 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Label"
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
+
+                    <Button
+                        android:id="@+id/settings_open_changelog"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_2"
+                        android:minHeight="44dp"
+                        android:fontFamily="@font/misans"
+                        android:text="@string/settings_open_changelog"
+                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -1896,7 +2046,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_3"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <TextView
@@ -2017,7 +2167,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_3"
                                 android:thumbTint="@color/primary"
-                                android:trackTint="#555555" />
+                                android:trackTint="@color/track_inactive" />
                         </LinearLayout>
 
                         <TextView

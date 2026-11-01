@@ -19,6 +19,7 @@ function buildEnglishSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
       items: [
         { text: "Native Mod Quick Start", link: `${localePrefix}guide/developer` },
         { text: "Build from Source", link: `${localePrefix}guide/build` },
+        { text: "Architecture", link: `${localePrefix}ARCHITECTURE` },
         { text: "Mod Entry API", link: `${localePrefix}api/mod` },
         { text: "Mod Menu API", link: `${localePrefix}api/mod-menu` },
         { text: "Config API", link: `${localePrefix}api/config` },
@@ -26,6 +27,7 @@ function buildEnglishSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
+        { text: "Rule File Signing", link: `${localePrefix}preloader-rule-signing` },
         {
           text: "Memory Hook Macros",
           link: `${localePrefix}api/memory-hook-macros`,
@@ -58,6 +60,7 @@ function buildChineseSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
+        { text: "规则文件签名", link: `${localePrefix}preloader-rule-signing` },
         { text: "Memory Hook 宏", link: `${localePrefix}api/memory-hook-macros` },
         { text: "Types 与宏", link: `${localePrefix}api/types-and-macros` },
       ],
@@ -75,9 +78,11 @@ function buildEnglishNav(): DefaultTheme.NavItem[] {
         { text: "Native Mod Quick Start", link: "/guide/developer" },
         { text: "API Reference", link: "/api/mod" },
         { text: "Build from Source", link: "/guide/build" },
+        { text: "Architecture", link: "/ARCHITECTURE" },
       ],
     },
     { text: "Privacy Policy", link: "/privacy-policy" },
+    { text: "Data Flows", link: "/privacy-data-flows" },
     { text: "Downloads", link: releases },
     { text: "GitHub", link: repo },
   ];
@@ -96,6 +101,7 @@ function buildChineseNav(): DefaultTheme.NavItem[] {
       ],
     },
     { text: "隐私政策", link: "/privacy-policy" },
+    { text: "数据流", link: "/privacy-data-flows" },
     { text: "下载", link: releases },
     { text: "GitHub", link: repo },
   ];

@@ -57,7 +57,7 @@ public final class WorldBackupScheduler {
         Context appContext = context.getApplicationContext();
         Intent intent = new Intent(appContext, WorldBackupService.class);
         intent.setAction(WorldBackupService.ACTION_RUN);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (ApiLevels.atLeastO()) {
             appContext.startForegroundService(intent);
         } else {
             appContext.startService(intent);

@@ -21,6 +21,7 @@ import android.view.Choreographer;
 public final class FrameRateMeter {
 
     private final FrameRateCounter counter = new FrameRateCounter();
+    private final FrameTimeHistory history = new FrameTimeHistory();
 
     private boolean running;
     private Choreographer choreographer;
@@ -36,6 +37,7 @@ public final class FrameRateMeter {
         public void doFrame(long frameTimeNanos) {
             if (!running) return;
             counter.record(frameTimeNanos);
+            history.record(frameTimeNanos);
             if (listener != null) {
                 listener.onRate(counter.fpsAt(frameTimeNanos));
             }
@@ -48,6 +50,7 @@ public final class FrameRateMeter {
         if (running) return;
         running = true;
         counter.reset();
+        history.reset();
         if (choreographer == null) choreographer = Choreographer.getInstance();
         choreographer.postFrameCallback(callback);
     }
@@ -65,5 +68,15 @@ public final class FrameRateMeter {
     /** The current rate without waiting for a callback; 0 when fewer than two frames are known. */
     public int currentFps() {
         return counter.fps();
+    }
+
+    /** The 1% low rate (the slowest recent frame), or 0 when there is no reading yet. */
+    public int currentOnePercentLowFps() {
+        return counter.onePercentLowFps();
+    }
+
+    /** The rolling frame-interval history, for the overlay's graph mode (item 191). */
+    public FrameTimeHistory history() {
+        return history;
     }
 }

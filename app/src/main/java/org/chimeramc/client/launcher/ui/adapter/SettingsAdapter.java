@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ItemSettingsContainerBinding;
 
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ContainerViewHolder> {
 
@@ -25,8 +26,9 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Contai
     @NonNull
     @Override
     public ContainerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings_container, parent, false);
-        return new ContainerViewHolder(v);
+        ItemSettingsContainerBinding binding = ItemSettingsContainerBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ContainerViewHolder(binding);
     }
 
     @Override
@@ -46,10 +48,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Contai
     }
 
     static class ContainerViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout container;
-        public ContainerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            container = itemView.findViewById(R.id.settings_items);
+        final LinearLayout container;
+        public ContainerViewHolder(@NonNull ItemSettingsContainerBinding binding) {
+            super(binding.getRoot());
+            container = binding.settingsItems;
         }
     }
 }

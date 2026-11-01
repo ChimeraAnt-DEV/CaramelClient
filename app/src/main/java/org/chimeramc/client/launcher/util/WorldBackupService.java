@@ -139,7 +139,7 @@ public class WorldBackupService extends Service {
 
     private void startForegroundCompat() {
         Notification notification = buildNotification(getString(R.string.world_backup_running)).build();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (ApiLevels.atLeastUpsideDownCake()) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else {
             startForeground(NOTIFICATION_ID, notification);
@@ -154,7 +154,7 @@ public class WorldBackupService extends Service {
                 .setWhen(System.currentTimeMillis())
                 .build();
         manager.notify(NOTIFICATION_ID, notif);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (ApiLevels.atLeastN()) {
             stopForeground(STOP_FOREGROUND_REMOVE);
         } else {
             stopForeground(true);
