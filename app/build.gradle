@@ -259,7 +259,7 @@ dependencies {
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.messaging
     // Microsoft Authentication Library (MSAL) for official OAuth
-    implementation 'com.microsoft.identity.client:msal:2.2.3'
+    implementation 'com.microsoft.identity.client:msal:8.6.0'
     testImplementation libs.junit
     // Android ships org.json in the platform, so the local unit-test runtime has stubs that
     // throw "not mocked". org.json:json is the same API as a plain jar, so a JSON-parsing
