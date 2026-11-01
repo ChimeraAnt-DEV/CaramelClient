@@ -1230,4 +1230,7 @@
     <string name="replay_marker_next">Следующая метка</string>
     <string name="replay_marker_previous">Предыдущая метка</string>
     <string name="replay_markers_count">%1$d меток</string>
+    <string name="crash_upload_preview">Что отправляется</string>
+    <string name="crash_upload_preview_title">Содержимое отчёта о сбое</string>
+    <string name="crash_upload_preview_close">Закрыть</string>
 </resources>

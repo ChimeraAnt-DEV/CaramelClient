@@ -1199,4 +1199,7 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="replay_marker_next">Marcador siguiente</string>
     <string name="replay_marker_previous">Marcador anterior</string>
     <string name="replay_markers_count">%1$d marcadores</string>
+    <string name="crash_upload_preview">Qué se envía</string>
+    <string name="crash_upload_preview_title">Contenido del informe de fallo</string>
+    <string name="crash_upload_preview_close">Cerrar</string>
 </resources>

@@ -1229,4 +1229,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="replay_marker_next">Điểm đánh dấu tiếp theo</string>
     <string name="replay_marker_previous">Điểm đánh dấu trước</string>
     <string name="replay_markers_count">%1$d điểm đánh dấu</string>
+    <string name="crash_upload_preview">Nội dung được gửi</string>
+    <string name="crash_upload_preview_title">Nội dung báo cáo lỗi</string>
+    <string name="crash_upload_preview_close">Đóng</string>
 </resources>

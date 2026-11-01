@@ -82,6 +82,7 @@ function buildEnglishNav(): DefaultTheme.NavItem[] {
       ],
     },
     { text: "Privacy Policy", link: "/privacy-policy" },
+    { text: "Data Flows", link: "/privacy-data-flows" },
     { text: "Downloads", link: releases },
     { text: "GitHub", link: repo },
   ];
@@ -100,6 +101,7 @@ function buildChineseNav(): DefaultTheme.NavItem[] {
       ],
     },
     { text: "隐私政策", link: "/privacy-policy" },
+    { text: "数据流", link: "/privacy-data-flows" },
     { text: "下载", link: releases },
     { text: "GitHub", link: repo },
   ];

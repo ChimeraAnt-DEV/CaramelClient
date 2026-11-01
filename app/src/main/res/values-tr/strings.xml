@@ -1226,4 +1226,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="replay_marker_next">Sonraki işaret</string>
     <string name="replay_marker_previous">Önceki işaret</string>
     <string name="replay_markers_count">%1$d işaret</string>
+    <string name="crash_upload_preview">Neler gönderilir</string>
+    <string name="crash_upload_preview_title">Çökme raporu içeriği</string>
+    <string name="crash_upload_preview_close">Kapat</string>
 </resources>

@@ -1199,4 +1199,7 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="replay_marker_next">Marqueur suivant</string>
     <string name="replay_marker_previous">Marqueur précédent</string>
     <string name="replay_markers_count">%1$d marqueurs</string>
+    <string name="crash_upload_preview">Ce qui est envoyé</string>
+    <string name="crash_upload_preview_title">Contenu du rapport de plantage</string>
+    <string name="crash_upload_preview_close">Fermer</string>
 </resources>

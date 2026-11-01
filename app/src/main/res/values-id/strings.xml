@@ -1223,4 +1223,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="replay_marker_next">Penanda berikutnya</string>
     <string name="replay_marker_previous">Penanda sebelumnya</string>
     <string name="replay_markers_count">%1$d penanda</string>
+    <string name="crash_upload_preview">Apa yang dikirim</string>
+    <string name="crash_upload_preview_title">Isi laporan kerusakan</string>
+    <string name="crash_upload_preview_close">Tutup</string>
 </resources>

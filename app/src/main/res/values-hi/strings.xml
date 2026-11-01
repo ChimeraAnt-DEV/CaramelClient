@@ -1227,4 +1227,7 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="replay_marker_next">अगला मार्कर</string>
     <string name="replay_marker_previous">पिछला मार्कर</string>
     <string name="replay_markers_count">%1$d मार्कर</string>
+    <string name="crash_upload_preview">क्या भेजा जाता है</string>
+    <string name="crash_upload_preview_title">क्रैश रिपोर्ट की सामग्री</string>
+    <string name="crash_upload_preview_close">बंद करें</string>
 </resources>

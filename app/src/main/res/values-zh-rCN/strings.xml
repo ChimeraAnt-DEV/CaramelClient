@@ -1220,4 +1220,7 @@
     <string name="replay_marker_next">下一个标记</string>
     <string name="replay_marker_previous">上一个标记</string>
     <string name="replay_markers_count">%1$d 个标记</string>
+    <string name="crash_upload_preview">发送的内容</string>
+    <string name="crash_upload_preview_title">崩溃报告内容</string>
+    <string name="crash_upload_preview_close">关闭</string>
 </resources>

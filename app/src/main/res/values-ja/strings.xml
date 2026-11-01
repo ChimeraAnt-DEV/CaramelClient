@@ -1196,4 +1196,7 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="replay_marker_next">次のマーカー</string>
     <string name="replay_marker_previous">前のマーカー</string>
     <string name="replay_markers_count">%1$d 個のマーカー</string>
+    <string name="crash_upload_preview">送信される内容</string>
+    <string name="crash_upload_preview_title">クラッシュレポートの内容</string>
+    <string name="crash_upload_preview_close">閉じる</string>
 </resources>
