@@ -20,6 +20,7 @@ import org.chimeramc.client.core.minecraft.ExtractionCachePolicy
 import org.chimeramc.client.core.minecraft.ExtractionManifest
 import org.chimeramc.client.core.minecraft.NativeLibraryVersionGate
 import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
+import org.chimeramc.client.util.AtomicFiles
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -316,7 +317,9 @@ class GamePackageManager private constructor(
 
         if (cacheRequiredLibs.all { File(outputDir, it).let { f -> f.exists() && f.length() > 0 } }) {
             try {
-                manifestFile.writeText(manifestString)
+                // Atomic: the manifest is compared by content, so a torn write from a kill during
+                // extraction would make the next launch distrust a cache that is actually fine.
+                AtomicFiles.writeOrThrow(manifestFile, manifestString)
                 File(outputDir, ".extraction_marker").delete()
                 writeNativeExtractionVersion(versionFile, nativeExtractionVersion)
                 report("Minecraft library cache manifest written")
@@ -337,7 +340,7 @@ class GamePackageManager private constructor(
 
     private fun writeNativeExtractionVersion(versionFile: File, version: Int) {
         try {
-            versionFile.writeText(version.toString())
+            AtomicFiles.writeOrThrow(versionFile, version.toString())
         } catch (e: Exception) {
             mirrorLogcat('W', "Failed to write native extraction version: ${e.message}")
         }
@@ -1068,8 +1071,8 @@ class GamePackageManager private constructor(
                         continue
                     }
                     try {
-                        File(dir, ".extraction_manifest").writeText(manifest)
-                        File(dir, "native_extraction_version").writeText(marker)
+                        AtomicFiles.writeOrThrow(File(dir, ".extraction_manifest"), manifest)
+                        AtomicFiles.writeOrThrow(File(dir, "native_extraction_version"), marker)
                         wrote = true
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to write extraction markers in ${dir.absolutePath}: ${e.message}")
