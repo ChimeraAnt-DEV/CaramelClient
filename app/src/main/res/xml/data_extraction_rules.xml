@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Data-extraction rules for Android 12+ (item 514).
+
+    Android 12 replaced `fullBackupContent` with a rules file that distinguishes cloud backup from
+    device-to-device transfer. The same reasoning applies to both here: an account token restored
+    onto a new phone is a session the user never authorised on that device, so the credential-
+    bearing files are excluded from both, while ordinary preferences still travel.
+
+    Both elements are required on API 31+: a file with only one of them is ignored for the other
+    transport, which would silently re-enable the backup this is here to stop.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="file" path="xal/" />
+        <exclude domain="file" path="crash_logs/" />
+        <exclude domain="sharedpref" path="org.chimeramc.xal.crypto.xml" />
+        <exclude domain="sharedpref" path="LauncherPrefs.xml" />
+        <exclude domain="sharedpref" path="controller_profiles.xml" />
+        <exclude domain="sharedpref" path="settings.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="file" path="xal/" />
+        <exclude domain="file" path="crash_logs/" />
+        <exclude domain="sharedpref" path="org.chimeramc.xal.crypto.xml" />
+        <exclude domain="sharedpref" path="LauncherPrefs.xml" />
+        <exclude domain="sharedpref" path="controller_profiles.xml" />
+        <exclude domain="sharedpref" path="settings.xml" />
+    </device-transfer>
+</data-extraction-rules>

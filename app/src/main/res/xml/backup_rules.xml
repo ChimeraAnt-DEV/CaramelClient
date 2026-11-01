@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup rules (item 514).
+
+    Auto Backup would otherwise upload the signed-in account's tokens and the launcher's private
+    state to the user's cloud backup. Those are credentials, not preferences: a token restored onto
+    another device is a session that was never authorised there, and a gamertag in a cloud backup
+    is personal data leaving the device without a prompt. The account store (`files/xal/`) and the
+    preferences that hold account and controller state are therefore excluded from both the key/value
+    backup and the device-to-device transfer.
+
+    The list is deliberately explicit rather than "exclude everything": a user who replaces a phone
+    should keep their theme, mod list and instance settings, so only the credential-bearing files
+    are named here.
+-->
+<full-backup-content>
+    <!-- Account tokens and XAL export data. -->
+    <exclude domain="file" path="xal/" />
+    <!-- Crash logs can carry a stack that names a path under the user's home; keep them local. -->
+    <exclude domain="file" path="crash_logs/" />
+    <!-- The launcher's own preference files that carry account or controller identifiers. -->
+    <exclude domain="sharedpref" path="org.chimeramc.xal.crypto.xml" />
+    <exclude domain="sharedpref" path="LauncherPrefs.xml" />
+    <exclude domain="sharedpref" path="controller_profiles.xml" />
+    <exclude domain="sharedpref" path="settings.xml" />
+</full-backup-content>
