@@ -64,8 +64,18 @@ public final class LocalSkinCache {
 
     /** Writes the entry (atlas + metadata). Returns true on success. */
     public static boolean write(File filesRoot, Entry entry) {
-        if (filesRoot == null || entry == null || entry.argb == null) return false;
-        File d = dir(filesRoot);
+        if (filesRoot == null) return false;
+        return writeEntry(dir(filesRoot), entry);
+    }
+
+    /**
+     * Writes an entry into an explicit directory, so a multi-entry store can reuse this exact
+     * format for each of its slots (item 246). The single-entry {@link #write} is this call with
+     * the cache's own directory.
+     */
+    public static boolean writeEntry(File d, Entry entry) {
+        if (d == null || entry == null || entry.argb == null) return false;
+        if (!d.exists() && !d.mkdirs()) return false;
         File bin = new File(d, BIN_NAME);
         File json = new File(d, JSON_NAME);
         try (FileOutputStream out = new FileOutputStream(bin)) {
@@ -101,8 +111,14 @@ public final class LocalSkinCache {
     /** Reads the cached entry, or null when there is none or it is malformed. */
     public static Entry read(File filesRoot) {
         if (filesRoot == null) return null;
-        File bin = new File(dir(filesRoot), BIN_NAME);
-        File json = new File(dir(filesRoot), JSON_NAME);
+        return readEntry(dir(filesRoot));
+    }
+
+    /** Reads an entry from an explicit directory; the multi-entry store's per-slot read (item 246). */
+    public static Entry readEntry(File d) {
+        if (d == null) return null;
+        File bin = new File(d, BIN_NAME);
+        File json = new File(d, JSON_NAME);
         if (!bin.isFile()) return null;
         try (FileInputStream in = new FileInputStream(bin)) {
             byte[] header = new byte[HEADER];
@@ -145,6 +161,18 @@ public final class LocalSkinCache {
     /** True when a cache is present. */
     public static boolean exists(File filesRoot) {
         return filesRoot != null && new File(dir(filesRoot), BIN_NAME).isFile();
+    }
+
+    /** True when a directory holds a readable entry. */
+    public static boolean existsIn(File d) {
+        return d != null && new File(d, BIN_NAME).isFile();
+    }
+
+    /** Deletes one entry directory's files. */
+    public static void clearEntry(File d) {
+        if (d == null) return;
+        new File(d, BIN_NAME).delete();
+        new File(d, JSON_NAME).delete();
     }
 
     /** Deletes the cache (a manual import override clears it). */
