@@ -26,6 +26,7 @@ public final class ReplaySidecar {
     private static final String KEY_HIGHLIGHT = "highlight";
     private static final String KEY_CAMERA_PATH = "cameraPath";
     private static final String KEY_TRACK = "track";
+    private static final String KEY_MARKERS = "markers";
 
     private final Map<String, String> values = new LinkedHashMap<>();
 
@@ -118,6 +119,16 @@ public final class ReplaySidecar {
     /** Stores the gameplay track; an empty track clears the key. */
     public ReplaySidecar setTrack(ReplayTrack track) {
         return set(KEY_TRACK, track == null ? "" : track.serializeLine());
+    }
+
+    /** The recorded markers (item 241), or an empty set when the clip carries none. */
+    public ReplayMarkers markers() {
+        return ReplayMarkers.parse(get(KEY_MARKERS, ""));
+    }
+
+    /** Stores the markers; an empty set clears the key. */
+    public ReplaySidecar setMarkers(ReplayMarkers markers) {
+        return set(KEY_MARKERS, markers == null ? "" : markers.serialize());
     }
 
     public String serialize() {

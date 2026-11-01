@@ -1222,4 +1222,9 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="setup_compat_fix">ठीक करें</string>
     <string name="backup_retention_title">इंस्टेंस बैकअप रिटेंशन</string>
     <string name="backup_retention_desc">प्रति इंस्टेंस कितने बैकअप रखें। इस संख्या से पुराने बैकअप हर नए बैकअप के बाद स्वचालित रूप से हटा दिए जाते हैं।</string>
+    <string name="replay_player_step_back">एक फ़्रेम पीछे जाएँ</string>
+    <string name="replay_player_step_forward">एक फ़्रेम आगे जाएँ</string>
+    <string name="replay_marker_next">अगला मार्कर</string>
+    <string name="replay_marker_previous">पिछला मार्कर</string>
+    <string name="replay_markers_count">%1$d मार्कर</string>
 </resources>

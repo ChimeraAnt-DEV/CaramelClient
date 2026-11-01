@@ -1215,4 +1215,9 @@
     <string name="setup_compat_fix">修复</string>
     <string name="backup_retention_title">实例备份保留</string>
     <string name="backup_retention_desc">每个实例保留多少份备份。超过此数量的旧备份会在每次新备份后自动删除。</string>
+    <string name="replay_player_step_back">后退一帧</string>
+    <string name="replay_player_step_forward">前进一帧</string>
+    <string name="replay_marker_next">下一个标记</string>
+    <string name="replay_marker_previous">上一个标记</string>
+    <string name="replay_markers_count">%1$d 个标记</string>
 </resources>

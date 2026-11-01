@@ -1194,4 +1194,9 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="setup_compat_fix">Corrigir</string>
     <string name="backup_retention_title">Retenção de backups de instância</string>
     <string name="backup_retention_desc">Quantos backups manter por instância. Backups mais antigos que este número são excluídos automaticamente após cada novo backup.</string>
+    <string name="replay_player_step_back">Retroceder um quadro</string>
+    <string name="replay_player_step_forward">Avançar um quadro</string>
+    <string name="replay_marker_next">Marcador seguinte</string>
+    <string name="replay_marker_previous">Marcador anterior</string>
+    <string name="replay_markers_count">%1$d marcadores</string>
 </resources>

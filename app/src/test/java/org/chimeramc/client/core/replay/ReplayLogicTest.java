@@ -313,6 +313,28 @@ public class ReplayLogicTest {
     }
 
     @Test
+    public void keyboardMapStepsFramesAndJumpsMarkers() {
+        assertEquals(ReplayControls.Action.FRAME_STEP_BACK,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_COMMA));
+        assertEquals(ReplayControls.Action.FRAME_STEP_FORWARD,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_PERIOD));
+        assertEquals(ReplayControls.Action.MARKER_PREV,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_LEFT_BRACKET));
+        assertEquals(ReplayControls.Action.MARKER_NEXT,
+                ReplayControls.forKeyboardKey(KeyEvent.KEYCODE_RIGHT_BRACKET));
+    }
+
+    @Test
+    public void theControllerDpadStaysReservedForNavigation() {
+        // The D-pad belongs to the shared grid navigation, so no D-pad key may carry a Replay
+        // action — the frame step lives on the keyboard's , and . instead.
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_LEFT));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_RIGHT));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_UP));
+        assertNull(ReplayControls.forControllerKey(KeyEvent.KEYCODE_DPAD_DOWN));
+    }
+
+    @Test
     public void cycleActionsDoNotNeedASelection() {
         assertFalse(ReplayControls.requiresSelection(ReplayControls.Action.CYCLE_NEXT));
         assertTrue(ReplayControls.requiresSelection(ReplayControls.Action.DELETE));

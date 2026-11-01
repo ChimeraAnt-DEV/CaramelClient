@@ -1224,4 +1224,9 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="setup_compat_fix">Khắc phục</string>
     <string name="backup_retention_title">Giữ bản sao lưu phiên bản</string>
     <string name="backup_retention_desc">Số bản sao lưu giữ cho mỗi phiên bản. Các bản cũ hơn số này sẽ tự động bị xóa sau mỗi lần sao lưu mới.</string>
+    <string name="replay_player_step_back">Lùi một khung hình</string>
+    <string name="replay_player_step_forward">Tiến một khung hình</string>
+    <string name="replay_marker_next">Điểm đánh dấu tiếp theo</string>
+    <string name="replay_marker_previous">Điểm đánh dấu trước</string>
+    <string name="replay_markers_count">%1$d điểm đánh dấu</string>
 </resources>

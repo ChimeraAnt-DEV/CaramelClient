@@ -1205,9 +1205,39 @@ public final class ReplayPanel {
                 return scrubPlayback(0.1f);
             case SPEED:
                 return stepPlaybackSpeed();
+            case FRAME_STEP_BACK:
+                return stepFrame(false);
+            case FRAME_STEP_FORWARD:
+                return stepFrame(true);
+            case MARKER_PREV:
+                return jumpToMarker(false);
+            case MARKER_NEXT:
+                return jumpToMarker(true);
             default:
                 return false;
         }
+    }
+
+    /** Steps the open clip one frame, for the Replay controller/keyboard route (item 242). */
+    public boolean stepFrame(boolean forward) {
+        if (playerView == null) return false;
+        playerView.stepFrame(forward);
+        return true;
+    }
+
+    /**
+     * Jumps to the previous or next recorded marker (item 241).
+     *
+     * @return false when no clip is open or it carries no markers, so a caller can fall through.
+     */
+    public boolean jumpToMarker(boolean forward) {
+        if (playerView == null || !playerView.hasMarkers()) return false;
+        if (forward) {
+            playerView.jumpToNextMarker();
+        } else {
+            playerView.jumpToPreviousMarker();
+        }
+        return true;
     }
 
     private static int indexOfName(List<ReplayClip> clips, ReplayClip target) {

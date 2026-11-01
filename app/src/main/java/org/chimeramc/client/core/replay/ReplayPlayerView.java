@@ -68,6 +68,10 @@ public final class ReplayPlayerView {
     private ImageView playPause;
     private TextView speedButton;
     private TextView cameraButton;
+    private TextView stepBackButton;
+    private TextView stepForwardButton;
+    private TextView markerPreviousButton;
+    private TextView markerNextButton;
     private SeekBar seekBar;
     private TextView positionText;
 
@@ -86,6 +90,11 @@ public final class ReplayPlayerView {
     private MediaPlayer player;
     private ReplayClip clip;
     private boolean prepared;
+    /**
+     * The clip's markers (item 241), copied once when the clip opens so the transport can jump to
+     * the next one without re-reading the sidecar per tap. Null when the clip carries none.
+     */
+    private ReplayMarkers markers;
     /** Whether the gate is currently latched by this view, so callbacks alternate. */
     private boolean gateLatched;
     /** True while the user drags the scrub bar, so the tick does not fight the thumb. */
@@ -242,6 +251,10 @@ public final class ReplayPlayerView {
         // A clip may carry an authored cinematic camera path in its sidecar; load it so the free
         // camera can play the shot, otherwise the camera starts from the recorded view.
         cameraPath = loadCameraPath(clip);
+        // The markers are copied once, alongside the camera path, so the transport can jump between
+        // them without re-reading the sidecar on every tap.
+        markers = clip == null ? null : clip.markers();
+        updateMarkerButtons();
         freeCamera = false;
         looking = false;
         updateCameraLabel();
@@ -343,6 +356,59 @@ public final class ReplayPlayerView {
         if (player == null || !prepared) return;
         timeline.seekFraction(fraction);
         player.seekTo((int) timeline.positionMs());
+        updateProgress();
+    }
+
+    /**
+     * Steps one frame forward or backward (item 242), for a button or controller route.
+     *
+     * <p>The step pauses the transport (see {@link ReplayTimeline#stepFrame}), so the frame the
+     * player lands on stays on screen. The decoder is re-seeked to the new position and the transport
+     * glyph follows, so a step out of playing reads as a pause.
+     */
+    public void stepFrame(boolean forward) {
+        if (player == null || !prepared) return;
+        timeline.stepFrame(forward);
+        player.pause();
+        player.seekTo((int) timeline.positionMs());
+        unlatchGate();
+        showPlayIcon(true);
+        mainHandler.removeCallbacks(progressTick);
+        updateProgress();
+    }
+
+    /** True when the open clip carries at least one marker (item 241). */
+    public boolean hasMarkers() {
+        return markers != null && !markers.isEmpty();
+    }
+
+    /**
+     * Jumps to the next marker at or after the current position (item 241).
+     *
+     * <p>Wraps to the first marker when none is later, so a repeated tap cycles through them rather
+     * than sticking at the end. A no-op when the clip carries none.
+     */
+    public void jumpToNextMarker() {
+        if (!hasMarkers()) return;
+        ReplayMarkers.Marker next = markers.next(timeline.positionMs() + 1L);
+        if (next == null) next = markers.at(0);
+        seekToMarker(next);
+    }
+
+    /** Jumps to the previous marker at or before the current position (item 241), wrapping. */
+    public void jumpToPreviousMarker() {
+        if (!hasMarkers()) return;
+        ReplayMarkers.Marker previous = markers.previous(timeline.positionMs() - 1L);
+        if (previous == null) previous = markers.at(markers.size() - 1);
+        seekToMarker(previous);
+    }
+
+    private void seekToMarker(ReplayMarkers.Marker marker) {
+        if (marker == null) return;
+        timeline.seekMs(marker.tMs);
+        if (player != null && prepared) {
+            player.seekTo((int) timeline.positionMs());
+        }
         updateProgress();
     }
 
@@ -486,6 +552,46 @@ public final class ReplayPlayerView {
         timeline.cycleSpeed();
         applySpeed();
         updateSpeedLabel();
+    }
+
+    /**
+     * Builds a small pill button with the shared style, press feedback and ripple.
+     *
+     * <p>The transport's step and marker controls are all the same shape, so they are built by one
+     * helper rather than four near-identical blocks that drift.
+     */
+    private TextView makePillButton(int textRes, Runnable action) {
+        TextView button = new TextView(activity);
+        button.setText(textRes);
+        button.setTextColor(style.textPrimary());
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        button.setTypeface(null, Typeface.BOLD);
+        button.setBackground(ReplayStyle.rippled(
+                ReplayStyle.pill(style.surfaceElevated(), activity), style.accentFill(60), activity));
+        button.setPadding(ReplayStyle.dpInt(activity, 10), ReplayStyle.dpInt(activity, 5),
+                ReplayStyle.dpInt(activity, 10), ReplayStyle.dpInt(activity, 5));
+        button.setOnClickListener(v -> action.run());
+        DynamicAnim.applyPressScale(button);
+        return button;
+    }
+
+    private LinearLayout.LayoutParams pillParams() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMarginStart(ReplayStyle.dpInt(activity, 8));
+        return params;
+    }
+
+    /**
+     * Shows the marker-jump buttons only when the open clip carries markers (item 241).
+     *
+     * <p>A clip with no markers would give the two buttons nothing to jump to, so they are hidden
+     * rather than left to do nothing. {@link #show} re-evaluates this per clip.
+     */
+    private void updateMarkerButtons() {
+        int visibility = hasMarkers() ? View.VISIBLE : View.GONE;
+        if (markerPreviousButton != null) markerPreviousButton.setVisibility(visibility);
+        if (markerNextButton != null) markerNextButton.setVisibility(visibility);
     }
 
     private void updateSpeedLabel() {
@@ -671,6 +777,23 @@ public final class ReplayPlayerView {
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         speedParams.setMarginStart(ReplayStyle.dpInt(activity, 8));
         row.addView(speedButton, speedParams);
+
+        // Frame stepping (item 242): one tap nudges the paused position by a single frame, which is
+        // how a player lands on an exact moment the scrub bar is too coarse to hit.
+        stepBackButton = makePillButton(R.string.replay_player_step_back, () -> stepFrame(false));
+        row.addView(stepBackButton, pillParams());
+        stepForwardButton = makePillButton(R.string.replay_player_step_forward, () -> stepFrame(true));
+        row.addView(stepForwardButton, pillParams());
+
+        // Marker jumps (item 241): cycle through the recorded death/streak/combo/join ticks. The
+        // buttons are only meaningful for a clip that carries markers, so they start hidden and
+        // show() re-evaluates that per clip.
+        markerPreviousButton = makePillButton(R.string.replay_marker_previous,
+                this::jumpToPreviousMarker);
+        row.addView(markerPreviousButton, pillParams());
+        markerNextButton = makePillButton(R.string.replay_marker_next, this::jumpToNextMarker);
+        row.addView(markerNextButton, pillParams());
+        updateMarkerButtons();
 
         // The free-camera toggle: detaches the view from the recorded first-person pose so the clip
         // can be watched like a spectator, and replays the clip's authored camera path when it has

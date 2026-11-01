@@ -1194,4 +1194,9 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="setup_compat_fix">Solucionar</string>
     <string name="backup_retention_title">Retención de copias de instancia</string>
     <string name="backup_retention_desc">Cuántas copias se conservan por instancia. Las copias más antiguas que superen este número se eliminan automáticamente tras cada nueva copia.</string>
+    <string name="replay_player_step_back">Retroceder un fotograma</string>
+    <string name="replay_player_step_forward">Avanzar un fotograma</string>
+    <string name="replay_marker_next">Marcador siguiente</string>
+    <string name="replay_marker_previous">Marcador anterior</string>
+    <string name="replay_markers_count">%1$d marcadores</string>
 </resources>

@@ -1221,4 +1221,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="setup_compat_fix">Düzelt</string>
     <string name="backup_retention_title">Örnek yedek saklama</string>
     <string name="backup_retention_desc">Her örnek için kaç yedek saklanacağı. Bu sayıyı aşan eski yedekler her yeni yedekten sonra otomatik olarak silinir.</string>
+    <string name="replay_player_step_back">Bir kare geri git</string>
+    <string name="replay_player_step_forward">Bir kare ileri git</string>
+    <string name="replay_marker_next">Sonraki işaret</string>
+    <string name="replay_marker_previous">Önceki işaret</string>
+    <string name="replay_markers_count">%1$d işaret</string>
 </resources>

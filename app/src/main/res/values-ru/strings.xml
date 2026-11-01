@@ -1225,4 +1225,9 @@
     <string name="setup_compat_fix">Исправить</string>
     <string name="backup_retention_title">Хранение резервных копий экземпляра</string>
     <string name="backup_retention_desc">Сколько резервных копий хранить для каждого экземпляра. Копии старше этого числа автоматически удаляются после каждой новой копии.</string>
+    <string name="replay_player_step_back">На один кадр назад</string>
+    <string name="replay_player_step_forward">На один кадр вперёд</string>
+    <string name="replay_marker_next">Следующая метка</string>
+    <string name="replay_marker_previous">Предыдущая метка</string>
+    <string name="replay_markers_count">%1$d меток</string>
 </resources>

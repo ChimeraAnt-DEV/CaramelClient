@@ -15,10 +15,20 @@ package org.chimeramc.client.core.replay;
 public final class ReplayTimeline {
 
     /** The speeds the cycle steps through, slowest reverse to fastest forward. */
-    public static final float[] SPEEDS = {-2.0f, -1.0f, -0.5f, 0.5f, 1.0f, 1.5f, 2.0f};
+    public static final float[] SPEEDS = {-2.0f, -1.0f, -0.5f, -0.25f, 0.25f, 0.5f, 0.75f, 1.0f, 1.5f, 2.0f};
 
     /** Where a fresh timeline starts in {@link #SPEEDS}. */
-    private static final int DEFAULT_SPEED_INDEX = 4;
+    private static final int DEFAULT_SPEED_INDEX = 7;
+
+    /**
+     * The nominal frame length used to step one frame (item 242).
+     *
+     * <p>The clip is a constant-frame-rate capture, so a frame step is a fixed jump rather than a
+     * decoded-frame lookup. 1/30 s matches the capture cadence; a step is deliberately a visible
+     * nudge on the timeline, and the exact value only has to be consistent between the button and
+     * the label.
+     */
+    public static final long FRAME_STEP_MS = 33L;
 
     private long durationMs;
     private long positionMs;
@@ -101,6 +111,20 @@ public final class ReplayTimeline {
     public void seekFraction(float fraction) {
         if (Float.isNaN(fraction) || Float.isInfinite(fraction)) return;
         seekMs((long) (clamp(fraction, 0f, 1f) * durationMs));
+    }
+
+    /**
+     * Steps the position by one frame in the given direction (item 242).
+     *
+     * <p>Frame stepping is a paused-frame operation: the transport stops first, so a step while
+     * playing lands on the stepped frame and stays there rather than immediately drifting away.
+     * A step of zero or past either end clamps, matching {@link #seekMs}.
+     *
+     * @param forward true to step toward the end, false toward the start
+     */
+    public void stepFrame(boolean forward) {
+        playing = false;
+        seekMs(positionMs + (forward ? FRAME_STEP_MS : -FRAME_STEP_MS));
     }
 
     /** Steps one speed slot forward in the cycle. */

@@ -62,6 +62,7 @@ public final class ReplayClipRepository {
         ReplayCameraPath path = sidecar.cameraPath();
         clip.setCameraPath(path != null && !path.isEmpty() ? path : null);
         clip.setTrack(sidecar.track());
+        clip.setMarkers(sidecar.markers());
         return clip;
     }
 
@@ -129,6 +130,9 @@ public final class ReplayClipRepository {
         }
         if (clip.track() != null && !clip.track().isEmpty()) {
             sidecar.setTrack(clip.track());
+        }
+        if (clip.markers() != null && !clip.markers().isEmpty()) {
+            sidecar.setMarkers(clip.markers());
         }
         ReplayStorage.writeSidecar(clip.file(), sidecar.serialize());
     }

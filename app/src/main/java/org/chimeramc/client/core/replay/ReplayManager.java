@@ -101,6 +101,17 @@ public final class ReplayManager {
 
     /** Samples the local-player feed into the clip's gameplay track while a capture runs. */
     private ReplayTrackRecorder trackRecorder;
+
+    /**
+     * The markers recorded for the clip in flight (item 241).
+     *
+     * <p>A marker is added by the same trigger that flags a highlight — a death, a kill streak, a
+     * combo — plus a {@link ReplayMarkers.Kind#JOIN} at the start of the recording. They live on the
+     * main thread with the rest of the recording state and are written into the sidecar when the
+     * clip is finalised, so the timeline can draw a tick at each one.
+     */
+    private ReplayMarkers markers = ReplayMarkers.empty();
+
     private final Runnable trackTick = new Runnable() {
         @Override
         public void run() {
@@ -201,6 +212,10 @@ public final class ReplayManager {
         this.profile = profile;
         this.state = State.RECORDING;
         this.trigger = ReplaySettings.get(appContext).newTrigger();
+        this.markers = ReplayMarkers.empty();
+        // The clip starts when the world it is recording was already joined, so the opening marker
+        // is the start of the recording itself — the one moment the client knows for certain.
+        this.markers.add(0L, ReplayMarkers.Kind.JOIN, "");
         startTrackRecording();
         attachMetadataOverlay(startedAtMs);
         notifyState();
@@ -270,13 +285,16 @@ public final class ReplayManager {
     public void onRecordingFinished(File file, long durationMs) {
         detachMetadataOverlay();
         ReplayTrack finishedTrack = stopTrackRecording();
+        // The markers are captured before the state resets so the sidecar writes the set that
+        // belongs to this clip, not whatever a later recording leaves behind.
+        ReplayMarkers finishedMarkers = markers;
         this.state = State.SAVING;
         notifyState();
         final ReplayQuality.Profile finishedProfile = profile;
         // The sidecar and the storage prune are file work; keep them off the main thread.
         AppExecutors.run(AppExecutors.Kind.DISK, "replay-finalize", () -> {
             try {
-                writeSidecar(file, durationMs, finishedProfile, finishedTrack);
+                writeSidecar(file, durationMs, finishedProfile, finishedTrack, finishedMarkers);
                 pruneIfNeeded();
             } catch (Throwable t) {
                 Log.w(TAG, "Post-recording bookkeeping failed", t);
@@ -293,6 +311,7 @@ public final class ReplayManager {
     public void onRecordingFailed() {
         detachMetadataOverlay();
         stopTrackRecording();
+        this.markers = ReplayMarkers.empty();
         state = State.IDLE;
         profile = null;
         notifyState();
@@ -326,13 +345,16 @@ public final class ReplayManager {
     }
 
     private void writeSidecar(File file, long durationMs, ReplayQuality.Profile profile,
-                              ReplayTrack track) {
+                              ReplayTrack track, ReplayMarkers clipMarkers) {
         ReplaySidecar sidecar = ReplaySidecar.of(System.currentTimeMillis(),
                 "", "", "");
         sidecar.set("durationMs", String.valueOf(durationMs));
         sidecar.set("resolution", profile == null ? "" : profile.label());
         if (track != null && !track.isEmpty()) {
             sidecar.setTrack(track);
+        }
+        if (clipMarkers != null && !clipMarkers.isEmpty()) {
+            sidecar.setMarkers(clipMarkers);
         }
         ReplayStorage.writeSidecar(file, sidecar.serialize());
     }
@@ -353,15 +375,30 @@ public final class ReplayManager {
     // ---------------------------------------------------------------------------------------------
 
     public void onDeath() {
+        recordMarker(ReplayMarkers.Kind.DEATH, "");
         fireHighlight(ReplayHighlightTrigger.Event.death());
     }
 
     public void onKillStreak(int streak) {
+        recordMarker(ReplayMarkers.Kind.KILL_STREAK, streak > 0 ? String.valueOf(streak) : "");
         fireHighlight(ReplayHighlightTrigger.Event.killStreak(streak));
     }
 
     public void onCombo(int hits) {
+        recordMarker(ReplayMarkers.Kind.COMBO, hits > 0 ? String.valueOf(hits) : "");
         fireHighlight(ReplayHighlightTrigger.Event.combo(hits));
+    }
+
+    /**
+     * Records a marker at the current elapsed time while a capture is running (item 241).
+     *
+     * <p>Only a live recording carries markers: a trigger that fires with no capture in flight has
+     * no clip to attach to, and adding it to the next recording would put an event on a timeline it
+     * did not happen on.
+     */
+    private void recordMarker(ReplayMarkers.Kind kind, String detail) {
+        if (state != State.RECORDING) return;
+        markers.add(elapsedMs(), kind, detail);
     }
 
     /**

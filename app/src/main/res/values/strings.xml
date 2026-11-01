@@ -2362,6 +2362,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_player_speed_1x">1x</string>
     <string name="replay_player_speed">%1$.1fx</string>
     <string name="replay_player_recording_note">Recording stopped so playback and capture do not share the decoder</string>
+    <string name="replay_player_step_back">Step back one frame</string>
+    <string name="replay_player_step_forward">Step forward one frame</string>
+    <string name="replay_marker_next">Next marker</string>
+    <string name="replay_marker_previous">Previous marker</string>
+    <string name="replay_markers_count">%1$d markers</string>
     <string name="replay_camera_free">Free camera</string>
     <string name="replay_camera_recorded">Recorded view</string>
     <string name="replay_camera_note">Free camera detaches playback from the recorded first-person view so you can watch from anywhere. The platform player cannot decode in reverse, so a reversed speed is stepped, which is choppier than forward playback.</string>
@@ -2395,7 +2400,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_cinematic_clear">Clear path</string>
     <string name="replay_cinematic_saved">Camera path saved to the clip</string>
     <string name="replay_controller_hint">A play · Start pause · L2/R2 scrub · Select speed · X delete · Y favorite · L1/R1 cycle</string>
-    <string name="replay_keyboard_hint">Click select · Del delete · Space play · Arrows scrub · Free-camera button detaches the view</string>
+    <string name="replay_keyboard_hint">Click select · Del delete · Space play · Arrows scrub · , . step a frame · [ ] jump marker · Free-camera button detaches the view</string>
     <string name="replay_permission_denied">Screen capture was not granted</string>
     <string name="replay_capture_started">Recording started</string>
     <string name="replay_capture_failed">Recording could not start</string>

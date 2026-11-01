@@ -1194,4 +1194,9 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="setup_compat_fix">Corriger</string>
     <string name="backup_retention_title">Conservation des sauvegardes d\'instance</string>
     <string name="backup_retention_desc">Combien de sauvegardes conserver par instance. Les sauvegardes plus anciennes que ce nombre sont supprimées automatiquement après chaque nouvelle sauvegarde.</string>
+    <string name="replay_player_step_back">Reculer d\'une image</string>
+    <string name="replay_player_step_forward">Avancer d\'une image</string>
+    <string name="replay_marker_next">Marqueur suivant</string>
+    <string name="replay_marker_previous">Marqueur précédent</string>
+    <string name="replay_markers_count">%1$d marqueurs</string>
 </resources>
