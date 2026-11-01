@@ -31,6 +31,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
@@ -217,6 +218,31 @@ public class SettingsActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SELECTED_TAB, selectedTabIndex);
+    }
+
+    /**
+     * Shows or hides a section, animating the size change when motion is allowed (item 124).
+     *
+     * <p>{@code TransitionManager} animates the container's own layout, so a section that grows
+     * from hidden to visible slides its siblings down instead of appearing at full height in one
+     * frame. Under reduced motion the change is applied directly, because the accessibility switch
+     * exists to remove exactly this kind of motion.
+     *
+     * <p>The transition is started on the section's parent, not the section: a {@code GONE} view has
+     * no bounds to animate from, so the animation has to be driven by the container that re-lays
+     * out around it.
+     */
+    private void animateSectionVisibility(@Nullable View section, boolean visible) {
+        if (section == null) return;
+        int target = visible ? View.VISIBLE : View.GONE;
+        if (section.getVisibility() == target) return;
+        ViewGroup parent = section.getParent() instanceof ViewGroup
+                ? (ViewGroup) section.getParent() : null;
+        if (parent != null && DynamicAnim.areAnimationsEnabled()) {
+            TransitionManager.beginDelayedTransition(parent, new AutoTransition()
+                    .setDuration(DynamicAnim.motionDurationMs(200)));
+        }
+        section.setVisibility(target);
     }
 
     private void initTabs() {
@@ -579,12 +605,8 @@ public class SettingsActivity extends BaseActivity {
 
         FeatureSettings fs = FeatureSettings.getInstance();
         master.setChecked(fs.isOptifineModeEnabled());
-        if (details != null) {
-            details.setVisibility(fs.isOptifineModeEnabled() ? View.VISIBLE : View.GONE);
-        }
-        if (badge != null) {
-            badge.setVisibility(fs.isOptifineModeEnabled() ? View.VISIBLE : View.GONE);
-        }
+        animateSectionVisibility(details, fs.isOptifineModeEnabled());
+        animateSectionVisibility(badge, fs.isOptifineModeEnabled());
 
         optifineController = new org.chimeramc.client.core.minecraft.OptifineSettingsController(
                 this, items, summary);
@@ -592,12 +614,8 @@ public class SettingsActivity extends BaseActivity {
 
         master.setOnCheckedChangeListener((btn, checked) -> {
             fs.setOptifineModeEnabled(checked);
-            if (details != null) {
-                details.setVisibility(checked ? View.VISIBLE : View.GONE);
-            }
-            if (badge != null) {
-                badge.setVisibility(checked ? View.VISIBLE : View.GONE);
-            }
+            animateSectionVisibility(details, checked);
+            animateSectionVisibility(badge, checked);
             org.chimeramc.client.core.minecraft.OptifineModeManager.apply(this);
             if (optifineController != null) {
                 optifineController.refreshStatus();
