@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network security config (item 516).
+
+    Cleartext is off by default. The launcher only ever needs it for the package mirror that serves
+    plain HTTP - mcpedl.org and its file host - so that host is named explicitly and everything else
+    (GitHub, Modrinth, CurseForge, the voice relay, Microsoft auth) must use TLS. Turning cleartext
+    off globally and re-enabling it per host is the point: a new endpoint cannot silently ship in
+    the clear, because the base config no longer allows it.
+
+    The debug override trusts a user-installed CA so a proxy (Charles, mitmproxy) can inspect a
+    debug build without weakening a release.
+-->
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system"/>
         </trust-anchors>
     </base-config>
+
+    <!--
+        The mcpedl.org mirror is the one host the launcher talks to over plain HTTP. Its download
+        pages and the file host that serves the packages are both under this domain, so
+        includeSubdomains covers them without naming each one.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">mcpedl.org</domain>
+    </domain-config>
+
     <debug-overrides>
         <trust-anchors>
+            <certificates src="system"/>
             <certificates src="user"/>
         </trust-anchors>
     </debug-overrides>
