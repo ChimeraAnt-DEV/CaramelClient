@@ -182,6 +182,11 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         try {
             initializePreloaderTextInput()
             PreloaderInput.setActivity(this)
+            // The bundled BerryAPI runtime is only dlopen-ed by the preloader bridge; attach it
+            // here, once the game process is up, so its subsystems are live for this session.
+            // Fail-closed and never fatal: a missing library or no usable hook backend returns
+            // false and the dependent features stay greyed rather than half-installed.
+            org.chimeramc.client.preloader.BerryApi.ensureAttached()
             val storageProfileId = intent.getStringExtra(MinecraftLauncher.EXTRA_STORAGE_PROFILE_ID)
             // A per-instance controller binding takes precedence over plain pad detection, so
             // an instance can bring its own controller setup into the session.

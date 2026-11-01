@@ -56,6 +56,25 @@ public final class BerryApi {
         }
     }
 
+    /**
+     * Attaches BerryAPI if it is not already attached, at most once per process.
+     *
+     * <p>The bundled library is only {@code dlopen}ed, never {@code BERRY_Inject}ed, so before this
+     * call {@link #isAttached()} is always false and none of its subsystems are live. This is the
+     * explicit attach the launcher performs when a game session starts.
+     *
+     * <p>Fail-closed and never fatal: a missing library, a missing symbol or a build with no usable
+     * hook backend returns false and leaves {@link #isAttached()} false, so the dependent features
+     * stay greyed rather than half-installed.
+     */
+    public static boolean ensureAttached() {
+        try {
+            return nativeEnsureAttached();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
     /** BerryAPI's own version string, or an empty string when unavailable. */
     public static String version() {
         try {
@@ -106,6 +125,8 @@ public final class BerryApi {
     private static native boolean nativeIsAvailable();
 
     private static native boolean nativeIsAttached();
+
+    private static native boolean nativeEnsureAttached();
 
     private static native String nativeVersion();
 
