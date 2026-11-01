@@ -9,6 +9,7 @@ import org.chimeramc.client.core.minecraft.MinecraftActivity;
 import org.chimeramc.client.core.minecraft.MinecraftActivityState;
 import org.chimeramc.client.core.minecraft.MinecraftImportIntents;
 import org.chimeramc.client.util.InstanceBackupManager;
+import org.chimeramc.client.util.IntentSanitizer;
 import org.chimeramc.client.util.MinecraftUriHandler;
 
 public class IntentHandler extends BaseActivity {
@@ -27,7 +28,15 @@ public class IntentHandler extends BaseActivity {
     }
 
     private void handleDeepLink(Intent originalIntent) {
-        Uri data = originalIntent.getData();
+        // The deep link is external input (item 178): this activity is exported with a VIEW filter,
+        // so any app or web page can reach it. Only a scheme the launcher is willing to be pointed
+        // at is accepted, and the extras are length-checked before use.
+        Uri data = IntentSanitizer.sanitizeUri(originalIntent.getData());
+        if (originalIntent.getData() != null && data == null) {
+            // The uri was refused: fall through to the plain launcher route rather than acting on
+            // an unchecked scheme.
+            Log.w(TAG, "refused a deep link with an unsupported scheme");
+        }
 
         if (data != null && MinecraftUriHandler.isMinecraftUri(data)) {
             handleMinecraftUri(originalIntent, data);
