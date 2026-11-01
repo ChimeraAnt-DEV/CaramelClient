@@ -1,7 +1,6 @@
 package org.chimeramc.client.core.auth;
 
 import android.content.Context;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
@@ -149,7 +148,7 @@ public final class SecretVault {
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                 .setKeySize(256);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (org.chimeramc.client.util.ApiLevels.atLeastN()) {
             // A key that survives a lock-screen change is the difference between an account that
             // stays signed in and one that silently signs out when the user updates their PIN.
             spec.setInvalidatedByBiometricEnrollment(false);
