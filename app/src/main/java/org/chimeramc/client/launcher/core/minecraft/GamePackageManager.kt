@@ -21,6 +21,7 @@ import org.chimeramc.client.core.minecraft.ExtractionManifest
 import org.chimeramc.client.core.minecraft.NativeLibraryVersionGate
 import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
 import org.chimeramc.client.util.AtomicFiles
+import org.chimeramc.client.core.minecraft.LibraryHashManifest
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -273,7 +274,10 @@ class GamePackageManager private constructor(
             }
         )
 
-        if (allPresent) {
+        // A cache that is present must also be intact. Presence plus length cannot see a library
+        // rewritten with different bytes of the same size, which loads to a dlopen failure or a
+        // native crash; the hash record is what makes that case a re-extract instead (item 303).
+        if (allPresent && verifyLibraryHashes(outputDir)) {
             report("Minecraft library cache hit: ${outputDir.absolutePath}")
             for (lib in extractableLibs) {
                 try {
@@ -322,10 +326,65 @@ class GamePackageManager private constructor(
                 AtomicFiles.writeOrThrow(manifestFile, manifestString)
                 File(outputDir, ".extraction_marker").delete()
                 writeNativeExtractionVersion(versionFile, nativeExtractionVersion)
+                writeLibraryHashRecord(outputDir, abi)
                 report("Minecraft library cache manifest written")
             } catch (e: Exception) {
                 mirrorLogcat('W', "Failed to write extraction manifest: ${e.message}")
                 report("Failed to write extraction manifest: ${e.message}")
+            }
+        }
+    }
+
+    /**
+     * Records the SHA-256 of every library just extracted, so the next launch can tell a cache that
+     * is merely present from one that is actually intact (item 303).
+     *
+     * <p>A best-effort write: a failure here costs a re-hash next launch, never a failed one, so it
+     * must not be allowed to turn a completed extraction into an error.
+     */
+    private fun writeLibraryHashRecord(outputDir: File, abi: String) {
+        try {
+            val entries = LinkedHashMap<String, LibraryHashManifest.Entry>()
+            for (lib in extractableLibs) {
+                val file = File(outputDir, lib)
+                if (!file.isFile || file.length() <= 0L) continue
+                LibraryHashManifest.entryFor(file, LibraryHashManifest.REAL)?.let { entries[lib] = it }
+            }
+            if (entries.isEmpty()) return
+            val text = "abi=$abi\n" + LibraryHashManifest.build(entries)
+            AtomicFiles.writeOrThrow(File(outputDir, LIBRARY_HASH_RECORD), text)
+        } catch (e: Exception) {
+            mirrorLogcat('W', "Failed to write the library hash record: ${e.message}")
+        }
+    }
+
+    /**
+     * Verifies the extracted libraries against the record written after extraction.
+     *
+     * <p>Only the metadata-changed files are re-hashed, so a healthy cache hit costs one stat per
+     * library. A record that is absent or was written for another ABI reads as "nothing to check",
+     * not as damage: the marker/version/manifest checks already cover the case where a cache is
+     * genuinely stale, and treating a missing record as damage would re-extract on the first launch
+     * after any launcher update.
+     */
+    private fun verifyLibraryHashes(outputDir: File): Boolean {
+        val recordFile = File(outputDir, LIBRARY_HASH_RECORD)
+        val text = try {
+            if (recordFile.isFile) recordFile.readText() else return true
+        } catch (e: Exception) {
+            mirrorLogcat('W', "Failed to read the library hash record: ${e.message}")
+            return true
+        }
+        val body = text.substringAfter('\n', "")
+        val record = LibraryHashManifest.parse(body)
+        if (record.isEmpty()) return true
+        return when (LibraryHashManifest.verify(record, outputDir, LibraryHashManifest.REAL)) {
+            LibraryHashManifest.Verdict.INTACT -> true
+            LibraryHashManifest.Verdict.NO_RECORD -> true
+            LibraryHashManifest.Verdict.DAMAGED -> {
+                mirrorLogcat('W', "Extracted library cache is damaged; it will be re-extracted")
+                report("Extracted library hash check failed: re-extracting")
+                false
             }
         }
     }
@@ -350,6 +409,7 @@ class GamePackageManager private constructor(
         val keepSet = keep.toHashSet()
         keepSet.add(".extraction_manifest")
         keepSet.add("native_extraction_version")
+        keepSet.add(LIBRARY_HASH_RECORD)
         val children = outputDir.listFiles() ?: return
         for (child in children) {
             if (child.isFile && child.name.endsWith(".so")) {
@@ -945,6 +1005,13 @@ class GamePackageManager private constructor(
          * existing cache is not invalidated by the removal alone.
          */
         private const val EXTRACTION_MANIFEST_TOKEN = "img_v4"
+
+        /**
+         * The file holding each extracted library's SHA-256 (item 303). Beside the manifest and the
+         * extraction version, and preserved by the stale-cache wipe for the same reason.
+         */
+        const val LIBRARY_HASH_RECORD = "library_hashes"
+
 
         @Volatile
         private var instance: GamePackageManager? = null
