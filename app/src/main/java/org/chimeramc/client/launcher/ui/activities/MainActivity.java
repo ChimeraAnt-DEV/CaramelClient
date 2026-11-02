@@ -125,6 +125,9 @@ import okhttp3.OkHttpClient;
 
     private static final long TIP_ROTATE_MS = 8000L;
 
+    /** The tip currently shown, or -1 before the first paint (item 283). */
+    private int tipIndex = -1;
+
     private ActivityMainBinding binding;
     private MinecraftLauncher minecraftLauncher;
     private LanguageManager languageManager;
@@ -2008,10 +2011,31 @@ import okhttp3.OkHttpClient;
         return action;
     }
 
+    /**
+     * Shows the tip carousel, or hides it once the launch budget is spent (item 283).
+     *
+     * <p>The retirement and the no-repeat rotation are {@link org.chimeramc.client.core.stats
+     * .TipsCarousel}'s rules; this method only paints the result and owns the timer. The panel is
+     * hidden rather than left showing a stale tip, because "no tips any more" is a deliberate
+     * state, not an empty rotation.
+     */
     private void showRandomTip() {
         String[] tips = getResources().getStringArray(R.array.launcher_tips);
-        if (tips.length == 0 || binding.tipText == null) return;
-        binding.tipText.setText(tips[new java.util.Random().nextInt(tips.length)]);
+        if (binding.tipText == null) return;
+
+        int launches = org.chimeramc.client.core.stats.LaunchStatsRecorder
+                .load(this).launches();
+        if (tips.length == 0 || !org.chimeramc.client.core.stats.TipsCarousel.shouldShow(launches)) {
+            binding.tipText.setVisibility(android.view.View.GONE);
+            return;
+        }
+
+        final java.util.Random random = new java.util.Random();
+        tipIndex = org.chimeramc.client.core.stats.TipsCarousel.nextIndex(
+                tips.length, tipIndex, random.nextInt(Integer.MAX_VALUE));
+        binding.tipText.setVisibility(android.view.View.VISIBLE);
+        binding.tipText.setText(tips[tipIndex]);
+
         // The tip rotation is a self-reposting tick. It runs through the activity's scope so
         // onDestroy removes the pending post instead of firing into a destroyed Activity
         // (items 14, 295).
@@ -2020,9 +2044,12 @@ import okhttp3.OkHttpClient;
             @Override
             public void run() {
                 if (binding == null || binding.tipText == null) return;
+                final int next = org.chimeramc.client.core.stats.TipsCarousel.nextIndex(
+                        tips.length, tipIndex, random.nextInt(Integer.MAX_VALUE));
                 binding.tipText.animate().alpha(0f).setDuration(300).withEndAction(() -> {
                     if (binding == null || binding.tipText == null) return;
-                    binding.tipText.setText(tips[new java.util.Random().nextInt(tips.length)]);
+                    tipIndex = next;
+                    binding.tipText.setText(tips[tipIndex]);
                     binding.tipText.animate().alpha(1f).setDuration(300).start();
                 }).start();
                 tipScope.postDelayed(this, TIP_ROTATE_MS);
