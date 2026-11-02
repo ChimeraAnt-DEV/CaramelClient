@@ -1243,4 +1243,8 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="performance_preset_thermal_apply">Gunakan Baterai</string>
     <string name="instance_size_on_disk">%1$s di disk</string>
     <string name="nav_tab_needs_attention">, perlu perhatian</string>
+    <string name="server_favourite">Favorit %1$s</string>
+    <string name="server_unfavourite">Hapus %1$s dari favorit</string>
+    <string name="servers_favourites_first">Favorit ditampilkan lebih dulu</string>
+    <string name="server_favourite_label">Favorit</string>
 </resources>

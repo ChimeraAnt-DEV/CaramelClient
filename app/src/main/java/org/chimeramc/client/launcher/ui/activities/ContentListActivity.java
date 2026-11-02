@@ -107,6 +107,8 @@ public class ContentListActivity extends BaseActivity {
     private ExecutorService pingExecutor;
     /** Server addresses ("ip:port") that already answered; they are not re-pinged every refresh. */
     private final java.util.Set<String> pingedServerKeys = new java.util.HashSet<>();
+    /** Starred server keys, read once and kept in step with the store (item 254). */
+    private java.util.Set<String> favouriteServerKeys = java.util.Collections.emptySet();
 
     private void showProgressDialog(String message) {
         // Showing a dialog on a finishing Activity throws WindowManager.BadTokenException, which
@@ -284,6 +286,9 @@ public class ContentListActivity extends BaseActivity {
                 binding.searchEditText.setVisibility(View.VISIBLE);
                 binding.customFlatButton.setText(getString(R.string.quick_launch_add_server));
                 binding.customFlatButton.setVisibility(View.VISIBLE);
+                // Read the stars before the adapter is built so the first paint is already
+                // favourites-first rather than reordering once the list arrives (item 254).
+                favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.load(this);
                 setupServersRecyclerView();
                 break;
         }
@@ -464,10 +469,28 @@ public class ContentListActivity extends BaseActivity {
     }
 
     private void setupServersRecyclerView() {
-        serversAdapter = new org.chimeramc.client.ui.adapter.ServersAdapter(new ArrayList<>(), server -> showDeleteServerDialog(server));
+        serversAdapter = new org.chimeramc.client.ui.adapter.ServersAdapter(
+                new ArrayList<>(),
+                new org.chimeramc.client.ui.adapter.ServersAdapter.OnServerClickListener() {
+                    @Override
+                    public void onDeleteClick(ServerItem server) {
+                        showDeleteServerDialog(server);
+                    }
+
+                    @Override
+                    public void onFavouriteToggle(ServerItem server) {
+                        // The star is local presentation state, so the write is a plain
+                        // SharedPreferences apply and the list re-sorts immediately (item 254).
+                        favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.toggle(
+                                        ContentListActivity.this,
+                                        org.chimeramc.client.core.content.ServerFavourites.key(server));
+                        serversAdapter.setFavourites(favouriteServerKeys);
+                    }
+                });
         GameVersion currentVersion = versionManager.getSelectedVersion();
         serversAdapter.setSelectedVersionCode(
                 currentVersion == null ? null : currentVersion.versionCode);
+        serversAdapter.setFavourites(favouriteServerKeys);
         binding.contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.contentRecyclerView.setAdapter(serversAdapter);
         binding.contentRecyclerView.post(() -> DynamicAnim.staggerRecyclerChildren(binding.contentRecyclerView));

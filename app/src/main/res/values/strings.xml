@@ -1304,6 +1304,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="server_added">Server added</string>
     <string name="server_exists">That server is already in your list</string>
     <string name="server_add_failed">Could not add the server</string>
+    <string name="server_favourite_label">Favourite</string>
+    <string name="server_favourite">Favourite %1$s</string>
+    <string name="server_unfavourite">Remove %1$s from favourites</string>
+    <string name="servers_favourites_first">Favourites are shown first</string>
     <string name="invalid_port">Invalid port number</string>
     <string name="invite_code_required">Invite code is required</string>
     <string name="world_name_required">World name is required</string>

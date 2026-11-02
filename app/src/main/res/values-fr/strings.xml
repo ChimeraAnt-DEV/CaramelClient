@@ -1219,4 +1219,8 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="performance_preset_thermal_apply">Utiliser Batterie</string>
     <string name="instance_size_on_disk">%1$s sur le disque</string>
     <string name="nav_tab_needs_attention">, nécessite votre attention</string>
+    <string name="server_favourite">Favori : %1$s</string>
+    <string name="server_unfavourite">Retirer %1$s des favoris</string>
+    <string name="servers_favourites_first">Les favoris sont affichés en premier</string>
+    <string name="server_favourite_label">Favori</string>
 </resources>

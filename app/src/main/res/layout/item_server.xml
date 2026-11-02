@@ -50,6 +50,17 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/server_favourite_button"
+            android:layout_width="@dimen/min_touch_target"
+            android:layout_height="@dimen/min_touch_target"
+            android:layout_marginEnd="@dimen/space_1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/server_favourite_label"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_server_star"
+            android:tint="@color/server_star_tint" />
+
         <Button
             android:id="@+id/server_delete_button"
             android:layout_width="wrap_content"

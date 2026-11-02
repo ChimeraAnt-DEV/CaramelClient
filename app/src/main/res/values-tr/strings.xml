@@ -1246,4 +1246,8 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="performance_preset_thermal_apply">Pil kullan</string>
     <string name="instance_size_on_disk">Diskte %1$s</string>
     <string name="nav_tab_needs_attention">, ilgi bekliyor</string>
+    <string name="server_favourite">%1$s favorilere ekle</string>
+    <string name="server_unfavourite">%1$s favorilerden çıkar</string>
+    <string name="servers_favourites_first">Favoriler önce gösterilir</string>
+    <string name="server_favourite_label">Favori</string>
 </resources>

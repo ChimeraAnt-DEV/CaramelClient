@@ -1250,4 +1250,8 @@
     <string name="performance_preset_thermal_apply">Использовать «Батарея»</string>
     <string name="instance_size_on_disk">%1$s на диске</string>
     <string name="nav_tab_needs_attention">, требует внимания</string>
+    <string name="server_favourite">В избранное: %1$s</string>
+    <string name="server_unfavourite">Убрать %1$s из избранного</string>
+    <string name="servers_favourites_first">Избранное показывается первым</string>
+    <string name="server_favourite_label">Избранное</string>
 </resources>
