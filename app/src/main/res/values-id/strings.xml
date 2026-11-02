@@ -1247,4 +1247,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="server_unfavourite">Hapus %1$s dari favorit</string>
     <string name="servers_favourites_first">Favorit ditampilkan lebih dulu</string>
     <string name="server_favourite_label">Favorit</string>
+    <string name="cosmetics_sync_setting_title">Sinkronisasi kosmetik</string>
+    <string name="cosmetics_sync_setting_desc">Tampilkan cape, aksesori, dan peliharaan yang kamu pakai kepada pengguna Glowberry lain di dunia yang sama, dan lihat milik mereka. Hanya di sisi klien; mematikannya menghentikan pengiriman dan penerimaan.</string>
 </resources>

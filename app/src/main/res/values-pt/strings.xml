@@ -1223,4 +1223,6 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="server_unfavourite">Remover %1$s dos favoritos</string>
     <string name="servers_favourites_first">Os favoritos são mostrados primeiro</string>
     <string name="server_favourite_label">Favorito</string>
+    <string name="cosmetics_sync_setting_title">Sincronização de cosméticos</string>
+    <string name="cosmetics_sync_setting_desc">Mostre a sua capa, acessório e mascote equipados a outros usuários Glowberry no mesmo mundo, e veja os deles. Apenas no cliente; desativar interrompe o envio e a receção.</string>
 </resources>

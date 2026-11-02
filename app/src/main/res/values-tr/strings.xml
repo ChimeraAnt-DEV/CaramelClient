@@ -1250,4 +1250,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="server_unfavourite">%1$s favorilerden çıkar</string>
     <string name="servers_favourites_first">Favoriler önce gösterilir</string>
     <string name="server_favourite_label">Favori</string>
+    <string name="cosmetics_sync_setting_title">Kozmetik eşitleme</string>
+    <string name="cosmetics_sync_setting_desc">Kuşandığın pelerin, aksesuar ve evcil hayvanı aynı dünyadaki diğer Glowberry kullanıcılarına göster, onlarınkini gör. Yalnızca istemci tarafı; kapatınca hem gönderme hem alma durur.</string>
 </resources>

@@ -1220,4 +1220,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="server_unfavourite">%1$s をお気に入りから削除</string>
     <string name="servers_favourites_first">お気に入りが先に表示されます</string>
     <string name="server_favourite_label">お気に入り</string>
+    <string name="cosmetics_sync_setting_title">コスメの同期</string>
+    <string name="cosmetics_sync_setting_desc">装備中のケープ・アクセサリ・ペットを同じワールドの他の Glowberry ユーザーに表示し、相手のものも表示します。クライアント側のみ。オフにすると送受信の両方が停止します。</string>
 </resources>

@@ -576,6 +576,19 @@ public class SettingsActivity extends BaseActivity {
                     (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
         }
 
+        // Cosmetic sync (item 466): the switch lives here, in Settings, as the one place a user
+        // expects to turn a network feature off. It defaults on, so an existing setup keeps the
+        // behaviour it already had, and the panel's own toggle reads the same preference.
+        SwitchMaterial switchCosmeticSync = findViewById(R.id.switch_cosmetic_sync);
+        if (switchCosmeticSync != null) {
+            org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager manager =
+                    org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
+                            .getInstance(this);
+            switchCosmeticSync.setChecked(manager.isCosmeticSyncEnabled());
+            switchCosmeticSync.setOnCheckedChangeListener(
+                    (btn, checked) -> manager.setCosmeticSyncEnabled(checked));
+        }
+
         // Backup retention (item 144): the slider maps 0..9 to 1..10 backups kept per instance.
         SeekBar seekBackupRetention = findViewById(R.id.seek_backup_retention);
         TextView valueBackupRetention = findViewById(R.id.value_backup_retention);

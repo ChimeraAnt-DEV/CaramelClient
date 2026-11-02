@@ -1078,6 +1078,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="cosmetics_route_native_live">This piece reaches the game through the native player-render hook, so it appears on your character in game.</string>
     <string name="cosmetics_route_preview_only">Preview only on this build: the native player-render hook is not live this session, so this piece shows here but not in game yet.</string>
     <string name="cosmetics_native_inactive">Native renderer is not active this session, so cosmetics show in this preview only. They appear in game once the renderer hook is available on your build.</string>
+    <string name="cosmetics_sync_setting_title">Cosmetic sync</string>
+    <string name="cosmetics_sync_setting_desc">Advertise your equipped cape, accessory and pet to other Glowberry users in the same world, and see theirs. Client-side only; turning it off stops both sending and receiving.</string>
     <string name="cosmetics_sync_off">Cosmetic sync is off — other Chimera users cannot see your cosmetics.</string>
     <string name="cosmetics_sync_with_game">Cosmetic sync starts with the game, so other Chimera users in the same world can see your equipped cape, accessory and pet — and you can see theirs.</string>
     <string name="cosmetics_sync_seen">Cosmetic sync is on (%2$s) — %1$d other Chimera user(s) in this world can see your cosmetics.</string>

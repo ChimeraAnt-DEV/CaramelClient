@@ -1244,4 +1244,6 @@
     <string name="server_unfavourite">将 %1$s 从收藏中移除</string>
     <string name="servers_favourites_first">收藏项优先显示</string>
     <string name="server_favourite_label">收藏</string>
+    <string name="cosmetics_sync_setting_title">外观同步</string>
+    <string name="cosmetics_sync_setting_desc">将你装备的披风、饰品和宠物展示给同一世界中的其他 Glowberry 用户，并查看他们的。仅在客户端进行；关闭后发送和接收都会停止。</string>
 </resources>

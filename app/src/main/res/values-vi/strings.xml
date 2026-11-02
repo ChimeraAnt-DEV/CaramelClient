@@ -1253,4 +1253,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="server_unfavourite">Xóa %1$s khỏi yêu thích</string>
     <string name="servers_favourites_first">Mục yêu thích được hiển thị trước</string>
     <string name="server_favourite_label">Yêu thích</string>
+    <string name="cosmetics_sync_setting_title">Đồng bộ trang phục</string>
+    <string name="cosmetics_sync_setting_desc">Hiển thị áo choàng, phụ kiện và thú cưng đang dùng cho người dùng Glowberry khác trong cùng thế giới, và xem của họ. Chỉ ở phía ứng dụng; tắt sẽ dừng cả gửi và nhận.</string>
 </resources>

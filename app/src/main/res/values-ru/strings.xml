@@ -1254,4 +1254,6 @@
     <string name="server_unfavourite">Убрать %1$s из избранного</string>
     <string name="servers_favourites_first">Избранное показывается первым</string>
     <string name="server_favourite_label">Избранное</string>
+    <string name="cosmetics_sync_setting_title">Синхронизация косметики</string>
+    <string name="cosmetics_sync_setting_desc">Показывайте свои плащ, аксессуар и питомца другим пользователям Glowberry в том же мире и видьте их. Только на клиенте; отключение останавливает и отправку, и приём.</string>
 </resources>
