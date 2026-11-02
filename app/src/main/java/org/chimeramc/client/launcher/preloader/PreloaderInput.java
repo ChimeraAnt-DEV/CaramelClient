@@ -112,8 +112,13 @@ public class PreloaderInput {
     /** Records the refresh rate the launcher resolved, for the refresh-rate item's report. */
     public static native void nativeSetOptifineRefreshTarget(int hz);
 
-    /** Configures the dynamic-render-distance governor bounds. */
-    public static native void nativeConfigureRenderDistance(int minDistance, int maxDistance, int fpsThreshold);
+    /** Configures the dynamic-render-distance governor bounds and step rule. */
+    public static native void nativeConfigureRenderDistance(int minDistance, int maxDistance,
+                                                           int fpsThreshold, int stepSize,
+                                                           long minDwellMs);
+
+    /** The number of accepted render-distance changes so far (item 383). */
+    public static native int nativeRenderDistanceChangeCount();
 
     /** The tick count the callback-trimming hook has observed. */
     public static native long nativeOptifineTickCount();
@@ -359,10 +364,21 @@ public class PreloaderInput {
         }
     }
 
-    public static void configureRenderDistance(int minDistance, int maxDistance, int fpsThreshold) {
+    public static void configureRenderDistance(int minDistance, int maxDistance, int fpsThreshold,
+                                               int stepSize, long minDwellMs) {
         try {
-            nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold);
+            nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
+                    minDwellMs);
         } catch (UnsatisfiedLinkError e) {
+        }
+    }
+
+    /** The number of accepted render-distance changes, or 0 when the preloader is absent. */
+    public static int renderDistanceChangeCount() {
+        try {
+            return nativeRenderDistanceChangeCount();
+        } catch (UnsatisfiedLinkError e) {
+            return 0;
         }
     }
 

@@ -23,6 +23,10 @@ compared against.
 
 ## Unreleased
 
+- **Render-distance governor** — `ConfigureOptifineRenderDistance` takes a step size and a minimum
+  dwell, and `RenderDistanceChangeCount` reports how many times the governor has moved the distance.
+  The dwell stops a drop and a restore from landing on consecutive sustain windows, which read as a
+  flickering render distance. Pinned by `RenderDistanceGovernorTest`.
 - **`BerryApi`** — the launcher can attach the bundled BerryAPI runtime and read its world seam
   (position and rotation) through the same snapshot the local-player feed publishes.
 - **`pl_get_abi_version()`** — the stable C ABI version is published and mirrored on the Java side as
