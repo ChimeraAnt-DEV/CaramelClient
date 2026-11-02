@@ -21,7 +21,12 @@ public final class AntEggBridge {
 
     private static native String nativeValidate(String filePath);
 
-    private static native String nativeLoadMod(String filePath, String sandboxRoot);
+    /**
+     * Extracts a package. {@code allowedRoot} is the app's private directory the sandbox root must
+     * live under; the native side re-checks it (item 454), so a wrong root is refused on both sides.
+     */
+    private static native String nativeLoadMod(String filePath, String sandboxRoot,
+                                               String allowedRoot);
 
     private static native boolean nativeLooksLikeAntEgg(String fileName);
 
@@ -58,9 +63,19 @@ public final class AntEggBridge {
      * @return null when extraction succeeded, otherwise a reason
      */
     public static String extract(String filePath, String sandboxRoot) {
+        java.io.File sandbox = new java.io.File(sandboxRoot);
+        // The sandbox root is <private-storage>/AntEggs, so its parent is the app's private
+        // directory — the root the extraction must stay inside. Derived rather than passed so this
+        // bridge needs no Context; the native side re-checks the same containment before writing.
+        java.io.File allowedRoot = sandbox.getParentFile();
+        String localRefusal = AntEggSandbox.describeRefusal(sandbox, allowedRoot);
+        if (localRefusal != null) {
+            return localRefusal;
+        }
         if (isNativeAvailable()) {
             try {
-                String error = nativeLoadMod(filePath, sandboxRoot);
+                String error = nativeLoadMod(filePath, sandboxRoot,
+                        allowedRoot == null ? "" : allowedRoot.getAbsolutePath());
                 if (error != null && !error.isEmpty()) {
                     return error;
                 }
@@ -69,8 +84,7 @@ public final class AntEggBridge {
                 // fall through to Java
             }
         }
-        AntEggPackage.Result result = AntEggPackage.extract(new java.io.File(filePath),
-                new java.io.File(sandboxRoot));
+        AntEggPackage.Result result = AntEggPackage.extract(new java.io.File(filePath), sandbox);
         return result.isValid() ? null : result.error;
     }
 

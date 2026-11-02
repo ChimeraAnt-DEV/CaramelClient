@@ -1286,4 +1286,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="usage_stats_preview_title">Isi laporan penggunaan</string>
     <string name="usage_stats_preview_close">Tutup</string>
     <string name="usage_stats_unavailable">Build ini tidak punya kolektor, jadi tidak ada yang bisa dikirim.</string>
+    <string name="diagnostics_field_feature_availability">Ketersediaan fitur</string>
+    <string name="diagnostics_field_hook_self_test">Uji mandiri hook</string>
 </resources>

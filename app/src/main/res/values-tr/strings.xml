@@ -1289,4 +1289,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="usage_stats_preview_title">Kullanım raporu içeriği</string>
     <string name="usage_stats_preview_close">Kapat</string>
     <string name="usage_stats_unavailable">Bu derlemede toplayıcı yapılandırılmamış, hiçbir şey gönderilemez.</string>
+    <string name="diagnostics_field_feature_availability">Özellik kullanılabilirliği</string>
+    <string name="diagnostics_field_hook_self_test">Kanca öz testi</string>
 </resources>

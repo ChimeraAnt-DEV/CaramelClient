@@ -23,6 +23,11 @@ compared against.
 
 ## Unreleased
 
+- **Signature scan cache** — the resolver stores a scan's offsets, keyed by the game library's ELF
+  build id, in a private directory the launcher sets with `nativeSetSignatureCacheDir`. A repeat
+  launch of the same game build skips the byte-pattern scan; a game update cannot read the previous
+  build's offsets, and a cached offset that falls outside the module is dropped. An empty directory
+  disables the cache.
 - **Render-distance governor** — `ConfigureOptifineRenderDistance` takes a step size and a minimum
   dwell, and `RenderDistanceChangeCount` reports how many times the governor has moved the distance.
   The dwell stops a drop and a restore from landing on consecutive sustain windows, which read as a

@@ -1,0 +1,42 @@
+{
+  "es": {
+    "diagnostics_field_feature_availability": "Disponibilidad de funciones",
+    "diagnostics_field_hook_self_test": "Autoprueba de hooks"
+  },
+  "fr": {
+    "diagnostics_field_feature_availability": "Disponibilité des fonctionnalités",
+    "diagnostics_field_hook_self_test": "Autotest des hooks"
+  },
+  "hi": {
+    "diagnostics_field_feature_availability": "फ़ीचर उपलब्धता",
+    "diagnostics_field_hook_self_test": "हुक स्व-परीक्षण"
+  },
+  "id": {
+    "diagnostics_field_feature_availability": "Ketersediaan fitur",
+    "diagnostics_field_hook_self_test": "Uji mandiri hook"
+  },
+  "ja": {
+    "diagnostics_field_feature_availability": "機能の可用性",
+    "diagnostics_field_hook_self_test": "フックのセルフテスト"
+  },
+  "pt": {
+    "diagnostics_field_feature_availability": "Disponibilidade de recursos",
+    "diagnostics_field_hook_self_test": "Autoteste de hooks"
+  },
+  "ru": {
+    "diagnostics_field_feature_availability": "Доступность функций",
+    "diagnostics_field_hook_self_test": "Самотест хуков"
+  },
+  "tr": {
+    "diagnostics_field_feature_availability": "Özellik kullanılabilirliği",
+    "diagnostics_field_hook_self_test": "Kanca öz testi"
+  },
+  "vi": {
+    "diagnostics_field_feature_availability": "Tính khả dụng của tính năng",
+    "diagnostics_field_hook_self_test": "Tự kiểm tra hook"
+  },
+  "zh-rCN": {
+    "diagnostics_field_feature_availability": "功能可用性",
+    "diagnostics_field_hook_self_test": "钩子自检"
+  }
+}

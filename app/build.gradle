@@ -185,6 +185,17 @@ android {
                 debugSymbolLevel 'FULL'
             }
             buildConfigField "boolean", "IS_BETA", "false"
+            externalNativeBuild {
+                cmake {
+                    // Item 388: the preloader times each post-render callback and names one that
+                    // overruns, but only when this define is present. It is a preloader-specific
+                    // define rather than NDEBUG because the NDK toolchain defines NDEBUG for this
+                    // build type too (AGP configures CMake as RelWithDebInfo), so NDEBUG cannot
+                    // express "a debug build". Release and beta omit it, so the shipped detour
+                    // carries neither the clock read nor the branch.
+                    arguments "-DANDROID_STL=c++_shared", "-DPRELOADER_HOOK_TIMING=1"
+                }
+            }
         }
         beta {
             initWith release

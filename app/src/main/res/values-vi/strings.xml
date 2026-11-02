@@ -1292,4 +1292,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="usage_stats_preview_title">Nội dung báo cáo sử dụng</string>
     <string name="usage_stats_preview_close">Đóng</string>
     <string name="usage_stats_unavailable">Bản dựng này không có bộ thu thập, không thể gửi gì.</string>
+    <string name="diagnostics_field_feature_availability">Tính khả dụng của tính năng</string>
+    <string name="diagnostics_field_hook_self_test">Tự kiểm tra hook</string>
 </resources>

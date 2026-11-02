@@ -1262,4 +1262,6 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="usage_stats_preview_title">Contenido del informe de uso</string>
     <string name="usage_stats_preview_close">Cerrar</string>
     <string name="usage_stats_unavailable">Esta compilación no tiene colector configurado, así que no se puede enviar nada.</string>
+    <string name="diagnostics_field_feature_availability">Disponibilidad de funciones</string>
+    <string name="diagnostics_field_hook_self_test">Autoprueba de hooks</string>
 </resources>

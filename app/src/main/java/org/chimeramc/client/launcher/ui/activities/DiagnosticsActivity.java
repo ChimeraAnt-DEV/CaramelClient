@@ -34,6 +34,7 @@ import org.chimeramc.client.launcher.core.minecraft.LaunchReadiness;
 import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.core.mods.ModLoadDiagnostics;
+import org.chimeramc.client.core.mods.ModManager;
 import org.chimeramc.client.preloader.PreloaderInput;
 import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
 import org.chimeramc.client.ui.activities.BaseActivity;
@@ -49,7 +50,9 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.chimeramc.client.core.backend.GameBridge;
+import org.chimeramc.client.core.backend.FeatureAvailabilityReport;
 import org.chimeramc.client.core.backend.HookAvailability;
+import org.chimeramc.client.core.backend.HookSelfTestReport;
 import org.chimeramc.client.preloader.BerryApi;
 
 /**
@@ -113,6 +116,16 @@ public class DiagnosticsActivity extends BaseActivity {
         boolean skinSeam;
         /** Whether the preloader's player-render hook is live (read once, off the UI thread). */
         boolean renderHookLive;
+        /**
+         * Item 453: the preloader's per-feature hook availability report. Never null; an
+         * unreadable/absent blob reads as the empty report, which the row renders as "no report".
+         */
+        FeatureAvailabilityReport featureAvailability = FeatureAvailabilityReport.empty();
+        /**
+         * Item 452: the preloader's hook self-test report. Never null; an absent blob reads as the
+         * empty report, which the row renders as "no self-test".
+         */
+        HookSelfTestReport hookSelfTest = HookSelfTestReport.empty();
         AccountDiagnostics.Snapshot account = new AccountDiagnostics.Snapshot();
         List<ModLoadDiagnostics.Record> modRecords = Collections.emptyList();
         /** The last launch that died inside the game activity, or null when none is recorded. */
@@ -297,6 +310,18 @@ public class DiagnosticsActivity extends BaseActivity {
             out.skinSeam = out.nativeLoaded && PreloaderInput.nativeHasCapturedSkin();
         } catch (Throwable ignored) {
             out.skinSeam = false;
+        }
+        try {
+            out.featureAvailability = FeatureAvailabilityReport.parse(
+                    out.nativeLoaded ? ModManager.featureAvailability() : "");
+        } catch (Throwable ignored) {
+            out.featureAvailability = FeatureAvailabilityReport.empty();
+        }
+        try {
+            out.hookSelfTest = HookSelfTestReport.parse(
+                    out.nativeLoaded ? ModManager.hookSelfTest() : "");
+        } catch (Throwable ignored) {
+            out.hookSelfTest = HookSelfTestReport.empty();
         }
         out.account = readAccountSnapshot();
         try {
@@ -525,6 +550,17 @@ public class DiagnosticsActivity extends BaseActivity {
         // missing hook is otherwise indistinguishable from a broken one, so the state is listed per
         // hook rather than left for the user to infer from an overlay that draws nothing.
         addRow(rows, R.string.diagnostics_field_hooks, HookAvailability.summary());
+        // Item 453: the preloader's own per-feature report. The launcher cannot know the preloader's
+        // feature list, so this is the preloader's answer rendered verbatim: which seam resolved,
+        // which did not, and why. It is distinct from the hook table above, which covers only the
+        // hooks the launcher knows how to ask about.
+        addRow(rows, R.string.diagnostics_field_feature_availability,
+                data.featureAvailability.summary());
+        // Item 452: the self-test's answer. It asks a different question from the row above — "can
+        // these hooks install on this build" rather than "what state did the install leave them in"
+        // — so a build where the backend itself cannot patch code is distinguishable from one where
+        // a single signature did not resolve.
+        addRow(rows, R.string.diagnostics_field_hook_self_test, data.hookSelfTest.summary());
         // The preloader is a separate library with its own C ABI version. Reporting it here makes a
         // client/native mismatch visible before a launch, rather than as a feature that silently
         // does nothing because the two were built from different ABI revisions.
@@ -834,6 +870,15 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Skin capture seam: ")
                     .append(data.skinSeam ? "live" : "inactive").append("\n");
         }
+        // Item 453: the preloader's per-feature report, one line per feature, so a bug report names
+        // the missing seam instead of only that "cosmetics do not work".
+        sb.append("\nPreloader feature availability:\n");
+        sb.append(data.featureAvailability.describeAll()).append("\n");
+
+        // Item 452: the hook self-test, so a report distinguishes a backend that cannot patch from a
+        // signature that did not resolve.
+        sb.append("\nPreloader hook self-test:\n");
+        sb.append(data.hookSelfTest.describeAll()).append("\n");
 
         // Item 282: the local counters, so a report carries them without the reporter having to
         // transcribe a screen. Local-only data; nothing here identifies the device beyond the model

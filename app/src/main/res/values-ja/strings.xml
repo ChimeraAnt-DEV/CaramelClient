@@ -1259,4 +1259,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="usage_stats_preview_title">使用レポートの内容</string>
     <string name="usage_stats_preview_close">閉じる</string>
     <string name="usage_stats_unavailable">このビルドには収集先が設定されていないため、何も送信できません。</string>
+    <string name="diagnostics_field_feature_availability">機能の可用性</string>
+    <string name="diagnostics_field_hook_self_test">フックのセルフテスト</string>
 </resources>
