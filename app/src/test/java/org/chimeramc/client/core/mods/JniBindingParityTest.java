@@ -114,6 +114,54 @@ public class JniBindingParityTest {
         assertTrue("JNI binding parity failed:\n" + join(problems), problems.isEmpty());
     }
 
+    /**
+     * The JNI entry-point table (item 470) must list every owner class the preloader exports for.
+     *
+     * <p>The table is prose, so nothing else keeps it in step with the code: a new {@code Java_…}
+     * export whose owner class is missing from the table would leave the documentation wrong while
+     * every other check stayed green. This reads the real table and compares the owner classes it
+     * names against the classes the C++ exports encode.
+     */
+    @Test
+    public void theJniTableListsEveryExportOwner() throws IOException {
+        Path repo = findRepoRoot();
+        Path table = repo.resolve("app/src/main/cpp/preloader/docs/jni-entry-points.md");
+        assertTrue("the JNI table is missing: " + table, Files.isRegularFile(table));
+
+        Set<String> ownersInCode = new TreeSet<>();
+        for (String symbol : scanCppExports(repo)) {
+            String owner = ownerClassOf(symbol);
+            if (owner != null) ownersInCode.add(owner);
+        }
+        assertFalse("the scan found no owner classes", ownersInCode.isEmpty());
+
+        String text = new String(Files.readAllBytes(table), StandardCharsets.UTF_8);
+        Set<String> missing = new TreeSet<>();
+        for (String owner : ownersInCode) {
+            if (!text.contains(owner)) missing.add(owner);
+        }
+        assertTrue("the JNI table does not name these owner classes: " + missing, missing.isEmpty());
+    }
+
+    /**
+     * The owner FQN a mangled symbol encodes, or null when it does not carry a recognisable
+     * {@code native} method suffix (a helper export).
+     */
+    private static String ownerClassOf(String symbol) {
+        String body = symbol.startsWith("Java_") ? symbol.substring("Java_".length()) : symbol;
+        // An overload suffix starts at the first "__" (a single "_" between name parts becomes "_1"
+        // in the mangled form, so "__" is unambiguous).
+        int overload = body.indexOf("__");
+        if (overload >= 0) body = body.substring(0, overload);
+        int nativeIdx = body.indexOf("_native");
+        if (nativeIdx < 0) return null;
+        String cls = body.substring(0, nativeIdx);
+        if (cls.isEmpty()) return null;
+        // `cls` already carries the full package path with `_` separators (the mangled symbol
+        // starts `Java_org_chimeramc_client_...`), so it is dotted, not prefixed.
+        return cls.replace('_', '.');
+    }
+
     @Test
     public void theCppAllowlistHidesOnlyItsOwnExports() {
         Set<String> cppAllow = new HashSet<>(Collections.singletonList("Java_a_b_C_dead"));
