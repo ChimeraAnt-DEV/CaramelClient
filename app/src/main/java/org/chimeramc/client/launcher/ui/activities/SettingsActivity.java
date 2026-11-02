@@ -134,6 +134,14 @@ public class SettingsActivity extends BaseActivity {
     /** The container of the settings sections, animated on a tab change (item 124). */
     private ViewGroup settingsContent;
 
+    /**
+     * The generated binding for the settings tree (item 111).
+     *
+     * <p>Bound once in {@link #onContentReady()} so a newly added row is reached through a typed
+     * field rather than another {@code findViewById}, which is the count the hygiene gate holds.
+     */
+    private org.chimeramc.client.databinding.ActivitySettingsBinding settingsBinding;
+
     /** Held so the thermal advice can be re-evaluated in {@link #onResume()} (item 260). */
     private MaterialButtonToggleGroup performancePresetGroup;
 
@@ -211,7 +219,9 @@ public class SettingsActivity extends BaseActivity {
 
     /** Runs once the asynchronously inflated settings tree is attached (item 130). */
     private void onContentReady() {
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+        View content = findViewById(android.R.id.content);
+        settingsBinding = org.chimeramc.client.databinding.ActivitySettingsBinding.bind(content);
+        DynamicAnim.applyPressScaleRecursively(content);
 
         setupNavBar();
 
@@ -1283,7 +1293,8 @@ public class SettingsActivity extends BaseActivity {
         // Item 273: one mod-update notification a day, not a prompt per mod. The row is disabled
         // with a stated reason when this build has no feed URL, so a switch that cannot do anything
         // says so instead of pretending.
-        SwitchMaterial switchModUpdate = findViewById(R.id.switch_mod_update_check);
+        SwitchMaterial switchModUpdate = settingsBinding != null
+                ? settingsBinding.switchModUpdateCheck : null;
         if (switchModUpdate != null) {
             FeatureSettings fs = FeatureSettings.getInstance();
             switchModUpdate.setChecked(fs.isModUpdateCheckEnabled());
