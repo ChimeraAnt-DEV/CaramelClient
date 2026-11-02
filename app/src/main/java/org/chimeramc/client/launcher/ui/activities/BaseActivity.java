@@ -281,6 +281,11 @@ public class BaseActivity extends AppCompatActivity {
 
         applyPersonalization();
 
+        // Item 339: a small icon button in the header or a row keeps its visual size and gains a
+        // 48dp touch target. Grouped per parent, because a view holds only one TouchDelegate.
+        org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(navBar);
+        org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(contentView);
+
         contentView.post(() -> {
             DynamicAnim.springAlphaTo(contentView, 1f).start();
             if (rail) {
