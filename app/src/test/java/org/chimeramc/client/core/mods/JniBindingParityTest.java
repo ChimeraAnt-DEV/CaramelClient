@@ -125,7 +125,7 @@ public class JniBindingParityTest {
     @Test
     public void theJniTableListsEveryExportOwner() throws IOException {
         Path repo = findRepoRoot();
-        Path table = repo.resolve("app/src/main/cpp/preloader/docs/jni-entry-points.md");
+        Path table = repo.resolve("docs/preloader-jni-entry-points.md");
         assertTrue("the JNI table is missing: " + table, Files.isRegularFile(table));
 
         Set<String> ownersInCode = new TreeSet<>();
