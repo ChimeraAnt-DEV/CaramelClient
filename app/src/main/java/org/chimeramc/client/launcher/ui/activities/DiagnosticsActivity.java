@@ -52,6 +52,7 @@ import java.util.concurrent.Executors;
 import org.chimeramc.client.core.backend.GameBridge;
 import org.chimeramc.client.core.backend.FeatureAvailabilityReport;
 import org.chimeramc.client.core.backend.HookAvailability;
+import org.chimeramc.client.core.backend.HookSelfTestReport;
 import org.chimeramc.client.preloader.BerryApi;
 
 /**
@@ -120,6 +121,11 @@ public class DiagnosticsActivity extends BaseActivity {
          * unreadable/absent blob reads as the empty report, which the row renders as "no report".
          */
         FeatureAvailabilityReport featureAvailability = FeatureAvailabilityReport.empty();
+        /**
+         * Item 452: the preloader's hook self-test report. Never null; an absent blob reads as the
+         * empty report, which the row renders as "no self-test".
+         */
+        HookSelfTestReport hookSelfTest = HookSelfTestReport.empty();
         AccountDiagnostics.Snapshot account = new AccountDiagnostics.Snapshot();
         List<ModLoadDiagnostics.Record> modRecords = Collections.emptyList();
         /** The last launch that died inside the game activity, or null when none is recorded. */
@@ -310,6 +316,12 @@ public class DiagnosticsActivity extends BaseActivity {
                     out.nativeLoaded ? ModManager.featureAvailability() : "");
         } catch (Throwable ignored) {
             out.featureAvailability = FeatureAvailabilityReport.empty();
+        }
+        try {
+            out.hookSelfTest = HookSelfTestReport.parse(
+                    out.nativeLoaded ? ModManager.hookSelfTest() : "");
+        } catch (Throwable ignored) {
+            out.hookSelfTest = HookSelfTestReport.empty();
         }
         out.account = readAccountSnapshot();
         try {
@@ -544,6 +556,11 @@ public class DiagnosticsActivity extends BaseActivity {
         // hooks the launcher knows how to ask about.
         addRow(rows, R.string.diagnostics_field_feature_availability,
                 data.featureAvailability.summary());
+        // Item 452: the self-test's answer. It asks a different question from the row above — "can
+        // these hooks install on this build" rather than "what state did the install leave them in"
+        // — so a build where the backend itself cannot patch code is distinguishable from one where
+        // a single signature did not resolve.
+        addRow(rows, R.string.diagnostics_field_hook_self_test, data.hookSelfTest.summary());
         // The preloader is a separate library with its own C ABI version. Reporting it here makes a
         // client/native mismatch visible before a launch, rather than as a feature that silently
         // does nothing because the two were built from different ABI revisions.
@@ -857,6 +874,11 @@ public class DiagnosticsActivity extends BaseActivity {
         // the missing seam instead of only that "cosmetics do not work".
         sb.append("\nPreloader feature availability:\n");
         sb.append(data.featureAvailability.describeAll()).append("\n");
+
+        // Item 452: the hook self-test, so a report distinguishes a backend that cannot patch from a
+        // signature that did not resolve.
+        sb.append("\nPreloader hook self-test:\n");
+        sb.append(data.hookSelfTest.describeAll()).append("\n");
 
         // Item 282: the local counters, so a report carries them without the reporter having to
         // transcribe a screen. Local-only data; nothing here identifies the device beyond the model

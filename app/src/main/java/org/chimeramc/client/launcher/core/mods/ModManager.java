@@ -117,6 +117,12 @@ public class ModManager {
      * signature does not read as "nothing works".
      */
     private static native String nativeFeatureAvailability();
+    /**
+     * Item 452: install-and-remove every hook once and report the result, as one JSON object. This
+     * is the "can these hooks install on this build at all" answer, distinct from the per-feature
+     * availability report above, which describes the state the real install produced.
+     */
+    private static native String nativeHookSelfTest();
 
     public static ModManager getInstance() {
         ModManager result = instance;
@@ -259,6 +265,20 @@ public class ModManager {
         if (!ensurePreloaderLoaded()) return "";
         try {
             String value = nativeFeatureAvailability();
+            return value == null ? "" : value;
+        } catch (UnsatisfiedLinkError e) {
+            return "";
+        }
+    }
+
+    /**
+     * The hook self-test report (item 452), as a JSON object, or "" when the preloader is not
+     * loaded. The round-trip is cached in the preloader, so calling this more than once is cheap.
+     */
+    public static String hookSelfTest() {
+        if (!ensurePreloaderLoaded()) return "";
+        try {
+            String value = nativeHookSelfTest();
             return value == null ? "" : value;
         } catch (UnsatisfiedLinkError e) {
             return "";

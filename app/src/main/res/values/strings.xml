@@ -1642,6 +1642,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_field_hooks">Preloader hooks</string>
     <!-- Item 453: the preloader's own per-feature report, distinct from the hook table above. -->
     <string name="diagnostics_field_feature_availability">Feature availability</string>
+    <!-- Item 452: the hook install/remove round-trip result, distinct from the row above. -->
+    <string name="diagnostics_field_hook_self_test">Hook self-test</string>
     <string name="diagnostics_field_preloader_abi">Preloader ABI</string>
     <string name="diagnostics_preloader_abi_ok">v%1$d (matches client)</string>
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
