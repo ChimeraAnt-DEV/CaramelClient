@@ -1283,4 +1283,6 @@
     <string name="usage_stats_preview_title">使用报告内容</string>
     <string name="usage_stats_preview_close">关闭</string>
     <string name="usage_stats_unavailable">此构建未配置收集器，无法发送任何内容。</string>
+    <string name="diagnostics_field_feature_availability">功能可用性</string>
+    <string name="diagnostics_field_hook_self_test">钩子自检</string>
 </resources>

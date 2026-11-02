@@ -1290,4 +1290,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="usage_stats_preview_title">उपयोग रिपोर्ट सामग्री</string>
     <string name="usage_stats_preview_close">बंद करें</string>
     <string name="usage_stats_unavailable">इस बिल्ड में कोई संग्रहक कॉन्फ़िगर नहीं है, कुछ नहीं भेजा जा सकता।</string>
+    <string name="diagnostics_field_feature_availability">फ़ीचर उपलब्धता</string>
+    <string name="diagnostics_field_hook_self_test">हुक स्व-परीक्षण</string>
 </resources>

@@ -1262,4 +1262,6 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="usage_stats_preview_title">Conteúdo do relatório de uso</string>
     <string name="usage_stats_preview_close">Fechar</string>
     <string name="usage_stats_unavailable">Esta compilação não tem coletor configurado, nada pode ser enviado.</string>
+    <string name="diagnostics_field_feature_availability">Disponibilidade de recursos</string>
+    <string name="diagnostics_field_hook_self_test">Autoteste de hooks</string>
 </resources>

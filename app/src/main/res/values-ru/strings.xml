@@ -1293,4 +1293,6 @@
     <string name="usage_stats_preview_title">Содержимое отчёта об использовании</string>
     <string name="usage_stats_preview_close">Закрыть</string>
     <string name="usage_stats_unavailable">В этой сборке не настроен сборщик, отправить нечего.</string>
+    <string name="diagnostics_field_feature_availability">Доступность функций</string>
+    <string name="diagnostics_field_hook_self_test">Самотест хуков</string>
 </resources>
