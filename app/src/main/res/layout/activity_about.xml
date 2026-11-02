@@ -54,7 +54,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -91,7 +92,8 @@
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                             <TextView
                                 android:id="@+id/author_badge"
@@ -206,7 +208,8 @@
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                             <TextView
                                 android:id="@+id/maintainer_badge"
@@ -285,7 +288,8 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
                         android:textStyle="bold"
                         android:drawableStart="@drawable/ic_code"
-                        android:drawablePadding="@dimen/space_2" />
+                        android:drawablePadding="@dimen/space_2"
+    android:accessibilityHeading="true" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -393,7 +397,8 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
                         android:textStyle="bold"
                         android:drawableStart="@drawable/ic_github"
-                        android:drawablePadding="@dimen/space_2" />
+                        android:drawablePadding="@dimen/space_2"
+    android:accessibilityHeading="true" />
 
                     <TextView
                         android:layout_width="wrap_content"

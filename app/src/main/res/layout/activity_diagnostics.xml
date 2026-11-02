@@ -55,7 +55,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +97,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_app_rows"
@@ -122,7 +124,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_readiness_rows"
@@ -148,7 +151,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_libs_rows"
@@ -174,7 +178,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_rules_rows"
@@ -200,7 +205,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_native_rows"
@@ -226,7 +232,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_account_rows"
@@ -252,7 +259,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_mods_rows"
@@ -278,7 +286,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="wrap_content"

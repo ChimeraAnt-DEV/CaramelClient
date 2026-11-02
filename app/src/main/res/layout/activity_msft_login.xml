@@ -44,7 +44,8 @@
                     android:text="@string/ms_login_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -159,7 +160,8 @@
                                     android:text="@string/ms_device_code_option_title"
                                     android:textColor="@color/on_surface"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -224,7 +226,8 @@
                                     android:text="@string/ms_webview_option_title"
                                     android:textColor="@color/on_surface"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -288,7 +291,8 @@
                                     android:text="@string/ms_oauth_option_title"
                                     android:textColor="@color/on_surface"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -469,7 +473,8 @@
                                     android:text="@string/ms_device_code_step_title"
                                     android:textColor="@color/on_surface"
                                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -651,7 +656,8 @@
                                 android:text="@string/ms_login_card_title"
                                 android:textColor="@color/on_surface"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -777,7 +783,8 @@
                     android:text="@string/ms_login_exchanging"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

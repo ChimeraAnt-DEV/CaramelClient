@@ -85,7 +85,8 @@
             android:fontFamily="@font/misans"
             android:textColor="@color/primary"
             android:textAppearance="@style/TextAppearance.Glowberry.Title"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
         <HorizontalScrollView
             android:layout_width="match_parent"

@@ -157,7 +157,8 @@
                         android:text="@string/no_mods_found"
                         android:textColor="@color/on_surface"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -252,7 +253,8 @@
                         android:text="@string/downloads_empty_title"
                         android:textColor="@color/on_surface"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                     <TextView
                         android:layout_width="match_parent"

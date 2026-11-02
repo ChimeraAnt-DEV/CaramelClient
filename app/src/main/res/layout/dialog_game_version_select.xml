@@ -38,7 +38,8 @@
                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
                 android:textStyle="bold"
                 android:textColor="?attr/colorPrimary"
-                android:fontFamily="@font/misans"/>
+                android:fontFamily="@font/misans"
+    android:accessibilityHeading="true" />
         </LinearLayout>
 
         <View

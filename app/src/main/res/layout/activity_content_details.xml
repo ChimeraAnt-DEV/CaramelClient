@@ -139,7 +139,8 @@
                     android:textStyle="bold"
                     android:textColor="@color/on_surface"
                     android:fontFamily="@font/misans"
-                    android:layout_marginBottom="@dimen/space_3"/>
+                    android:layout_marginBottom="@dimen/space_3"
+    android:accessibilityHeading="true" />
 
                 <WebView
                     android:id="@+id/detail_summary"

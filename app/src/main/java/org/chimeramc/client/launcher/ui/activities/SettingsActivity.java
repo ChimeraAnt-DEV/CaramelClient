@@ -223,6 +223,9 @@ public class SettingsActivity extends BaseActivity {
         View content = findViewById(android.R.id.content);
         settingsBinding = org.chimeramc.client.databinding.ActivitySettingsBinding.bind(content);
         DynamicAnim.applyPressScaleRecursively(content);
+        // Items 341/342: section titles are headings and each label+switch row is one focus stop,
+        // wired in one pass so a newly added row cannot be the one that was forgotten.
+        org.chimeramc.client.ui.components.UiAccessibility.wireToggleRows(content);
 
         setupNavBar();
 

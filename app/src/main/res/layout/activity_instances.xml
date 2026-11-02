@@ -261,7 +261,8 @@
                     android:text="@string/empty_instances_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="wrap_content"

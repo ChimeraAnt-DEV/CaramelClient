@@ -84,7 +84,8 @@
                             android:maxLines="2"
                             android:textColor="@color/on_surface"
                             android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -143,7 +144,8 @@
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                     <Switch
                         android:id="@+id/mod_switch_detail"
@@ -167,7 +169,8 @@
                     android:text="@string/mod_metadata_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <include
                     android:id="@+id/mod_version_row"
@@ -203,7 +206,8 @@
                     android:text="@string/mod_actions_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <Button
                     android:id="@+id/configure_mod_button"

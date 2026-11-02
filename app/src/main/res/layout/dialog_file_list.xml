@@ -15,7 +15,8 @@
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/on_surface"
-        android:layout_marginBottom="@dimen/space_4"/>
+        android:layout_marginBottom="@dimen/space_4"
+    android:accessibilityHeading="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_files"
