@@ -86,4 +86,74 @@ public class MotionSchemeTest {
         assertTrue(UiTokens.Motion.REDUCED.durationMs <= UiTokens.Motion.EXPRESSIVE.durationMs);
         assertTrue("a reduced spring must not overshoot", UiTokens.Motion.REDUCED.damping >= 1f);
     }
+
+    // ---------------------------------------------------------------- platform animation scale (75)
+
+    /**
+     * The platform setting is a multiplier, not a boolean. Reading only its zero case (the previous
+     * behaviour) meant a user who asked for 0.5x or 2x system animations still got the app's own
+     * timing, which is the bug item 75 names.
+     */
+    @Test
+    public void aFasterPlatformScaleShortensEveryDuration() {
+        DynamicAnim.setGlobalSpeedMultiplier(1f);
+        DynamicAnim.applyMotionScheme(false, 0.5f);
+        assertSame(UiTokens.Motion.EXPRESSIVE, DynamicAnim.motionScheme());
+        assertEquals("0.5x system scale halves the duration", 130L,
+                DynamicAnim.motionDurationMs(260L));
+        assertEquals(0.5f, DynamicAnim.platformAnimationScale(), 0.0001f);
+    }
+
+    @Test
+    public void aSlowerPlatformScaleLengthensEveryDuration() {
+        DynamicAnim.setGlobalSpeedMultiplier(1f);
+        DynamicAnim.applyMotionScheme(false, 2f);
+        assertEquals("2x system scale doubles the duration", 520L,
+                DynamicAnim.motionDurationMs(260L));
+    }
+
+    /** A scale of zero is the platform's "no animation", so motion must switch off entirely. */
+    @Test
+    public void aZeroPlatformScaleDisablesMotion() {
+        DynamicAnim.applyMotionScheme(false, 0f);
+        assertSame(UiTokens.Motion.REDUCED, DynamicAnim.motionScheme());
+        assertFalse(DynamicAnim.areAnimationsEnabled());
+    }
+
+    /** The boolean entry point still works and maps "off" to a zero scale. */
+    @Test
+    public void theBooleanEntryPointMapsToTheEquivalentScale() {
+        DynamicAnim.applyMotionScheme(false, false);
+        assertEquals(1f, DynamicAnim.platformAnimationScale(), 0.0001f);
+        assertTrue(DynamicAnim.areAnimationsEnabled());
+
+        DynamicAnim.applyMotionScheme(false, true);
+        assertEquals(0f, DynamicAnim.platformAnimationScale(), 0.0001f);
+        assertFalse(DynamicAnim.areAnimationsEnabled());
+    }
+
+    /** A bad read must not freeze or infinitely stretch an animation. */
+    @Test
+    public void anUnreadableScaleFallsBackToTheDefault() {
+        DynamicAnim.applyMotionScheme(false, Float.NaN);
+        assertEquals(1f, DynamicAnim.platformAnimationScale(), 0.0001f);
+        assertEquals(260L, DynamicAnim.motionDurationMs(260L));
+
+        DynamicAnim.applyMotionScheme(false, -3f);
+        assertEquals(1f, DynamicAnim.platformAnimationScale(), 0.0001f);
+    }
+
+    /**
+     * The two multipliers compose rather than one overwriting the other. They have opposite senses -
+     * the app's value is a speed (larger is shorter) and Android's is a duration factor (larger is
+     * longer) - so a 2x app speed on a 0.5x system scale is 4x faster overall.
+     */
+    @Test
+    public void theAppSpeedAndThePlatformScaleCompose() {
+        DynamicAnim.setGlobalSpeedMultiplier(2f);
+        DynamicAnim.applyMotionScheme(false, 0.5f);
+        assertEquals("2x app speed on a 0.5x system scale is 4x", 65L,
+                DynamicAnim.motionDurationMs(260L));
+        DynamicAnim.setGlobalSpeedMultiplier(1f);
+    }
 }

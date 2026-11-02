@@ -30,6 +30,18 @@ public final class DynamicAnim {
     private static boolean animationsEnabled = true;
 
     /**
+     * The platform's animation scale ({@code Settings.Global.ANIMATOR_DURATION_SCALE}), item 75.
+     *
+     * <p>Android's developer option is a duration <em>multiplier</em>, not a switch: 0.5 means "play
+     * everything twice as fast", 2 means "twice as slow", and 0 means "no animation". Reading it as a
+     * boolean (the previous {@code == 0f} test) honoured only the last of those three, so a user who
+     * asked for faster animations still got the app's own timing. This value folds into
+     * {@link #scaled(long)} so every duration follows it, and a scale of zero disables motion
+     * outright - the same state {@link UiTokens.Motion#REDUCED} describes.
+     */
+    private static float platformAnimationScale = 1.0f;
+
+    /**
      * The motion scheme in force (U6). Every animated surface here reads its duration, damping and
      * stiffness from this one object rather than hard-coding a spring, so "Reduce motion" is a
      * single switch instead of a hunt through the codebase.
@@ -54,6 +66,15 @@ public final class DynamicAnim {
         return globalSpeedMultiplier;
     }
 
+    /**
+     * The platform animation scale in force (item 75). 1.0 is "system default".
+     *
+     * <p>Exposed so a screen can show it in a debug overlay and a test can assert it was read.
+     */
+    public static float platformAnimationScale() {
+        return platformAnimationScale;
+    }
+
     public static void enableAnimations() {
         animationsEnabled = true;
         motion = UiTokens.Motion.EXPRESSIVE;
@@ -72,7 +93,22 @@ public final class DynamicAnim {
      * springs back because the app's own switch happens to be on.
      */
     public static void applyMotionScheme(boolean reduceMotion, boolean platformAnimationsOff) {
-        motion = UiTokens.motionScheme(reduceMotion, platformAnimationsOff);
+        applyMotionScheme(reduceMotion, platformAnimationsOff ? 0f : 1f);
+    }
+
+    /**
+     * Selects the scheme from the app's reduce-motion switch and the platform's animation scale
+     * (item 75).
+     *
+     * <p>The scale is a multiplier: a value of 0 disables motion entirely (the same outcome as the
+     * platform's "remove animations" setting, which is what it means), any positive value scales
+     * every duration, and an out-of-range or unreadable value is treated as the default of 1 so a
+     * bad read can never freeze or infinitely stretch an animation.
+     */
+    public static void applyMotionScheme(boolean reduceMotion, float platformScale) {
+        float scale = (Float.isNaN(platformScale) || platformScale < 0f) ? 1.0f : platformScale;
+        platformAnimationScale = scale;
+        motion = UiTokens.motionScheme(reduceMotion, scale == 0f);
         animationsEnabled = motion != UiTokens.Motion.REDUCED;
     }
 
@@ -401,6 +437,10 @@ public final class DynamicAnim {
     // 对 RecyclerView 可见子项做阶梯式入场（淡入 + 上滑）
     public static void staggerRecyclerChildren(RecyclerView rv) {
         if (rv == null) return;
+        // Reduced motion, the platform's 0x scale and the app's speed switch all land here as
+        // `!animationsEnabled`; without this guard the children are still set to alpha 0 and then
+        // staggered in, so a "no animations" device would see a staggered fade anyway (item 75).
+        if (!animationsEnabled) return;
         rv.post(() -> {
             int count = rv.getChildCount();
             for (int i = 0; i < count; i++) {
@@ -512,8 +552,19 @@ public final class DynamicAnim {
         animator.start();
     }
 
-    /** Applies the global speed multiplier to a duration, never returning zero. */
+    /**
+     * Applies the global speed multiplier and the platform animation scale to a duration, never
+     * returning zero.
+     *
+     * <p>Guarded so a zero factor cannot make a duration infinite - the zero case is handled by
+     * {@link #animationsEnabled} before this runs.
+     */
     private static long scaled(long durationMs) {
-        return Math.max(1L, (long) (durationMs / globalSpeedMultiplier));
+        float speed = globalSpeedMultiplier > 0f ? globalSpeedMultiplier : 1f;
+        float scale = platformAnimationScale > 0f ? platformAnimationScale : 1f;
+        // The two settings have opposite senses: the app's multiplier is a *speed* (larger is
+        // shorter) while Android's animation scale is a duration *factor* (larger is longer), so one
+        // divides and the other multiplies.
+        return Math.max(1L, (long) (durationMs * scale / speed));
     }
 }

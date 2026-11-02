@@ -538,15 +538,27 @@ public class BaseActivity extends AppCompatActivity {
      * motion is on.
      */
     private void applyMotionScheme(PersonalizationManager pm) {
-        boolean platformAnimationsOff = false;
+        DynamicAnim.applyMotionScheme(pm.isReduceMotion(), readPlatformAnimationScale());
+    }
+
+    /**
+     * The platform animation scale (item 75).
+     *
+     * <p>Read as the multiplier Android stores it as rather than collapsed to a boolean, so a user on
+     * a 0.5x or 2x system scale gets motion at that speed and only a 0 stops it. An unreadable or
+     * out-of-range value falls back to the system default of 1, so a restricted device keeps its
+     * animations rather than losing them.
+     */
+    private float readPlatformAnimationScale() {
         try {
-            platformAnimationsOff = android.provider.Settings.Global.getFloat(
+            float scale = android.provider.Settings.Global.getFloat(
                     getContentResolver(),
-                    android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f;
+                    android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
+            return (Float.isNaN(scale) || scale < 0f) ? 1f : scale;
         } catch (Throwable ignored) {
-            // Unreadable on a restricted device; treat motion as allowed.
+            // Unreadable on a restricted device; treat motion as the system default.
+            return 1f;
         }
-        DynamicAnim.applyMotionScheme(pm.isReduceMotion(), platformAnimationsOff);
     }
 
     protected boolean shouldSkipNavBar() {
