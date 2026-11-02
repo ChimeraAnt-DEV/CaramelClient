@@ -137,6 +137,14 @@ public final class CosmeticsDiagnosticsReport {
         public boolean framePacingVsyncLocked;
         /** Item 11: whether a frame-pacing reading exists at all this session. */
         public boolean framePacingAvailable;
+        /** Items 386/387: the median frame interval in microseconds over the long window, or -1. */
+        public int framePacingP50Us = -1;
+        /** Items 386/387: the 95th percentile frame interval, or -1. */
+        public int framePacingP95Us = -1;
+        /** Items 386/387: the 99th percentile frame interval, or -1. */
+        public int framePacingP99Us = -1;
+        /** Items 386/387: frames above twice the median, per minute, or -1 unknown. */
+        public int framePacingHitchesPerMinute = -1;
         /** True when a game session is running (the launcher's own session flag). */
         public boolean sessionActive;
         /** The HUD hook's "a HUD screen is open" reading, or false when the hook has not fired. */
@@ -194,6 +202,19 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingWorstUs = pacing[2];
                 in.framePacingJittering = (pacing[3] & 1) != 0;
                 in.framePacingVsyncLocked = (pacing[3] & 2) != 0;
+            }
+        } catch (Throwable ignored) {
+        }
+
+        // Items 386/387: the percentile + hitch reading. Separate from the per-frame one because it
+        // sorts the long window; it is a summary the report shows beside the average.
+        try {
+            int[] percentiles = PreloaderInput.readFramePacingPercentiles();
+            if (percentiles != null) {
+                in.framePacingP50Us = percentiles[1];
+                in.framePacingP95Us = percentiles[2];
+                in.framePacingP99Us = percentiles[3];
+                in.framePacingHitchesPerMinute = percentiles[4];
             }
         } catch (Throwable ignored) {
         }
@@ -356,6 +377,7 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Local player feed: ").append(localPlayerText(v)).append('\n');
         b.append("Camera anchor source: ").append(cameraText(v)).append('\n');
         b.append("Frame pacing: ").append(framePacingText(v)).append('\n');
+        b.append("Frame percentiles: ").append(framePercentilesText(v)).append('\n');
         b.append("Cape engine texture route: ").append(yesNo(v.capeEngineRouteLive)).append('\n');
         b.append("Engine image pipeline live: ").append(yesNo(v.imagePipelineLive)).append('\n');
         b.append("GL backend: ").append(backendText(v.glBackend)).append('\n');
@@ -594,6 +616,25 @@ public final class CosmeticsDiagnosticsReport {
             s.append(" — vsync-locked");
         } else {
             s.append(" — steady, not vsync-locked");
+        }
+        return s.toString();
+    }
+
+    /**
+     * Items 386/387: the median and tail frame intervals plus the hitch rate. A percentile a device
+     * cannot report reads as "no reading yet", never as 0 ms (which would look like a perfect
+     * frame).
+     */
+    private static String framePercentilesText(Inputs v) {
+        if (v.framePacingP50Us < 0 || v.framePacingP95Us < 0 || v.framePacingP99Us < 0) {
+            return "no reading yet";
+        }
+        StringBuilder s = new StringBuilder();
+        s.append("p50 ").append(formatMicros(v.framePacingP50Us));
+        s.append(", p95 ").append(formatMicros(v.framePacingP95Us));
+        s.append(", p99 ").append(formatMicros(v.framePacingP99Us));
+        if (v.framePacingHitchesPerMinute >= 0) {
+            s.append(" — ").append(v.framePacingHitchesPerMinute).append(" hitches/min");
         }
         return s.toString();
     }

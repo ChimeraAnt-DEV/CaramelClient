@@ -129,6 +129,22 @@ public class CosmeticsDiagnosticsReportTest {
     }
 
     @Test
+    public void framePercentilesAreReportedAndAnUnreadReadingIsNotZero() {
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.framePacingP50Us = 16667;
+        in.framePacingP95Us = 20000;
+        in.framePacingP99Us = 50000;
+        in.framePacingHitchesPerMinute = 12;
+        String report = CosmeticsDiagnosticsReport.format(in);
+        assertTrue(report.contains("Frame percentiles: p50 16.7 ms, p95 20.0 ms, p99 50.0 ms"
+                + " — 12 hitches/min"));
+
+        CosmeticsDiagnosticsReport.Inputs unread = new CosmeticsDiagnosticsReport.Inputs();
+        assertTrue(CosmeticsDiagnosticsReport.format(unread)
+                .contains("Frame percentiles: no reading yet"));
+    }
+
+    @Test
     public void anUnreadHookCountReadsAsUnknownNotZero() {
         // A report that said "Hooks installed: 0" for a value the native side never sent would read
         // as a real failure; the honest reading is "unknown".

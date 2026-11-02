@@ -275,6 +275,12 @@ public class PreloaderInput {
     public static native int[] nativeReadFramePacing();
 
     /**
+     * Items 386/387: the percentile + hitch reading over the long frame window, as
+     * {valid, p50Us, p95Us, p99Us, hitchesPerMinute}. Length 1 (or null) means "no reading yet".
+     */
+    public static native int[] nativeReadFramePacingPercentiles();
+
+    /**
      * The local-player feed as {live, xBits, yBits, zBits, yawBits, pitchBits}. Floats are the raw
      * IEEE-754 bits of the position and view rotation; the caller decodes them.
      */
@@ -753,6 +759,19 @@ public class PreloaderInput {
         try {
             int[] value = nativeReadFramePacing();
             return value != null && value.length >= 4 && value[0] == 1 ? value : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Items 386/387: the percentile + hitch reading, or null when there is no reading yet. The
+     * array is {valid, p50Us, p95Us, p99Us, hitchesPerMinute}.
+     */
+    public static int[] readFramePacingPercentiles() {
+        try {
+            int[] value = nativeReadFramePacingPercentiles();
+            return value != null && value.length >= 5 && value[0] == 1 ? value : null;
         } catch (UnsatisfiedLinkError e) {
             return null;
         }
