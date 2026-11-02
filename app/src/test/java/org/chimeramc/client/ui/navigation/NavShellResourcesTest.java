@@ -189,6 +189,60 @@ public class NavShellResourcesTest {
                 scanned > 0);
     }
 
+    @Test
+    public void theBarChainDeclaresItsStyleAndBiasOnceOnTheHead() throws IOException {
+        // Item 69. The wordmark and the tab strip are one packed horizontal chain. A packed chain
+        // reads its style and its bias from the head element only, so a bias on the middle element
+        // is dead configuration - it reads as if it positions the strip and it does nothing. The
+        // declaration therefore lives on the wordmark (the head, which starts the chain) and the
+        // strip must not carry a second one.
+        String bar = read("app/src/main/res/layout/nav_bar.xml");
+        Matcher wordmark = Pattern.compile(
+                "<TextView[^>]*@\\+id/nav_app_name.*?/>", Pattern.DOTALL).matcher(bar);
+        assertTrue("nav_app_name missing from nav_bar.xml", wordmark.find());
+        String head = wordmark.group();
+        assertTrue("the chain head must declare the packed style",
+                head.contains("layout_constraintHorizontal_chainStyle=\"packed\""));
+        assertTrue("the chain head must declare the bias",
+                head.contains("layout_constraintHorizontal_bias="));
+
+        Matcher strip = Pattern.compile(
+                "<HorizontalScrollView[^>]*@\\+id/nav_tab_scroll.*?>", Pattern.DOTALL).matcher(bar);
+        assertTrue("nav_tab_scroll missing from nav_bar.xml", strip.find());
+        assertFalse("the chain's middle element must not restate the bias; a packed chain ignores "
+                        + "it and the duplicate reads as a second, contradictory declaration",
+                strip.group().contains("layout_constraintHorizontal_bias"));
+    }
+
+    @Test
+    public void theAttentionDotExistsAndIsSmallerThanATouchTarget() throws IOException {
+        // Item 83. The dot is a marker, not a control: it must have a real drawable and its own
+        // dimen, and it must be small enough to read as "something is waiting" rather than as a
+        // button. A dot sized like a touch target is the mistake this forbids.
+        String dimens = read("app/src/main/res/values/dimens.xml");
+        int size = dimen(dimens, "nav_tab_dot_size");
+        assertTrue("the attention dot must be a small marker, not a control", size > 0 && size <= 12);
+        String dot = read("app/src/main/res/drawable/nav_tab_dot.xml");
+        assertTrue("the attention dot must be a filled circle", dot.contains("android:shape=\"oval\""));
+        assertTrue("the attention dot must take its size from the dimen, so the two cannot drift",
+                dot.contains("@dimen/nav_tab_dot_size"));
+    }
+
+    @Test
+    public void theAttentionStringExistsInEveryShippedLocale() throws IOException {
+        // The dot's screen-reader text has to be translated like any other string, or a TalkBack
+        // user hears an English fragment on every other locale.
+        String base = read("app/src/main/res/values/strings.xml");
+        assertTrue("nav_tab_needs_attention is missing from the default strings",
+                base.contains("name=\"nav_tab_needs_attention\""));
+        for (String locale : new String[]{"es", "fr", "hi", "id", "ja", "pt", "ru", "tr", "vi",
+                "zh-rCN"}) {
+            String xml = read("app/src/main/res/values-" + locale + "/strings.xml");
+            assertTrue(locale + " is missing the attention string",
+                    xml.contains("name=\"nav_tab_needs_attention\""));
+        }
+    }
+
     private static int dimen(String xml, String name) {
         Matcher m = Pattern.compile("<dimen name=\"" + Pattern.quote(name) + "\">([0-9]+)dp</dimen>")
                 .matcher(xml);

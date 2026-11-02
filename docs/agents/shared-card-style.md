@@ -1,0 +1,7 @@
+## Shared card style (Widget.Chimera.Card + res/values/dimens.xml)
+- Every card surface reads geometry from `dimens.xml` (`chimera_card_radius` 14dp, `chimera_card_radius_small` 10dp, `chimera_card_border_width`, `chimera_card_elevation`, `chimera_card_padding`), never its own literal radius.
+- `Widget.Chimera.Card` / `.Compact` set `android:background` to `@drawable/chimera_card` / `chimera_card_small` and are for **plain containers** (`LinearLayout`, `FrameLayout`, `TextView`). `Widget.Chimera.CardView` / `.MaterialCardView` are the variants for actual `CardView` subclasses тАФ a CardView must get its radius from `cardCornerRadius`, not an `android:background`.
+- `Widget.Chimera` is an empty root style that must exist: the dotted names infer their parent from it.
+- The old one-off card drawables (`bg_rounded_card`, `header_background`, `card_background`, `card_background_small`, `bg_third_level_item`) still resolve, but they are now thin aliases pointing at the shared card tokens тАФ do not add new references to them.
+- The section gradient cards (`card_hero_gradient`, `card_versions/mod/content/launch_gradient`) are `layer-list`s that reuse the same radius tokens and add the shared `card_border` stroke, so gradient and flat cards are geometrically identical.
+- **Do not add a recursive "apply card rounding to every GradientDrawable" walk.** `MainActivity.applyCardRounding` deliberately touches only the launch/select buttons; a full-tree radius rewrite also flattens pills (`bg_filter_chip` 20dp), tags (4dp) and accent bars (1.5dp).

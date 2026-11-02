@@ -53,6 +53,12 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private var preparingStarted = false
     private var firstFrameFallback: Runnable? = null
     private var enteringGame = false
+    // Item 285: the launch watchdog. It tracks the last sign of progress and, when a launch goes
+    // silent for too long, offers the two actions that actually help instead of an endless spinner.
+    private var launchStartedMs = 0L
+    private var lastProgressMs = 0L
+    private var watchdogScheduled = false
+    private var watchdogDialog: CustomAlertDialog? = null
     private var progressAnimator: ValueAnimator? = null
     private var currentProgress = 0
     private var lastLogMessage: String? = null
@@ -71,6 +77,8 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         super.onCreate(savedInstanceState)
         trace = LaunchTrace.ensure(intent)
         trace.mark("MinecraftLoadingActivity onCreate")
+        launchStartedMs = android.os.SystemClock.elapsedRealtime()
+        lastProgressMs = launchStartedMs
         applyLaunchOrientation()
         hideSystemUi()
         window.decorView.setOnSystemUiVisibilityChangeListener {
@@ -155,6 +163,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         preparingStarted = true
         trace.milestone("Runtime preparation continuing")
         appendLog("Preparing game")
+        scheduleWatchdog()
         startPreparing()
     }
 
@@ -211,6 +220,11 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                     showFailure(throwable)
                 }
             }
+        } catch (cancelled: org.chimeramc.client.core.minecraft.ExtractionControl.ExtractionCancelledException) {
+            // The user gave up on the launch while it was extracting. That is not a failure to
+            // report: the loading screen is already on its way back to the launcher, and showing
+            // a "launch failed" dialog on top of it would read as a bug (item 306).
+            appendLog("Extraction cancelled")
         } catch (throwable: Throwable) {
             mainHandler.post {
                 showFailure(throwable)
@@ -220,14 +234,94 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
 
     override fun onProgress(progress: Int, status: String, detail: String?) {
         mainHandler.post {
+            lastProgressMs = android.os.SystemClock.elapsedRealtime()
             updateProgress(progress, status, detail)
         }
     }
 
     override fun onLog(message: String) {
         mainHandler.post {
+            lastProgressMs = android.os.SystemClock.elapsedRealtime()
             appendLog(message)
         }
+    }
+
+    /**
+     * Arms the launch watchdog (item 285).
+     *
+     * <p>One wake-up is scheduled at the next threshold the pure rule reports, rather than polling
+     * every frame, so a launch that is progressing costs a single timer. Each call reschedules from
+     * the new anchor, so progress pushes the deadline out instead of firing on a fixed wall clock.
+     */
+    private fun scheduleWatchdog() {
+        if (watchdogScheduled || isFinishing || isDestroyed) return
+        watchdogScheduled = true
+        val now = android.os.SystemClock.elapsedRealtime()
+        val at = org.chimeramc.client.core.minecraft.LaunchWatchdog.nextCheckAt(
+            launchStartedMs, lastProgressMs, enteringGame, now)
+        if (at == Long.MAX_VALUE) {
+            watchdogScheduled = false
+            return
+        }
+        val delay = (at - now).coerceAtLeast(0L)
+        mainHandler.postDelayed({
+            watchdogScheduled = false
+            onWatchdogTick()
+        }, delay)
+    }
+
+    private fun onWatchdogTick() {
+        if (isFinishing || isDestroyed || returningToLauncher || enteringGame) return
+        val now = android.os.SystemClock.elapsedRealtime()
+        val state = org.chimeramc.client.core.minecraft.LaunchWatchdog.evaluate(
+            launchStartedMs, lastProgressMs, enteringGame, now)
+        if (org.chimeramc.client.core.minecraft.LaunchWatchdog.isActionable(state)) {
+            showWatchdogDialog(state)
+        } else {
+            scheduleWatchdog()
+        }
+    }
+
+    private fun showWatchdogDialog(state: org.chimeramc.client.core.minecraft.LaunchWatchdog.State) {
+        if (watchdogDialog != null || isFinishing || isDestroyed) return
+        val dead = state == org.chimeramc.client.core.minecraft.LaunchWatchdog.State.DEAD
+        val dialog = CustomAlertDialog(this)
+            .setTitleText(getString(R.string.minecraft))
+            .setMessage(getString(if (dead) R.string.launch_watchdog_dead else R.string.launch_watchdog_stalled))
+            .setBlurBackground(true)
+            .setPositiveButton(getString(R.string.launch_watchdog_open_logs)) {
+                watchdogDialog = null
+                showLogcat()
+            }
+            .setNegativeButton(getString(if (dead) R.string.launch_watchdog_restart_without_mods else R.string.dialog_negative_cancel)) {
+                watchdogDialog = null
+                if (dead) restartWithoutMods() else scheduleWatchdog()
+            }
+        dialog.setCancelable(false)
+        watchdogDialog = dialog
+        dialog.show()
+        appendLog("Launch watchdog: " + state.name)
+    }
+
+    /** Opens the in-app log viewer so the user can see what the launch is stuck on. */
+    private fun showLogcat() {
+        try {
+            startActivity(Intent(this, org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity::class.java))
+        } catch (ignored: Throwable) {
+            // The log viewer is a convenience; a failure to open it must not take the launch down.
+        }
+        scheduleWatchdog()
+    }
+
+    /** Returns to the launcher with the current instance's mods disabled, to rule a mod out. */
+    private fun restartWithoutMods() {
+        try {
+            org.chimeramc.client.core.mods.ModSafeMode.suppressModsForNextLaunch(this)
+        } catch (ignored: Throwable) {
+            // Best effort: the restart still proceeds even if the flag could not be written.
+        }
+        appendLog("Restarting without mods")
+        returnToLauncher()
     }
 
     private fun updateProgress(progress: Int, status: String, detail: String?) {
@@ -415,6 +509,15 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     }
 
     override fun onBackPressed() {
+        // A launch that is still extracting can be given up on. The signal is checked between
+        // files, so the copy stops at the next safe boundary instead of running to completion for
+        // a user who has already left (item 306). The instance is cleared inside returnToLauncher,
+        // so a cancel that lands after the extraction finished is a no-op.
+        try {
+            org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()
+        } catch (ignored: Throwable) {
+            // Cancelling is best effort; returning to the launcher must not depend on it.
+        }
         appendLog("Returning to launcher")
         returnToLauncher()
     }
@@ -435,6 +538,8 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         firstFrameFallback?.let { window.decorView.removeCallbacks(it) }
         firstFrameFallback = null
         progressAnimator?.cancel()
+        watchdogDialog?.dismiss()
+        watchdogDialog = null
         executor.shutdownNow()
         super.onDestroy()
     }

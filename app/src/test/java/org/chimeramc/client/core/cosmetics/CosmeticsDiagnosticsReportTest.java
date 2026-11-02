@@ -24,6 +24,8 @@ public class CosmeticsDiagnosticsReportTest {
         in.renderSlot = 17;
         in.resolvedBy = 1;
         in.glBackend = 1;
+        in.gpuFamily = 1;
+        in.hookCount = 6;
         in.eglContextCurrent = true;
         in.hookInstalled = true;
         in.framesSeen = 120;
@@ -127,6 +129,59 @@ public class CosmeticsDiagnosticsReportTest {
     }
 
     @Test
+    public void framePercentilesAreReportedAndAnUnreadReadingIsNotZero() {
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.framePacingP50Us = 16667;
+        in.framePacingP95Us = 20000;
+        in.framePacingP99Us = 50000;
+        in.framePacingHitchesPerMinute = 12;
+        String report = CosmeticsDiagnosticsReport.format(in);
+        assertTrue(report.contains("Frame percentiles: p50 16.7 ms, p95 20.0 ms, p99 50.0 ms"
+                + " — 12 hitches/min"));
+
+        CosmeticsDiagnosticsReport.Inputs unread = new CosmeticsDiagnosticsReport.Inputs();
+        assertTrue(CosmeticsDiagnosticsReport.format(unread)
+                .contains("Frame percentiles: no reading yet"));
+    }
+
+    @Test
+    public void processMemoryIsReportedAndAnUnreadSourceIsNotZero() {
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.processResidentKb = 186368;
+        in.processProportionalKb = 122880;
+        String report = CosmeticsDiagnosticsReport.format(in);
+        assertTrue(report.contains("Process memory: 120.0 MB (Pss), 182.0 MB resident"));
+
+        // A resident-only reading (no smaps_rollup) must not print a Pss figure it does not have.
+        CosmeticsDiagnosticsReport.Inputs rssOnly = new CosmeticsDiagnosticsReport.Inputs();
+        rssOnly.processResidentKb = 4096;
+        assertTrue(CosmeticsDiagnosticsReport.format(rssOnly)
+                .contains("Process memory: 4.0 MB resident"));
+
+        CosmeticsDiagnosticsReport.Inputs unread = new CosmeticsDiagnosticsReport.Inputs();
+        assertTrue(CosmeticsDiagnosticsReport.format(unread)
+                .contains("Process memory: no reading yet"));
+    }
+
+    @Test
+    public void anUnreadHookCountReadsAsUnknownNotZero() {
+        // A report that said "Hooks installed: 0" for a value the native side never sent would read
+        // as a real failure; the honest reading is "unknown".
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.hookCount = -1;
+        assertTrue(CosmeticsDiagnosticsReport.format(in).contains("Hooks installed: unknown"));
+    }
+
+    @Test
+    public void anUnreadGpuFamilyReadsAsUnknownNotAGuess() {
+        // -1 is the native "not read" sentinel. Rendering it as a family name would tell a bug
+        // reporter the wrong GPU, so it must read as unknown.
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.gpuFamily = -1;
+        assertTrue(CosmeticsDiagnosticsReport.format(in).contains("GPU family: unknown"));
+    }
+
+    @Test
     public void theReportCarriesEveryRequestedField() {
         String report = CosmeticsDiagnosticsReport.format(fullInputs());
         assertTrue(report.contains("App version: v1.2.3"));
@@ -139,6 +194,8 @@ public class CosmeticsDiagnosticsReportTest {
         assertTrue(report.contains("Cape engine texture route: yes"));
         assertTrue(report.contains("Engine image pipeline live: yes"));
         assertTrue(report.contains("GL backend: GLES"));
+        assertTrue(report.contains("GPU family: Adreno"));
+        assertTrue(report.contains("Hooks installed: 6"));
         assertTrue(report.contains("EGL context current: yes"));
         assertTrue(report.contains("Published geometry bytes: 2048"));
         assertTrue(report.contains("Piece atlases: cape hat"));

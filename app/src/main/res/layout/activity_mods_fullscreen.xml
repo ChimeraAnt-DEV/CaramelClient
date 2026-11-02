@@ -60,7 +60,8 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
                         android:textColor="@color/accent_text"
                         android:fontFamily="@font/misans"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -87,7 +88,8 @@
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
                         android:textColor="@color/accent_text"
                         android:fontFamily="@font/misans"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -287,7 +289,8 @@
                     android:text="@string/empty_mods_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="wrap_content"

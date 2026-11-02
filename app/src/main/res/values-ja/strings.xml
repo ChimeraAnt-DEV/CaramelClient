@@ -43,7 +43,10 @@
     <string name="loading">読み込み中…</string>
 
     <string name="import_confirmation_title">モッドのインポート</string>
-    <string name="import_confirmation_message">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</item>
+        <item quantity="other">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</item>
+    </plurals>
     <string name="import_so_plugin_title">SO プラグインのインポート</string>
     <string name="plugin_name_label">プラグイン名</string>
     <string name="plugin_type_label">タイプ</string>
@@ -66,7 +69,10 @@
     <string name="cancel">キャンセル</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d 個のモッドファイルの処理に成功しました</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d 個のモッドファイルの処理に成功しました</item>
+        <item quantity="other">%d 個のモッドファイルの処理に成功しました</item>
+    </plurals>
     <string name="user_cancelled">ユーザーによりインポートがキャンセルされました</string>
 
     <string name="exit">終了</string>
@@ -531,7 +537,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="structure_exported">エクスポート完了: %s</string>
     <string name="extract">抽出</string>
     <string name="structures_found_title">構造物を発見</string>
-    <string name="structures_found_count">このワールドで %d 個の構造物が見つかりました</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">このワールドで %d 個の構造物が見つかりました</item>
+        <item quantity="other">このワールドで %d 個の構造物が見つかりました</item>
+    </plurals>
 
     <string name="mod_menu">モッドメニュー</string>
     <string name="mod_menu_general">一般</string>
@@ -1052,6 +1061,7 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="diagnostics_preloader_abi_mismatch">v%1$d（クライアントはv%2$dを期待）</string>
     <string name="about_input_backend_status">入力バックエンド: %1$s</string>
     <string name="diagnostics_field_input_backend">入力バックエンド</string>
+    <string name="diagnostics_field_hooks">プリローダーフック</string>
     <string name="crash_exit_reason_label">前回の終了理由:</string>
     <string name="crash_disable_last_mod">クラッシュしたModを無効にする</string>
     <string name="crash_disable_no_suspects">このクラッシュに記録されたModはありません。</string>
@@ -1091,6 +1101,11 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="controller_bind_device_cleared">%1$s には紐付けられたプロファイルがありません</string>
     <string name="controller_stick_preview_description">スティックの現在位置: リングが生の値、ドットがプロファイルの送信値です</string>
     <string name="controller_stick_preview_side">%1$s スティックを表示中</string>
+    <string name="screenshot_share">スクリーンショットを共有</string>
+    <string name="screenshot_share_failed">このスクリーンショットを共有できませんでした。</string>
+    <string name="screenshot_share_no_app">共有画像を受け取れるアプリがありません。</string>
+    <string name="screenshot_share_no_screenshot">共有できるスクリーンショットがまだありません。</string>
+    <string name="pause_menu_share_screenshot">最後のスクリーンショットを共有</string>
     <string name="pause_menu_screenshot">スクリーンショット</string>
     <string name="pause_menu_hide_hud">HUDを隠す</string>
     <string name="pause_menu_switch_layout">レイアウトを切り替え</string>
@@ -1207,4 +1222,41 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="mod_import_link_done_digest">%1$s をインポートしました。\n%2$s</string>
     <string name="nav_rail_collapse">レールを折りたたむ</string>
     <string name="nav_rail_expand">レールを展開</string>
+    <string name="launch_watchdog_stalled">この起動はしばらく進んでいません。まだ動作中の可能性があります。ログを開いて何をしているか確認してください。</string>
+    <string name="launch_watchdog_dead">この起動は長時間フレームを描画していません。mod を除外するため、mod なしで再起動してください。</string>
+    <string name="launch_watchdog_open_logs">ログを開く</string>
+    <string name="launch_watchdog_restart_without_mods">mod なしで再起動</string>
+    <string name="performance_preset_thermal_message">このデバイスは熱によって制限されています。バッテリーモードなら CPU の負担が減ります。</string>
+    <string name="performance_preset_thermal_apply">バッテリーを使う</string>
+    <string name="instance_size_on_disk">ディスク上 %1$s</string>
+    <string name="nav_tab_needs_attention">、対応が必要です</string>
+    <string name="server_favourite">%1$s をお気に入りに追加</string>
+    <string name="server_unfavourite">%1$s をお気に入りから削除</string>
+    <string name="servers_favourites_first">お気に入りが先に表示されます</string>
+    <string name="server_favourite_label">お気に入り</string>
+    <string name="cosmetics_sync_setting_title">コスメの同期</string>
+    <string name="cosmetics_sync_setting_desc">装備中のケープ・アクセサリ・ペットを同じワールドの他の Glowberry ユーザーに表示し、相手のものも表示します。クライアント側のみ。オフにすると送受信の両方が停止します。</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">上へ移動</string>
+    <string name="pack_changer_move_down">下へ移動</string>
+    <string name="pack_changer_reorder_failed">パックの順序を保存できませんでした。</string>
+    <string name="resource_pack_resolution">解像度: %1$s</string>
+    <string name="announcement_learn_more">詳細</string>
+    <string name="announcement_dismiss">閉じる</string>
+    <string name="mod_update_notification_title">モッドの更新があります</string>
+    <string name="mod_update_channel">モッド更新</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">他 %1$d 件</string>
+    <string name="mod_update_check_title">モッドの更新を確認</string>
+    <string name="mod_update_check_desc">インストール済みモッドの新しいバージョンが公開されたとき、一日一回通知します。</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d 件のモッドに更新があります</item>
+        <item quantity="other">%1$d 件のモッドに更新があります</item>
+    </plurals>
+    <string name="usage_stats_title">匿名の使用カウンター</string>
+    <string name="usage_stats_desc">デフォルトではオフ。オンにすると一日一回匿名のレポート：アプリバージョン、デバイスクラス、ABI、ローカルの起動回数。アカウント、ゲームタグ、デバイスID、サーバーアドレス、モッド一覧は含まれません。</string>
+    <string name="usage_stats_preview">送信内容を表示</string>
+    <string name="usage_stats_preview_title">使用レポートの内容</string>
+    <string name="usage_stats_preview_close">閉じる</string>
+    <string name="usage_stats_unavailable">このビルドには収集先が設定されていないため、何も送信できません。</string>
 </resources>

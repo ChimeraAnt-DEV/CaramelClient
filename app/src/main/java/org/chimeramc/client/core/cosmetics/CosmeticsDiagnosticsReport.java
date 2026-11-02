@@ -47,6 +47,16 @@ public final class CosmeticsDiagnosticsReport {
         public int resolvedBy = -1;
         /** {@code GlBackend}: 0 unknown, 1 GLES, 2 Vulkan. */
         public int glBackend = 0;
+        /** The classified GPU family (item 376): see {@link GpuFamily#fromNativeCode}; -1 not read. */
+        public int gpuFamily = -1;
+        /**
+         * The number of distinct targets currently carrying a detour (item 396), or -1 unknown.
+         *
+         * <p>The overlay hooks install through a {@code std::call_once}, so a count that rises on a
+         * second init attempt, or falls to zero after a successful install, is a real defect the
+         * report can show.
+         */
+        public int hookCount = -1;
         public boolean eglContextCurrent;
         public boolean hookInstalled;
         /** The exact gate that refused the render hook (item 18): 0 live, 1 version gate,
@@ -127,6 +137,18 @@ public final class CosmeticsDiagnosticsReport {
         public boolean framePacingVsyncLocked;
         /** Item 11: whether a frame-pacing reading exists at all this session. */
         public boolean framePacingAvailable;
+        /** Items 386/387: the median frame interval in microseconds over the long window, or -1. */
+        public int framePacingP50Us = -1;
+        /** Items 386/387: the 95th percentile frame interval, or -1. */
+        public int framePacingP95Us = -1;
+        /** Items 386/387: the 99th percentile frame interval, or -1. */
+        public int framePacingP99Us = -1;
+        /** Items 386/387: frames above twice the median, per minute, or -1 unknown. */
+        public int framePacingHitchesPerMinute = -1;
+        /** Item 415: this process's resident footprint in KiB, or -1 when no source was readable. */
+        public int processResidentKb = -1;
+        /** Item 415: this process's proportional (Pss) footprint in KiB, or -1 unknown. */
+        public int processProportionalKb = -1;
         /** True when a game session is running (the launcher's own session flag). */
         public boolean sessionActive;
         /** The HUD hook's "a HUD screen is open" reading, or false when the hook has not fired. */
@@ -155,6 +177,8 @@ public final class CosmeticsDiagnosticsReport {
             in.renderSlot = diag[0];
             in.resolvedBy = diag[1];
             in.glBackend = diag[2];
+            in.gpuFamily = diag.length >= 18 ? diag[17] : -1;
+            in.hookCount = diag.length >= 19 ? diag[18] : -1;
             in.eglContextCurrent = diag[3] == 1;
             in.hookInstalled = diag[4] == 1;
             in.renderHookFailureReason = PreloaderInput.renderHookFailureReason();
@@ -182,6 +206,29 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingWorstUs = pacing[2];
                 in.framePacingJittering = (pacing[3] & 1) != 0;
                 in.framePacingVsyncLocked = (pacing[3] & 2) != 0;
+            }
+        } catch (Throwable ignored) {
+        }
+
+        // Items 386/387: the percentile + hitch reading. Separate from the per-frame one because it
+        // sorts the long window; it is a summary the report shows beside the average.
+        try {
+            int[] percentiles = PreloaderInput.readFramePacingPercentiles();
+            if (percentiles != null) {
+                in.framePacingP50Us = percentiles[1];
+                in.framePacingP95Us = percentiles[2];
+                in.framePacingP99Us = percentiles[3];
+                in.framePacingHitchesPerMinute = percentiles[4];
+            }
+        } catch (Throwable ignored) {
+        }
+
+        // Item 415: the process footprint, so a session that grows is visible in the report.
+        try {
+            int[] memory = PreloaderInput.readProcessMemory();
+            if (memory != null) {
+                in.processResidentKb = memory[1];
+                in.processProportionalKb = memory[2];
             }
         } catch (Throwable ignored) {
         }
@@ -344,9 +391,13 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Local player feed: ").append(localPlayerText(v)).append('\n');
         b.append("Camera anchor source: ").append(cameraText(v)).append('\n');
         b.append("Frame pacing: ").append(framePacingText(v)).append('\n');
+        b.append("Frame percentiles: ").append(framePercentilesText(v)).append('\n');
+        b.append("Process memory: ").append(processMemoryText(v)).append('\n');
         b.append("Cape engine texture route: ").append(yesNo(v.capeEngineRouteLive)).append('\n');
         b.append("Engine image pipeline live: ").append(yesNo(v.imagePipelineLive)).append('\n');
         b.append("GL backend: ").append(backendText(v.glBackend)).append('\n');
+        b.append("GPU family: ").append(gpuFamilyText(v.gpuFamily)).append('\n');
+        b.append("Hooks installed: ").append(hookCountText(v.hookCount)).append('\n');
         b.append("EGL context current: ").append(yesNo(v.eglContextCurrent)).append('\n');
         b.append("Last GL error: ").append(errorText(v.lastError)).append('\n');
         b.append('\n');
@@ -480,6 +531,21 @@ public final class CosmeticsDiagnosticsReport {
         return RenderBackend.label(RenderBackend.fromNativeCode(backend));
     }
 
+    /**
+     * The classified GPU family, or "unknown" when the native side has not read the driver strings.
+     * A negative code is the "not read" sentinel, never a family, so it must not be labelled.
+     */
+    private static String gpuFamilyText(int nativeCode) {
+        if (nativeCode < 0) return "unknown";
+        return GpuFamily.label(GpuFamily.fromNativeCode(nativeCode));
+    }
+
+    /** The live hook count, or "unknown" when the native side did not report it. Never "0 hooks"
+     * for an unread value: that reads as a real failure rather than a missing measurement. */
+    private static String hookCountText(int count) {
+        return count < 0 ? "unknown" : Integer.toString(count);
+    }
+
     private static String errorText(int error) {
         if (error < 0) return "unknown";
         return error == 0 ? "none" : "0x" + Integer.toHexString(error);
@@ -567,6 +633,51 @@ public final class CosmeticsDiagnosticsReport {
             s.append(" — steady, not vsync-locked");
         }
         return s.toString();
+    }
+
+    /**
+     * Items 386/387: the median and tail frame intervals plus the hitch rate. A percentile a device
+     * cannot report reads as "no reading yet", never as 0 ms (which would look like a perfect
+     * frame).
+     */
+    private static String framePercentilesText(Inputs v) {
+        if (v.framePacingP50Us < 0 || v.framePacingP95Us < 0 || v.framePacingP99Us < 0) {
+            return "no reading yet";
+        }
+        StringBuilder s = new StringBuilder();
+        s.append("p50 ").append(formatMicros(v.framePacingP50Us));
+        s.append(", p95 ").append(formatMicros(v.framePacingP95Us));
+        s.append(", p99 ").append(formatMicros(v.framePacingP99Us));
+        if (v.framePacingHitchesPerMinute >= 0) {
+            s.append(" — ").append(v.framePacingHitchesPerMinute).append(" hitches/min");
+        }
+        return s.toString();
+    }
+
+    /**
+     * Item 415: the process footprint. The proportional figure is the honest one when the kernel
+     * exposes it (it is this process's share of shared pages); the resident figure counts shared
+     * pages in full. An unreadable source says so rather than printing "0 KB".
+     */
+    private static String processMemoryText(Inputs v) {
+        if (v.processResidentKb < 0 && v.processProportionalKb < 0) {
+            return "no reading yet";
+        }
+        StringBuilder s = new StringBuilder();
+        if (v.processProportionalKb >= 0) {
+            s.append(formatKb(v.processProportionalKb)).append(" (Pss)");
+            if (v.processResidentKb >= 0) s.append(", ");
+        }
+        if (v.processResidentKb >= 0) {
+            s.append(formatKb(v.processResidentKb)).append(" resident");
+        }
+        return s.toString();
+    }
+
+    /** Kibibytes to a short "182 MB" form. */
+    private static String formatKb(int kb) {
+        if (kb < 1024) return kb + " KB";
+        return String.format(Locale.US, "%.1f MB", kb / 1024.0);
     }
 
     /** Microseconds to a short "16.7 ms" form; a sub-millisecond value is shown in microseconds. */

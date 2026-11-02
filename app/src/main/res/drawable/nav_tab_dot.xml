@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The navigation attention dot (item 83).
+
+    A single small filled circle shown as the destination's compound drawable end when that screen
+    has something the user must act on (a mod that failed to load, a mod the crash guard disabled, a
+    pending safe-mode escape, or an available update). Its colour is set in code so the "attention"
+    token lives with the rest of the state colours rather than in a drawable.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/error" />
+    <size
+        android:width="@dimen/nav_tab_dot_size"
+        android:height="@dimen/nav_tab_dot_size" />
+</shape>

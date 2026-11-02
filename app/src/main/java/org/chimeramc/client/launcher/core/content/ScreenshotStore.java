@@ -47,4 +47,32 @@ public final class ScreenshotStore {
         if (gameDataDir == null) return null;
         return new File(gameDataDir, "Screenshots");
     }
+
+    /**
+     * The newest screenshot in the selected instance's folder, or null when there is none.
+     *
+     * <p>The in-game pause-menu row can only share something that already exists: it runs over a
+     * live session, where a file picker would cover the game. "Share the last screenshot" is the
+     * action that is actually available there, and it needs this one lookup.
+     */
+    public static File latestScreenshot(Activity activity) {
+        File dir = screenshotsDir(activity);
+        if (dir == null || !dir.isDirectory()) return null;
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) return null;
+        File newest = null;
+        for (File file : files) {
+            if (file == null || !file.isFile()) continue;
+            if (!isImage(file.getName())) continue;
+            if (newest == null || file.lastModified() > newest.lastModified()) newest = file;
+        }
+        return newest;
+    }
+
+    /** True for a file name with an image extension the game or the launcher writes. */
+    public static boolean isImage(String name) {
+        if (name == null) return false;
+        String lower = name.toLowerCase(java.util.Locale.ROOT);
+        return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+    }
 }

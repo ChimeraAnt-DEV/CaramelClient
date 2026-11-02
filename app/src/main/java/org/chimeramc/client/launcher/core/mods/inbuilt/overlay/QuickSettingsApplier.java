@@ -11,6 +11,7 @@ import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.util.DisplayModePreference;
+import org.chimeramc.client.util.SurfaceFrameRate;
 import org.chimeramc.client.util.LauncherStorage;
 
 import java.io.File;
@@ -82,7 +83,15 @@ public final class QuickSettingsApplier {
      */
     public static Result applyRefreshCap(Activity activity, int capHz) {
         if (activity == null) return Result.FAILED;
-        if (capHz == QuickSettings.CAP_UNLIMITED) return Result.APPLIED;
+        if (capHz == QuickSettings.CAP_UNLIMITED) {
+            // Clear any rate a previous cap requested, then leave the panel alone.
+            SurfaceFrameRate.apply(activity, capHz);
+            return Result.APPLIED;
+        }
+        // API 30+: ask the surface itself for the rate. This cannot change the resolution, which
+        // is the whole point of preferring it, and it works on a panel that exposes no matching
+        // display mode. Only when it is unavailable do we fall back to the display-mode path.
+        if (SurfaceFrameRate.apply(activity, capHz)) return Result.APPLIED;
         try {
             WindowManager windowManager =
                     (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);

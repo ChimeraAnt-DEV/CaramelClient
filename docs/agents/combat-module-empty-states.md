@@ -1,0 +1,3 @@
+## Combat module empty states
+- A module that needs a native feed (Crystal Optimizer's `WorldSource`, Armor HUD's `DataSource`, Hitboxes' `EntitySource`) must distinguish **"no data source"** from **"data source says nothing is there"**. Crystal Optimizer's `isAwaitingGameData()` renders "waiting for game data"; without it the readout said "no safe spot", blaming the player's aim for a feed that does not exist. `HitboxOverlay` shows an equivalent "awaiting data" state.
+- `TouchTapDetector` classifies a touch attack for the Select Hit metronome. A `POINTER_UP` for a *different* pointer must not end the gesture тАФ ending there dropped the real tap the moment a jump/sneak button was released. Fixed and pinned by `TouchTapDetectorTest`.

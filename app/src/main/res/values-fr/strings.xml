@@ -43,7 +43,10 @@
     <string name="loading">Chargement…</string>
 
     <string name="import_confirmation_title">Importer des Mods</string>
-    <string name="import_confirmation_message">Êtes-vous sûr de vouloir importer les %d fichiers mods sélectionnés ?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Êtes-vous sûr de vouloir importer les %d fichiers mods sélectionnés ?</item>
+        <item quantity="other">Êtes-vous sûr de vouloir importer les %d fichiers mods sélectionnés ?</item>
+    </plurals>
     <string name="import_so_plugin_title">Importer un Plugin SO</string>
     <string name="plugin_name_label">Nom du plugin</string>
     <string name="plugin_type_label">Type</string>
@@ -66,7 +69,10 @@
     <string name="cancel">Annuler</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d fichiers mod traités avec succès</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d fichiers mod traités avec succès</item>
+        <item quantity="other">%d fichiers mod traités avec succès</item>
+    </plurals>
     <string name="user_cancelled">Importation annulée par l\'utilisateur</string>
 
     <string name="exit">Quitter</string>
@@ -531,7 +537,10 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="structure_exported">Exporté : %s</string>
     <string name="extract">Extraire</string>
     <string name="structures_found_title">Structures trouvées</string>
-    <string name="structures_found_count">%d structures trouvées dans ce monde</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">%d structures trouvées dans ce monde</item>
+        <item quantity="other">%d structures trouvées dans ce monde</item>
+    </plurals>
 
     <string name="mod_menu">Menu Mod</string>
     <string name="mod_menu_general">Général</string>
@@ -1055,6 +1064,7 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (le client attend v%2$d)</string>
     <string name="about_input_backend_status">Backend d’entrée : %1$s</string>
     <string name="diagnostics_field_input_backend">Backend d’entrée</string>
+    <string name="diagnostics_field_hooks">Hooks du préchargeur</string>
     <string name="crash_exit_reason_label">Raison de la dernière fermeture :</string>
     <string name="crash_disable_last_mod">Désactiver le mod qui a planté</string>
     <string name="crash_disable_no_suspects">Aucun mod n\'a été enregistré pour ce plantage.</string>
@@ -1094,6 +1104,11 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="controller_bind_device_cleared">%1$s n\'a plus de profil lié</string>
     <string name="controller_stick_preview_description">Position du stick en direct : l\'anneau est la lecture brute et le point ce que le profil envoie</string>
     <string name="controller_stick_preview_side">Affichage du stick %1$s</string>
+    <string name="screenshot_share">Partager la capture</string>
+    <string name="screenshot_share_failed">Impossible de partager cette capture.</string>
+    <string name="screenshot_share_no_app">Aucune application ne peut recevoir une image partagée.</string>
+    <string name="screenshot_share_no_screenshot">Aucune capture à partager pour l\'instant.</string>
+    <string name="pause_menu_share_screenshot">Partager la dernière capture</string>
     <string name="pause_menu_screenshot">Capture</string>
     <string name="pause_menu_hide_hud">Masquer le HUD</string>
     <string name="pause_menu_switch_layout">Changer de disposition</string>
@@ -1210,4 +1225,41 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_import_link_done_digest">%1$s importé.\n%2$s</string>
     <string name="nav_rail_collapse">Réduire le rail</string>
     <string name="nav_rail_expand">Développer le rail</string>
+    <string name="launch_watchdog_stalled">Ce lancement n\'a pas progressé depuis un moment. Il fonctionne peut-être encore ; ouvrez les journaux pour voir ce qu\'il fait.</string>
+    <string name="launch_watchdog_dead">Ce lancement n\'a dessiné aucune image depuis longtemps. Redémarrez sans mods pour écarter un mod.</string>
+    <string name="launch_watchdog_open_logs">Ouvrir les journaux</string>
+    <string name="launch_watchdog_restart_without_mods">Redémarrer sans mods</string>
+    <string name="performance_preset_thermal_message">Cet appareil est limité par la température. Le mode Batterie donnerait moins de travail au processeur.</string>
+    <string name="performance_preset_thermal_apply">Utiliser Batterie</string>
+    <string name="instance_size_on_disk">%1$s sur le disque</string>
+    <string name="nav_tab_needs_attention">, nécessite votre attention</string>
+    <string name="server_favourite">Favori : %1$s</string>
+    <string name="server_unfavourite">Retirer %1$s des favoris</string>
+    <string name="servers_favourites_first">Les favoris sont affichés en premier</string>
+    <string name="server_favourite_label">Favori</string>
+    <string name="cosmetics_sync_setting_title">Synchro des cosmétiques</string>
+    <string name="cosmetics_sync_setting_desc">Affichez votre cape, accessoire et familier équipés aux autres utilisateurs Glowberry du même monde, et voyez les leurs. Côté client uniquement ; désactivez pour arrêter l\'envoi et la réception.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Monter</string>
+    <string name="pack_changer_move_down">Descendre</string>
+    <string name="pack_changer_reorder_failed">Impossible d\'enregistrer l\'ordre des packs.</string>
+    <string name="resource_pack_resolution">Résolution : %1$s</string>
+    <string name="announcement_learn_more">En savoir plus</string>
+    <string name="announcement_dismiss">Ignorer</string>
+    <string name="mod_update_notification_title">Mises à jour de mods disponibles</string>
+    <string name="mod_update_channel">Mises à jour de mods</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">et %1$d de plus</string>
+    <string name="mod_update_check_title">Rechercher des mises à jour de mods</string>
+    <string name="mod_update_check_desc">Une notification par jour lorsqu\'une version plus récente d\'un mod installé est publiée.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod a une mise à jour</item>
+        <item quantity="other">%1$d mods ont des mises à jour</item>
+    </plurals>
+    <string name="usage_stats_title">Compteur d\'usage anonyme</string>
+    <string name="usage_stats_desc">Désactivé par défaut. Une fois activé, un rapport anonyme par jour : version de l\'app, classe d\'appareil, ABI et comptages locaux de lancement. Aucun compte, gamertag, id d\'appareil, adresse de serveur ni liste de mods.</string>
+    <string name="usage_stats_preview">Voir ce qui serait envoyé</string>
+    <string name="usage_stats_preview_title">Contenu du rapport d\'usage</string>
+    <string name="usage_stats_preview_close">Fermer</string>
+    <string name="usage_stats_unavailable">Cette version n\'a aucun collecteur configuré, rien ne peut être envoyé.</string>
 </resources>

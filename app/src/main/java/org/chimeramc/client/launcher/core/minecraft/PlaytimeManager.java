@@ -23,6 +23,8 @@ public final class PlaytimeManager {
     private static final String KEY_ACTIVE_PROFILE = "active_profile";
     private static final String KEY_ACTIVE_START = "active_start_elapsed";
     private static final String KEY_TOTAL_PREFIX = "total_ms_";
+    /** The wall-clock time of the last session start, per instance (item 143). */
+    private static final String KEY_LAST_PLAYED_PREFIX = "last_played_ms_";
     public static final long HEARTBEAT_INTERVAL_MS = 15_000L;
 
     private static Context sAppContext;
@@ -53,9 +55,13 @@ public final class PlaytimeManager {
         sActiveProfileId = profileId;
         sActiveBaseMs = getTotalMs(profileId);
         sActiveStartElapsed = SystemClock.elapsedRealtime();
+        // Wall-clock (not elapsed) so "last played" survives a reboot, unlike the elapsed-time
+        // session anchor above.
+        long nowWall = System.currentTimeMillis();
         prefs().edit()
                 .putString(KEY_ACTIVE_PROFILE, profileId)
                 .putLong(KEY_ACTIVE_START, sActiveStartElapsed)
+                .putLong(KEY_LAST_PLAYED_PREFIX + profileId, nowWall)
                 .apply();
         LowLatencyNetworkManager.setGameSessionActive(true);
         // A fresh session clears any memory-pressure reading left over from the last one, then
@@ -103,6 +109,15 @@ public final class PlaytimeManager {
     public static long getTotalMs(String profileId) {
         if (profileId == null || sAppContext == null) return 0L;
         return prefs().getLong(KEY_TOTAL_PREFIX + profileId, 0L);
+    }
+
+    /**
+     * The wall-clock time of the instance's last session start, or 0 when it has never been played
+     * (item 143). Wall-clock rather than elapsed so it survives a reboot.
+     */
+    public static long getLastPlayedMs(String profileId) {
+        if (profileId == null || sAppContext == null) return 0L;
+        return prefs().getLong(KEY_LAST_PLAYED_PREFIX + profileId, 0L);
     }
 
     public static String formatPlaytime(long ms) {

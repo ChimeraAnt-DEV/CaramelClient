@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.chimeramc.client.R;
 import org.chimeramc.client.databinding.ItemServerBinding;
 import org.chimeramc.client.core.content.ServerItem;
+import org.chimeramc.client.core.content.ServerFavourites;
 import org.chimeramc.client.core.content.ServerPongInfo;
 import org.chimeramc.client.ui.components.ListDiff;
 import org.chimeramc.client.ui.components.ListDiffDispatch;
@@ -34,14 +35,40 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     private final Map<String, Boolean> pingFailures = new HashMap<>();
     /** The selected instance's version code, used for the compatibility verdict. */
     private String selectedVersionCode;
+    /** Favourite server keys ("ip:port"), read from {@link ServerFavourites} (item 254). */
+    private java.util.Set<String> favourites = java.util.Collections.emptySet();
 
     public interface OnServerClickListener {
         void onDeleteClick(ServerItem server);
+
+        /** The star was tapped on this row; the host persists the change. */
+        void onFavouriteToggle(ServerItem server);
     }
 
     public ServersAdapter(List<ServerItem> servers, OnServerClickListener listener) {
         this.servers = servers;
         this.listener = listener;
+    }
+
+    /**
+     * Sets the favourite keys and re-sorts, favourites first (item 254).
+     *
+     * <p>The order is a presentation rule, so it is applied where the list is rendered rather than
+     * where it is stored: the game's own {@code external_servers.txt} keeps the order it was written
+     * in, and a user who un-favourites a server sees it return to that order instead of to the
+     * bottom. The sort is stable, so the stored order is preserved inside each group.
+     */
+    public void setFavourites(java.util.Set<String> favouriteKeys) {
+        this.favourites = favouriteKeys != null
+                ? java.util.Collections.unmodifiableSet(new java.util.HashSet<>(favouriteKeys))
+                : java.util.Collections.emptySet();
+        if (servers != null && !servers.isEmpty()) {
+            List<ServerItem> sorted = ServerFavourites.order(servers, this.favourites);
+            if (!sorted.equals(servers)) {
+                servers = sorted;
+                notifyItemRangeChanged(0, servers.size());
+            }
+        }
     }
 
     /**
@@ -53,7 +80,10 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
      * row that survives the update is a change rather than a remove and an insert.
      */
     public void updateData(List<ServerItem> newServers) {
-        List<ServerItem> next = newServers != null ? newServers : java.util.Collections.emptyList();
+        List<ServerItem> raw = newServers != null ? newServers : java.util.Collections.emptyList();
+        // Favourites first, then the stored order (item 254). Ordering here, before the diff, is
+        // what keeps a starred row from jumping position when a search filter is applied.
+        List<ServerItem> next = ServerFavourites.order(raw, favourites);
         ListDiff.Result diff = ListDiff.compute(this.servers, next,
                 ServersAdapter::keyFor,
                 (old, fresh) -> old.name.equals(fresh.name));
@@ -105,6 +135,17 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
                 listener.onDeleteClick(server);
             }
         });
+        boolean favourite = favourites.contains(keyFor(server));
+        holder.favouriteButton.setSelected(favourite);
+        holder.favouriteButton.setContentDescription(holder.itemView.getContext().getString(
+                favourite ? R.string.server_unfavourite : R.string.server_favourite,
+                server.name));
+        holder.favouriteButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onFavouriteToggle(server);
+            }
+        });
+        org.chimeramc.client.ui.animation.DynamicAnim.applyPressScale(holder.favouriteButton);
 
         org.chimeramc.client.util.PersonalizationManager pm =
                 new org.chimeramc.client.util.PersonalizationManager(holder.itemView.getContext());
@@ -178,6 +219,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
         TextView ipText;
         TextView statusText;
         Button deleteButton;
+        android.widget.ImageButton favouriteButton;
 
         ViewHolder(ItemServerBinding binding) {
             super(binding.getRoot());
@@ -185,6 +227,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
             ipText = binding.serverIp;
             statusText = binding.serverStatus;
             deleteButton = binding.serverDeleteButton;
+            favouriteButton = binding.serverFavouriteButton;
         }
     }
 }

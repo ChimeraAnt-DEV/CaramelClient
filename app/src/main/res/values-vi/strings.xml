@@ -42,7 +42,10 @@
     <string name="loading">Đang tải…</string>
 
     <string name="import_confirmation_title">Nhập Mods</string>
-    <string name="import_confirmation_message">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </item>
+        <item quantity="other">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </item>
+    </plurals>
     <string name="import_so_plugin_title">Nhập Plugin SO</string>
     <string name="plugin_name_label">Tên Plugin</string>
     <string name="plugin_type_label">Loại</string>
@@ -65,7 +68,10 @@
     <string name="cancel">Hủy</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Đã xử lý thành công file Mod %d</string>
+    <plurals name="files_processed">
+        <item quantity="one">Đã xử lý thành công file Mod %d</item>
+        <item quantity="other">Đã xử lý thành công file Mod %d</item>
+    </plurals>
     <string name="user_cancelled">Hành động đã bị hủy bởi người dùng</string>
 
 
@@ -603,7 +609,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="structure_exported">Đã xuất: %s</string>
     <string name="extract">Xuất</string>
     <string name="structures_found_title">Tìm thấy cấu trúc</string>
-    <string name="structures_found_count">Tìm thấy %d cấu trúc trên thế giới này</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Tìm thấy %d cấu trúc trên thế giới này</item>
+        <item quantity="other">Tìm thấy %d cấu trúc trên thế giới này</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menu</string>
@@ -1085,6 +1094,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (ứng dụng mong đợi v%2$d)</string>
     <string name="about_input_backend_status">Phần phụ trợ nhập: %1$s</string>
     <string name="diagnostics_field_input_backend">Phần phụ trợ nhập</string>
+    <string name="diagnostics_field_hooks">Hook trình tải trước</string>
     <string name="crash_exit_reason_label">Lý do thoát lần trước:</string>
     <string name="crash_disable_last_mod">Tắt mod gây lỗi</string>
     <string name="crash_disable_no_suspects">Không có mod nào được ghi nhận cho lỗi này.</string>
@@ -1124,6 +1134,11 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="controller_bind_device_cleared">%1$s không còn cấu hình được liên kết</string>
     <string name="controller_stick_preview_description">Vị trí cần gạt trực tiếp: vòng là giá trị thô, chấm là giá trị cấu hình gửi đi</string>
     <string name="controller_stick_preview_side">Đang hiển thị cần gạt %1$s</string>
+    <string name="screenshot_share">Chia sẻ ảnh chụp màn hình</string>
+    <string name="screenshot_share_failed">Không thể chia sẻ ảnh chụp màn hình này.</string>
+    <string name="screenshot_share_no_app">Không có ứng dụng nào nhận được ảnh chia sẻ.</string>
+    <string name="screenshot_share_no_screenshot">Chưa có ảnh chụp màn hình để chia sẻ.</string>
+    <string name="pause_menu_share_screenshot">Chia sẻ ảnh chụp cuối</string>
     <string name="pause_menu_screenshot">Ảnh chụp màn hình</string>
     <string name="pause_menu_hide_hud">Ẩn HUD</string>
     <string name="pause_menu_switch_layout">Đổi bố cục</string>
@@ -1240,4 +1255,41 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="mod_import_link_done_digest">Đã nhập %1$s.\n%2$s</string>
     <string name="nav_rail_collapse">Thu gọn thanh</string>
     <string name="nav_rail_expand">Mở rộng thanh</string>
+    <string name="launch_watchdog_stalled">Lần khởi chạy này đã không tiến triển trong một lúc. Nó có thể vẫn đang chạy; mở nhật ký để xem nó đang làm gì.</string>
+    <string name="launch_watchdog_dead">Lần khởi chạy này đã lâu không vẽ khung hình nào. Khởi động lại mà không có mod để loại trừ một mod.</string>
+    <string name="launch_watchdog_open_logs">Mở nhật ký</string>
+    <string name="launch_watchdog_restart_without_mods">Khởi động lại không có mod</string>
+    <string name="performance_preset_thermal_message">Thiết bị này bị giới hạn do nhiệt. Chế độ Pin sẽ cho CPU ít việc hơn.</string>
+    <string name="performance_preset_thermal_apply">Dùng Pin</string>
+    <string name="instance_size_on_disk">%1$s trên đĩa</string>
+    <string name="nav_tab_needs_attention">, cần chú ý</string>
+    <string name="server_favourite">Yêu thích %1$s</string>
+    <string name="server_unfavourite">Xóa %1$s khỏi yêu thích</string>
+    <string name="servers_favourites_first">Mục yêu thích được hiển thị trước</string>
+    <string name="server_favourite_label">Yêu thích</string>
+    <string name="cosmetics_sync_setting_title">Đồng bộ trang phục</string>
+    <string name="cosmetics_sync_setting_desc">Hiển thị áo choàng, phụ kiện và thú cưng đang dùng cho người dùng Glowberry khác trong cùng thế giới, và xem của họ. Chỉ ở phía ứng dụng; tắt sẽ dừng cả gửi và nhận.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Di chuyển lên</string>
+    <string name="pack_changer_move_down">Di chuyển xuống</string>
+    <string name="pack_changer_reorder_failed">Không thể lưu thứ tự gói.</string>
+    <string name="resource_pack_resolution">Độ phân giải: %1$s</string>
+    <string name="announcement_learn_more">Tìm hiểu thêm</string>
+    <string name="announcement_dismiss">Bỏ qua</string>
+    <string name="mod_update_notification_title">Có bản cập nhật mod</string>
+    <string name="mod_update_channel">Cập nhật mod</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">và %1$d nữa</string>
+    <string name="mod_update_check_title">Kiểm tra cập nhật mod</string>
+    <string name="mod_update_check_desc">Một thông báo mỗi ngày khi có phiên bản mới hơn của mod đã cài.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod có bản cập nhật</item>
+        <item quantity="other">%1$d mod có bản cập nhật</item>
+    </plurals>
+    <string name="usage_stats_title">Bộ đếm sử dụng ẩn danh</string>
+    <string name="usage_stats_desc">Mặc định tắt. Khi bật, một báo cáo ẩn danh mỗi ngày: phiên bản ứng dụng, lớp thiết bị, ABI và số lần khởi chạy cục bộ. Không có tài khoản, gamertag, id thiết bị, địa chỉ máy chủ hay danh sách mod.</string>
+    <string name="usage_stats_preview">Xem những gì sẽ được gửi</string>
+    <string name="usage_stats_preview_title">Nội dung báo cáo sử dụng</string>
+    <string name="usage_stats_preview_close">Đóng</string>
+    <string name="usage_stats_unavailable">Bản dựng này không có bộ thu thập, không thể gửi gì.</string>
 </resources>

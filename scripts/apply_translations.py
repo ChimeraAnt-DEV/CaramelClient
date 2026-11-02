@@ -33,6 +33,8 @@ RES = ROOT / "app/src/main/res"
 BATCHES = [
     ROOT / "scripts/translations_priority.json",
     ROOT / "scripts/translations_priority_messages.json",
+    ROOT / "scripts/translations_priority_launch.json",
+    ROOT / "scripts/translations_priority_nav.json",
 ]
 
 STRING_RE = re.compile(r'<string name="([^"]+)"([^>]*)>(.*?)</string>', re.S)

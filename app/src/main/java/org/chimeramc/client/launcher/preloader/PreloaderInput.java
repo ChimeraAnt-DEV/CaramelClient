@@ -112,8 +112,13 @@ public class PreloaderInput {
     /** Records the refresh rate the launcher resolved, for the refresh-rate item's report. */
     public static native void nativeSetOptifineRefreshTarget(int hz);
 
-    /** Configures the dynamic-render-distance governor bounds. */
-    public static native void nativeConfigureRenderDistance(int minDistance, int maxDistance, int fpsThreshold);
+    /** Configures the dynamic-render-distance governor bounds and step rule. */
+    public static native void nativeConfigureRenderDistance(int minDistance, int maxDistance,
+                                                           int fpsThreshold, int stepSize,
+                                                           long minDwellMs);
+
+    /** The number of accepted render-distance changes so far (item 383). */
+    public static native int nativeRenderDistanceChangeCount();
 
     /** The tick count the callback-trimming hook has observed. */
     public static native long nativeOptifineTickCount();
@@ -275,6 +280,18 @@ public class PreloaderInput {
     public static native int[] nativeReadFramePacing();
 
     /**
+     * Items 386/387: the percentile + hitch reading over the long frame window, as
+     * {valid, p50Us, p95Us, p99Us, hitchesPerMinute}. Length 1 (or null) means "no reading yet".
+     */
+    public static native int[] nativeReadFramePacingPercentiles();
+
+    /**
+     * Item 415: this process's memory footprint as
+     * {valid, residentKb, proportionalKb, fromPss}. A missing source reads as invalid.
+     */
+    public static native int[] nativeReadProcessMemory();
+
+    /**
      * The local-player feed as {live, xBits, yBits, zBits, yawBits, pitchBits}. Floats are the raw
      * IEEE-754 bits of the position and view rotation; the caller decodes them.
      */
@@ -286,6 +303,14 @@ public class PreloaderInput {
      * resolved engine camera.
      */
     public static native int nativeCameraAnchorSource();
+
+    /**
+     * Native declaration: the classified GPU family (item 376), or -1 when not yet read.
+     *
+     * <p>0 unknown, 1 Adreno, 2 Mali, 3 Immortalis, 4 PowerVR, 5 Xclipse, 6 NVIDIA, 7 Apple,
+     * 8 software rasteriser, 9 generic. See {@link org.chimeramc.client.core.cosmetics.GpuFamily}.
+     */
+    public static native int nativeGpuFamily();
 
     /**
      * Samples the native cape chain: {@code {lean1, sway1, lean2, sway2, ...}} in degrees for
@@ -339,10 +364,21 @@ public class PreloaderInput {
         }
     }
 
-    public static void configureRenderDistance(int minDistance, int maxDistance, int fpsThreshold) {
+    public static void configureRenderDistance(int minDistance, int maxDistance, int fpsThreshold,
+                                               int stepSize, long minDwellMs) {
         try {
-            nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold);
+            nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
+                    minDwellMs);
         } catch (UnsatisfiedLinkError e) {
+        }
+    }
+
+    /** The number of accepted render-distance changes, or 0 when the preloader is absent. */
+    public static int renderDistanceChangeCount() {
+        try {
+            return nativeRenderDistanceChangeCount();
+        } catch (UnsatisfiedLinkError e) {
+            return 0;
         }
     }
 
@@ -751,6 +787,32 @@ public class PreloaderInput {
     }
 
     /**
+     * Items 386/387: the percentile + hitch reading, or null when there is no reading yet. The
+     * array is {valid, p50Us, p95Us, p99Us, hitchesPerMinute}.
+     */
+    /**
+     * Item 415: the process footprint, or null when no source could be read. The array is
+     * {valid, residentKb, proportionalKb, fromPss}.
+     */
+    public static int[] readProcessMemory() {
+        try {
+            int[] value = nativeReadProcessMemory();
+            return value != null && value.length >= 4 && value[0] == 1 ? value : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    public static int[] readFramePacingPercentiles() {
+        try {
+            int[] value = nativeReadFramePacingPercentiles();
+            return value != null && value.length >= 5 && value[0] == 1 ? value : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /**
      * The local-player feed as {live, xBits, yBits, zBits, yawBits, pitchBits}, or null when the
      * library is absent. Floats travel as their raw int bits; decode with
      * {@link Float#intBitsToFloat(int)}.
@@ -772,6 +834,21 @@ public class PreloaderInput {
     public static int cameraAnchorSource() {
         try {
             return nativeCameraAnchorSource();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /**
+     * The classified GPU family (item 376), or -1 when the native side has not read the driver
+     * strings yet (no library, or no GLES context at the time of the call).
+     *
+     * <p>Map it with {@link org.chimeramc.client.core.cosmetics.GpuFamily#fromNativeCode}; a
+     * negative reading means "unknown", never a family.
+     */
+    public static int gpuFamily() {
+        try {
+            return nativeGpuFamily();
         } catch (UnsatisfiedLinkError e) {
             return -1;
         }

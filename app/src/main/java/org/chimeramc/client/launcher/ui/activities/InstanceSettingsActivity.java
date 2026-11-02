@@ -96,7 +96,10 @@ public class InstanceSettingsActivity extends BaseActivity {
             saveShortcutSettings();
         });
 
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+        android.view.View instanceContent = findViewById(android.R.id.content);
+        DynamicAnim.applyPressScaleRecursively(instanceContent);
+        // Items 341/342: the same heading and one-focus-stop rules as the global Settings screen.
+        org.chimeramc.client.ui.components.UiAccessibility.wireToggleRows(instanceContent);
 
         setupNavBar();
 

@@ -199,14 +199,21 @@ public class FpsDisplayOverlay {
             // The timer runs four times a second but the readout changes far less often, so the
             // text is built and set only when the number actually differs (item 187).
             if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
-                String text = fps > 0
+                // The level is carried by a shape as well as a colour (item 344): a green/red pair
+                // is unreadable to a colour-blind user and, in daylight, to everyone. The cue is
+                // the same one the Mod Menu's stats strip would show, from one rule.
+                HudThreshold.Level level = HudThreshold.levelForFps(fps);
+                String value = fps > 0
                         ? activity.getString(R.string.mod_overlay_fps_value, fps)
                         : activity.getString(R.string.mod_overlay_fps_unknown);
+                String cue = HudThreshold.cue(level);
+                String text = cue.isEmpty() ? value : cue + " " + value;
                 if (statsEnabled) {
                     String stats = fpsStatsText();
                     if (stats != null) text = text + "  " + stats;
                 }
                 statsText.setText(text);
+                statsText.setTextColor(HudThreshold.colourFor(level));
             }
             if (graphView != null) {
                 graphView.refresh();

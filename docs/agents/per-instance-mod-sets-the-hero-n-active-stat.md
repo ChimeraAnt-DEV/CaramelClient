@@ -1,0 +1,5 @@
+## Per-instance mod sets & the hero "N active" stat (core.mods.ModManager + MainActivity)
+- Mods are already per-instance: `ModManager.setCurrentVersion(version)` points `modsDir` at `version.modsDir` and each instance keeps its own `mods/` + `mods_config.json`. Switching the selected version is what swaps the set тАФ there is no shared global list.
+- The hero-card count (`stat_mods_count` = "%1$d active") is derived from the same `modsLiveData` list the Mods tab renders, via `Mod.countEnabled(list)` (a pure, null-safe helper). Do **not** compute it with a separate `ModManager` read at bind time: discovery runs off the UI thread and the version is bound after the observer is attached, so the bind-time read is the stale pre-load value (zero). Recompute in `updateModsUI` so it always reflects the instance actually selected.
+- `updateModsUI` must refresh the stat *before* any early return on `binding`/`modsListContainer`; a plain "0 active" on first paint is the symptom of gating the refresh behind a null view.
+- `ModEnabledCountTest` covers the counting (empty/null/all-disabled тЖТ 0, toggling, null entries).

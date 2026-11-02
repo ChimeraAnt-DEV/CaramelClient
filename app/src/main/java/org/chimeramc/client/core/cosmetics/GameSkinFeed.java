@@ -78,11 +78,16 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
     /**
      * Reads the cached last capture, so the launcher shows the real skin before the game has run.
      * Fail-closed: no cache, a corrupt cache or a decode failure returns null.
+     *
+     * <p>Item 246: the capture lives in the bounded LRU {@link SkinCacheStore} first, keyed by the
+     * identity hash, and the single-entry {@link LocalSkinCache} is the fallback for a capture
+     * written before the store existed. The store is byte-budgeted, so a long-lived install with
+     * many accounts cannot grow the cache without limit.
      */
     public PlayerSkinProvider.SkinBitmap readCached(Context context) {
         if (context == null) return null;
         try {
-            LocalSkinCache.Entry entry = LocalSkinCache.read(context.getFilesDir());
+            LocalSkinCache.Entry entry = readCachedEntry(context);
             if (entry == null || entry.argb == null) return null;
             Bitmap bitmap = Bitmap.createBitmap(entry.argb, entry.width, entry.height,
                     Bitmap.Config.ARGB_8888);
@@ -103,13 +108,35 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
             int h = skin.bitmap.getHeight();
             int[] argb = new int[w * h];
             skin.bitmap.getPixels(argb, 0, w, 0, 0, w, h);
+            String identity = identityHash(context);
             LocalSkinCache.Entry entry = new LocalSkinCache.Entry(w, h,
                     SkinCaptureValidator.ArmModel.WIDE, "", System.currentTimeMillis(),
-                    identityHash(context), argb);
+                    identity, argb);
+            // Item 246: write into the bounded LRU store, and keep the single-entry cache in step so
+            // a reader that predates the store still finds the latest capture.
+            SkinCacheStore.put(context.getFilesDir(),
+                    identity.isEmpty() ? "default" : identity, entry,
+                    SkinCacheStore.DEFAULT_BUDGET_BYTES, System.currentTimeMillis());
             LocalSkinCache.write(context.getFilesDir(), entry);
         } catch (Throwable ignored) {
             // A cache write failure must never break the preview.
         }
+    }
+
+    /**
+     * Reads the capture, preferring the LRU store's slot for the current identity and falling back
+     * to the single-entry cache (item 246).
+     */
+    private static LocalSkinCache.Entry readCachedEntry(Context context) {
+        try {
+            String identity = identityHash(context);
+            String key = identity.isEmpty() ? "default" : identity;
+            LocalSkinCache.Entry fromStore = SkinCacheStore.get(context.getFilesDir(), key,
+                    System.currentTimeMillis());
+            if (fromStore != null && fromStore.argb != null) return fromStore;
+        } catch (Throwable ignored) {
+        }
+        return LocalSkinCache.read(context.getFilesDir());
     }
 
     private static String identityHash(Context context) {

@@ -13,7 +13,8 @@
         android:text="@string/mod_menu_controller_bind"
         android:textColor="@color/overlay_text_primary"
         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
     <TextView
         android:id="@+id/bind_dialog_hint"

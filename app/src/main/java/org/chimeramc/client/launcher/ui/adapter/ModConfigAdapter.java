@@ -472,36 +472,65 @@ public class ModConfigAdapter extends RecyclerView.Adapter<ModConfigAdapter.Conf
                     : node.value.isJsonPrimitive() ? node.value.getAsString() : gson.toJson(node.value));
             editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) {
-                    commitText(node, editText.getText().toString(), numeric);
+                    commitText(node, editText, numeric);
                 }
             });
             editText.setOnEditorActionListener((v, actionId, event) -> {
-                commitText(node, editText.getText().toString(), numeric);
-                editText.clearFocus();
+                // Only leave the field when the value is acceptable; an out-of-range entry keeps
+                // focus so the user can correct it where the error is shown (item 156).
+                if (commitText(node, editText, numeric)) {
+                    editText.clearFocus();
+                }
                 return true;
             });
             controls.addView(editText);
         }
 
-        private void commitText(Node node, String text, boolean numeric) {
-            try {
-                JsonElement value = numeric
-                        ? new JsonPrimitive(Double.parseDouble(text))
-                        : new JsonPrimitive(text);
+        /**
+         * Commits an edited value, showing the reason inline when it is rejected (item 156).
+         *
+         * <p>The old behaviour popped a modal dialog for a bad number and left the bad text in the
+         * field, so the user had to dismiss a dialog to see the field again. The error now sits on
+         * the field itself and the previous value is kept until the entry is valid.
+         *
+         * @return true when the value was accepted (or unchanged), false when it was rejected.
+         */
+        private boolean commitText(Node node, EditText editText, boolean numeric) {
+            String text = editText.getText().toString();
+            if (numeric) {
+                double parsed;
+                try {
+                    parsed = Double.parseDouble(text.trim());
+                } catch (NumberFormatException e) {
+                    editText.setError(itemView.getContext().getString(
+                            R.string.mod_config_error_number, node.path));
+                    return false;
+                }
+                Double min = node.schema == null ? null : node.schema.getMinimum();
+                Double max = node.schema == null ? null : node.schema.getMaximum();
+                if (min != null && parsed < min) {
+                    editText.setError(itemView.getContext().getString(
+                            R.string.mod_config_error_minimum, node.path, min));
+                    return false;
+                }
+                if (max != null && parsed > max) {
+                    editText.setError(itemView.getContext().getString(
+                            R.string.mod_config_error_maximum, node.path, max));
+                    return false;
+                }
+                editText.setError(null);
+                JsonElement value = new JsonPrimitive(parsed);
                 if (!value.equals(node.value)) {
                     setValue(node, value);
                 }
-            } catch (NumberFormatException e) {
-                editError(e.getMessage());
+                return true;
             }
-        }
-
-        private void editError(String message) {
-            new CustomAlertDialog(itemView.getContext())
-                    .setTitleText(itemView.getContext().getString(R.string.mod_config_validation_failed))
-                    .setMessage(message)
-                    .setPositiveButton(itemView.getContext().getString(R.string.dialog_positive_ok), null)
-                    .show();
+            editText.setError(null);
+            JsonElement value = new JsonPrimitive(text);
+            if (!value.equals(node.value)) {
+                setValue(node, value);
+            }
+            return true;
         }
 
         private Button smallButton(String text) {

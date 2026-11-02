@@ -26,9 +26,11 @@ import org.chimeramc.client.core.cosmetics.PreviewAuthoredScene;
 import org.chimeramc.client.core.cosmetics.PreviewCapeScene;
 import org.chimeramc.client.core.cosmetics.PreviewCharacterScene;
 import org.chimeramc.client.core.cosmetics.PreviewPetScene;
+import org.chimeramc.client.core.cosmetics.PreviewQuality;
 import org.chimeramc.client.core.cosmetics.PreviewRaster;
 import org.chimeramc.client.core.cosmetics.PreviewScene;
 import org.chimeramc.client.core.cosmetics.SkinAlphaFilter;
+import org.chimeramc.client.preloader.PreloaderInput;
 import org.chimeramc.client.core.cosmetics.SkinModel;
 import org.chimeramc.client.core.cosmetics.geometry.BedrockGeometry;
 import org.chimeramc.client.core.cosmetics.geometry.BedrockGeometryParser;
@@ -148,8 +150,14 @@ public class CapePreviewView extends View {
     private int[] skinAtlasPixels;
     /** The rasteriser's ARGB buffer copied into a Bitmap the Canvas can blit. */
     private Bitmap rasterBitmap;
-    /** 2x internal supersample: the scene renders at twice the view size, then downscales. */
-    private static final int RASTER_SUPERSAMPLE = 2;
+    /**
+     * Internal supersample factor: the scene renders at this multiple of the view size, then
+     * downscales. Resolved once from the GPU family (item 376): real hardware gets 2x for
+     * antialiasing, a software rasteriser gets 1x because 4x the fill is a real per-frame cost
+     * there. {@link PreviewQuality} owns the mapping and is unit-tested; this only caches it.
+     */
+    private final int rasterSupersample = PreviewQuality.supersampleForNativeCode(
+            PreloaderInput.gpuFamily());
     /** Cap on the rasteriser's internal edge, so a large view cannot blow the memory budget. */
     private static final int RASTER_MAX_EDGE = 1024;
 
@@ -686,8 +694,8 @@ public class CapePreviewView extends View {
             // Phase D: the whole scene — character, pet, cape, accessories, authored meshes — is
             // rasterised by the pure software renderer, so it needs no Canvas layers and the depth
             // buffer resolves every piece against every other.
-            int internalW = Math.min(w * RASTER_SUPERSAMPLE, RASTER_MAX_EDGE);
-            int internalH = Math.min(h * RASTER_SUPERSAMPLE, RASTER_MAX_EDGE);
+            int internalW = Math.min(w * rasterSupersample, RASTER_MAX_EDGE);
+            int internalH = Math.min(h * rasterSupersample, RASTER_MAX_EDGE);
             Bitmap target = ensureFrame(internalW, internalH);
             if (target == null) {
                 // No offscreen target could be allocated: draw nothing rather than a broken half-frame.

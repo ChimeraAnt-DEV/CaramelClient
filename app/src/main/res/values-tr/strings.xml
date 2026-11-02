@@ -42,7 +42,10 @@
     <string name="loading">Yükleniyor…</string>
 
     <string name="import_confirmation_title">Modları İçe Aktar</string>
-    <string name="import_confirmation_message">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</item>
+        <item quantity="other">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</item>
+    </plurals>
     <string name="import_so_plugin_title">SO Eklentisi İçe Aktar</string>
     <string name="plugin_name_label">Eklenti Adı</string>
     <string name="plugin_type_label">Tür</string>
@@ -65,7 +68,10 @@
     <string name="cancel">İptal</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d mod dosyası başarıyla işlendi</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d mod dosyası başarıyla işlendi</item>
+        <item quantity="other">%d mod dosyası başarıyla işlendi</item>
+    </plurals>
     <string name="user_cancelled">İçe aktarma kullanıcı tarafından iptal edildi</string>
 
     <string name="exit">Çıkış</string>
@@ -617,7 +623,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="structure_exported">Aktarıldı: %s</string>
     <string name="extract">Çıkar</string>
     <string name="structures_found_title">Yapılar Bulundu</string>
-    <string name="structures_found_count">Bu dünyada %d yapı bulundu</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Bu dünyada %d yapı bulundu</item>
+        <item quantity="other">Bu dünyada %d yapı bulundu</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menüsü</string>
@@ -1082,6 +1091,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (istemci v%2$d bekliyor)</string>
     <string name="about_input_backend_status">Giriş arka ucu: %1$s</string>
     <string name="diagnostics_field_input_backend">Giriş arka ucu</string>
+    <string name="diagnostics_field_hooks">Önyükleyici kancaları</string>
     <string name="crash_exit_reason_label">Son çıkış nedeni:</string>
     <string name="crash_disable_last_mod">Çökmeye neden olan modu devre dışı bırak</string>
     <string name="crash_disable_no_suspects">Bu çökme için kayıtlı mod yok.</string>
@@ -1121,6 +1131,11 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="controller_bind_device_cleared">%1$s artık bağlı bir profile sahip değil</string>
     <string name="controller_stick_preview_description">Canlı çubuk konumu: halka ham okuma, nokta profilin gönderdiğidir</string>
     <string name="controller_stick_preview_side">%1$s çubuk gösteriliyor</string>
+    <string name="screenshot_share">Ekran görüntüsünü paylaş</string>
+    <string name="screenshot_share_failed">Bu ekran görüntüsü paylaşılamadı.</string>
+    <string name="screenshot_share_no_app">Paylaşılan görseli alabilecek bir uygulama yok.</string>
+    <string name="screenshot_share_no_screenshot">Henüz paylaşılacak ekran görüntüsü yok.</string>
+    <string name="pause_menu_share_screenshot">Son ekran görüntüsünü paylaş</string>
     <string name="pause_menu_screenshot">Ekran görüntüsü</string>
     <string name="pause_menu_hide_hud">HUD\'ı gizle</string>
     <string name="pause_menu_switch_layout">Düzeni değiştir</string>
@@ -1237,4 +1252,41 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_import_link_done_digest">%1$s içe aktarıldı.\n%2$s</string>
     <string name="nav_rail_collapse">Rayı daralt</string>
     <string name="nav_rail_expand">Rayı genişlet</string>
+    <string name="launch_watchdog_stalled">Bu başlatma bir süredir ilerlemiyor. Hâlâ çalışıyor olabilir; ne yaptığını görmek için günlükleri açın.</string>
+    <string name="launch_watchdog_dead">Bu başlatma uzun süredir hiç kare çizmedi. Bir modu elemek için modsuz yeniden başlatın.</string>
+    <string name="launch_watchdog_open_logs">Günlükleri aç</string>
+    <string name="launch_watchdog_restart_without_mods">Modsuz yeniden başlat</string>
+    <string name="performance_preset_thermal_message">Bu cihaz ısı nedeniyle kısıtlanmış. Pil modu CPU\'ya daha az iş verir.</string>
+    <string name="performance_preset_thermal_apply">Pil kullan</string>
+    <string name="instance_size_on_disk">Diskte %1$s</string>
+    <string name="nav_tab_needs_attention">, ilgi bekliyor</string>
+    <string name="server_favourite">%1$s favorilere ekle</string>
+    <string name="server_unfavourite">%1$s favorilerden çıkar</string>
+    <string name="servers_favourites_first">Favoriler önce gösterilir</string>
+    <string name="server_favourite_label">Favori</string>
+    <string name="cosmetics_sync_setting_title">Kozmetik eşitleme</string>
+    <string name="cosmetics_sync_setting_desc">Kuşandığın pelerin, aksesuar ve evcil hayvanı aynı dünyadaki diğer Glowberry kullanıcılarına göster, onlarınkini gör. Yalnızca istemci tarafı; kapatınca hem gönderme hem alma durur.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Yukarı taşı</string>
+    <string name="pack_changer_move_down">Aşağı taşı</string>
+    <string name="pack_changer_reorder_failed">Paket sırası kaydedilemedi.</string>
+    <string name="resource_pack_resolution">Çözünürlük: %1$s</string>
+    <string name="announcement_learn_more">Daha fazla bilgi</string>
+    <string name="announcement_dismiss">Kapat</string>
+    <string name="mod_update_notification_title">Mod güncellemeleri var</string>
+    <string name="mod_update_channel">Mod güncellemeleri</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">ve %1$d tane daha</string>
+    <string name="mod_update_check_title">Mod güncellemelerini denetle</string>
+    <string name="mod_update_check_desc">Kurulu bir modun daha yeni sürümü yayınlandığında günde bir bildirim.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d modun güncellemesi var</item>
+        <item quantity="other">%1$d modun güncellemesi var</item>
+    </plurals>
+    <string name="usage_stats_title">Anonim kullanım sayacı</string>
+    <string name="usage_stats_desc">Varsayılan olarak kapalı. Açıkken günde bir anonim rapor: uygulama sürümü, cihaz sınıfı, ABI ve yerel başlatma sayıları. Hesap, gamertag, cihaz kimliği, sunucu adresi veya mod listesi yok.</string>
+    <string name="usage_stats_preview">Ne gönderileceğini göster</string>
+    <string name="usage_stats_preview_title">Kullanım raporu içeriği</string>
+    <string name="usage_stats_preview_close">Kapat</string>
+    <string name="usage_stats_unavailable">Bu derlemede toplayıcı yapılandırılmamış, hiçbir şey gönderilemez.</string>
 </resources>

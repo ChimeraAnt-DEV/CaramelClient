@@ -55,6 +55,14 @@ jobs:
         # request that breaks one has to fail here rather than at review time.
         run: ./gradlew testDebugUnitTest
 
+      - name: Run lint (accessibility, unused resources, new-API gate)
+        # Item 330/346. app/lint.xml promotes the accessibility checks (ContentDescription, LabelFor,
+        # TouchTargetSizeCheck) and NewApi to errors and captures the pre-existing backlog in
+        # lint-baseline.xml, so this step fails only on a NEW offender. Without it, an unlabelled
+        # icon-only button or an API-above-minSdk reference lands unnoticed, because neither is
+        # visible on a build machine.
+        run: ./gradlew :app:lintDebug
+
       - name: Build debug APK
         run: ./gradlew assembleDebug
 

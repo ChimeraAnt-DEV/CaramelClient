@@ -130,6 +130,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <!-- Announcement card (item 255): hidden until the feed yields a card that applies
+                     to this build and has not been dismissed. -->
+                <include
+                    layout="@layout/include_announcement_card"
+                    android:id="@+id/launch_announcement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <include
                     layout="@layout/include_section_header"
                     android:id="@+id/section_quick"

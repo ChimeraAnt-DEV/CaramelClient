@@ -23,8 +23,9 @@ public class PauseMenuActionsTest {
     @Test
     public void theRowHasTheRequestedActions() {
         List<PauseMenuActions.Entry> entries = PauseMenuActions.all();
-        assertEquals(5, entries.size());
+        assertEquals(6, entries.size());
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_SCREENSHOT));
+        assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_SHARE_SCREENSHOT));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_HIDE_HUD));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_SWITCH_LAYOUT));
         assertNotNull(PauseMenuActions.byId(PauseMenuActions.ACTION_OPEN_LOGS));

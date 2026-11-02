@@ -101,7 +101,9 @@ public final class OptifineModeManager {
             PreloaderInput.configureRenderDistance(
                     RenderDistanceDefaults.MIN_CHUNKS,
                     RenderDistanceDefaults.MAX_CHUNKS,
-                    RenderDistanceDefaults.FPS_THRESHOLD);
+                    RenderDistanceDefaults.FPS_THRESHOLD,
+                    RenderDistanceDefaults.STEP_SIZE,
+                    RenderDistanceDefaults.MIN_DWELL_MS);
         } else {
             Log.i(TAG, "Preloader unavailable; optifine configuration not pushed");
         }

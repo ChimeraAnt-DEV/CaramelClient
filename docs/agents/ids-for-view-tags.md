@@ -1,0 +1,3 @@
+## Ids for view tags
+- `res/values/ids.xml` holds `<item type="id">` keys used with `View.setTag(int, Object)`. Use these rather than inventing tag keys, so cached state cannot collide with resource ids.
+- Gradient accent palette lives in `colors.xml` + `values-night/colors.xml` (`grad_hero_start/end`, `grad_launch_*`, `grad_versions_*`, `grad_mods_*`, `grad_content_*`, `grad_pulse_glow`) with per-section drawables `card_hero_gradient.xml`, `card_launch_gradient.xml`, `card_versions_gradient.xml`, `card_mods_gradient.xml`, `card_content_gradient.xml`, and `section_accent_bar.xml` (3dp vertical accent bars used as section headers). Keep dark/light variants in sync and respect `on_primary`/`on_surface` for text legibility on gradients.

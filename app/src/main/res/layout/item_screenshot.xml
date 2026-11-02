@@ -56,6 +56,22 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/screenshot_share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_2"
+                android:backgroundTint="@color/secondary"
+                android:fontFamily="@font/misans"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="@dimen/space_4"
+                android:paddingVertical="@dimen/space_2"
+                android:text="@string/screenshot_share"
+                android:textAllCaps="false"
+                android:textColor="@color/on_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+            <Button
                 android:id="@+id/screenshot_save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

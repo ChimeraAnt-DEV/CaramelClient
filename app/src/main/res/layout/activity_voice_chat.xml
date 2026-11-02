@@ -189,7 +189,8 @@
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
                             android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/voice_relay_switch"
@@ -297,7 +298,8 @@
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                     <TextView
                         android:id="@+id/voice_channel_name"
@@ -307,7 +309,8 @@
                         android:fontFamily="@font/misans"
                         android:textColor="@color/primary"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                     <TextView
                         android:id="@+id/voice_channel_kind"
@@ -444,7 +447,8 @@
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
                         android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                     <EditText
                         android:id="@+id/voice_create_name"
@@ -580,7 +584,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -637,7 +642,8 @@
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:id="@+id/voice_directory_empty"

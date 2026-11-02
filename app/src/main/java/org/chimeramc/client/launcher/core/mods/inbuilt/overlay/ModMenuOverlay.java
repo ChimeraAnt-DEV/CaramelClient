@@ -1831,7 +1831,10 @@ public class ModMenuOverlay {
             replayPanel = null;
         }
         cosmeticsPanel = null;
-        packChangerPanel = null;
+        if (packChangerPanel != null) {
+            packChangerPanel.dispose();
+            packChangerPanel = null;
+        }
         voicePanel = null;
     }
 
@@ -1854,6 +1857,9 @@ public class ModMenuOverlay {
         hideSupporterPages();
         if (packsContainer != null) {
             packsContainer.removeAllViews();
+            if (packChangerPanel != null) {
+                packChangerPanel.dispose();
+            }
             packChangerPanel = new PackChangerPanel(activity, compactMode);
             packsContainer.addView(packChangerPanel.getView(),
                     new FrameLayout.LayoutParams(

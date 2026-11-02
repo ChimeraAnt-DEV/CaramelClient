@@ -67,7 +67,8 @@
                 android:text="@string/crash_details_title"
                 android:textColor="@color/on_surface"
                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+    android:accessibilityHeading="true" />
         </LinearLayout>
 
         <View

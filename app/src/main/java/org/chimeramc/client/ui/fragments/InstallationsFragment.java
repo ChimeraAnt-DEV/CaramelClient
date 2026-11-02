@@ -534,7 +534,7 @@ public class InstallationsFragment extends Fragment {
                     pendingVersionName = null;
                     pendingPageUrl = null;
                     refreshStagedPackages();
-                    Toast.makeText(ctx(), getString(R.string.installations_cleared, deleted),
+                    Toast.makeText(ctx(), getResources().getQuantityString(R.plurals.installations_cleared, deleted, deleted),
                             Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(getString(R.string.cancel), null)

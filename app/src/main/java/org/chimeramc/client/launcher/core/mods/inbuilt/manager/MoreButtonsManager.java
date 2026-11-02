@@ -266,7 +266,8 @@ public final class MoreButtonsManager {
                 Log.w(TAG, message, cause);
             }
         } catch (Throwable ignored) {
-            // Off-device; nothing to report to.
+            // Off-device; nothing to report to. The log call above is itself the report, so there is
+            // no second sink to write to here.
         }
     }
 

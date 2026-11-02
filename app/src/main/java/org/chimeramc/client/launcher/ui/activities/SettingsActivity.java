@@ -38,9 +38,14 @@ import androidx.transition.TransitionManager;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
 import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.core.mods.update.ModUpdateScheduler;
+import org.chimeramc.client.core.telemetry.UsageStatsReporter;
+import org.chimeramc.client.core.mods.update.ModUpdateStore;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
 import org.chimeramc.client.settings.PerformancePresetManager;
+import org.chimeramc.client.core.minecraft.ThermalPresetAdvisor;
+import org.chimeramc.client.settings.ThermalGovernor;
 import org.chimeramc.client.launcher.core.minecraft.UserFacingError;
 import org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity;
 import org.chimeramc.client.ui.animation.DynamicAnim;
@@ -130,6 +135,26 @@ public class SettingsActivity extends BaseActivity {
     /** The container of the settings sections, animated on a tab change (item 124). */
     private ViewGroup settingsContent;
 
+    /**
+     * The generated binding for the settings tree (item 111).
+     *
+     * <p>Bound once in {@link #onContentReady()} so a newly added row is reached through a typed
+     * field rather than another {@code findViewById}, which is the count the hygiene gate holds.
+     */
+    private org.chimeramc.client.databinding.ActivitySettingsBinding settingsBinding;
+
+    /** Held so the thermal advice can be re-evaluated in {@link #onResume()} (item 260). */
+    private MaterialButtonToggleGroup performancePresetGroup;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // A device that heats up after the screen opened must still see the advice (item 260).
+        if (performancePresetGroup != null) {
+            refreshThermalPresetAdvice();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,7 +220,12 @@ public class SettingsActivity extends BaseActivity {
 
     /** Runs once the asynchronously inflated settings tree is attached (item 130). */
     private void onContentReady() {
-        DynamicAnim.applyPressScaleRecursively(findViewById(android.R.id.content));
+        View content = findViewById(android.R.id.content);
+        settingsBinding = org.chimeramc.client.databinding.ActivitySettingsBinding.bind(content);
+        DynamicAnim.applyPressScaleRecursively(content);
+        // Items 341/342: section titles are headings and each label+switch row is one focus stop,
+        // wired in one pass so a newly added row cannot be the one that was forgotten.
+        org.chimeramc.client.ui.components.UiAccessibility.wireToggleRows(content);
 
         setupNavBar();
 
@@ -520,6 +550,49 @@ public class SettingsActivity extends BaseActivity {
             crashUploadPreview.setOnClickListener(v -> showCrashUploadPreview());
         }
 
+        // Item 281: the anonymous usage counter. Off by default, disabled with a stated reason when
+        // this build has no collector, and the preview button shows the exact fields first.
+        SwitchMaterial switchUsageStats = settingsBinding != null
+                ? settingsBinding.switchUsageStats : null;
+        if (switchUsageStats != null) {
+            switchUsageStats.setChecked(fs.isUsageStatsEnabled());
+            boolean usageConfigured = UsageStatsReporter.isConfigured();
+            switchUsageStats.setEnabled(usageConfigured);
+            switchUsageStats.setOnCheckedChangeListener((btn, checked) -> {
+                if (!checked) {
+                    fs.setUsageStatsEnabled(false);
+                    return;
+                }
+                if (!usageConfigured) {
+                    fs.setUsageStatsEnabled(false);
+                    btn.setChecked(false);
+                    return;
+                }
+                // Consent is shown before it is recorded: the switch only turns on once the user
+                // confirms the payload they just read.
+                new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                        .setTitleText(getString(R.string.usage_stats_preview_title))
+                        .setMessage(UsageStatsReporter.describe(this))
+                        .setPositiveButton(getString(R.string.usage_stats_title), v -> {
+                            fs.setUsageStatsEnabled(true);
+                            AppExecutors.run(AppExecutors.Kind.NETWORK, "usage-stats",
+                                    () -> UsageStatsReporter.reportIfDue(getApplicationContext()));
+                        })
+                        .setNegativeButton(getString(R.string.cancel), v -> btn.setChecked(false))
+                        .show();
+            });
+        }
+        View usageStatsPreview = settingsBinding != null
+                ? settingsBinding.buttonUsageStatsPreview : null;
+        if (usageStatsPreview != null) {
+            usageStatsPreview.setOnClickListener(v ->
+                    new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                            .setTitleText(getString(R.string.usage_stats_preview_title))
+                            .setMessage(UsageStatsReporter.describe(this))
+                            .setPositiveButton(getString(R.string.usage_stats_preview_close), null)
+                            .show());
+        }
+
         SwitchMaterial switchManagedLogin = findViewById(R.id.switch_managed_login);
         switchManagedLogin.setChecked(fs.isLauncherManagedMcLoginEnabled());
         switchManagedLogin.setOnCheckedChangeListener((btn, checked) -> fs.setLauncherManagedMcLoginEnabled(checked));
@@ -560,6 +633,21 @@ public class SettingsActivity extends BaseActivity {
             switchStreamingSafe.setChecked(fs.isStreamingSafeModeEnabled());
             switchStreamingSafe.setOnCheckedChangeListener(
                     (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
+        }
+
+        // Cosmetic sync (item 466): the switch lives here, in Settings, as the one place a user
+        // expects to turn a network feature off. It defaults on, so an existing setup keeps the
+        // behaviour it already had, and the panel's own toggle reads the same preference.
+        SwitchMaterial switchCosmeticSync = org.chimeramc.client.databinding
+                .ActivitySettingsBinding.bind(findViewById(android.R.id.content))
+                .switchCosmeticSync;
+        if (switchCosmeticSync != null) {
+            org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager manager =
+                    org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager
+                            .getInstance(this);
+            switchCosmeticSync.setChecked(manager.isCosmeticSyncEnabled());
+            switchCosmeticSync.setOnCheckedChangeListener(
+                    (btn, checked) -> manager.setCosmeticSyncEnabled(checked));
         }
 
         // Backup retention (item 144): the slider maps 0..9 to 1..10 backups kept per instance.
@@ -674,6 +762,46 @@ public class SettingsActivity extends BaseActivity {
             }
             syncPerformanceDependentSwitches();
         });
+        setupThermalPresetAdvice(group);
+        this.performancePresetGroup = group;
+    }
+
+    /**
+     * Shows the thermal-throttle suggestion (item 260).
+     *
+     * <p>The reading is only meaningful while the screen is open, so it is refreshed in
+     * {@link #onResume()} as well as here: a device that heats up after the screen was opened
+     * would otherwise never see the advice. The user accepts with one tap, which is the whole
+     * point of a suggestion — the launcher never switches the preset on its own.
+     */
+    private void setupThermalPresetAdvice(MaterialButtonToggleGroup group) {
+        refreshThermalPresetAdvice();
+        View apply = findViewById(R.id.performance_preset_thermal_apply);
+        if (apply != null) {
+            apply.setOnClickListener(v -> {
+                String suggestion = ThermalPresetAdvisor.suggestedPresetName(
+                        PerformancePresetManager.current(this).name());
+                if (suggestion == null) return;
+                PerformancePresetManager.Preset preset =
+                        PerformancePresetManager.Preset.valueOf(suggestion);
+                PerformancePresetManager.apply(this, preset);
+                if (group != null) {
+                    group.check(buttonIdFor(preset));
+                }
+                syncPerformanceDependentSwitches();
+            });
+        }
+    }
+
+    /** Re-evaluates the thermal advice against the current preset and updates the row. */
+    private void refreshThermalPresetAdvice() {
+        View warning = findViewById(R.id.performance_preset_thermal_warning);
+        if (warning == null) return;
+        String currentName = PerformancePresetManager.current(this).name();
+        ThermalPresetAdvisor.Advice advice =
+                ThermalPresetAdvisor.advise(ThermalGovernor.severity(), currentName);
+        warning.setVisibility(advice == ThermalPresetAdvisor.Advice.SUGGEST_LIGHTER
+                ? View.VISIBLE : View.GONE);
     }
 
     /** Mirrors the preset's settings back into the individual switches on the same screen. */
@@ -1208,6 +1336,30 @@ public class SettingsActivity extends BaseActivity {
 
         Button btnCheckUpdate = findViewById(R.id.btn_check_update);
         btnCheckUpdate.setOnClickListener(v -> handleUpdateButtonClick());
+
+        // Item 273: one mod-update notification a day, not a prompt per mod. The row is disabled
+        // with a stated reason when this build has no feed URL, so a switch that cannot do anything
+        // says so instead of pretending.
+        SwitchMaterial switchModUpdate = settingsBinding != null
+                ? settingsBinding.switchModUpdateCheck : null;
+        if (switchModUpdate != null) {
+            FeatureSettings fs = FeatureSettings.getInstance();
+            switchModUpdate.setChecked(fs.isModUpdateCheckEnabled());
+            boolean modUpdateConfigured = !ModUpdateStore.configuredUrl().isEmpty();
+            switchModUpdate.setEnabled(modUpdateConfigured);
+            switchModUpdate.setOnCheckedChangeListener((btn, checked) -> {
+                if (!modUpdateConfigured) {
+                    btn.setChecked(false);
+                    return;
+                }
+                FeatureSettings.getInstance().setModUpdateCheckEnabled(checked);
+                if (checked) {
+                    // A user who just turned the check on should not wait a day for the first run.
+                    ModUpdateStore.clearThrottle(this);
+                    ModUpdateScheduler.requestCheck(this);
+                }
+            });
+        }
 
         preloaderSigsLastUpdateText = findViewById(R.id.preloader_sigs_last_update);
         preloaderSigsUpdateButton = findViewById(R.id.btn_update_preloader_sigs);

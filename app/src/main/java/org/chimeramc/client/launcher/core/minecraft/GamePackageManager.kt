@@ -20,6 +20,12 @@ import org.chimeramc.client.core.minecraft.ExtractionCachePolicy
 import org.chimeramc.client.core.minecraft.ExtractionManifest
 import org.chimeramc.client.core.minecraft.NativeLibraryVersionGate
 import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
+import org.chimeramc.client.util.AtomicFiles
+import org.chimeramc.client.core.minecraft.LibraryHashManifest
+import org.chimeramc.client.core.minecraft.ExtractionSpaceBudget
+import org.chimeramc.client.core.minecraft.ExtractionControl
+import org.chimeramc.client.core.minecraft.LibraryNames
+import org.chimeramc.client.core.minecraft.LibraryLoadPlan
 
 class GamePackageManager private constructor(
     private val context: Context,
@@ -39,6 +45,15 @@ class GamePackageManager private constructor(
      */
     private var launchTrace: LaunchTrace? = launchTrace
     private var progressListener: MinecraftRuntimePreparer.ProgressListener? = progressListener
+
+    /**
+     * The cancellation signal for the extraction in flight, or null when none is running (item 306).
+     *
+     * <p>Re-pointed by {@code getInstance} on reuse for the same reason the two sinks above are: the
+     * instance outlives a launch, so a signal left from the previous launch would cancel this one.
+     */
+    @Volatile
+    private var extractionControl: ExtractionControl? = null
 
     private val packageContext: Context
     private val assetManager: AssetManager
@@ -226,6 +241,20 @@ class GamePackageManager private constructor(
 
     private fun extractLibraries() {
         report("Preparing Minecraft library cache")
+        // A fresh signal per extraction. The instance outlives a launch, so a signal from the
+        // previous one must not cancel this one (item 306).
+        val control = ExtractionControl()
+        extractionControl = control
+        try {
+            extractLibrariesInternal(control)
+        } finally {
+            // Cleared so a cancel arriving after the extraction finished is a no-op rather than
+            // arming the next launch.
+            extractionControl = null
+        }
+    }
+
+    private fun extractLibrariesInternal(control: ExtractionControl) {
         val outputDir = File(nativeLibDir)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
@@ -272,7 +301,10 @@ class GamePackageManager private constructor(
             }
         )
 
-        if (allPresent) {
+        // A cache that is present must also be intact. Presence plus length cannot see a library
+        // rewritten with different bytes of the same size, which loads to a dlopen failure or a
+        // native crash; the hash record is what makes that case a re-extract instead (item 303).
+        if (allPresent && verifyLibraryHashes(outputDir)) {
             report("Minecraft library cache hit: ${outputDir.absolutePath}")
             for (lib in extractableLibs) {
                 try {
@@ -288,20 +320,39 @@ class GamePackageManager private constructor(
         }
         report("Minecraft library cache miss: extracting libraries")
 
+        // Refuse before the first byte is written when the volume cannot hold the extraction. A
+        // full disk half-way through leaves a partial cache that the presence check then treats as
+        // a miss and retries on every launch, so this is the one check that has to come first
+        // (item 304). An unreadable free-space figure never blocks: the write failures report
+        // themselves and refusing would break a launch that would have worked.
+        requireExtractionSpace(outputDir, apkFiles)
+
+        // Item 137: real progress, counted in files rather than a spinner. The total is only
+        // known once the first package is open, so the count is reported as a running number and
+        // the loading screen renders it against its own indeterminate bar.
+        var filesDone = 0
+        val onFile: () -> Unit = {
+            filesDone++
+            if (filesDone % 8 == 0) {
+                report("Extracted $filesDone libraries so far")
+            }
+        }
+
         val abi: String
         if (version != null && !version.isInstalled) {
             // Resolve once: getDeviceAbi scans every APK, so calling it per file would
             // re-open all of them for each one.
             abi = getDeviceAbi(apkFiles)
-            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi) }
+            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi, control, onFile) }
         } else {
             val appInfo = packageContext.applicationInfo
             if (File(appInfo.nativeLibraryDir).exists()) {
-                copyFromNativeDir(appInfo.nativeLibraryDir, outputDir)
+                copyFromNativeDir(appInfo.nativeLibraryDir, outputDir, control, onFile)
             }
             abi = getDeviceAbi(apkFiles)
-            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi) }
+            apkFiles.forEach { extractFromApk(it.absolutePath, outputDir, abi, control, onFile) }
         }
+        report("Extracted $filesDone libraries")
         // The STL fallback runs before the completeness check, not after. libc++_shared.so is in
         // the required list, and a package that ships no copy is supplied from the launcher's own
         // native dir - so checking first would refuse a perfectly launchable version for a library
@@ -316,14 +367,96 @@ class GamePackageManager private constructor(
 
         if (cacheRequiredLibs.all { File(outputDir, it).let { f -> f.exists() && f.length() > 0 } }) {
             try {
-                manifestFile.writeText(manifestString)
+                // Atomic: the manifest is compared by content, so a torn write from a kill during
+                // extraction would make the next launch distrust a cache that is actually fine.
+                AtomicFiles.writeOrThrow(manifestFile, manifestString)
                 File(outputDir, ".extraction_marker").delete()
                 writeNativeExtractionVersion(versionFile, nativeExtractionVersion)
+                writeLibraryHashRecord(outputDir, abi)
                 report("Minecraft library cache manifest written")
             } catch (e: Exception) {
                 mirrorLogcat('W', "Failed to write extraction manifest: ${e.message}")
                 report("Failed to write extraction manifest: ${e.message}")
             }
+        }
+    }
+
+    /**
+     * Records the SHA-256 of every library just extracted, so the next launch can tell a cache that
+     * is merely present from one that is actually intact (item 303).
+     *
+     * <p>A best-effort write: a failure here costs a re-hash next launch, never a failed one, so it
+     * must not be allowed to turn a completed extraction into an error.
+     */
+    private fun writeLibraryHashRecord(outputDir: File, abi: String) {
+        try {
+            val entries = LinkedHashMap<String, LibraryHashManifest.Entry>()
+            for (lib in extractableLibs) {
+                val file = File(outputDir, lib)
+                if (!file.isFile || file.length() <= 0L) continue
+                LibraryHashManifest.entryFor(file, LibraryHashManifest.REAL)?.let { entries[lib] = it }
+            }
+            if (entries.isEmpty()) return
+            val text = "abi=$abi\n" + LibraryHashManifest.build(entries)
+            AtomicFiles.writeOrThrow(File(outputDir, LIBRARY_HASH_RECORD), text)
+        } catch (e: Exception) {
+            mirrorLogcat('W', "Failed to write the library hash record: ${e.message}")
+        }
+    }
+
+    /**
+     * Verifies the extracted libraries against the record written after extraction.
+     *
+     * <p>Only the metadata-changed files are re-hashed, so a healthy cache hit costs one stat per
+     * library. A record that is absent or was written for another ABI reads as "nothing to check",
+     * not as damage: the marker/version/manifest checks already cover the case where a cache is
+     * genuinely stale, and treating a missing record as damage would re-extract on the first launch
+     * after any launcher update.
+     */
+    private fun verifyLibraryHashes(outputDir: File): Boolean {
+        val recordFile = File(outputDir, LIBRARY_HASH_RECORD)
+        val text = try {
+            if (recordFile.isFile) recordFile.readText() else return true
+        } catch (e: Exception) {
+            mirrorLogcat('W', "Failed to read the library hash record: ${e.message}")
+            return true
+        }
+        val body = text.substringAfter('\n', "")
+        val record = LibraryHashManifest.parse(body)
+        if (record.isEmpty()) return true
+        return when (LibraryHashManifest.verify(record, outputDir, LibraryHashManifest.REAL)) {
+            LibraryHashManifest.Verdict.INTACT -> true
+            LibraryHashManifest.Verdict.NO_RECORD -> true
+            LibraryHashManifest.Verdict.DAMAGED -> {
+                mirrorLogcat('W', "Extracted library cache is damaged; it will be re-extracted")
+                report("Extracted library hash check failed: re-extracting")
+                false
+            }
+        }
+    }
+
+    /**
+     * Fails with a named, actionable reason when the extraction cannot fit (item 304).
+     *
+     * <p>The message names both figures, because "not enough storage" without the numbers leaves the
+     * user guessing how much to free. The free-space reading comes from the volume the libraries are
+     * extracted into, which is not always the volume the APK lives on.
+     */
+    private fun requireExtractionSpace(outputDir: File, apkFiles: List<File>) {
+        val needed = ExtractionSpaceBudget.neededBytes(apkFiles.map { it.length() })
+        val free = try {
+            android.os.StatFs(outputDir.absolutePath).availableBytes
+        } catch (e: Exception) {
+            // Unknown, which the budget treats as "do not block".
+            -1L
+        }
+        if (ExtractionSpaceBudget.check(free, needed) == ExtractionSpaceBudget.Verdict.INSUFFICIENT) {
+            val message = "Not enough free storage to extract this version: " +
+                ExtractionSpaceBudget.formatBytes(free) + " available, about " +
+                ExtractionSpaceBudget.formatBytes(needed) + " needed"
+            mirrorLogcat('E', message)
+            report(message)
+            throw IllegalStateException(message)
         }
     }
 
@@ -337,7 +470,7 @@ class GamePackageManager private constructor(
 
     private fun writeNativeExtractionVersion(versionFile: File, version: Int) {
         try {
-            versionFile.writeText(version.toString())
+            AtomicFiles.writeOrThrow(versionFile, version.toString())
         } catch (e: Exception) {
             mirrorLogcat('W', "Failed to write native extraction version: ${e.message}")
         }
@@ -347,6 +480,7 @@ class GamePackageManager private constructor(
         val keepSet = keep.toHashSet()
         keepSet.add(".extraction_manifest")
         keepSet.add("native_extraction_version")
+        keepSet.add(LIBRARY_HASH_RECORD)
         val children = outputDir.listFiles() ?: return
         for (child in children) {
             if (child.isFile && child.name.endsWith(".so")) {
@@ -409,7 +543,12 @@ class GamePackageManager private constructor(
         )
     }
 
-    private fun copyFromNativeDir(sourceDir: String, destDir: File) {
+    private fun copyFromNativeDir(
+        sourceDir: String,
+        destDir: File,
+        control: ExtractionControl,
+        onFile: () -> Unit
+    ) {
         val source = File(sourceDir)
         if (!source.exists()) {
             mirrorLogcat('W', "Source native library directory does not exist: $sourceDir")
@@ -436,6 +575,10 @@ class GamePackageManager private constructor(
         }
 
         for (lib in toCopy) {
+            if (control.isCancelled()) {
+                report("Extraction cancelled by the user")
+                throw ExtractionControl.ExtractionCancelledException()
+            }
             val srcFile = File(source, lib)
             val dstFile = File(destDir, lib)
             if (srcFile.exists() && srcFile.length() > 0) {
@@ -443,8 +586,11 @@ class GamePackageManager private constructor(
                     srcFile.inputStream().use { input ->
                         copyStreamToReadOnlyFile(input, dstFile)
                     }
+                    onFile()
                     report("Copied $lib from native lib directory")
                     logFileOperation("Copied", lib)
+                } catch (e: ExtractionControl.ExtractionCancelledException) {
+                    throw e
                 } catch (e: Exception) {
                     logFileOperation("Failed to copy", lib, e = e)
                 }
@@ -454,7 +600,13 @@ class GamePackageManager private constructor(
         }
     }
 
-    private fun extractFromApk(apkPath: String, outputDir: File, abi: String) {
+    private fun extractFromApk(
+        apkPath: String,
+        outputDir: File,
+        abi: String,
+        control: ExtractionControl,
+        onFile: () -> Unit
+    ) {
         val apkFile = File(apkPath)
         if (!apkFile.exists()) {
             mirrorLogcat('W', "APK file does not exist: $apkPath")
@@ -475,6 +627,12 @@ class GamePackageManager private constructor(
                 val entries = zip.entries()
                 val extracted = mutableListOf<String>()
                 while (entries.hasMoreElements()) {
+                    // Between entries is the safe boundary: a library is written through a temp
+                    // file and renamed, so stopping here never leaves a torn one (item 306).
+                    if (control.isCancelled()) {
+                        report("Extraction cancelled by the user")
+                        throw ExtractionControl.ExtractionCancelledException()
+                    }
                     val entry = entries.nextElement()
                     if (entry.isDirectory || entry.name.isEmpty()) continue
                     if (!entry.name.startsWith(abiPath) || !entry.name.endsWith(".so")) continue
@@ -489,7 +647,12 @@ class GamePackageManager private constructor(
                             copyStreamToReadOnlyFile(input, output)
                         }
                         extracted += libName
+                        onFile()
                         report("Extracted $libName from ${apkFile.name} for $abi")
+                    } catch (e: ExtractionControl.ExtractionCancelledException) {
+                        // A cancellation is not a file failure; it must reach the caller, not be
+                        // logged as "this one file did not copy" and stepped over (item 306).
+                        throw e
                     } catch (e: Exception) {
                         mirrorLogcat('W', "Failed to extract ${output.name} from $apkPath: ${e.message}")
                     }
@@ -498,6 +661,8 @@ class GamePackageManager private constructor(
                     mirrorLogcat('W', "No .so files found under $abiPath in $apkPath")
                 }
             }
+        } catch (e: ExtractionControl.ExtractionCancelledException) {
+            throw e
         } catch (e: Exception) {
             mirrorLogcat('W', "Failed to extract libraries from $apkPath: ${e.message}")
         }
@@ -662,6 +827,16 @@ class GamePackageManager private constructor(
         if (e != null) mirrorLogcat('W', message)
     }
 
+    /**
+     * Signals the extraction in flight to stop at the next safe boundary (item 306).
+     *
+     * <p>Private because the callers reach it through the companion's static entry point; a public
+     * instance method of the same name would clash with it at the JVM signature level.
+     */
+    private fun cancelExtractionInFlight() {
+        extractionControl?.cancel()
+    }
+
     private fun report(message: String) {
         LaunchLog.append(context, message)
         // Both sinks, always. The listener drives the loading screen and the trace drives the
@@ -824,34 +999,32 @@ class GamePackageManager private constructor(
         excludeReasons: Map<String, String> = emptyMap()
     ): List<LibraryLoadResult> {
         val deviceSupports64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
-        val allLibs = (requiredLibs + systemLoadedLibs).filterNot { lib ->
-            // PlayFab/maesdk are arm64-only closed-source prebuilts; on a 32-bit
-            // device they aren't bundled, so exclude them up front instead of letting
-            // System.loadLibrary fail mid-launch.
-            systemLoadedLibs.contains(lib) && !deviceSupports64Bit
-        }
-        val loadableLibs = allLibs.filterNot { lib ->
-            val libName = normalizeLibraryName(lib)
-            excludeLibs.contains(libName) || excludeLibs.contains(lib)
-        }
-        val total = loadableLibs.size.coerceAtLeast(1)
-        var loadIndex = 0
+        val allLibs = requiredLibs + systemLoadedLibs
+        // The plan (which libraries load, which are skipped and why, and the progress arithmetic)
+        // is a pure class so the rules are testable without a device (item 301).
+        val plan = LibraryLoadPlan.plan(
+            allLibs.asList(), systemLoadedLibs.asList(), excludeLibs, deviceSupports64Bit
+        )
+        val skips = LibraryLoadPlan.skipReasons(
+            allLibs.asList(), systemLoadedLibs.asList(), excludeLibs, deviceSupports64Bit, excludeReasons
+        )
         val results = mutableListOf<LibraryLoadResult>()
 
-        allLibs.forEach { lib ->
-            val libName = normalizeLibraryName(lib)
-            if (excludeLibs.contains(libName) || excludeLibs.contains(lib)) {
-                val reason = excludeReasons[libName]
-                    ?: excludeReasons[lib]
-                    ?: "not required in this launch path"
+        for (lib in allLibs) {
+            val skipReason = skips[lib]
+            if (skipReason != null) {
                 listener?.onLog("Skipped native library: $lib")
-                trace?.mark("System.load skipped", "$lib - $reason")
-                return@forEach
+                trace?.mark("System.load skipped", "$lib - $skipReason")
             }
+        }
 
-            loadIndex += 1
-            val progress = progressStart + ((progressEnd - progressStart) * (loadIndex - 1) / total)
-            listener?.onProgress(progress, "Loading Minecraft", "$loadIndex/$total")
+        for (step in plan) {
+            val lib = step.name
+            val libName = normalizeLibraryName(lib)
+            val progress = LibraryLoadPlan.progressFor(
+                step.index, step.total, progressStart, progressEnd
+            )
+            listener?.onProgress(progress, "Loading Minecraft", "${step.index}/${step.total}")
             listener?.onLog("Loading native library: $lib")
             trace?.mark("System.load started", lib)
 
@@ -873,13 +1046,9 @@ class GamePackageManager private constructor(
         return results
     }
 
-    private fun toLibraryFileName(name: String): String {
-        return if (name.startsWith("lib") && name.endsWith(".so")) name else "lib${normalizeLibraryName(name)}.so"
-    }
+    private fun toLibraryFileName(name: String): String = LibraryNames.fileName(name)
 
-    private fun normalizeLibraryName(name: String): String {
-        return name.removePrefix("lib").removeSuffix(".so")
-    }
+    private fun normalizeLibraryName(name: String): String = LibraryNames.normalize(name)
 
     private fun elapsedSince(startedAt: Long): Long {
         return SystemClock.elapsedRealtime() - startedAt
@@ -943,6 +1112,13 @@ class GamePackageManager private constructor(
          */
         private const val EXTRACTION_MANIFEST_TOKEN = "img_v4"
 
+        /**
+         * The file holding each extracted library's SHA-256 (item 303). Beside the manifest and the
+         * extraction version, and preserved by the stale-cache wipe for the same reason.
+         */
+        const val LIBRARY_HASH_RECORD = "library_hashes"
+
+
         @Volatile
         private var instance: GamePackageManager? = null
         private var lastVersionKey: String? = null
@@ -960,7 +1136,7 @@ class GamePackageManager private constructor(
             progressListener: MinecraftRuntimePreparer.ProgressListener? = null
         ): GamePackageManager {
             return synchronized(this) {
-                val newVersionKey = buildVersionKey(version)
+                val newVersionKey = buildVersionKey(context, version)
                 val current = instance
                 if (current == null || newVersionKey != lastVersionKey) {
                     val created = GamePackageManager(
@@ -980,19 +1156,67 @@ class GamePackageManager private constructor(
             }
         }
 
-        private fun buildVersionKey(version: GameVersion?): String {
+        /**
+         * The cache key for the reused instance.
+         *
+         * <p>The version's own fields are not enough. For the device-installed Minecraft package the
+         * launch reads the APK out of the installed package, and Play can update that package while
+         * the launcher sits in the background. The version record on disk does not change, so the
+         * key used to match, the cached instance was reused, and the launch kept reading the old
+         * `sourceDir` and native-library directory of a package that no longer existed - a stale
+         * path (item 305).
+         *
+         * <p>The installed package's `lastUpdateTime` is the fingerprint that catches it: it changes
+         * exactly when the package changes, so an update during a session invalidates the cache and
+         * the next launch re-resolves everything. An imported instance has no installed package, so
+         * it keeps the version-only key and does not pay for a package query.
+         */
+        private fun buildVersionKey(context: Context, version: GameVersion?): String {
             if (version == null) return "installed-default"
+            val installedFingerprint = if (version.isInstalled) installedPackageFingerprint(context, version) else ""
             return listOf(
                 version.isInstalled.toString(),
                 version.packageName.orEmpty(),
                 version.versionCode.orEmpty(),
                 version.directoryName.orEmpty(),
                 version.versionDir?.absolutePath.orEmpty(),
-                version.abiList.orEmpty()
+                version.abiList.orEmpty(),
+                installedFingerprint
             ).joinToString("|")
         }
 
+        /**
+         * A fingerprint of the device-installed package, or an empty string when it cannot be read.
+         *
+         * <p>`lastUpdateTime` and `versionName` together: the timestamp catches a reinstall or an
+         * update, and the name catches the rare case of a same-timestamp replacement. An unreadable
+         * package yields an empty string, which keeps the old key behaviour rather than inventing a
+         * new one on every launch - a key that changed every time would re-run the extraction setup
+         * on every launch for a package that is actually fine.
+         */
+        private fun installedPackageFingerprint(context: Context, version: GameVersion): String {
+            val packageName = version.packageName ?: MinecraftLauncher.MC_PACKAGE_NAME
+            return try {
+                val info = context.packageManager.getPackageInfo(packageName, 0)
+                info.lastUpdateTime.toString() + ":" + (info.versionName ?: "")
+            } catch (e: Exception) {
+                ""
+            }
+        }
+
         fun isInitialized() = instance != null
+
+        /**
+         * Signals the extraction in flight to stop at the next safe boundary (item 306).
+         *
+         * <p>Static so a caller that only wants to give up on a launch does not have to hold - or
+         * re-resolve - the manager instance. A no-op when none exists or none is extracting, which
+         * is the common case for a launch that already got past extraction.
+         */
+        @JvmStatic
+        fun cancelExtraction() {
+            instance?.cancelExtractionInFlight()
+        }
 
         /** Manual extractor pipeline version; bump when the extraction logic changes. */
         @JvmStatic
@@ -1068,8 +1292,8 @@ class GamePackageManager private constructor(
                         continue
                     }
                     try {
-                        File(dir, ".extraction_manifest").writeText(manifest)
-                        File(dir, "native_extraction_version").writeText(marker)
+                        AtomicFiles.writeOrThrow(File(dir, ".extraction_manifest"), manifest)
+                        AtomicFiles.writeOrThrow(File(dir, "native_extraction_version"), marker)
                         wrote = true
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to write extraction markers in ${dir.absolutePath}: ${e.message}")

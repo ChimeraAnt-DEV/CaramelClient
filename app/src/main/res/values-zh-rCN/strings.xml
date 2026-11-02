@@ -35,7 +35,10 @@
     <string name="loading">加载中…</string>
 
     <string name="import_confirmation_title">导入模组</string>
-    <string name="import_confirmation_message">确定要导入所选的 %d 个模组文件吗？</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">确定要导入所选的 %d 个模组文件吗？</item>
+        <item quantity="other">确定要导入所选的 %d 个模组文件吗？</item>
+    </plurals>
     <string name="overwrite_file_title">文件已存在</string>
     <string name="overwrite_file_message">文件 %s 已存在，是否覆盖？</string>
     <string name="overwrite">覆盖</string>
@@ -65,7 +68,10 @@
     <string name="cancel">取消</string>
 
     <!-- Feedback -->
-    <string name="files_processed">成功处理 %d 个模组文件</string>
+    <plurals name="files_processed">
+        <item quantity="one">成功处理 %d 个模组文件</item>
+        <item quantity="other">成功处理 %d 个模组文件</item>
+    </plurals>
     <string name="user_cancelled">用户取消导入</string>
 
 
@@ -536,7 +542,10 @@
     <string name="structure_exported">已导出：%s</string>
     <string name="extract">提取</string>
     <string name="structures_found_title">发现结构</string>
-    <string name="structures_found_count">在此世界中发现 %d 个结构</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">在此世界中发现 %d 个结构</item>
+        <item quantity="other">在此世界中发现 %d 个结构</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">模组菜单</string>
@@ -1076,6 +1085,7 @@
     <string name="diagnostics_preloader_abi_mismatch">v%1$d（客户端期望 v%2$d）</string>
     <string name="about_input_backend_status">输入后端：%1$s</string>
     <string name="diagnostics_field_input_backend">输入后端</string>
+    <string name="diagnostics_field_hooks">预加载器挂钩</string>
     <string name="crash_exit_reason_label">上次退出的原因：</string>
     <string name="crash_disable_last_mod">禁用导致崩溃的模组</string>
     <string name="crash_disable_no_suspects">此次崩溃没有记录任何模组。</string>
@@ -1115,6 +1125,11 @@
     <string name="controller_bind_device_cleared">%1$s 不再有绑定的配置</string>
     <string name="controller_stick_preview_description">摇杆实时位置：圆环是原始读数，圆点是配置实际发送的值</string>
     <string name="controller_stick_preview_side">正在显示%1$s摇杆</string>
+    <string name="screenshot_share">分享截图</string>
+    <string name="screenshot_share_failed">无法分享此截图。</string>
+    <string name="screenshot_share_no_app">没有应用可以接收分享的图片。</string>
+    <string name="screenshot_share_no_screenshot">还没有可分享的截图。</string>
+    <string name="pause_menu_share_screenshot">分享最近的截图</string>
     <string name="pause_menu_screenshot">截图</string>
     <string name="pause_menu_hide_hud">隐藏 HUD</string>
     <string name="pause_menu_switch_layout">切换布局</string>
@@ -1231,4 +1246,41 @@
     <string name="mod_import_link_done_digest">已导入 %1$s。\n%2$s</string>
     <string name="nav_rail_collapse">收起侧栏</string>
     <string name="nav_rail_expand">展开侧栏</string>
+    <string name="launch_watchdog_stalled">本次启动已有一段时间没有进展。它可能仍在运行；打开日志查看它正在做什么。</string>
+    <string name="launch_watchdog_dead">本次启动长时间没有绘制任何画面。请在没有模组的情况下重新启动，以排除模组问题。</string>
+    <string name="launch_watchdog_open_logs">打开日志</string>
+    <string name="launch_watchdog_restart_without_mods">在没有模组的情况下重新启动</string>
+    <string name="performance_preset_thermal_message">此设备因温度过高而降速。电池模式会减轻 CPU 的负担。</string>
+    <string name="performance_preset_thermal_apply">使用电池模式</string>
+    <string name="instance_size_on_disk">磁盘上 %1$s</string>
+    <string name="nav_tab_needs_attention">，需要处理</string>
+    <string name="server_favourite">收藏 %1$s</string>
+    <string name="server_unfavourite">将 %1$s 从收藏中移除</string>
+    <string name="servers_favourites_first">收藏项优先显示</string>
+    <string name="server_favourite_label">收藏</string>
+    <string name="cosmetics_sync_setting_title">外观同步</string>
+    <string name="cosmetics_sync_setting_desc">将你装备的披风、饰品和宠物展示给同一世界中的其他 Glowberry 用户，并查看他们的。仅在客户端进行；关闭后发送和接收都会停止。</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">上移</string>
+    <string name="pack_changer_move_down">下移</string>
+    <string name="pack_changer_reorder_failed">无法保存资源包顺序。</string>
+    <string name="resource_pack_resolution">分辨率：%1$s</string>
+    <string name="announcement_learn_more">了解更多</string>
+    <string name="announcement_dismiss">忽略</string>
+    <string name="mod_update_notification_title">有模组更新</string>
+    <string name="mod_update_channel">模组更新</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">还有 %1$d 个</string>
+    <string name="mod_update_check_title">检查模组更新</string>
+    <string name="mod_update_check_desc">已安装模组发布新版本时，每天通知一次。</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d 个模组有更新</item>
+        <item quantity="other">%1$d 个模组有更新</item>
+    </plurals>
+    <string name="usage_stats_title">匿名使用计数</string>
+    <string name="usage_stats_desc">默认关闭。开启后每天一份匿名报告：应用版本、设备类别、ABI 和本地启动次数。不包含账号、游戏标签、设备 ID、服务器地址或模组列表。</string>
+    <string name="usage_stats_preview">查看将发送的内容</string>
+    <string name="usage_stats_preview_title">使用报告内容</string>
+    <string name="usage_stats_preview_close">关闭</string>
+    <string name="usage_stats_unavailable">此构建未配置收集器，无法发送任何内容。</string>
 </resources>

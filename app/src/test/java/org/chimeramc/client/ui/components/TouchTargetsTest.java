@@ -87,6 +87,62 @@ public class TouchTargetsTest {
     }
 
     @Test
+    public void threeSmallSiblingsEachGetTheirOwnWidenedRectangle() {
+        // The bug this guards: a parent holds one TouchDelegate, so installing three in a row keeps
+        // only the last. The union the composite is given must cover all three targets, or the
+        // parent's delegate rejects an event before the children are consulted.
+        int[][] rects = {
+                TouchTargets.delegateBounds(0, 8, 32, 40, 300, 56, 48),
+                TouchTargets.delegateBounds(40, 8, 72, 40, 300, 56, 48),
+                TouchTargets.delegateBounds(80, 8, 112, 40, 300, 56, 48),
+        };
+        for (int[] r : rects) {
+            assertEquals("each target is 48 wide", 48, r[2] - r[0]);
+            assertEquals("each target is 48 tall", 48, r[3] - r[1]);
+        }
+        // The union is what the parent delegate is given; it must contain every child's rectangle,
+        // or the parent rejects that child's events before the composite is consulted.
+        int[] union = TouchTargets.unionOf(rects);
+        for (int[] r : rects) {
+            assertTrue("the parent delegate's rect must contain every child's",
+                    union[0] <= r[0] && union[1] <= r[1] && union[2] >= r[2] && union[3] >= r[3]);
+        }
+        // The union grows to the widened rectangles, not the views' own bounds: the first target is
+        // clamped at the parent's start, the last extends past its own right edge.
+        assertArrayEquals(new int[]{0, 0, 120, 48}, union);
+    }
+
+    @Test
+    public void needsWideningIsTrueWhenEitherEdgeIsUnderTheMinimum() {
+        assertTrue(TouchTargets.needsWidening(0, 0, 32, 32, 48));
+        assertTrue("a wide but short view still needs a delegate",
+                TouchTargets.needsWidening(0, 0, 200, 32, 48));
+        assertFalse(TouchTargets.needsWidening(0, 0, 48, 48, 48));
+        assertFalse(TouchTargets.needsWidening(0, 0, 96, 96, 48));
+    }
+
+    @Test
+    public void unionOfRejectsAnEmptyInput() {
+        try {
+            TouchTargets.unionOf(new int[0][]);
+            org.junit.Assert.fail("an empty union has no rectangle to return");
+        } catch (IllegalArgumentException expected) {
+            // The rule is documented: the caller must have at least one target to widen.
+        }
+    }
+
+    @Test
+    public void aViewAlreadyAtTheMinimumIsSkippedByTheGroupingRule() {
+        // delegateBounds returns the view's own rect when it already meets the minimum, which is
+        // what lets the caller skip installing a delegate for it.
+        int[] b = TouchTargets.delegateBounds(0, 0, 48, 48, 200, 200, 48);
+        assertEquals(0, b[0]);
+        assertEquals(0, b[1]);
+        assertEquals(48, b[2]);
+        assertEquals(48, b[3]);
+    }
+
+    @Test
     public void theMinimumIsMaterialsFortyEight() {
         assertEquals(48, TouchTargets.MIN_TARGET_DP);
         assertFalse(TouchTargets.meetsMinimum(47, 48, TouchTargets.MIN_TARGET_DP));

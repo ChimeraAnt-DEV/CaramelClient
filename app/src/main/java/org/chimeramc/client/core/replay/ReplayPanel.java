@@ -699,7 +699,7 @@ public final class ReplayPanel {
         List<ReplayClip> filtered = repository.filtered(all, filter, sort);
         lastFiltered.clear();
         lastFiltered.addAll(filtered);
-        clipCount.setText(activity.getString(R.string.replay_clip_count, filtered.size()));
+        clipCount.setText(activity.getResources().getQuantityString(R.plurals.replay_clip_count, filtered.size(), filtered.size()));
         renderChips();
 
         grid.removeAllViews();

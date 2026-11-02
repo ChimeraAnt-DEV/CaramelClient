@@ -107,6 +107,8 @@ public class ContentListActivity extends BaseActivity {
     private ExecutorService pingExecutor;
     /** Server addresses ("ip:port") that already answered; they are not re-pinged every refresh. */
     private final java.util.Set<String> pingedServerKeys = new java.util.HashSet<>();
+    /** Starred server keys, read once and kept in step with the store (item 254). */
+    private java.util.Set<String> favouriteServerKeys = java.util.Collections.emptySet();
 
     private void showProgressDialog(String message) {
         // Showing a dialog on a finishing Activity throws WindowManager.BadTokenException, which
@@ -284,6 +286,9 @@ public class ContentListActivity extends BaseActivity {
                 binding.searchEditText.setVisibility(View.VISIBLE);
                 binding.customFlatButton.setText(getString(R.string.quick_launch_add_server));
                 binding.customFlatButton.setVisibility(View.VISIBLE);
+                // Read the stars before the adapter is built so the first paint is already
+                // favourites-first rather than reordering once the list arrives (item 254).
+                favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.load(this);
                 setupServersRecyclerView();
                 break;
         }
@@ -457,6 +462,12 @@ public class ContentListActivity extends BaseActivity {
             public void onSaveClick(org.chimeramc.client.core.content.ScreenshotItem screenshot) {
                 saveScreenshotToGallery(screenshot);
             }
+
+            @Override
+            public void onShareClick(org.chimeramc.client.core.content.ScreenshotItem screenshot) {
+                org.chimeramc.client.launcher.core.content.ScreenshotShareSheet.shareItem(
+                        ContentListActivity.this, screenshot);
+            }
         });
         binding.contentRecyclerView.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
         binding.contentRecyclerView.setAdapter(screenshotsAdapter);
@@ -464,10 +475,28 @@ public class ContentListActivity extends BaseActivity {
     }
 
     private void setupServersRecyclerView() {
-        serversAdapter = new org.chimeramc.client.ui.adapter.ServersAdapter(new ArrayList<>(), server -> showDeleteServerDialog(server));
+        serversAdapter = new org.chimeramc.client.ui.adapter.ServersAdapter(
+                new ArrayList<>(),
+                new org.chimeramc.client.ui.adapter.ServersAdapter.OnServerClickListener() {
+                    @Override
+                    public void onDeleteClick(ServerItem server) {
+                        showDeleteServerDialog(server);
+                    }
+
+                    @Override
+                    public void onFavouriteToggle(ServerItem server) {
+                        // The star is local presentation state, so the write is a plain
+                        // SharedPreferences apply and the list re-sorts immediately (item 254).
+                        favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.toggle(
+                                        ContentListActivity.this,
+                                        org.chimeramc.client.core.content.ServerFavourites.key(server));
+                        serversAdapter.setFavourites(favouriteServerKeys);
+                    }
+                });
         GameVersion currentVersion = versionManager.getSelectedVersion();
         serversAdapter.setSelectedVersionCode(
                 currentVersion == null ? null : currentVersion.versionCode);
+        serversAdapter.setFavourites(favouriteServerKeys);
         binding.contentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.contentRecyclerView.setAdapter(serversAdapter);
         binding.contentRecyclerView.post(() -> DynamicAnim.staggerRecyclerChildren(binding.contentRecyclerView));
@@ -992,7 +1021,7 @@ public class ContentListActivity extends BaseActivity {
         TextView structureCount = dialogView.findViewById(R.id.structure_count);
         RecyclerView recyclerView = dialogView.findViewById(R.id.structures_recycler_view);
         
-        structureCount.setText(getString(R.string.structures_found_count, structures.size()));
+        structureCount.setText(getResources().getQuantityString(R.plurals.structures_found_count, structures.size(), structures.size()));
         
         StructuresAdapter adapter = new StructuresAdapter();
         adapter.setStructures(structures);
@@ -1283,6 +1312,12 @@ public class ContentListActivity extends BaseActivity {
         if (screenshotsAdapter != null) {
             screenshotsAdapter.shutdown();
             screenshotsAdapter = null;
+        }
+        // The pack adapter owns a background size/resolution scanner (item 253); it must be
+        // stopped with the screen or its worker outlives the activity.
+        if (packsAdapter != null) {
+            packsAdapter.dispose();
+            packsAdapter = null;
         }
         // A dialog still attached to a destroyed Activity is the "Activity has leaked window"
         // crash; it also trapped the user, because nothing could dismiss it once the owner was gone.

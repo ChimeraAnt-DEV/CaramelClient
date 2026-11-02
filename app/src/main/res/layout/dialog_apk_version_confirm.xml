@@ -16,7 +16,8 @@
         android:textColor="?attr/colorPrimary"
         android:textAppearance="@style/TextAppearance.Glowberry.Title"
         android:textStyle="bold"
-        android:fontFamily="@font/misans"/>
+        android:fontFamily="@font/misans"
+    android:accessibilityHeading="true" />
 
     <EditText
         android:id="@+id/edit_version_name"

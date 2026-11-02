@@ -32,6 +32,7 @@ import org.chimeramc.client.launcher.ui.util.SceneTransitions;
 import org.chimeramc.client.core.content.ContentImporter;
 import org.chimeramc.client.core.downloads.DownloadsScanner;
 import org.chimeramc.client.core.modrinth.ModrinthClient;
+import org.chimeramc.client.core.modrinth.SearchDebounce;
 import org.chimeramc.client.core.modrinth.models.ModrinthProject;
 import org.chimeramc.client.core.modrinth.models.ModrinthSearchResponse;
 import org.chimeramc.client.core.versions.GameVersion;
@@ -101,6 +102,14 @@ public class ModHubActivity extends BaseActivity {
     private int currentOffset;
     private long totalHits;
     private boolean scanning;
+
+    /**
+     * Debounced search (item 149). Typing "shaders" must be one request, not seven, and a slow
+     * request that returns after more typing must not overwrite the newer result, so each search
+     * carries a generation and only the current one is applied.
+     */
+    private final Runnable searchDebounceRunnable = this::loadModrinth;
+    private int searchGeneration;
 
     private static final class TypeOption {
         final String label;
@@ -227,12 +236,29 @@ public class ModHubActivity extends BaseActivity {
 
         searchBox.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // An explicit search must not wait for the debounce.
+                handler.removeCallbacks(searchDebounceRunnable);
                 currentOffset = 0;
                 loadModrinth();
                 UIHelper.hideKeyboard(this);
                 return true;
             }
             return false;
+        });
+        searchBox.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                handler.removeCallbacks(searchDebounceRunnable);
+                handler.postDelayed(searchDebounceRunnable, SearchDebounce.DEBOUNCE_MS);
+            }
         });
 
         buildTypeChips();
@@ -351,6 +377,7 @@ public class ModHubActivity extends BaseActivity {
 
     private void loadModrinth() {
         TypeOption type = selectedType();
+        final int generation = ++searchGeneration;
 
         modrinthProgress.setVisibility(View.VISIBLE);
         modrinthEmpty.setVisibility(View.GONE);
@@ -363,6 +390,7 @@ public class ModHubActivity extends BaseActivity {
                     @Override
                     public void onSuccess(ModrinthSearchResponse result) {
                         handler.post(() -> {
+                            if (!SearchDebounce.isCurrent(generation, searchGeneration)) return;
                             modrinthProgress.setVisibility(View.GONE);
                             List<ModrinthProject> hits = result != null && result.hits != null
                                     ? result.hits : Collections.<ModrinthProject>emptyList();
@@ -378,6 +406,7 @@ public class ModHubActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable t) {
                         handler.post(() -> {
+                            if (!SearchDebounce.isCurrent(generation, searchGeneration)) return;
                             modrinthProgress.setVisibility(View.GONE);
                             modrinthEmpty.setVisibility(View.VISIBLE);
                             Toast.makeText(ModHubActivity.this,
@@ -533,6 +562,7 @@ public class ModHubActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        handler.removeCallbacks(searchDebounceRunnable);
         // The importer owns a single-thread executor; without this its thread outlives the screen
         // and stays parked for the life of the process.
         if (contentImporter != null) {

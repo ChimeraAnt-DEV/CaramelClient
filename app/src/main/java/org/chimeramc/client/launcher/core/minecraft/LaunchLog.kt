@@ -51,12 +51,73 @@ object LaunchLog {
         }
     }
 
+    /**
+     * Caps the log file, keeping the newest half (item 309).
+     *
+     * <p>Runs on the writer's own thread under the same lock every append takes, so it cannot race a
+     * write. The check is a stat of the open file, so it costs nothing on the common path; the
+     * truncate itself only runs once the file has passed the cap. The kept tail is what a debug
+     * bundle needs: after a crash the end of the log is the interesting part, and a rotate that
+     * renamed the file would leave the reader on the oldest lines.
+     */
+    private fun rotateIfNeeded(w: PrintWriter) {
+        val target = file ?: return
+        val size = try {
+            target.length()
+        } catch (_: Throwable) {
+            return
+        }
+        if (!LogRotation.shouldRotate(size)) return
+        val cut = try {
+            java.io.RandomAccessFile(target, "rw").use { raf ->
+                val rawCut = LogRotation.truncateFrom(size)
+                val windowLen = (size - rawCut).coerceAtMost(WINDOW_BYTES).toInt()
+                val window = ByteArray(windowLen)
+                raf.seek(rawCut)
+                raf.readFully(window)
+                val offset = LogRotation.tailOffset(size, window)
+                val tail = ByteArray((size - offset).toInt())
+                raf.seek(offset)
+                raf.readFully(tail)
+                raf.setLength(0L)
+                raf.seek(0L)
+                raf.write(tail)
+                offset
+            }
+        } catch (_: Throwable) {
+            return
+        }
+        // Reopen the writer: it still points at the old end-of-file offset, which no longer exists.
+        try {
+            w.flush()
+        } catch (_: Throwable) {}
+        try {
+            val dir = target.parentFile
+            dir?.mkdirs()
+            writer = PrintWriter(FileWriter(target, true), true)
+            this.file = target
+        } catch (_: Throwable) {}
+        // A one-line note so a reader knows the file was trimmed rather than started there.
+        try {
+            val reopened = writer
+            reopened?.append(timestampFormat.format(Date()))
+            reopened?.append(" [log rotated; older lines dropped from offset ")
+            reopened?.append(cut.toString())
+            reopened?.append("]\n")
+            reopened?.flush()
+        } catch (_: Throwable) {}
+    }
+
+    /** How many bytes from the cut are scanned for a line boundary. */
+    private const val WINDOW_BYTES = 4096L
+
     /** Appends a plain line (no timestamp prefix( — used for raw onLog messages. */
     @JvmStatic
     fun append(context: Context, message: String) {
         synchronized (lock) {
             val w = writer(context) ?: return
             try {
+                rotateIfNeeded(w)
                 w.append(timestampFormat.format(Date())).append(' ').append(message).append('\n')
                 w.flush()
             } catch (_: Throwable) {}
@@ -69,6 +130,7 @@ object LaunchLog {
         synchronized (lock) {
             val w = writer(context) ?: return
             try {
+                rotateIfNeeded(w)
                 w.append(timestampFormat.format(Date()))
                     .append(' ')
                     .append(android.os.Process.myPid().toString())

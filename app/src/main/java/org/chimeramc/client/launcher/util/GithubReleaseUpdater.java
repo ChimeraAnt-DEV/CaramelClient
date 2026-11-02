@@ -46,6 +46,17 @@ public class GithubReleaseUpdater {
     public static final String REPO_OWNER = "ChimeraAnt-DEV";
     public static final String REPO_NAME = "GlowberryClient";
     private static final String PREF_IGNORED_VERSION = "update_ignored_version";
+    /**
+     * The prefs file and key recording that an update was seen (item 83).
+     *
+     * <p>The update check is a one-shot dialog, so nothing durable said "an update exists" after it
+     * was dismissed or ignored. The Settings tab's attention dot needs exactly that fact, so the
+     * check records the version it found; {@link #isUpdateAvailable} reads it back and re-verifies
+     * against the installed version, so a version the user then installed clears the dot on its own
+     * rather than needing an explicit reset.
+     */
+    private static final String PREF_UPDATE_STATE = "no_update_version";
+    private static final String KEY_LATEST_SEEN = "latest_seen_version";
     private final Activity activity;
     private final String owner;
     private final String repo;
@@ -70,6 +81,46 @@ public class GithubReleaseUpdater {
 
     public static int compareVersion(String a, String b) {
         return org.chimeramc.client.launcher.util.UpdateVersion.compare(a, b);
+    }
+
+    /**
+     * Records the newest release version a check has seen, so the Settings tab can show a dot
+     * (item 83). Best-effort: a failure to persist must never break the check itself.
+     */
+    public static void rememberLatestSeen(Context context, String version) {
+        if (context == null || version == null || version.isEmpty()) return;
+        try {
+            context.getApplicationContext()
+                    .getSharedPreferences(PREF_UPDATE_STATE, Context.MODE_PRIVATE)
+                    .edit().putString(KEY_LATEST_SEEN, version).apply();
+        } catch (RuntimeException ignored) {
+            // The dot is cosmetic; a prefs failure must not surface.
+        }
+    }
+
+    /**
+     * True when a newer release than the installed one has been seen and the user has not ignored
+     * it (item 83).
+     *
+     * <p>Re-verifies against the installed version each time, so installing the update clears the
+     * dot with no separate bookkeeping.
+     */
+    public static boolean isUpdateAvailable(Context context) {
+        if (context == null) return false;
+        try {
+            SharedPreferences prefs = context.getApplicationContext()
+                    .getSharedPreferences(PREF_UPDATE_STATE, Context.MODE_PRIVATE);
+            String latest = prefs.getString(KEY_LATEST_SEEN, "");
+            if (latest == null || latest.isEmpty()) return false;
+            if (latest.equals(prefs.getString(PREF_IGNORED_VERSION, ""))) return false;
+            String installed = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0).versionName;
+            return compareVersion(latest, installed) > 0;
+        } catch (RuntimeException e) {
+            return false;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     public void checkUpdate() {
@@ -102,6 +153,7 @@ public class GithubReleaseUpdater {
                         return;
                     }
                     String localVersion = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
+                    rememberLatestSeen(activity, latestVersion);
                     if (compareVersion(latestVersion, localVersion) > 0) {
                         showUpdateDialog(latestVersion, downloadUrl);
                     } else {
@@ -160,6 +212,7 @@ public class GithubReleaseUpdater {
                     SharedPreferences prefs = activity.getSharedPreferences("no_update_version", Context.MODE_PRIVATE);
                     String ignoredVersion = prefs.getString(PREF_IGNORED_VERSION, "");
 
+                    rememberLatestSeen(activity, latestVersion);
                     if (compareVersion(latestVersion, localVersion) > 0
                             && !ignoredVersion.equals(latestVersion)) {
                         showUpdateDialogWithIgnore(latestVersion, downloadUrl);

@@ -31,7 +31,8 @@
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.Glowberry.Title"
             android:textColor="@color/primary"
-            android:fontFamily="@font/misans" />
+            android:fontFamily="@font/misans"
+    android:accessibilityHeading="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -161,7 +162,8 @@
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
                     android:textAlignment="center"
                     android:textColor="@color/on_surface"
-                    android:fontFamily="@font/misans"/>
+                    android:fontFamily="@font/misans"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:id="@+id/privileges_text"

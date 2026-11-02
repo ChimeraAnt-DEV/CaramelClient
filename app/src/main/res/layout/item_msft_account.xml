@@ -40,8 +40,8 @@
                 android:textColor="@color/primary"
                 android:layout_marginStart="@dimen/space_2"
                 style="@style/Widget.Chimera.Card.Compact"
-                android:paddingLeft="@dimen/space_2"
-                android:paddingRight="@dimen/space_2"
+                android:paddingStart="@dimen/space_2"
+                android:paddingEnd="@dimen/space_2"
                 android:paddingTop="@dimen/space_hairline"
                 android:paddingBottom="@dimen/space_hairline"
                 android:visibility="gone" />

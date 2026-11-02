@@ -29,6 +29,23 @@ class LauncherApplication : Application() {
         // active for it, so a hook that kills the process cannot trap the user in a crash loop.
         org.chimeramc.client.core.minecraft.OptifineModeManager.reconcileOnStartup(applicationContext)
         CrashReporter.init(this)
+        // Item 493: one table a script or a module can ask before it draws, so a feature whose
+        // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
+        // probe is a cached native read, so this is cheap enough to leave installed for the process.
+        org.chimeramc.client.core.backend.HookAvailability.install { hook ->
+            when (hook) {
+                org.chimeramc.client.core.backend.HookAvailability.Hook.PLAYER_RENDER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isPlayerRenderHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.MCE_IMAGE ->
+                    org.chimeramc.client.preloader.PreloaderInput.isMceImageHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.COSMETICS_RENDER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isCosmeticsHookLive()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.LOCAL_PLAYER ->
+                    org.chimeramc.client.preloader.PreloaderInput.isLocalPlayerAvailable()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.TEXTURE_FLUSH ->
+                    org.chimeramc.client.preloader.PreloaderInput.isTextureCacheFlushAvailable()
+            }
+        }
         // Send any crash report captured by a previous run, but only when the user's own
         // "Crash report upload" switch is on and this build has a collector configured. Off the
         // main thread: it reads files and performs a network request, and a launcher that stalls
@@ -40,6 +57,17 @@ class LauncherApplication : Application() {
                 // Reporting a crash must never itself crash the launcher; the uploader logs.
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
+        // Item 281: the opt-in anonymous usage counter. Same shape as the crash report above --
+        // off the main thread, gated on the user's switch and a configured collector, and inert in
+        // the shipped source because no endpoint is set. At most one report a day.
+        Thread({
+            try {
+                org.chimeramc.client.core.telemetry.UsageStatsReporter
+                    .reportIfDue(applicationContext)
+            } catch (_: Throwable) {
+                // A counter must never be the reason a launch fails; the reporter logs.
+            }
+        }, "usage-stats").apply { isDaemon = true }.start()
         // Mirror the persisted haptics preference into the static feedback layer so the
         // very first interaction honours it, before Settings is ever opened.
         org.chimeramc.client.ui.animation.UiTouchFeedback.setEnabled(

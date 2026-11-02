@@ -21,6 +21,7 @@ import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.UnifiedMod;
 
 import java.util.List;
+import org.chimeramc.client.util.HexColor;
 
 public class ModConfigView {
 
@@ -192,8 +193,7 @@ public class ModConfigView {
                             (int)(40 * density), (int)(20 * density));
 
                     String currentHex = cfg.currentValue.isEmpty() ? cfg.defaultValue : cfg.currentValue;
-                    int initialColor = Color.WHITE;
-                    try { initialColor = Color.parseColor(currentHex); } catch (Exception ignored) {}
+                    int initialColor = HexColor.parseOrWhite(currentHex);
 
                     android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
                     gd.setColor(initialColor);

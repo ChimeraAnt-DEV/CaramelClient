@@ -1,0 +1,4 @@
+## Mod load diagnostics & crash-loop safe mode (core.mods.ModLoadDiagnostics + ModSafeMode)
+- `ModLoadDiagnostics` records *why* a mod failed тАФ `KIND_DLOPEN`, `KIND_INCOMPATIBLE` etc. тАФ and `Classifier.describe(error)` / `kindOf(error)` turn a native loader error into a user-readable reason and a kind. `MinecraftRuntimePreparer.kt` writes the records at launch; `ModsFullscreenActivity` reads them and badges the failing mod inline instead of the process just dying.
+- `ModSafeMode.beginLaunch(context, enabledModIds)` / `markModLoaded` / `completeLaunch` track which mods were loaded when a session started. If the previous launch never reached `completeLaunch`, `hasCrashLoop(context)` is true and the Mods tab offers to disable the mods loaded before that crash. `CrashReporter` is the separate crash-log surface; this is the mod-disable response.
+- Tests live in `ModLoadDiagnosticsTest` (no mocks).

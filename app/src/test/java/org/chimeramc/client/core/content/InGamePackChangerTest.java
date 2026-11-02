@@ -358,4 +358,48 @@ public class InGamePackChangerTest {
         assertEquals(2, InGamePackChanger.worldPackFiles(root).size());
         assertTrue(InGamePackChanger.worldPackFiles(null).isEmpty());
     }
+
+    @Test
+    public void reorderActiveRewritesTheGlobalListToTheGivenOrder() throws Exception {
+        File root = tempDir();
+        writeGlobal(root, "["
+                + "{\"pack_id\":\"aaaaaaaa-0000-0000-0000-000000000001\",\"version\":[1,0,0]},"
+                + "{\"pack_id\":\"bbbbbbbb-0000-0000-0000-000000000002\",\"version\":[1,0,0]}]");
+
+        boolean ok = InGamePackChanger.reorderActive(root,
+                java.util.Arrays.asList("bbbbbbbb-0000-0000-0000-000000000002",
+                        "aaaaaaaa-0000-0000-0000-000000000001"));
+        assertTrue(ok);
+
+        // The list order is the applied order, and the last entry wins a conflict, so the ids
+        // must appear exactly as passed: beta first, alpha last.
+        String written = new String(Files.readAllBytes(
+                new File(new File(root, "minecraftpe"), "global_resource_packs.json").toPath()));
+        int alphaIdx = written.indexOf("aaaaaaaa");
+        int betaIdx = written.indexOf("bbbbbbbb");
+        assertTrue("both packs kept", alphaIdx >= 0 && betaIdx >= 0);
+        assertTrue("alpha is written last so it wins the conflict", alphaIdx > betaIdx);
+    }
+
+    @Test
+    public void reorderActiveKeepsInactiveEntries() throws Exception {
+        File root = tempDir();
+        writeGlobal(root, "["
+                + "{\"pack_id\":\"aaaaaaaa-0000-0000-0000-000000000001\",\"version\":[1,0,0]},"
+                + "{\"pack_id\":\"cccccccc-0000-0000-0000-000000000003\",\"version\":[1,0,0]}]");
+
+        assertTrue(InGamePackChanger.reorderActive(root,
+                java.util.Collections.singletonList("aaaaaaaa-0000-0000-0000-000000000001")));
+
+        String written = new String(Files.readAllBytes(
+                new File(new File(root, "minecraftpe"), "global_resource_packs.json").toPath()));
+        assertTrue("the unmentioned pack is preserved", written.contains("cccccccc"));
+    }
+
+    @Test
+    public void reorderActiveOnAMissingListIsANoOp() throws Exception {
+        File root = tempDir();
+        assertFalse(InGamePackChanger.reorderActive(root,
+                java.util.Collections.singletonList("aaaaaaaa-0000-0000-0000-000000000001")));
+    }
 }

@@ -36,7 +36,10 @@
     <string name="loading">Memuat…</string>
 
     <string name="import_confirmation_title">Impor Mod</string>
-    <string name="import_confirmation_message">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</item>
+        <item quantity="other">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</item>
+    </plurals>
     <string name="overwrite_file_title">File Sudah Ada</string>
     <string name="overwrite_file_message">File %s sudah ada. Apakah Anda ingin menimpanya?</string>
     <string name="overwrite">Timpa</string>
@@ -54,7 +57,10 @@
     <string name="cancel">Batal</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Berhasil memproses %d file mod.</string>
+    <plurals name="files_processed">
+        <item quantity="one">Berhasil memproses %d file mod.</item>
+        <item quantity="other">Berhasil memproses %d file mod.</item>
+    </plurals>
     <string name="user_cancelled">Impor dibatalkan oleh pengguna.</string>
 
 
@@ -493,7 +499,10 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="structure_exported">Diekspor: %s</string>
     <string name="extract">Ekstrak</string>
     <string name="structures_found_title">Struktur Ditemukan</string>
-    <string name="structures_found_count">%d struktur yang ditemukan di dunia ini</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">%d struktur yang ditemukan di dunia ini</item>
+        <item quantity="other">%d struktur yang ditemukan di dunia ini</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Menu Mod</string>
@@ -1079,6 +1088,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (klien mengharapkan v%2$d)</string>
     <string name="about_input_backend_status">Backend masukan: %1$s</string>
     <string name="diagnostics_field_input_backend">Backend masukan</string>
+    <string name="diagnostics_field_hooks">Hook pramuat</string>
     <string name="crash_exit_reason_label">Alasan keluar terakhir:</string>
     <string name="crash_disable_last_mod">Nonaktifkan mod yang menyebabkan crash</string>
     <string name="crash_disable_no_suspects">Tidak ada mod yang tercatat untuk crash ini.</string>
@@ -1118,6 +1128,11 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="controller_bind_device_cleared">%1$s tidak lagi memiliki profil tertaut</string>
     <string name="controller_stick_preview_description">Posisi stik langsung: cincin adalah bacaan mentah dan titik adalah yang dikirim profil</string>
     <string name="controller_stick_preview_side">Menampilkan stik %1$s</string>
+    <string name="screenshot_share">Bagikan tangkapan layar</string>
+    <string name="screenshot_share_failed">Tidak dapat membagikan tangkapan layar ini.</string>
+    <string name="screenshot_share_no_app">Tidak ada aplikasi yang dapat menerima gambar yang dibagikan.</string>
+    <string name="screenshot_share_no_screenshot">Belum ada tangkapan layar untuk dibagikan.</string>
+    <string name="pause_menu_share_screenshot">Bagikan tangkapan terakhir</string>
     <string name="pause_menu_screenshot">Tangkapan layar</string>
     <string name="pause_menu_hide_hud">Sembunyikan HUD</string>
     <string name="pause_menu_switch_layout">Ganti tata letak</string>
@@ -1234,4 +1249,41 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_import_link_done_digest">%1$s diimpor.\n%2$s</string>
     <string name="nav_rail_collapse">Ciutkan rel</string>
     <string name="nav_rail_expand">Bentangkan rel</string>
+    <string name="launch_watchdog_stalled">Peluncuran ini tidak mengalami kemajuan selama beberapa waktu. Mungkin masih berjalan; buka log untuk melihat apa yang sedang dilakukannya.</string>
+    <string name="launch_watchdog_dead">Peluncuran ini sudah lama tidak menggambar satu bingkai pun. Mulai ulang tanpa mod untuk menyingkirkan kemungkinan mod.</string>
+    <string name="launch_watchdog_open_logs">Buka log</string>
+    <string name="launch_watchdog_restart_without_mods">Mulai ulang tanpa mod</string>
+    <string name="performance_preset_thermal_message">Perangkat ini dibatasi suhu. Mode Baterai akan memberi CPU lebih sedikit pekerjaan.</string>
+    <string name="performance_preset_thermal_apply">Gunakan Baterai</string>
+    <string name="instance_size_on_disk">%1$s di disk</string>
+    <string name="nav_tab_needs_attention">, perlu perhatian</string>
+    <string name="server_favourite">Favorit %1$s</string>
+    <string name="server_unfavourite">Hapus %1$s dari favorit</string>
+    <string name="servers_favourites_first">Favorit ditampilkan lebih dulu</string>
+    <string name="server_favourite_label">Favorit</string>
+    <string name="cosmetics_sync_setting_title">Sinkronisasi kosmetik</string>
+    <string name="cosmetics_sync_setting_desc">Tampilkan cape, aksesori, dan peliharaan yang kamu pakai kepada pengguna Glowberry lain di dunia yang sama, dan lihat milik mereka. Hanya di sisi klien; mematikannya menghentikan pengiriman dan penerimaan.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Naikkan</string>
+    <string name="pack_changer_move_down">Turunkan</string>
+    <string name="pack_changer_reorder_failed">Tidak dapat menyimpan urutan paket.</string>
+    <string name="resource_pack_resolution">Resolusi: %1$s</string>
+    <string name="announcement_learn_more">Pelajari lebih lanjut</string>
+    <string name="announcement_dismiss">Tutup</string>
+    <string name="mod_update_notification_title">Pembaruan mod tersedia</string>
+    <string name="mod_update_channel">Pembaruan mod</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">dan %1$d lagi</string>
+    <string name="mod_update_check_title">Periksa pembaruan mod</string>
+    <string name="mod_update_check_desc">Satu notifikasi sehari saat versi lebih baru dari mod terpasang diterbitkan.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod punya pembaruan</item>
+        <item quantity="other">%1$d mod punya pembaruan</item>
+    </plurals>
+    <string name="usage_stats_title">Penghitung penggunaan anonim</string>
+    <string name="usage_stats_desc">Mati secara default. Saat aktif, satu laporan anonim per hari: versi aplikasi, kelas perangkat, ABI, dan jumlah peluncuran lokal. Tanpa akun, gamertag, id perangkat, alamat server, atau daftar mod.</string>
+    <string name="usage_stats_preview">Lihat apa yang akan dikirim</string>
+    <string name="usage_stats_preview_title">Isi laporan penggunaan</string>
+    <string name="usage_stats_preview_close">Tutup</string>
+    <string name="usage_stats_unavailable">Build ini tidak punya kolektor, jadi tidak ada yang bisa dikirim.</string>
 </resources>

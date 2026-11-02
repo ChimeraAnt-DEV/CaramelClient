@@ -47,11 +47,15 @@ import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.components.ListDiff;
 import org.chimeramc.client.ui.components.ListDiffDispatch;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
+import org.chimeramc.client.databinding.ItemInstanceCardBinding;
 import org.chimeramc.client.ui.dialogs.InstallProgressDialog;
 import org.chimeramc.client.ui.activities.InstanceSettingsActivity;
 import org.chimeramc.client.util.ApkImportManager;
 import org.chimeramc.client.util.InstanceBackupManager;
 
+import org.chimeramc.client.util.LauncherStorage;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -94,8 +98,53 @@ public class InstancesFragment extends Fragment {
     private ActivityResultLauncher<Intent> instanceSettingsLauncher;
     private boolean firstResume = true;
 
+    /**
+     * Measures each instance's disk use off the main thread and remembers it (item 143). A card is
+     * bound with a cached figure; a card whose instance has not been measured schedules one walk
+     * and is repainted when it finishes, so a fast scroll does not run the walk once per bind.
+     */
+    private org.chimeramc.client.core.minecraft.InstanceSizeLoader sizeLoader;
+
     /** The inflated view; a Fragment has no window, so findViewById goes through this. */
     private View root;
+
+    private org.chimeramc.client.core.minecraft.InstanceSizeLoader sizeLoader() {
+        if (sizeLoader == null) {
+            sizeLoader = new org.chimeramc.client.core.minecraft.InstanceSizeLoader(
+                    this::measureInstanceBytes,
+                    work -> org.chimeramc.client.util.AppExecutors.run(
+                            org.chimeramc.client.util.AppExecutors.Kind.DISK, "instance-size", work));
+        }
+        return sizeLoader;
+    }
+
+    /** Walks one instance's storage roots and returns the total bytes, or -1 when it cannot. */
+    private long measureInstanceBytes(String instanceKey) {
+        try {
+            GameVersion version = findVersionByKey(instanceKey);
+            if (version == null || getContext() == null) return -1L;
+            Context context = getContext().getApplicationContext();
+            String profileId = MinecraftLauncher.getStorageProfileId(version);
+            File gameData = LauncherStorage.getStorageGameDataDir(context, profileId,
+                    version.versionIsolation, true);
+            File mods = LauncherStorage.getProfileModsDir(context, profileId);
+            File runtime = MinecraftLauncher.getRuntimeLibDir(context, profileId);
+            File cache = LauncherStorage.getProfileCacheRoot(context, profileId);
+            return org.chimeramc.client.core.minecraft.InstanceDiskUsage
+                    .measure(gameData, mods, runtime, cache).totalBytes();
+        } catch (Throwable t) {
+            return -1L;
+        }
+    }
+
+    /** The version whose storage profile matches {@code instanceKey}, or null. */
+    private GameVersion findVersionByKey(String instanceKey) {
+        if (instanceKey == null) return null;
+        for (GameVersion v : allVersions) {
+            if (v != null && instanceKey.equals(MinecraftLauncher.getStorageProfileId(v))) return v;
+        }
+        return null;
+    }
 
     private Context ctx() {
         return requireContext();
@@ -188,7 +237,7 @@ public class InstancesFragment extends Fragment {
         loadVersions();
 
         GameVersion selectedVersion = versionManager.getSelectedVersion();
-        adapter = new InstanceCardAdapter(selectedVersion);
+        adapter = new InstanceCardAdapter(selectedVersion, sizeLoader());
         recyclerView.setAdapter(adapter);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -243,11 +292,13 @@ public class InstancesFragment extends Fragment {
         if (installed != null) allVersions.addAll(installed);
         if (custom != null) allVersions.addAll(custom);
 
-        Collections.sort(allVersions, (a, b) -> {
-            String va = a.versionCode != null ? a.versionCode : "";
-            String vb = b.versionCode != null ? b.versionCode : "";
-            return vb.compareTo(va);
-        });
+        // Item 143: most recently played first, with the version code as the tiebreak. The rule
+        // lives in InstanceSort so it is unit-tested; the fragment only supplies the last-played
+        // time, which is per storage profile.
+        Collections.sort(allVersions, org.chimeramc.client.core.versions.InstanceSort.comparator(
+                v -> org.chimeramc.client.core.minecraft.PlaytimeManager.getLastPlayedMs(
+                        MinecraftLauncher.getStorageProfileId(v)),
+                v -> v.versionCode));
     }
 
     private void setupFilterTabs() {
@@ -868,6 +919,8 @@ public class InstancesFragment extends Fragment {
         } else {
             versionManager.loadAllVersions();
             loadVersions();
+            // The instances were re-read, so a size cached before an uninstall or a clear is stale.
+            sizeLoader().clear();
         }
         setupImportButton();
         setupBackupImportButton();
@@ -944,8 +997,17 @@ public class InstancesFragment extends Fragment {
             this.settingsListener = l;
         }
 
-        InstanceCardAdapter(GameVersion selected) {
+        /** The host fragment's shared size loader, so a scroll does not walk the same instance twice. */
+        private final org.chimeramc.client.core.minecraft.InstanceSizeLoader sizeLoaderRef;
+
+        InstanceCardAdapter(GameVersion selected,
+                            org.chimeramc.client.core.minecraft.InstanceSizeLoader sizeLoaderRef) {
             this.selectedVersion = selected;
+            this.sizeLoaderRef = sizeLoaderRef;
+        }
+
+        private org.chimeramc.client.core.minecraft.InstanceSizeLoader hostSizeLoader() {
+            return sizeLoaderRef;
         }
 
         void setSelectedVersion(GameVersion v) {
@@ -994,6 +1056,40 @@ public class InstancesFragment extends Fragment {
             ListDiffDispatch.apply(this, diff);
         }
 
+        /**
+         * Shows the instance's cached size, or requests a measurement and shows nothing until it
+         * arrives (item 143). A size of zero is a real reading and is shown; only "not known yet"
+         * is blank, so an empty instance does not read as an unmeasured one.
+         */
+        void bindInstanceSize(VH vh, String instanceKey) {
+            if (vh.size == null) return;
+            Long cached = hostSizeLoader().cached(instanceKey);
+            if (cached != null) {
+                vh.size.setText(vh.itemView.getContext().getString(
+                        R.string.instance_size_on_disk,
+                        org.chimeramc.client.launcher.util.StorageUsage.format(cached)));
+                vh.size.setVisibility(View.VISIBLE);
+                return;
+            }
+            vh.size.setText("");
+            vh.size.setVisibility(View.GONE);
+            hostSizeLoader().request(instanceKey, key -> {
+                // The measurement finished off the main thread; repaint the rows for that key.
+                notifyKeyChanged(key);
+            });
+        }
+
+        /** Redraws the bound rows whose instance key is {@code key}. */
+        void notifyKeyChanged(String key) {
+            if (key == null) return;
+            for (int i = 0; i < items.size(); i++) {
+                GameVersion v = items.get(i);
+                if (v != null && key.equals(MinecraftLauncher.getStorageProfileId(v))) {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+
         @Override
         public int getItemViewType(int position) {
             return TYPE_ITEM;
@@ -1002,8 +1098,8 @@ public class InstancesFragment extends Fragment {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance_card, parent, false);
-            return new VH(v);
+            return new VH(ItemInstanceCardBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false));
         }
 
         @Override
@@ -1108,8 +1204,14 @@ public class InstancesFragment extends Fragment {
                 if (listener != null) listener.onClick(v);
             });
 
+            // Item 143: the on-disk size, measured off the main thread and cached. A card whose
+            // instance has not been measured yet shows nothing and requests one walk; the walk
+            // repaints the grid through the loader's callback when it finishes.
+            String instanceKey = MinecraftLauncher.getStorageProfileId(v);
+            bindInstanceSize(vh, instanceKey);
+
             long playtimeMs = org.chimeramc.client.core.minecraft.PlaytimeManager.getTotalMs(
-                    MinecraftLauncher.getStorageProfileId(v));
+                    instanceKey);
             vh.playtime.setText(holder.itemView.getContext().getString(R.string.playtime_label,
                     org.chimeramc.client.core.minecraft.PlaytimeManager.formatPlaytime(playtimeMs)));
 
@@ -1148,19 +1250,22 @@ public class InstancesFragment extends Fragment {
         }
 
         static class VH extends RecyclerView.ViewHolder {
-            TextView versionCode, typeTag, displayName, playtime, notes;
+            final ItemInstanceCardBinding binding;
+            TextView versionCode, typeTag, displayName, playtime, notes, size;
             TextView abiBadge;
             ImageView settingsIcon;
 
-            VH(View v) {
-                super(v);
-                versionCode = v.findViewById(R.id.card_version_code);
-                typeTag = v.findViewById(R.id.card_type_tag);
-                displayName = v.findViewById(R.id.card_display_name);
-                playtime = v.findViewById(R.id.card_playtime);
-                notes = v.findViewById(R.id.card_notes);
-                abiBadge = v.findViewById(R.id.card_abi_badge);
-                settingsIcon = v.findViewById(R.id.card_settings_icon);
+            VH(ItemInstanceCardBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+                versionCode = binding.cardVersionCode;
+                typeTag = binding.cardTypeTag;
+                displayName = binding.cardDisplayName;
+                playtime = binding.cardPlaytime;
+                notes = binding.cardNotes;
+                size = binding.cardSize;
+                abiBadge = binding.cardAbiBadge;
+                settingsIcon = binding.cardSettingsIcon;
             }
         }
     }

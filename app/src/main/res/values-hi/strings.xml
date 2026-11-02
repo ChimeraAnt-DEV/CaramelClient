@@ -43,7 +43,10 @@
     <string name="loading">लोड हो रहा है…</string>
 
     <string name="import_confirmation_title">मॉड्स आयात करें</string>
-    <string name="import_confirmation_message">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</item>
+        <item quantity="other">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</item>
+    </plurals>
     <string name="import_so_plugin_title">SO प्लगइन आयात करें</string>
     <string name="plugin_name_label">प्लगइन का नाम</string>
     <string name="plugin_type_label">प्रकार</string>
@@ -66,7 +69,10 @@
     <string name="cancel">रद्द करें</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</item>
+        <item quantity="other">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</item>
+    </plurals>
     <string name="user_cancelled">उपयोगकर्ता द्वारा आयात रद्द किया गया</string>
 
     <string name="exit">बाहर निकलें</string>
@@ -550,7 +556,10 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="structure_exported">निर्यात किया गया: %s</string>
     <string name="extract">निकालें</string>
     <string name="structures_found_title">संरचनाएं मिलीं</string>
-    <string name="structures_found_count">इस वर्ल्ड में %d संरचनाएं मिलीं</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">इस वर्ल्ड में %d संरचनाएं मिलीं</item>
+        <item quantity="other">इस वर्ल्ड में %d संरचनाएं मिलीं</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">मॉड मेनू</string>
@@ -1083,6 +1092,7 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (क्लाइंट v%2$d की अपेक्षा करता है)</string>
     <string name="about_input_backend_status">इनपुट बैकएंड: %1$s</string>
     <string name="diagnostics_field_input_backend">इनपुट बैकएंड</string>
+    <string name="diagnostics_field_hooks">प्रीलोडर हुक</string>
     <string name="crash_exit_reason_label">पिछले बंद होने का कारण:</string>
     <string name="crash_disable_last_mod">क्रैश करने वाले मॉड को बंद करें</string>
     <string name="crash_disable_no_suspects">इस क्रैश के लिए कोई मॉड दर्ज नहीं हुआ।</string>
@@ -1122,6 +1132,11 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="controller_bind_device_cleared">%1$s से जुड़ी प्रोफ़ाइल अब नहीं है</string>
     <string name="controller_stick_preview_description">लाइव स्टिक स्थिति: छल्ला असली पाठ है और बिंदु वह जो प्रोफ़ाइल भेजती है</string>
     <string name="controller_stick_preview_side">%1$s स्टिक दिखाई जा रही है</string>
+    <string name="screenshot_share">स्क्रीनशॉट साझा करें</string>
+    <string name="screenshot_share_failed">यह स्क्रीनशॉट साझा नहीं किया जा सका।</string>
+    <string name="screenshot_share_no_app">कोई ऐप साझा की गई छवि प्राप्त नहीं कर सकता।</string>
+    <string name="screenshot_share_no_screenshot">अभी साझा करने के लिए कोई स्क्रीनशॉट नहीं है।</string>
+    <string name="pause_menu_share_screenshot">अंतिम स्क्रीनशॉट साझा करें</string>
     <string name="pause_menu_screenshot">स्क्रीनशॉट</string>
     <string name="pause_menu_hide_hud">HUD छिपाएँ</string>
     <string name="pause_menu_switch_layout">लेआउट बदलें</string>
@@ -1238,4 +1253,41 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="mod_import_link_done_digest">%1$s आयात किया गया।\n%2$s</string>
     <string name="nav_rail_collapse">रेल छोटा करें</string>
     <string name="nav_rail_expand">रेल बड़ा करें</string>
+    <string name="launch_watchdog_stalled">यह लॉन्च कुछ समय से आगे नहीं बढ़ा है। यह अभी भी काम कर रहा हो सकता है; देखने के लिए लॉग खोलें कि यह क्या कर रहा है।</string>
+    <string name="launch_watchdog_dead">यह लॉन्च बहुत देर से कोई फ़्रेम नहीं बनाया है। किसी मॉड को बाहर करने के लिए बिना मॉड्स के पुनः आरंभ करें।</string>
+    <string name="launch_watchdog_open_logs">लॉग खोलें</string>
+    <string name="launch_watchdog_restart_without_mods">बिना मॉड्स के पुनः आरंभ करें</string>
+    <string name="performance_preset_thermal_message">यह डिवाइस गर्मी के कारण धीमा है। बैटरी मोड CPU को कम काम देगा।</string>
+    <string name="performance_preset_thermal_apply">बैटरी का उपयोग करें</string>
+    <string name="instance_size_on_disk">डिस्क पर %1$s</string>
+    <string name="nav_tab_needs_attention">, ध्यान देने की आवश्यकता है</string>
+    <string name="server_favourite">%1$s पसंदीदा</string>
+    <string name="server_unfavourite">%1$s को पसंदीदा से हटाएँ</string>
+    <string name="servers_favourites_first">पसंदीदा पहले दिखाए जाते हैं</string>
+    <string name="server_favourite_label">पसंदीदा</string>
+    <string name="cosmetics_sync_setting_title">कॉस्मेटिक सिंक</string>
+    <string name="cosmetics_sync_setting_desc">अपनी पहनी हुई केप, सहायक वस्तु और पालतू को उसी विश्व के अन्य Glowberry उपयोगकर्ताओं को दिखाएँ, और उनकी देखें। केवल क्लाइंट-साइड; बंद करने पर भेजना और प्राप्त करना दोनों रुक जाते हैं।</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">ऊपर ले जाएँ</string>
+    <string name="pack_changer_move_down">नीचे ले जाएँ</string>
+    <string name="pack_changer_reorder_failed">पैक क्रम सहेजा नहीं जा सका।</string>
+    <string name="resource_pack_resolution">रिज़ॉल्यूशन: %1$s</string>
+    <string name="announcement_learn_more">और जानें</string>
+    <string name="announcement_dismiss">खारिज करें</string>
+    <string name="mod_update_notification_title">मॉड अपडेट उपलब्ध</string>
+    <string name="mod_update_channel">मॉड अपडेट</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">और %1$d अधिक</string>
+    <string name="mod_update_check_title">मॉड अपडेट जांचें</string>
+    <string name="mod_update_check_desc">स्थापित मॉड का नया संस्करण जारी होने पर दिन में एक सूचना।</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d मॉड में अपडेट है</item>
+        <item quantity="other">%1$d मॉड्स में अपडेट हैं</item>
+    </plurals>
+    <string name="usage_stats_title">अनाम उपयोग काउंटर</string>
+    <string name="usage_stats_desc">डिफॉल्ट रूप से बंद। चालू होने पर प्रतिदिन एक अनाम रिपोर्ट: ऐप संस्करण, डिवाइस श्रेणी, ABI और स्थानीय लॉन्च गिनती। कोई अकाउंट, गेमरटैग, डिवाइस आईडी, सर्वर पता या मॉड सूची नहीं।</string>
+    <string name="usage_stats_preview">क्या भेजा जाएगा देखें</string>
+    <string name="usage_stats_preview_title">उपयोग रिपोर्ट सामग्री</string>
+    <string name="usage_stats_preview_close">बंद करें</string>
+    <string name="usage_stats_unavailable">इस बिल्ड में कोई संग्रहक कॉन्फ़िगर नहीं है, कुछ नहीं भेजा जा सकता।</string>
 </resources>

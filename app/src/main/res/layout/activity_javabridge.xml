@@ -103,7 +103,8 @@
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
                     android:textStyle="bold"
-                    tools:text="Cool Mod" />
+                    tools:text="Cool Mod"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:id="@+id/javabridge_mod_meta"
@@ -300,7 +301,8 @@
                     android:text="@string/javabridge_empty_title"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+    android:accessibilityHeading="true" />
 
                 <TextView
                     android:layout_width="match_parent"

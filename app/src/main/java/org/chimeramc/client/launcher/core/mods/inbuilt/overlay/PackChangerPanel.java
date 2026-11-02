@@ -35,6 +35,9 @@ public final class PackChangerPanel {
     private final LinearLayout root;
     private final LinearLayout listColumn;
     private TextView statusLine;
+    /** Sizes and texture resolutions are scanned off the main thread and cached (item 253). */
+    private final org.chimeramc.client.core.content.PackAssetSummaryCache assetCache =
+            new org.chimeramc.client.core.content.PackAssetSummaryCache();
 
     public PackChangerPanel(Activity activity, boolean compact) {
         this.activity = activity;
@@ -106,12 +109,45 @@ public final class PackChangerPanel {
             return;
         }
 
+        // The applied order (last entry wins a conflict) is what the move buttons act on. Rows
+        // are listed in that order so "move up" always means "higher priority", never "up the
+        // alphabetical list".
+        List<String> order = InGamePackChanger.activeOrder(resolveListingDir());
+        final List<String> displayed = order.isEmpty() ? activeUuidsInListOrder(packs) : order;
+        java.util.Map<String, InGamePackChanger.PackEntry> byUuid = new java.util.HashMap<>();
         for (InGamePackChanger.PackEntry pack : packs) {
-            listColumn.addView(buildRow(pack));
+            byUuid.put(org.chimeramc.client.core.content.ResourcePackOrder.normalise(pack.uuid), pack);
+        }
+        java.util.List<InGamePackChanger.PackEntry> ordered = new java.util.ArrayList<>();
+        for (String uuid : displayed) {
+            InGamePackChanger.PackEntry entry = byUuid.get(uuid);
+            if (entry != null) ordered.add(entry);
+        }
+        for (InGamePackChanger.PackEntry pack : packs) {
+            if (!displayed.contains(org.chimeramc.client.core.content.ResourcePackOrder
+                    .normalise(pack.uuid))) {
+                ordered.add(pack);
+            }
+        }
+        for (int i = 0; i < ordered.size(); i++) {
+            InGamePackChanger.PackEntry pack = ordered.get(i);
+            listColumn.addView(buildRow(pack, i, ordered));
         }
     }
 
-    private View buildRow(InGamePackChanger.PackEntry pack) {
+    /** The active packs' uuids in the list's own order, used when there is no global file. */
+    private List<String> activeUuidsInListOrder(List<InGamePackChanger.PackEntry> packs) {
+        List<String> result = new java.util.ArrayList<>();
+        for (InGamePackChanger.PackEntry pack : packs) {
+            if (pack.active) {
+                result.add(org.chimeramc.client.core.content.ResourcePackOrder.normalise(pack.uuid));
+            }
+        }
+        return result;
+    }
+
+    private View buildRow(InGamePackChanger.PackEntry pack, int index,
+                          List<InGamePackChanger.PackEntry> ordered) {
         LinearLayout row = new LinearLayout(activity);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -129,12 +165,25 @@ public final class PackChangerPanel {
         labels.addView(name);
 
         TextView meta = new TextView(activity);
-        meta.setText(activity.getString(R.string.pack_changer_pack_meta, pack.version,
-                pack.active ? activity.getString(R.string.pack_changer_on)
-                        : activity.getString(R.string.pack_changer_off)));
         meta.setTextSize(compact ? 10f : 11f);
         meta.setTextColor(pack.active ? 0xFF71ACEF : 0xFF8F979F);
         labels.addView(meta);
+        bindPackMeta(meta, pack);
+
+        // Priority controls. Only meaningful for an active pack: a pack the game has not applied
+        // has no position to change.
+        if (pack.active && ordered.size() > 1) {
+            LinearLayout priority = new LinearLayout(activity);
+            priority.setOrientation(LinearLayout.HORIZONTAL);
+            TextView up = buildPriorityButton(R.string.pack_changer_move_up, index > 0);
+            up.setOnClickListener(v -> movePriority(ordered, index, index - 1));
+            TextView down = buildPriorityButton(R.string.pack_changer_move_down,
+                    index < ordered.size() - 1);
+            down.setOnClickListener(v -> movePriority(ordered, index, index + 1));
+            priority.addView(up);
+            priority.addView(down);
+            labels.addView(priority);
+        }
 
         // A pill toggle rather than a SwitchMaterial: the overlay is inflated from a plain
         // FrameLayout and has no Material theme context here.
@@ -176,6 +225,77 @@ public final class PackChangerPanel {
         return row;
     }
 
+    /**
+     * Fills a row's meta line with the pack's version/state plus its size and texture resolution.
+     *
+     * <p>The size and resolution come from a background scan, so the line first shows what is known
+     * synchronously and is repainted when the scan lands (item 253).
+     */
+    private void bindPackMeta(TextView meta, InGamePackChanger.PackEntry pack) {
+        String state = pack.active ? activity.getString(R.string.pack_changer_on)
+                : activity.getString(R.string.pack_changer_off);
+        org.chimeramc.client.core.content.PackAssetSummary.Result summary =
+                assetCache.peek(pack.directory);
+        if (summary != null) {
+            meta.setText(activity.getString(R.string.pack_changer_pack_size,
+                    formatBytes(summary.totalBytes), state));
+            return;
+        }
+        meta.setText(activity.getString(R.string.pack_changer_pack_meta, pack.version, state));
+        assetCache.get(pack.directory, (dir, result) -> {
+            // The row may have been recycled to another pack by the time the scan lands; re-find
+            // the view for this pack rather than trusting the captured one.
+            if (result != null) rebuild();
+        });
+    }
+
+    /** A small pill button for the priority controls, greyed when the move is not possible. */
+    private TextView buildPriorityButton(int labelRes, boolean enabled) {
+        TextView button = new TextView(activity);
+        button.setText(labelRes);
+        button.setTextSize(compact ? 10f : 11f);
+        button.setPadding(dp(10), dp(4), dp(10), dp(4));
+        button.setTextColor(enabled ? 0xFFE6E9EC : 0xFF5A6068);
+        GradientDrawable background = new GradientDrawable();
+        background.setCornerRadius(dp(12));
+        background.setColor(0x3324282C);
+        background.setStroke(dp(1), enabled ? 0x66FFFFFF : 0x22FFFFFF);
+        button.setBackground(background);
+        button.setEnabled(enabled);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, dp(6), dp(8), 0);
+        button.setLayoutParams(params);
+        return button;
+    }
+
+    /** Moves one pack's priority and rewrites the global list to match. */
+    private void movePriority(List<InGamePackChanger.PackEntry> ordered, int from, int to) {
+        List<String> uuids = new java.util.ArrayList<>();
+        for (InGamePackChanger.PackEntry entry : ordered) {
+            uuids.add(org.chimeramc.client.core.content.ResourcePackOrder.normalise(entry.uuid));
+        }
+        List<String> moved = org.chimeramc.client.core.content.ResourcePackOrder.move(uuids, from, to);
+        File dir = resolveListingDir();
+        if (dir == null || !InGamePackChanger.reorderActive(dir, moved)) {
+            statusLine.setText(R.string.pack_changer_reorder_failed);
+            return;
+        }
+        rebuild();
+    }
+
+    private String formatBytes(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024L * 1024L) {
+            return String.format(java.util.Locale.getDefault(), "%.1f KB", bytes / 1024.0);
+        }
+        if (bytes < 1024L * 1024L * 1024L) {
+            return String.format(java.util.Locale.US, "%.1f MB", bytes / (1024.0 * 1024.0));
+        }
+        return String.format(java.util.Locale.US, "%.1f GB",
+                bytes / (1024.0 * 1024.0 * 1024.0));
+    }
+
     /** True when the selected instance opted into the in-game pack changer. */
     private boolean isEnabledForInstance() {
         try {
@@ -205,5 +325,10 @@ public final class PackChangerPanel {
 
     private int dp(float value) {
         return Math.round(value * activity.getResources().getDisplayMetrics().density);
+    }
+
+    /** Stops the background scan worker; call when the panel is removed. */
+    public void dispose() {
+        assetCache.shutdown();
     }
 }

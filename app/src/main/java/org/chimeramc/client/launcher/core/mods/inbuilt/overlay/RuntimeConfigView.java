@@ -51,6 +51,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.WeakHashMap;
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.HexColor;
 import org.chimeramc.client.util.MainThread;
 
 final class RuntimeConfigView {
@@ -927,7 +928,9 @@ final class RuntimeConfigView {
 
     private void showColorDialog(RuntimeConfigSchema.Node node, String initialValue, Button sourceButton) {
         int initial;
-        try { initial = Color.parseColor(initialValue); } catch (Exception ignored) { initial = Color.WHITE; }
+        // A corrupt stored literal reads as white through the pure parser (item 350) instead of a
+        // swallowed exception, so the fallback is a rule with a test rather than an empty catch.
+        initial = HexColor.parseOrWhite(initialValue);
         LinearLayout box = new LinearLayout(context);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setPadding(dp(18), dp(6), dp(18), 0);

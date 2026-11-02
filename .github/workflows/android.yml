@@ -145,6 +145,12 @@ jobs:
         # nlohmann/json into a gitignored cache when needed.
         run: bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh
 
+      # Items 111, 136, 333: the three hygiene budgets. The existing debt is large and is recorded
+      # in scripts/hygiene/*.txt; this fails only when a change makes it larger, which is the part a
+      # single PR can actually hold the line on.
+      - name: Check UI hygiene budgets
+        run: python3 scripts/check_ui_hygiene.py
+
       - name: Run Python tooling host tests
         # The rule-generation helpers, the offline binary analyzer and the release checksum
         # helper are pure Python. numpy is required by the analyzer's instruction scan; without

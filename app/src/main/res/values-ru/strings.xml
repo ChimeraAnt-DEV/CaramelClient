@@ -36,7 +36,10 @@
     <string name="loading">Загрузка…</string>
 
     <string name="import_confirmation_title">Импортировать моды</string>
-    <string name="import_confirmation_message">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+        <item quantity="other">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+    </plurals>
     <string name="overwrite_file_title">Файл Уже Существует</string>
     <string name="overwrite_file_message">Файл %s уже существует. Вы хотите перезаписать его?</string>
     <string name="overwrite">Перезаписать</string>
@@ -54,7 +57,10 @@
     <string name="cancel">Отмена</string>
 
     <!-- Обратная связь -->
-    <string name="files_processed">Успешно добавлены файлы мода %d </string>
+    <plurals name="files_processed">
+        <item quantity="one">Успешно добавлены файлы мода %d </item>
+        <item quantity="other">Успешно добавлены файлы мода %d </item>
+    </plurals>
     <string name="user_cancelled">Импорт отменен пользователем</string>
 
 
@@ -489,7 +495,10 @@
     <string name="structure_exported">Экспортировано: %s</string>
     <string name="extract">Извлечь</string>
     <string name="structures_found_title">Найдены структуры</string>
-    <string name="structures_found_count">Найдено %d структур в этом мире</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Найдено %d структур в этом мире</item>
+        <item quantity="other">Найдено %d структур в этом мире</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Мод-меню</string>
@@ -1086,6 +1095,7 @@
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (клиент ожидает v%2$d)</string>
     <string name="about_input_backend_status">Бэкенд ввода: %1$s</string>
     <string name="diagnostics_field_input_backend">Бэкенд ввода</string>
+    <string name="diagnostics_field_hooks">Хуки прелоадера</string>
     <string name="crash_exit_reason_label">Причина последнего завершения:</string>
     <string name="crash_disable_last_mod">Отключить мод, вызвавший сбой</string>
     <string name="crash_disable_no_suspects">Для этого сбоя не зарегистрировано ни одного мода.</string>
@@ -1125,6 +1135,11 @@
     <string name="controller_bind_device_cleared">У %1$s больше нет привязанного профиля</string>
     <string name="controller_stick_preview_description">Положение стика в реальном времени: кольцо — сырое значение, точка — то, что отправляет профиль</string>
     <string name="controller_stick_preview_side">Показан %1$s стик</string>
+    <string name="screenshot_share">Поделиться скриншотом</string>
+    <string name="screenshot_share_failed">Не удалось поделиться этим скриншотом.</string>
+    <string name="screenshot_share_no_app">Нет приложения, способного принять изображение.</string>
+    <string name="screenshot_share_no_screenshot">Пока нет скриншота, которым можно поделиться.</string>
+    <string name="pause_menu_share_screenshot">Поделиться последним скриншотом</string>
     <string name="pause_menu_screenshot">Скриншот</string>
     <string name="pause_menu_hide_hud">Скрыть HUD</string>
     <string name="pause_menu_switch_layout">Сменить макет</string>
@@ -1241,4 +1256,41 @@
     <string name="mod_import_link_done_digest">%1$s импортирован.\n%2$s</string>
     <string name="nav_rail_collapse">Свернуть панель</string>
     <string name="nav_rail_expand">Развернуть панель</string>
+    <string name="launch_watchdog_stalled">Этот запуск давно не продвигается. Возможно, он ещё работает; откройте журналы, чтобы увидеть, что происходит.</string>
+    <string name="launch_watchdog_dead">Этот запуск давно не отрисовал ни одного кадра. Перезапустите без модов, чтобы исключить мод.</string>
+    <string name="launch_watchdog_open_logs">Открыть журналы</string>
+    <string name="launch_watchdog_restart_without_mods">Перезапустить без модов</string>
+    <string name="performance_preset_thermal_message">Это устройство ограничено из-за нагрева. Режим «Батарея» даст процессору меньше работы.</string>
+    <string name="performance_preset_thermal_apply">Использовать «Батарея»</string>
+    <string name="instance_size_on_disk">%1$s на диске</string>
+    <string name="nav_tab_needs_attention">, требует внимания</string>
+    <string name="server_favourite">В избранное: %1$s</string>
+    <string name="server_unfavourite">Убрать %1$s из избранного</string>
+    <string name="servers_favourites_first">Избранное показывается первым</string>
+    <string name="server_favourite_label">Избранное</string>
+    <string name="cosmetics_sync_setting_title">Синхронизация косметики</string>
+    <string name="cosmetics_sync_setting_desc">Показывайте свои плащ, аксессуар и питомца другим пользователям Glowberry в том же мире и видьте их. Только на клиенте; отключение останавливает и отправку, и приём.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Переместить вверх</string>
+    <string name="pack_changer_move_down">Переместить вниз</string>
+    <string name="pack_changer_reorder_failed">Не удалось сохранить порядок наборов.</string>
+    <string name="resource_pack_resolution">Разрешение: %1$s</string>
+    <string name="announcement_learn_more">Подробнее</string>
+    <string name="announcement_dismiss">Отклонить</string>
+    <string name="mod_update_notification_title">Доступны обновления модов</string>
+    <string name="mod_update_channel">Обновления модов</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">и ещё %1$d</string>
+    <string name="mod_update_check_title">Проверять обновления модов</string>
+    <string name="mod_update_check_desc">Одно уведомление в день, когда выходит новая версия установленного мода.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">Для %1$d мода есть обновление</item>
+        <item quantity="other">Для %1$d модов есть обновления</item>
+    </plurals>
+    <string name="usage_stats_title">Анонимный счётчик использования</string>
+    <string name="usage_stats_desc">По умолчанию выключено. Когда включено — один анонимный отчёт в день: версия приложения, класс устройства, ABI и локальные счётчики запусков. Без аккаунта, геймертага, id устройства, адреса сервера или списка модов.</string>
+    <string name="usage_stats_preview">Показать, что будет отправлено</string>
+    <string name="usage_stats_preview_title">Содержимое отчёта об использовании</string>
+    <string name="usage_stats_preview_close">Закрыть</string>
+    <string name="usage_stats_unavailable">В этой сборке не настроен сборщик, отправить нечего.</string>
 </resources>

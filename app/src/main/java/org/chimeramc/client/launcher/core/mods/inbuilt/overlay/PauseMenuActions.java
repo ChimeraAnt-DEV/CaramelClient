@@ -18,6 +18,8 @@ public final class PauseMenuActions {
 
     /** Take a screenshot of the launcher's own window. */
     public static final String ACTION_SCREENSHOT = "screenshot";
+    /** Share the newest screenshot through the system share sheet (item 276). */
+    public static final String ACTION_SHARE_SCREENSHOT = "share_screenshot";
     /** Hide or show every HUD overlay, the same state the three-finger tap toggles. */
     public static final String ACTION_HIDE_HUD = "hide_hud";
     /** Cycle to the next saved overlay layout. */
@@ -61,6 +63,8 @@ public final class PauseMenuActions {
         List<Entry> entries = new ArrayList<>();
         entries.add(new Entry(ACTION_SCREENSHOT, R.string.pause_menu_screenshot,
                 R.drawable.ic_screenshot));
+        entries.add(new Entry(ACTION_SHARE_SCREENSHOT, R.string.pause_menu_share_screenshot,
+                R.drawable.ic_share));
         entries.add(new Entry(ACTION_HIDE_HUD, R.string.pause_menu_hide_hud,
                 R.drawable.ic_hud));
         entries.add(new Entry(ACTION_SWITCH_LAYOUT, R.string.pause_menu_switch_layout,

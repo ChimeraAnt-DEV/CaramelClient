@@ -51,6 +51,7 @@ import org.chimeramc.client.ui.navigation.EdgeToEdgeInsets;
 import org.chimeramc.client.ui.navigation.LauncherTab;
 import org.chimeramc.client.ui.navigation.NavLayoutMode;
 import org.chimeramc.client.ui.navigation.NavRailPolicy;
+import org.chimeramc.client.ui.navigation.NavTabBadge;
 import org.chimeramc.client.ui.navigation.NavTabLongPress;
 import org.chimeramc.client.ui.components.UiShape;
 import org.chimeramc.client.ui.components.UiTokens;
@@ -279,6 +280,11 @@ public class BaseActivity extends AppCompatActivity {
         installNavDebugBounds();
 
         applyPersonalization();
+
+        // Item 339: a small icon button in the header or a row keeps its visual size and gains a
+        // 48dp touch target. Grouped per parent, because a view holds only one TouchDelegate.
+        org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(navBar);
+        org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(contentView);
 
         contentView.post(() -> {
             DynamicAnim.springAlphaTo(contentView, 1f).start();
@@ -537,15 +543,27 @@ public class BaseActivity extends AppCompatActivity {
      * motion is on.
      */
     private void applyMotionScheme(PersonalizationManager pm) {
-        boolean platformAnimationsOff = false;
+        DynamicAnim.applyMotionScheme(pm.isReduceMotion(), readPlatformAnimationScale());
+    }
+
+    /**
+     * The platform animation scale (item 75).
+     *
+     * <p>Read as the multiplier Android stores it as rather than collapsed to a boolean, so a user on
+     * a 0.5x or 2x system scale gets motion at that speed and only a 0 stops it. An unreadable or
+     * out-of-range value falls back to the system default of 1, so a restricted device keeps its
+     * animations rather than losing them.
+     */
+    private float readPlatformAnimationScale() {
         try {
-            platformAnimationsOff = android.provider.Settings.Global.getFloat(
+            float scale = android.provider.Settings.Global.getFloat(
                     getContentResolver(),
-                    android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f;
+                    android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
+            return (Float.isNaN(scale) || scale < 0f) ? 1f : scale;
         } catch (Throwable ignored) {
-            // Unreadable on a restricted device; treat motion as allowed.
+            // Unreadable on a restricted device; treat motion as the system default.
+            return 1f;
         }
-        DynamicAnim.applyMotionScheme(pm.isReduceMotion(), platformAnimationsOff);
     }
 
     protected boolean shouldSkipNavBar() {
@@ -687,6 +705,14 @@ public class BaseActivity extends AppCompatActivity {
 
     /** True on a narrow window, where only the selected tab shows its label. */
     private boolean compactNavTabs;
+    /**
+     * The destination views, captured once when the nav is inflated (item 83).
+     *
+     * <p>The badge pass runs from {@code onResume}, and looking the tabs up again there would both
+     * repeat work the inflation already did and add a lookup per destination per resume. Holding the
+     * views the loop already found keeps the pass to a field read.
+     */
+    private final java.util.List<TextView> navTabViews = new java.util.ArrayList<>();
 
     /**
      * Applies the navigation's label configuration for the chosen {@link NavLayoutMode}.
@@ -760,9 +786,11 @@ public class BaseActivity extends AppCompatActivity {
 
         // Each tab is a single TextView carrying its own icon via drawableStart, so tinting
         // the compound drawable is what colours the icon.
+        navTabViews.clear();
         for (LauncherTab destination : LauncherTab.visibleTabs(privacy)) {
             TextView tab = findViewById(destination.viewId());
             if (tab == null) continue;
+            navTabViews.add(tab);
             // The label and the icon come from the enum, so the two nav layouts and the
             // destination list cannot disagree about what a tab is (U5).
             tab.setText(destination.labelRes());
@@ -891,6 +919,79 @@ public class BaseActivity extends AppCompatActivity {
      * with one filler row. A long press must not also fire the press effect's click, which is why
      * the listener returns true.
      */
+    /**
+     * Puts the attention dot on whichever destination has something waiting (item 83).
+     *
+     * <p>The signals come from the subsystems that already know them - the mod load diagnostics,
+     * the crash guard, the safe-mode escape and the update check - and the decision of which tab
+     * earns a dot is {@link NavTabBadge}, so the bar and the rail cannot disagree. Re-run from
+     * {@link #onResume}, so returning from the Mods screen (where the user just cleared the
+     * failure) drops the dot without a restart.
+     *
+     * <p>The dot is a compound drawable at the tab's end, which keeps the geometry the tab already
+     * has (the icon at the start, the label in the middle) rather than adding a fourth view to
+     * position. A tab with no badge gets its drawable end cleared, so a cleared state cannot leave
+     * a stale dot behind.
+     */
+    private void refreshNavBadges() {
+        if (!navBarInjected) return;
+        Context context = getApplicationContext();
+        NavTabBadge.Signals signals;
+        try {
+            signals = new NavTabBadge.Signals(
+                    org.chimeramc.client.core.mods.ModLoadDiagnostics.hasFailures(context),
+                    !org.chimeramc.client.core.mods.ModCrashAttribution
+                            .getAutoDisabledMods(context).isEmpty(),
+                    org.chimeramc.client.core.mods.ModSafeMode.hasCrashLoop(context),
+                    org.chimeramc.client.util.GithubReleaseUpdater.isUpdateAvailable(context));
+        } catch (RuntimeException e) {
+            // A signal that cannot be read is "no badge", never a crash on every screen's resume.
+            signals = NavTabBadge.Signals.none();
+        }
+        for (TextView tab : navTabViews) {
+            LauncherTab destination = LauncherTab.forViewId(tab.getId());
+            if (destination == null) continue;
+            applyTabBadge(tab, NavTabBadge.showsBadge(destination, signals));
+        }
+    }
+
+    /**
+     * Shows or clears the attention dot on one destination.
+     *
+     * <p>The start drawable is the destination's own icon and is never touched; only the end
+     * drawable carries the dot. A {@code TextView} has one tint for its whole compound list, so the
+     * badge colour is folded into the tab's own state list rather than installed beside it: while a
+     * dot is shown the inactive colour becomes the attention colour, which tints the icon too. That
+     * is deliberate - a red icon beside a red dot reads as one "this destination needs you" signal
+     * - and a selected tab keeps the accent, because the user is already looking at the screen that
+     * carries the reason for the dot.
+     */
+    private void applyTabBadge(TextView tab, boolean show) {
+        LauncherTab destination = LauncherTab.forViewId(tab.getId());
+        if (destination == null) return;
+        tab.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                destination.iconRes(), 0, show ? R.drawable.nav_tab_dot : 0, 0);
+        int accent = navAccentForBadge();
+        int inactive = getResources().getColor(
+                show ? R.color.error : R.color.text_secondary, getTheme());
+        TextViewCompat.setCompoundDrawableTintList(tab, navTabTint(accent, inactive));
+        // A screen reader must hear the dot, not just see it: the description is the one place the
+        // state reaches a user who cannot see the colour.
+        String description = String.valueOf(describeTab(tab.getId(), tab.isSelected()));
+        tab.setContentDescription(show
+                ? description + getString(R.string.nav_tab_needs_attention)
+                : description);
+    }
+
+    /** The accent the tab tint uses, resolved through the same contrast floor as the tabs. */
+    private int navAccentForBadge() {
+        PersonalizationManager pm = new PersonalizationManager(this);
+        int surface = getResources().getColor(R.color.ui_bg_surface, getTheme());
+        int onSurface = getResources().getColor(R.color.on_surface, getTheme());
+        return org.chimeramc.client.ui.navigation.NavAccent
+                .resolve(pm.getAccentColor(), surface, onSurface);
+    }
+
     private void attachTabLongPress(TextView tab, LauncherTab destination) {
         NavTabLongPress.Action[] actions = NavTabLongPress.actionsFor(destination);
         if (actions.length == 0) return;
@@ -1373,6 +1474,7 @@ public class BaseActivity extends AppCompatActivity {
         getDelegate().applyDayNight();
         hideSystemUI();
         refreshNavAccountUI();
+        refreshNavBadges();
     }
 
     @Override

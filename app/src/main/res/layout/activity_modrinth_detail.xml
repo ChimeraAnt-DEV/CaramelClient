@@ -65,7 +65,8 @@
             android:text="@string/modrinth_versions_title"
             android:textColor="@color/on_surface"
             android:textAppearance="@style/TextAppearance.Glowberry.Title"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+    android:accessibilityHeading="true" />
     </LinearLayout>
 
     <FrameLayout
