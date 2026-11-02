@@ -103,7 +103,7 @@ public class ModsFullscreenActivity extends BaseActivity {
             FileHandler.JavaBridgeHandoff {
         @Override
         public void onSuccess(int processedFiles) {
-            Toast.makeText(ModsFullscreenActivity.this, getString(R.string.files_processed, processedFiles), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ModsFullscreenActivity.this, getResources().getQuantityString(R.plurals.files_processed, processedFiles, processedFiles), Toast.LENGTH_SHORT).show();
         }
 
         @Override

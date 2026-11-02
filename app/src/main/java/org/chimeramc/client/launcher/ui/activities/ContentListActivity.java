@@ -1021,7 +1021,7 @@ public class ContentListActivity extends BaseActivity {
         TextView structureCount = dialogView.findViewById(R.id.structure_count);
         RecyclerView recyclerView = dialogView.findViewById(R.id.structures_recycler_view);
         
-        structureCount.setText(getString(R.string.structures_found_count, structures.size()));
+        structureCount.setText(getResources().getQuantityString(R.plurals.structures_found_count, structures.size(), structures.size()));
         
         StructuresAdapter adapter = new StructuresAdapter();
         adapter.setStructures(structures);

@@ -43,7 +43,10 @@
     <string name="loading">Cargando…</string>
 
     <string name="import_confirmation_title">Importar Mods</string>
-    <string name="import_confirmation_message">¿Estás seguro de que quieres importar los %d archivos de mods seleccionados?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">¿Estás seguro de que quieres importar los %d archivos de mods seleccionados?</item>
+        <item quantity="other">¿Estás seguro de que quieres importar los %d archivos de mods seleccionados?</item>
+    </plurals>
     <string name="import_so_plugin_title">Importar Plugin SO</string>
     <string name="plugin_name_label">Nombre del Plugin</string>
     <string name="plugin_type_label">Tipo</string>
@@ -66,7 +69,10 @@
     <string name="cancel">Cancelar</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Se procesaron correctamente %d archivos de mods</string>
+    <plurals name="files_processed">
+        <item quantity="one">Se procesaron correctamente %d archivos de mods</item>
+        <item quantity="other">Se procesaron correctamente %d archivos de mods</item>
+    </plurals>
     <string name="user_cancelled">Importación cancelada por el usuario</string>
 
     <string name="exit">Salir</string>
@@ -531,7 +537,10 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="structure_exported">Exportado: %s</string>
     <string name="extract">Extraer</string>
     <string name="structures_found_title">Estructuras Encontradas</string>
-    <string name="structures_found_count">%d estructuras encontradas en este mundo</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">%d estructuras encontradas en este mundo</item>
+        <item quantity="other">%d estructuras encontradas en este mundo</item>
+    </plurals>
 
     <string name="mod_menu">Menú de Mods</string>
     <string name="mod_menu_general">General</string>

@@ -79,13 +79,19 @@
     <string name="last_played_none">No instance selected</string>
     <string name="last_played_tap">Tap to launch</string>
     <string name="stat_instances">Installed</string>
-    <string name="stat_instances_count">%1$d instances</string>
+    <plurals name="stat_instances_count">
+        <item quantity="one">%1$d instance</item>
+        <item quantity="other">%1$d instances</item>
+    </plurals>
     <string name="stat_mods">Active mods</string>
     <string name="stat_mods_count">%1$d active</string>
     <string name="stat_playtime">Total playtime</string>
 
     <string name="import_confirmation_title">Import Mods</string>
-    <string name="import_confirmation_message">Are you sure you want to import the selected %d mod files?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Are you sure you want to import the selected %1$d mod file?</item>
+        <item quantity="other">Are you sure you want to import the selected %1$d mod files?</item>
+    </plurals>
     <string name="import_so_plugin_title">Import SO Plugin</string>
     <string name="plugin_name_label">Plugin Name</string>
     <string name="plugin_type_label">Type</string>
@@ -108,7 +114,10 @@
     <string name="cancel">Cancel</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Successfully processed %d mod files</string>
+    <plurals name="files_processed">
+        <item quantity="one">Successfully processed %1$d mod file</item>
+        <item quantity="other">Successfully processed %1$d mod files</item>
+    </plurals>
     <string name="user_cancelled">Import cancelled by user</string>
 
     <string name="exit">Exit</string>
@@ -855,7 +864,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="structure_exported">Exported: %s</string>
     <string name="extract">Extract</string>
     <string name="structures_found_title">Structures Found</string>
-    <string name="structures_found_count">%d structures found in this world</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">%1$d structure found in this world</item>
+        <item quantity="other">%1$d structures found in this world</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menu</string>
@@ -2276,7 +2288,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="downloads_import_all">Import all</string>
     <string name="downloads_unsupported">Unsupported</string>
     <string name="downloads_file_details">%1$s • %2$s</string>
-    <string name="downloads_imported_count">Imported %1$d file(s)</string>
+    <plurals name="downloads_imported_count">
+        <item quantity="one">Imported %1$d file</item>
+        <item quantity="other">Imported %1$d files</item>
+    </plurals>
     <string name="downloads_summary">%1$d importable of %2$d found</string>
 
     <!-- Installations (Monster MCPE) -->
@@ -2314,7 +2329,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="installations_clear_staged">Clear</string>
     <string name="installations_clear_staged_title">Clear downloaded packages?</string>
     <string name="installations_clear_staged_message">This deletes every package waiting in the Downloaded_APKs folder. Installed instances are not affected.</string>
-    <string name="installations_cleared">Deleted %1$d package(s)</string>
+    <plurals name="installations_cleared">
+        <item quantity="one">Deleted %1$d package</item>
+        <item quantity="other">Deleted %1$d packages</item>
+    </plurals>
     <string name="installations_empty_title">No versions found</string>
     <string name="installations_empty_message">The download page did not list any Minecraft Bedrock versions. Check your connection and refresh.</string>
     <string name="installations_error_title">Could not load versions</string>
@@ -2336,7 +2354,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_storage_usage">%1$s of %2$s used</string>
     <string name="replay_storage_warning">Storage almost full — oldest clips will be pruned automatically</string>
     <string name="replay_storage_over">Over the cap — favorites are keeping this above the limit</string>
-    <string name="replay_clip_count">%1$d clip(s)</string>
+    <plurals name="replay_clip_count">
+        <item quantity="one">%1$d clip</item>
+        <item quantity="other">%1$d clips</item>
+    </plurals>
     <string name="replay_sort_label">Sort</string>
     <string name="replay_filter_all">All</string>
     <string name="replay_filter_favorites">Favorites</string>
@@ -2500,12 +2521,18 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="launch_toggle_antegg">AntEgg Mod Packs</string>
     <string name="launch_toggle_voice">Voice Chat</string>
     <string name="launch_toggle_replay">Replays</string>
-    <string name="launch_antegg_status_ready">%1$d mod packs installed</string>
+    <plurals name="launch_antegg_status_ready">
+        <item quantity="one">%1$d mod pack installed</item>
+        <item quantity="other">%1$d mod packs installed</item>
+    </plurals>
     <string name="launch_antegg_status_none">No mod packs installed</string>
     <string name="launch_antegg_status_loading">Preparing\u2026</string>
     <string name="launch_voice_status_on">On \u00b7 %1$s</string>
     <string name="launch_voice_status_off">Off</string>
-    <string name="launch_replay_status_count">%1$d clips saved</string>
+    <plurals name="launch_replay_status_count">
+        <item quantity="one">%1$d clip saved</item>
+        <item quantity="other">%1$d clips saved</item>
+    </plurals>
     <string name="launch_replay_status_none">No clips yet</string>
     <string name="launch_preparing">Preparing launcher\u2026</string>
 

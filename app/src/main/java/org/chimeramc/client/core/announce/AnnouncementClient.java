@@ -1,10 +1,10 @@
 package org.chimeramc.client.core.announce;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,8 +14,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import okhttp3.OkHttpClient;
@@ -46,13 +44,7 @@ public final class AnnouncementClient {
     /** How long a fetch may take before it is abandoned. */
     private static final int TIMEOUT_MS = 8000;
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "announcements");
-        thread.setDaemon(true);
-        return thread;
-    });
     private final AtomicBoolean busy = new AtomicBoolean(false);
-    private final Handler main = new Handler(Looper.getMainLooper());
 
     /**
      * Shows the cached card immediately (if any) and refreshes from the network in the background.
@@ -74,7 +66,7 @@ public final class AnnouncementClient {
         if (LowLatencyNetworkManager.isGameSessionActive()) return;
         if (!busy.compareAndSet(false, true)) return;
 
-        executor.execute(() -> {
+        AppExecutors.run(AppExecutors.Kind.NETWORK, "announcements", () -> {
             String body = fetch(url);
             try {
                 if (body == null) return;
@@ -82,7 +74,7 @@ public final class AnnouncementClient {
                 List<AnnouncementCard> cards = AnnouncementFeed.parse(body);
                 AnnouncementCard card = pick(cards, versionCode, AnnouncementStore.dismissedIds(app));
                 if (callback != null) {
-                    main.post(() -> callback.onCard(card));
+                    MainThread.post(() -> callback.onCard(card));
                 }
             } finally {
                 busy.set(false);
@@ -92,7 +84,7 @@ public final class AnnouncementClient {
 
     /** Stops the worker. Safe to call more than once. */
     public void shutdown() {
-        executor.shutdownNow();
+        busy.set(false);
     }
 
     private static AnnouncementCard pick(List<AnnouncementCard> cards, long versionCode,

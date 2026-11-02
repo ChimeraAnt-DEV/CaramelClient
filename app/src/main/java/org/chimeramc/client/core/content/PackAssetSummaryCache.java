@@ -1,14 +1,12 @@
 package org.chimeramc.client.core.content;
 
-import android.os.Handler;
-import android.os.Looper;
+import org.chimeramc.client.util.AppExecutors;
+import org.chimeramc.client.util.MainThread;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -41,13 +39,7 @@ public final class PackAssetSummaryCache {
                 }
             };
     private final Map<String, Boolean> inFlight = new ConcurrentHashMap<>();
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "pack-asset-scan");
-        thread.setDaemon(true);
-        return thread;
-    });
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
-    private final Handler main = new Handler(Looper.getMainLooper());
 
     /** The cached summary for a pack, or null when it has not been computed yet. */
     public PackAssetSummary.Result peek(File pack) {
@@ -76,22 +68,18 @@ public final class PackAssetSummaryCache {
         if (cached != null) return cached;
         if (shutdown.get()) return null;
         if (inFlight.putIfAbsent(key, Boolean.TRUE) == null) {
-            try {
-                executor.execute(() -> {
-                    PackAssetSummary.Result result = PackAssetSummary.scan(pack);
-                    synchronized (cache) {
-                        cache.put(key, result);
-                    }
-                    inFlight.remove(key);
-                    if (callback != null && !shutdown.get()) {
-                        main.post(() -> {
-                            if (!shutdown.get()) callback.onSummary(pack, result);
-                        });
-                    }
-                });
-            } catch (java.util.concurrent.RejectedExecutionException e) {
+            AppExecutors.run(AppExecutors.Kind.DISK, "pack-asset-scan", () -> {
+                PackAssetSummary.Result result = PackAssetSummary.scan(pack);
+                synchronized (cache) {
+                    cache.put(key, result);
+                }
                 inFlight.remove(key);
-            }
+                if (callback != null && !shutdown.get()) {
+                    MainThread.post(() -> {
+                        if (!shutdown.get()) callback.onSummary(pack, result);
+                    });
+                }
+            });
         }
         return null;
     }
@@ -107,7 +95,6 @@ public final class PackAssetSummaryCache {
     /** Stops the worker and clears the cache. Safe to call more than once. */
     public void shutdown() {
         shutdown.set(true);
-        executor.shutdownNow();
         synchronized (cache) {
             cache.clear();
         }

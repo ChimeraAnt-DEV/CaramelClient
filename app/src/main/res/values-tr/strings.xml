@@ -42,7 +42,10 @@
     <string name="loading">Yükleniyor…</string>
 
     <string name="import_confirmation_title">Modları İçe Aktar</string>
-    <string name="import_confirmation_message">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</item>
+        <item quantity="other">Seçilen %d mod dosyasını içe aktarmak istediğinizden emin misiniz?</item>
+    </plurals>
     <string name="import_so_plugin_title">SO Eklentisi İçe Aktar</string>
     <string name="plugin_name_label">Eklenti Adı</string>
     <string name="plugin_type_label">Tür</string>
@@ -65,7 +68,10 @@
     <string name="cancel">İptal</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d mod dosyası başarıyla işlendi</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d mod dosyası başarıyla işlendi</item>
+        <item quantity="other">%d mod dosyası başarıyla işlendi</item>
+    </plurals>
     <string name="user_cancelled">İçe aktarma kullanıcı tarafından iptal edildi</string>
 
     <string name="exit">Çıkış</string>
@@ -617,7 +623,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="structure_exported">Aktarıldı: %s</string>
     <string name="extract">Çıkar</string>
     <string name="structures_found_title">Yapılar Bulundu</string>
-    <string name="structures_found_count">Bu dünyada %d yapı bulundu</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Bu dünyada %d yapı bulundu</item>
+        <item quantity="other">Bu dünyada %d yapı bulundu</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menüsü</string>

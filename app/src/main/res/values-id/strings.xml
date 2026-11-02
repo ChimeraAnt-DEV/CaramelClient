@@ -36,7 +36,10 @@
     <string name="loading">Memuat…</string>
 
     <string name="import_confirmation_title">Impor Mod</string>
-    <string name="import_confirmation_message">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</item>
+        <item quantity="other">Apakah Anda yakin ingin mengimpor %d file mod yang dipilih?</item>
+    </plurals>
     <string name="overwrite_file_title">File Sudah Ada</string>
     <string name="overwrite_file_message">File %s sudah ada. Apakah Anda ingin menimpanya?</string>
     <string name="overwrite">Timpa</string>
@@ -54,7 +57,10 @@
     <string name="cancel">Batal</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Berhasil memproses %d file mod.</string>
+    <plurals name="files_processed">
+        <item quantity="one">Berhasil memproses %d file mod.</item>
+        <item quantity="other">Berhasil memproses %d file mod.</item>
+    </plurals>
     <string name="user_cancelled">Impor dibatalkan oleh pengguna.</string>
 
 
@@ -493,7 +499,10 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="structure_exported">Diekspor: %s</string>
     <string name="extract">Ekstrak</string>
     <string name="structures_found_title">Struktur Ditemukan</string>
-    <string name="structures_found_count">%d struktur yang ditemukan di dunia ini</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">%d struktur yang ditemukan di dunia ini</item>
+        <item quantity="other">%d struktur yang ditemukan di dunia ini</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Menu Mod</string>

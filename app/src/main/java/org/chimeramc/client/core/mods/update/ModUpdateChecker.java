@@ -1,20 +1,18 @@
 package org.chimeramc.client.core.mods.update;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import org.chimeramc.client.core.mods.Mod;
 import org.chimeramc.client.core.mods.ModManager;
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
+import org.chimeramc.client.util.AppExecutors;
 import org.chimeramc.client.util.AppLog;
+import org.chimeramc.client.util.MainThread;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import okhttp3.OkHttpClient;
@@ -44,13 +42,7 @@ public final class ModUpdateChecker {
         void onUpdates(List<ModUpdatePlan.ModUpdate> updates);
     }
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "mod-update-check");
-        thread.setDaemon(true);
-        return thread;
-    });
     private final AtomicBoolean busy = new AtomicBoolean(false);
-    private final Handler main = new Handler(Looper.getMainLooper());
 
     /**
      * Checks for mod updates if the throttle allows it.
@@ -68,7 +60,7 @@ public final class ModUpdateChecker {
         if (!ModUpdateStore.isDue(app, now)) return;
         if (!busy.compareAndSet(false, true)) return;
 
-        executor.execute(() -> {
+        AppExecutors.run(AppExecutors.Kind.NETWORK, "mod-update-check", () -> {
             try {
                 ModUpdateStore.recordCheck(app, now);
                 String body = fetch(url);
@@ -86,7 +78,7 @@ public final class ModUpdateChecker {
 
                 ModUpdateStore.setAnnounced(app, fingerprint);
                 if (callback != null) {
-                    main.post(() -> callback.onUpdates(updates));
+                    MainThread.post(() -> callback.onUpdates(updates));
                 }
             } catch (RuntimeException e) {
                 AppLog.warn(TAG, "mod update check failed", e);
@@ -96,9 +88,9 @@ public final class ModUpdateChecker {
         });
     }
 
-    /** Stops the worker. Safe to call more than once. */
+    /** Stops the worker. Safe to call more than once. The shared pool outlives us. */
     public void shutdown() {
-        executor.shutdownNow();
+        busy.set(false);
     }
 
     /** The installed mods for the currently selected version, or an empty list. */

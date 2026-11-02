@@ -42,7 +42,10 @@
     <string name="loading">Đang tải…</string>
 
     <string name="import_confirmation_title">Nhập Mods</string>
-    <string name="import_confirmation_message">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </item>
+        <item quantity="other">Bạn có chắc chắn muốn nhập Mod %d đã chọn không? </item>
+    </plurals>
     <string name="import_so_plugin_title">Nhập Plugin SO</string>
     <string name="plugin_name_label">Tên Plugin</string>
     <string name="plugin_type_label">Loại</string>
@@ -65,7 +68,10 @@
     <string name="cancel">Hủy</string>
 
     <!-- Feedback -->
-    <string name="files_processed">Đã xử lý thành công file Mod %d</string>
+    <plurals name="files_processed">
+        <item quantity="one">Đã xử lý thành công file Mod %d</item>
+        <item quantity="other">Đã xử lý thành công file Mod %d</item>
+    </plurals>
     <string name="user_cancelled">Hành động đã bị hủy bởi người dùng</string>
 
 
@@ -603,7 +609,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="structure_exported">Đã xuất: %s</string>
     <string name="extract">Xuất</string>
     <string name="structures_found_title">Tìm thấy cấu trúc</string>
-    <string name="structures_found_count">Tìm thấy %d cấu trúc trên thế giới này</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Tìm thấy %d cấu trúc trên thế giới này</item>
+        <item quantity="other">Tìm thấy %d cấu trúc trên thế giới này</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menu</string>

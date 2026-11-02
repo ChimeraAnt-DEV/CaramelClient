@@ -43,7 +43,10 @@
     <string name="loading">लोड हो रहा है…</string>
 
     <string name="import_confirmation_title">मॉड्स आयात करें</string>
-    <string name="import_confirmation_message">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</item>
+        <item quantity="other">क्या आप सुनिश्चित हैं कि आप चयनित %d मॉड फ़ाइलों को आयात करना चाहते हैं?</item>
+    </plurals>
     <string name="import_so_plugin_title">SO प्लगइन आयात करें</string>
     <string name="plugin_name_label">प्लगइन का नाम</string>
     <string name="plugin_type_label">प्रकार</string>
@@ -66,7 +69,10 @@
     <string name="cancel">रद्द करें</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</item>
+        <item quantity="other">%d मॉड फ़ाइलों को सफलतापूर्वक संसाधित किया गया</item>
+    </plurals>
     <string name="user_cancelled">उपयोगकर्ता द्वारा आयात रद्द किया गया</string>
 
     <string name="exit">बाहर निकलें</string>
@@ -550,7 +556,10 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="structure_exported">निर्यात किया गया: %s</string>
     <string name="extract">निकालें</string>
     <string name="structures_found_title">संरचनाएं मिलीं</string>
-    <string name="structures_found_count">इस वर्ल्ड में %d संरचनाएं मिलीं</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">इस वर्ल्ड में %d संरचनाएं मिलीं</item>
+        <item quantity="other">इस वर्ल्ड में %d संरचनाएं मिलीं</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">मॉड मेनू</string>

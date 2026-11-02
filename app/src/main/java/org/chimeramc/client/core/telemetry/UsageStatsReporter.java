@@ -10,9 +10,9 @@ import org.chimeramc.client.core.stats.LaunchStatsStore;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.util.AppLog;
 
+import org.chimeramc.client.util.AppExecutors;
+
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,11 +45,6 @@ public final class UsageStatsReporter {
     private static final String PREFS = "usage_stats";
     private static final String KEY_LAST_SENT = "last_sent_at";
 
-    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "usage-stats");
-        thread.setDaemon(true);
-        return thread;
-    });
     private static final AtomicBoolean BUSY = new AtomicBoolean(false);
 
     private UsageStatsReporter() {
@@ -110,7 +105,7 @@ public final class UsageStatsReporter {
         final Context app = context.getApplicationContext();
         if (!isDue(app)) return;
         if (!BUSY.compareAndSet(false, true)) return;
-        EXECUTOR.execute(() -> {
+        AppExecutors.run(AppExecutors.Kind.NETWORK, "usage-stats", () -> {
             try {
                 send(app);
             } catch (Throwable e) {

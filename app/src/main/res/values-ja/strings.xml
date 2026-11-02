@@ -43,7 +43,10 @@
     <string name="loading">読み込み中…</string>
 
     <string name="import_confirmation_title">モッドのインポート</string>
-    <string name="import_confirmation_message">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</item>
+        <item quantity="other">選択した %d 個のモッドファイルをインポートしてもよろしいですか？</item>
+    </plurals>
     <string name="import_so_plugin_title">SO プラグインのインポート</string>
     <string name="plugin_name_label">プラグイン名</string>
     <string name="plugin_type_label">タイプ</string>
@@ -66,7 +69,10 @@
     <string name="cancel">キャンセル</string>
 
     <!-- Feedback -->
-    <string name="files_processed">%d 個のモッドファイルの処理に成功しました</string>
+    <plurals name="files_processed">
+        <item quantity="one">%d 個のモッドファイルの処理に成功しました</item>
+        <item quantity="other">%d 個のモッドファイルの処理に成功しました</item>
+    </plurals>
     <string name="user_cancelled">ユーザーによりインポートがキャンセルされました</string>
 
     <string name="exit">終了</string>
@@ -531,7 +537,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="structure_exported">エクスポート完了: %s</string>
     <string name="extract">抽出</string>
     <string name="structures_found_title">構造物を発見</string>
-    <string name="structures_found_count">このワールドで %d 個の構造物が見つかりました</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">このワールドで %d 個の構造物が見つかりました</item>
+        <item quantity="other">このワールドで %d 個の構造物が見つかりました</item>
+    </plurals>
 
     <string name="mod_menu">モッドメニュー</string>
     <string name="mod_menu_general">一般</string>

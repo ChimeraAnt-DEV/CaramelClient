@@ -1933,12 +1933,12 @@ import okhttp3.OkHttpClient;
                     if (isFinishing() || isDestroyed()) return;
                     if (antEggStatus != null) {
                         antEggStatus.setText(antEggCount > 0
-                                ? getString(R.string.launch_antegg_status_ready, antEggCount)
+                                ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
                                 : getString(R.string.launch_antegg_status_none));
                     }
                     if (replayStatus != null) {
                         replayStatus.setText(replayCount > 0
-                                ? getString(R.string.launch_replay_status_count, replayCount)
+                                ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
                                 : getString(R.string.launch_replay_status_none));
                     }
                 });
@@ -2812,7 +2812,7 @@ import okhttp3.OkHttpClient;
             final int count = installedCount;
             DynamicAnim.countUp(count, 400L,
                     value -> setAnimatedStatText(instancesStat,
-                            getString(R.string.stat_instances_count, (int) value)));
+                            getResources().getQuantityString(R.plurals.stat_instances_count, (int) value, (int) value)));
         }
         // The mods count comes from the live mod list, not from a count captured here: the list
         // loads asynchronously per instance, so reading it at bind time would report the previous
@@ -2953,7 +2953,7 @@ import okhttp3.OkHttpClient;
         public void onSuccess(int processedFiles) {
             hideProgressLoader();
             if (processedFiles > 0)
-                UIHelper.showToast(MainActivity.this, getString(R.string.files_processed, processedFiles));
+                UIHelper.showToast(MainActivity.this, getResources().getQuantityString(R.plurals.files_processed, processedFiles, processedFiles));
         }
 
         @Override

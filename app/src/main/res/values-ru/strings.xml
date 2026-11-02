@@ -36,7 +36,10 @@
     <string name="loading">Загрузка…</string>
 
     <string name="import_confirmation_title">Импортировать моды</string>
-    <string name="import_confirmation_message">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</string>
+    <plurals name="import_confirmation_message">
+        <item quantity="one">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+        <item quantity="other">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+    </plurals>
     <string name="overwrite_file_title">Файл Уже Существует</string>
     <string name="overwrite_file_message">Файл %s уже существует. Вы хотите перезаписать его?</string>
     <string name="overwrite">Перезаписать</string>
@@ -54,7 +57,10 @@
     <string name="cancel">Отмена</string>
 
     <!-- Обратная связь -->
-    <string name="files_processed">Успешно добавлены файлы мода %d </string>
+    <plurals name="files_processed">
+        <item quantity="one">Успешно добавлены файлы мода %d </item>
+        <item quantity="other">Успешно добавлены файлы мода %d </item>
+    </plurals>
     <string name="user_cancelled">Импорт отменен пользователем</string>
 
 
@@ -489,7 +495,10 @@
     <string name="structure_exported">Экспортировано: %s</string>
     <string name="extract">Извлечь</string>
     <string name="structures_found_title">Найдены структуры</string>
-    <string name="structures_found_count">Найдено %d структур в этом мире</string>
+    <plurals name="structures_found_count">
+        <item quantity="one">Найдено %d структур в этом мире</item>
+        <item quantity="other">Найдено %d структур в этом мире</item>
+    </plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Мод-меню</string>

@@ -187,7 +187,7 @@ public class FileHandler {
                     if (!packagedUris.isEmpty()) {
                         new CustomAlertDialog(context)
                                 .setTitleText(context.getString(R.string.import_confirmation_title))
-                                .setMessage(context.getString(R.string.import_confirmation_message, packagedUris.size()))
+                                .setMessage(context.getResources().getQuantityString(R.plurals.import_confirmation_message, packagedUris.size(), packagedUris.size()))
                                 .setPositiveButton(context.getString(R.string.confirm), d -> handleFilesWithOverwriteCheck(packagedUris, null, null, null, callback))
                                 .setNegativeButton(context.getString(R.string.cancel), d -> {
                                     if (callback != null) {
