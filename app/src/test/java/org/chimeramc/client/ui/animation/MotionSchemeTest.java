@@ -80,6 +80,46 @@ public class MotionSchemeTest {
         DynamicAnim.setGlobalSpeedMultiplier(1f);
     }
 
+    /**
+     * The three durations are a closed scale (item 121).
+     *
+     * <p>They exist so a decorative transition names its intent instead of a literal, and the
+     * ordering is what makes them usable as a scale: a "fast" step that is not the shortest, or a
+     * "slow" step that is not the longest, would silently invert the meaning of the name at the
+     * call site.
+     */
+    @Test
+    public void theThreeDurationsAreAnOrderedScale() {
+        assertTrue("fast must be the shortest step",
+                UiTokens.MOTION_FAST_MS < UiTokens.MOTION_STANDARD_MS);
+        assertTrue("slow must be the longest step",
+                UiTokens.MOTION_STANDARD_MS < UiTokens.MOTION_SLOW_MS);
+        assertTrue("a step must never be zero, which would make a transition an instant pop",
+                UiTokens.MOTION_FAST_MS > 0);
+    }
+
+    /**
+     * The spring presets are the ratios the class already animated on (item 121).
+     *
+     * <p>They replaced raw {@code SpringForce.DAMPING_RATIO_*} picks, so the numbers have to be the
+     * same ones or every press, move and arrival in the launcher changes feel in one commit. The
+     * values are pinned against the platform constants they name.
+     */
+    @Test
+    public void theSpringPresetsMatchThePlatformConstantsTheyName() {
+        assertEquals("a press must not wobble",
+                androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_NO_BOUNCY,
+                UiTokens.Springs.PRESS_DAMPING, 0.0001f);
+        assertEquals("a press must be immediate",
+                androidx.dynamicanimation.animation.SpringForce.STIFFNESS_HIGH,
+                UiTokens.Springs.PRESS_STIFFNESS, 0.0001f);
+        assertEquals("a move may bounce a little",
+                androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY,
+                UiTokens.Springs.MOVE_DAMPING, 0.0001f);
+        assertTrue("an arrival settles rather than snapping, but must still be a spring",
+                UiTokens.Springs.ARRIVE_DAMPING > 0f && UiTokens.Springs.ARRIVE_DAMPING < 1f);
+    }
+
     /** Reduced motion must never be longer than expressive motion, or the switch makes it slower. */
     @Test
     public void reducedMotionIsNeverTheLongerTransition() {

@@ -149,6 +149,50 @@ public final class UiTokens {
     public static final long MOTION_MAX_MS = 240L;
 
     /**
+     * The three durations the whole UI animates on (item 121).
+     *
+     * <p>A decorative transition used to be a literal at the call site, so the same "fade a panel
+     * in" ran at 140ms here, 180ms there and 220ms somewhere else, and nothing said which was
+     * intended. Three steps - a quick state change, a standard transition and a slow reveal - are
+     * enough to express every case and few enough that a new surface picks one instead of inventing
+     * a number. A duration that is not one of these is a deliberate exception and should say so in
+     * a comment, which is the point: the scale makes the exceptions visible.
+     */
+    public static final long MOTION_FAST_MS = 100L;
+    public static final long MOTION_STANDARD_MS = 200L;
+    public static final long MOTION_SLOW_MS = 300L;
+
+    /**
+     * The three spring presets (item 121).
+     *
+     * <p>They are the shape of a spring, not a duration: a spring settles on its own, so the
+     * damping ratio is what decides whether it bounces. Naming the three uses (a press that must
+     * not wobble, a move that may, an arrival that should) means a surface asks for the intent
+     * rather than picking a ratio, and the reduced-motion scheme can flatten all three in one
+     * place.
+     */
+    public static final class Springs {
+        /**
+         * A press or hover: no bounce, high stiffness, so the response is immediate.
+         *
+         * <p>The values are the ones this codebase already animated on, named so a caller asks for
+         * "a press" rather than picking a ratio: damping 1.0 is
+         * {@code SpringForce.DAMPING_RATIO_NO_BOUNCY} and stiffness 10000 is
+         * {@code SpringForce.STIFFNESS_HIGH}. They are written as literals rather than as references
+         * so this class stays free of any Android type, which is what keeps it unit-testable.
+         */
+        public static final float PRESS_DAMPING = 1.0f;
+        public static final float PRESS_STIFFNESS = 10000f;
+        /** A move or slide: {@code SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY}. */
+        public static final float MOVE_DAMPING = 0.5f;
+        /** An arrival: a softer bounce, so it reads as a settle rather than a snap. */
+        public static final float ARRIVE_DAMPING = 0.72f;
+
+        private Springs() {
+        }
+    }
+
+    /**
      * The two motion schemes (U11). Every animated surface reads its duration and easing from
      * here rather than hard-coding a spring, so "Reduce motion" is one switch instead of a hunt
      * through the codebase. {@link #REDUCED} is a short linear fade — still a transition, so a

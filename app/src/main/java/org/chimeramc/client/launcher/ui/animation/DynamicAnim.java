@@ -25,7 +25,7 @@ import org.chimeramc.client.ui.components.UiTokens;
 public final class DynamicAnim {
     private DynamicAnim() {}
 
-    private static final long DIALOG_DISMISS_DURATION_MS = 160L;
+
     private static float globalSpeedMultiplier = 1.0f;
     private static boolean animationsEnabled = true;
 
@@ -123,31 +123,31 @@ public final class DynamicAnim {
 
     public static SpringAnimation springAlphaTo(View view, float target) {
         SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.ALPHA, target);
-        anim.setSpring(springFor(target, SpringForce.DAMPING_RATIO_NO_BOUNCY));
+        anim.setSpring(springFor(target, UiTokens.Springs.PRESS_DAMPING));
         return anim;
     }
 
     public static SpringAnimation springTranslationYTo(View view, float target) {
         SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.TRANSLATION_Y, target);
-        anim.setSpring(springFor(target, SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY));
+        anim.setSpring(springFor(target, UiTokens.Springs.MOVE_DAMPING));
         return anim;
     }
 
     public static SpringAnimation springTranslationXTo(View view, float target) {
         SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.TRANSLATION_X, target);
-        anim.setSpring(springFor(target, SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY));
+        anim.setSpring(springFor(target, UiTokens.Springs.MOVE_DAMPING));
         return anim;
     }
 
     public static SpringAnimation springScaleXTo(View view, float target) {
         SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_X, target);
-        anim.setSpring(springFor(target, SpringForce.DAMPING_RATIO_NO_BOUNCY));
+        anim.setSpring(springFor(target, UiTokens.Springs.PRESS_DAMPING));
         return anim;
     }
 
     public static SpringAnimation springScaleYTo(View view, float target) {
         SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_Y, target);
-        anim.setSpring(springFor(target, SpringForce.DAMPING_RATIO_NO_BOUNCY));
+        anim.setSpring(springFor(target, UiTokens.Springs.PRESS_DAMPING));
         return anim;
     }
 
@@ -161,7 +161,7 @@ public final class DynamicAnim {
      */
     private static SpringForce springFor(float target, float expressiveDamping) {
         UiTokens.Motion scheme = motion;
-        float damping = scheme.linear ? SpringForce.DAMPING_RATIO_NO_BOUNCY : expressiveDamping;
+        float damping = scheme.linear ? UiTokens.Springs.PRESS_DAMPING : expressiveDamping;
         float stiffness = scheme.stiffness > 0f ? scheme.stiffness : SpringForce.STIFFNESS_LOW;
         return new SpringForce(target)
                 .setDampingRatio(damping)
@@ -195,14 +195,14 @@ public final class DynamicAnim {
             scaleX = new SpringAnimation(view, DynamicAnimation.SCALE_X, 1f);
             scaleY = new SpringAnimation(view, DynamicAnimation.SCALE_Y, 1f);
             SpringForce force = new SpringForce(1f)
-                    .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
-                    .setStiffness(SpringForce.STIFFNESS_HIGH);
+                    .setDampingRatio(UiTokens.Springs.PRESS_DAMPING)
+                    .setStiffness(UiTokens.Springs.PRESS_STIFFNESS);
             scaleX.setSpring(force);
             // Separate SpringForce instances: a SpringForce cannot be shared between
             // two animations, it holds the animation's own state.
             scaleY.setSpring(new SpringForce(1f)
-                    .setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY)
-                    .setStiffness(SpringForce.STIFFNESS_HIGH));
+                    .setDampingRatio(UiTokens.Springs.PRESS_DAMPING)
+                    .setStiffness(UiTokens.Springs.PRESS_STIFFNESS));
         }
 
         void press() {
@@ -292,7 +292,7 @@ public final class DynamicAnim {
                         state.downX = event.getX();
                         state.downY = event.getY();
                         state.press();
-                        animateElevation(v, PRESS_Z_DP, 8f);
+                        animateElevation(v, PRESS_Z_DP, UiTokens.MOTION_PRESS_MS);
                         UiTouchFeedback.pressView(v);
                         break;
                     case MotionEvent.ACTION_MOVE:
@@ -303,13 +303,13 @@ public final class DynamicAnim {
                                 event.getY() - state.downY) > state.touchSlop) {
                             state.dragging = true;
                             state.snapBack(v);
-                            animateElevation(v, 0f, 8f);
+                            animateElevation(v, 0f, UiTokens.MOTION_PRESS_MS);
                         }
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         state.release();
-                        animateElevation(v, 0f, 8f);
+                        animateElevation(v, 0f, UiTokens.MOTION_PRESS_MS);
                         break;
                     default:
                         break;
@@ -334,16 +334,16 @@ public final class DynamicAnim {
         view.setOnHoverListener((v, event) -> {
             switch (event.getActionMasked()) {
                 case android.view.MotionEvent.ACTION_HOVER_ENTER:
-                    animateElevation(v, PRESS_Z_DP * 1.5f, 140f);
+                    animateElevation(v, PRESS_Z_DP * 1.5f, UiTokens.MOTION_FAST_MS);
                     v.animate().scaleX(1.02f).scaleY(1.02f)
-                            .setDuration(140L)
+                            .setDuration(motionDurationMs(UiTokens.MOTION_FAST_MS))
                             .setInterpolator(getDefaultInterpolator())
                             .start();
                     break;
                 case android.view.MotionEvent.ACTION_HOVER_EXIT:
-                    animateElevation(v, 0f, 180f);
+                    animateElevation(v, 0f, UiTokens.MOTION_STANDARD_MS);
                     v.animate().scaleX(1f).scaleY(1f)
-                            .setDuration(180L)
+                            .setDuration(motionDurationMs(UiTokens.MOTION_STANDARD_MS))
                             .setInterpolator(getDefaultInterpolator())
                             .start();
                     break;
@@ -362,12 +362,12 @@ public final class DynamicAnim {
         applyPressScale(view, null);
     }
 
-    private static void animateElevation(View view, float target, float durationMs) {
+    private static void animateElevation(View view, float target, long durationMs) {
         try {
             view.animate().cancel();
             view.animate()
                     .translationZ(dp(view.getContext(), target))
-                    .setDuration((long) durationMs)
+                    .setDuration(scaled(durationMs))
                     .setInterpolator(getDefaultInterpolator())
                     .start();
         } catch (Throwable ignored) {
@@ -410,7 +410,7 @@ public final class DynamicAnim {
                 .alpha(0f)
                 .scaleX(0.94f)
                 .scaleY(0.94f)
-                .setDuration(motionDurationMs(DIALOG_DISMISS_DURATION_MS))
+                .setDuration(motionDurationMs(UiTokens.MOTION_DEFAULT_MS))
                 .setInterpolator(motion.linear ? new LinearInterpolator()
                         : new AccelerateInterpolator())
                 .setListener(new AnimatorListenerAdapter() {
@@ -434,7 +434,7 @@ public final class DynamicAnim {
         }
     }
 
-    // 对 RecyclerView 可见子项做阶梯式入场（淡入 + 上滑）
+    // A staggered arrival for the RecyclerView's visible children: fade in while sliding up.
     public static void staggerRecyclerChildren(RecyclerView rv) {
         if (rv == null) return;
         // Reduced motion, the platform's 0x scale and the app's speed switch all land here as
@@ -449,7 +449,9 @@ public final class DynamicAnim {
                 float dy = dp(rv.getContext(), 12f);
                 child.setAlpha(0f);
                 child.setTranslationY(dy);
-                final int delay = i * 40; // 40ms 阶梯
+                // The shared arrival beat, not a private literal (item 121): the same step the
+                // nav bar and the home cards use, so every staggered surface lands on one rhythm.
+                final long delay = i * ARRIVAL_STEP_MS;
                 rv.postDelayed(() -> {
                     springAlphaTo(child, 1f).start();
                     springTranslationYTo(child, 0f).start();
@@ -509,7 +511,7 @@ public final class DynamicAnim {
                 .scaleX(1f)
                 .scaleY(1f)
                 .setStartDelay(scaled(startDelayMs))
-                .setDuration(motionDurationMs(260L))
+                .setDuration(motionDurationMs(UiTokens.MOTION_SLOW_MS))
                 .setInterpolator(overshoot ? new OvershootInterpolator(1.6f)
                         : new LinearInterpolator())
                 .start();
