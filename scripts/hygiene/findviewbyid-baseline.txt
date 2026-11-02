@@ -48,7 +48,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModrinthDetailActi
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModsFullscreenActivity.java 2
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/MsftLoginActivity.java 25
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/QuickLaunchActivity.java 12
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 104
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 105
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/VoiceChatActivity.java 36
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/AccountsAdapter.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/CurseForgeContentAdapter.java 8
@@ -62,7 +62,6 @@ app/src/main/java/org/chimeramc/client/launcher/ui/adapter/ModsAdapter.java 10
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/OptionsPropertiesAdapter.java 4
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/QuickLaunchAdapter.java 2
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/ResourcePacksAdapter.java 6
-app/src/main/java/org/chimeramc/client/launcher/ui/adapter/ScreenshotsAdapter.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/SkinsAdapter.java 6
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/StructuresAdapter.java 3
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/WorldPropertiesAdapter.java 5
