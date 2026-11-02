@@ -17,6 +17,8 @@ import org.chimeramc.client.R;
 import org.chimeramc.client.databinding.OverlayPauseMenuRowBinding;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.launcher.core.content.ScreenshotAction;
+import org.chimeramc.client.launcher.core.content.ScreenshotShareSheet;
+import org.chimeramc.client.launcher.core.content.ScreenshotStore;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.util.MainThread;
 
@@ -145,6 +147,9 @@ public class PauseMenuRow {
             case PauseMenuActions.ACTION_SCREENSHOT:
                 ScreenshotAction.capture(activity);
                 break;
+            case PauseMenuActions.ACTION_SHARE_SCREENSHOT:
+                shareLatestScreenshot();
+                break;
             case PauseMenuActions.ACTION_HIDE_HUD:
                 toggleHudVisibility();
                 break;
@@ -160,6 +165,23 @@ public class PauseMenuRow {
             default:
                 break;
         }
+    }
+
+    /**
+     * Shares the newest screenshot (item 276).
+     *
+     * <p>A file picker cannot open over a live game session, so the row shares what is already on
+     * disk rather than asking for a file. With no screenshot yet it says so instead of opening an
+     * empty chooser, because a chooser that appears to do nothing reads as a broken button.
+     */
+    private void shareLatestScreenshot() {
+        java.io.File latest = ScreenshotStore.latestScreenshot(activity);
+        if (latest == null) {
+            Toast.makeText(activity, R.string.screenshot_share_no_screenshot,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ScreenshotShareSheet.share(activity, latest);
     }
 
     private void toggleHudVisibility() {

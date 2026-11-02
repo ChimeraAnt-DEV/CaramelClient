@@ -468,6 +468,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="save">Save</string>
     <string name="reset">Reset</string>
     <string name="saved_to_gallery">Saved to gallery</string>
+    <string name="screenshot_share">Share screenshot</string>
+    <string name="screenshot_share_failed">Could not share this screenshot.</string>
+    <string name="screenshot_share_no_app">No app can receive a shared image.</string>
+    <string name="screenshot_shared">Shared</string>
+    <string name="screenshot_share_no_screenshot">No screenshot to share yet.</string>
     <string name="level_dat_not_found">level.dat not found</string>
     <string name="no_editable_properties">No editable properties found</string>
     <string name="no_data">No data</string>
@@ -2637,6 +2642,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_hud_hidden">HUD overlays hidden</string>
     <string name="mod_menu_hud_shown">HUD overlays shown</string>
     <string name="pause_menu_screenshot">Screenshot</string>
+    <string name="pause_menu_share_screenshot">Share last screenshot</string>
     <string name="pause_menu_hide_hud">Hide HUD</string>
     <string name="pause_menu_switch_layout">Switch layout</string>
     <string name="pause_menu_open_logs">Logs</string>

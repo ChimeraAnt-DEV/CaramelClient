@@ -462,6 +462,12 @@ public class ContentListActivity extends BaseActivity {
             public void onSaveClick(org.chimeramc.client.core.content.ScreenshotItem screenshot) {
                 saveScreenshotToGallery(screenshot);
             }
+
+            @Override
+            public void onShareClick(org.chimeramc.client.core.content.ScreenshotItem screenshot) {
+                org.chimeramc.client.launcher.core.content.ScreenshotShareSheet.shareItem(
+                        ContentListActivity.this, screenshot);
+            }
         });
         binding.contentRecyclerView.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
         binding.contentRecyclerView.setAdapter(screenshotsAdapter);

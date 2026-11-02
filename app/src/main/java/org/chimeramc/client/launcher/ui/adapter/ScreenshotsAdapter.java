@@ -39,7 +39,15 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
 
     public interface OnScreenshotClickListener {
         void onDeleteClick(ScreenshotItem screenshot);
+
         void onSaveClick(ScreenshotItem screenshot);
+
+        /**
+         * Share the screenshot (item 276). A default no-op keeps every existing caller source
+         * compatible, so adding the share row did not force a change at each construction site.
+         */
+        default void onShareClick(ScreenshotItem screenshot) {
+        }
     }
 
     public ScreenshotsAdapter(List<ScreenshotItem> screenshots, OnScreenshotClickListener listener) {
@@ -108,6 +116,12 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
             }
         });
 
+        holder.shareButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onShareClick(screenshot);
+            }
+        });
+
         org.chimeramc.client.util.PersonalizationManager pm = new org.chimeramc.client.util.PersonalizationManager(holder.itemView.getContext());
         pm.applyGlassToView(holder.itemView);
         pm.applyAccentToView(holder.itemView, holder.itemView.getContext());
@@ -142,6 +156,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
         TextView dateText;
         Button deleteButton;
         Button saveButton;
+        Button shareButton;
 
         ViewHolder(View view) {
             super(view);
@@ -150,6 +165,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
             dateText = view.findViewById(R.id.screenshot_date);
             deleteButton = view.findViewById(R.id.screenshot_delete_button);
             saveButton = view.findViewById(R.id.screenshot_save_button);
+            shareButton = view.findViewById(R.id.screenshot_share_button);
         }
     }
 }
