@@ -1059,6 +1059,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="pack_changer_off">off</string>
     <string name="pack_changer_pack_meta">v%1$s · %2$s</string>
     <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="announcement_learn_more">Learn more</string>
+    <string name="announcement_dismiss">Dismiss</string>
     <string name="pack_changer_move_up">Move up</string>
     <string name="pack_changer_move_down">Move down</string>
     <string name="pack_changer_reorder_failed">Could not save the pack order.</string>

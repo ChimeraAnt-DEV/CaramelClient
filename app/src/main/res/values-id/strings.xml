@@ -1259,4 +1259,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="pack_changer_move_down">Turunkan</string>
     <string name="pack_changer_reorder_failed">Tidak dapat menyimpan urutan paket.</string>
     <string name="resource_pack_resolution">Resolusi: %1$s</string>
+    <string name="announcement_learn_more">Pelajari lebih lanjut</string>
+    <string name="announcement_dismiss">Tutup</string>
 </resources>

@@ -1232,4 +1232,6 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="pack_changer_move_down">下へ移動</string>
     <string name="pack_changer_reorder_failed">パックの順序を保存できませんでした。</string>
     <string name="resource_pack_resolution">解像度: %1$s</string>
+    <string name="announcement_learn_more">詳細</string>
+    <string name="announcement_dismiss">閉じる</string>
 </resources>

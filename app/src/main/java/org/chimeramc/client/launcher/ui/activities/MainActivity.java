@@ -41,6 +41,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.minecraft.MinecraftImportIntents;
 import org.chimeramc.client.core.minecraft.GamePackageManager;
@@ -199,6 +200,9 @@ import okhttp3.OkHttpClient;
     private final ExecutorService launchStatsExecutor = Executors.newSingleThreadExecutor();
 
     private final Handler uiHandler = MainThread.handler();
+    /** The announcements feed client (item 255), shut down in onDestroy. */
+    private org.chimeramc.client.core.announce.AnnouncementClient announcementClient;
+
     /** The lifetime of the self-reposting tip rotation, closed in onDestroy. */
     private final MainThread.Scope tipScope = MainThread.scope();
     private Runnable pulseRunnable;
@@ -1723,6 +1727,52 @@ import okhttp3.OkHttpClient;
 
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
+        setupAnnouncementCard();
+    }
+
+    /**
+     * Shows the announcement card when the feed yields one that applies to this build (item 255).
+     *
+     * <p>The card is hidden by default and only made visible for a matching, undismissed card, so a
+     * failed fetch leaves the Launch tab exactly as it was. Dismissing writes the id and hides the
+     * card; the cached feed means the choice survives a restart.
+     */
+    private void setupAnnouncementCard() {
+        if (binding.launchAnnouncement == null) return;
+        View card = binding.launchAnnouncement.announcementCard;
+        TextView title = binding.launchAnnouncement.announcementTitle;
+        TextView body = binding.launchAnnouncement.announcementBody;
+        TextView link = binding.launchAnnouncement.announcementLink;
+        View dismiss = binding.launchAnnouncement.announcementDismiss;
+
+        announcementClient = new org.chimeramc.client.core.announce.AnnouncementClient();
+        announcementClient.load(this, BuildConfig.VERSION_CODE, announcement -> {
+            if (announcement == null) {
+                card.setVisibility(View.GONE);
+                return;
+            }
+            title.setText(announcement.title);
+            body.setText(announcement.body);
+            if (announcement.hasLink() && link != null) {
+                link.setVisibility(View.VISIBLE);
+                link.setOnClickListener(v -> {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(announcement.url)));
+                    } catch (Throwable ignored) {
+                    }
+                });
+            } else if (link != null) {
+                link.setVisibility(View.GONE);
+            }
+            if (dismiss != null) {
+                dismiss.setOnClickListener(v -> {
+                    org.chimeramc.client.core.announce.AnnouncementStore.dismiss(this, announcement.id);
+                    card.setVisibility(View.GONE);
+                });
+            }
+            card.setVisibility(View.VISIBLE);
+            DynamicAnim.applyPressScale(card);
+        });
     }
 
     private void setupQuickActions() {
@@ -3001,6 +3051,10 @@ import okhttp3.OkHttpClient;
         accountExecutor.shutdownNow();
         // Removes a pending tip rotation, so it cannot fire into the destroyed Activity.
         tipScope.close();
+        if (announcementClient != null) {
+            announcementClient.shutdown();
+            announcementClient = null;
+        }
     }
 
     /**

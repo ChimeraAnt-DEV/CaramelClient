@@ -1265,4 +1265,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="pack_changer_move_down">Di chuyển xuống</string>
     <string name="pack_changer_reorder_failed">Không thể lưu thứ tự gói.</string>
     <string name="resource_pack_resolution">Độ phân giải: %1$s</string>
+    <string name="announcement_learn_more">Tìm hiểu thêm</string>
+    <string name="announcement_dismiss">Bỏ qua</string>
 </resources>

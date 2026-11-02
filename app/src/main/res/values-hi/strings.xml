@@ -1263,4 +1263,6 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="pack_changer_move_down">नीचे ले जाएँ</string>
     <string name="pack_changer_reorder_failed">पैक क्रम सहेजा नहीं जा सका।</string>
     <string name="resource_pack_resolution">रिज़ॉल्यूशन: %1$s</string>
+    <string name="announcement_learn_more">और जानें</string>
+    <string name="announcement_dismiss">खारिज करें</string>
 </resources>

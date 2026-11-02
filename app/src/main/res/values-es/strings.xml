@@ -1235,4 +1235,6 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="pack_changer_move_down">Bajar</string>
     <string name="pack_changer_reorder_failed">No se pudo guardar el orden de los paquetes.</string>
     <string name="resource_pack_resolution">Resolución: %1$s</string>
+    <string name="announcement_learn_more">Más información</string>
+    <string name="announcement_dismiss">Descartar</string>
 </resources>

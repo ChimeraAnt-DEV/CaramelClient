@@ -1256,4 +1256,6 @@
     <string name="pack_changer_move_down">下移</string>
     <string name="pack_changer_reorder_failed">无法保存资源包顺序。</string>
     <string name="resource_pack_resolution">分辨率：%1$s</string>
+    <string name="announcement_learn_more">了解更多</string>
+    <string name="announcement_dismiss">忽略</string>
 </resources>

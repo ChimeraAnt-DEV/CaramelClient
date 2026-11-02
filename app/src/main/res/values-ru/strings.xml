@@ -1266,4 +1266,6 @@
     <string name="pack_changer_move_down">Переместить вниз</string>
     <string name="pack_changer_reorder_failed">Не удалось сохранить порядок наборов.</string>
     <string name="resource_pack_resolution">Разрешение: %1$s</string>
+    <string name="announcement_learn_more">Подробнее</string>
+    <string name="announcement_dismiss">Отклонить</string>
 </resources>

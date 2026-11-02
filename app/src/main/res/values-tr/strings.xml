@@ -1262,4 +1262,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="pack_changer_move_down">Aşağı taşı</string>
     <string name="pack_changer_reorder_failed">Paket sırası kaydedilemedi.</string>
     <string name="resource_pack_resolution">Çözünürlük: %1$s</string>
+    <string name="announcement_learn_more">Daha fazla bilgi</string>
+    <string name="announcement_dismiss">Kapat</string>
 </resources>

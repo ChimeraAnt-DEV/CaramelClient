@@ -1233,6 +1233,8 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="pack_changer_pack_size">%1$s · %2$s</string>
     <string name="pack_changer_move_up">Monter</string>
     <string name="pack_changer_move_down">Descendre</string>
-    <string name="pack_changer_reorder_failed">Impossible d'enregistrer l'ordre des packs.</string>
-    <string name="resource_pack_resolution">Résolution : %1$s</string>
+    <string name="pack_changer_reorder_failed">Impossible d\'enregistrer l\'ordre des packs.</string>
+    <string name="resource_pack_resolution">Résolution : %1$s</string>
+    <string name="announcement_learn_more">En savoir plus</string>
+    <string name="announcement_dismiss">Ignorer</string>
 </resources>
