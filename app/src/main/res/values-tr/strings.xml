@@ -1257,4 +1257,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="server_favourite_label">Favori</string>
     <string name="cosmetics_sync_setting_title">Kozmetik eşitleme</string>
     <string name="cosmetics_sync_setting_desc">Kuşandığın pelerin, aksesuar ve evcil hayvanı aynı dünyadaki diğer Glowberry kullanıcılarına göster, onlarınkini gör. Yalnızca istemci tarafı; kapatınca hem gönderme hem alma durur.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Yukarı taşı</string>
+    <string name="pack_changer_move_down">Aşağı taşı</string>
+    <string name="pack_changer_reorder_failed">Paket sırası kaydedilemedi.</string>
+    <string name="resource_pack_resolution">Çözünürlük: %1$s</string>
 </resources>

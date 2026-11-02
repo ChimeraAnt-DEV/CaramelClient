@@ -269,6 +269,111 @@ public final class InGamePackChanger {
     }
 
     /**
+     * The active uuids in the order the global list stores them, first to last (item 253).
+     *
+     * <p>This is the order a reorder starts from: reading it back rather than re-deriving it means
+     * a move works from what the game will actually apply, not from the list's display order.
+     * Returns an empty list when there is no list to read.
+     */
+    public static List<String> activeOrder(File gameDataDir) {
+        List<String> result = new ArrayList<>();
+        if (gameDataDir == null) return result;
+        JsonArray array = readGlobalArray(globalFile(gameDataDir));
+        if (array == null) return result;
+        for (JsonElement element : array) {
+            if (!element.isJsonObject()) continue;
+            JsonObject object = element.getAsJsonObject();
+            if (!object.has("pack_id")) continue;
+            String key = object.get("pack_id").getAsString().trim().toLowerCase(Locale.ROOT);
+            if (!key.isEmpty() && !result.contains(key)) result.add(key);
+        }
+        return result;
+    }
+
+    /**
+     * Rewrites the global pack list so the active packs appear in {@code order} (item 253).
+     *
+     * <p>Bedrock applies active packs bottom-up, so the array order <em>is</em> the priority: the
+     * last entry wins a texture conflict. The list is rebuilt from the current file, reordering the
+     * active entries to match {@code order} and keeping every inactive entry (and any entry the
+     * order does not name) in place, so a reorder can never drop a pack the game has applied.
+     *
+     * @param gameDataDir the instance's game-data root
+     * @param order       the active uuids in the order they should appear in the list, first to
+     *                    last; Bedrock applies the <em>last</em> entry with the highest priority,
+     *                    so the last id here is the one that wins a texture conflict
+     * @return true when the global list was written; false when there is no list to reorder, the
+     *         argument is bad, or the write failed
+     */
+    public static boolean reorderActive(File gameDataDir, java.util.List<String> order) {
+        if (gameDataDir == null) return false;
+
+        // Index the desired rank by normalised uuid once, then apply it to every list file.
+        java.util.Map<String, Integer> rank = new java.util.HashMap<>();
+        if (order != null) {
+            int next = 0;
+            for (String id : order) {
+                String key = ResourcePackOrder.normalise(id);
+                if (!key.isEmpty() && !rank.containsKey(key)) rank.put(key, next++);
+            }
+        }
+
+        File global = globalFile(gameDataDir);
+        if (global == null || !global.isFile()) return false;
+
+        // The world files are what the running session reads, so reorder them first: a failure on
+        // the global list then cannot leave the running world in the old priority.
+        boolean worldOk = true;
+        for (File worldPacks : worldPackFiles(gameDataDir)) {
+            if (worldPacks.isFile() && !reorderFile(worldPacks, rank)) worldOk = false;
+        }
+
+        return reorderFile(global, rank) && worldOk;
+    }
+
+    /**
+     * Rewrites one pack list so the entries the rank names come first, in rank order, followed by
+     * every other entry in its existing position.
+     *
+     * @return true when the file was written or did not exist; false on an IO failure
+     */
+    private static boolean reorderFile(File file, java.util.Map<String, Integer> rank) {
+        JsonArray existing = readGlobalArray(file);
+        if (existing == null) {
+            // Nothing to reorder in a file that does not exist or is unreadable; leaving it absent
+            // is correct, not a failure.
+            return !file.isFile();
+        }
+        List<JsonObject> ranked = new ArrayList<>();
+        List<JsonObject> others = new ArrayList<>();
+        for (JsonElement element : existing) {
+            if (!element.isJsonObject()) continue;
+            JsonObject object = element.getAsJsonObject();
+            if (!object.has("pack_id")) continue;
+            String key = object.get("pack_id").getAsString().trim().toLowerCase(Locale.ROOT);
+            JsonObject clean = new JsonObject();
+            clean.addProperty("pack_id", key);
+            clean.add("version", versionArray(versionOf(object)));
+            if (rank.containsKey(key)) {
+                ranked.add(clean);
+            } else {
+                others.add(clean);
+            }
+        }
+        ranked.sort(java.util.Comparator.comparingInt(
+                entry -> rank.getOrDefault(
+                        entry.get("pack_id").getAsString().toLowerCase(Locale.ROOT), 0)));
+        List<JsonObject> merged = new ArrayList<>(ranked);
+        merged.addAll(others);
+        try {
+            writeGlobal(file, merged);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
      * Asks the running session to pick up a pack change immediately.
      *
      * <p>The shipped Bedrock builds have no verified in-place refresh: the preloader export

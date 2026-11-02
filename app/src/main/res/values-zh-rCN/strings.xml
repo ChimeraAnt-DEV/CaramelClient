@@ -1251,4 +1251,9 @@
     <string name="server_favourite_label">收藏</string>
     <string name="cosmetics_sync_setting_title">外观同步</string>
     <string name="cosmetics_sync_setting_desc">将你装备的披风、饰品和宠物展示给同一世界中的其他 Glowberry 用户，并查看他们的。仅在客户端进行；关闭后发送和接收都会停止。</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">上移</string>
+    <string name="pack_changer_move_down">下移</string>
+    <string name="pack_changer_reorder_failed">无法保存资源包顺序。</string>
+    <string name="resource_pack_resolution">分辨率：%1$s</string>
 </resources>

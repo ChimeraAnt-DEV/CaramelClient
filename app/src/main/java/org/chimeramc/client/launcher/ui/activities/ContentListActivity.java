@@ -1313,6 +1313,12 @@ public class ContentListActivity extends BaseActivity {
             screenshotsAdapter.shutdown();
             screenshotsAdapter = null;
         }
+        // The pack adapter owns a background size/resolution scanner (item 253); it must be
+        // stopped with the screen or its worker outlives the activity.
+        if (packsAdapter != null) {
+            packsAdapter.dispose();
+            packsAdapter = null;
+        }
         // A dialog still attached to a destroyed Activity is the "Activity has leaked window"
         // crash; it also trapped the user, because nothing could dismiss it once the owner was gone.
         hideProgressDialog();

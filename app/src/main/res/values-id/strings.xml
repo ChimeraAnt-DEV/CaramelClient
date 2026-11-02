@@ -1254,4 +1254,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="server_favourite_label">Favorit</string>
     <string name="cosmetics_sync_setting_title">Sinkronisasi kosmetik</string>
     <string name="cosmetics_sync_setting_desc">Tampilkan cape, aksesori, dan peliharaan yang kamu pakai kepada pengguna Glowberry lain di dunia yang sama, dan lihat milik mereka. Hanya di sisi klien; mematikannya menghentikan pengiriman dan penerimaan.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Naikkan</string>
+    <string name="pack_changer_move_down">Turunkan</string>
+    <string name="pack_changer_reorder_failed">Tidak dapat menyimpan urutan paket.</string>
+    <string name="resource_pack_resolution">Resolusi: %1$s</string>
 </resources>

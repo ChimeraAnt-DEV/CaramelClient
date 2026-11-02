@@ -1227,4 +1227,9 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="server_favourite_label">お気に入り</string>
     <string name="cosmetics_sync_setting_title">コスメの同期</string>
     <string name="cosmetics_sync_setting_desc">装備中のケープ・アクセサリ・ペットを同じワールドの他の Glowberry ユーザーに表示し、相手のものも表示します。クライアント側のみ。オフにすると送受信の両方が停止します。</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">上へ移動</string>
+    <string name="pack_changer_move_down">下へ移動</string>
+    <string name="pack_changer_reorder_failed">パックの順序を保存できませんでした。</string>
+    <string name="resource_pack_resolution">解像度: %1$s</string>
 </resources>

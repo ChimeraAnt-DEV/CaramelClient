@@ -1258,4 +1258,9 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="server_favourite_label">पसंदीदा</string>
     <string name="cosmetics_sync_setting_title">कॉस्मेटिक सिंक</string>
     <string name="cosmetics_sync_setting_desc">अपनी पहनी हुई केप, सहायक वस्तु और पालतू को उसी विश्व के अन्य Glowberry उपयोगकर्ताओं को दिखाएँ, और उनकी देखें। केवल क्लाइंट-साइड; बंद करने पर भेजना और प्राप्त करना दोनों रुक जाते हैं।</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">ऊपर ले जाएँ</string>
+    <string name="pack_changer_move_down">नीचे ले जाएँ</string>
+    <string name="pack_changer_reorder_failed">पैक क्रम सहेजा नहीं जा सका।</string>
+    <string name="resource_pack_resolution">रिज़ॉल्यूशन: %1$s</string>
 </resources>

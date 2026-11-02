@@ -21,6 +21,9 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
 
     private List<ResourcePackItem> resourcePacks = new ArrayList<>();
     private OnResourcePackActionListener onResourcePackActionListener;
+    /** Size and texture-resolution scans run off the main thread and are cached (item 253). */
+    private final org.chimeramc.client.core.content.PackAssetSummaryCache assetCache =
+            new org.chimeramc.client.core.content.PackAssetSummaryCache();
 
     public interface OnResourcePackActionListener {
         void onResourcePackDelete(ResourcePackItem pack);
@@ -63,7 +66,9 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
 
         holder.packName.setText(pack.getPackName());
         holder.packDescription.setText(pack.getDescription());
-        holder.packSize.setText(holder.itemView.getContext().getString(R.string.world_size, pack.getFormattedSize()));
+        holder.packSize.setText(holder.itemView.getContext().getString(
+                R.string.world_size, pack.getFormattedSize()));
+        bindResolution(holder.packSize, pack);
 
         holder.exportButton.setOnClickListener(v -> {
             if (onResourcePackActionListener != null) {
@@ -110,5 +115,44 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
             deleteButton = itemView.findViewById(R.id.pack_delete_button);
             transferButton = itemView.findViewById(R.id.pack_transfer_button);
         }
+    }
+
+    /**
+     * Appends the pack's largest-texture resolution to the size line once the background scan
+     * completes (item 253). The size is shown immediately; the resolution fills in when known.
+     */
+    private void bindResolution(TextView sizeView, ResourcePackItem pack) {
+        org.chimeramc.client.core.content.PackAssetSummary.Result cached =
+                assetCache.peek(pack.getFile());
+        if (cached != null) {
+            applyResolution(sizeView, pack, cached);
+            return;
+        }
+        assetCache.get(pack.getFile(), (dir, result) -> {
+            if (result == null) return;
+            // Notify the one row rather than the whole list: a resolution arriving must not
+            // rebuild every row and lose the list's scroll and animations (item 12).
+            for (int i = 0; i < resourcePacks.size(); i++) {
+                if (resourcePacks.get(i).getFile() != null
+                        && resourcePacks.get(i).getFile().equals(dir)) {
+                    notifyItemChanged(i);
+                    return;
+                }
+            }
+        });
+    }
+
+    private void applyResolution(TextView sizeView, ResourcePackItem pack,
+                                 org.chimeramc.client.core.content.PackAssetSummary.Result summary) {
+        if (summary.textureCount == 0) return;
+        sizeView.setText(sizeView.getContext().getString(R.string.world_size,
+                pack.getFormattedSize()) + " \u00b7 "
+                + sizeView.getContext().getString(R.string.resource_pack_resolution,
+                summary.resolutionLabel()));
+    }
+
+    /** Stops the background scan worker; call when the adapter is detached for good. */
+    public void dispose() {
+        assetCache.shutdown();
     }
 }

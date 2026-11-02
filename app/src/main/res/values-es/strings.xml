@@ -1230,4 +1230,9 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="server_favourite_label">Favorito</string>
     <string name="cosmetics_sync_setting_title">Sincronización de cosméticos</string>
     <string name="cosmetics_sync_setting_desc">Muestra tu capa, accesorio y mascota equipados a otros usuarios de Glowberry en el mismo mundo, y ve los suyos. Solo en el cliente; si lo desactivas se deja de enviar y recibir.</string>
+    <string name="pack_changer_pack_size">%1$s · %2$s</string>
+    <string name="pack_changer_move_up">Subir</string>
+    <string name="pack_changer_move_down">Bajar</string>
+    <string name="pack_changer_reorder_failed">No se pudo guardar el orden de los paquetes.</string>
+    <string name="resource_pack_resolution">Resolución: %1$s</string>
 </resources>
