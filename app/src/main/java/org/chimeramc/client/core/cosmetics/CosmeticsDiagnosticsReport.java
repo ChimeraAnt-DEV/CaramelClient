@@ -145,6 +145,10 @@ public final class CosmeticsDiagnosticsReport {
         public int framePacingP99Us = -1;
         /** Items 386/387: frames above twice the median, per minute, or -1 unknown. */
         public int framePacingHitchesPerMinute = -1;
+        /** Item 415: this process's resident footprint in KiB, or -1 when no source was readable. */
+        public int processResidentKb = -1;
+        /** Item 415: this process's proportional (Pss) footprint in KiB, or -1 unknown. */
+        public int processProportionalKb = -1;
         /** True when a game session is running (the launcher's own session flag). */
         public boolean sessionActive;
         /** The HUD hook's "a HUD screen is open" reading, or false when the hook has not fired. */
@@ -215,6 +219,16 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingP95Us = percentiles[2];
                 in.framePacingP99Us = percentiles[3];
                 in.framePacingHitchesPerMinute = percentiles[4];
+            }
+        } catch (Throwable ignored) {
+        }
+
+        // Item 415: the process footprint, so a session that grows is visible in the report.
+        try {
+            int[] memory = PreloaderInput.readProcessMemory();
+            if (memory != null) {
+                in.processResidentKb = memory[1];
+                in.processProportionalKb = memory[2];
             }
         } catch (Throwable ignored) {
         }
@@ -378,6 +392,7 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Camera anchor source: ").append(cameraText(v)).append('\n');
         b.append("Frame pacing: ").append(framePacingText(v)).append('\n');
         b.append("Frame percentiles: ").append(framePercentilesText(v)).append('\n');
+        b.append("Process memory: ").append(processMemoryText(v)).append('\n');
         b.append("Cape engine texture route: ").append(yesNo(v.capeEngineRouteLive)).append('\n');
         b.append("Engine image pipeline live: ").append(yesNo(v.imagePipelineLive)).append('\n');
         b.append("GL backend: ").append(backendText(v.glBackend)).append('\n');
@@ -637,6 +652,32 @@ public final class CosmeticsDiagnosticsReport {
             s.append(" — ").append(v.framePacingHitchesPerMinute).append(" hitches/min");
         }
         return s.toString();
+    }
+
+    /**
+     * Item 415: the process footprint. The proportional figure is the honest one when the kernel
+     * exposes it (it is this process's share of shared pages); the resident figure counts shared
+     * pages in full. An unreadable source says so rather than printing "0 KB".
+     */
+    private static String processMemoryText(Inputs v) {
+        if (v.processResidentKb < 0 && v.processProportionalKb < 0) {
+            return "no reading yet";
+        }
+        StringBuilder s = new StringBuilder();
+        if (v.processProportionalKb >= 0) {
+            s.append(formatKb(v.processProportionalKb)).append(" (Pss)");
+            if (v.processResidentKb >= 0) s.append(", ");
+        }
+        if (v.processResidentKb >= 0) {
+            s.append(formatKb(v.processResidentKb)).append(" resident");
+        }
+        return s.toString();
+    }
+
+    /** Kibibytes to a short "182 MB" form. */
+    private static String formatKb(int kb) {
+        if (kb < 1024) return kb + " KB";
+        return String.format(Locale.US, "%.1f MB", kb / 1024.0);
     }
 
     /** Microseconds to a short "16.7 ms" form; a sub-millisecond value is shown in microseconds. */

@@ -281,6 +281,12 @@ public class PreloaderInput {
     public static native int[] nativeReadFramePacingPercentiles();
 
     /**
+     * Item 415: this process's memory footprint as
+     * {valid, residentKb, proportionalKb, fromPss}. A missing source reads as invalid.
+     */
+    public static native int[] nativeReadProcessMemory();
+
+    /**
      * The local-player feed as {live, xBits, yBits, zBits, yawBits, pitchBits}. Floats are the raw
      * IEEE-754 bits of the position and view rotation; the caller decodes them.
      */
@@ -768,6 +774,19 @@ public class PreloaderInput {
      * Items 386/387: the percentile + hitch reading, or null when there is no reading yet. The
      * array is {valid, p50Us, p95Us, p99Us, hitchesPerMinute}.
      */
+    /**
+     * Item 415: the process footprint, or null when no source could be read. The array is
+     * {valid, residentKb, proportionalKb, fromPss}.
+     */
+    public static int[] readProcessMemory() {
+        try {
+            int[] value = nativeReadProcessMemory();
+            return value != null && value.length >= 4 && value[0] == 1 ? value : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
     public static int[] readFramePacingPercentiles() {
         try {
             int[] value = nativeReadFramePacingPercentiles();

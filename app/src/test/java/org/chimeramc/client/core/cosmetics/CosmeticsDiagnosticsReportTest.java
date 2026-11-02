@@ -145,6 +145,25 @@ public class CosmeticsDiagnosticsReportTest {
     }
 
     @Test
+    public void processMemoryIsReportedAndAnUnreadSourceIsNotZero() {
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.processResidentKb = 186368;
+        in.processProportionalKb = 122880;
+        String report = CosmeticsDiagnosticsReport.format(in);
+        assertTrue(report.contains("Process memory: 120.0 MB (Pss), 182.0 MB resident"));
+
+        // A resident-only reading (no smaps_rollup) must not print a Pss figure it does not have.
+        CosmeticsDiagnosticsReport.Inputs rssOnly = new CosmeticsDiagnosticsReport.Inputs();
+        rssOnly.processResidentKb = 4096;
+        assertTrue(CosmeticsDiagnosticsReport.format(rssOnly)
+                .contains("Process memory: 4.0 MB resident"));
+
+        CosmeticsDiagnosticsReport.Inputs unread = new CosmeticsDiagnosticsReport.Inputs();
+        assertTrue(CosmeticsDiagnosticsReport.format(unread)
+                .contains("Process memory: no reading yet"));
+    }
+
+    @Test
     public void anUnreadHookCountReadsAsUnknownNotZero() {
         // A report that said "Hooks installed: 0" for a value the native side never sent would read
         // as a real failure; the honest reading is "unknown".
