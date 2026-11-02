@@ -39,6 +39,7 @@ import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
 import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
 import org.chimeramc.client.core.mods.update.ModUpdateScheduler;
+import org.chimeramc.client.core.telemetry.UsageStatsReporter;
 import org.chimeramc.client.core.mods.update.ModUpdateStore;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
@@ -544,6 +545,49 @@ public class SettingsActivity extends BaseActivity {
         View crashUploadPreview = findViewById(R.id.button_crash_upload_preview);
         if (crashUploadPreview != null) {
             crashUploadPreview.setOnClickListener(v -> showCrashUploadPreview());
+        }
+
+        // Item 281: the anonymous usage counter. Off by default, disabled with a stated reason when
+        // this build has no collector, and the preview button shows the exact fields first.
+        SwitchMaterial switchUsageStats = settingsBinding != null
+                ? settingsBinding.switchUsageStats : null;
+        if (switchUsageStats != null) {
+            switchUsageStats.setChecked(fs.isUsageStatsEnabled());
+            boolean usageConfigured = UsageStatsReporter.isConfigured();
+            switchUsageStats.setEnabled(usageConfigured);
+            switchUsageStats.setOnCheckedChangeListener((btn, checked) -> {
+                if (!checked) {
+                    fs.setUsageStatsEnabled(false);
+                    return;
+                }
+                if (!usageConfigured) {
+                    fs.setUsageStatsEnabled(false);
+                    btn.setChecked(false);
+                    return;
+                }
+                // Consent is shown before it is recorded: the switch only turns on once the user
+                // confirms the payload they just read.
+                new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                        .setTitleText(getString(R.string.usage_stats_preview_title))
+                        .setMessage(UsageStatsReporter.describe(this))
+                        .setPositiveButton(getString(R.string.usage_stats_title), v -> {
+                            fs.setUsageStatsEnabled(true);
+                            AppExecutors.run(AppExecutors.Kind.NETWORK, "usage-stats",
+                                    () -> UsageStatsReporter.reportIfDue(getApplicationContext()));
+                        })
+                        .setNegativeButton(getString(R.string.cancel), v -> btn.setChecked(false))
+                        .show();
+            });
+        }
+        View usageStatsPreview = settingsBinding != null
+                ? settingsBinding.buttonUsageStatsPreview : null;
+        if (usageStatsPreview != null) {
+            usageStatsPreview.setOnClickListener(v ->
+                    new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)
+                            .setTitleText(getString(R.string.usage_stats_preview_title))
+                            .setMessage(UsageStatsReporter.describe(this))
+                            .setPositiveButton(getString(R.string.usage_stats_preview_close), null)
+                            .show());
         }
 
         SwitchMaterial switchManagedLogin = findViewById(R.id.switch_managed_login);

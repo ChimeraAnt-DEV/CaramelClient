@@ -1247,4 +1247,10 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
         <item quantity="one">%1$d mod tem uma atualização</item>
         <item quantity="other">%1$d mods têm atualizações</item>
     </plurals>
+    <string name="usage_stats_title">Contador de uso anônimo</string>
+    <string name="usage_stats_desc">Desativado por padrão. Quando ativado, um relatório anônimo por dia: versão do app, classe de dispositivo, ABI e contagens locais de inicialização. Sem conta, gamertag, id de dispositivo, endereço de servidor ou lista de mods.</string>
+    <string name="usage_stats_preview">Ver o que seria enviado</string>
+    <string name="usage_stats_preview_title">Conteúdo do relatório de uso</string>
+    <string name="usage_stats_preview_close">Fechar</string>
+    <string name="usage_stats_unavailable">Esta compilação não tem coletor configurado, nada pode ser enviado.</string>
 </resources>

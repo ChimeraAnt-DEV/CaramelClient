@@ -1244,4 +1244,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
         <item quantity="one">%1$d 件のモッドに更新があります</item>
         <item quantity="other">%1$d 件のモッドに更新があります</item>
     </plurals>
+    <string name="usage_stats_title">匿名の使用カウンター</string>
+    <string name="usage_stats_desc">デフォルトではオフ。オンにすると一日一回匿名のレポート：アプリバージョン、デバイスクラス、ABI、ローカルの起動回数。アカウント、ゲームタグ、デバイスID、サーバーアドレス、モッド一覧は含まれません。</string>
+    <string name="usage_stats_preview">送信内容を表示</string>
+    <string name="usage_stats_preview_title">使用レポートの内容</string>
+    <string name="usage_stats_preview_close">閉じる</string>
+    <string name="usage_stats_unavailable">このビルドには収集先が設定されていないため、何も送信できません。</string>
 </resources>

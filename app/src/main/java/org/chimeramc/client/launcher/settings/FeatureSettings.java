@@ -14,6 +14,14 @@ public class FeatureSettings {
      * Settings row shows exactly what would be sent before the switch is turned on.
      */
     private Boolean crashUploadEnabled = false;
+
+    /**
+     * The opt-in anonymous usage counter (item 281). Off by default: it is a disclosure, so it is
+     * the user's decision, and the Settings row shows exactly which fields would be sent before the
+     * switch can be turned on. The counter is inert in the shipped source anyway, because this
+     * build has no collector configured ({@code BuildConfig.USAGE_STATS_ENDPOINT}).
+     */
+    private Boolean usageStatsEnabled = false;
     private boolean foregroundServiceEnabled = false;
     private boolean reduceNetworkLatencyEnabled = false;
     private boolean fpsOptimizerEnabled = false;
@@ -148,6 +156,9 @@ public class FeatureSettings {
 
     public boolean isCrashUploadEnabled() { return crashUploadEnabled != null && crashUploadEnabled; }
     public void setCrashUploadEnabled(boolean enabled) { this.crashUploadEnabled = enabled; autoSave(); }
+
+    public boolean isUsageStatsEnabled() { return usageStatsEnabled != null && usageStatsEnabled; }
+    public void setUsageStatsEnabled(boolean enabled) { this.usageStatsEnabled = enabled; autoSave(); }
 
     public boolean isForegroundServiceEnabled() { return foregroundServiceEnabled; }
     public void setForegroundServiceEnabled(boolean enabled) { this.foregroundServiceEnabled = enabled; autoSave(); }

@@ -1278,4 +1278,10 @@
         <item quantity="one">Для %1$d мода есть обновление</item>
         <item quantity="other">Для %1$d модов есть обновления</item>
     </plurals>
+    <string name="usage_stats_title">Анонимный счётчик использования</string>
+    <string name="usage_stats_desc">По умолчанию выключено. Когда включено — один анонимный отчёт в день: версия приложения, класс устройства, ABI и локальные счётчики запусков. Без аккаунта, геймертага, id устройства, адреса сервера или списка модов.</string>
+    <string name="usage_stats_preview">Показать, что будет отправлено</string>
+    <string name="usage_stats_preview_title">Содержимое отчёта об использовании</string>
+    <string name="usage_stats_preview_close">Закрыть</string>
+    <string name="usage_stats_unavailable">В этой сборке не настроен сборщик, отправить нечего.</string>
 </resources>

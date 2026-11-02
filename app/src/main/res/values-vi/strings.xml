@@ -1277,4 +1277,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
         <item quantity="one">%1$d mod có bản cập nhật</item>
         <item quantity="other">%1$d mod có bản cập nhật</item>
     </plurals>
+    <string name="usage_stats_title">Bộ đếm sử dụng ẩn danh</string>
+    <string name="usage_stats_desc">Mặc định tắt. Khi bật, một báo cáo ẩn danh mỗi ngày: phiên bản ứng dụng, lớp thiết bị, ABI và số lần khởi chạy cục bộ. Không có tài khoản, gamertag, id thiết bị, địa chỉ máy chủ hay danh sách mod.</string>
+    <string name="usage_stats_preview">Xem những gì sẽ được gửi</string>
+    <string name="usage_stats_preview_title">Nội dung báo cáo sử dụng</string>
+    <string name="usage_stats_preview_close">Đóng</string>
+    <string name="usage_stats_unavailable">Bản dựng này không có bộ thu thập, không thể gửi gì.</string>
 </resources>

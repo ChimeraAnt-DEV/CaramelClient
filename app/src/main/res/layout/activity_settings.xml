@@ -1908,6 +1908,60 @@
                             android:background="@color/divider"
                             android:alpha="0.3" />
 
+                        <!-- Item 281: the opt-in anonymous usage counter. The switch is disabled
+                             with a stated reason when this build has no collector, and the preview
+                             button shows the exact fields before consent is given. -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/usage_stats_title"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/usage_stats_title"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/on_surface"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch_usage_stats"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:thumbTint="@color/primary"
+                                android:trackTint="@color/track_inactive" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_1"
+                            android:fontFamily="@font/misans"
+                            android:text="@string/usage_stats_desc"
+                            android:textColor="@color/mod_menu_text_tertiary"
+                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_usage_stats_preview"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_1"
+                            android:minHeight="@dimen/min_touch_target"
+                            android:text="@string/usage_stats_preview" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/space_4"
+                            android:layout_marginBottom="@dimen/space_4"
+                            android:background="@color/divider"
+                            android:alpha="0.3" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

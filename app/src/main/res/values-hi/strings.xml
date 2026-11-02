@@ -1275,4 +1275,10 @@ GlowberryClient जारी रखने से पहले माइग्र
         <item quantity="one">%1$d मॉड में अपडेट है</item>
         <item quantity="other">%1$d मॉड्स में अपडेट हैं</item>
     </plurals>
+    <string name="usage_stats_title">अनाम उपयोग काउंटर</string>
+    <string name="usage_stats_desc">डिफॉल्ट रूप से बंद। चालू होने पर प्रतिदिन एक अनाम रिपोर्ट: ऐप संस्करण, डिवाइस श्रेणी, ABI और स्थानीय लॉन्च गिनती। कोई अकाउंट, गेमरटैग, डिवाइस आईडी, सर्वर पता या मॉड सूची नहीं।</string>
+    <string name="usage_stats_preview">क्या भेजा जाएगा देखें</string>
+    <string name="usage_stats_preview_title">उपयोग रिपोर्ट सामग्री</string>
+    <string name="usage_stats_preview_close">बंद करें</string>
+    <string name="usage_stats_unavailable">इस बिल्ड में कोई संग्रहक कॉन्फ़िगर नहीं है, कुछ नहीं भेजा जा सकता।</string>
 </resources>

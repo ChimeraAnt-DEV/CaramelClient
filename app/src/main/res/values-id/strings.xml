@@ -1271,4 +1271,10 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
         <item quantity="one">%1$d mod punya pembaruan</item>
         <item quantity="other">%1$d mod punya pembaruan</item>
     </plurals>
+    <string name="usage_stats_title">Penghitung penggunaan anonim</string>
+    <string name="usage_stats_desc">Mati secara default. Saat aktif, satu laporan anonim per hari: versi aplikasi, kelas perangkat, ABI, dan jumlah peluncuran lokal. Tanpa akun, gamertag, id perangkat, alamat server, atau daftar mod.</string>
+    <string name="usage_stats_preview">Lihat apa yang akan dikirim</string>
+    <string name="usage_stats_preview_title">Isi laporan penggunaan</string>
+    <string name="usage_stats_preview_close">Tutup</string>
+    <string name="usage_stats_unavailable">Build ini tidak punya kolektor, jadi tidak ada yang bisa dikirim.</string>
 </resources>

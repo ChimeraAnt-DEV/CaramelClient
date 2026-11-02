@@ -1274,4 +1274,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
         <item quantity="one">%1$d modun güncellemesi var</item>
         <item quantity="other">%1$d modun güncellemesi var</item>
     </plurals>
+    <string name="usage_stats_title">Anonim kullanım sayacı</string>
+    <string name="usage_stats_desc">Varsayılan olarak kapalı. Açıkken günde bir anonim rapor: uygulama sürümü, cihaz sınıfı, ABI ve yerel başlatma sayıları. Hesap, gamertag, cihaz kimliği, sunucu adresi veya mod listesi yok.</string>
+    <string name="usage_stats_preview">Ne gönderileceğini göster</string>
+    <string name="usage_stats_preview_title">Kullanım raporu içeriği</string>
+    <string name="usage_stats_preview_close">Kapat</string>
+    <string name="usage_stats_unavailable">Bu derlemede toplayıcı yapılandırılmamış, hiçbir şey gönderilemez.</string>
 </resources>

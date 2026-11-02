@@ -1268,4 +1268,10 @@
         <item quantity="one">%1$d 个模组有更新</item>
         <item quantity="other">%1$d 个模组有更新</item>
     </plurals>
+    <string name="usage_stats_title">匿名使用计数</string>
+    <string name="usage_stats_desc">默认关闭。开启后每天一份匿名报告：应用版本、设备类别、ABI 和本地启动次数。不包含账号、游戏标签、设备 ID、服务器地址或模组列表。</string>
+    <string name="usage_stats_preview">查看将发送的内容</string>
+    <string name="usage_stats_preview_title">使用报告内容</string>
+    <string name="usage_stats_preview_close">关闭</string>
+    <string name="usage_stats_unavailable">此构建未配置收集器，无法发送任何内容。</string>
 </resources>

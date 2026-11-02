@@ -57,6 +57,17 @@ class LauncherApplication : Application() {
                 // Reporting a crash must never itself crash the launcher; the uploader logs.
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
+        // Item 281: the opt-in anonymous usage counter. Same shape as the crash report above --
+        // off the main thread, gated on the user's switch and a configured collector, and inert in
+        // the shipped source because no endpoint is set. At most one report a day.
+        Thread({
+            try {
+                org.chimeramc.client.core.telemetry.UsageStatsReporter
+                    .reportIfDue(applicationContext)
+            } catch (_: Throwable) {
+                // A counter must never be the reason a launch fails; the reporter logs.
+            }
+        }, "usage-stats").apply { isDaemon = true }.start()
         // Mirror the persisted haptics preference into the static feedback layer so the
         // very first interaction honours it, before Settings is ever opened.
         org.chimeramc.client.ui.animation.UiTouchFeedback.setEnabled(
