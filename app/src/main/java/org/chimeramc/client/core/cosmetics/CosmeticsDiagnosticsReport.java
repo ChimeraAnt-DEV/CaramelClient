@@ -47,6 +47,8 @@ public final class CosmeticsDiagnosticsReport {
         public int resolvedBy = -1;
         /** {@code GlBackend}: 0 unknown, 1 GLES, 2 Vulkan. */
         public int glBackend = 0;
+        /** The classified GPU family (item 376): see {@link GpuFamily#fromNativeCode}; -1 not read. */
+        public int gpuFamily = -1;
         public boolean eglContextCurrent;
         public boolean hookInstalled;
         /** The exact gate that refused the render hook (item 18): 0 live, 1 version gate,
@@ -155,6 +157,7 @@ public final class CosmeticsDiagnosticsReport {
             in.renderSlot = diag[0];
             in.resolvedBy = diag[1];
             in.glBackend = diag[2];
+            in.gpuFamily = diag.length >= 18 ? diag[17] : -1;
             in.eglContextCurrent = diag[3] == 1;
             in.hookInstalled = diag[4] == 1;
             in.renderHookFailureReason = PreloaderInput.renderHookFailureReason();
@@ -347,6 +350,7 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Cape engine texture route: ").append(yesNo(v.capeEngineRouteLive)).append('\n');
         b.append("Engine image pipeline live: ").append(yesNo(v.imagePipelineLive)).append('\n');
         b.append("GL backend: ").append(backendText(v.glBackend)).append('\n');
+        b.append("GPU family: ").append(gpuFamilyText(v.gpuFamily)).append('\n');
         b.append("EGL context current: ").append(yesNo(v.eglContextCurrent)).append('\n');
         b.append("Last GL error: ").append(errorText(v.lastError)).append('\n');
         b.append('\n');
@@ -478,6 +482,15 @@ public final class CosmeticsDiagnosticsReport {
 
     private static String backendText(int backend) {
         return RenderBackend.label(RenderBackend.fromNativeCode(backend));
+    }
+
+    /**
+     * The classified GPU family, or "unknown" when the native side has not read the driver strings.
+     * A negative code is the "not read" sentinel, never a family, so it must not be labelled.
+     */
+    private static String gpuFamilyText(int nativeCode) {
+        if (nativeCode < 0) return "unknown";
+        return GpuFamily.label(GpuFamily.fromNativeCode(nativeCode));
     }
 
     private static String errorText(int error) {

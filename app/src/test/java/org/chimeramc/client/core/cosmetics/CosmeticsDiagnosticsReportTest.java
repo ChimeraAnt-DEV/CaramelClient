@@ -24,6 +24,7 @@ public class CosmeticsDiagnosticsReportTest {
         in.renderSlot = 17;
         in.resolvedBy = 1;
         in.glBackend = 1;
+        in.gpuFamily = 1;
         in.eglContextCurrent = true;
         in.hookInstalled = true;
         in.framesSeen = 120;
@@ -127,6 +128,15 @@ public class CosmeticsDiagnosticsReportTest {
     }
 
     @Test
+    public void anUnreadGpuFamilyReadsAsUnknownNotAGuess() {
+        // -1 is the native "not read" sentinel. Rendering it as a family name would tell a bug
+        // reporter the wrong GPU, so it must read as unknown.
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.gpuFamily = -1;
+        assertTrue(CosmeticsDiagnosticsReport.format(in).contains("GPU family: unknown"));
+    }
+
+    @Test
     public void theReportCarriesEveryRequestedField() {
         String report = CosmeticsDiagnosticsReport.format(fullInputs());
         assertTrue(report.contains("App version: v1.2.3"));
@@ -139,6 +149,7 @@ public class CosmeticsDiagnosticsReportTest {
         assertTrue(report.contains("Cape engine texture route: yes"));
         assertTrue(report.contains("Engine image pipeline live: yes"));
         assertTrue(report.contains("GL backend: GLES"));
+        assertTrue(report.contains("GPU family: Adreno"));
         assertTrue(report.contains("EGL context current: yes"));
         assertTrue(report.contains("Published geometry bytes: 2048"));
         assertTrue(report.contains("Piece atlases: cape hat"));

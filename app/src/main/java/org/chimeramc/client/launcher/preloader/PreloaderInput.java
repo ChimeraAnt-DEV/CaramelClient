@@ -288,6 +288,14 @@ public class PreloaderInput {
     public static native int nativeCameraAnchorSource();
 
     /**
+     * Native declaration: the classified GPU family (item 376), or -1 when not yet read.
+     *
+     * <p>0 unknown, 1 Adreno, 2 Mali, 3 Immortalis, 4 PowerVR, 5 Xclipse, 6 NVIDIA, 7 Apple,
+     * 8 software rasteriser, 9 generic. See {@link org.chimeramc.client.core.cosmetics.GpuFamily}.
+     */
+    public static native int nativeGpuFamily();
+
+    /**
      * Samples the native cape chain: {@code {lean1, sway1, lean2, sway2, ...}} in degrees for
      * {@code segments} segments, or empty when unavailable. Lets the preview and the native render
      * share one motion curve instead of each carrying its own amplitudes.
@@ -772,6 +780,21 @@ public class PreloaderInput {
     public static int cameraAnchorSource() {
         try {
             return nativeCameraAnchorSource();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /**
+     * The classified GPU family (item 376), or -1 when the native side has not read the driver
+     * strings yet (no library, or no GLES context at the time of the call).
+     *
+     * <p>Map it with {@link org.chimeramc.client.core.cosmetics.GpuFamily#fromNativeCode}; a
+     * negative reading means "unknown", never a family.
+     */
+    public static int gpuFamily() {
+        try {
+            return nativeGpuFamily();
         } catch (UnsatisfiedLinkError e) {
             return -1;
         }
