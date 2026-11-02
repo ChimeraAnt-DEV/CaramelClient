@@ -49,6 +49,14 @@ public final class CosmeticsDiagnosticsReport {
         public int glBackend = 0;
         /** The classified GPU family (item 376): see {@link GpuFamily#fromNativeCode}; -1 not read. */
         public int gpuFamily = -1;
+        /**
+         * The number of distinct targets currently carrying a detour (item 396), or -1 unknown.
+         *
+         * <p>The overlay hooks install through a {@code std::call_once}, so a count that rises on a
+         * second init attempt, or falls to zero after a successful install, is a real defect the
+         * report can show.
+         */
+        public int hookCount = -1;
         public boolean eglContextCurrent;
         public boolean hookInstalled;
         /** The exact gate that refused the render hook (item 18): 0 live, 1 version gate,
@@ -158,6 +166,7 @@ public final class CosmeticsDiagnosticsReport {
             in.resolvedBy = diag[1];
             in.glBackend = diag[2];
             in.gpuFamily = diag.length >= 18 ? diag[17] : -1;
+            in.hookCount = diag.length >= 19 ? diag[18] : -1;
             in.eglContextCurrent = diag[3] == 1;
             in.hookInstalled = diag[4] == 1;
             in.renderHookFailureReason = PreloaderInput.renderHookFailureReason();
@@ -351,6 +360,7 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Engine image pipeline live: ").append(yesNo(v.imagePipelineLive)).append('\n');
         b.append("GL backend: ").append(backendText(v.glBackend)).append('\n');
         b.append("GPU family: ").append(gpuFamilyText(v.gpuFamily)).append('\n');
+        b.append("Hooks installed: ").append(hookCountText(v.hookCount)).append('\n');
         b.append("EGL context current: ").append(yesNo(v.eglContextCurrent)).append('\n');
         b.append("Last GL error: ").append(errorText(v.lastError)).append('\n');
         b.append('\n');
@@ -491,6 +501,12 @@ public final class CosmeticsDiagnosticsReport {
     private static String gpuFamilyText(int nativeCode) {
         if (nativeCode < 0) return "unknown";
         return GpuFamily.label(GpuFamily.fromNativeCode(nativeCode));
+    }
+
+    /** The live hook count, or "unknown" when the native side did not report it. Never "0 hooks"
+     * for an unread value: that reads as a real failure rather than a missing measurement. */
+    private static String hookCountText(int count) {
+        return count < 0 ? "unknown" : Integer.toString(count);
     }
 
     private static String errorText(int error) {

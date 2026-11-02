@@ -25,6 +25,7 @@ public class CosmeticsDiagnosticsReportTest {
         in.resolvedBy = 1;
         in.glBackend = 1;
         in.gpuFamily = 1;
+        in.hookCount = 6;
         in.eglContextCurrent = true;
         in.hookInstalled = true;
         in.framesSeen = 120;
@@ -128,6 +129,15 @@ public class CosmeticsDiagnosticsReportTest {
     }
 
     @Test
+    public void anUnreadHookCountReadsAsUnknownNotZero() {
+        // A report that said "Hooks installed: 0" for a value the native side never sent would read
+        // as a real failure; the honest reading is "unknown".
+        CosmeticsDiagnosticsReport.Inputs in = new CosmeticsDiagnosticsReport.Inputs();
+        in.hookCount = -1;
+        assertTrue(CosmeticsDiagnosticsReport.format(in).contains("Hooks installed: unknown"));
+    }
+
+    @Test
     public void anUnreadGpuFamilyReadsAsUnknownNotAGuess() {
         // -1 is the native "not read" sentinel. Rendering it as a family name would tell a bug
         // reporter the wrong GPU, so it must read as unknown.
@@ -150,6 +160,7 @@ public class CosmeticsDiagnosticsReportTest {
         assertTrue(report.contains("Engine image pipeline live: yes"));
         assertTrue(report.contains("GL backend: GLES"));
         assertTrue(report.contains("GPU family: Adreno"));
+        assertTrue(report.contains("Hooks installed: 6"));
         assertTrue(report.contains("EGL context current: yes"));
         assertTrue(report.contains("Published geometry bytes: 2048"));
         assertTrue(report.contains("Piece atlases: cape hat"));
