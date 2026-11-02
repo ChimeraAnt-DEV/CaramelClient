@@ -44,8 +44,12 @@ parts that are not done are listed as not done.
 - **In-game overlays.** The overlays are drawn on a `Canvas` over the game and are not exposed to a
   screen reader; they are a visual aid, not a navigable UI. The launcher screens are the accessible
   surface.
-- **RTL.** The nav uses `paddingStart`/`paddingEnd`, but a full right-to-left pass over every layout
-  has not been run.
+- **RTL.** `RtlLayoutTest` reads every layout and fails on a physical side — `padding`/`margin`
+  `Left`/`Right`, `drawableLeft`/`drawableRight`, `gravity="left|right"`,
+  `textAlignment="viewLeft|viewRight"`, the `RelativeLayout` rules and the `ConstraintLayout`
+  `layout_constraintLeft_to*` form — so a reintroduction is caught in the build rather than on a
+  device. A pseudo-locale run on a device has not been done, so a mirrored screenshot is still
+  unverified.
 
 ## How to check
 

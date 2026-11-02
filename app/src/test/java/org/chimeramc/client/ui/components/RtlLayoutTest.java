@@ -34,12 +34,32 @@ public class RtlLayoutTest {
     private static final Path LAYOUT_ROOT = Paths.get("src", "main", "res");
 
     /**
-     * The absolute direction attributes. {@code drawableLeft}/{@code drawableRight} are included
-     * because they position a compound drawable on a fixed side for the same reason.
+     * The absolute direction attributes. Each one names a physical side, so it stays put when the
+     * layout direction flips.
+     *
+     * <ul>
+     *   <li>{@code padding}/{@code margin} {@code Left}/{@code Right} and the
+     *       {@code drawable}/{@code compoundDrawable} pair - the {@code *Start}/{@code *End} forms
+     *       resolve against the direction.
+     *   <li>{@code gravity="left|right"} and the layout-gravity form - {@code start}/{@code end}
+     *       are the direction-relative equivalents.
+     *   <li>{@code textAlignment="viewLeft|viewRight"} - {@code viewStart}/{@code viewEnd}.
+     *   <li>the {@code RelativeLayout} rules ({@code layout_toLeftOf}, {@code layout_alignRight},
+     *       {@code layout_alignParentStart}'s physical twin) and the {@code ConstraintLayout}
+     *       {@code layout_constraintLeft_to*} form.
+     * </ul>
+     *
+     * <p>{@code textAlignment="textStart"} is deliberately <em>not</em> reported: it is the
+     * direction-relative value (the one the framework uses when the attribute is absent).
      */
     private static final Pattern ABSOLUTE_DIRECTION = Pattern.compile(
             "android:(?:layout_)?(?:padding|margin)(?:Left|Right)\\b"
-                    + "|android:(?:drawable|compoundDrawable)(?:Left|Right)\\b");
+                    + "|android:(?:drawable|compoundDrawable)(?:Left|Right)\\b"
+                    + "|android:(?:layout_)?gravity=\"[^\"]*\\b(?:left|right)\\b"
+                    + "|android:textAlignment=\"(?:viewLeft|viewRight)\""
+                    + "|android:layout_(?:toLeftOf|toRightOf|alignLeft|alignRight"
+                    + "|alignParentLeft|alignParentRight)="
+                    + "|app:layout_constraint(?:Left|Right)_to");
 
     @Test
     public void noLayoutPinsToAPhysicalSide() throws IOException {
@@ -48,12 +68,12 @@ public class RtlLayoutTest {
             String text = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
             Matcher m = ABSOLUTE_DIRECTION.matcher(text);
             while (m.find()) {
-                offenders.add(file.getFileName() + " -> " + m.group());
+                int line = text.substring(0, m.start()).split("\n", -1).length;
+                offenders.add(file.getFileName() + ":" + line + " -> " + m.group());
             }
         }
-        assertTrue("a layout must use paddingStart/End, marginStart/End and drawableStart/End so it "
-                + "mirrors in an RTL locale; a physical Left/Right stays on the wrong side. Offenders: "
-                + offenders, offenders.isEmpty());
+        assertTrue("a layout must use the Start/End forms so it mirrors in an RTL locale; a physical "
+                + "Left/Right stays on the wrong side. Offenders: " + offenders, offenders.isEmpty());
     }
 
     private static List<Path> layoutFiles() throws IOException {
