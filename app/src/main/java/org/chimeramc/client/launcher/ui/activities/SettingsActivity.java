@@ -38,6 +38,8 @@ import androidx.transition.TransitionManager;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
 import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.core.mods.update.ModUpdateScheduler;
+import org.chimeramc.client.core.mods.update.ModUpdateStore;
 import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
 import org.chimeramc.client.settings.PerformancePresetManager;
@@ -1277,6 +1279,29 @@ public class SettingsActivity extends BaseActivity {
 
         Button btnCheckUpdate = findViewById(R.id.btn_check_update);
         btnCheckUpdate.setOnClickListener(v -> handleUpdateButtonClick());
+
+        // Item 273: one mod-update notification a day, not a prompt per mod. The row is disabled
+        // with a stated reason when this build has no feed URL, so a switch that cannot do anything
+        // says so instead of pretending.
+        SwitchMaterial switchModUpdate = findViewById(R.id.switch_mod_update_check);
+        if (switchModUpdate != null) {
+            FeatureSettings fs = FeatureSettings.getInstance();
+            switchModUpdate.setChecked(fs.isModUpdateCheckEnabled());
+            boolean modUpdateConfigured = !ModUpdateStore.configuredUrl().isEmpty();
+            switchModUpdate.setEnabled(modUpdateConfigured);
+            switchModUpdate.setOnCheckedChangeListener((btn, checked) -> {
+                if (!modUpdateConfigured) {
+                    btn.setChecked(false);
+                    return;
+                }
+                FeatureSettings.getInstance().setModUpdateCheckEnabled(checked);
+                if (checked) {
+                    // A user who just turned the check on should not wait a day for the first run.
+                    ModUpdateStore.clearThrottle(this);
+                    ModUpdateScheduler.requestCheck(this);
+                }
+            });
+        }
 
         preloaderSigsLastUpdateText = findViewById(R.id.preloader_sigs_last_update);
         preloaderSigsUpdateButton = findViewById(R.id.btn_update_preloader_sigs);

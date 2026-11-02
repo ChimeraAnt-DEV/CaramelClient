@@ -1261,4 +1261,14 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="resource_pack_resolution">Resolusi: %1$s</string>
     <string name="announcement_learn_more">Pelajari lebih lanjut</string>
     <string name="announcement_dismiss">Tutup</string>
+    <string name="mod_update_notification_title">Pembaruan mod tersedia</string>
+    <string name="mod_update_channel">Pembaruan mod</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">dan %1$d lagi</string>
+    <string name="mod_update_check_title">Periksa pembaruan mod</string>
+    <string name="mod_update_check_desc">Satu notifikasi sehari saat versi lebih baru dari mod terpasang diterbitkan.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod punya pembaruan</item>
+        <item quantity="other">%1$d mod punya pembaruan</item>
+    </plurals>
 </resources>

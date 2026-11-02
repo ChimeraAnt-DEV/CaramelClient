@@ -1237,4 +1237,14 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="resource_pack_resolution">Resolução: %1$s</string>
     <string name="announcement_learn_more">Saiba mais</string>
     <string name="announcement_dismiss">Dispensar</string>
+    <string name="mod_update_notification_title">Atualizações de mods disponíveis</string>
+    <string name="mod_update_channel">Atualizações de mods</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">e mais %1$d</string>
+    <string name="mod_update_check_title">Verificar atualizações de mods</string>
+    <string name="mod_update_check_desc">Uma notificação por dia quando uma versão mais recente de um mod instalado for publicada.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod tem uma atualização</item>
+        <item quantity="other">%1$d mods têm atualizações</item>
+    </plurals>
 </resources>

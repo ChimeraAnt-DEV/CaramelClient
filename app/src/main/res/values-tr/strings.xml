@@ -1264,4 +1264,14 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="resource_pack_resolution">Çözünürlük: %1$s</string>
     <string name="announcement_learn_more">Daha fazla bilgi</string>
     <string name="announcement_dismiss">Kapat</string>
+    <string name="mod_update_notification_title">Mod güncellemeleri var</string>
+    <string name="mod_update_channel">Mod güncellemeleri</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">ve %1$d tane daha</string>
+    <string name="mod_update_check_title">Mod güncellemelerini denetle</string>
+    <string name="mod_update_check_desc">Kurulu bir modun daha yeni sürümü yayınlandığında günde bir bildirim.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d modun güncellemesi var</item>
+        <item quantity="other">%1$d modun güncellemesi var</item>
+    </plurals>
 </resources>

@@ -1234,4 +1234,14 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="resource_pack_resolution">解像度: %1$s</string>
     <string name="announcement_learn_more">詳細</string>
     <string name="announcement_dismiss">閉じる</string>
+    <string name="mod_update_notification_title">モッドの更新があります</string>
+    <string name="mod_update_channel">モッド更新</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">他 %1$d 件</string>
+    <string name="mod_update_check_title">モッドの更新を確認</string>
+    <string name="mod_update_check_desc">インストール済みモッドの新しいバージョンが公開されたとき、一日一回通知します。</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d 件のモッドに更新があります</item>
+        <item quantity="other">%1$d 件のモッドに更新があります</item>
+    </plurals>
 </resources>

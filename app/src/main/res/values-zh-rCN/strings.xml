@@ -1258,4 +1258,14 @@
     <string name="resource_pack_resolution">分辨率：%1$s</string>
     <string name="announcement_learn_more">了解更多</string>
     <string name="announcement_dismiss">忽略</string>
+    <string name="mod_update_notification_title">有模组更新</string>
+    <string name="mod_update_channel">模组更新</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">还有 %1$d 个</string>
+    <string name="mod_update_check_title">检查模组更新</string>
+    <string name="mod_update_check_desc">已安装模组发布新版本时，每天通知一次。</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d 个模组有更新</item>
+        <item quantity="other">%1$d 个模组有更新</item>
+    </plurals>
 </resources>

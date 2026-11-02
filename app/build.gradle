@@ -128,6 +128,10 @@ android {
         // no URL is published with the code; when an operator sets `announcements.url` the card
         // appears for builds the feed's version gate covers. Empty means "no card", never an error.
         buildConfigField "String", "ANNOUNCEMENTS_URL", "\"${localProperties.getProperty('announcements.url', '')}\""
+        // Item 273: the mod-update feed the daily check reads. Empty in the shipped source, so no
+        // URL is published with the code; when an operator sets `mods.update.url` the check runs
+        // and reports one summary. Empty means "no check", never an error.
+        buildConfigField "String", "MOD_UPDATE_FEED_URL", "\"${localProperties.getProperty('mods.update.url', '')}\""
         ndk {
             // 64-bit only: 32-bit (armeabi-v7a) instances cannot run in this app
             // (Android processes lock in one bitness), so only ship arm64-v8a.

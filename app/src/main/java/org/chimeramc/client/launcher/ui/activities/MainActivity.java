@@ -1728,6 +1728,9 @@ import okhttp3.OkHttpClient;
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
         setupAnnouncementCard();
+        // Item 273: one mod-update notification a day, never a prompt per mod. The scheduler applies
+        // the feature switch and the throttle, and does nothing at all when this build has no feed.
+        org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
     }
 
     /**

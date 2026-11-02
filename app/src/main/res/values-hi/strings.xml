@@ -1265,4 +1265,14 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="resource_pack_resolution">रिज़ॉल्यूशन: %1$s</string>
     <string name="announcement_learn_more">और जानें</string>
     <string name="announcement_dismiss">खारिज करें</string>
+    <string name="mod_update_notification_title">मॉड अपडेट उपलब्ध</string>
+    <string name="mod_update_channel">मॉड अपडेट</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">और %1$d अधिक</string>
+    <string name="mod_update_check_title">मॉड अपडेट जांचें</string>
+    <string name="mod_update_check_desc">स्थापित मॉड का नया संस्करण जारी होने पर दिन में एक सूचना।</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d मॉड में अपडेट है</item>
+        <item quantity="other">%1$d मॉड्स में अपडेट हैं</item>
+    </plurals>
 </resources>

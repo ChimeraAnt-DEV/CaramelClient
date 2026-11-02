@@ -34,7 +34,17 @@ def main() -> int:
             if f'name="{name}"' in text:
                 print(f"present {locale}:{name}")
                 continue
-            entry = f'    <string name="{name}">{escape(value)}</string>\n'
+            if isinstance(value, dict):
+                # {"one": "...", "other": "..."} -> a <plurals> element.
+                lines = [f'    <plurals name="{name}">']
+                for quantity in ("zero", "one", "two", "few", "many", "other"):
+                    if quantity in value:
+                        lines.append(
+                            f'        <item quantity="{quantity}">{escape(value[quantity])}</item>')
+                lines.append("    </plurals>")
+                entry = "\n".join(lines) + "\n"
+            else:
+                entry = f'    <string name="{name}">{escape(value)}</string>\n'
             text = text.replace("</resources>", entry + "</resources>", 1)
             path.write_text(text, encoding="utf-8")
             print(f"added {locale}:{name}")

@@ -1267,4 +1267,14 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="resource_pack_resolution">Độ phân giải: %1$s</string>
     <string name="announcement_learn_more">Tìm hiểu thêm</string>
     <string name="announcement_dismiss">Bỏ qua</string>
+    <string name="mod_update_notification_title">Có bản cập nhật mod</string>
+    <string name="mod_update_channel">Cập nhật mod</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">và %1$d nữa</string>
+    <string name="mod_update_check_title">Kiểm tra cập nhật mod</string>
+    <string name="mod_update_check_desc">Một thông báo mỗi ngày khi có phiên bản mới hơn của mod đã cài.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">%1$d mod có bản cập nhật</item>
+        <item quantity="other">%1$d mod có bản cập nhật</item>
+    </plurals>
 </resources>

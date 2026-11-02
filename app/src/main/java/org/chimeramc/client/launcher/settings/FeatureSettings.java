@@ -33,6 +33,26 @@ public class FeatureSettings {
     private boolean streamingSafeModeEnabled = false;
 
     /**
+     * Whether the daily mod-update check may run (item 273).
+     *
+     * <p>On by default, and deliberately so: the check is inert unless this build was given a feed
+     * URL ({@code BuildConfig.MOD_UPDATE_FEED_URL}), so the shipped source makes no request at all
+     * and a build that configures a feed gets the feature without every user having to find a
+     * switch. It is one request a day at most and it only reads a public version list -- the
+     * privacy-sensitive reporting is a separate opt-in (item 281). A user who wants no check turns
+     * this off and the throttle state is left untouched.
+     */
+    private boolean modUpdateCheckEnabled = true;
+
+    public boolean isModUpdateCheckEnabled() { return modUpdateCheckEnabled; }
+
+    public void setModUpdateCheckEnabled(boolean enabled) {
+        if (this.modUpdateCheckEnabled == enabled) return;
+        this.modUpdateCheckEnabled = enabled;
+        autoSave();
+    }
+
+    /**
      * The top-level destination the user was last on, by {@code LauncherTab} name (item 77).
      *
      * <p>Stored as the enum's name, not its view id: an id is a generated resource number that a

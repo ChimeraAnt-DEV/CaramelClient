@@ -1268,4 +1268,14 @@
     <string name="resource_pack_resolution">Разрешение: %1$s</string>
     <string name="announcement_learn_more">Подробнее</string>
     <string name="announcement_dismiss">Отклонить</string>
+    <string name="mod_update_notification_title">Доступны обновления модов</string>
+    <string name="mod_update_channel">Обновления модов</string>
+    <string name="mod_update_summary_detail">%1$s · %2$s</string>
+    <string name="mod_update_and_more">и ещё %1$d</string>
+    <string name="mod_update_check_title">Проверять обновления модов</string>
+    <string name="mod_update_check_desc">Одно уведомление в день, когда выходит новая версия установленного мода.</string>
+    <plurals name="mod_update_summary">
+        <item quantity="one">Для %1$d мода есть обновление</item>
+        <item quantity="other">Для %1$d модов есть обновления</item>
+    </plurals>
 </resources>
