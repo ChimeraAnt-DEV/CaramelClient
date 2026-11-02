@@ -190,6 +190,31 @@ public class NavShellResourcesTest {
     }
 
     @Test
+    public void theBarChainDeclaresItsStyleAndBiasOnceOnTheHead() throws IOException {
+        // Item 69. The wordmark and the tab strip are one packed horizontal chain. A packed chain
+        // reads its style and its bias from the head element only, so a bias on the middle element
+        // is dead configuration - it reads as if it positions the strip and it does nothing. The
+        // declaration therefore lives on the wordmark (the head, which starts the chain) and the
+        // strip must not carry a second one.
+        String bar = read("app/src/main/res/layout/nav_bar.xml");
+        Matcher wordmark = Pattern.compile(
+                "<TextView[^>]*@\\+id/nav_app_name.*?/>", Pattern.DOTALL).matcher(bar);
+        assertTrue("nav_app_name missing from nav_bar.xml", wordmark.find());
+        String head = wordmark.group();
+        assertTrue("the chain head must declare the packed style",
+                head.contains("layout_constraintHorizontal_chainStyle=\"packed\""));
+        assertTrue("the chain head must declare the bias",
+                head.contains("layout_constraintHorizontal_bias="));
+
+        Matcher strip = Pattern.compile(
+                "<HorizontalScrollView[^>]*@\\+id/nav_tab_scroll.*?>", Pattern.DOTALL).matcher(bar);
+        assertTrue("nav_tab_scroll missing from nav_bar.xml", strip.find());
+        assertFalse("the chain's middle element must not restate the bias; a packed chain ignores "
+                        + "it and the duplicate reads as a second, contradictory declaration",
+                strip.group().contains("layout_constraintHorizontal_bias"));
+    }
+
+    @Test
     public void theAttentionDotExistsAndIsSmallerThanATouchTarget() throws IOException {
         // Item 83. The dot is a marker, not a control: it must have a real drawable and its own
         // dimen, and it must be small enough to read as "something is waiting" rather than as a
