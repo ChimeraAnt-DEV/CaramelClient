@@ -145,6 +145,11 @@ object MinecraftRuntimePreparer {
             if (coverageFailure == null) {
                 val signatureRulesFile = PreloaderSignatureRulesManager
                     .getRulesFile(context.applicationContext)
+                // Point the scan cache at private storage before the rules are delivered: a
+                // repeat launch of the same game build then skips the byte-pattern scan (items
+                // 436, 437). A null directory leaves the cache off, which is the safe default.
+                PreloaderInput.setSignatureCacheDir(
+                    File(context.applicationContext.filesDir, "signature_cache"))
                 PreloaderInput.configureSignatureRules(signatureRulesFile, version.versionCode)
                 trace.mark("Preloader signature rules configured",
                     signatureRulesFile?.absolutePath ?: "<none>")

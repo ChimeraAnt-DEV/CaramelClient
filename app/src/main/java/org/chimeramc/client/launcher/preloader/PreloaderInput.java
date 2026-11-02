@@ -91,6 +91,14 @@ public class PreloaderInput {
 
     public static native void nativeConfigureSignatureRules(String rulesPath, String minecraftVersion);
 
+    /**
+     * Sets the directory the preloader caches a resolved signature scan in (items 436, 437). The
+     * cache is keyed by the game library's ELF build id and stores offsets from its load base, so a
+     * repeat launch of the same game build skips the byte-pattern scan and a game update cannot read
+     * the previous build's offsets. An empty string disables the cache.
+     */
+    public static native void nativeSetSignatureCacheDir(String directory);
+
     // --- Game Performance Mode -------------------------------------------------------------
 
     /**
@@ -395,6 +403,19 @@ public class PreloaderInput {
             return nativeOptifineHudUpdateCount();
         } catch (UnsatisfiedLinkError e) {
             return 0L;
+        }
+    }
+
+    /**
+     * Points the preloader's on-disk signature scan cache at a private directory. A null or empty
+     * directory disables the cache, which is the safe fallback when no writable directory is known.
+     */
+    public static void setSignatureCacheDir(File directory) {
+        try {
+            nativeSetSignatureCacheDir(directory == null ? "" : directory.getAbsolutePath());
+        } catch (UnsatisfiedLinkError e) {
+            android.util.Log.w("PreloaderSigs",
+                    "Signature scan cache not configured: libpreloader.so is not loaded");
         }
     }
 

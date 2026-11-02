@@ -24,11 +24,11 @@ Column meanings:
 | `org.chimeramc.client.preloader.PreloaderInput` | `src/pl/PreLoader.cpp` | 2 |
 |  | `src/pl/cosmetics/animation/AnimationJni.cpp` | 1 |
 |  | `src/pl/cosmetics/network/CosmeticSyncJni.cpp` | 3 |
-|  | `src/pl/runtime/GameCosmeticsJni.cpp` | 45 |
-|  | `src/pl/runtime/InputJni.cpp` | 18 |
-|  | `src/pl/runtime/OptifineJni.cpp` | 7 |
+|  | `src/pl/runtime/GameCosmeticsJni.cpp` | 48 |
+|  | `src/pl/runtime/InputJni.cpp` | 19 |
+|  | `src/pl/runtime/OptifineJni.cpp` | 8 |
 
-Total: **114 exports** across **6 owner classes**.
+Total: **119 exports** across **6 owner classes**.
 
 ## Thread rules
 
@@ -46,6 +46,9 @@ JNI call made from a detour therefore has to be safe from that thread:
   contract that lets the launcher poll them from the UI thread without a lock.
 - **`PreloaderInput` writers** (`nativeSet*`, `nativeClear*`, `nativeRemove*`) publish a new snapshot
   under a short mutex; call them from the launcher's own thread, not from a detour.
+- **`PreloaderInput` configuration** (`nativeConfigureSignatureRules`, `nativeSetSignatureCacheDir`)
+  runs once during launch preparation on the launcher thread. The cache directory is private app
+  storage; an empty path disables the cache.
 - **`ModManager` lifecycle calls** (`nativeLoadMod`, `nativeEnableLoadedMods`, …) run during launch
   preparation on the launcher thread; they are not safe to call from a game callback.
 - **`ExternalModBridge` and `AntEggBridge`** are called by the launcher and by mods; treat them as
