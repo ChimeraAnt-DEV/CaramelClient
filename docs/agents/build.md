@@ -1,0 +1,5 @@
+## Build
+- `./gradlew :app:compileDebugJavaWithJavac` тАФ fast Java-only validation.
+- `./gradlew :app:compileDebugKotlin` тАФ validates the Kotlin module (also compiles Java).
+  - **Submodules required before assembling**: `app/src/main/cpp/preloader` (https://github.com/ChimeraAnt-DEV/preloader-android) and `app/src/main/cpp/libHttpClient` (https://github.com/microsoft/libHttpClient( are git submodules; `CMakeLists.txt` add_subdirectories both. If uninitialized (`git submodule status` shows `-` prefix(, run `git submodule sync && git submodule update --init --recursive` first, then `./gradlew clean`.
+  - Toolchain installed at `/opt/android-sdk` (`local.properties`; java at `/usr/lib/jvm/java-21-openjdk-amd64`). The bundled prebuilts are `libPlayFabMultiplayer.so`, `libmaesdk.so` and `libmtbinloader2.so` in `app/src/main/jniLibs/arm64-v8a/`; the app is arm64-only by design. Kit: `adb uninstall org.chimeramc.client` before installing a new APK (stale extracted native libs are cached under app storage).

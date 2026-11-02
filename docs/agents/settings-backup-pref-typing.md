@@ -1,0 +1,2 @@
+## Settings backup (`LauncherSettingsBackup`) pref typing
+- `applySharedPrefs` must restore the *type each key was stored with*. SharedPreferences is typed per key, so writing a float where an int pref (`PersonalizationManager` stores accent/blur/rounding as ints) reads back with `getInt` throws `ClassCastException` at the read site, after the import already reported success. Gson preserves the original literal, so a `.`/`e` in the literal selects `putFloat`, otherwise `putInt`.

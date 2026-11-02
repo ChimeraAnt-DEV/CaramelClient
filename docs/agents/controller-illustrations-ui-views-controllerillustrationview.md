@@ -1,0 +1,3 @@
+## Controller illustrations (ui.views.ControllerIllustrationView)
+- `ControllerIllustrationView` draws regions from **normalised** coordinates: `px = cx + (r.x - 0.5f) * 2f * scale`. The offset must stay inside the parentheses тАФ `(r.x - 0.5f * 2f * scale)` collapses every button to `cx - scale`, piling the whole pad into a narrow band. If the illustration suddenly looks like cramped blobs, check that first.
+- `handleMotionEvent` must set each axis glow **both ways** (`setRegionGlow("ls", active)`), because motion events stream continuously. Setting only `true` latched sticks and the d-pad on permanently after a single touch.
