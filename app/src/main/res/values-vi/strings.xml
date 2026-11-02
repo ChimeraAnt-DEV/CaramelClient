@@ -1125,6 +1125,11 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="controller_bind_device_cleared">%1$s không còn cấu hình được liên kết</string>
     <string name="controller_stick_preview_description">Vị trí cần gạt trực tiếp: vòng là giá trị thô, chấm là giá trị cấu hình gửi đi</string>
     <string name="controller_stick_preview_side">Đang hiển thị cần gạt %1$s</string>
+    <string name="screenshot_share">Chia sẻ ảnh chụp màn hình</string>
+    <string name="screenshot_share_failed">Không thể chia sẻ ảnh chụp màn hình này.</string>
+    <string name="screenshot_share_no_app">Không có ứng dụng nào nhận được ảnh chia sẻ.</string>
+    <string name="screenshot_share_no_screenshot">Chưa có ảnh chụp màn hình để chia sẻ.</string>
+    <string name="pause_menu_share_screenshot">Chia sẻ ảnh chụp cuối</string>
     <string name="pause_menu_screenshot">Ảnh chụp màn hình</string>
     <string name="pause_menu_hide_hud">Ẩn HUD</string>
     <string name="pause_menu_switch_layout">Đổi bố cục</string>

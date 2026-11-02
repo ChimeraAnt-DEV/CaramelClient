@@ -1092,6 +1092,11 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="controller_bind_device_cleared">%1$s には紐付けられたプロファイルがありません</string>
     <string name="controller_stick_preview_description">スティックの現在位置: リングが生の値、ドットがプロファイルの送信値です</string>
     <string name="controller_stick_preview_side">%1$s スティックを表示中</string>
+    <string name="screenshot_share">スクリーンショットを共有</string>
+    <string name="screenshot_share_failed">このスクリーンショットを共有できませんでした。</string>
+    <string name="screenshot_share_no_app">共有画像を受け取れるアプリがありません。</string>
+    <string name="screenshot_share_no_screenshot">共有できるスクリーンショットがまだありません。</string>
+    <string name="pause_menu_share_screenshot">最後のスクリーンショットを共有</string>
     <string name="pause_menu_screenshot">スクリーンショット</string>
     <string name="pause_menu_hide_hud">HUDを隠す</string>
     <string name="pause_menu_switch_layout">レイアウトを切り替え</string>

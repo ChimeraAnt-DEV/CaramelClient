@@ -579,7 +579,9 @@ public class SettingsActivity extends BaseActivity {
         // Cosmetic sync (item 466): the switch lives here, in Settings, as the one place a user
         // expects to turn a network feature off. It defaults on, so an existing setup keeps the
         // behaviour it already had, and the panel's own toggle reads the same preference.
-        SwitchMaterial switchCosmeticSync = findViewById(R.id.switch_cosmetic_sync);
+        SwitchMaterial switchCosmeticSync = org.chimeramc.client.databinding
+                .ActivitySettingsBinding.bind(findViewById(android.R.id.content))
+                .switchCosmeticSync;
         if (switchCosmeticSync != null) {
             org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager manager =
                     org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager

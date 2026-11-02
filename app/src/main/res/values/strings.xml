@@ -471,7 +471,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="screenshot_share">Share screenshot</string>
     <string name="screenshot_share_failed">Could not share this screenshot.</string>
     <string name="screenshot_share_no_app">No app can receive a shared image.</string>
-    <string name="screenshot_shared">Shared</string>
     <string name="screenshot_share_no_screenshot">No screenshot to share yet.</string>
     <string name="level_dat_not_found">level.dat not found</string>
     <string name="no_editable_properties">No editable properties found</string>

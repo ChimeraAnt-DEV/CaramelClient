@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.ItemScreenshotBinding;
 import org.chimeramc.client.core.content.ScreenshotItem;
 import org.chimeramc.client.ui.components.ListDiff;
 import org.chimeramc.client.ui.components.ListDiffDispatch;
@@ -76,9 +76,9 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_screenshot, parent, false);
-        return new ViewHolder(view);
+        ItemScreenshotBinding binding = ItemScreenshotBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -104,19 +104,19 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
             });
         });
 
-        holder.deleteButton.setOnClickListener(v -> {
+        holder.binding.screenshotDeleteButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDeleteClick(screenshot);
             }
         });
 
-        holder.saveButton.setOnClickListener(v -> {
+        holder.binding.screenshotSaveButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onSaveClick(screenshot);
             }
         });
 
-        holder.shareButton.setOnClickListener(v -> {
+        holder.binding.screenshotShareButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onShareClick(screenshot);
             }
@@ -151,21 +151,19 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView nameText;
-        TextView dateText;
-        Button deleteButton;
-        Button saveButton;
-        Button shareButton;
+        // View binding replaces the six findViewById lookups (item 111): the ids and their types
+        // come from the layout, so a renamed view is a compile error rather than a null at runtime.
+        final ItemScreenshotBinding binding;
+        final ImageView imageView;
+        final TextView nameText;
+        final TextView dateText;
 
-        ViewHolder(View view) {
-            super(view);
-            imageView = view.findViewById(R.id.screenshot_image);
-            nameText = view.findViewById(R.id.screenshot_name);
-            dateText = view.findViewById(R.id.screenshot_date);
-            deleteButton = view.findViewById(R.id.screenshot_delete_button);
-            saveButton = view.findViewById(R.id.screenshot_save_button);
-            shareButton = view.findViewById(R.id.screenshot_share_button);
+        ViewHolder(ItemScreenshotBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+            imageView = binding.screenshotImage;
+            nameText = binding.screenshotName;
+            dateText = binding.screenshotDate;
         }
     }
 }

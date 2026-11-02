@@ -1116,6 +1116,11 @@
     <string name="controller_bind_device_cleared">%1$s 不再有绑定的配置</string>
     <string name="controller_stick_preview_description">摇杆实时位置：圆环是原始读数，圆点是配置实际发送的值</string>
     <string name="controller_stick_preview_side">正在显示%1$s摇杆</string>
+    <string name="screenshot_share">分享截图</string>
+    <string name="screenshot_share_failed">无法分享此截图。</string>
+    <string name="screenshot_share_no_app">没有应用可以接收分享的图片。</string>
+    <string name="screenshot_share_no_screenshot">还没有可分享的截图。</string>
+    <string name="pause_menu_share_screenshot">分享最近的截图</string>
     <string name="pause_menu_screenshot">截图</string>
     <string name="pause_menu_hide_hud">隐藏 HUD</string>
     <string name="pause_menu_switch_layout">切换布局</string>
