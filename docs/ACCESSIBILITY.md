@@ -29,8 +29,12 @@ parts that are not done are listed as not done.
 - **One focus stop per toggle.** A settings row's label names its switch and stops being its own
   node (`UiAccessibility.wireToggleRows`, run by Settings and Instance Settings), so a toggle is one
   item to traverse rather than two.
-- **No colour-only meaning.** A HUD threshold carries a text or shape cue as well as a colour, so a
-  colour-blind user is not relying on hue alone.
+- **No colour-only meaning.** A HUD threshold carries a shape cue as well as a colour. `HudThreshold`
+  is the one rule: the FPS readout's level is drawn from a blue-to-orange ramp (not green-to-red,
+  which collapses under the common red-green deficiencies) and each level also carries its own
+  glyph — an up triangle, a square or a down triangle — so the level survives a monochrome screen,
+  a colour-blind user and bright daylight. `HudThresholdTest` pins that no two levels share a colour
+  and that every level has a non-empty cue.
 
 ## Known gaps
 
