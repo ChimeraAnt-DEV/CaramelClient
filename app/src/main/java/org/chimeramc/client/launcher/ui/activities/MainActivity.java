@@ -1368,7 +1368,6 @@ import okhttp3.OkHttpClient;
         // the hero preview's animation on every resume.
         bindLaunchPreviewCosmetics();
         if (launchPreview != null) launchPreview.startPreview();
-        bindHeadPod();
         refreshLaunchToggles();
         announcePendingLaunchFailure();
     }
@@ -1414,50 +1413,6 @@ import okhttp3.OkHttpClient;
                                 org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity.class)))
                 .setNegativeButton(getString(R.string.dialog_positive_ok), null)
                 .show();
-    }
-
-    /**
-     * Wires the launch tab's head pod: the live 3D skin bust in a glass disc.
-     *
-     * <p>It re-resolves the skin on every bind because the skin can change on the Customize screen,
-     * and gates its idle motion on the personalization "show animations" flag. A tap opens the skin
-     * customizer, which is the pod's documented job.
-     */
-    private void bindHeadPod() {
-        View pod = findViewById(R.id.launch_head_pod);
-        if (!(pod instanceof org.chimeramc.client.ui.components.HeadPodView)) return;
-        org.chimeramc.client.ui.components.HeadPodView headPod =
-                (org.chimeramc.client.ui.components.HeadPodView) pod;
-        headPod.refreshSkin();
-        // The avatar opens the profile sheet (U2): cosmetics and skins are properties of the
-        // player, not destinations, so they live behind the player's own head rather than in a
-        // top-level tab.
-        headPod.setListener(() -> {
-            try {
-                new org.chimeramc.client.launcher.ui.dialogs.ProfileSheet(this).show();
-            } catch (Throwable ignored) {
-                // A sheet that cannot inflate must never take the Play screen down with it.
-            }
-        });
-        try {
-            headPod.setAnimationsEnabled(new PersonalizationManager(this).isShowAnimations());
-        } catch (Throwable ignored) {
-            headPod.setAnimationsEnabled(true);
-        }
-        // The sync indicator reports the cosmetic-sync module's real state: a running module is
-        // synced, one that is enabled but still opening its sockets is loading, and one that is not
-        // running is hidden rather than claiming a link that does not exist.
-        try {
-            org.chimeramc.client.core.cosmetics.CosmeticSyncModule module =
-                    org.chimeramc.client.core.cosmetics.CosmeticSyncModule.peek();
-            boolean running = module != null && module.isRunning();
-            boolean enabled = org.chimeramc.client.core.mods.inbuilt.manager
-                    .InbuiltModManager.getInstance(this).isCosmeticSyncEnabled();
-            headPod.setSyncState(
-                    org.chimeramc.client.ui.components.HeadPodSync.stateFor(enabled, running));
-        } catch (Throwable ignored) {
-            headPod.setSyncState(org.chimeramc.client.ui.components.HeadPodView.SYNC_UNKNOWN);
-        }
     }
 
     private void applyPersonalization() {
@@ -1712,9 +1667,6 @@ import okhttp3.OkHttpClient;
 
         // Setup Launch-tab quick toggles (AntEgg / Voice / Replays)
         setupLaunchToggles();
-
-        // The launch tab's interactive head pod (live 3D skin bust in a glass disc).
-        bindHeadPod();
 
         // Setup the docked launch controls' shimmer feedback
         setupDockFeedback();
