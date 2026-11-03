@@ -97,6 +97,14 @@ public final class ReplayPanel {
     private boolean gamepadDetected;
     private TextView hintView;
     private ReplayPlayerView playerView;
+    /**
+     * The BerryAPI replay source. When the clip is a BerryAPI-format replay and the library's replay
+     * surface is present, playback goes through BerryAPI's own system (it reconstructs a tick and
+     * draws a review) instead of the launcher's recorder player. Absent library: the launcher path is
+     * used exactly as before.
+     */
+    private final org.chimeramc.client.core.replay.BerryReplaySource berryReplay =
+            new org.chimeramc.client.core.replay.BerryReplaySource();
 
     private final Handler mainHandler = MainThread.handler();
     private final ReplayManager.Listener stateListener = new ReplayManager.Listener() {
@@ -995,10 +1003,78 @@ public final class ReplayPanel {
         });
     }
 
+    /**
+     * Whether a clip is a BerryAPI-format replay rather than one the launcher recorded.
+     *
+     * <p>BerryAPI's container carries its own magic; the launcher's clips are MP4. The distinction is
+     * by extension and magic so a renamed file cannot be routed to the wrong player.
+     */
+    private boolean isBerryReplay(ReplayClip clip) {
+        String name = clip.file().getName().toLowerCase(java.util.Locale.ROOT);
+        if (name.endsWith(".berryreplay") || name.endsWith(".breplay")) return true;
+        return false;
+    }
+
+    /**
+     * Opens a BerryAPI replay: reads the bytes, hands them to BerryAPI and starts playback.
+     *
+     * <p>Runs off the UI thread because reading a replay file can be large; the result is reported on
+     * the UI thread. A refusal names the reason rather than leaving the screen blank.
+     */
+    private void openBerryReplay(ReplayClip clip) {
+        final java.io.File file = clip.file();
+        runOnIo(() -> {
+            byte[] bytes;
+            try {
+                bytes = java.nio.file.Files.readAllBytes(file.toPath());
+            } catch (Throwable t) {
+                org.chimeramc.client.util.AppLog.warnOnce("GlowberryClient", "replay:read",
+                        "Could not read the BerryAPI replay file", t);
+                activity.runOnUiThread(() -> Toast.makeText(activity,
+                        R.string.replay_berry_read_failed, Toast.LENGTH_SHORT).show());
+                return;
+            }
+            final int status = berryReplay.load(bytes);
+            final BerryReplaySource.Snapshot snap = berryReplay.snapshot();
+            activity.runOnUiThread(() -> {
+                if (status != org.chimeramc.client.core.replay.ReplayAbi.OK) {
+                    Toast.makeText(activity, activity.getString(
+                            R.string.replay_berry_load_failed,
+                            org.chimeramc.client.core.replay.ReplayAbi.statusName(status)),
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!snap.loaded) {
+                    Toast.makeText(activity, R.string.replay_berry_read_failed,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // BerryAPI drives the review from its own frame clock, so the panel only reports the
+                // timeline and lets the library play it.
+                berryReplay.play();
+                Toast.makeText(activity, activity.getString(
+                        R.string.replay_berry_playing, snap.tickLength()), Toast.LENGTH_SHORT).show();
+            });
+        });
+    }
+
+    /** Whether BerryAPI's replay system is available, for a caller that wants to say so. */
+    public boolean berryReplayAvailable() {
+        return berryReplay.available();
+    }
+
     private void openClip(ReplayClip clip) {
         selected = clip;
         if (clip == null || clip.file() == null || !clip.file().isFile()) {
             Toast.makeText(activity, R.string.replay_playback_hint, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // A BerryAPI-format replay is played by BerryAPI's own system when it is present: it owns the
+        // container format, the tick reconstruction and the review overlay, so handing it the bytes
+        // is the only correct route. The launcher's own recorder clips fall through to the embedded
+        // player below, unchanged.
+        if (isBerryReplay(clip) && berryReplay.available()) {
+            openBerryReplay(clip);
             return;
         }
         // Embedded playback: the clip plays inside this overlay window rather than being handed to
