@@ -65,6 +65,8 @@ accessor-name strings are stripped).
 | `hyperspatial_cull` | Launcher-side work shedding | Host only | n/a | working (tested) |
 | `vertical_render_coalesce` | Launcher-side work shedding | Host only | n/a | working (tested) |
 | `tick_rate_predictor` | Launcher-side work shedding | Host only | n/a | working (tested) |
+| `adaptive_frame_pacing` | Launcher-side frame pacing (governor rules) | Host only | n/a | working (tested) |
+| `thermal_quality_hold` | Launcher-side thermal hold | Host only | n/a | working (tested) |
 
 ## Cosmetics (not a `ModIds` module; the Cosmetics panel)
 

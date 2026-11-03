@@ -185,6 +185,12 @@ public final class InbuiltModuleProvider {
         mods.add(create(activity, manager, overlayManager, ModIds.TICK_RATE_PREDICTOR,
                 R.string.inbuilt_mod_tick_rate_predictor,
                 R.string.inbuilt_mod_tick_rate_predictor_desc, groupName));
+        mods.add(create(activity, manager, overlayManager, ModIds.ADAPTIVE_FRAME_PACING,
+                R.string.inbuilt_mod_adaptive_frame_pacing,
+                R.string.inbuilt_mod_adaptive_frame_pacing_desc, groupName));
+        mods.add(create(activity, manager, overlayManager, ModIds.THERMAL_QUALITY_HOLD,
+                R.string.inbuilt_mod_thermal_quality_hold,
+                R.string.inbuilt_mod_thermal_quality_hold_desc, groupName));
         mods.add(create(activity, manager, overlayManager, ModIds.AIM_SETTINGS,
                 R.string.inbuilt_mod_aim_settings, R.string.inbuilt_mod_aim_settings_desc,
                 groupName));
@@ -452,7 +458,9 @@ public final class InbuiltModuleProvider {
                 || ModIds.CROSSHAIR.equals(id)
                 || ModIds.HYPERSPATIAL_CULL.equals(id)
                 || ModIds.VERTICAL_RENDER_COALESCE.equals(id)
-                || ModIds.TICK_RATE_PREDICTOR.equals(id);
+                || ModIds.TICK_RATE_PREDICTOR.equals(id)
+                || ModIds.ADAPTIVE_FRAME_PACING.equals(id)
+                || ModIds.THERMAL_QUALITY_HOLD.equals(id);
         // Combat modules get their own PvP section so the tab is a real destination, not just a
         // filter over the inbuilt list. They remain inbuilt modules, so the Inbuilt filter and
         // the "Inbuilt" grouping still find them.

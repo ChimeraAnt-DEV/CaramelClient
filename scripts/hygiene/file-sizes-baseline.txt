@@ -5,7 +5,7 @@
 
 app/src/main/java/org/chimeramc/client/launcher/core/minecraft/GamePackageManager.kt 1553
 app/src/main/java/org/chimeramc/client/launcher/core/mods/FileHandler.java 1544
-app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/InbuiltModuleProvider.java 1757
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/InbuiltModuleProvider.java 1765
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/manager/InbuiltModManager.java 1722
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/InbuiltOverlayManager.java 2129
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 3395

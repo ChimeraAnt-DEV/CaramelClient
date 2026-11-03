@@ -69,6 +69,8 @@ public final class FpsModuleCatalog {
     public static final String HYPERSPATIAL_CULL = "hyperspatial_cull";
     public static final String VERTICAL_RENDER_COALESCE = "vertical_render_coalesce";
     public static final String TICK_RATE_PREDICTOR = "tick_rate_predictor";
+    public static final String ADAPTIVE_FRAME_PACING = "adaptive_frame_pacing";
+    public static final String THERMAL_QUALITY_HOLD = "thermal_quality_hold";
 
     private static final List<Module> MODULES;
 
@@ -119,6 +121,47 @@ public final class FpsModuleCatalog {
                 "Launcher Polling Throttle",
                 "Throttles the launcher's own background polling and per-frame overlay work. It "
                         + "does not change the game's tick loop, hitboxes or server sync.", tick));
+
+        // --- Module 4: Adaptive Frame Pacing -----------------------------------------------------
+        // The client-side half of BerryAPI's PerformanceGovernor: the governor's control rules
+        // (dead band, hysteresis, tail latency) applied to the launcher's own overlay tick rate.
+        List<Option> adaptive = new ArrayList<>();
+        adaptive.add(toggle("af_enabled", "Adaptive pacing",
+                "Watch the launcher's frame time and step its own overlay work down when frames run "
+                        + "slow, back up when they recover. It changes only the launcher's work."));
+        adaptive.add(slider("af_target_fps", "Target FPS", 60, 30, 120,
+                "The frame rate the pacing aims for. 60 is right for most devices."));
+        adaptive.add(slider("af_frames_to_react", "Reaction window (frames)", 8, 2, 60,
+                "How many consecutive slow frames before the launcher steps its work down. A larger "
+                        + "window ignores brief spikes; a smaller one reacts faster."));
+        adaptive.add(toggle("af_tail_latency", "React to frame spikes",
+                "Also require the slowest 1% of frames to be slow before stepping down, so a smooth "
+                        + "average cannot hide regular long frames."));
+        modules.add(new Module(ADAPTIVE_FRAME_PACING,
+                "Adaptive Frame Pacing",
+                "Steps the launcher's own overlay work down when frames run slow and back up when "
+                        + "they recover, using the same rules as BerryAPI's performance governor. It "
+                        + "does not change the game's rendering.", adaptive));
+
+        // --- Module 5: Thermal Quality Hold ------------------------------------------------------
+        List<Option> thermal = new ArrayList<>();
+        thermal.add(toggle("tq_enabled", "Thermal hold",
+                "Hold the launcher's work down while the device is thermally throttled, and keep it "
+                        + "down for a while afterwards so it does not heat straight back up."));
+        thermal.add(slider("tq_fair_ceiling", "Warm ceiling (%)", 70, 20, 100,
+                "The most work the launcher does while the device is merely warm (not throttling), "
+                        + "as a percentage."));
+        thermal.add(slider("tq_thermal_ceiling", "Throttled ceiling (%)", 40, 10, 100,
+                "The most work the launcher does while the device is actually throttling, as a "
+                        + "percentage."));
+        thermal.add(slider("tq_dwell_s", "Cooldown (s)", 30, 0, 120,
+                "How long the launcher keeps its work reduced after throttling stops, so the device "
+                        + "does not immediately heat back up."));
+        modules.add(new Module(THERMAL_QUALITY_HOLD,
+                "Thermal Quality Hold",
+                "Reduces the launcher's own work while the device is warm or throttled, with a "
+                        + "cooldown so it does not oscillate. It does not change the game's "
+                        + "rendering.", thermal));
 
         MODULES = Collections.unmodifiableList(modules);
     }

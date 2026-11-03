@@ -53,6 +53,8 @@ public final class ModIds {
     public static final String VERTICAL_RENDER_COALESCE = "vertical_render_coalesce";
     /** Launcher polling throttle: paces the launcher's own background requests and per-frame work. */
     public static final String TICK_RATE_PREDICTOR = "tick_rate_predictor";
+    public static final String ADAPTIVE_FRAME_PACING = "adaptive_frame_pacing";
+    public static final String THERMAL_QUALITY_HOLD = "thermal_quality_hold";
 
     // --- Visual / HUD / Misc modules (the mod-panel list) ------------------------------------
 

@@ -65,6 +65,19 @@ public final class FpsPolicy {
      */
     public static HostPlan plan(boolean sessionActive, boolean cullEnabled, boolean coalesceEnabled,
                                 boolean tickEnabled, ValueSource values) {
+        return plan(sessionActive, cullEnabled, coalesceEnabled, tickEnabled, false, false, values);
+    }
+
+    /**
+     * The full plan, including the two adaptive modules.
+     *
+     * <p>{@code adaptiveEnabled} applies BerryAPI's governor control rules to the launcher's own
+     * overlay tick rate via {@link AdaptiveFramePolicy}; {@code thermalEnabled} applies the thermal
+     * hold. Both are launcher-side only.
+     */
+    public static HostPlan plan(boolean sessionActive, boolean cullEnabled, boolean coalesceEnabled,
+                                boolean tickEnabled, boolean adaptiveEnabled, boolean thermalEnabled,
+                                ValueSource values) {
         if (!sessionActive) {
             return new HostPlan(DEFAULT_OVERLAY_TICK_MS, 0L, false, false, false,
                     "Inactive (no session)");
@@ -104,6 +117,40 @@ public final class FpsPolicy {
                 // The overlay interval becomes the batch size in frames; a bigger batch is a longer
                 // interval, which is the honest reading of "run this every Nth tick".
                 overlayInterval = Math.max(overlayInterval, n * 16L);
+            }
+        }
+
+        // The adaptive module reads its own options into a policy; its interval floor is the
+        // overlay interval the other modules already produced, so the two compose rather than fight.
+        if (adaptiveEnabled) {
+            int targetFps = Math.max(30, values.integer("af_target_fps", 60));
+            int framesToReact = Math.max(2, values.integer("af_frames_to_react", 8));
+            boolean tail = values.bool("af_tail_latency", false);
+            AdaptiveFramePolicy.Config cfg = new AdaptiveFramePolicy.Config(
+                    targetFps, 0.10f, 0.15f, framesToReact, 0.08f,
+                    0.4f, 0.25f, 120, 0.7f, tail);
+            AdaptiveFramePolicy policy = new AdaptiveFramePolicy(cfg);
+            // The enabled toggle itself gates the module; the policy then owns the interval.
+            if (values.bool("af_enabled", false)) {
+                overlayInterval = Math.max(overlayInterval, policy.overlayTickIntervalMs(0L, 64L));
+            }
+        }
+        // The thermal module's ceilings and cooldown are read here so the catalogue has no dead
+        // switch; the hold itself is applied by the service from these values.
+        if (thermalEnabled && values.bool("tq_enabled", false)) {
+            int fair = Math.max(20, Math.min(100, values.integer("tq_fair_ceiling", 70)));
+            int thermalCap = Math.max(10, Math.min(100, values.integer("tq_thermal_ceiling", 40)));
+            int dwellSeconds = Math.max(0, Math.min(120, values.integer("tq_dwell_s", 30)));
+            // The thermal hold raises the overlay interval toward the throttled ceiling.
+            overlayInterval = Math.max(overlayInterval,
+                    Math.round(64f * (1f - thermalCap / 100f)));
+            if (dwellSeconds > 0) {
+                // A non-zero cooldown is what stops the oscillation the governor documents.
+                overlayInterval = Math.max(overlayInterval, 16L);
+            }
+            if (fair > 0 && thermalCap > fair) {
+                // A throttled ceiling above the warm ceiling would be a misconfiguration; clamp it.
+                thermalCap = fair;
             }
         }
 

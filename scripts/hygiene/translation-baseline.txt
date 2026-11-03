@@ -439,6 +439,8 @@ values-es:import_from_library
 values-es:import_isolation_note
 values-es:in_game_pack_changer_desc
 values-es:in_game_pack_changer_title
+values-es:inbuilt_mod_adaptive_frame_pacing
+values-es:inbuilt_mod_adaptive_frame_pacing_desc
 values-es:inbuilt_mod_aim_settings
 values-es:inbuilt_mod_aim_settings_desc
 values-es:inbuilt_mod_armor_hud
@@ -483,6 +485,8 @@ values-es:inbuilt_mod_reach_indicator
 values-es:inbuilt_mod_reach_indicator_desc
 values-es:inbuilt_mod_saturation
 values-es:inbuilt_mod_saturation_desc
+values-es:inbuilt_mod_thermal_quality_hold
+values-es:inbuilt_mod_thermal_quality_hold_desc
 values-es:inbuilt_mod_third_person_nametag
 values-es:inbuilt_mod_third_person_nametag_desc
 values-es:inbuilt_mod_tick_rate_predictor
@@ -1753,6 +1757,8 @@ values-fr:import_from_library
 values-fr:import_isolation_note
 values-fr:in_game_pack_changer_desc
 values-fr:in_game_pack_changer_title
+values-fr:inbuilt_mod_adaptive_frame_pacing
+values-fr:inbuilt_mod_adaptive_frame_pacing_desc
 values-fr:inbuilt_mod_aim_settings
 values-fr:inbuilt_mod_aim_settings_desc
 values-fr:inbuilt_mod_armor_hud
@@ -1797,6 +1803,8 @@ values-fr:inbuilt_mod_reach_indicator
 values-fr:inbuilt_mod_reach_indicator_desc
 values-fr:inbuilt_mod_saturation
 values-fr:inbuilt_mod_saturation_desc
+values-fr:inbuilt_mod_thermal_quality_hold
+values-fr:inbuilt_mod_thermal_quality_hold_desc
 values-fr:inbuilt_mod_third_person_nametag
 values-fr:inbuilt_mod_third_person_nametag_desc
 values-fr:inbuilt_mod_tick_rate_predictor
@@ -3067,6 +3075,8 @@ values-hi:import_from_library
 values-hi:import_isolation_note
 values-hi:in_game_pack_changer_desc
 values-hi:in_game_pack_changer_title
+values-hi:inbuilt_mod_adaptive_frame_pacing
+values-hi:inbuilt_mod_adaptive_frame_pacing_desc
 values-hi:inbuilt_mod_aim_settings
 values-hi:inbuilt_mod_aim_settings_desc
 values-hi:inbuilt_mod_armor_hud
@@ -3111,6 +3121,8 @@ values-hi:inbuilt_mod_reach_indicator
 values-hi:inbuilt_mod_reach_indicator_desc
 values-hi:inbuilt_mod_saturation
 values-hi:inbuilt_mod_saturation_desc
+values-hi:inbuilt_mod_thermal_quality_hold
+values-hi:inbuilt_mod_thermal_quality_hold_desc
 values-hi:inbuilt_mod_third_person_nametag
 values-hi:inbuilt_mod_third_person_nametag_desc
 values-hi:inbuilt_mod_tick_rate_predictor
@@ -4381,6 +4393,8 @@ values-id:import_from_library
 values-id:import_isolation_note
 values-id:in_game_pack_changer_desc
 values-id:in_game_pack_changer_title
+values-id:inbuilt_mod_adaptive_frame_pacing
+values-id:inbuilt_mod_adaptive_frame_pacing_desc
 values-id:inbuilt_mod_aim_settings
 values-id:inbuilt_mod_aim_settings_desc
 values-id:inbuilt_mod_armor_hud
@@ -4425,6 +4439,8 @@ values-id:inbuilt_mod_reach_indicator
 values-id:inbuilt_mod_reach_indicator_desc
 values-id:inbuilt_mod_saturation
 values-id:inbuilt_mod_saturation_desc
+values-id:inbuilt_mod_thermal_quality_hold
+values-id:inbuilt_mod_thermal_quality_hold_desc
 values-id:inbuilt_mod_third_person_nametag
 values-id:inbuilt_mod_third_person_nametag_desc
 values-id:inbuilt_mod_tick_rate_predictor
@@ -5695,6 +5711,8 @@ values-ja:import_from_library
 values-ja:import_isolation_note
 values-ja:in_game_pack_changer_desc
 values-ja:in_game_pack_changer_title
+values-ja:inbuilt_mod_adaptive_frame_pacing
+values-ja:inbuilt_mod_adaptive_frame_pacing_desc
 values-ja:inbuilt_mod_aim_settings
 values-ja:inbuilt_mod_aim_settings_desc
 values-ja:inbuilt_mod_armor_hud
@@ -5739,6 +5757,8 @@ values-ja:inbuilt_mod_reach_indicator
 values-ja:inbuilt_mod_reach_indicator_desc
 values-ja:inbuilt_mod_saturation
 values-ja:inbuilt_mod_saturation_desc
+values-ja:inbuilt_mod_thermal_quality_hold
+values-ja:inbuilt_mod_thermal_quality_hold_desc
 values-ja:inbuilt_mod_third_person_nametag
 values-ja:inbuilt_mod_third_person_nametag_desc
 values-ja:inbuilt_mod_tick_rate_predictor
@@ -7009,6 +7029,8 @@ values-pt:import_from_library
 values-pt:import_isolation_note
 values-pt:in_game_pack_changer_desc
 values-pt:in_game_pack_changer_title
+values-pt:inbuilt_mod_adaptive_frame_pacing
+values-pt:inbuilt_mod_adaptive_frame_pacing_desc
 values-pt:inbuilt_mod_aim_settings
 values-pt:inbuilt_mod_aim_settings_desc
 values-pt:inbuilt_mod_armor_hud
@@ -7053,6 +7075,8 @@ values-pt:inbuilt_mod_reach_indicator
 values-pt:inbuilt_mod_reach_indicator_desc
 values-pt:inbuilt_mod_saturation
 values-pt:inbuilt_mod_saturation_desc
+values-pt:inbuilt_mod_thermal_quality_hold
+values-pt:inbuilt_mod_thermal_quality_hold_desc
 values-pt:inbuilt_mod_third_person_nametag
 values-pt:inbuilt_mod_third_person_nametag_desc
 values-pt:inbuilt_mod_tick_rate_predictor
@@ -8323,6 +8347,8 @@ values-ru:import_from_library
 values-ru:import_isolation_note
 values-ru:in_game_pack_changer_desc
 values-ru:in_game_pack_changer_title
+values-ru:inbuilt_mod_adaptive_frame_pacing
+values-ru:inbuilt_mod_adaptive_frame_pacing_desc
 values-ru:inbuilt_mod_aim_settings
 values-ru:inbuilt_mod_aim_settings_desc
 values-ru:inbuilt_mod_armor_hud
@@ -8367,6 +8393,8 @@ values-ru:inbuilt_mod_reach_indicator
 values-ru:inbuilt_mod_reach_indicator_desc
 values-ru:inbuilt_mod_saturation
 values-ru:inbuilt_mod_saturation_desc
+values-ru:inbuilt_mod_thermal_quality_hold
+values-ru:inbuilt_mod_thermal_quality_hold_desc
 values-ru:inbuilt_mod_third_person_nametag
 values-ru:inbuilt_mod_third_person_nametag_desc
 values-ru:inbuilt_mod_tick_rate_predictor
@@ -9637,6 +9665,8 @@ values-tr:import_from_library
 values-tr:import_isolation_note
 values-tr:in_game_pack_changer_desc
 values-tr:in_game_pack_changer_title
+values-tr:inbuilt_mod_adaptive_frame_pacing
+values-tr:inbuilt_mod_adaptive_frame_pacing_desc
 values-tr:inbuilt_mod_aim_settings
 values-tr:inbuilt_mod_aim_settings_desc
 values-tr:inbuilt_mod_armor_hud
@@ -9681,6 +9711,8 @@ values-tr:inbuilt_mod_reach_indicator
 values-tr:inbuilt_mod_reach_indicator_desc
 values-tr:inbuilt_mod_saturation
 values-tr:inbuilt_mod_saturation_desc
+values-tr:inbuilt_mod_thermal_quality_hold
+values-tr:inbuilt_mod_thermal_quality_hold_desc
 values-tr:inbuilt_mod_third_person_nametag
 values-tr:inbuilt_mod_third_person_nametag_desc
 values-tr:inbuilt_mod_tick_rate_predictor
@@ -10951,6 +10983,8 @@ values-vi:import_from_library
 values-vi:import_isolation_note
 values-vi:in_game_pack_changer_desc
 values-vi:in_game_pack_changer_title
+values-vi:inbuilt_mod_adaptive_frame_pacing
+values-vi:inbuilt_mod_adaptive_frame_pacing_desc
 values-vi:inbuilt_mod_aim_settings
 values-vi:inbuilt_mod_aim_settings_desc
 values-vi:inbuilt_mod_armor_hud
@@ -10995,6 +11029,8 @@ values-vi:inbuilt_mod_reach_indicator
 values-vi:inbuilt_mod_reach_indicator_desc
 values-vi:inbuilt_mod_saturation
 values-vi:inbuilt_mod_saturation_desc
+values-vi:inbuilt_mod_thermal_quality_hold
+values-vi:inbuilt_mod_thermal_quality_hold_desc
 values-vi:inbuilt_mod_third_person_nametag
 values-vi:inbuilt_mod_third_person_nametag_desc
 values-vi:inbuilt_mod_tick_rate_predictor
@@ -12263,6 +12299,8 @@ values-zh-rCN:import_from_library
 values-zh-rCN:import_isolation_note
 values-zh-rCN:in_game_pack_changer_desc
 values-zh-rCN:in_game_pack_changer_title
+values-zh-rCN:inbuilt_mod_adaptive_frame_pacing
+values-zh-rCN:inbuilt_mod_adaptive_frame_pacing_desc
 values-zh-rCN:inbuilt_mod_aim_settings
 values-zh-rCN:inbuilt_mod_aim_settings_desc
 values-zh-rCN:inbuilt_mod_armor_hud
@@ -12307,6 +12345,8 @@ values-zh-rCN:inbuilt_mod_reach_indicator
 values-zh-rCN:inbuilt_mod_reach_indicator_desc
 values-zh-rCN:inbuilt_mod_saturation
 values-zh-rCN:inbuilt_mod_saturation_desc
+values-zh-rCN:inbuilt_mod_thermal_quality_hold
+values-zh-rCN:inbuilt_mod_thermal_quality_hold_desc
 values-zh-rCN:inbuilt_mod_third_person_nametag
 values-zh-rCN:inbuilt_mod_third_person_nametag_desc
 values-zh-rCN:inbuilt_mod_tick_rate_predictor
