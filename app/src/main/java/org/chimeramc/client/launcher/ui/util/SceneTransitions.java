@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builds the scene-transition options for a list-to-detail navigation (item 123).
+ * Builds the scene-transition options for a list-to-detail navigation.
  *
  * <p>The detail screens used a plain {@code startActivity}, so the icon and title jumped between
  * screens. A shared-element transition carries them across instead, which is the difference between

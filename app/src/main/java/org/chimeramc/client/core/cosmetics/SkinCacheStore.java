@@ -1,11 +1,13 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A bounded, least-recently-used store of captured player skins (item 246).
+ * A bounded, least-recently-used store of captured player skins.
  *
  * <p>The single-entry {@link LocalSkinCache} is enough for "your own skin", but cosmetic sync and
  * the account skin path can hold several atlases, and an unbounded cache of 512x512 atlases grows
@@ -169,6 +171,7 @@ public final class SkinCacheStore {
             // itself, so the order survives a process restart without a sidecar file.
             dir.setLastModified(nowMs > 0L ? nowMs : System.currentTimeMillis());
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "SkinCacheStore:174", "Ignored a failure at SkinCacheStore:174", ignored);
         }
     }
 

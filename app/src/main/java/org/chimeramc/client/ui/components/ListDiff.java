@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The list-update decision, as a pure function (items 12, 141-143, 202).
+ * The list-update decision, as a pure function.
  *
  * <p>{@code notifyDataSetChanged} was called from 37 sites. It is not a performance hint that got
  * skipped: it tells the adapter that nothing is known about what changed, so every visible row is

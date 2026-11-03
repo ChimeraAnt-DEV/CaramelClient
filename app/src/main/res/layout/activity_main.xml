@@ -114,23 +114,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_max="@dimen/page_max_width">
 
-                <!-- The head pod: the interactive anchor. A live 3D bust of the player's skin in a
-                     glass disc; hover pauses the idle spin, drag rotates, click opens the skin
-                     customizer. It sits above the hero panel so it reads as the tab's centrepiece. -->
-                <include
-                    layout="@layout/include_launch_head_pod"
-                    android:id="@+id/launch_head_pod_row"
+                <!-- Hero panel: the Compose hero (instance identity + stats on the left, the live
+                     3D character preview on the right). Hosted in a ComposeView so the launch tab
+                     can move off XML one block at a time; the real CapePreviewView still renders. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_hero_compose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <!-- Hero panel: live 3D player preview (left) + instance identity and stats (right). -->
-                <include
-                    layout="@layout/include_hero_panel"
-                    android:id="@+id/launch_hero"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <!-- Announcement card (item 255): hidden until the feed yields a card that applies
+                <!-- Announcement card: hidden until the feed yields a card that applies
                      to this build and has not been dismissed. -->
                 <include
                     layout="@layout/include_announcement_card"
@@ -146,9 +138,10 @@
                     android:layout_marginTop="@dimen/space_4"
                     android:layout_marginBottom="@dimen/space_3" />
 
-                <!-- Quick-toggle cards: AntEgg packs, Voice, Replays, each with a live status. -->
-                <include
-                    layout="@layout/include_launch_toggles"
+                <!-- Quick-toggle cards: AntEgg packs, Voice, Replays, each with a live status.
+                     A Compose row now; the host binds the live statuses. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_toggles_compose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -391,46 +384,7 @@
                         app:tint="@color/text_secondary" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/miscDiscordRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_2"
-                    android:background="@drawable/glass_card"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/space_4"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="@dimen/space_3"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_discord"
-                        app:tint="@color/accent_sky" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/discord_join"
-                        android:fontFamily="@font/misans"
-                        android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body" />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginStart="@dimen/space_2"
-                        android:alpha="0.7"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary" />
-                </LinearLayout>
-
+                
                 <LinearLayout
                     android:id="@+id/miscAccountsRow"
                     android:layout_width="match_parent"

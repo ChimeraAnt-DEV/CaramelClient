@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import org.chimeramc.client.util.ApiLevels
 
 import android.app.AlarmManager
@@ -67,7 +69,7 @@ object MinecraftProcessRestarter {
 
         try {
             appContext.startActivity(intent)
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
             Process.killProcess(oldPid)
             exitProcess(0)
         }
@@ -80,7 +82,8 @@ object MinecraftProcessRestarter {
         try {
             alarmManager.cancel(pendingIntent)
             pendingIntent.cancel()
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftProcessRestarter:86", "Ignored a failure at MinecraftProcessRestarter:86", t)
         }
     }
 
@@ -144,7 +147,7 @@ class LauncherRestartActivity : BaseActivity() {
             if (oldPid > 0 && oldPid != Process.myPid()) {
                 Process.killProcess(oldPid)
                 hideSystemUI()
-                // Do not assume a fixed delay is enough for the old process to be gone (item 275):
+                // Do not assume a fixed delay is enough for the old process to be gone:
                 // starting MainActivity while the old process still holds the app's storage and the
                 // game's files is the race the restart exists to avoid. The wait runs off the main
                 // thread so the restart screen stays responsive, and it is bounded so a process that

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.antegg;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.core.mods.ModManager;
 
 /**
@@ -23,7 +25,7 @@ public final class AntEggBridge {
 
     /**
      * Extracts a package. {@code allowedRoot} is the app's private directory the sandbox root must
-     * live under; the native side re-checks it (item 454), so a wrong root is refused on both sides.
+     * live under; the native side re-checks it, so a wrong root is refused on both sides.
      */
     private static native String nativeLoadMod(String filePath, String sandboxRoot,
                                                String allowedRoot);
@@ -49,8 +51,7 @@ public final class AntEggBridge {
                 }
                 return null;
             } catch (UnsatisfiedLinkError e) {
-                // The library loaded but this symbol is missing (an older build); the Java
-                // path is equivalent, so fall through rather than failing the import.
+                AppLog.warnOnce("GlowberryClient", "AntEggBridge:54", "Ignored a failure at AntEggBridge:54", e);
             }
         }
         AntEggPackage.Result result = AntEggPackage.inspect(new java.io.File(filePath));
@@ -81,7 +82,7 @@ public final class AntEggBridge {
                 }
                 return null;
             } catch (UnsatisfiedLinkError e) {
-                // fall through to Java
+                AppLog.warnOnce("GlowberryClient", "AntEggBridge:85", "Ignored a failure at AntEggBridge:85", e);
             }
         }
         AntEggPackage.Result result = AntEggPackage.extract(new java.io.File(filePath), sandbox);
@@ -94,7 +95,7 @@ public final class AntEggBridge {
             try {
                 return nativeLooksLikeAntEgg(fileName);
             } catch (UnsatisfiedLinkError e) {
-                // fall through
+                AppLog.warnOnce("GlowberryClient", "AntEggBridge:98", "Ignored a failure at AntEggBridge:98", e);
             }
         }
         return AntEggPackage.looksLikeAntEgg(fileName);

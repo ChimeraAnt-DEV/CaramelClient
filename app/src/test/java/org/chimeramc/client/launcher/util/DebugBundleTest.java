@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Pins the debug-bundle tailing and redaction rules (items 262, 263, 517). */
+/** Pins the debug-bundle tailing and redaction rules. */
 public class DebugBundleTest {
 
     @Test
@@ -97,7 +97,7 @@ public class DebugBundleTest {
     @Test
     public void streamingSafeComposeAlsoMasksCoordinatesAndAddresses() {
         // The report and the log both carry a world position and a server host; a streamer who
-        // copies the bundle must not leak either (item 277).
+        // copies the bundle must not leak either.
         String report = "Position: X: 12.5 Y: 64.0 Z: -30.2\nServer: play.example.net:19132";
         String plain = DebugBundle.compose(report, null, false);
         assertTrue(plain.contains("12.5"));

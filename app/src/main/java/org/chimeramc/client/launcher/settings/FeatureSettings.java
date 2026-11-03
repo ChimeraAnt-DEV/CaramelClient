@@ -7,16 +7,25 @@ public class FeatureSettings {
     private static Context appContext;
     private boolean launcherManagedMcLoginEnabled = false;
     private boolean logcatOverlayEnabled = false;
+
+    /**
+     * Whether the launch screen shows the raw launch log instead of the logo + status ring.
+     *
+     * <p>Off by default: the launch screen is a calm "Preparing to launch" surface, and the raw log is
+     * a diagnostic a user opts into from Settings. A file written before this switch existed loads it
+     * off, which is the documented default.
+     */
+    private boolean launchLogEnabled = false;
     private boolean lowInputDelayEnabled = false;
     /**
-     * Crash report upload (item 518). Off until the user opts in: a report carries a stack trace
+     * Crash report upload. Off until the user opts in: a report carries a stack trace
      * and the app version, and sending it is a disclosure the user must make deliberately. The
      * Settings row shows exactly what would be sent before the switch is turned on.
      */
     private Boolean crashUploadEnabled = false;
 
     /**
-     * The opt-in anonymous usage counter (item 281). Off by default: it is a disclosure, so it is
+     * The opt-in anonymous usage counter. Off by default: it is a disclosure, so it is
      * the user's decision, and the Settings row shows exactly which fields would be sent before the
      * switch can be turned on. The counter is inert in the shipped source anyway, because this
      * build has no collector configured ({@code BuildConfig.USAGE_STATS_ENDPOINT}).
@@ -27,7 +36,7 @@ public class FeatureSettings {
     private boolean fpsOptimizerEnabled = false;
 
     /**
-     * Guest mode (item 272): hide mods, servers and voice chat on a shared or borrowed device.
+     * Guest mode: hide mods, servers and voice chat on a shared or borrowed device.
      *
      * <p>Off by default, like the other behaviour-changing switches, so an existing setup is never
      * altered silently. It hides surfaces only -- it never disables a feature or blocks a launch.
@@ -35,19 +44,19 @@ public class FeatureSettings {
     private boolean guestModeEnabled = false;
 
     /**
-     * Streaming-safe mode (item 277): mask account names, coordinates and server addresses in
+     * Streaming-safe mode: mask account names, coordinates and server addresses in
      * overlays and in any text that leaves the app.
      */
     private boolean streamingSafeModeEnabled = false;
 
     /**
-     * Whether the daily mod-update check may run (item 273).
+     * Whether the daily mod-update check may run.
      *
      * <p>On by default, and deliberately so: the check is inert unless this build was given a feed
      * URL ({@code BuildConfig.MOD_UPDATE_FEED_URL}), so the shipped source makes no request at all
      * and a build that configures a feed gets the feature without every user having to find a
      * switch. It is one request a day at most and it only reads a public version list -- the
-     * privacy-sensitive reporting is a separate opt-in (item 281). A user who wants no check turns
+     * privacy-sensitive reporting is a separate opt-in. A user who wants no check turns
      * this off and the throttle state is left untouched.
      */
     private boolean modUpdateCheckEnabled = true;
@@ -61,7 +70,7 @@ public class FeatureSettings {
     }
 
     /**
-     * The top-level destination the user was last on, by {@code LauncherTab} name (item 77).
+     * The top-level destination the user was last on, by {@code LauncherTab} name.
      *
      * <p>Stored as the enum's name, not its view id: an id is a generated resource number that a
      * later build can renumber, so a stored id would silently point at a different tab after an
@@ -71,7 +80,7 @@ public class FeatureSettings {
     private String lastNavTab = null;
 
     /**
-     * Whether the user collapsed the wide navigation rail to icon-only (item 85).
+     * Whether the user collapsed the wide navigation rail to icon-only.
      *
      * <p>A tablet user who prefers the icons to a labelled rail can fold it, and the choice is
      * remembered across launches. It is a presentation preference only: it never changes which
@@ -148,6 +157,14 @@ public class FeatureSettings {
     public boolean isLauncherManagedMcLoginEnabled() { return launcherManagedMcLoginEnabled; }
     public void setLauncherManagedMcLoginEnabled(boolean enabled) { this.launcherManagedMcLoginEnabled = enabled; autoSave(); }
 
+    public boolean isLaunchLogEnabled() { return launchLogEnabled; }
+
+    public void setLaunchLogEnabled(boolean enabled) {
+        if (this.launchLogEnabled == enabled) return;
+        this.launchLogEnabled = enabled;
+        autoSave();
+    }
+
     public boolean isLogcatOverlayEnabled() { return logcatOverlayEnabled; }
     public void setLogcatOverlayEnabled(boolean enabled) { this.logcatOverlayEnabled = enabled; autoSave(); }
 
@@ -176,7 +193,7 @@ public class FeatureSettings {
     public void setFpsOptimizerEnabled(boolean enabled) { this.fpsOptimizerEnabled = enabled; autoSave(); }
 
     /**
-     * The last top-level destination the user visited, or null when there is none (item 77).
+     * The last top-level destination the user visited, or null when there is none.
      *
      * <p>Persisting the tab is what makes the launcher reopen where the user left off instead of
      * always resetting to Play, which matters most on a device where the launcher is used as the
@@ -187,7 +204,7 @@ public class FeatureSettings {
 
     public void setLastNavTab(String tabName) { this.lastNavTab = tabName; autoSave(); }
 
-    /** Whether the wide rail is folded to icons only (item 85). */
+    /** Whether the wide rail is folded to icons only. */
     public boolean isNavRailCollapsed() { return navRailCollapsed; }
 
     public void setNavRailCollapsed(boolean collapsed) {
@@ -272,7 +289,7 @@ public class FeatureSettings {
     public void setStreamingSafeModeEnabled(boolean enabled) { this.streamingSafeModeEnabled = enabled; autoSave(); }
 
     /**
-     * How many instance backups to keep per instance (item 144). {@code 0} means "use the default"
+     * How many instance backups to keep per instance. {@code 0} means "use the default"
      * ({@link org.chimeramc.client.util.BackupRetention#DEFAULT_KEEP}); the rule itself clamps the
      * value, so a bad stored number cannot leave thousands of archives on disk.
      */

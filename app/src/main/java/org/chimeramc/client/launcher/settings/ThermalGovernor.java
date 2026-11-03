@@ -1,5 +1,7 @@
 package org.chimeramc.client.settings;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.content.Context;
@@ -101,7 +103,7 @@ public final class ThermalGovernor {
                 powerManager.addThermalStatusListener(MAIN::post, LISTENER);
                 sRegistered = true;
             } catch (Throwable ignored) {
-                // No thermal reporting available; severity stays cool and nothing is held back.
+                AppLog.warnOnce("GlowberryClient", "ThermalGovernor:106", "Ignored a failure at ThermalGovernor:106", ignored);
             }
         }
 

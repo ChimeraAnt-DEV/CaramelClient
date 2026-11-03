@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Split AGENTS.md into per-area docs under docs/agents/ and regenerate a one-page index.
 
-Item 320. AGENTS.md had grown past 2,500 lines with 97 sections, so the file a contributor is told
+AGENTS.md had grown past 2,500 lines with 97 sections, so the file a contributor is told
 to read first was the last thing anyone would finish. The content is worth keeping; the shape is
 not. This moves each `## ` section verbatim into `docs/agents/<slug>.md` and rewrites AGENTS.md as
 an index that links to them.

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The first-run wizard (U13). One step is shown at a time: a title, an explanation, the step's
-    primary action and a Skip. The progress rail is populated in code from SetupWizard.activeSteps,
-    so a wizard with sign-in turned off draws three dots rather than four.
+    The five-step setup wizard. One step is shown at a time: a progress line, a title, an explanation,
+    the step's own content (the licence terms and its checkbox on step 1), and a Back / Next pair with
+    a Skip. The progress line is populated in code from SetupWizard.STEPS.
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,14 +14,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="@dimen/space_8">
+
+        <TextView
+            android:id="@+id/setup_step_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/misans"
+            android:textColor="@color/ui_text_secondary"
+            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
 
         <LinearLayout
             android:id="@+id/setup_rail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
             android:gravity="center"
             android:orientation="horizontal" />
 
@@ -32,10 +41,9 @@
             android:layout_marginTop="@dimen/space_6"
             android:fontFamily="@font/misans"
             android:gravity="center"
-            android:text="@string/setup_step_import_title"
+            android:text="@string/setup_license_title"
             android:textColor="@color/ui_text_primary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Display"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.Glowberry.Display" />
 
         <TextView
             android:id="@+id/setup_body"
@@ -44,7 +52,7 @@
             android:layout_marginTop="@dimen/space_3"
             android:fontFamily="@font/misans"
             android:gravity="center"
-            android:text="@string/setup_step_import_body"
+            android:text="@string/setup_license_body"
             android:textColor="@color/ui_text_secondary"
             android:textAppearance="@style/TextAppearance.Glowberry.Body" />
 
@@ -59,10 +67,67 @@
             android:textAppearance="@style/TextAppearance.Glowberry.Caption"
             android:visibility="gone" />
 
-        <!--
-            The device compatibility pass (item 284). Each row is a check with its own fix, so a
-            first-run failure is named before the user picks a version and presses Play.
-        -->
+        <!-- Step 1 only: the full terms in a scroll, then the acceptance checkbox. -->
+        <ScrollView
+            android:id="@+id/setup_terms_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginTop="@dimen/space_4"
+            android:background="@drawable/bg_minecraft_loading_terminal"
+            android:fadeScrollbars="false"
+            android:padding="@dimen/space_4"
+            android:scrollbars="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/setup_terms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/misans"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/ui_text_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        </ScrollView>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/setup_license_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:minHeight="@dimen/min_touch_target"
+            android:fontFamily="@font/misans"
+            android:text="@string/setup_license_agree"
+            android:textColor="@color/ui_text_primary"
+            android:visibility="gone" />
+
+        <!-- Step 5 only: the changelog and Discord actions. -->
+        <LinearLayout
+            android:id="@+id/setup_finish_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/setup_changelog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_finish_changelog" />
+
+            <Button
+                android:id="@+id/setup_discord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_finish_discord" />
+        </LinearLayout>
+
+        <!-- Device compatibility, shown from the instance step onward. -->
         <LinearLayout
             android:id="@+id/setup_compat"
             android:layout_width="match_parent"
@@ -79,8 +144,7 @@
                 android:fontFamily="@font/misans"
                 android:textColor="@color/ui_text_primary"
                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                android:textStyle="bold"
-    android:accessibilityHeading="true" />
+                android:accessibilityHeading="true" />
 
             <LinearLayout
                 android:id="@+id/setup_compat_rows"
@@ -90,24 +154,42 @@
                 android:orientation="vertical" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/setup_primary"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_6"
-            android:minHeight="@dimen/min_touch_target"
-            android:fontFamily="@font/misans"
-            android:text="@string/setup_step_import_action" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/setup_secondary"
-            style="?attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2"
-            android:minHeight="@dimen/min_touch_target"
-            android:fontFamily="@font/misans"
-            android:text="@string/setup_skip"
-            android:textColor="@color/ui_text_secondary" />
+            <Button
+                android:id="@+id/setup_back"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_back"
+                android:textColor="@color/ui_text_secondary" />
+
+            <Button
+                android:id="@+id/setup_skip"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_skip"
+                android:textColor="@color/ui_text_secondary" />
+
+            <Button
+                android:id="@+id/setup_primary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_next" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

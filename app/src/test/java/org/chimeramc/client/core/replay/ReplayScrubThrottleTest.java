@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The scrub decode-rate rule (item 206).
+ * The scrub decode-rate rule.
  *
  * <p>A drag reports a position per touch move; without a cap the decodes queue behind the finger.
  */

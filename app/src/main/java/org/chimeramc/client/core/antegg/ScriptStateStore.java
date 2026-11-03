@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Remembers which {@code .AntEgg} packages are disabled (item 226).
+ * Remembers which {@code .AntEgg} packages are disabled.
  *
  * <p>The set is stored as the <em>disabled</em> ids rather than the enabled ones, so a package
  * installed after this preference was first written is enabled by default. Storing the enabled set

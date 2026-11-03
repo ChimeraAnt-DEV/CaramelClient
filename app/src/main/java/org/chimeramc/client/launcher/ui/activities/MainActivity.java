@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import org.chimeramc.client.util.SafeExecutor;
@@ -126,7 +128,7 @@ import okhttp3.OkHttpClient;
 
     private static final long TIP_ROTATE_MS = 8000L;
 
-    /** The tip currently shown, or -1 before the first paint (item 283). */
+    /** The tip currently shown, or -1 before the first paint. */
     private int tipIndex = -1;
 
     private ActivityMainBinding binding;
@@ -200,7 +202,7 @@ import okhttp3.OkHttpClient;
     private final ExecutorService launchStatsExecutor = Executors.newSingleThreadExecutor();
 
     private final Handler uiHandler = MainThread.handler();
-    /** The announcements feed client (item 255), shut down in onDestroy. */
+    /** The announcements feed client, shut down in onDestroy. */
     private org.chimeramc.client.core.announce.AnnouncementClient announcementClient;
 
     /** The lifetime of the self-reposting tip rotation, closed in onDestroy. */
@@ -211,6 +213,22 @@ import okhttp3.OkHttpClient;
     private Runnable shimmerRunnable;
     private boolean shimmerRunning;
     private org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView launchPreview;
+
+    /** The Compose hero host and the state it renders; set up in setupLaunchHero(). */
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchHeroState> heroState;
+    private androidx.compose.ui.platform.ComposeView heroCompose;
+    private String heroName = "";
+    private String heroVersion = "";
+    private org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind heroAbi =
+            org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind.NONE;
+    private int heroInstancesCount;
+    private int heroModsCount;
+    private String heroPlaytime = "0m";
+    private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>> toggleState;
+    private androidx.compose.ui.platform.ComposeView toggleCompose;
+    private String antEggStatusText = "";
+    private String voiceStatusText = "";
+    private String replayStatusText = "";
     /** True while a launch is in flight, so the hero card and Play button cannot double-fire. */
     private boolean launchInProgress;
     private ValueAnimator activeProgressAnimator;
@@ -249,7 +267,6 @@ import okhttp3.OkHttpClient;
         if (!isInstanceShortcutIntent()) {
             new GithubReleaseUpdater(this, GithubReleaseUpdater.REPO_OWNER, GithubReleaseUpdater.REPO_NAME, permissionResultLauncher).checkUpdateOnLaunch();
         }
-        showEulaIfNeeded();
         setupOnBackPressedCallback();
 
         accountLoginLauncher = registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(), result -> {
@@ -314,9 +331,9 @@ import okhttp3.OkHttpClient;
             case ACCOUNT:
                 return findViewById(R.id.account_status_bar);
             case HERO:
-                return findViewById(R.id.last_played_card);
+                return findViewById(R.id.launch_hero_compose);
             case TOGGLES:
-                return findViewById(R.id.launch_toggle_antegg);
+                return findViewById(R.id.launch_toggles_compose);
             case CONTENT:
                 return findViewById(R.id.section_content);
             case DOCK:
@@ -614,8 +631,7 @@ import okhttp3.OkHttpClient;
                         }
                         runOnUiThread(() -> { if (bmp != null) headerAvatar.setImageBitmap(bmp); });
                     } catch (Throwable ignored) {
-                        // Best-effort avatar: a decode failure, including a heap exhaustion while
-                        // decoding, must not kill the executor thread.
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:619", "Ignored a failure at MainActivity:619", ignored);
                     }
                 });
             }
@@ -749,7 +765,9 @@ import okhttp3.OkHttpClient;
         popup.setOnDismissListener(() -> {
             if (root != null && scrim != null) {
                 scrim.animate().alpha(0f).setDuration(120).withEndAction(() -> {
-                    try { root.removeView(scrim); } catch (Exception ignored) {}
+                    try { root.removeView(scrim); } catch (Exception ignored) {
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:754", "Ignored a failure at MainActivity:754", ignored);
+                    }
                 }).start();
             }
         });
@@ -1036,6 +1054,7 @@ import okhttp3.OkHttpClient;
                 try {
                     shouldOfferMigration = storageMigrationManager.shouldOfferMigration();
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "MainActivity:1042", "Ignored a failure at MainActivity:1042", ignored);
                 }
                 boolean finalShouldOfferMigration = shouldOfferMigration;
                 runOnUiThread(() -> {
@@ -1082,8 +1101,7 @@ import okhttp3.OkHttpClient;
     }
 
     private void showPostEulaFlow() {
-        SharedPreferences prefs = getSharedPreferences("LauncherPrefs", MODE_PRIVATE);
-        if (!prefs.getBoolean("eula_accepted", false) || postEulaFlowRunning) return;
+        if (postEulaFlowRunning) return;
         if (isInstanceShortcutIntent()) {
             showStorageMigrationPromptIfNeeded();
             return;
@@ -1314,29 +1332,6 @@ import okhttp3.OkHttpClient;
         return getString(R.string.storage_migration_duration_seconds, remainingSeconds);
     }
 
-    private void showEulaIfNeeded() {
-        SharedPreferences prefs = getSharedPreferences("LauncherPrefs", MODE_PRIVATE);
-        if (!prefs.getBoolean("eula_accepted", false)) {
-            showEulaDialog();
-        }
-    }
-
-    private void showEulaDialog() {
-        CustomAlertDialog dia = new CustomAlertDialog(this)
-                .setTitleText(getString(R.string.eula_title))
-                .setMessage(getString(R.string.eula_message))
-                .setUseBorderedBackground(true)
-                .setBlurBackground(true)
-                .setPositiveButton(getString(R.string.eula_agree), v -> {
-                    getSharedPreferences("LauncherPrefs", MODE_PRIVATE)
-                            .edit().putBoolean("eula_accepted", true).apply();
-                    binding.getRoot().postDelayed(this::showPostEulaFlow, 220L);
-                })
-                .setNegativeButton(getString(R.string.eula_exit), v -> finishAffinity());
-        dia.setCancelable(false);
-        dia.show();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -1368,7 +1363,6 @@ import okhttp3.OkHttpClient;
         // the hero preview's animation on every resume.
         bindLaunchPreviewCosmetics();
         if (launchPreview != null) launchPreview.startPreview();
-        bindHeadPod();
         refreshLaunchToggles();
         announcePendingLaunchFailure();
     }
@@ -1416,50 +1410,6 @@ import okhttp3.OkHttpClient;
                 .show();
     }
 
-    /**
-     * Wires the launch tab's head pod: the live 3D skin bust in a glass disc.
-     *
-     * <p>It re-resolves the skin on every bind because the skin can change on the Customize screen,
-     * and gates its idle motion on the personalization "show animations" flag. A tap opens the skin
-     * customizer, which is the pod's documented job.
-     */
-    private void bindHeadPod() {
-        View pod = findViewById(R.id.launch_head_pod);
-        if (!(pod instanceof org.chimeramc.client.ui.components.HeadPodView)) return;
-        org.chimeramc.client.ui.components.HeadPodView headPod =
-                (org.chimeramc.client.ui.components.HeadPodView) pod;
-        headPod.refreshSkin();
-        // The avatar opens the profile sheet (U2): cosmetics and skins are properties of the
-        // player, not destinations, so they live behind the player's own head rather than in a
-        // top-level tab.
-        headPod.setListener(() -> {
-            try {
-                new org.chimeramc.client.launcher.ui.dialogs.ProfileSheet(this).show();
-            } catch (Throwable ignored) {
-                // A sheet that cannot inflate must never take the Play screen down with it.
-            }
-        });
-        try {
-            headPod.setAnimationsEnabled(new PersonalizationManager(this).isShowAnimations());
-        } catch (Throwable ignored) {
-            headPod.setAnimationsEnabled(true);
-        }
-        // The sync indicator reports the cosmetic-sync module's real state: a running module is
-        // synced, one that is enabled but still opening its sockets is loading, and one that is not
-        // running is hidden rather than claiming a link that does not exist.
-        try {
-            org.chimeramc.client.core.cosmetics.CosmeticSyncModule module =
-                    org.chimeramc.client.core.cosmetics.CosmeticSyncModule.peek();
-            boolean running = module != null && module.isRunning();
-            boolean enabled = org.chimeramc.client.core.mods.inbuilt.manager
-                    .InbuiltModManager.getInstance(this).isCosmeticSyncEnabled();
-            headPod.setSyncState(
-                    org.chimeramc.client.ui.components.HeadPodSync.stateFor(enabled, running));
-        } catch (Throwable ignored) {
-            headPod.setSyncState(org.chimeramc.client.ui.components.HeadPodView.SYNC_UNKNOWN);
-        }
-    }
-
     private void applyPersonalization() {
         PersonalizationManager pm = new PersonalizationManager(this);
         
@@ -1491,7 +1441,7 @@ import okhttp3.OkHttpClient;
         applyGlowEffects(glow);
 
         // The motion scheme is applied by BaseActivity.applyMotionScheme for every screen, so
-        // this screen must not set it a second time (one owner, item 345).
+        // this screen must not set it a second time (one owner).
     }
     
     private void applyCardRounding(int roundingDp) {
@@ -1544,16 +1494,14 @@ import okhttp3.OkHttpClient;
         }
 
         int[] cardIds = {
-                R.id.last_played_card,
-                R.id.launch_toggle_antegg,
-                R.id.launch_toggle_voice,
-                R.id.launch_toggle_replay
+                R.id.launch_hero_compose,
+                R.id.launch_toggles_compose
         };
         for (int id : cardIds) {
             View card = findViewById(id);
             if (card != null) {
                 card.setElevation(enabled ? dp(4f) : dp(0f));
-                if (enabled && card.getBackground() instanceof GradientDrawable && card.getId() == R.id.last_played_card) {
+                if (enabled && card.getBackground() instanceof GradientDrawable && card.getId() == R.id.launch_hero_compose) {
                     GradientDrawable bg = (GradientDrawable) card.getBackground().mutate();
                     int accent = new PersonalizationManager(this).getAccentColor();
                     bg.setStroke((int) dp(1.5f), accent != 0 ? accent : getColor(R.color.grad_pulse_glow));
@@ -1563,7 +1511,7 @@ import okhttp3.OkHttpClient;
     }
     
     private void startHeroCardPulse() {
-        View heroCard = findViewById(R.id.last_played_card);
+        View heroCard = findViewById(R.id.launch_hero_compose);
         if (heroCard == null) return;
         PersonalizationManager pm = new PersonalizationManager(this);
         if (!pm.isShowAnimations()) return;
@@ -1616,7 +1564,7 @@ import okhttp3.OkHttpClient;
             uiHandler.removeCallbacks(pulseRunnable);
             pulseRunnable = null;
         }
-        View heroCard = findViewById(R.id.last_played_card);
+        View heroCard = findViewById(R.id.launch_hero_compose);
         if (heroCard != null) {
             heroCard.animate().cancel();
             heroCard.animate().translationZ(0f).alpha(1f)
@@ -1713,9 +1661,6 @@ import okhttp3.OkHttpClient;
         // Setup Launch-tab quick toggles (AntEgg / Voice / Replays)
         setupLaunchToggles();
 
-        // The launch tab's interactive head pod (live 3D skin bust in a glass disc).
-        bindHeadPod();
-
         // Setup the docked launch controls' shimmer feedback
         setupDockFeedback();
 
@@ -1728,13 +1673,13 @@ import okhttp3.OkHttpClient;
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
         setupAnnouncementCard();
-        // Item 273: one mod-update notification a day, never a prompt per mod. The scheduler applies
+        // One mod-update notification a day, never a prompt per mod. The scheduler applies
         // the feature switch and the throttle, and does nothing at all when this build has no feed.
         org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
     }
 
     /**
-     * Shows the announcement card when the feed yields one that applies to this build (item 255).
+     * Shows the announcement card when the feed yields one that applies to this build.
      *
      * <p>The card is hidden by default and only made visible for a matching, undismissed card, so a
      * failed fetch leaves the Launch tab exactly as it was. Dismissing writes the id and hides the
@@ -1762,6 +1707,7 @@ import okhttp3.OkHttpClient;
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(announcement.url)));
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:1721", "Ignored a failure at MainActivity:1721", ignored);
                     }
                 });
             } else if (link != null) {
@@ -1779,12 +1725,8 @@ import okhttp3.OkHttpClient;
     }
 
     private void setupQuickActions() {
-        // Last Played Hero Card
-        View lastPlayedCard = findViewById(R.id.last_played_card);
-        if (lastPlayedCard != null) {
-            lastPlayedCard.setOnClickListener(v -> launchGame());
-            DynamicAnim.applyPressScale(lastPlayedCard);
-        }
+        // The hero is a Compose screen now and owns its own click (the host passes launchGame as
+        // onHeroClick), so there is nothing to wire here beyond the sections below.
 
         // Refresh hero card stats
         refreshLastPlayedCard();
@@ -1803,38 +1745,56 @@ import okhttp3.OkHttpClient;
      * that feature's live state on its own status line, refreshed whenever the tab resumes.
      */
     private void setupLaunchToggles() {
-        View hero = findViewById(R.id.launch_hero);
-        if (hero != null) {
-            launchPreview = hero.findViewById(R.id.launch_player_preview);
-            if (launchPreview != null) {
-                launchPreview.setAlwaysAnimate(true);
-                bindLaunchPreviewCosmetics();
-                launchPreview.startPreview();
-            }
-        }
-        View antEgg = findViewById(R.id.launch_toggle_antegg);
-        if (antEgg != null) {
-            antEgg.setOnClickListener(v -> openModsFullscreen());
-            DynamicAnim.applyPressScale(antEgg);
-        }
-        View voice = findViewById(R.id.launch_toggle_voice);
-        if (voice != null) {
-            voice.setOnClickListener(v -> startActivity(
-                    new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
-            DynamicAnim.applyPressScale(voice);
-        }
-        // Guest mode removes the Mods and Voice shortcuts from this tab (item 272). The nav bar
-        // hides the Mods destination, but the Launch tab reaches the same places through these
-        // cards, so both are resolved through the same rule here rather than left as an open door.
-        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
-        setRowVisible(antEgg, !guest);
-        setRowVisible(voice, !guest);
-        View replay = findViewById(R.id.launch_toggle_replay);
-        if (replay != null) {
-            replay.setOnClickListener(v -> LibraryActivity.open(this, LibraryActivity.TAB_REPLAY));
-            DynamicAnim.applyPressScale(replay);
-        }
+        setupLaunchHero();
+        setupLaunchToggleRow();
         refreshLaunchToggles();
+    }
+
+    /** Hosts the Compose quick-toggle row and keeps its data in step with the live statuses. */
+    private void setupLaunchToggleRow() {
+        View host = findViewById(R.id.launch_toggles_compose);
+        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
+        toggleCompose = (androidx.compose.ui.platform.ComposeView) host;
+        toggleState = org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.state(
+                buildToggleRow());
+        toggleCompose.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.setContent(
+                toggleCompose,
+                toggleState,
+                kind -> {
+                    switch (kind) {
+                        case ANTEGG:
+                            openModsFullscreen();
+                            break;
+                        case VOICE:
+                            startActivity(new Intent(this,
+                                    org.chimeramc.client.ui.activities.VoiceChatActivity.class));
+                            break;
+                        case REPLAY:
+                            LibraryActivity.open(this, LibraryActivity.TAB_REPLAY);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+    }
+
+    /** The row's data: guest mode hides Mods and Voice, and Replays always stays. */
+    private java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>
+            buildToggleRow() {
+        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
+        return org.chimeramc.client.ui.compose.launch.LaunchToggleState.visible(
+                guest,
+                getString(R.string.launch_toggle_antegg), antEggStatusText,
+                getString(R.string.launch_toggle_voice), voiceStatusText,
+                getString(R.string.launch_toggle_replay), replayStatusText);
+    }
+
+    /** Rebuilds the toggle row from the live statuses and recomposes. */
+    private void refreshToggleRow() {
+        if (toggleState == null) return;
+        toggleState.setValue(buildToggleRow());
     }
 
     /**
@@ -1902,25 +1862,20 @@ import okhttp3.OkHttpClient;
      * library's clip count. Nothing here is a second source of truth.
      */
     private void refreshLaunchToggles() {
-        TextView antEggStatus = findViewById(R.id.launch_antegg_status);
-        TextView voiceStatus = findViewById(R.id.launch_voice_status);
-        TextView replayStatus = findViewById(R.id.launch_replay_status);
-
-        // Voice is in-memory state, so it is painted straight away.
-        if (voiceStatus != null) {
-            org.chimeramc.client.core.voice.VoiceChatModule module =
-                    org.chimeramc.client.core.voice.VoiceChatModule.peek();
-            boolean on = module != null && module.isRunning();
-            voiceStatus.setText(on
-                    ? getString(R.string.launch_voice_status_on, getVoiceRouteLabel())
-                    : getString(R.string.launch_voice_status_off));
-        }
+        // Voice is in-memory state, so it is refreshed straight away.
+        org.chimeramc.client.core.voice.VoiceChatModule module =
+                org.chimeramc.client.core.voice.VoiceChatModule.peek();
+        boolean on = module != null && module.isRunning();
+        voiceStatusText = on
+                ? getString(R.string.launch_voice_status_on, getVoiceRouteLabel())
+                : getString(R.string.launch_voice_status_off);
+        refreshToggleRow();
 
         // The other two read the disk: the AntEgg count lists a directory and the Replay count
         // scans the replays folder and asks MediaMetadataRetriever for every clip's duration. On
         // the UI thread that ran on every onResume, so returning from any screen blocked the frame
         // while the video metadata was parsed. Gather both on a worker and paint when they arrive.
-        if (antEggStatus == null && replayStatus == null) return;
+        if (toggleState == null) return;
         // onResume can run against an executor that onDestroy has already shut down, and an
         // escaping RejectedExecutionException would take the Launch tab down with it. The statuses
         // then simply keep their last painted value, which is the right degradation for a
@@ -1931,19 +1886,17 @@ import okhttp3.OkHttpClient;
                 final int replayCount = countReplayClips();
                 uiHandler.post(() -> {
                     if (isFinishing() || isDestroyed()) return;
-                    if (antEggStatus != null) {
-                        antEggStatus.setText(antEggCount > 0
-                                ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
-                                : getString(R.string.launch_antegg_status_none));
-                    }
-                    if (replayStatus != null) {
-                        replayStatus.setText(replayCount > 0
-                                ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
-                                : getString(R.string.launch_replay_status_none));
-                    }
+                    antEggStatusText = antEggCount > 0
+                            ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
+                            : getString(R.string.launch_antegg_status_none);
+                    replayStatusText = replayCount > 0
+                            ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
+                            : getString(R.string.launch_replay_status_none);
+                    refreshToggleRow();
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:1904", "Ignored a failure at MainActivity:1904", ignored);
         }
     }
 
@@ -1964,7 +1917,7 @@ import okhttp3.OkHttpClient;
             // game through the engine hook when available) rather than a stale or generic one.
             launchPreview.refreshSkin();
         } catch (Throwable ignored) {
-            // A preview must never block the Launch tab; the placeholder skin is fine.
+            AppLog.warnOnce("GlowberryClient", "MainActivity:1925", "Ignored a failure at MainActivity:1925", ignored);
         }
     }
 
@@ -2065,7 +2018,7 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * Shows the tip carousel, or hides it once the launch budget is spent (item 283).
+     * Shows the tip carousel, or hides it once the launch budget is spent.
      *
      * <p>The retirement and the no-repeat rotation are {@link org.chimeramc.client.core.stats
      * .TipsCarousel}'s rules; this method only paints the result and owns the timer. The panel is
@@ -2091,7 +2044,7 @@ import okhttp3.OkHttpClient;
 
         // The tip rotation is a self-reposting tick. It runs through the activity's scope so
         // onDestroy removes the pending post instead of firing into a destroyed Activity
-        // (items 14, 295).
+        //.
         if (tipScope.isClosed()) return;
         tipScope.postDelayed(new Runnable() {
             @Override
@@ -2190,15 +2143,11 @@ import okhttp3.OkHttpClient;
     private void initMiscellaneousSection() {
         binding.miscCurseforgeRow.setOnClickListener(v -> startActivity(new Intent(this, CurseForgeActivity.class)));
         binding.miscModHubRow.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
-        // Guest mode hides the mod-download rows (item 272); both are binding fields, so this adds
+        // Guest mode hides the mod-download rows; both are binding fields, so this adds
         // no new lookup.
         boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
         setRowVisible(binding.miscModHubRow, !guest);
         setRowVisible(binding.miscCurseforgeRow, !guest);
-        if (binding.miscDiscordRow != null) {
-            binding.miscDiscordRow.setOnClickListener(v -> openDiscordInvite());
-            DynamicAnim.applyPressScale(binding.miscDiscordRow);
-        }
         binding.miscAccountsRow.setOnClickListener(v -> startActivity(new Intent(this, AccountsActivity.class)));
         binding.miscQuickLaunchRow.setOnClickListener(v -> startActivity(new Intent(this, QuickLaunchActivity.class)));
         DynamicAnim.applyPressScale(binding.miscCurseforgeRow);
@@ -2225,7 +2174,7 @@ import okhttp3.OkHttpClient;
             mods.setOnClickListener(v -> startActivity(new Intent(this, ModsFullscreenActivity.class)));
             DynamicAnim.applyPressScale(mods);
             DynamicAnim.applyHoverBloom(mods);
-            // Guest mode removes the Mods shortcut from the dock too (item 272).
+            // Guest mode removes the Mods shortcut from the dock too.
             setRowVisible(mods, !org.chimeramc.client.core.privacy.PrivacyModes.current(this)
                     .isGuestMode());
         }
@@ -2260,7 +2209,7 @@ import okhttp3.OkHttpClient;
         try {
             new org.chimeramc.client.launcher.ui.dialogs.ProfileSheet(this).show();
         } catch (Throwable ignored) {
-            // A sheet that cannot inflate must never take the Play screen down with it.
+            AppLog.warnOnce("GlowberryClient", "MainActivity:2221", "Ignored a failure at MainActivity:2221", ignored);
         }
     }
 
@@ -2280,21 +2229,6 @@ import okhttp3.OkHttpClient;
     private void openModsFullscreen() {
         Intent intent = new Intent(this, ModsFullscreenActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Opens the community Discord invite. The URL is a plain https link (a string resource), so any
-     * installed Discord app or a browser can handle it; a failure to resolve is reported rather than
-     * crashing.
-     */
-    private void openDiscordInvite() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    android.net.Uri.parse(getString(R.string.discord_join_url)));
-            startActivity(intent);
-        } catch (Throwable t) {
-            Toast.makeText(this, R.string.discord_join_failed, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void launchGame() {
@@ -2410,10 +2344,11 @@ import okhttp3.OkHttpClient;
             try {
                 GamePackageManager.invalidateExtractionCache(this, version);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "MainActivity:2371", "Ignored a failure at MainActivity:2371", ignored);
             }
         }
         if (readiness == LaunchReadiness.State.GAME_NEWER_THAN_RULES) {
-            // The installed game is ahead of the signature set (item 256). This is a warning, not a
+            // The installed game is ahead of the signature set. This is a warning, not a
             // blocker: the game runs, only the hook-driven features lag. The user is told once, on
             // the launch attempt that hit it, and continuing is a single tap.
             trace.warning("Installed build newer than signature rules", version.versionCode);
@@ -2425,7 +2360,7 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * The warning shown when the installed build is newer than the signature set (item 256).
+     * The warning shown when the installed build is newer than the signature set.
      *
      * <p>It is deliberately a dismissible dialog rather than a silent log line: the features the
      * user expects (overlays, cosmetics, controller hooks) will be missing, and without a word
@@ -2437,6 +2372,7 @@ import okhttp3.OkHttpClient;
         try {
             covered = PreloaderSignatureRulesManager.highestCoveredVersion(this);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:2399", "Ignored a failure at MainActivity:2399", ignored);
         }
         String message = getString(R.string.launch_failure_message_newer_game);
         if (covered != null && !covered.isEmpty()) {
@@ -2805,88 +2741,39 @@ import okhttp3.OkHttpClient;
             List<org.chimeramc.client.core.versions.GameVersion> custom = versionManager.getCustomVersions();
             installedCount = (installed != null ? installed.size() : 0) + (custom != null ? custom.size() : 0);
         }
-        TextView instancesStat = findViewById(R.id.last_played_instances_stat);
-        if (instancesStat != null) {
-            // Count up from zero rather than appearing at the final value: the hero card is the
-            // first thing drawn after the splash, so the numbers should settle, not blink in.
-            final int count = installedCount;
-            DynamicAnim.countUp(count, 400L,
-                    value -> setAnimatedStatText(instancesStat,
-                            getResources().getQuantityString(R.plurals.stat_instances_count, (int) value, (int) value)));
-        }
+        // The hero's stats are rendered by the Compose hero; refreshHero recomposes them from the
+        // live values, so the count-up below only drives the animated number into that state.
+        final int count = installedCount;
+        DynamicAnim.countUp(count, 400L, value -> {
+            heroInstancesCount = (int) value;
+            refreshHero();
+        });
         // The mods count comes from the live mod list, not from a count captured here: the list
         // loads asynchronously per instance, so reading it at bind time would report the previous
         // instance (usually zero). updateModsUI recomputes it whenever the list changes.
         if (viewModel != null) {
             refreshActiveModsStat(viewModel.getModsLiveData().getValue());
         }
-        TextView playtimeStat = findViewById(R.id.last_played_time_stat);
-        if (playtimeStat != null) {
-            long totalPlaytime = selectedVersion != null
-                    ? PlaytimeManager.getTotalMs(MinecraftLauncher.getStorageProfileId(selectedVersion))
-                    : 0L;
-            playtimeStat.setText(PlaytimeManager.formatPlaytime(totalPlaytime));
-        }
+        long totalPlaytime = selectedVersion != null
+                ? PlaytimeManager.getTotalMs(MinecraftLauncher.getStorageProfileId(selectedVersion))
+                : 0L;
+        heroPlaytime = PlaytimeManager.formatPlaytime(totalPlaytime);
         updateLastPlayedName(
                 selectedVersion != null ? getInstanceDisplayName(selectedVersion) : null,
                 selectedVersion
         );
     }
 
-    private void setAnimatedStatText(TextView view, String text) {
-        if (view == null) return;
-        PersonalizationManager pm = new PersonalizationManager(this);
-        if (!pm.isShowAnimations()) {
-            view.setText(text);
-            return;
-        }
-        String current = view.getText().toString();
-        if (current.equals(text)) {
-            return;
-        }
-        view.setText(text);
-        view.setScaleX(0.6f);
-        view.setScaleY(0.6f);
-        view.setAlpha(0.3f);
-        view.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .alpha(1f)
-                .setDuration(320L)
-                .setInterpolator(DynamicAnim.getDefaultInterpolator())
-                .withLayer()
-                .start();
-    }
-
     private void updateLastPlayedName(String instanceName, GameVersion selectedVersion) {
-        TextView heroName = findViewById(R.id.last_played_name);
-        String name = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
-        if (heroName != null) {
-            heroName.setText(name);
-        }
-        TextView heroVersion = findViewById(R.id.last_played_version);
-        if (heroVersion != null) {
-            String versionText = selectedVersion != null ? getInstanceVersionText(selectedVersion) : "";
-            // Instances are commonly named after their version, so the same "26.51" would appear
-            // twice. The name is the identity; only show the version line when it adds anything.
-            if (versionText != null && versionText.equals(name)) {
-                versionText = "";
-            }
-            heroVersion.setText(versionText);
-            heroVersion.setVisibility(TextUtils.isEmpty(versionText) ? View.GONE : View.VISIBLE);
-        }
-        TextView abiBadge = findViewById(R.id.last_played_abi_badge);
-        if (abiBadge != null) {
-            String abi = selectedVersion != null ? selectedVersion.abiList : null;
-            if (TextUtils.isEmpty(abi)) {
-                abiBadge.setVisibility(View.GONE);
-            } else {
-                boolean is32Bit = "armeabi-v7a".equals(abi) || "x86".equals(abi);
-                abiBadge.setText(is32Bit ? getString(R.string.abi_32_bit) : getString(R.string.abi_64_bit));
-                abiBadge.setTextColor(is32Bit ? 0xFFF6A821 : 0xFF0F5BE4);
-                abiBadge.setVisibility(View.VISIBLE);
-            }
-        }
+        heroName = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
+        String versionText = selectedVersion != null ? getInstanceVersionText(selectedVersion) : "";
+        // Instances are commonly named after their version, so the same "26.51" would appear twice.
+        // The rule lives in LaunchHeroState so it is unit-tested; the hero renders the result.
+        heroVersion = org.chimeramc.client.ui.compose.launch.LaunchHeroState
+                .versionOrEmpty(heroName, versionText);
+        heroAbi = org.chimeramc.client.ui.compose.launch.LaunchHeroState
+                .abiKind(selectedVersion != null ? selectedVersion.abiList : null);
+        refreshHero();
     }
 
     private boolean isVersionManagerReady() {
@@ -3017,11 +2904,56 @@ import okhttp3.OkHttpClient;
     }
 
     private void refreshActiveModsStat(List<Mod> mods) {
-        TextView modsStat = findViewById(R.id.last_played_mods_stat);
-        if (modsStat == null) return;
         int count = Mod.countEnabled(mods);
-        DynamicAnim.countUp(count, 400L,
-                value -> setAnimatedStatText(modsStat, getString(R.string.stat_mods_count, (int) value)));
+        DynamicAnim.countUp(count, 400L, value -> {
+            heroModsCount = (int) value;
+            refreshHero();
+        });
+    }
+
+    /**
+     * Builds the Launch-tab hero once and hosts it in its ComposeView.
+     *
+     * <p>The hero is a Compose screen now, but it is still the real character preview: the host binds
+     * the equipped cape/hat/pet from the CosmeticStore (which the composable cannot read) and starts
+     * the preview, then keeps the [LaunchHeroState] in step so a recomposition shows the new values.
+     */
+    private void setupLaunchHero() {
+        View host = findViewById(R.id.launch_hero_compose);
+        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
+        heroCompose = (androidx.compose.ui.platform.ComposeView) host;
+        heroState = org.chimeramc.client.ui.compose.launch.LaunchHeroHost.state(buildHeroState());
+        heroCompose.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.launch.LaunchHeroHost.setContent(
+                heroCompose,
+                heroState,
+                this::openProfileSheet,
+                this::launchGame,
+                view -> {
+                    launchPreview = view;
+                    bindLaunchPreviewCosmetics();
+                    if (launchPreview != null) launchPreview.startPreview();
+                });
+    }
+
+    /** Rebuilds the hero state from the live fields and recomposes. */
+    private void refreshHero() {
+        if (heroState == null) return;
+        heroState.setValue(buildHeroState());
+    }
+
+    private org.chimeramc.client.ui.compose.launch.LaunchHeroState buildHeroState() {
+        return new org.chimeramc.client.ui.compose.launch.LaunchHeroState(
+                getString(R.string.last_played_title),
+                getString(R.string.last_played_tap),
+                heroName.isEmpty() ? getString(R.string.not_found_version) : heroName,
+                heroVersion,
+                heroAbi,
+                heroInstancesCount,
+                heroModsCount,
+                heroPlaytime,
+                getString(R.string.cosmetics_preview_description));
     }
 
     private void setupNavBar() {
@@ -3031,10 +2963,9 @@ import okhttp3.OkHttpClient;
 
     @Override
     protected void onDestroy() {
-        if (launchPreview != null) {
-            launchPreview.release();
-            launchPreview = null;
-        }
+        // The Compose hero releases its own preview when the composition leaves, so there is no
+        // manual release here: doing both would release the same view twice.
+        launchPreview = null;
         unbindStorageMigrationService();
         dismissStorageMigrationDialog(null);
         // Both managers own a single-thread pool; without this they outlived the Activity.

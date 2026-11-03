@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The in-game quick settings model (item 225).
+ * The in-game quick settings model.
  *
  * <p>Two settings a player wants to change without leaving a world: the render resolution scale and
  * the frame-rate cap. Both are modelled here as a closed set of choices with the clamping rules, so

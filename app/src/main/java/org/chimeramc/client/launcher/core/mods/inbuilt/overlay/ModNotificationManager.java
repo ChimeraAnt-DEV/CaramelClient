@@ -34,7 +34,7 @@ public class ModNotificationManager {
     private static final int BASE_MARGIN_DP = 16;
     private static final int BOTTOM_OFFSET_DP = 60;
     /**
-     * The most notifications shown at once (item 201).
+     * The most notifications shown at once.
      *
      * <p>A burst of events (a loadout applying a dozen modules, or a script toggling a set) would
      * otherwise stack past the top of the screen and keep a dozen windows alive. Past the cap the
@@ -167,7 +167,7 @@ public class ModNotificationManager {
             .setDuration(SLIDE_DURATION)
             .setInterpolator(new DecelerateInterpolator());
         // A hardware layer pays for itself while the slide/alpha runs and is pure overhead after,
-        // so it is promoted for the animation and demoted on its end or cancel (item 189).
+        // so it is promoted for the animation and demoted on its end or cancel.
         OverlayLayers.hardwareDuring(view, animator);
         animator.start();
     }

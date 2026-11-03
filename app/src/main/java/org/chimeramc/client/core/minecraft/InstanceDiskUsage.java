@@ -3,7 +3,7 @@ package org.chimeramc.client.core.minecraft;
 import java.io.File;
 
 /**
- * The disk an instance occupies, split by what it holds (item 265).
+ * The disk an instance occupies, split by what it holds.
  *
  * <p>A single total does not tell a user what they can safely clear, so the figure is broken into
  * game data (worlds, resource packs, settings), mods, extracted runtime libraries and the scratch

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** The hold-to-scrub drag rules (item 206). */
+/** The hold-to-scrub drag rules. */
 public class ReplayScrubGestureTest {
 
     @Test

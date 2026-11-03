@@ -16,7 +16,7 @@ import java.util.Set;
 import org.junit.Test;
 
 /**
- * Pins the native-library load plan (item 301).
+ * Pins the native-library load plan.
  *
  * <p>These are the rules that were previously interleaved inside the load loop: a library skipped
  * because the device cannot load it and one skipped because the caller asked look identical from

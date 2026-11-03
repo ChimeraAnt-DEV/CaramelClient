@@ -8,6 +8,8 @@
       android:pathData="M12,9A3,3 0,1 1,12 15A3,3 0,0 1,12 9Z"
       android:strokeColor="#000000"
       android:strokeWidth="1.5"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
       android:fillColor="@android:color/transparent" />
 
   <path

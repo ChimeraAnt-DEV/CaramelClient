@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -47,7 +49,7 @@ abstract class TextOverlay {
 
     // The timer fires far more often than the text changes, so an unchanged readout would repaint
     // an identical frame. The gate paints a changed value at once and holds an unchanged one to the
-    // refresh cadence (item 187). Built in the constructor, not here: `refreshIntervalMs()` is
+    // refresh cadence. Built in the constructor, not here: `refreshIntervalMs()` is
     // overridden by the subclasses, and a field initializer would call the override before the
     // subclass's own fields exist.
     private final OverlayRefreshGate refreshGate;
@@ -141,7 +143,7 @@ abstract class TextOverlay {
             isShowing = true;
             handler.post(refreshRunnable);
         } catch (Throwable ignored) {
-            // A readout must never take the session down; leaving it off is acceptable.
+            AppLog.warnOnce("GlowberryClient", "TextOverlay:146", "Ignored a failure at TextOverlay:146", ignored);
         }
     }
 
@@ -181,6 +183,7 @@ abstract class TextOverlay {
         try {
             if (view.getParent() != null) windowManager.removeViewImmediate(view);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "TextOverlay:186", "Ignored a failure at TextOverlay:186", ignored);
         }
     }
 
@@ -224,6 +227,7 @@ abstract class TextOverlay {
                     try {
                         windowManager.updateViewLayout(overlayView, wmParams);
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce("GlowberryClient", "TextOverlay:230", "Ignored a failure at TextOverlay:230", ignored);
                     }
                 }
                 return true;

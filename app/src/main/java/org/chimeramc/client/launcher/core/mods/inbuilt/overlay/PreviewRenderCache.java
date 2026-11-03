@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * The preview's two render decisions, as pure rules (item 204).
+ * The preview's two render decisions, as pure rules.
  *
  * <p>Both decide whether work happens, so both are worth a unit test: a wrong answer is either a
  * frame that never refreshes (the scene changed but the cache says it did not) or a preview that

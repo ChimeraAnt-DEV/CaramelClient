@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * The page arithmetic for the Closet's card grid (item 205).
+ * The page arithmetic for the Closet's card grid.
  *
  * <p>The catalogue is hundreds of entries per category, and the grid is a {@code ScrollView} of
  * wrapping rows, so building every card up front costs a bitmap render and a view per cosmetic

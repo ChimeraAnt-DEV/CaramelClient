@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The frame-time graph mapping (item 191).
+ * The frame-time graph mapping.
  *
  * <p>Pins the direction (oldest on the left, newest on the right), the vertical scale (a longer
  * frame is higher), the floor that stops a steady cadence being pinned to the top, and the guards

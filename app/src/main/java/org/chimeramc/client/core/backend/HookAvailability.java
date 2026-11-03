@@ -4,8 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Which preloader hooks the running build actually installed, as one queryable table (items 453,
- * 493).
+ * Which preloader hooks the running build actually installed, as one queryable table.
  *
  * <p>A hook that did not resolve is not an error — the game classes export no symbols, so a hook
  * exists only when its per-build signature was found. The problem is that a feature built on a

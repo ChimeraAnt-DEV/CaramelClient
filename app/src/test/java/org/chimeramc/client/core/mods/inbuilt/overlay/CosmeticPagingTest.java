@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The Closet grid's page arithmetic (item 205).
+ * The Closet grid's page arithmetic.
  *
  * <p>Pins the boundaries a paged grid gets wrong: an exact multiple of the page size, a partial last
  * page, an empty category (one empty page, not zero), a negative page, and a page past the end.

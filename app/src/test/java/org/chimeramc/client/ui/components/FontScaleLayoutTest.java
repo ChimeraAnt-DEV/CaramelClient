@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * A text-bearing view does not pin its height to a dp value (item 340).
+ * A text-bearing view does not pin its height to a dp value.
  *
  * <p>A fixed height does not grow with the user's font-size setting, so at 200% the label is
  * clipped. The layout rule is {@code wrap_content} plus {@code android:minHeight}: the view is at

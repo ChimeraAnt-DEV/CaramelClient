@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the in-game quick settings model (item 225).
+ * Pins the in-game quick settings model.
  *
  * <p>The panel, the options writer and the tests must agree about the offered values and how an
  * out-of-range value is snapped, because a chip set with nothing selected reads as "nothing

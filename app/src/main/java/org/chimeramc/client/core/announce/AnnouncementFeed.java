@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Parses the announcements feed and picks the card to show (item 255).
+ * Parses the announcements feed and picks the card to show.
  *
  * <p>Android-free and pure so the two rules that matter are unit-tested: a malformed feed parses to
  * an empty list rather than throwing (the feed is a document a human edits and a machine hosts), and

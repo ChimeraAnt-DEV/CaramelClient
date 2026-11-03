@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * The one-shot wake-up behind the daemon loops (item 15). The rules that matter: a signal wakes a
+ * The one-shot wake-up behind the daemon loops. The rules that matter: a signal wakes a
  * waiter immediately, a timeout bounds a wait that nothing signals, and an interrupt is reported
  * rather than swallowed so a loop can use it as its shutdown path.
  */

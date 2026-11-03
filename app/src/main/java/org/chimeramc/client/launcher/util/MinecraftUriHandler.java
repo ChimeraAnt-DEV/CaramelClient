@@ -245,6 +245,7 @@ public class MinecraftUriHandler {
                     break;
             }
         } catch (UnsupportedOperationException ignored) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftUriHandler:248", "Ignored a failure at MinecraftUriHandler:248", ignored);
         }
     }
 
@@ -254,6 +255,7 @@ public class MinecraftUriHandler {
             String serverParam = uri.getQueryParameter(ACTION_ADD_EXTERNAL_SERVER);
             parseAddExternalServerValue(result, serverParam);
         } catch (UnsupportedOperationException ignored) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftUriHandler:258", "Ignored a failure at MinecraftUriHandler:258", ignored);
         }
     }
 
@@ -272,6 +274,7 @@ public class MinecraftUriHandler {
                 }
             }
         } catch (UnsupportedOperationException ignored) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftUriHandler:277", "Ignored a failure at MinecraftUriHandler:277", ignored);
         }
     }
 

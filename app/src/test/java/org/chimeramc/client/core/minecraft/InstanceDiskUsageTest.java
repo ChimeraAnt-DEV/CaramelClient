@@ -11,7 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/** Pins the per-instance disk breakdown (item 265). */
+/** Pins the per-instance disk breakdown. */
 public class InstanceDiskUsageTest {
 
     @Rule

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,6 +56,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
         try {
             PreloaderInput.nativeClearCapturedSkin();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:59", "Ignored a failure at GameSkinFeed:59", ignored);
         }
     }
 
@@ -79,7 +82,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
      * Reads the cached last capture, so the launcher shows the real skin before the game has run.
      * Fail-closed: no cache, a corrupt cache or a decode failure returns null.
      *
-     * <p>Item 246: the capture lives in the bounded LRU {@link SkinCacheStore} first, keyed by the
+     * <p>The capture lives in the bounded LRU {@link SkinCacheStore} first, keyed by the
      * identity hash, and the single-entry {@link LocalSkinCache} is the fallback for a capture
      * written before the store existed. The store is byte-budgeted, so a long-lived install with
      * many accounts cannot grow the cache without limit.
@@ -112,20 +115,20 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
             LocalSkinCache.Entry entry = new LocalSkinCache.Entry(w, h,
                     SkinCaptureValidator.ArmModel.WIDE, "", System.currentTimeMillis(),
                     identity, argb);
-            // Item 246: write into the bounded LRU store, and keep the single-entry cache in step so
+            // Write into the bounded LRU store, and keep the single-entry cache in step so
             // a reader that predates the store still finds the latest capture.
             SkinCacheStore.put(context.getFilesDir(),
                     identity.isEmpty() ? "default" : identity, entry,
                     SkinCacheStore.DEFAULT_BUDGET_BYTES, System.currentTimeMillis());
             LocalSkinCache.write(context.getFilesDir(), entry);
         } catch (Throwable ignored) {
-            // A cache write failure must never break the preview.
+            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:125", "Ignored a failure at GameSkinFeed:125", ignored);
         }
     }
 
     /**
      * Reads the capture, preferring the LRU store's slot for the current identity and falling back
-     * to the single-entry cache (item 246).
+     * to the single-entry cache.
      */
     private static LocalSkinCache.Entry readCachedEntry(Context context) {
         try {
@@ -135,6 +138,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
                     System.currentTimeMillis());
             if (fromStore != null && fromStore.argb != null) return fromStore;
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:141", "Ignored a failure at GameSkinFeed:141", ignored);
         }
         return LocalSkinCache.read(context.getFilesDir());
     }
@@ -218,6 +222,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
                 return Bitmap.createBitmap(argb, width, height, Bitmap.Config.ARGB_8888);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:225", "Ignored a failure at GameSkinFeed:225", ignored);
         }
         return null;
     }

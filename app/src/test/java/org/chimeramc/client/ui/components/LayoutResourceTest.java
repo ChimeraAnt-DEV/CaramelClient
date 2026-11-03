@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * The layouts name their colours and their text (items 22 and 335), enforced against the real files.
+ * The layouts name their colours and their text, enforced against the real files.
  *
  * <p>Two things a layout used to be able to do that it must not:
  *
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  *       which the framework ignores at runtime.
  * </ul>
  *
- * <p>This is the CI gate the plan asks for (item 136): a new literal fails the build rather than
+ * <p>This is the CI gate the plan asks for: a new literal fails the build rather than
  * quietly shipping, which is the only way the count stays at zero after being brought there.
  */
 public class LayoutResourceTest {
@@ -118,7 +118,7 @@ public class LayoutResourceTest {
     }
 
     /**
-     * Every clickable icon names itself for a screen reader (item 23/338).
+     * Every clickable icon names itself for a screen reader.
      *
      * <p>An {@code ImageView} has no text, so a screen reader has nothing to announce unless the
      * view says what it is. Decorative images are fine and common — the fix for those is

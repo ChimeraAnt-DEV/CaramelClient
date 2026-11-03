@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * The agent docs stay an index that points at things that exist (item 320).
+ * The agent docs stay an index that points at things that exist.
  *
  * <p>{@code AGENTS.md} grew past 2,500 lines and 97 sections, so the file a contributor is told to
  * read first was the last thing anyone would finish. It is now a one-page index over

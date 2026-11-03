@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The preview's render-cache and animation-gate rules (item 204).
+ * The preview's render-cache and animation-gate rules.
  *
  * <p>Both are silent failures if wrong: a stale revision freezes the preview, a missing gate keeps
  * a hidden preview burning frames.

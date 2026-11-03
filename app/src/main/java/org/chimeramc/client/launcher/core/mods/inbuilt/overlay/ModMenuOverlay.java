@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.app.Activity;
@@ -531,7 +533,7 @@ public class ModMenuOverlay {
                     fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
                 }
             } catch (Throwable ignored) {
-                // A native read must never take the menu down; the em dash is the honest fallback.
+                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:536", "Ignored a failure at ModMenuOverlay:536", ignored);
             }
             statsFps.setText(ModStatsFormatter.fps(fps));
         }
@@ -587,7 +589,7 @@ public class ModMenuOverlay {
                 if (renderDebugOverlay != null) renderDebugOverlay.start();
             }
         } catch (Throwable ignored) {
-            // A debug overlay must never block the menu.
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:592", "Ignored a failure at ModMenuOverlay:592", ignored);
         }
     }
 
@@ -1097,12 +1099,15 @@ public class ModMenuOverlay {
             case UNSUPPORTED:
                 if (org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
                         .isUnavailable(mod.getId())) {
+                    String unavailable = org.chimeramc.client.core.mods.inbuilt.model
+                            .ModAvailability.unavailableReason(mod.getId());
                     int reason = org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
-                            .REASON_SERVER_DECIDED.equals(
-                            org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
-                                    .unavailableReason(mod.getId()))
+                            .REASON_SERVER_DECIDED.equals(unavailable)
                             ? R.string.mod_unavailable_reason_server
-                            : R.string.mod_unavailable_reason;
+                            : (org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
+                                    .REASON_NO_BACKEND.equals(unavailable)
+                                    ? R.string.mod_unavailable_reason_backend
+                                    : R.string.mod_unavailable_reason);
                     return activity.getString(reason);
                 }
                 return activity.getString(R.string.mod_menu_row_unsupported);
@@ -1286,7 +1291,7 @@ public class ModMenuOverlay {
     }
 
     /**
-     * Binds the radial wheel's centre dead-zone slider (item 199).
+     * Binds the radial wheel's centre dead-zone slider.
      *
      * <p>The value lives in the manager's preferences rather than in {@link ModMenuSettings}: that
      * object is the menu's appearance, and the dead zone is the wheel's input feel, owned by the
@@ -2000,6 +2005,7 @@ public class ModMenuOverlay {
                 }
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2008", "Ignored a failure at ModMenuOverlay:2008", ignored);
         }
         return false;
     }
@@ -2124,7 +2130,7 @@ public class ModMenuOverlay {
     }
 
     /**
-     * Shows or hides the safe-area frame (item 210).
+     * Shows or hides the safe-area frame.
      *
      * <p>The frame is measured against the window it will cover, so it is populated after the first
      * layout pass rather than at inflation, when the window size is still unknown.
@@ -2800,7 +2806,7 @@ public class ModMenuOverlay {
         if (keep != replayContainer) hideReplay();
         if (keep != voiceContainer) hideVoice();
         // The keyboard page arms a key-capture timeout; leaving the page must cancel it, or it
-        // fires into a detached tree and holds the section alive (item 183).
+        // fires into a detached tree and holds the section alive.
         if (keep != keyboardContainer && keyboardSection != null) keyboardSection.onHidden();
         if (keep != packsContainer && packsContainer != null) {
             packsContainer.setVisibility(View.GONE);
@@ -2881,7 +2887,7 @@ public class ModMenuOverlay {
                 autoDisabled = org.chimeramc.client.core.mods.ModCrashAttribution
                         .wasAutoDisabled(activity, mod.getId());
             } catch (Throwable ignored) {
-                // An unreadable crash record must not hide the module; it reads as not crashed.
+                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2890", "Ignored a failure at ModMenuOverlay:2890", ignored);
             }
             states.put(mod.getStableKey(), ModMenuRowState.of(
                     registered, available, autoDisabled, mod.isEnabled()));
@@ -2972,7 +2978,7 @@ public class ModMenuOverlay {
                 adapter.setTheme(theme);
             }
         } catch (Throwable ignored) {
-            // Theme re-application is cosmetic; never let it break the open menu.
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2981", "Ignored a failure at ModMenuOverlay:2981", ignored);
         }
     }
 
@@ -3027,12 +3033,14 @@ public class ModMenuOverlay {
             reduce = new org.chimeramc.client.util.PersonalizationManager(activity)
                     .isReduceMotion();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3036", "Ignored a failure at ModMenuOverlay:3036", ignored);
         }
         try {
             animationsOff = android.provider.Settings.Global.getFloat(
                     activity.getContentResolver(),
                     android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f;
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3043", "Ignored a failure at ModMenuOverlay:3043", ignored);
         }
         return menuSettings.effectiveGlass(reduce, animationsOff);
     }
@@ -3122,6 +3130,7 @@ public class ModMenuOverlay {
                 layer.setImageDrawable(null);
                 layer.setVisibility(android.view.View.GONE);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3133", "Ignored a failure at ModMenuOverlay:3133", ignored);
             }
         }
         recycleQuietly(backdropBlurred);
@@ -3138,6 +3147,7 @@ public class ModMenuOverlay {
         try {
             bitmap.recycle();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3150", "Ignored a failure at ModMenuOverlay:3150", ignored);
         }
     }
 
@@ -3208,7 +3218,9 @@ public class ModMenuOverlay {
                             rootView.removeView(overlayView);
                         }
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3222", "Ignored a failure at ModMenuOverlay:3222", ignored);
+                }
                 overlayView = null;
                 isShowing = false;
                 hasStaggeredOnce = false;

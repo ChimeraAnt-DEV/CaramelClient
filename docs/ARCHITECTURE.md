@@ -2,7 +2,7 @@
 
 GlowberryClient is three cooperating pieces: the **launcher app**, the **preloader** native
 runtime, and an optional **script runtime** (BerryAPI). This page is the one diagram and the
-"who calls whom" that the plan asks for (item 321).
+"who calls whom" that the plan asks for.
 
 ## The three pieces
 
@@ -61,7 +61,7 @@ flowchart TD
 
 - **`GameBackend` / `GameBridge`** (`core/backend`) — the client's input and FPS seam. With no
   backend registered every call is a quiet no-op returning `false`, so the launcher still starts
-  and the overlays degrade quietly (item 502).
+  and the overlays degrade quietly.
 - **`PreloaderInput`** (`launcher/preloader`) — the JNI surface to the preloader: signature rules,
   input injection, render geometry, cosmetic frames, diagnostics.
 - **`BerryApi`** (`launcher/preloader`) — a thin, fail-closed read of the bundled BerryAPI runtime.

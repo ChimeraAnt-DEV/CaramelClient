@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Pins the rail's fold rule (item 85). */
+/** Pins the rail's fold rule. */
 public class NavRailPolicyTest {
 
     @Test

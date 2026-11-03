@@ -225,7 +225,7 @@ public class ModsAdapter extends RecyclerView.Adapter<ModsAdapter.ModViewHolder>
     }
 
     /**
-     * Replaces the list, animating only what changed (item 202).
+     * Replaces the list, animating only what changed.
      *
      * <p>A mod's identity is its id, so discovery that reorders or appends keeps the existing rows
      * and inserts the new ones. Toggling a switch used to rebuild every card in the grid, which

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.os.Environment;
 
@@ -90,7 +92,7 @@ public final class ReplayStorage {
         try (OutputStream out = new FileOutputStream(sidecarFor(clip))) {
             out.write(contents.getBytes("UTF-8"));
         } catch (Exception ignored) {
-            // A missing sidecar only costs metadata on a later scan, not the clip.
+            AppLog.warnOnce("GlowberryClient", "ReplayStorage:95", "Ignored a failure at ReplayStorage:95", ignored);
         }
     }
 

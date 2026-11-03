@@ -153,7 +153,7 @@ public class ModNativeLoader {
                     continue;
                 }
 
-                // Item 512: a native library is loaded with the launcher's own privileges, so the
+                // A native library is loaded with the launcher's own privileges, so the
                 // path it comes from is a security boundary. The entry was copied into the app's
                 // private cache above; prove it is still inside that root before it reaches the
                 // linker, so a symlink or a shared path cannot smuggle a library in.
@@ -317,7 +317,7 @@ public class ModNativeLoader {
                 throw new IOException("dependency of " + mod.getDisplayName()
                         + " cannot load here: " + mismatch);
             }
-            // Item 512: a dependency is loaded from the same private root as the entry; a sibling
+            // A dependency is loaded from the same private root as the entry; a sibling
             // that escaped it (a symlink out of the package) is refused before the linker sees it.
             String rootRefusal = NativeLoadPolicy.describeRefusal(library, allowedRoot);
             if (rootRefusal != null) {

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -136,7 +138,7 @@ public class RadialMenuView extends View {
     private android.view.VelocityTracker flickTracker;
 
     private float density;
-    /** The screen-reader virtual-view bridge for the wheel's slots (item 200). */
+    /** The screen-reader virtual-view bridge for the wheel's slots. */
     private RadialWheelAccessibilityHelper a11yHelper;
 
     private Bitmap skinHead;
@@ -249,7 +251,7 @@ public class RadialMenuView extends View {
         setFocusable(true);
     }
 
-    /** The accessibility bridge, exposed so the host can forward hover events (item 200). */
+    /** The accessibility bridge, exposed so the host can forward hover events. */
     RadialWheelAccessibilityHelper accessibilityHelper() {
         return a11yHelper;
     }
@@ -1194,7 +1196,7 @@ public class RadialMenuView extends View {
         return -1;
     }
 
-    // --- Accessibility surface (item 200) -------------------------------------------------------
+    // --- Accessibility surface -------------------------------------------------------
     //
     // The bridge in RadialWheelAccessibilityHelper reads these; keeping them here means the
     // helper needs no reflection and the wheel's own fields stay private.
@@ -1255,7 +1257,7 @@ public class RadialMenuView extends View {
     }
 
     /**
-     * The combined-index chip (left column first, then right) under a point, or -1 (item 200).
+     * The combined-index chip (left column first, then right) under a point, or -1.
      *
      * <p>{@link #a11yChips} concatenates the two columns, so the bridge needs the same numbering;
      * {@link #chipHit} numbers each column separately, and translating here keeps that knowledge in
@@ -1842,7 +1844,7 @@ public class RadialMenuView extends View {
     }
 
     /**
-     * Moves the profile-entry highlight, ticking when it lands on a different slot (item 199).
+     * Moves the profile-entry highlight, ticking when it lands on a different slot.
      *
      * <p>A profile wheel has no sectors to cross, so the fixed wheel's {@link #setHighlight} tick
      * never fires on it: without this the wheel is silent while the player steps through the
@@ -1892,6 +1894,7 @@ public class RadialMenuView extends View {
         try {
             paint.setFontVariationSettings("'wght' " + weight);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuView:1897", "Ignored a failure at RadialMenuView:1897", ignored);
         }
     }
 

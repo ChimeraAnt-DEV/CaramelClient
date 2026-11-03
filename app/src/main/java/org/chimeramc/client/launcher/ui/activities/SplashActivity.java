@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.animation.Animator;
@@ -445,7 +447,7 @@ public class SplashActivity extends BaseActivity {
         // A first launch with no installed instance goes to the wizard instead of the dashboard;
         // SetupWizardActivity.shouldShow owns that decision so the two entry points cannot drift.
         //
-        // Otherwise the launcher reopens on the destination the user was last on (item 77), so a
+        // Otherwise the launcher reopens on the destination the user was last on, so a
         // cold start does not always reset to Play. An absent or unknown stored name falls back to
         // Play, which is what BaseActivity.rememberedTab() returning null means.
         Class<?> destination;
@@ -544,6 +546,7 @@ public class SplashActivity extends BaseActivity {
                     }
                 }
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "SplashActivity:549", "Ignored a failure at SplashActivity:549", ignored);
             }
         }
     }

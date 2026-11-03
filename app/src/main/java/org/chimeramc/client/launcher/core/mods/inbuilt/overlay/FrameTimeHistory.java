@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * A rolling history of frame intervals, for the FPS overlay's graph mode (item 191).
+ * A rolling history of frame intervals, for the FPS overlay's graph mode.
  *
  * <p>A single frames-per-second number hides stutter: a steady 60 and a 60 that hitches every few
  * frames read identically. This holds the last {@link #CAPACITY} frame intervals in milliseconds so

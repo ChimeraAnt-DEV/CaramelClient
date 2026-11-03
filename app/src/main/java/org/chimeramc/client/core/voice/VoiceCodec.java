@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.voice;
 
+import org.chimeramc.client.util.AppLog;
+
 /**
  * Encodes and decodes 20&nbsp;ms frames of 16&nbsp;kHz mono audio between raw PCM and Opus.
  *
@@ -86,6 +88,7 @@ public final class VoiceCodec {
             try {
                 encoderClass.getMethod("setBitrate", int.class).invoke(encoder, BITRATE);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "VoiceCodec:91", "Ignored a failure at VoiceCodec:91", ignored);
             }
 
             java.lang.reflect.Method encodeMethod = encoderClass.getMethod(

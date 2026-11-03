@@ -13,7 +13,7 @@ import org.chimeramc.client.core.content.ScreenshotItem;
 import java.io.File;
 
 /**
- * Opens the system share sheet for a screenshot (item 276).
+ * Opens the system share sheet for a screenshot.
  *
  * <p>Saving to the gallery is one step; getting the image to Discord or a chat app from there is
  * several. This hands the file straight to {@code ACTION_SEND} with a {@code FileProvider} content

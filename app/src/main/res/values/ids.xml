@@ -14,6 +14,6 @@
     <!-- Marks a view that already has the detach-time animation cancel listener installed. -->
     <item name="dynamic_anim_detach_guard" type="id" />
     <!-- Sequence number of the latest async text request on a view, so a stale measurement is
-         dropped instead of overwriting newer text (item 127). -->
+         dropped instead of overwriting newer text. -->
     <item name="async_text_sequence" type="id" />
 </resources>

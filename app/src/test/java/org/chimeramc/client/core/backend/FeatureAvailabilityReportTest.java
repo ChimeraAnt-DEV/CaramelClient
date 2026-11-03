@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the preloader feature-availability report parsing (item 453).
+ * Pins the preloader feature-availability report parsing.
  *
  * The report is what the Diagnostics screen prints and what a bug report quotes, so its shape, its
  * fail-closed behaviour on a bad blob and its summary wording are all fixed here. The class is

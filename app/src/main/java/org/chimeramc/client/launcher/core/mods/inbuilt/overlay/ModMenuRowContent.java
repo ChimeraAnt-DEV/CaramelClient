@@ -3,7 +3,7 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
 import java.util.Map;
 
 /**
- * Whether two versions of a module row draw the same thing (item 202).
+ * Whether two versions of a module row draw the same thing.
  *
  * <p>The RecyclerView diff decides, per row, whether to rebind it. That decision has to see
  * <em>everything</em> the row renders from, or a change goes unnoticed and the row stays stale on

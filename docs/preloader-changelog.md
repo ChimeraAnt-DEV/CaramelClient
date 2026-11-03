@@ -4,14 +4,14 @@ One entry per change a client or a mod author can observe. Newest first.
 
 This lives with the client's docs rather than inside the `preloader-android` submodule, because it is
 published alongside the client release notes: when the submodule commit is bumped, the entry below
-that matches the new preloader goes into the client's own changelog (item 473).
+that matches the new preloader goes into the client's own changelog.
 
 The preloader is versioned by its **C ABI version** (`pl_get_abi_version()`, currently `1`) and its
 **rule revision** (the `revision` field of `preloader_signature_rules_source.json`). A client that
-bundles a preloader records which rule revision it was tested against (item 474); a mod is only
+bundles a preloader records which rule revision it was tested against; a mod is only
 required to care about the ABI version.
 
-## Tested-against matrix (item 474)
+## Tested-against matrix
 
 Each client release records the preloader ABI version and rule revision it shipped and tested with.
 The client verifies the ABI at load and refuses a mismatch, so the row is what a bug report is

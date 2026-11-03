@@ -3,7 +3,7 @@ package org.chimeramc.client.ui.navigation;
 import org.chimeramc.client.R;
 
 /**
- * What a long press on a destination offers (item 92).
+ * What a long press on a destination offers.
  *
  * <p>A tab is a navigation entry, so a long press must not navigate somewhere else by surprise; it
  * offers the destinations that are <em>sections</em> of that tab. Library holds Instances, Install

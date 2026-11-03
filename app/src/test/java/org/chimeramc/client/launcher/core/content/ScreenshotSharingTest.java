@@ -11,7 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 
 /**
- * The pure share rules (item 276). No mocks: the naming and typing are decided from a real
+ * The pure share rules. No mocks: the naming and typing are decided from a real
  * {@link File}, so the test uses a real temp file and a real temp directory.
  */
 public class ScreenshotSharingTest {

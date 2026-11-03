@@ -17,11 +17,11 @@ public final class RenderDistanceDefaults {
     /** Step down when the frame rate sits below this for the sustain window. */
     public static final int FPS_THRESHOLD = 45;
 
-    /** Chunks moved per accepted change (item 383). */
+    /** Chunks moved per accepted change. */
     public static final int STEP_SIZE = 1;
 
     /**
-     * Minimum ms between two changes (item 382). A drop and a restore that land on consecutive
+     * Minimum ms between two changes. A drop and a restore that land on consecutive
      * sustain windows would otherwise read as flicker; the dwell lets each change settle first.
      */
     public static final long MIN_DWELL_MS = 4000L;

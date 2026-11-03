@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Overlay layouts (item 212): the model's clamps, the store's pure rules and the wheel catalog's
+ * Overlay layouts: the model's clamps, the store's pure rules and the wheel catalog's
  * layout entries.
  */
 public class OverlayLayoutTest {

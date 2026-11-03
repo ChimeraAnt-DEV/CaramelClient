@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the hook self-test report parsing (item 452).
+ * Pins the hook self-test report parsing.
  *
  * The report is what the Diagnostics screen prints and what a bug report quotes, so its shape, its
  * fail-closed behaviour on a bad blob and its summary wording are fixed here. The class is

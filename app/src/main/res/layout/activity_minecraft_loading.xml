@@ -1,154 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<!--
+    The launch screen. The default state is calm and centred: the Glowberry logo, the status line and
+    a rotating colour-shifting ring that reports the launch phase on its own. The raw launch log is a
+    diagnostic, so it lives behind the "Show launch log" setting and is hidden unless the user opts
+    in; when it is off the whole screen is just the logo, the status and the ring.
+-->
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:paddingHorizontal="@dimen/space_8"
-    android:paddingVertical="@dimen/space_6"
-    tools:context=".core.minecraft.MinecraftLoadingActivity">
+    tools:context=".launcher.core.minecraft.MinecraftLoadingActivity">
 
-    <ImageView
-        android:id="@+id/minecraftLaunchLogo"
-        android:layout_width="58dp"
-        android:layout_height="58dp"
-        android:contentDescription="@string/splash_logo_desc"
-        android:src="@drawable/ic_glowberry_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/minecraftLaunchTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_4"
-        android:includeFontPadding="false"
-        android:text="@string/minecraft_loading_title"
-        android:textColor="@color/on_background"
-        android:textAppearance="@style/TextAppearance.Glowberry.Display"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/minecraftLaunchSubtitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/minecraftLaunchLogo"
-        app:layout_constraintTop_toTopOf="@id/minecraftLaunchLogo"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/minecraftLaunchSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_4"
-        android:layout_marginTop="@dimen/space_2"
-        android:includeFontPadding="false"
-        android:text="@string/minecraft_loading_subtitle"
-        android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label"
-        app:layout_constraintBottom_toBottomOf="@id/minecraftLaunchLogo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/minecraftLaunchLogo"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchTitle" />
-
-    <TextView
-        android:id="@+id/minecraftLaunchStatus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:includeFontPadding="false"
-        android:text="@string/minecraft_loading_status_preparing"
-        android:textColor="@color/on_background"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchLogo"
-    android:accessibilityHeading="true" />
-
-    <ProgressBar
-        android:id="@+id/minecraftLaunchProgress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        android:layout_marginTop="@dimen/space_3"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0"
-        android:progressDrawable="@drawable/bg_loading_progress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchStatus" />
-
-    <TextView
-        android:id="@+id/minecraftLaunchDetail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_3"
-        android:includeFontPadding="false"
-        android:minHeight="18dp"
-        android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchProgress"
-        tools:text="Loading libminecraftpe.so" />
-
-    <TextView
-        android:id="@+id/minecraftLaunchLogTitle"
+    <!-- The centred launch lockup: logo, ring, status. Always visible. -->
+    <LinearLayout
+        android:id="@+id/minecraftLaunchCenter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_4"
-        android:includeFontPadding="false"
-        android:text="@string/minecraft_loading_log_title"
-        android:textColor="@color/on_background"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchDetail" />
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_8">
 
-    <ScrollView
-        android:id="@+id/minecraftLaunchLogScroll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_3"
-        android:background="@drawable/bg_minecraft_loading_terminal"
-        android:fadeScrollbars="false"
-        android:padding="@dimen/space_4"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/minecraftLaunchReturn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchLogTitle"
-        app:layout_goneMarginBottom="0dp">
+        <ImageView
+            android:id="@+id/minecraftLaunchLogo"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:contentDescription="@string/splash_logo_desc"
+            android:src="@drawable/ic_glowberry_logo" />
+
+        <org.chimeramc.client.launcher.ui.views.LaunchRingView
+            android:id="@+id/minecraftLaunchRing"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="@dimen/space_6"
+            android:importantForAccessibility="no" />
 
         <TextView
-            android:id="@+id/minecraftLaunchLog"
-            android:layout_width="match_parent"
+            android:id="@+id/minecraftLaunchStatus"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
+            android:layout_marginTop="@dimen/space_6"
             android:includeFontPadding="false"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/on_header_gradient_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
-    </ScrollView>
+            android:gravity="center"
+            android:text="@string/minecraft_loading_status_preparing"
+            android:textColor="@color/on_background"
+            android:textAppearance="@style/TextAppearance.Glowberry.Title" />
+
+        <TextView
+            android:id="@+id/minecraftLaunchDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:textColor="@color/text_secondary"
+            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+    </LinearLayout>
+
+    <!-- The raw log, shown only when the user turns on "Show launch log" in Settings. -->
+    <LinearLayout
+        android:id="@+id/minecraftLaunchLogContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_4"
+        android:paddingBottom="@dimen/space_4"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/minecraftLaunchLogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:accessibilityHeading="true"
+            android:text="@string/minecraft_loading_log_title"
+            android:textColor="@color/on_background"
+            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textStyle="bold" />
+
+        <ScrollView
+            android:id="@+id/minecraftLaunchLogScroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/space_3"
+            android:layout_weight="1"
+            android:background="@drawable/bg_minecraft_loading_terminal"
+            android:fadeScrollbars="false"
+            android:padding="@dimen/space_4"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/minecraftLaunchLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/on_header_gradient_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        </ScrollView>
+    </LinearLayout>
 
     <Button
         android:id="@+id/minecraftLaunchReturn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/space_6"
         android:minHeight="44dp"
-        android:layout_marginTop="@dimen/space_4"
-        android:background="@drawable/bg_launch_button"
-        android:minWidth="160dp"
-        android:paddingHorizontal="@dimen/space_4"
-        android:text="@string/minecraft_loading_return"
-        android:textAllCaps="false"
-        android:textColor="@color/on_primary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minecraftLaunchLogScroll"
         tools:visibility="visible" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

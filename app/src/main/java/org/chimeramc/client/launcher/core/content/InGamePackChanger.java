@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -269,7 +271,7 @@ public final class InGamePackChanger {
     }
 
     /**
-     * The active uuids in the order the global list stores them, first to last (item 253).
+     * The active uuids in the order the global list stores them, first to last.
      *
      * <p>This is the order a reorder starts from: reading it back rather than re-deriving it means
      * a move works from what the game will actually apply, not from the list's display order.
@@ -291,7 +293,7 @@ public final class InGamePackChanger {
     }
 
     /**
-     * Rewrites the global pack list so the active packs appear in {@code order} (item 253).
+     * Rewrites the global pack list so the active packs appear in {@code order}.
      *
      * <p>Bedrock applies active packs bottom-up, so the array order <em>is</em> the priority: the
      * last entry wins a texture conflict. The list is rebuilt from the current file, reordering the
@@ -520,8 +522,7 @@ public final class InGamePackChanger {
                 return parsed.getAsJsonArray();
             }
         } catch (Exception ignored) {
-            // A corrupt list is treated as empty and rewritten by the next toggle; keeping
-            // unparseable bytes would stop the game from reading any global pack.
+            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:525", "Ignored a failure at InGamePackChanger:525", ignored);
         }
         return null;
     }
@@ -563,6 +564,7 @@ public final class InGamePackChanger {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:567", "Ignored a failure at InGamePackChanger:567", ignored);
         }
         return pack.getName();
     }

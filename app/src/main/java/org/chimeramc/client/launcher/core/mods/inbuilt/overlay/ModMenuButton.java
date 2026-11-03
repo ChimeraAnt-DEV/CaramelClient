@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -266,7 +268,9 @@ public class ModMenuButton {
                         rootView.removeView(buttonView);
                     }
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "ModMenuButton:272", "Ignored a failure at ModMenuButton:272", ignored);
+            }
             buttonView = null;
             isShowing = false;
         });

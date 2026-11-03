@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.voice;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -279,6 +281,7 @@ public final class VoiceAudioEngine {
             try {
                 active.write(pcm, 0, length);
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "VoiceAudioEngine:284", "Ignored a failure at VoiceAudioEngine:284", ignored);
             }
             return;
         }
@@ -293,6 +296,7 @@ public final class VoiceAudioEngine {
         try {
             active.write(mixed, 0, length);
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "VoiceAudioEngine:299", "Ignored a failure at VoiceAudioEngine:299", ignored);
         }
     }
 
@@ -339,6 +343,7 @@ public final class VoiceAudioEngine {
                 active.stop();
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "VoiceAudioEngine:346", "Ignored a failure at VoiceAudioEngine:346", ignored);
         }
         active.release();
     }
@@ -350,6 +355,7 @@ public final class VoiceAudioEngine {
         try {
             active.stop();
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "VoiceAudioEngine:358", "Ignored a failure at VoiceAudioEngine:358", ignored);
         }
         active.release();
     }

@@ -184,7 +184,7 @@
                     android:id="@+id/mod_config_files_row"
                     layout="@layout/item_mod_detail_meta_row" />
 
-                <!-- Item 511: show the verified hash and the source file so a mod's provenance is
+                <!-- Show the verified hash and the source file so a mod's provenance is
                      visible, not just its name. -->
                 <include
                     android:id="@+id/mod_integrity_row"

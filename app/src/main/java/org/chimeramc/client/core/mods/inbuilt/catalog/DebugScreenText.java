@@ -57,7 +57,7 @@ public final class DebugScreenText {
         /** True when a frame-pacing reading exists at all this session. */
         public boolean framePacingAvailable;
         /**
-         * Streaming-safe mode (item 277): mask the world position, so a stream or a screenshot does
+         * Streaming-safe mode: mask the world position, so a stream or a screenshot does
          * not reveal where the player is. The frame rate, memory and version are not identifying
          * and stay visible.
          */

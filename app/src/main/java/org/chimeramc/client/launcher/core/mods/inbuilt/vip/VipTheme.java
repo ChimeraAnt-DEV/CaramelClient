@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.vip;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import org.chimeramc.client.ui.components.UiTokens;
@@ -26,6 +28,7 @@ public final class VipTheme {
             glow = new org.chimeramc.client.util.PersonalizationManager(context)
                     .isEnableGlowEffects();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "VipTheme:31", "Ignored a failure at VipTheme:31", ignored);
         }
         this.glowEnabled = glow;
     }

@@ -5,7 +5,7 @@ import java.util.Locale;
 
 /**
  * The pure rules behind sharing a screenshot: what to call the shared item and which MIME type to
- * declare (item 276).
+ * declare.
  *
  * <p>Android-free on purpose, so the naming and typing are unit-testable on the JVM; the
  * {@code ACTION_SEND} intent itself is assembled by {@link ScreenshotShareSheet}, which needs a

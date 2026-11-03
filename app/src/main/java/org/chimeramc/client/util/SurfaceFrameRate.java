@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Applies a frame-rate cap to the window's surface (item 261).
+ * Applies a frame-rate cap to the window's surface.
  *
  * <p>From API 30, {@code Surface.setFrameRate} is the mechanism the platform recommends: it asks
  * the compositor to present the surface at a rate directly, so a cap never touches the display

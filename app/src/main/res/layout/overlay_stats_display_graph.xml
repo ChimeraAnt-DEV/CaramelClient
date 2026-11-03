@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     The FPS overlay body: the readout line plus, when the frame-time graph is enabled, a small
-    polyline of the last two seconds of frame intervals (item 191). The graph is the child of a
+    polyline of the last two seconds of frame intervals. The graph is the child of a
     vertical container so the readout keeps the exact look it had; the graph is GONE until the user
     turns it on, so the default overlay is unchanged.
 -->

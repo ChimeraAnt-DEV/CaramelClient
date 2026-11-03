@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.File;
 
 /**
@@ -81,6 +83,7 @@ public final class AccountSkinCache {
                      new java.io.FileOutputStream(new File(target.getParentFile(), PNG_NAME + ".key"))) {
             out.write(entry.accountKey.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         } catch (java.io.IOException ignored) {
+            AppLog.warnOnce("GlowberryClient", "AccountSkinCache:86", "Ignored a failure at AccountSkinCache:86", ignored);
         }
         return true;
     }

@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 /**
- * Draws the laid-out bounds of the nav entries over the nav itself (item 80).
+ * Draws the laid-out bounds of the nav entries over the nav itself.
  *
  * <p>It is a {@link Drawable} added to the nav's {@link android.view.ViewOverlay}, so it paints over
  * the chrome without becoming a child of it: no layout is affected, nothing is measured differently,

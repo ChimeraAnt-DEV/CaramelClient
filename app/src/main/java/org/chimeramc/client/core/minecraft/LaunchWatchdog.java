@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
 /**
- * The rule for a launch that never reaches a drawn frame (item 285).
+ * The rule for a launch that never reaches a drawn frame.
  *
  * <p>A launch can stall without failing: the extraction completes, the loader reports success, and
  * then the game process never draws. From the loading screen that is indistinguishable from a slow

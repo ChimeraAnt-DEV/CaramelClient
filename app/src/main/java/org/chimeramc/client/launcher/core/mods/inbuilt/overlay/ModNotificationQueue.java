@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * The notification stack's bounded-queue rule (item 201).
+ * The notification stack's bounded-queue rule.
  *
  * <p>Extracted from {@link ModNotificationManager} so the "how many must go" decision is pure and
  * unit-tested without an Activity: the manager owns the windows, this owns the arithmetic. A burst

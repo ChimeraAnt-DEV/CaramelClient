@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Backup rules (item 514).
+    Backup rules.
 
     Auto Backup would otherwise upload the signed-in account's tokens and the launcher's private
     state to the user's cloud backup. Those are credentials, not preferences: a token restored onto

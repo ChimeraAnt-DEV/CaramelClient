@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Network security config (item 516).
+    Network security config.
 
     Cleartext is off by default. The launcher only ever needs it for the package mirror that serves
     plain HTTP - mcpedl.org and its file host - so that host is named explicitly and everything else

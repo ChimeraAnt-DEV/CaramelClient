@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.update;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -10,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Persists the mod-update check state (item 273).
+ * Persists the mod-update check state.
  *
  * <p>Three facts are needed for "one notification, not one per mod": when the check last ran (so it
  * is throttled rather than run on every launch), the feed URL (so it is a build value, not a
@@ -56,7 +58,7 @@ public final class ModUpdateStore {
         try {
             prefs(context).edit().putLong(KEY_LAST_CHECK_AT, nowMs).apply();
         } catch (RuntimeException ignored) {
-            // Throttling is an optimisation; losing it re-checks, which is harmless.
+            AppLog.warnOnce("GlowberryClient", "ModUpdateStore:61", "Ignored a failure at ModUpdateStore:61", ignored);
         }
     }
 
@@ -82,7 +84,7 @@ public final class ModUpdateStore {
                             ? Collections.emptySet() : new HashSet<>(fingerprint))
                     .apply();
         } catch (RuntimeException ignored) {
-            // See recordCheck.
+            AppLog.warnOnce("GlowberryClient", "ModUpdateStore:87", "Ignored a failure at ModUpdateStore:87", ignored);
         }
     }
 
@@ -91,7 +93,7 @@ public final class ModUpdateStore {
         try {
             prefs(context).edit().remove(KEY_LAST_CHECK_AT).apply();
         } catch (RuntimeException ignored) {
-            // See recordCheck.
+            AppLog.warnOnce("GlowberryClient", "ModUpdateStore:96", "Ignored a failure at ModUpdateStore:96", ignored);
         }
     }
 }

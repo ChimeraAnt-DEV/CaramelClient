@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -50,6 +52,7 @@ public final class ReplayStyle {
             resolved = pm.getAccentColor();
             glow = pm.isEnableGlowEffects();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ReplayStyle:55", "Ignored a failure at ReplayStyle:55", ignored);
         }
         this.accent = resolved;
         this.accentSecondary = blend(resolved, ACCENT_SECONDARY, 0.5f);

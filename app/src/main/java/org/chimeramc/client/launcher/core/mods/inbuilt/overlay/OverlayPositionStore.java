@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Stores an overlay's position as a fraction of the surface rather than in pixels (item 211).
+ * Stores an overlay's position as a fraction of the surface rather than in pixels.
  *
  * <p>A pixel position is only meaningful for the surface it was measured on. Rotate the device, or
  * change the resolution scale, and a widget saved at "x = 1200" on a 1920-wide surface lands in a

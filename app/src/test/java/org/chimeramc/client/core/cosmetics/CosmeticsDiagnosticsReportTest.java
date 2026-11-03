@@ -54,7 +54,7 @@ public class CosmeticsDiagnosticsReportTest {
 
     @Test
     public void theSkinSeamLineNamesTheStageAndTheCounters() {
-        // Item 3: a "skin not visible" report must say which stage the skin path reached, and the
+        // A "skin not visible" report must say which stage the skin path reached, and the
         // observed stage must state that the payload itself is still unproven.
         CosmeticsDiagnosticsReport.Inputs in = fullInputs();
         in.skinSeamStage = 2;

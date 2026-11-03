@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Every {@code nativemod} wrapper is a thin forwarder onto the active backend (item 353).
+ * Every {@code nativemod} wrapper is a thin forwarder onto the active backend.
  *
  * <p>After the {@code org.levimc} strip these classes no longer hold native code of their own: each
  * one must route to {@link GameBridge} and, with no backend registered, do nothing at all - no
@@ -139,8 +139,6 @@ public class ModWrapperRoutingTest {
         assertFalse(MoreButtonsMod.initialize());
         assertFalse(HotbarSlotMod.initialize());
         assertFalse(PojavControlsMod.initialize());
-        assertFalse(GyroMod.init());
-        assertFalse(GyroMod.nativeIsInitialized());
 
         // Input sends are no-ops, and none of them throw.
         ZoomMod.nativeOnKeyDown();
@@ -162,14 +160,6 @@ public class ModWrapperRoutingTest {
         HotbarSlotMod.clearSlot(0);
         AutoSprintMod.setEnabled(true);
         AutoSprintMod.setEnabled(false);
-        GyroMod.nativePreResolve();
-        GyroMod.nativeSetEnabled(true);
-        GyroMod.nativeUpdateDelta(1f, 1f);
-        GyroMod.nativeSetSensitivityX(1f);
-        GyroMod.nativeSetSensitivityY(1f);
-        GyroMod.nativeSetInvertX(false);
-        GyroMod.nativeSetInvertY(false);
-        GyroMod.nativeSetDeadzone(0.1f);
 
         // An unknown reading is negative, never a fabricated number.
         assertTrue(FpsMod.nativeGetFps() < 0);

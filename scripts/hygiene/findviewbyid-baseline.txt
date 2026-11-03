@@ -2,7 +2,7 @@
 app/src/main/java/org/chimeramc/client/core/minecraft/OptifineSettingsController.java 4
 app/src/main/java/org/chimeramc/client/launcher/controller/ControllerToastView.java 7
 app/src/main/java/org/chimeramc/client/launcher/core/changelog/ChangelogManager.java 8
-app/src/main/java/org/chimeramc/client/launcher/core/minecraft/MinecraftLoadingActivity.kt 6
+app/src/main/java/org/chimeramc/client/launcher/core/minecraft/MinecraftLoadingActivity.kt 7
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ArmorHudOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/BaseOverlayButton.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/CpsDisplayOverlay.java 4
@@ -35,12 +35,12 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentDetailsActi
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentListActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/CurseForgeActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomFlatWorldActivity.java 6
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.java 3
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 57
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 43
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModDetailActivity.java 23
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModHubActivity.java 17
@@ -48,7 +48,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModrinthDetailActi
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModsFullscreenActivity.java 2
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/MsftLoginActivity.java 25
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/QuickLaunchActivity.java 12
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 105
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 106
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/VoiceChatActivity.java 36
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/AccountsAdapter.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/CurseForgeContentAdapter.java 8

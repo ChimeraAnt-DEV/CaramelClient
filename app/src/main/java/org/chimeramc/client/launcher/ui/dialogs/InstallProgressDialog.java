@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
@@ -67,7 +69,7 @@ public class InstallProgressDialog extends Dialog {
     }
 
     /**
-     * Shows a Cancel button that runs [onCancel] (item 144). A long instance backup or restore can
+     * Shows a Cancel button that runs [onCancel]. A long instance backup or restore can
      * be cancelled part-way; the install flow never calls this, so it stays non-cancellable.
      */
     public void setCancelAction(Runnable onCancel) {
@@ -144,7 +146,9 @@ public class InstallProgressDialog extends Dialog {
             binding.progressBar.setProgressTintList(ColorStateList.valueOf(accent));
             binding.progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 42)));
             binding.progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "InstallProgressDialog:150", "Ignored a failure at InstallProgressDialog:150", ignored);
+        }
     }
 
     private int withAlpha(int color, int alpha) {

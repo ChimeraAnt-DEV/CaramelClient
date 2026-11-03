@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
@@ -58,7 +60,7 @@ public final class CosmeticSyncCache {
                 CosmeticSyncProtocol.Advert advert = CosmeticSyncProtocol.decode(raw);
                 if (advert != null && !advert.peerId.isEmpty()) out.add(advert);
             } catch (RuntimeException ignored) {
-                // A corrupt entry is dropped rather than failing the whole load.
+                AppLog.warnOnce("GlowberryClient", "CosmeticSyncCache:63", "Ignored a failure at CosmeticSyncCache:63", ignored);
             }
         }
         return out;

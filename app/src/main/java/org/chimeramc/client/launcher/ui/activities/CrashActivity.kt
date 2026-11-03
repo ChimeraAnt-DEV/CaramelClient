@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities
 
+import org.chimeramc.client.util.AppLog
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -35,7 +37,7 @@ class CrashActivity : BaseActivity() {
         val summary = intent.getStringExtra("SUMMARY")
             ?: intent.getStringExtra("EMERGENCY")
         val crashType = intent.getStringExtra("CRASH_TYPE")
-        // Item 282: a crash screen means the previous process died before a session was recorded, so
+        // A crash screen means the previous process died before a session was recorded, so
         // count it here rather than from the dying process -- an async write from a crashing process
         // is not guaranteed to land. This screen runs in the fresh launcher process, where the
         // write is durable.
@@ -216,7 +218,7 @@ class CrashActivity : BaseActivity() {
                     disabled++
                 }
             } catch (ignored: Throwable) {
-                // A failure to disable is reported below by the count, never as a crash.
+                AppLog.warnOnce("GlowberryClient", "CrashActivity:221", "Ignored a failure at CrashActivity:221", ignored)
             }
             ModSafeMode.acknowledgeCrash(this, true)
             val finalDisabled = disabled
@@ -311,6 +313,8 @@ class CrashActivity : BaseActivity() {
         super.onDestroy()
         try {
             executor.shutdownNow()
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+            AppLog.warnOnce("GlowberryClient", "CrashActivity:317", "Ignored a failure at CrashActivity:317", ignored)
+        }
     }
 }

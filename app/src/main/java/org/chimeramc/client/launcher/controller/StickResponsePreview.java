@@ -1,7 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
 /**
- * The live raw-vs-filtered stick reading shown while a dead zone is edited (item 220).
+ * The live raw-vs-filtered stick reading shown while a dead zone is edited.
  *
  * <p>A dead-zone slider on its own tells the player a number, not what it does. This holds both
  * points — where the stick physically is and what the profile makes of it — so a view can draw them

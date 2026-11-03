@@ -121,7 +121,7 @@ public final class ReplaySidecar {
         return set(KEY_TRACK, track == null ? "" : track.serializeLine());
     }
 
-    /** The recorded markers (item 241), or an empty set when the clip carries none. */
+    /** The recorded markers, or an empty set when the clip carries none. */
     public ReplayMarkers markers() {
         return ReplayMarkers.parse(get(KEY_MARKERS, ""));
     }

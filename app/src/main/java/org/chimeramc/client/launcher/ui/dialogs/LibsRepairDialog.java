@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
@@ -142,7 +144,9 @@ public class LibsRepairDialog extends Dialog {
             if (accent != 0 && iconContainer != null) {
                 iconContainer.setBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 34)));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "LibsRepairDialog:148", "Ignored a failure at LibsRepairDialog:148", ignored);
+        }
     }
 
     private int withAlpha(int color, int alpha) {

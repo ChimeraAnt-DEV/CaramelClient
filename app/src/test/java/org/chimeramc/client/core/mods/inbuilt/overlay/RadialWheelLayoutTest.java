@@ -249,7 +249,7 @@ public class RadialWheelLayoutTest {
         assertEquals(Sector.NONE, flick(135.0, 2500f));
     }
 
-    // --- The screen-reader slot targets (item 200) ----------------------------------------------
+    // --- The screen-reader slot targets ----------------------------------------------
 
     @Test
     public void everySlotCentreSitsOnTheRingBand() {

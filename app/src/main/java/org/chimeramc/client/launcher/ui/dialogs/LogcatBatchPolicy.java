@@ -1,7 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
 /**
- * When the logcat overlay flushes its pending lines to the UI (item 208).
+ * When the logcat overlay flushes its pending lines to the UI.
  *
  * <p>The reader thread appends to a bounded queue and a background loop drains it; every flush ends
  * in a main-thread post that rebuilds the adapter's item list. Posting on every drain tick put up to

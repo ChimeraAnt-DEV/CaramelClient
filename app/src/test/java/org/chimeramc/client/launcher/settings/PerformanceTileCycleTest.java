@@ -9,7 +9,7 @@ import org.chimeramc.client.settings.PerformancePresetManager.Preset;
 import org.junit.Test;
 
 /**
- * The Quick Settings tile's tap cycle (item 268).
+ * The Quick Settings tile's tap cycle.
  *
  * <p>The tile is a small control with one gesture, so the cycle is worth pinning: every tap must
  * move to a different preset (a tap that looks like nothing happened reads as a broken tile), the

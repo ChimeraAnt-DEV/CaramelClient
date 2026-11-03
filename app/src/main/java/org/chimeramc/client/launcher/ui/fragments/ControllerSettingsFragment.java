@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.fragments;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -71,9 +73,9 @@ public class ControllerSettingsFragment extends Fragment {
     private ControllerProfileManager profileManager;
     private ControllerType currentType = ControllerType.XBOX;
     private ControllerType detectedType;
-    /** The connected pad's vendor/product key, or null when none is detected (item 219). */
+    /** The connected pad's vendor/product key, or null when none is detected. */
     private ControllerDeviceKey detectedDevice;
-    /** The live raw-vs-filtered reading, and the view that draws it (item 220). */
+    /** The live raw-vs-filtered reading, and the view that draws it. */
     private StickResponsePreview stickPreview;
     private StickPreviewView stickPreviewView;
     private int manualIndex;
@@ -276,6 +278,7 @@ public class ControllerSettingsFragment extends Fragment {
             try {
                 inputManager.unregisterInputDeviceListener(deviceListener);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "ControllerSettingsFragment:281", "Ignored a failure at ControllerSettingsFragment:281", ignored);
             }
         }
         illustration = null;
@@ -302,7 +305,7 @@ public class ControllerSettingsFragment extends Fragment {
     public void handleHardwareKey(int keyCode, boolean down) {
         // A layer-modifier capture takes the next press before the illustration sees it, so the
         // captured button is the one the player meant rather than also lighting the map. The
-        // decision itself lives in the tested LayerModifierCapture (item 218).
+        // decision itself lives in the tested LayerModifierCapture.
         LayerModifierCapture.Decision decision = layerCapture.offer(keyCode, down);
         if (decision == LayerModifierCapture.Decision.CAPTURED) {
             if (layerModifierRefresh != null) layerModifierRefresh.run();
@@ -316,7 +319,7 @@ public class ControllerSettingsFragment extends Fragment {
         }
     }
 
-    /** The button-to-modifier capture state; owns which layer is waiting for a press (item 218). */
+    /** The button-to-modifier capture state; owns which layer is waiting for a press. */
     private final LayerModifierCapture layerCapture = new LayerModifierCapture();
     /** Repaints the layer rows after a capture or edit, so the label is never stale. */
     private Runnable layerModifierRefresh;
@@ -424,7 +427,7 @@ public class ControllerSettingsFragment extends Fragment {
     }
 
     /**
-     * Shows the raw stick reading beside what the profile makes of it (item 220).
+     * Shows the raw stick reading beside what the profile makes of it.
      *
      * <p>The side follows the stick the player is actually moving, so the reading always belongs to
      * the dead zone being discussed rather than whichever one was picked last. A pad reporting both
@@ -517,7 +520,7 @@ public class ControllerSettingsFragment extends Fragment {
      *
      * <p>Separate from {@link #findConnectedController()} because the type is a family: two pads of
      * the same family both resolve to one type but must be distinguishable to bind a profile to a
-     * specific one (item 219).
+     * specific one.
      */
     private ControllerDeviceKey findConnectedDeviceKey() {
         int[] ids = InputDevice.getDeviceIds();
@@ -535,7 +538,7 @@ public class ControllerSettingsFragment extends Fragment {
         return null;
     }
 
-    /** Binds the active profile slot to the currently connected controller (item 219). */
+    /** Binds the active profile slot to the currently connected controller. */
     private void bindToDevice() {
         if (detectedDevice == null) {
             Toast.makeText(requireContext(), R.string.controller_bind_device_none,
@@ -912,7 +915,7 @@ public class ControllerSettingsFragment extends Fragment {
         content.addView(label(getString(R.string.controller_editor_right_deadzone)));
         content.addView(rightDz);
         // Dragging a dead zone updates the live reading, so the value is felt rather than guessed
-        // (item 220). The working copy is what the preview shapes with, matching the save path.
+        //. The working copy is what the preview shapes with, matching the save path.
         android.widget.SeekBar.OnSeekBarChangeListener deadZonePreview =
                 new android.widget.SeekBar.OnSeekBarChangeListener() {
                     @Override

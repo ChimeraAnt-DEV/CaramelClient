@@ -18,7 +18,7 @@ import java.security.Signature;
 import java.util.Base64;
 
 /**
- * Pins the detached-signature check on the preloader rule file (item 257).
+ * Pins the detached-signature check on the preloader rule file.
  *
  * <p>The rule file decides which code addresses the preloader patches, so an unverified rule set is
  * remote code execution by proxy. The interesting cases are all refusals: a tampered payload, a

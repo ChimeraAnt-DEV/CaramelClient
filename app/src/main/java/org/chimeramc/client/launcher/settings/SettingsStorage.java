@@ -12,7 +12,7 @@ public class SettingsStorage {
 
     /**
      * The stored JSON for [settings]. Pure, so the round trip is unit-tested without a device
-     * (item 351).
+     *.
      */
     public static String toJson(FeatureSettings settings) {
         return gson.toJson(settings);

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The read model behind the script manager screen (item 226).
+ * The read model behind the script manager screen.
  *
  * <p>The manager lists what is installed in the {@code .AntEgg} sandbox — not just scripts, but
  * every package, because a native package and a script package live side by side and the user

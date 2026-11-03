@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -89,7 +91,7 @@ public class FpsDisplayOverlay {
 
     /**
      * Inflates the overlay body: the plain readout, or the readout plus the frame-time graph when
-     * the user enabled it (item 191). Both layouts expose the same {@code stats_text} id, so the
+     * the user enabled it. Both layouts expose the same {@code stats_text} id, so the
      * rest of the overlay is unchanged; the graph is only present in the graph layout.
      */
     private void inflateOverlay() {
@@ -197,9 +199,9 @@ public class FpsDisplayOverlay {
                 fps = fallbackFps;
             }
             // The timer runs four times a second but the readout changes far less often, so the
-            // text is built and set only when the number actually differs (item 187).
+            // text is built and set only when the number actually differs.
             if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
-                // The level is carried by a shape as well as a colour (item 344): a green/red pair
+                // The level is carried by a shape as well as a colour: a green/red pair
                 // is unreadable to a colour-blind user and, in daylight, to everyone. The cue is
                 // the same one the Mod Menu's stats strip would show, from one rule.
                 HudThreshold.Level level = HudThreshold.levelForFps(fps);
@@ -223,7 +225,7 @@ public class FpsDisplayOverlay {
     }
 
     /**
-     * The average and 1% low over the configured window (item 190), as "60 avg / 41 low", or null
+     * The average and 1% low over the configured window, as "60 avg / 41 low", or null
      * when there is not yet a reading. Computed from the same history the graph draws, so the two
      * can never disagree, and only on the once-a-second refresh — never on the frame path.
      */
@@ -257,7 +259,7 @@ public class FpsDisplayOverlay {
                 return fps > 0 ? fps : 0;
             }
         } catch (Throwable ignored) {
-            // A build without the native hook; fall through to the host meter.
+            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:262", "Ignored a failure at FpsDisplayOverlay:262", ignored);
         }
         return 0;
     }
@@ -285,7 +287,9 @@ public class FpsDisplayOverlay {
             if (wmParams != null && windowManager != null && overlayView != null && isShowing) {
                 try {
                     clampCurrentPosition(true);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:291", "Ignored a failure at FpsDisplayOverlay:291", ignored);
+                }
             }
         }
     }
@@ -434,7 +438,9 @@ public class FpsDisplayOverlay {
                     rootView.removeView(overlayView);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:442", "Ignored a failure at FpsDisplayOverlay:442", ignored);
+        }
         overlayView = null;
         statsText = null;
         graphView = null;

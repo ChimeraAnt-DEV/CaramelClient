@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Validates the extras of an intent that came from outside the app (item 178).
+ * Validates the extras of an intent that came from outside the app.
  *
  * <p>{@code IntentHandler} is an exported activity with a {@code VIEW} filter, so any app on the
  * device — or a web page via {@code minecraft://} — can hand it an intent. Every extra it reads is

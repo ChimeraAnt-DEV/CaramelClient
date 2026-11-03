@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The settings serialisation contract (item 351).
+ * The settings serialisation contract.
  *
  * <p>{@link FeatureSettings} is one Gson object per key in a single JSON blob, so the two failure
  * modes that matter are a <em>missing</em> field and an <em>extra</em> field. A field the JSON
@@ -38,6 +38,7 @@ public class FeatureSettingsTest {
         original.setOptifineModeEnabled(true);
         original.setOptifineItemEnabled("entity_culling", true);
         original.setOptifineCrashCount("particle_culling", 3);
+        original.setLaunchLogEnabled(true);
 
         FeatureSettings restored = SettingsStorage.fromJson(SettingsStorage.toJson(original));
         assertNotNull(restored);
@@ -51,6 +52,19 @@ public class FeatureSettingsTest {
         assertTrue(restored.isOptifineModeEnabled());
         assertTrue(restored.isOptifineItemEnabled("entity_culling"));
         assertEquals(3, restored.getOptifineCrashCount("particle_culling"));
+        assertTrue(restored.isLaunchLogEnabled());
+    }
+
+    @Test
+    public void theLaunchLogDefaultsOff() {
+        // The launch screen shows the logo and the status ring by default; the raw log is a
+        // diagnostic the user opts into, so a settings file written before the switch existed must
+        // load it off rather than on.
+        assertFalse("a missing field must keep the declared default", new FeatureSettings().isLaunchLogEnabled());
+        FeatureSettings restored = SettingsStorage.fromJson("{\"lowInputDelayEnabled\":true}");
+        assertNotNull(restored);
+        assertFalse("the launch log must stay off for an existing settings file",
+                restored.isLaunchLogEnabled());
     }
 
     @Test

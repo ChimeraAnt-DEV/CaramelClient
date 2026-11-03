@@ -305,7 +305,7 @@ public class CustomAlertDialog extends Dialog {
                     super.dismiss();
                 } catch (Exception ignored) {
                     // Dismissing a dialog whose window is already detached throws on some builds;
-                    // there is nothing to recover, but a silent swallow hid state bugs (item 117).
+                    // there is nothing to recover, but a silent swallow hid state bugs.
                     AppLog.warnOnce(TAG, "dialog-dismiss-detached",
                             "Dismissing a detached dialog failed", ignored);
                 } finally {

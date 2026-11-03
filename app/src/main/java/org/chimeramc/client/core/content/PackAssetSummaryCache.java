@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Computes {@link PackAssetSummary} off the main thread and caches the result (item 253).
+ * Computes {@link PackAssetSummary} off the main thread and caches the result.
  *
  * <p>Reading a pack's size and largest texture means walking its directory and opening every PNG
  * for a 24-byte header. That is cheap per file but unbounded in total, so doing it in a list row's

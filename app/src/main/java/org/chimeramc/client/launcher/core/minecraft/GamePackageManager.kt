@@ -47,7 +47,7 @@ class GamePackageManager private constructor(
     private var progressListener: MinecraftRuntimePreparer.ProgressListener? = progressListener
 
     /**
-     * The cancellation signal for the extraction in flight, or null when none is running (item 306).
+     * The cancellation signal for the extraction in flight, or null when none is running.
      *
      * <p>Re-pointed by {@code getInstance} on reuse for the same reason the two sinks above are: the
      * instance outlives a launch, so a signal left from the previous launch would cancel this one.
@@ -242,7 +242,7 @@ class GamePackageManager private constructor(
     private fun extractLibraries() {
         report("Preparing Minecraft library cache")
         // A fresh signal per extraction. The instance outlives a launch, so a signal from the
-        // previous one must not cancel this one (item 306).
+        // previous one must not cancel this one.
         val control = ExtractionControl()
         extractionControl = control
         try {
@@ -303,7 +303,7 @@ class GamePackageManager private constructor(
 
         // A cache that is present must also be intact. Presence plus length cannot see a library
         // rewritten with different bytes of the same size, which loads to a dlopen failure or a
-        // native crash; the hash record is what makes that case a re-extract instead (item 303).
+        // native crash; the hash record is what makes that case a re-extract instead.
         if (allPresent && verifyLibraryHashes(outputDir)) {
             report("Minecraft library cache hit: ${outputDir.absolutePath}")
             for (lib in extractableLibs) {
@@ -323,11 +323,11 @@ class GamePackageManager private constructor(
         // Refuse before the first byte is written when the volume cannot hold the extraction. A
         // full disk half-way through leaves a partial cache that the presence check then treats as
         // a miss and retries on every launch, so this is the one check that has to come first
-        // (item 304). An unreadable free-space figure never blocks: the write failures report
+        //. An unreadable free-space figure never blocks: the write failures report
         // themselves and refusing would break a launch that would have worked.
         requireExtractionSpace(outputDir, apkFiles)
 
-        // Item 137: real progress, counted in files rather than a spinner. The total is only
+        // Real progress, counted in files rather than a spinner. The total is only
         // known once the first package is open, so the count is reported as a running number and
         // the loading screen renders it against its own indeterminate bar.
         var filesDone = 0
@@ -383,7 +383,7 @@ class GamePackageManager private constructor(
 
     /**
      * Records the SHA-256 of every library just extracted, so the next launch can tell a cache that
-     * is merely present from one that is actually intact (item 303).
+     * is merely present from one that is actually intact.
      *
      * <p>A best-effort write: a failure here costs a re-hash next launch, never a failed one, so it
      * must not be allowed to turn a completed extraction into an error.
@@ -436,7 +436,7 @@ class GamePackageManager private constructor(
     }
 
     /**
-     * Fails with a named, actionable reason when the extraction cannot fit (item 304).
+     * Fails with a named, actionable reason when the extraction cannot fit.
      *
      * <p>The message names both figures, because "not enough storage" without the numbers leaves the
      * user guessing how much to free. The free-space reading comes from the volume the libraries are
@@ -628,7 +628,7 @@ class GamePackageManager private constructor(
                 val extracted = mutableListOf<String>()
                 while (entries.hasMoreElements()) {
                     // Between entries is the safe boundary: a library is written through a temp
-                    // file and renamed, so stopping here never leaves a torn one (item 306).
+                    // file and renamed, so stopping here never leaves a torn one.
                     if (control.isCancelled()) {
                         report("Extraction cancelled by the user")
                         throw ExtractionControl.ExtractionCancelledException()
@@ -651,7 +651,7 @@ class GamePackageManager private constructor(
                         report("Extracted $libName from ${apkFile.name} for $abi")
                     } catch (e: ExtractionControl.ExtractionCancelledException) {
                         // A cancellation is not a file failure; it must reach the caller, not be
-                        // logged as "this one file did not copy" and stepped over (item 306).
+                        // logged as "this one file did not copy" and stepped over.
                         throw e
                     } catch (e: Exception) {
                         mirrorLogcat('W', "Failed to extract ${output.name} from $apkPath: ${e.message}")
@@ -828,7 +828,7 @@ class GamePackageManager private constructor(
     }
 
     /**
-     * Signals the extraction in flight to stop at the next safe boundary (item 306).
+     * Signals the extraction in flight to stop at the next safe boundary.
      *
      * <p>Private because the callers reach it through the companion's static entry point; a public
      * instance method of the same name would clash with it at the JVM signature level.
@@ -1001,7 +1001,7 @@ class GamePackageManager private constructor(
         val deviceSupports64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
         val allLibs = requiredLibs + systemLoadedLibs
         // The plan (which libraries load, which are skipped and why, and the progress arithmetic)
-        // is a pure class so the rules are testable without a device (item 301).
+        // is a pure class so the rules are testable without a device.
         val plan = LibraryLoadPlan.plan(
             allLibs.asList(), systemLoadedLibs.asList(), excludeLibs, deviceSupports64Bit
         )
@@ -1113,7 +1113,7 @@ class GamePackageManager private constructor(
         private const val EXTRACTION_MANIFEST_TOKEN = "img_v4"
 
         /**
-         * The file holding each extracted library's SHA-256 (item 303). Beside the manifest and the
+         * The file holding each extracted library's SHA-256. Beside the manifest and the
          * extraction version, and preserved by the stale-cache wipe for the same reason.
          */
         const val LIBRARY_HASH_RECORD = "library_hashes"
@@ -1164,7 +1164,7 @@ class GamePackageManager private constructor(
          * the launcher sits in the background. The version record on disk does not change, so the
          * key used to match, the cached instance was reused, and the launch kept reading the old
          * `sourceDir` and native-library directory of a package that no longer existed - a stale
-         * path (item 305).
+         * path.
          *
          * <p>The installed package's `lastUpdateTime` is the fingerprint that catches it: it changes
          * exactly when the package changes, so an update during a session invalidates the cache and
@@ -1207,7 +1207,7 @@ class GamePackageManager private constructor(
         fun isInitialized() = instance != null
 
         /**
-         * Signals the extraction in flight to stop at the next safe boundary (item 306).
+         * Signals the extraction in flight to stop at the next safe boundary.
          *
          * <p>Static so a caller that only wants to give up on a launch does not have to hold - or
          * re-resolve - the manager instance. A no-op when none exists or none is extracting, which

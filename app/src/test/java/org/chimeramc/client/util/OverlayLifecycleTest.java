@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 /**
- * Every overlay that posts delayed work must have a way to cancel it (item 183).
+ * Every overlay that posts delayed work must have a way to cancel it.
  *
  * <p>The in-game overlays schedule work on the main looper — a deferred attach, a refresh tick, a
  * confirm-delete timer. A post that is never removed outlives the view that made it: it keeps the

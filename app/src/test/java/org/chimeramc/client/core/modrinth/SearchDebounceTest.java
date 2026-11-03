@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the search debounce rule (item 149).
+ * Pins the search debounce rule.
  *
  * <p>Two behaviours matter and neither is visible from the call site: the field must wait for a
  * pause, and a stale response must never replace a newer one.

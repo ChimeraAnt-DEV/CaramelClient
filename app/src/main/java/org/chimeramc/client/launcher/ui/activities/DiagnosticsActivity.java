@@ -106,7 +106,7 @@ public class DiagnosticsActivity extends BaseActivity {
         /** Non-null when the rule DB has no entry covering the selected build. */
         String coverageFailure;
         /**
-         * True when the selected build is newer than every rule's range (item 256), as opposed to
+         * True when the selected build is newer than every rule's range, as opposed to
          * merely uncovered. The diagnostics row says which, because the two need different actions.
          */
         boolean rulesNewerBuild;
@@ -117,12 +117,12 @@ public class DiagnosticsActivity extends BaseActivity {
         /** Whether the preloader's player-render hook is live (read once, off the UI thread). */
         boolean renderHookLive;
         /**
-         * Item 453: the preloader's per-feature hook availability report. Never null; an
+         * The preloader's per-feature hook availability report. Never null; an
          * unreadable/absent blob reads as the empty report, which the row renders as "no report".
          */
         FeatureAvailabilityReport featureAvailability = FeatureAvailabilityReport.empty();
         /**
-         * Item 452: the preloader's hook self-test report. Never null; an absent blob reads as the
+         * The preloader's hook self-test report. Never null; an absent blob reads as the
          * empty report, which the row renders as "no self-test".
          */
         HookSelfTestReport hookSelfTest = HookSelfTestReport.empty();
@@ -130,7 +130,7 @@ public class DiagnosticsActivity extends BaseActivity {
         List<ModLoadDiagnostics.Record> modRecords = Collections.emptyList();
         /** The last launch that died inside the game activity, or null when none is recorded. */
         LastLaunchFailure.Report lastLaunchFailure;
-        /** Local launch/crash counters (item 282). Never null. */
+        /** Local launch/crash counters. Never null. */
         org.chimeramc.client.core.stats.LaunchStats stats =
                 new org.chimeramc.client.core.stats.LaunchStats();
     }
@@ -174,13 +174,13 @@ public class DiagnosticsActivity extends BaseActivity {
             refresh.setOnClickListener(v -> refresh());
             DynamicAnim.applyPressScale(refresh);
         }
-        // Item 262: the whole bundle (report + recent, redacted log) in one tap.
+        // The whole bundle (report + recent, redacted log) in one tap.
         Button copyDebug = findViewById(R.id.diagnostics_copy_debug_button);
         if (copyDebug != null) {
             copyDebug.setOnClickListener(v -> copyDebugInfo());
             DynamicAnim.applyPressScale(copyDebug);
         }
-        // Item 263: the same bundle, copied and then the community invite opened so the report can
+        // The same bundle, copied and then the community invite opened so the report can
         // be pasted where it will be read.
         Button reportBug = findViewById(R.id.diagnostics_report_bug_button);
         if (reportBug != null) {
@@ -189,7 +189,7 @@ public class DiagnosticsActivity extends BaseActivity {
         }
     }
 
-    /** Builds the full debug bundle: the report plus the recent, redacted log (item 262). */
+    /** Builds the full debug bundle: the report plus the recent, redacted log. */
     private String buildDebugBundle() {
         String log;
         try {
@@ -338,7 +338,7 @@ public class DiagnosticsActivity extends BaseActivity {
         } catch (Throwable ignored) {
             out.lastLaunchFailure = null;
         }
-        // Local launch/crash statistics (item 282). A read failure degrades to an empty record, so
+        // Local launch/crash statistics. A read failure degrades to an empty record, so
         // the screen shows "no launches recorded" rather than an error.
         try {
             out.stats = org.chimeramc.client.core.stats.LaunchStatsRecorder.load(this);
@@ -546,17 +546,17 @@ public class DiagnosticsActivity extends BaseActivity {
         // The input backend is a separate seam from the runtime: the library can be present while
         // nothing is registered to inject input through it, which is a distinct failure state.
         addRow(rows, R.string.diagnostics_field_input_backend, GameBridge.statusLine());
-        // Item 493: which preloader hooks actually installed on this build. A feature built on a
+        // Which preloader hooks actually installed on this build. A feature built on a
         // missing hook is otherwise indistinguishable from a broken one, so the state is listed per
         // hook rather than left for the user to infer from an overlay that draws nothing.
         addRow(rows, R.string.diagnostics_field_hooks, HookAvailability.summary());
-        // Item 453: the preloader's own per-feature report. The launcher cannot know the preloader's
+        // The preloader's own per-feature report. The launcher cannot know the preloader's
         // feature list, so this is the preloader's answer rendered verbatim: which seam resolved,
         // which did not, and why. It is distinct from the hook table above, which covers only the
         // hooks the launcher knows how to ask about.
         addRow(rows, R.string.diagnostics_field_feature_availability,
                 data.featureAvailability.summary());
-        // Item 452: the self-test's answer. It asks a different question from the row above — "can
+        // The self-test's answer. It asks a different question from the row above — "can
         // these hooks install on this build" rather than "what state did the install leave them in"
         // — so a build where the backend itself cannot patch code is distinguishable from one where
         // a single signature did not resolve.
@@ -631,6 +631,7 @@ public class DiagnosticsActivity extends BaseActivity {
                         : -1L);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "DiagnosticsActivity:634", "Ignored a failure at DiagnosticsActivity:634", ignored);
         }
         try {
             snapshot.skinLookupEnabled(AccountSkinService.isEnabled(this));
@@ -641,6 +642,7 @@ public class DiagnosticsActivity extends BaseActivity {
             snapshot.skinCached(AccountSkinCache.isValidFor(entry,
                     AccountSkinService.activeXuid(this)));
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "DiagnosticsActivity:645", "Ignored a failure at DiagnosticsActivity:645", ignored);
         }
         return snapshot;
     }
@@ -667,7 +669,7 @@ public class DiagnosticsActivity extends BaseActivity {
     }
 
     /**
-     * Renders the local launch/crash statistics (item 282).
+     * Renders the local launch/crash statistics.
      *
      * <p>Reads from the same store the launch path writes; the values are shown verbatim and an
      * unknown average renders as an em dash rather than a zero, so a device that has never
@@ -820,7 +822,7 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Last launch failure: (none recorded)\n");
         }
 
-        // Item 307: name the slowest stages of the last launch, so a "the launcher takes ages to
+        // Name the slowest stages of the last launch, so a "the launcher takes ages to
         // start" report says which stage is slow instead of only that it is.
         sb.append("Slowest launch stages:\n");
         sb.append(org.chimeramc.client.core.minecraft.LaunchTrace.lastLaunchStages().describeSlowest(3))
@@ -870,17 +872,17 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Skin capture seam: ")
                     .append(data.skinSeam ? "live" : "inactive").append("\n");
         }
-        // Item 453: the preloader's per-feature report, one line per feature, so a bug report names
+        // The preloader's per-feature report, one line per feature, so a bug report names
         // the missing seam instead of only that "cosmetics do not work".
         sb.append("\nPreloader feature availability:\n");
         sb.append(data.featureAvailability.describeAll()).append("\n");
 
-        // Item 452: the hook self-test, so a report distinguishes a backend that cannot patch from a
+        // The hook self-test, so a report distinguishes a backend that cannot patch from a
         // signature that did not resolve.
         sb.append("\nPreloader hook self-test:\n");
         sb.append(data.hookSelfTest.describeAll()).append("\n");
 
-        // Item 282: the local counters, so a report carries them without the reporter having to
+        // The local counters, so a report carries them without the reporter having to
         // transcribe a screen. Local-only data; nothing here identifies the device beyond the model
         // line already printed above.
         org.chimeramc.client.core.stats.LaunchStats stats = data.stats;

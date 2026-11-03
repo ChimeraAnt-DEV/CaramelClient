@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.replay;
 
 /**
- * The hold-to-scrub drag rules, as pure maths (item 206).
+ * The hold-to-scrub drag rules, as pure maths.
  *
  * <p>{@link ClipCardView} used to decide inline whether a drag had passed touch slop and had turned
  * horizontal, and it divided the raw x by the view width to get the position. That is the kind of

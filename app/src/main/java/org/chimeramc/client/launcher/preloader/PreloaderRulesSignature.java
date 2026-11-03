@@ -8,7 +8,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 /**
- * Verifies a detached signature over a preloader rule file (item 257).
+ * Verifies a detached signature over a preloader rule file.
  *
  * <p>The rules are delivered as a data file so a new Minecraft build needs no app release. That
  * makes the file remote input, and remote input that decides which code addresses get patched is

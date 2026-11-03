@@ -225,7 +225,7 @@ public class RadialWheelMotionTest {
         assertEquals(48f, RadialWheelMotion.MIN_SEGMENT_ARC_DP, 1e-6);
     }
 
-    // --- The configurable centre dead zone (item 199) -------------------------------------------
+    // --- The configurable centre dead zone -------------------------------------------
 
     @Test
     public void theCentreDeadZoneIsClampedIntoTheUsableRange() {

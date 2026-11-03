@@ -242,11 +242,13 @@ public class ApkInstaller {
             File versionDir = LauncherStorage.getVersionDir(context, dirName);
             if (versionDir.exists()) deleteDir(versionDir);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ApkInstaller:245", "Ignored a failure at ApkInstaller:245", ignored);
         }
         try {
             File libDir = MinecraftLauncher.getRuntimeLibDir(context, dirName);
             if (libDir.exists()) deleteDir(libDir);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ApkInstaller:251", "Ignored a failure at ApkInstaller:251", ignored);
         }
     }
 
@@ -338,7 +340,9 @@ public class ApkInstaller {
                         total += size;
                     }
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                AppLog.warnOnce("GlowberryClient", "ApkInstaller:344", "Ignored a failure at ApkInstaller:344", ignored);
+            }
         }
         return total;
     }
@@ -367,6 +371,7 @@ public class ApkInstaller {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ApkInstaller:374", "Ignored a failure at ApkInstaller:374", ignored);
         }
         return "unknown_version";
     }
@@ -426,7 +431,9 @@ public class ApkInstaller {
             if (fd != null) {
                 return fd.getStatSize();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ApkInstaller:435", "Ignored a failure at ApkInstaller:435", ignored);
+        }
         return -1L;
     }
 

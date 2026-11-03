@@ -1,5 +1,6 @@
 package org.chimeramc.client.core.mods.inbuilt.model;
 
+import org.chimeramc.client.core.backend.GameBackend;
 import org.chimeramc.client.util.Api28Compat;
 
 public final class ModIds {
@@ -52,6 +53,8 @@ public final class ModIds {
     public static final String VERTICAL_RENDER_COALESCE = "vertical_render_coalesce";
     /** Launcher polling throttle: paces the launcher's own background requests and per-frame work. */
     public static final String TICK_RATE_PREDICTOR = "tick_rate_predictor";
+    public static final String ADAPTIVE_FRAME_PACING = "adaptive_frame_pacing";
+    public static final String THERMAL_QUALITY_HOLD = "thermal_quality_hold";
 
     // --- Visual / HUD / Misc modules (the mod-panel list) ------------------------------------
 
@@ -156,6 +159,32 @@ public final class ModIds {
     }
 
     /**
+     * The backend capability a module needs before it can run, or null when it needs none.
+     *
+     * <p>A module whose only route to an effect is a backend feature must be badged while no backend
+     * advertises that feature. Zoom is the one such module: a field-of-view change is not something
+     * the launcher can do by injecting input, so with no backend that reports
+     * {@link GameBackend.Feature#ZOOM} (a future backend reaches it through BerryAPI's
+     * {@code render.set_zoom}) the module cannot produce anything and must read as not available
+     * rather than toggling to no effect.
+     */
+    public static GameBackend.Feature requiredBackendFeature(String modId) {
+        return ZOOM.equals(modId) ? GameBackend.Feature.ZOOM : null;
+    }
+
+    /**
+     * True when the active backend does not provide what the module needs.
+     *
+     * <p>Reads {@link org.chimeramc.client.core.backend.GameBridge}, so the answer follows the live
+     * backend: registering one that provides the feature un-badges the module without a rebuild.
+     */
+    public static boolean requiresBackendFeature(String modId) {
+        GameBackend.Feature feature = requiredBackendFeature(modId);
+        return feature != null
+                && !org.chimeramc.client.core.backend.GameBridge.supports(feature);
+    }
+
+    /**
      * True for modules that are <em>entirely</em> dependent on a per-frame data feed from the
      * game process and have no other route to a result: durability/target reads (Armor HUD),
      * placement geometry (Crystal Optimizer), the held-item read the trajectory arc needs
@@ -184,10 +213,9 @@ public final class ModIds {
         return ARMOR_HUD.equals(modId) || CRYSTAL_OPTIMIZER.equals(modId)
                 || TRAJECTORY_PREDICTION.equals(modId) || KILL_EFFECTS.equals(modId)
                 // These visual modules act on the game's rendered frame or its entity list, which
-                // this build exposes to no mod yet (the prebuilt libinbuiltmods.so supports only
-                // AutoSprint/Fps/Gyro/HotbarSlot/MoreButtons/PojavControls/Snaplook/Zoom), so with
-                // no native provider they cannot produce anything. Listing them as if they worked
-                // would be the defect. Not listed here, because they reach a result through a route
+                // this build exposes to no mod yet, so with no native provider they cannot produce
+                // anything. Listing them as if they worked would be the defect. Not listed here,
+                // because they reach a result through a route
                 // this build already has: Fullbright (a brightness option), Crosshair (an overlay),
                 // and List Players / Debug Menu (the local-player feed and the proximity-voice peer
                 // list).

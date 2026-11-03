@@ -10,7 +10,7 @@ import androidx.customview.widget.ExploreByTouchHelper;
 import java.util.List;
 
 /**
- * The radial wheel's screen-reader surface (item 200).
+ * The radial wheel's screen-reader surface.
  *
  * <p>The wheel is a single custom {@link View} that paints its slots itself, so to the accessibility
  * framework it is one opaque rectangle: a screen reader can focus the whole wheel but cannot reach

@@ -27,6 +27,235 @@ public final class BerryApi {
     private BerryApi() {
     }
 
+    // --- Replay surface ---------------------------------------------------------------------
+    //
+    // BerryAPI owns the replay system (load a replay, seek it, play it, read its timeline). The
+    // launcher's replay screen drives it through these; every call answers the fail-closed default
+    // (false / empty) when the library or its replay ABI is absent, so the screen shows "not
+    // available" rather than crashing.
+
+    /** True when BerryAPI's replay surface resolved and passed its ABI check. */
+    public static boolean replayAvailable() {
+        try {
+            return nativeReplayAvailable();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /** True when a replay is loaded. */
+    public static boolean replayLoaded() {
+        try {
+            return nativeReplayLoaded();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
+     * The replay summary, or null when unavailable.
+     *
+     * <p>{loaded, firstTick, lastTick, sectionCount, recordCount, payloadBytes, buildId,
+     * protocolVersion}.
+     */
+    public static long[] replayInfo() {
+        try {
+            long[] v = nativeReplayInfo();
+            return v != null && v.length == 8 ? v : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /**
+     * The playback state, or null when unavailable.
+     *
+     * <p>{active, playing, activeWorld, tick, speedBits}; the speed is a 32-bit float's bit pattern.
+     */
+    public static long[] replayPlayback() {
+        try {
+            long[] v = nativeReplayPlayback();
+            return v != null && v.length == 5 ? v : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /** Decodes a replay from bytes. Returns a status code; 0 is success. */
+    public static int replayLoad(byte[] bytes) {
+        try {
+            return nativeReplayLoad(bytes);
+        } catch (UnsatisfiedLinkError e) {
+            return 1; // not attached
+        }
+    }
+
+    /** Starts playback. Returns a status code; 0 is success. */
+    public static int replayPlay() {
+        try {
+            return nativeReplayPlay();
+        } catch (UnsatisfiedLinkError e) {
+            return 1;
+        }
+    }
+
+    /** Seeks to an absolute tick. Returns a status code; 0 is success. */
+    public static int replaySeek(long tick) {
+        try {
+            return nativeReplaySeek(tick);
+        } catch (UnsatisfiedLinkError e) {
+            return 1;
+        }
+    }
+
+    public static void replaySetSpeed(float speed) {
+        try {
+            nativeReplaySetSpeed(speed);
+        } catch (UnsatisfiedLinkError e) {
+            reportUnavailable("replaySetSpeed", e);
+        }
+    }
+
+    public static void replayPause() {
+        try {
+            nativeReplayPause();
+        } catch (UnsatisfiedLinkError e) {
+            reportUnavailable("replayPause", e);
+        }
+    }
+
+    public static void replayStop() {
+        try {
+            nativeReplayStop();
+        } catch (UnsatisfiedLinkError e) {
+            reportUnavailable("replayStop", e);
+        }
+    }
+
+    public static void replayUnload() {
+        try {
+            nativeReplayUnload();
+        } catch (UnsatisfiedLinkError e) {
+            reportUnavailable("replayUnload", e);
+        }
+    }
+
+    /**
+     * Reports a replay call that could not reach the library.
+     *
+     * <p>Once per call kind, so a screen that drives the surface while the library is absent does not
+     * flood the log; the caller already knows from {@link #replayAvailable()} whether to expect it.
+     */
+    private static void reportUnavailable(String call, UnsatisfiedLinkError cause) {
+        org.chimeramc.client.util.AppLog.warnOnce("BerryApi", "replay:" + call,
+                "BerryAPI replay call " + call + " could not reach the library", cause);
+    }
+
+    /** The library's replay status line, or an empty string. */
+    public static String replayStatus() {
+        try {
+            String s = nativeReplayStatus();
+            return s == null ? "" : s;
+        } catch (UnsatisfiedLinkError e) {
+            return "";
+        }
+    }
+
+    private static native boolean nativeReplayAvailable();
+
+    private static native boolean nativeReplayLoaded();
+
+    private static native long[] nativeReplayInfo();
+
+    private static native long[] nativeReplayPlayback();
+
+    private static native int nativeReplayLoad(byte[] bytes);
+
+    private static native int nativeReplayPlay();
+
+    private static native int nativeReplaySeek(long tick);
+
+    private static native void nativeReplaySetSpeed(float speed);
+
+    private static native void nativeReplayPause();
+
+    private static native void nativeReplayStop();
+
+    private static native void nativeReplayUnload();
+
+    private static native String nativeReplayStatus();
+
+    // --- Governor surface -------------------------------------------------------------------
+    //
+    // BerryAPI's adaptive quality governor. The launcher reads it for its FPS diagnostics and can
+    // bound it. Every call answers the fail-closed default when the library or its governor ABI is
+    // absent.
+
+    /** True when BerryAPI's governor surface resolved and passed its ABI check. */
+    public static boolean governorAvailable() {
+        try {
+            return nativeGovernorAvailable();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
+     * The governor reading, or null when unavailable.
+     *
+     * <p>{qualityParticles, qualityEntityDistance, qualityAnimationDistance, qualityEntityCulling,
+     * qualityLighting, qualityRenderDistance, thermal, thermallyLimited, platform, ceilingBits,
+     * renderDistanceChunks, maxParticles, entityDistanceBits, animationDistanceBits}. The three
+     * floats cross as their bit patterns.
+     */
+    public static long[] governorStatus() {
+        try {
+            long[] v = nativeGovernorStatus();
+            return v != null && v.length == 14 ? v : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /** Reports platform thermal pressure. Returns the action taken, or -1 when unavailable. */
+    public static int governorSetThermal(int state) {
+        try {
+            return nativeGovernorSetThermal(state);
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /** Sets the device class the governor tunes for. */
+    public static void governorSetPlatform(int platform) {
+        try {
+            nativeGovernorSetPlatform(platform);
+        } catch (UnsatisfiedLinkError e) {
+            org.chimeramc.client.util.AppLog.warnOnce("BerryApi", "governor:platform",
+                    "BerryAPI governor platform could not reach the library", e);
+        }
+    }
+
+    /** Sets a hard ceiling the governor may not exceed, 0..1. */
+    public static void governorSetCeiling(float ceiling) {
+        try {
+            nativeGovernorSetCeiling(ceiling);
+        } catch (UnsatisfiedLinkError e) {
+            org.chimeramc.client.util.AppLog.warnOnce("BerryApi", "governor:ceiling",
+                    "BerryAPI governor ceiling could not reach the library", e);
+        }
+    }
+
+    private static native boolean nativeGovernorAvailable();
+
+    private static native long[] nativeGovernorStatus();
+
+    private static native int nativeGovernorSetThermal(int state);
+
+    private static native void nativeGovernorSetPlatform(int platform);
+
+    private static native void nativeGovernorSetCeiling(float ceiling);
+
     /**
      * Loads the bundled library once and returns whether it is usable. Idempotent and safe from any
      * thread; the native side caches the answer.

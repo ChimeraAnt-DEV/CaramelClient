@@ -484,7 +484,7 @@ object MinecraftRuntimePreparer {
                 trace.warning("Mod auto-disabled (crash attribution)", mod.displayName)
             }
         }
-        // Item 285: "restart without mods" from the launch watchdog sets a one-shot flag. Consuming
+        // "restart without mods" from the launch watchdog sets a one-shot flag. Consuming
         // it here means the diagnostic launch loads nothing, and the launch after it returns to the
         // user's real configuration without them having to re-enable anything by hand.
         val suppressMods = ModSafeMode.consumeSuppressMods(context)

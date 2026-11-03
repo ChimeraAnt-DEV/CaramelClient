@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.replay;
 
 /**
- * Caps how often a hold-to-scrub drag decodes a preview frame (item 206).
+ * Caps how often a hold-to-scrub drag decodes a preview frame.
  *
  * <p>A drag reports a fraction on every touch move - sixty or more a second on a fast swipe - and
  * each one would otherwise queue a {@code MediaMetadataRetriever} decode. Decoding cannot keep up,

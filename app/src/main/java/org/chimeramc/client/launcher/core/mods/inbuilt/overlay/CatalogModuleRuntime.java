@@ -245,7 +245,7 @@ public final class CatalogModuleRuntime {
     }
 
     /**
-     * Whether streaming-safe mode is on right now (item 277).
+     * Whether streaming-safe mode is on right now.
      *
      * <p>Read per readout rather than cached: the readouts refresh on their own 500&nbsp;ms timer, so
      * the cost is negligible, and caching would leave a stale answer after the switch is toggled.
@@ -285,7 +285,7 @@ public final class CatalogModuleRuntime {
                 return "Kills " + counters.kills();
             case "hud_coordinates":
             case "move_position_display":
-                // Streaming-safe mode masks the HUD readout too (item 277): the overlay is drawn
+                // Streaming-safe mode masks the HUD readout too: the overlay is drawn
                 // over the game and is exactly what a capture would show, so masking only the
                 // debug screen and the exported log would leave the most visible leak in place.
                 return streamingSafe() ? PrivacyRedactor.MASK
@@ -387,7 +387,7 @@ public final class CatalogModuleRuntime {
         if (position == null || position.length < 3) return null;
         java.util.List<ReachIndicator.VoicePeerPosition> peers = PeerPositions.read();
         if (peers.isEmpty()) return null;
-        // Streaming-safe mode masks the peer's name too (item 277): the target line is drawn over
+        // Streaming-safe mode masks the peer's name too: the target line is drawn over
         // the game, so a name on it would be captured even though the exported log is redacted.
         boolean maskNames = streamingSafe();
         java.util.List<PeerTargets.Peer> converted = new java.util.ArrayList<>(peers.size());

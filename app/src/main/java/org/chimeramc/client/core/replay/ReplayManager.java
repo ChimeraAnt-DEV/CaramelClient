@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -103,7 +105,7 @@ public final class ReplayManager {
     private ReplayTrackRecorder trackRecorder;
 
     /**
-     * The markers recorded for the clip in flight (item 241).
+     * The markers recorded for the clip in flight.
      *
      * <p>A marker is added by the same trigger that flags a highlight — a death, a kill streak, a
      * combo — plus a {@link ReplayMarkers.Kind#JOIN} at the start of the recording. They live on the
@@ -277,6 +279,7 @@ public final class ReplayManager {
             try {
                 metadataOverlay.detach();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayManager:282", "Ignored a failure at ReplayManager:282", ignored);
             }
             metadataOverlay = null;
         }
@@ -390,7 +393,7 @@ public final class ReplayManager {
     }
 
     /**
-     * Records a marker at the current elapsed time while a capture is running (item 241).
+     * Records a marker at the current elapsed time while a capture is running.
      *
      * <p>Only a live recording carries markers: a trigger that fires with no capture in flight has
      * no clip to attach to, and adding it to the next recording would put an event on a timeline it

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Pins the resource-pack ordering rules (item 253): a move never drops or duplicates an id, and a
+ * Pins the resource-pack ordering rules: a move never drops or duplicates an id, and a
  * saved order never hides a pack it does not mention.
  */
 public class ResourcePackOrderTest {

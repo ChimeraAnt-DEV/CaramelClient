@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * Pins the launch-trace stage arithmetic (item 307).
+ * Pins the launch-trace stage arithmetic.
  *
  * <p>The subtle rule is that a stage's cost is the gap to the previous stage, not its elapsed time:
  * the last stage's elapsed time is the whole launch, and reporting that as the stage's own duration

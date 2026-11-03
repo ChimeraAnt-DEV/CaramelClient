@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import org.chimeramc.client.preloader.PreloaderInput;
@@ -49,6 +51,7 @@ public final class NativeCosmeticsRuntime {
                 try {
                     NativeCosmeticsBridge.publishPeer(peerId, null, null, null);
                 } catch (Throwable ignored) {
+                    AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:54", "Ignored a failure at NativeCosmeticsRuntime:54", ignored);
                 }
             }
         });
@@ -60,6 +63,7 @@ public final class NativeCosmeticsRuntime {
         try {
             GameSkinFeed.install(context);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:66", "Ignored a failure at NativeCosmeticsRuntime:66", ignored);
         }
         syncEquipped(context);
     }
@@ -86,7 +90,7 @@ public final class NativeCosmeticsRuntime {
             // frame tick once the capture arrives.
             NativeCosmeticsBridge.publishCapeTexture(cape);
         } catch (Throwable ignored) {
-            // A cosmetic must never take the process down; the preview still shows the selection.
+            AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:93", "Ignored a failure at NativeCosmeticsRuntime:93", ignored);
         }
     }
 
@@ -103,7 +107,7 @@ public final class NativeCosmeticsRuntime {
                     CosmeticCatalog.equippedAccessory(advert.accessoryId),
                     CosmeticCatalog.equippedPet(advert.petId));
         } catch (Throwable ignored) {
-            // A bad payload must not stop the receive loop.
+            AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:110", "Ignored a failure at NativeCosmeticsRuntime:110", ignored);
         }
     }
 
@@ -220,7 +224,7 @@ public final class NativeCosmeticsRuntime {
                     0f, 0f, isVfxEnabled());
             PreloaderInput.pushCosmeticFrame(frame.toBytes());
         } catch (Throwable ignored) {
-            // A cosmetic frame must never take the game down; the next tick retries.
+            AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:227", "Ignored a failure at NativeCosmeticsRuntime:227", ignored);
         }
     }
 }

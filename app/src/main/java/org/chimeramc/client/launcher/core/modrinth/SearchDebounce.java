@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.modrinth;
 
 /**
- * Decides when a keystroke's search should actually run (item 149).
+ * Decides when a keystroke's search should actually run.
  *
  * <p>Searching on every character means a request per keystroke: typing "shaders" fires seven
  * requests, six of which are already stale by the time they return, and the list flickers through

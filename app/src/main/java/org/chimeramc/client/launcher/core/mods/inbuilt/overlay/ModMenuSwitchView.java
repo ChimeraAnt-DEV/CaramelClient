@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.animation.ValueAnimator;
@@ -235,7 +237,7 @@ public class ModMenuSwitchView extends View {
             event.setSource(this);
             sendAccessibilityEventUnchecked(event);
         } catch (Throwable ignored) {
-            // An accessibility announcement must never be able to break the control.
+            AppLog.warnOnce("GlowberryClient", "ModMenuSwitchView:240", "Ignored a failure at ModMenuSwitchView:240", ignored);
         }
     }
 

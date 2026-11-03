@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import org.chimeramc.client.launcher.controller.StickResponsePreview;
 
 /**
- * Draws where a stick physically is and what the profile makes of it (item 220).
+ * Draws where a stick physically is and what the profile makes of it.
  *
  * <p>The raw reading is a hollow ring; the filtered output is a filled dot. When the two coincide
  * the profile is passing the reading through; when the dot stays at the centre while the ring moves,

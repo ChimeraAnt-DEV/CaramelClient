@@ -10,7 +10,7 @@ import org.junit.Test;
 
 /**
  * The controller layer-modifier capture, the mapping model lifted out of the settings fragment
- * (item 218). No mocks: this drives the real state machine and a real {@link RemapLayer}.
+ *. No mocks: this drives the real state machine and a real {@link RemapLayer}.
  */
 public class LayerModifierCaptureTest {
 

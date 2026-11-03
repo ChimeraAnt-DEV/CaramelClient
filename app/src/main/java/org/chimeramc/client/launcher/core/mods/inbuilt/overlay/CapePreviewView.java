@@ -121,7 +121,7 @@ public class CapePreviewView extends View {
     /** Offscreen 2x supersample target; reallocated only when the view size changes. */
     private Bitmap frame;
     /**
-     * The scene revision the cached {@link #frame} holds (item 204).
+     * The scene revision the cached {@link #frame} holds.
      *
      * <p>Rasterising the whole scene at 2x is the expensive part of a frame, and the view is
      * invalidated for reasons that do not change it: a parent redraw, a focus change, a sibling's
@@ -152,7 +152,7 @@ public class CapePreviewView extends View {
     private Bitmap rasterBitmap;
     /**
      * Internal supersample factor: the scene renders at this multiple of the view size, then
-     * downscales. Resolved once from the GPU family (item 376): real hardware gets 2x for
+     * downscales. Resolved once from the GPU family: real hardware gets 2x for
      * antialiasing, a software rasteriser gets 1x because 4x the fill is a real per-frame cost
      * there. {@link PreviewQuality} owns the mapping and is unit-tested; this only caches it.
      */
@@ -210,7 +210,7 @@ public class CapePreviewView extends View {
      * yaw/pitch/scale, and used by every projection and cull test so the two cannot disagree.
      */
     private SkinModel.Camera camera;
-    // Blit scratch, reused so a frame draws without allocating two Rects (item 17).
+    // Blit scratch, reused so a frame draws without allocating two Rects.
     private final android.graphics.Rect sourceRect = new android.graphics.Rect();
     private final android.graphics.Rect destRect = new android.graphics.Rect();
 
@@ -474,7 +474,7 @@ public class CapePreviewView extends View {
      * the editor's behaviour.
      */
     /**
-     * Runs {@code callback} once, after the next frame is rendered (item 205). Used by the Closet to
+     * Runs {@code callback} once, after the next frame is rendered. Used by the Closet to
      * swap its "preparing preview" placeholder for the real render without a fixed delay. If the
      * preview has already drawn a frame the callback runs on the next post.
      */
@@ -555,7 +555,7 @@ public class CapePreviewView extends View {
     }
 
     /**
-     * Records that the scene changed and must be rasterised again (item 204).
+     * Records that the scene changed and must be rasterised again.
      *
      * <p>Called from every path that alters what the render reads: the animation step, a touch
      * drag, a cosmetic change, a skin refresh and a size change. The counter only ever moves
@@ -701,7 +701,7 @@ public class CapePreviewView extends View {
                 // No offscreen target could be allocated: draw nothing rather than a broken half-frame.
                 return;
             }
-            // Item 204: rasterise only when the scene actually changed. A redraw caused by a parent
+            // Rasterise only when the scene actually changed. A redraw caused by a parent
             // or a sibling does not alter this scene, and re-rasterising at 2x for it is pure waste;
             // the cached bitmap is re-blitted instead. `renderedRevision` is only set after a
             // successful full render, so a failed frame is retried rather than frozen.
@@ -712,7 +712,7 @@ public class CapePreviewView extends View {
                     camera = new SkinModel.Camera(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
                 } else {
                     // Re-target rather than rebuild: the constructor recomputes six trig values and
-                    // this runs every frame while the preview is animating (item 17).
+                    // this runs every frame while the preview is animating.
                     camera.set(yawDeg, pitchDeg, SkinModel.CAMERA_DISTANCE, 0f, 18f, 0f);
                 }
                 renderScene(camera, internalW, internalH);

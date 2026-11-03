@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
+import org.chimeramc.client.util.AppLog;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -208,7 +210,9 @@ final class BundledResourcePackInstaller {
                 if (!target.startsWith("chimeralauncher_") || !target.equals(new File(target).getName())) continue;
                 result.add(new ManagedPack(object.get("uuid").getAsString(), target, type));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "BundledResourcePackInstaller:214", "Ignored a failure at BundledResourcePackInstaller:214", ignored);
+        }
         return result;
     }
 

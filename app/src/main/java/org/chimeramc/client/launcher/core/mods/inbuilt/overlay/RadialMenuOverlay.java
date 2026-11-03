@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.app.Activity;
@@ -252,7 +254,7 @@ public class RadialMenuOverlay {
                 }
             });
         } catch (Throwable ignored) {
-            // No profiles available: the fixed wheel above is still fully wired.
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:257", "Ignored a failure at RadialMenuOverlay:257", ignored);
         }
         menuView.setChipToggle(new RadialMenuView.ChipToggle() {
             @Override
@@ -373,7 +375,7 @@ public class RadialMenuOverlay {
         long now = android.os.SystemClock.uptimeMillis();
         float dt = lastStickMs == 0L ? 1f / 60f : Math.min(0.1f, (now - lastStickMs) / 1000f);
         lastStickMs = now;
-        // The centre dead zone is a user setting (item 199): a worn stick needs a wider one than a
+        // The centre dead zone is a user setting: a worn stick needs a wider one than a
         // new pad, and the value is clamped on read so a bad stored value cannot silence the cursor.
         float deadZone = InbuiltModManager.getInstance(activity).getWheelCenterDeadZone();
         float curve = CursorController.DEFAULT_CURVE_EXPONENT;
@@ -456,20 +458,24 @@ public class RadialMenuOverlay {
             // that means "calm the UI down" drives the glass too; the OS setting already feeds it.
             env.reduceTransparency(personalization.isReduceMotion());
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:461", "Ignored a failure at RadialMenuOverlay:461", ignored);
         }
         try {
             env.sessionActive(LowLatencyNetworkManager.isGameSessionActive());
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:466", "Ignored a failure at RadialMenuOverlay:466", ignored);
         }
         try {
             env.thermal(ThermalGovernor.severity(), isBatterySaver(activity), false);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:471", "Ignored a failure at RadialMenuOverlay:471", ignored);
         }
         try {
             // R8: the wheel asks the FPS Optimization coordinator rather than judging the device a
             // second time, so the blur budget cannot disagree with the launcher's own decision.
             env.budget(FpsOptimizationService.wheelBlurBudget());
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:478", "Ignored a failure at RadialMenuOverlay:478", ignored);
         }
         return env;
     }
@@ -572,7 +578,7 @@ public class RadialMenuOverlay {
                 windowManager.removeViewImmediate(view);
             }
         } catch (Exception ignored) {
-            // Already detached or the token is gone; nothing to clean up.
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:581", "Ignored a failure at RadialMenuOverlay:581", ignored);
         }
         // A second, unconditional attempt: removeViewImmediate can throw for a window the system
         // has already detached, and a translucent MATCH_PARENT window that survives that is exactly
@@ -580,6 +586,7 @@ public class RadialMenuOverlay {
         try {
             windowManager.removeView(view);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuOverlay:589", "Ignored a failure at RadialMenuOverlay:589", ignored);
         }
     }
 }

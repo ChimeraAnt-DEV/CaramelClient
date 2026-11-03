@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -177,7 +179,7 @@ final class CosmeticsDiagnosticsDialog {
                 clipboard.setPrimaryClip(ClipData.newPlainText("GlowberryClient diagnostics", text));
             }
         } catch (Throwable ignored) {
-            // A clipboard failure must not break the screen.
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsDialog:182", "Ignored a failure at CosmeticsDiagnosticsDialog:182", ignored);
         }
     }
 
@@ -194,7 +196,7 @@ final class CosmeticsDiagnosticsDialog {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             activity.startActivity(Intent.createChooser(intent, chooserTitle));
         } catch (Throwable ignored) {
-            // No share target is not an error worth surfacing.
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsDialog:199", "Ignored a failure at CosmeticsDiagnosticsDialog:199", ignored);
         }
     }
 

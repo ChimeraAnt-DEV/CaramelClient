@@ -30,7 +30,7 @@ public class ModAvailabilityTest {
     @Test
     public void workingModulesAreAvailableAndInteractive() {
         String[] working = {
-                ModIds.AUTO_SPRINT, ModIds.ZOOM, ModIds.FPS_DISPLAY, ModIds.CPS_DISPLAY,
+                ModIds.AUTO_SPRINT, ModIds.FPS_DISPLAY, ModIds.CPS_DISPLAY,
                 ModIds.SNAPLOOK, ModIds.GYRO, ModIds.HIT_REGISTRATION, ModIds.HIT_TIMING,
                 ModIds.VOICE_CHAT, ModIds.MOD_MENU,
                 // Offhand sends the game's own off-hand keys, so it needs no native feed and must
@@ -43,6 +43,17 @@ public class ModAvailabilityTest {
             assertNull(id + " must carry no badged reason",
                     ModAvailability.unavailableReason(id));
         }
+    }
+
+    /**
+     * Zoom is not in the list above because its availability follows the backend, not the game-data
+     * rule: it is badged while no backend advertises a field-of-view change and usable once one
+     * does. {@code ZoomBackendCapabilityTest} pins both sides of that.
+     */
+    @Test
+    public void zoomFollowsTheBackendNotTheGameDataRule() {
+        assertFalse(ModIds.requiresGameData(ModIds.ZOOM));
+        assertTrue(ModIds.requiresBackendFeature(ModIds.ZOOM));
     }
 
     /**
@@ -113,7 +124,7 @@ public class ModAvailabilityTest {
         for (String id : new String[]{
                 ModIds.ARMOR_HUD, ModIds.CRYSTAL_OPTIMIZER,
                 ModIds.TRAJECTORY_PREDICTION, ModIds.KILL_EFFECTS, ModIds.HITBOX,
-                ModIds.AUTO_SPRINT, ModIds.ZOOM, ModIds.HIT_REGISTRATION}) {
+                ModIds.AUTO_SPRINT, ModIds.HIT_REGISTRATION}) {
             assertEquals(ModIds.requiresGameData(id), ModAvailability.isUnavailable(id));
         }
     }

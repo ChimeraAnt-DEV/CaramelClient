@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.animation;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -30,7 +32,7 @@ public final class DynamicAnim {
     private static boolean animationsEnabled = true;
 
     /**
-     * The platform's animation scale ({@code Settings.Global.ANIMATOR_DURATION_SCALE}), item 75.
+     * The platform's animation scale ({@code Settings.Global.ANIMATOR_DURATION_SCALE}).
      *
      * <p>Android's developer option is a duration <em>multiplier</em>, not a switch: 0.5 means "play
      * everything twice as fast", 2 means "twice as slow", and 0 means "no animation". Reading it as a
@@ -67,7 +69,7 @@ public final class DynamicAnim {
     }
 
     /**
-     * The platform animation scale in force (item 75). 1.0 is "system default".
+     * The platform animation scale in force. 1.0 is "system default".
      *
      * <p>Exposed so a screen can show it in a debug overlay and a test can assert it was read.
      */
@@ -98,7 +100,7 @@ public final class DynamicAnim {
 
     /**
      * Selects the scheme from the app's reduce-motion switch and the platform's animation scale
-     * (item 75).
+     *.
      *
      * <p>The scale is a multiplier: a value of 0 disables motion entirely (the same outcome as the
      * platform's "remove animations" setting, which is what it means), any positive value scales
@@ -247,7 +249,7 @@ public final class DynamicAnim {
      */
     /**
      * Cancels a view's running animations and clears any partial transform when it detaches
-     * (item 74).
+     *.
      *
      * <p>A fast tab switch detaches a view mid-animation, and the animation then keeps running
      * against a detached view: it holds the view, the transform is left part-way (a tab stuck at
@@ -371,7 +373,7 @@ public final class DynamicAnim {
                     .setInterpolator(getDefaultInterpolator())
                     .start();
         } catch (Throwable ignored) {
-            // Elevation is purely cosmetic; never break touch handling.
+            AppLog.warnOnce("GlowberryClient", "DynamicAnim:376", "Ignored a failure at DynamicAnim:376", ignored);
         }
     }
 
@@ -439,7 +441,7 @@ public final class DynamicAnim {
         if (rv == null) return;
         // Reduced motion, the platform's 0x scale and the app's speed switch all land here as
         // `!animationsEnabled`; without this guard the children are still set to alpha 0 and then
-        // staggered in, so a "no animations" device would see a staggered fade anyway (item 75).
+        // staggered in, so a "no animations" device would see a staggered fade anyway.
         if (!animationsEnabled) return;
         rv.post(() -> {
             int count = rv.getChildCount();
@@ -449,7 +451,7 @@ public final class DynamicAnim {
                 float dy = dp(rv.getContext(), 12f);
                 child.setAlpha(0f);
                 child.setTranslationY(dy);
-                // The shared arrival beat, not a private literal (item 121): the same step the
+                // The shared arrival beat, not a private literal: the same step the
                 // nav bar and the home cards use, so every staggered surface lands on one rhythm.
                 final long delay = i * ARRIVAL_STEP_MS;
                 rv.postDelayed(() -> {

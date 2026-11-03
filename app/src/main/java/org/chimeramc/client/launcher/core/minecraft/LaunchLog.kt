@@ -52,7 +52,7 @@ object LaunchLog {
     }
 
     /**
-     * Caps the log file, keeping the newest half (item 309).
+     * Caps the log file, keeping the newest half.
      *
      * <p>Runs on the writer's own thread under the same lock every append takes, so it cannot race a
      * write. The check is a stat of the open file, so it costs nothing on the common path; the
@@ -90,13 +90,13 @@ object LaunchLog {
         // Reopen the writer: it still points at the old end-of-file offset, which no longer exists.
         try {
             w.flush()
-        } catch (_: Throwable) {}
+        } catch (_: Throwable) { /* best-effort: the log sink itself */ }
         try {
             val dir = target.parentFile
             dir?.mkdirs()
             writer = PrintWriter(FileWriter(target, true), true)
             this.file = target
-        } catch (_: Throwable) {}
+        } catch (_: Throwable) { /* best-effort: the log sink itself */ }
         // A one-line note so a reader knows the file was trimmed rather than started there.
         try {
             val reopened = writer
@@ -105,7 +105,7 @@ object LaunchLog {
             reopened?.append(cut.toString())
             reopened?.append("]\n")
             reopened?.flush()
-        } catch (_: Throwable) {}
+        } catch (_: Throwable) { /* best-effort: the log sink itself */ }
     }
 
     /** How many bytes from the cut are scanned for a line boundary. */
@@ -120,7 +120,7 @@ object LaunchLog {
                 rotateIfNeeded(w)
                 w.append(timestampFormat.format(Date())).append(' ').append(message).append('\n')
                 w.flush()
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) { /* best-effort: the log sink itself */ }
         }
     }
 
@@ -139,7 +139,7 @@ object LaunchLog {
                     .append(' ')
                     .append(level).append('/').append(tag).append(": ").append(message).append('\n')
                 w.flush()
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) { /* best-effort: the log sink itself */ }
         }
     }
 

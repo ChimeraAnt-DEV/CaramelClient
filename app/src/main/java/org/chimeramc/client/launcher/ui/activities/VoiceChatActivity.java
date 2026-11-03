@@ -125,7 +125,7 @@ public class VoiceChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Guest mode removes voice chat (item 272). The launcher hides every entry to this screen,
+        // Guest mode removes voice chat. The launcher hides every entry to this screen,
         // but it is exported and can be started by name, so it refuses here too rather than
         // offering a feature the mode removed.
         if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesVoice()) {

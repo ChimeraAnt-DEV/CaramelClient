@@ -44,7 +44,7 @@ public final class LaunchProbe {
 
         /**
          * Whether the installed build is newer than every rule's range, rather than merely
-         * uncovered (item 256). Only meaningful when {@link #signatureRulesCoverBuild()} is false.
+         * uncovered. Only meaningful when {@link #signatureRulesCoverBuild()} is false.
          */
         boolean signatureRulesNewerBuild();
 

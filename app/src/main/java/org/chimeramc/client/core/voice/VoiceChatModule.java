@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.voice;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -129,6 +131,7 @@ public final class VoiceChatModule {
             try {
                 name = android.os.Build.MODEL;
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "VoiceChatModule:134", "Ignored a failure at VoiceChatModule:134", ignored);
             }
             instance = new VoiceChatModule(context, name);
         }

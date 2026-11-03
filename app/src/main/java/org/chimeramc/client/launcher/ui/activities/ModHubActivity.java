@@ -104,7 +104,7 @@ public class ModHubActivity extends BaseActivity {
     private boolean scanning;
 
     /**
-     * Debounced search (item 149). Typing "shaders" must be one request, not seven, and a slow
+     * Debounced search. Typing "shaders" must be one request, not seven, and a slow
      * request that returns after more typing must not overwrite the newer result, so each search
      * carries a generation and only the current one is applied.
      */
@@ -144,7 +144,7 @@ public class ModHubActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Guest mode removes every mod surface (item 272). The launch rows are hidden, but these
+        // Guest mode removes every mod surface. The launch rows are hidden, but these
         // screens are exported and can be started by name, so each refuses rather than showing what
         // the mode exists to hide.
         if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
@@ -432,7 +432,7 @@ public class ModHubActivity extends BaseActivity {
     private void openProject(ModrinthProject project, View icon, View title) {
         Intent intent = new Intent(this, ModrinthDetailActivity.class);
         intent.putExtra(ModrinthDetailActivity.EXTRA_PROJECT, project);
-        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        // Carry the row's icon and title across instead of cutting to the detail screen.
         SceneTransitions.start(this, intent,
                 SceneTransitions.icon(icon), SceneTransitions.title(title));
     }

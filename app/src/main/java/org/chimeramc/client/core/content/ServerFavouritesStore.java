@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -8,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Persists the starred servers (item 254).
+ * Persists the starred servers.
  *
  * <p>A small {@link SharedPreferences} set of {@code ip:port} keys, kept apart from the game's own
  * server file so a star never changes what the game reads. Every write is {@code apply()}: the star
@@ -54,7 +56,7 @@ public final class ServerFavouritesStore {
                     .putStringSet(KEY, copy)
                     .apply();
         } catch (Throwable ignored) {
-            // A favourite that cannot be written costs one star, not the screen.
+            AppLog.warnOnce("GlowberryClient", "ServerFavouritesStore:59", "Ignored a failure at ServerFavouritesStore:59", ignored);
         }
     }
 

@@ -54,7 +54,7 @@ public class AutoSprintOverlay extends BaseOverlayButton {
     }
 
     /**
-     * Drops the module when the game loses focus (item 195).
+     * Drops the module when the game loses focus.
      *
      * <p>The backend's {@code releaseAll} already stops holding forward, but the overlay's own flag
      * would stay armed, so returning to the game would show a "sprint on" indicator for a state the

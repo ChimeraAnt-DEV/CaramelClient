@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * API-level gates go through {@code ApiLevels}, never a raw comparison (items 26, 310).
+ * API-level gates go through {@code ApiLevels}, never a raw comparison.
  *
  * <p>{@code ApiLevels} is the one owner of every version gate, with a named predicate per boundary
  * so a JVM test can assert both sides without a device. That only holds while nothing writes

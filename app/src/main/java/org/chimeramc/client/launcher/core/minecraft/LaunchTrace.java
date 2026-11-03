@@ -15,7 +15,7 @@ public final class LaunchTrace {
 
     /**
      * The stages of the most recent launch, so the Diagnostics screen can name the slowest ones
-     * (item 307) without holding a reference to the launch's own trace object, which is passed
+     * without holding a reference to the launch's own trace object, which is passed
      * activity to activity through the launch intent.
      *
      * <p>Guarded by {@link #lastLaunchLock}. A new session id clears it, so a report never mixes two

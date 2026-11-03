@@ -2,7 +2,7 @@ package org.chimeramc.client.core.privacy;
 
 /**
  * Masks the three things streaming-safe mode must not show: a world position, a gamertag and a
- * server address (item 277).
+ * server address.
  *
  * <p>Pure and Android-free, so every rule is unit-tested. The shapes it masks are deliberately
  * conservative: a coordinate is only masked when it looks like three numbers, so an unrelated line

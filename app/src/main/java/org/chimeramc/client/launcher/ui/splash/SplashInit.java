@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.ui.splash;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -84,7 +86,7 @@ public final class SplashInit {
         try {
             work.run();
         } catch (Throwable ignored) {
-            // Best-effort: a failed warm-up must still let the launcher open.
+            AppLog.warnOnce("GlowberryClient", "SplashInit:89", "Ignored a failure at SplashInit:89", ignored);
         }
         final int finished = done.incrementAndGet();
         final float fraction = finished / (float) STEPS;

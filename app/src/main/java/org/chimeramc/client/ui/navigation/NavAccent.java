@@ -3,7 +3,7 @@ package org.chimeramc.client.ui.navigation;
 import org.chimeramc.client.ui.components.UiTokens;
 
 /**
- * Picks the colour the navigation uses for its active destination (item 87).
+ * Picks the colour the navigation uses for its active destination.
  *
  * <p>The active tab is tinted with the theme accent. Under Material You the accent comes from the
  * user's wallpaper, so it can be any hue and any lightness - including one that sits almost on top

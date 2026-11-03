@@ -115,7 +115,7 @@ public class LauncherTabTest {
 
     @Test
     public void aStoredTabNameRoundTripsAndAnUnknownOneIsNoPreference() {
-        // Item 77: the last destination is persisted so a cold start reopens where the user left
+        // The last destination is persisted so a cold start reopens where the user left
         // off. It is stored by name, so a name this build does not have reads as "no preference"
         // rather than opening a wrong tab - which is what storing a resource id would risk.
         for (LauncherTab tab : LauncherTab.values()) {
@@ -130,7 +130,7 @@ public class LauncherTabTest {
 
     @Test
     public void guestModeRemovesOnlyTheModsDestination() {
-        // Item 272: guest mode hides what the owner installed, and nothing else. The rule lives on
+        // Guest mode hides what the owner installed, and nothing else. The rule lives on
         // the enum so the bar, the rail and the bumper cycle cannot disagree about which tabs exist.
         assertTrue(LauncherTab.MODS.hiddenInGuestMode());
         assertFalse(LauncherTab.LAUNCH.hiddenInGuestMode());

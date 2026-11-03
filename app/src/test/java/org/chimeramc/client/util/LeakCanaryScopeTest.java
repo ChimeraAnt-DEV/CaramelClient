@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 /**
- * LeakCanary is a debug-only dependency and must stay out of release (item 297).
+ * LeakCanary is a debug-only dependency and must stay out of release.
  *
  * <p>Its whole purpose is to watch for activity-context leaks while a developer runs the app, and it
  * carries a heap-analysis engine that has no place in a shipped APK: a few hundred kilobytes of

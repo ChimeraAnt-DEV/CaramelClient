@@ -3,7 +3,7 @@ package org.chimeramc.client.core.minecraft;
 import java.util.function.LongSupplier;
 
 /**
- * Waits for a process to exit before the launcher starts its replacement (item 275).
+ * Waits for a process to exit before the launcher starts its replacement.
  *
  * <p>The restart path kills the old launcher process and then starts {@code MainActivity} after a
  * fixed delay. A fixed delay is a guess: too short and the new process can start while the old one

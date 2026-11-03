@@ -107,7 +107,7 @@ public enum LauncherTab {
     }
 
     /**
-     * The tab a stored name refers to, or null when it is absent or unknown (item 77).
+     * The tab a stored name refers to, or null when it is absent or unknown.
      *
      * <p>The launcher remembers the last destination so a cold start reopens where the user left
      * off, and it stores the <em>name</em> rather than the view id: an id is a generated resource
@@ -124,7 +124,7 @@ public enum LauncherTab {
     }
 
     /**
-     * Whether guest mode hides this destination (item 272).
+     * Whether guest mode hides this destination.
      *
      * <p>Mods is the only tab that exposes what the owner installed, so it is the only one guest
      * mode removes. Keeping the rule on the enum, next to the destination, means the bar, the rail

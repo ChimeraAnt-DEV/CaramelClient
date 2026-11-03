@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the local launch statistics (item 282). No mocks: the class is pure arithmetic, and the
+ * Pins the local launch statistics. No mocks: the class is pure arithmetic, and the
  * point of the tests is that the arithmetic cannot quietly report a flattering number.
  */
 public class LaunchStatsTest {

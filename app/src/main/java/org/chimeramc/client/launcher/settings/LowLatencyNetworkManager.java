@@ -1,5 +1,7 @@
 package org.chimeramc.client.settings;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.annotation.SuppressLint;
@@ -138,6 +140,7 @@ public final class LowLatencyNetworkManager {
                 try {
                     socket.setTcpNoDelay(true);
                 } catch (IOException ignored) {
+                    AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:143", "Ignored a failure at LowLatencyNetworkManager:143", ignored);
                 }
                 enableQuickAck(socket);
                 try {
@@ -147,6 +150,7 @@ public final class LowLatencyNetworkManager {
                     socket.setSendBufferSize(SOCKET_BUFFER_SIZE);
                     socket.setReceiveBufferSize(SOCKET_BUFFER_SIZE);
                 } catch (IOException ignored) {
+                    AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:153", "Ignored a failure at LowLatencyNetworkManager:153", ignored);
                 }
                 return socket;
             }
@@ -172,6 +176,7 @@ public final class LowLatencyNetworkManager {
                 setsockopt.invoke(null, fdesc, 6 /* SOL_TCP */, 12 /* TCP_QUICKACK */, 1);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:179", "Ignored a failure at LowLatencyNetworkManager:179", ignored);
         }
     }
 
@@ -184,9 +189,11 @@ public final class LowLatencyNetworkManager {
                     m.setAccessible(true);
                     return m.invoke(target);
                 } catch (NoSuchMethodException ignored) {
+                    AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:192", "Ignored a failure at LowLatencyNetworkManager:192", ignored);
                 }
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:196", "Ignored a failure at LowLatencyNetworkManager:196", ignored);
         }
         return null;
     }
@@ -199,6 +206,7 @@ public final class LowLatencyNetworkManager {
                 try {
                     InetAddress.getAllByName(host);
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:209", "Ignored a failure at LowLatencyNetworkManager:209", ignored);
                 }
             });
         }
@@ -252,7 +260,7 @@ public final class LowLatencyNetworkManager {
                 sWifiLock.release();
             }
         } catch (Throwable ignored) {
-            // A device that refuses the lock simply keeps its default radio behaviour.
+            AppLog.warnOnce("GlowberryClient", "LowLatencyNetworkManager:263", "Ignored a failure at LowLatencyNetworkManager:263", ignored);
         }
     }
 

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -183,6 +185,12 @@ public final class InbuiltModuleProvider {
         mods.add(create(activity, manager, overlayManager, ModIds.TICK_RATE_PREDICTOR,
                 R.string.inbuilt_mod_tick_rate_predictor,
                 R.string.inbuilt_mod_tick_rate_predictor_desc, groupName));
+        mods.add(create(activity, manager, overlayManager, ModIds.ADAPTIVE_FRAME_PACING,
+                R.string.inbuilt_mod_adaptive_frame_pacing,
+                R.string.inbuilt_mod_adaptive_frame_pacing_desc, groupName));
+        mods.add(create(activity, manager, overlayManager, ModIds.THERMAL_QUALITY_HOLD,
+                R.string.inbuilt_mod_thermal_quality_hold,
+                R.string.inbuilt_mod_thermal_quality_hold_desc, groupName));
         mods.add(create(activity, manager, overlayManager, ModIds.AIM_SETTINGS,
                 R.string.inbuilt_mod_aim_settings, R.string.inbuilt_mod_aim_settings_desc,
                 groupName));
@@ -450,7 +458,9 @@ public final class InbuiltModuleProvider {
                 || ModIds.CROSSHAIR.equals(id)
                 || ModIds.HYPERSPATIAL_CULL.equals(id)
                 || ModIds.VERTICAL_RENDER_COALESCE.equals(id)
-                || ModIds.TICK_RATE_PREDICTOR.equals(id);
+                || ModIds.TICK_RATE_PREDICTOR.equals(id)
+                || ModIds.ADAPTIVE_FRAME_PACING.equals(id)
+                || ModIds.THERMAL_QUALITY_HOLD.equals(id);
         // Combat modules get their own PvP section so the tab is a real destination, not just a
         // filter over the inbuilt list. They remain inbuilt modules, so the Inbuilt filter and
         // the "Inbuilt" grouping still find them.
@@ -970,7 +980,7 @@ public final class InbuiltModuleProvider {
                     String.valueOf(manager.isOverlayShowEverywhere(modId))));
         }
 
-        // The frame-time graph is an FPS-overlay-only option (item 191): it needs the FPS meter,
+        // The frame-time graph is an FPS-overlay-only option: it needs the FPS meter,
         // which only that overlay runs.
         if (ModIds.FPS_DISPLAY.equals(modId)) {
             configs.add(config(CFG_FRAME_GRAPH,
@@ -1055,6 +1065,18 @@ public final class InbuiltModuleProvider {
                     "120", "10", "200",
                     String.valueOf(manager.getCursorSensitivity())));
         } else if (ModIds.ZOOM.equals(modId)) {
+            // The keybind is always offered: it is the input that would drive zoom once a backend
+            // provides one. The four shaping sliders are hidden while no backend advertises
+            // Feature.ZOOM, because they change a field-of-view zoom nothing can apply — offering
+            // them would be four controls that visibly do nothing.
+            configs.add(config(CFG_ZOOM_KEYBIND,
+                    context.getString(R.string.mod_config_zoom_keybind),
+                    UnifiedMod.ConfigType.KEYBIND,
+                    "", "", "",
+                    String.valueOf(manager.getZoomKeybind())));
+            if (ModIds.requiresBackendFeature(ModIds.ZOOM)) {
+                return configs;
+            }
             configs.add(config(CFG_ZOOM_LEVEL,
                     context.getString(R.string.mod_config_zoom_level_percent),
                     UnifiedMod.ConfigType.SLIDER_INT,
@@ -1065,11 +1087,6 @@ public final class InbuiltModuleProvider {
                     UnifiedMod.ConfigType.SLIDER_INT,
                     "150", "0", "1000",
                     String.valueOf(manager.getZoomTransitionDuration())));
-            configs.add(config(CFG_ZOOM_KEYBIND,
-                    context.getString(R.string.mod_config_zoom_keybind),
-                    UnifiedMod.ConfigType.KEYBIND,
-                    "", "", "",
-                    String.valueOf(manager.getZoomKeybind())));
             configs.add(config(CFG_ZOOM_SCROLL_SENSITIVITY,
                     context.getString(R.string.mod_config_zoom_scroll_sensitivity),
                     UnifiedMod.ConfigType.SLIDER_INT,
@@ -1517,6 +1534,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setAimCrosshairColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1529", "Ignored a failure at InbuiltModuleProvider:1529", ignored);
                 }
                 break;
             }
@@ -1607,6 +1625,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setTrajectoryColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1620", "Ignored a failure at InbuiltModuleProvider:1620", ignored);
                 }
                 break;
             case CFG_HIT_PREDICTION_LOOKAHEAD:
@@ -1619,6 +1638,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setKillEffectColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1633", "Ignored a failure at InbuiltModuleProvider:1633", ignored);
                 }
                 break;
             case CFG_VOICE_MIC:

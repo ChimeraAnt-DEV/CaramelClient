@@ -5,7 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * Measures how much disk an instance actually uses, and formats it for the UI (item 265).
+ * Measures how much disk an instance actually uses, and formats it for the UI.
  *
  * <p>Kept free of Android types so the walk and the formatting are unit-tested with real temp
  * directories. Two rules matter:

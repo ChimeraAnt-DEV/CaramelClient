@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,7 +62,7 @@ public class ModsFullscreenActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Guest mode removes the Mods destination (item 272). The tab and every shortcut are hidden,
+        // Guest mode removes the Mods destination. The tab and every shortcut are hidden,
         // but the activity is exported and can be started by name or by a stale deep link, so it
         // refuses here rather than showing what the mode exists to hide.
         if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
@@ -358,7 +360,7 @@ public class ModsFullscreenActivity extends BaseActivity {
      * servers that send a length is not worth a second widget.
      */
     private void importFromLink(String url) {
-        // Item 233: the source and the size are shown before anything is fetched, so a link import
+        // The source and the size are shown before anything is fetched, so a link import
         // is a deliberate choice rather than a surprise download from a pasted string.
         new CustomAlertDialog(this)
                 .setTitleText(getString(R.string.mod_import_link_confirm_title))
@@ -389,7 +391,7 @@ public class ModsFullscreenActivity extends BaseActivity {
                             runOnUiThread(() -> {
                                 if (isFinishing() || isDestroyed()) return;
                                 if (result.success) {
-                                    // Item 233: show the digest of what actually arrived so it can
+                                    // Show the digest of what actually arrived so it can
                                     // be compared with the publisher's own value.
                                     String digest = org.chimeramc.client.core.antegg.AntEggLinkPreview
                                             .describeDigest(org.chimeramc.client.core.antegg.ModHash
@@ -428,7 +430,7 @@ public class ModsFullscreenActivity extends BaseActivity {
         try {
             worker.execute(task);
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit.
+            AppLog.warnOnce("GlowberryClient", "ModsFullscreenActivity:433", "Ignored a failure at ModsFullscreenActivity:433", ignored);
         }
     }
 
@@ -589,7 +591,7 @@ public class ModsFullscreenActivity extends BaseActivity {
         View menuButton = binding.modMenuButton;
         boolean supported = menuButton == null || menuButton.getVisibility() == View.VISIBLE;
         emptyView.setVisibility(supported && (mods == null || mods.isEmpty()) ? View.VISIBLE : View.GONE);
-        // The empty state's own action (item 180): it opens the same file-or-link chooser the Add
+        // The empty state's own action: it opens the same file-or-link chooser the Add
         // Mod header button does, so the message always has a next step next to it.
         TextView emptyAction = binding.emptyModsAction;
         emptyAction.setOnClickListener(v -> showImportChooser());

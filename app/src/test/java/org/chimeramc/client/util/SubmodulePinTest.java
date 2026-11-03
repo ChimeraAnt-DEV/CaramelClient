@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * The preloader submodule is pinned to a commit, not a branch (item 324).
+ * The preloader submodule is pinned to a commit, not a branch.
  *
  * <p>A gitlink is always a commit SHA, so the only way a submodule silently floats is a
  * {@code branch =} entry in {@code .gitmodules}: it lets {@code git submodule update --remote} move

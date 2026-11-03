@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The frame-cap to surface-rate mapping (item 261).
+ * The frame-cap to surface-rate mapping.
  *
  * <p>Pure, so the mapping is pinned without a device: a cap of 90 must request 90.0, and a cap of
  * zero (unlimited) must request the documented reset value 0 rather than a nonsense negative rate.

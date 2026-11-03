@@ -81,7 +81,7 @@ public class MotionSchemeTest {
     }
 
     /**
-     * The three durations are a closed scale (item 121).
+     * The three durations are a closed scale.
      *
      * <p>They exist so a decorative transition names its intent instead of a literal, and the
      * ordering is what makes them usable as a scale: a "fast" step that is not the shortest, or a
@@ -99,7 +99,7 @@ public class MotionSchemeTest {
     }
 
     /**
-     * The spring presets are the ratios the class already animated on (item 121).
+     * The spring presets are the ratios the class already animated on.
      *
      * <p>They replaced raw {@code SpringForce.DAMPING_RATIO_*} picks, so the numbers have to be the
      * same ones or every press, move and arrival in the launcher changes feel in one commit. The
@@ -132,7 +132,7 @@ public class MotionSchemeTest {
     /**
      * The platform setting is a multiplier, not a boolean. Reading only its zero case (the previous
      * behaviour) meant a user who asked for 0.5x or 2x system animations still got the app's own
-     * timing, which is the bug item 75 names.
+     * timing, which is the bug the old code shipped.
      */
     @Test
     public void aFasterPlatformScaleShortensEveryDuration() {

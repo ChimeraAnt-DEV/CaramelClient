@@ -90,7 +90,7 @@
         drawable and the 24dp end inset are accounted for.
     -->
     <dimen name="nav_rail_tab_padding_start">24dp</dimen>
-    <!-- The navigation attention dot (item 83); small enough to read as a marker, not a control. -->
+    <!-- The navigation attention dot; small enough to read as a marker, not a control. -->
     <dimen name="nav_tab_dot_size">8dp</dimen>
     <!-- Gap between a rail row's icon and its label. The expanded rail (values-sw840dp) widens
          it; the icon-only rail never shows a label so the value does not matter there. -->

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Pins the resource-pack size/resolution readout (item 253). The PNG header parse is tested from
+ * Pins the resource-pack size/resolution readout. The PNG header parse is tested from
  * real bytes, and the directory walk from real files on disk.
  */
 public class PackAssetSummaryTest {

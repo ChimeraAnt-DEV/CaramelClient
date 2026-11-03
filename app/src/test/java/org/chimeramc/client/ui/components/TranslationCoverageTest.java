@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Translations may not fall further behind (items 24, 331, 333).
+ * Translations may not fall further behind.
  *
  * <p>The ten shipped locales each covered about 38% of the default strings, so roughly 1,350 keys
  * fell back to English — and the gap was in the newest surfaces, which is exactly where a new user
@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  * removing a key from the baseline is what "translating something" looks like.
  *
  * <p>The other half is honesty: a string that is a brand name, a file extension or a wire token is
- * marked {@code translatable="false"} and stops counting. That is item 334, and it is enforced here
+ * marked {@code translatable="false"} and stops counting. That rule is enforced here
  * so the count means "work to do" rather than "work plus things that must never be translated".
  */
 public class TranslationCoverageTest {

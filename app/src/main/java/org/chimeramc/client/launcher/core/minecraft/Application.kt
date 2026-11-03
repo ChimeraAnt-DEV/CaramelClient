@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -18,7 +20,7 @@ class LauncherApplication : Application() {
         // Point the failure reporter at the application context before anything else can fail, so
         // the first failure is durable rather than only reaching logcat.
         org.chimeramc.client.util.AppLog.install(applicationContext)
-        // Item 296: catch main-thread disk/network work in debug builds. A no-op in release.
+        // Catch main-thread disk/network work in debug builds. A no-op in release.
         org.chimeramc.client.util.StrictModeSetup.install(org.chimeramc.client.BuildConfig.DEBUG)
         FeatureSettings.init(applicationContext)
         LowLatencyNetworkManager.init(applicationContext)
@@ -29,7 +31,7 @@ class LauncherApplication : Application() {
         // active for it, so a hook that kills the process cannot trap the user in a crash loop.
         org.chimeramc.client.core.minecraft.OptifineModeManager.reconcileOnStartup(applicationContext)
         CrashReporter.init(this)
-        // Item 493: one table a script or a module can ask before it draws, so a feature whose
+        // One table a script or a module can ask before it draws, so a feature whose
         // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
         // probe is a cached native read, so this is cheap enough to leave installed for the process.
         org.chimeramc.client.core.backend.HookAvailability.install { hook ->
@@ -53,19 +55,19 @@ class LauncherApplication : Application() {
         Thread({
             try {
                 org.chimeramc.client.core.crash.CrashReportUploader.uploadPending(applicationContext)
-            } catch (_: Throwable) {
-                // Reporting a crash must never itself crash the launcher; the uploader logs.
+            } catch (t: Throwable) {
+                AppLog.warnOnce("GlowberryClient", "Application:59", "Ignored a failure at Application:59", t)
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
-        // Item 281: the opt-in anonymous usage counter. Same shape as the crash report above --
+        // The opt-in anonymous usage counter. Same shape as the crash report above --
         // off the main thread, gated on the user's switch and a configured collector, and inert in
         // the shipped source because no endpoint is set. At most one report a day.
         Thread({
             try {
                 org.chimeramc.client.core.telemetry.UsageStatsReporter
                     .reportIfDue(applicationContext)
-            } catch (_: Throwable) {
-                // A counter must never be the reason a launch fails; the reporter logs.
+            } catch (t: Throwable) {
+                AppLog.warnOnce("GlowberryClient", "Application:70", "Ignored a failure at Application:70", t)
             }
         }, "usage-stats").apply { isDaemon = true }.start()
         // Mirror the persisted haptics preference into the static feedback layer so the

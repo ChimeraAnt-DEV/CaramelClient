@@ -10,7 +10,7 @@ import android.view.View;
 import java.util.List;
 
 /**
- * Draws the HUD editor's safe-area frame, cutout and grid (item 210).
+ * Draws the HUD editor's safe-area frame, cutout and grid.
  *
  * <p>Without it the editor lets a widget be dropped under a notch or the gesture bar, where it is
  * clipped and the user has no way to know why. The frame shows exactly the box the editor clamps

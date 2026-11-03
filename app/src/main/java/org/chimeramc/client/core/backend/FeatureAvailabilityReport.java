@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 /**
- * The preloader's per-feature hook availability report, parsed for the Diagnostics screen (item 453).
+ * The preloader's per-feature hook availability report, parsed for the Diagnostics screen.
  *
  * <p>The preloader answers "did this feature's hook install?" per feature and renders the whole set
  * as one JSON object, because "the preloader loaded" and "this feature works" are different

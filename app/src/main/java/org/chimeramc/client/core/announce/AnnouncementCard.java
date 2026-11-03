@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.announce;
 
 /**
- * One announcement the launcher can show on the Launch tab (item 255).
+ * One announcement the launcher can show on the Launch tab.
  *
  * <p>The feed is a small JSON document the project hosts, so an announcement can be posted without
  * shipping a new APK. That makes the <em>version gate</em> the important part: an announcement that

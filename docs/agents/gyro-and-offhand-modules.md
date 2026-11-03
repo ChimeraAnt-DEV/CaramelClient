@@ -2,8 +2,8 @@
 - **The Gyro module drives look through `PojavControlsMod.nativeSendLookDelta`** тАФ the same path
   mouse/touch look uses тАФ instead of a separate native gyro hook. Sensitivity, invert and dead zone
   are applied in Java (`GyroOverlay.sendLookDelta`), so it needs no native gyro symbol and works
-  wherever the game does. `GyroMod` (the native class) is still pre-resolved at launch but the overlay
-  no longer calls it.
+  wherever the game does. There is no separate `GyroMod` wrapper: it had no caller, so it was
+  removed rather than kept as a second, unused route to the same call.
 - **The Offhand module opens the inventory, it does not "swap".** Bedrock has no swap-to-off-hand key at all тАФ there is no
   `key.offhand` in the shipped input map, so Java's `F` swap simply does not exist here. The off-hand slot is filled from the
   inventory screen and accepts only a handful of items (shields, arrows, firework rockets, totems of undying, maps, nautilus

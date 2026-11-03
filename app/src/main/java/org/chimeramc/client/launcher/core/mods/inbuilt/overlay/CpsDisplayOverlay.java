@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -228,7 +230,7 @@ public class CpsDisplayOverlay {
         if (statsText != null) {
             int cps = getCps();
             // The timer runs ten times a second while the count only changes on a click, so an
-            // unchanged readout must not repaint (item 187).
+            // unchanged readout must not repaint.
             if (refreshGate.shouldRefresh(Integer.toString(cps), SystemClock.uptimeMillis())) {
                 statsText.setText(activity.getString(R.string.mod_overlay_cps_value, cps));
             }
@@ -259,7 +261,9 @@ public class CpsDisplayOverlay {
             if (wmParams != null && windowManager != null && overlayView != null && isShowing) {
                 try {
                     clampCurrentPosition(true);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "CpsDisplayOverlay:265", "Ignored a failure at CpsDisplayOverlay:265", ignored);
+                }
             }
         }
     }
@@ -406,7 +410,9 @@ public class CpsDisplayOverlay {
                     rootView.removeView(overlayView);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "CpsDisplayOverlay:414", "Ignored a failure at CpsDisplayOverlay:414", ignored);
+        }
         overlayView = null;
         statsText = null;
         synchronized (clickTimes) {

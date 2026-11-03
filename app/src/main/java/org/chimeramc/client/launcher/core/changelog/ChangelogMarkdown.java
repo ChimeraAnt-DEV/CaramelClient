@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Parses the bundled {@code CHANGELOG.md} into a flat list of renderable blocks (item 270).
+ * Parses the bundled {@code CHANGELOG.md} into a flat list of renderable blocks.
  *
  * <p>The repo's changelog is the single source of truth, and it is a plain Markdown file rather than
  * a bespoke JSON so contributors can edit it in a normal editor. This class turns the small subset

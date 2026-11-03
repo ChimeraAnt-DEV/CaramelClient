@@ -3,7 +3,7 @@ package org.chimeramc.client.core.mods.inbuilt;
 import java.util.List;
 
 /**
- * The control a schema node turns into, derived as pure rules (item 203).
+ * The control a schema node turns into, derived as pure rules.
  *
  * <p>{@link RuntimeConfigView} already builds a control per node, but the parameters that decide
  * <em>what</em> it builds were inline literals spread through the view: the 0..100 int default, the

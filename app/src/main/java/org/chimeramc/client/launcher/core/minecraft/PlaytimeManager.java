@@ -23,7 +23,7 @@ public final class PlaytimeManager {
     private static final String KEY_ACTIVE_PROFILE = "active_profile";
     private static final String KEY_ACTIVE_START = "active_start_elapsed";
     private static final String KEY_TOTAL_PREFIX = "total_ms_";
-    /** The wall-clock time of the last session start, per instance (item 143). */
+    /** The wall-clock time of the last session start, per instance. */
     private static final String KEY_LAST_PLAYED_PREFIX = "last_played_ms_";
     public static final long HEARTBEAT_INTERVAL_MS = 15_000L;
 
@@ -113,7 +113,7 @@ public final class PlaytimeManager {
 
     /**
      * The wall-clock time of the instance's last session start, or 0 when it has never been played
-     * (item 143). Wall-clock rather than elapsed so it survives a reboot.
+     *. Wall-clock rather than elapsed so it survives a reboot.
      */
     public static long getLastPlayedMs(String profileId) {
         if (profileId == null || sAppContext == null) return 0L;

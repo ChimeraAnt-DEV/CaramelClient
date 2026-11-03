@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.chimeramc.client.util.ThermalPolicy;
 
 /**
- * Pins the thermal preset suggestion (item 260).
+ * Pins the thermal preset suggestion.
  *
  * <p>The rule has two boundaries that matter: a merely warm device must not be interrupted, and a
  * device already on Battery must never be told to go lighter (there is nothing below it).

@@ -1,0 +1,16 @@
+# Large source files (>=1500 lines) and their current size.
+# A file may shrink (lower its entry) but never grow; a new file may not cross the
+# threshold. Splitting a file is what lowering an entry looks like. Checked by
+# FileSizeBudgetTest; third-party sources under libHttpClient are out of scope.
+
+app/src/main/java/org/chimeramc/client/launcher/core/minecraft/GamePackageManager.kt 1553
+app/src/main/java/org/chimeramc/client/launcher/core/mods/FileHandler.java 1544
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/InbuiltModuleProvider.java 1765
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/manager/InbuiltModManager.java 1722
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/InbuiltOverlayManager.java 2129
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 3395
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/RadialMenuView.java 1940
+app/src/main/java/org/chimeramc/client/launcher/core/versions/VersionManager.java 1505
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 1645
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 3036
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 1818

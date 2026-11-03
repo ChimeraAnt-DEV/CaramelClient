@@ -76,6 +76,7 @@ public class ServerManager {
                             int idx = Integer.parseInt(parts[0]);
                             if (idx > maxIndex) maxIndex = idx;
                         } catch (NumberFormatException ignored) {
+                            AppLog.warnOnce(TAG, "ServerManager:79", "Ignored a failure at ServerManager:79", ignored);
                         }
                     }
                 }
@@ -189,7 +190,9 @@ public class ServerManager {
                         try {
                             int idx = Integer.parseInt(parts[0]);
                             if (idx > maxIndex) maxIndex = idx;
-                        } catch (NumberFormatException ignored) {}
+                        } catch (NumberFormatException ignored) {
+                            AppLog.warnOnce(TAG, "ServerManager:194", "Ignored a failure at ServerManager:194", ignored);
+                        }
 
                         if (name.equals(serverItem.name) && ip.equals(serverItem.ip) && portStr.equals(String.valueOf(serverItem.port))) {
                             exists = true;

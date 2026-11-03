@@ -1,4 +1,4 @@
-# Item 313: keep plugin and dependency versions current without a manual sweep.
+# Keep plugin and dependency versions current without a manual sweep.
 #
 # The versions themselves live in gradle/libs.versions.toml, so Dependabot edits one file rather
 # than five build scripts. Weekly, not daily: this is a game launcher, and a dependency bump that

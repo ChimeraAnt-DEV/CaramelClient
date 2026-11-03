@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The first-run compatibility checks (item 284).
+ * The first-run compatibility checks.
  *
  * <p>A new install fails for a small, knowable set of reasons -- not enough free space, an APK that
  * cannot load in this process, the Play Store build instead of an imported one, a permission the

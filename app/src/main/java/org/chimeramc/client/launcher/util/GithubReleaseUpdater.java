@@ -47,7 +47,7 @@ public class GithubReleaseUpdater {
     public static final String REPO_NAME = "GlowberryClient";
     private static final String PREF_IGNORED_VERSION = "update_ignored_version";
     /**
-     * The prefs file and key recording that an update was seen (item 83).
+     * The prefs file and key recording that an update was seen.
      *
      * <p>The update check is a one-shot dialog, so nothing durable said "an update exists" after it
      * was dismissed or ignored. The Settings tab's attention dot needs exactly that fact, so the
@@ -85,7 +85,7 @@ public class GithubReleaseUpdater {
 
     /**
      * Records the newest release version a check has seen, so the Settings tab can show a dot
-     * (item 83). Best-effort: a failure to persist must never break the check itself.
+     *. Best-effort: a failure to persist must never break the check itself.
      */
     public static void rememberLatestSeen(Context context, String version) {
         if (context == null || version == null || version.isEmpty()) return;
@@ -94,13 +94,13 @@ public class GithubReleaseUpdater {
                     .getSharedPreferences(PREF_UPDATE_STATE, Context.MODE_PRIVATE)
                     .edit().putString(KEY_LATEST_SEEN, version).apply();
         } catch (RuntimeException ignored) {
-            // The dot is cosmetic; a prefs failure must not surface.
+            AppLog.warnOnce(TAG, "GithubReleaseUpdater:97", "Ignored a failure at GithubReleaseUpdater:97", ignored);
         }
     }
 
     /**
      * True when a newer release than the installed one has been seen and the user has not ignored
-     * it (item 83).
+     * it.
      *
      * <p>Re-verifies against the installed version each time, so installing the update clears the
      * dot with no separate bookkeeping.
@@ -312,10 +312,12 @@ public class GithubReleaseUpdater {
                     try {
                         if (is != null) is.close();
                     } catch (Exception ignored) {
+                        AppLog.warnOnce(TAG, "GithubReleaseUpdater:315", "Ignored a failure at GithubReleaseUpdater:315", ignored);
                     }
                     try {
                         if (fos != null) fos.close();
                     } catch (Exception ignored) {
+                        AppLog.warnOnce(TAG, "GithubReleaseUpdater:320", "Ignored a failure at GithubReleaseUpdater:320", ignored);
                     }
                 }
             }

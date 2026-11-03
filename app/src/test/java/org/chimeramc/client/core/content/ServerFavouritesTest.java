@@ -13,7 +13,7 @@ import java.util.Set;
 import org.junit.Test;
 
 /**
- * Pins the favourite-server rules (item 254).
+ * Pins the favourite-server rules.
  *
  * <p>The star is presentation state over a file the game owns, so the two things that can go wrong
  * are a key that does not identify a server and an ordering that moves an unstarred server for no

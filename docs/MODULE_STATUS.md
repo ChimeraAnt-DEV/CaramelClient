@@ -27,7 +27,7 @@ accessor-name strings are stripped).
 | `toggle_hud` | Hides the HUD | Preloader key injection | yes | working (tested) |
 | `auto_sprint` | Sprint without holding | `GameBackend.setAutoSprint` (the injected-input seam) | yes (backend seam, no prebuilt lib) | unverified (device) |
 | `chick_pet` | Spawns a client pet | Client pet render (`NativeCosmeticsBridge` / `PetGeometry`) | yes (client-side) | unverified (device) |
-| `zoom` | Hold-to-zoom | `GameBackend.setZoom` (the injected-input seam) | yes (backend seam) | unverified (device) |
+| `zoom` | Hold-to-zoom | `GameBackend.setZoom` (the injected-input seam) | **no** until a backend advertises `Feature.ZOOM` | needs-hook (backend); badged and refused while no FOV provider is registered |
 | `fps_display` | FPS overlay | `GameBackend.readFps` + inbuilt overlay | yes (backend seam; host `FrameRateMeter` fallback) | unverified (device) |
 | `cps_display` | Clicks-per-second overlay | Inbuilt overlay + attack input | yes (client-only) | working (tested) |
 | `snaplook` | Snap to a saved angle | `GameBackend.sendLookDelta` (the injected-input seam) | yes (backend seam) | unverified (device) |
@@ -65,6 +65,8 @@ accessor-name strings are stripped).
 | `hyperspatial_cull` | Launcher-side work shedding | Host only | n/a | working (tested) |
 | `vertical_render_coalesce` | Launcher-side work shedding | Host only | n/a | working (tested) |
 | `tick_rate_predictor` | Launcher-side work shedding | Host only | n/a | working (tested) |
+| `adaptive_frame_pacing` | Launcher-side frame pacing (governor rules) | Host only | n/a | working (tested) |
+| `thermal_quality_hold` | Launcher-side thermal hold | Host only | n/a | working (tested) |
 
 ## Cosmetics (not a `ModIds` module; the Cosmetics panel)
 

@@ -8,7 +8,7 @@ import java.util.Collections;
 import org.junit.Test;
 
 /**
- * An extraction must be refused before it starts when the disk cannot hold it (item 304).
+ * An extraction must be refused before it starts when the disk cannot hold it.
  *
  * <p>Discovering the disk is full half-way through leaves a partial cache that the presence check
  * then retries on every launch, so the check has to happen before the first byte is written.

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Pins the relaunch budget (item 274): a bounded number of relaunches inside a window, so a bad
+ * Pins the relaunch budget: a bounded number of relaunches inside a window, so a bad
  * state cannot turn the launcher into a restart loop.
  *
  * <p>Pure, so no device and no running game are needed. The rules that matter are the boundary

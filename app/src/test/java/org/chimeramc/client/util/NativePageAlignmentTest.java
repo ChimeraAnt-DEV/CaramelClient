@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 /**
- * Every bundled 64-bit native library must be linkable on a 16 KB page device (item 314).
+ * Every bundled 64-bit native library must be linkable on a 16 KB page device.
  *
  * <p>Newer Android releases load shared objects with 16 KB page granularity; an ELF whose
  * {@code PT_LOAD} segments are aligned to only 4 KB fails to load there ("dlopen failed: empty/

@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import org.chimeramc.client.util.SafeExecutor;
@@ -160,7 +162,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Inflates the screen's layout off the main thread, then wraps it in the nav (item 130).
+     * Inflates the screen's layout off the main thread, then wraps it in the nav.
      *
      * <p>A screen whose XML is thousands of lines blocks its first frame on the parse. The heavy
      * screens call this instead of {@link #setContentView(int)}; the layout is built on a
@@ -199,13 +201,13 @@ public class BaseActivity extends AppCompatActivity {
     @Nullable
     private View.OnLayoutChangeListener pendingIndicatorListener;
 
-    /** The column holding the nav shape and the content, kept so the nav can be swapped (item 67). */
+    /** The column holding the nav shape and the content, kept so the nav can be swapped. */
     private LinearLayout navColumn;
     /** The inflated navigation view, kept so it can be replaced on a window-shape change. */
     private View navShapeView;
     /** The screen's own content view, re-measured when the nav shape changes. */
     private View navContentView;
-    /** The debug bounds overlay, or null when the debug layout toggle is off (item 80). */
+    /** The debug bounds overlay, or null when the debug layout toggle is off. */
     @Nullable
     private org.chimeramc.client.ui.navigation.NavBoundsOverlay navBoundsOverlay;
 
@@ -281,7 +283,7 @@ public class BaseActivity extends AppCompatActivity {
 
         applyPersonalization();
 
-        // Item 339: a small icon button in the header or a row keeps its visual size and gains a
+        // A small icon button in the header or a row keeps its visual size and gains a
         // 48dp touch target. Grouped per parent, because a view holds only one TouchDelegate.
         org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(navBar);
         org.chimeramc.client.ui.components.TouchTargets.expandTouchTargetsRecursively(contentView);
@@ -324,7 +326,7 @@ public class BaseActivity extends AppCompatActivity {
                     compat.getInsets(WindowInsetsCompat.Type.systemBars());
             // The display cutout is a separate inset type from the system bars, and in landscape
             // the notch is on one side, so the leading rail would sit under it without this
-            // (item 68). Unioned rather than replaced: on a device that reports both, the larger
+            //. Unioned rather than replaced: on a device that reports both, the larger
             // of the two on each edge is what actually needs clearing.
             androidx.core.graphics.Insets cutout =
                     compat.getInsets(WindowInsetsCompat.Type.displayCutout());
@@ -376,13 +378,13 @@ public class BaseActivity extends AppCompatActivity {
         return NavLayoutMode.forWindow(currentWidthDp(), currentWindowWidthDp());
     }
 
-    /** The user's fold choice for the wide rail (item 85). */
+    /** The user's fold choice for the wide rail. */
     private boolean railCollapsed() {
         return org.chimeramc.client.settings.FeatureSettings.getInstance().isNavRailCollapsed();
     }
 
     /**
-     * Whether the rail currently shows its destination labels (item 85).
+     * Whether the rail currently shows its destination labels.
      *
      * <p>One reading of the policy, used by the wordmark, the label text and the compact-mode flag,
      * so the three cannot disagree about whether the rail is folded.
@@ -392,7 +394,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Applies the rail width for the current fold choice (item 85).
+     * Applies the rail width for the current fold choice.
      *
      * <p>The width comes from a resource qualifier ({@code values-sw840dp}) that a runtime fold
      * cannot change, so the rail's layout params are set here from {@link NavRailPolicy}. Only the
@@ -411,7 +413,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows or hides the rail fold control (item 85).
+     * Shows or hides the rail fold control.
      *
      * <p>The control is offered only where it does something - on an expanded rail - and its icon
      * and description name the action it performs, so a screen reader announces "Collapse rail"
@@ -442,7 +444,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Outlines every nav entry's real bounds and logs them, on a debug build (item 80).
+     * Outlines every nav entry's real bounds and logs them, on a debug build.
      *
      * <p>The whole class of nav defect here - a row padded by the rail's own width, a wordmark on a
      * bar with no room for it, a header that centres a pair - shows up as a view whose laid-out
@@ -460,7 +462,7 @@ public class BaseActivity extends AppCompatActivity {
             // The entries come from walking the nav's own subtree rather than from a list of
             // looked-up ids: this aid is about the whole shape (the row, its tabs, the header),
             // and a lookup list would silently stop covering a view that a layout change added.
-            // It also leaves the findViewById ratchet (item 111) where it was, adding no lookups.
+            // It also leaves the findViewById ratchet where it was, adding no lookups.
             java.util.List<View> views = new java.util.ArrayList<>();
             collectNavViews(navShapeView, views);
             org.chimeramc.client.ui.navigation.NavDebugBounds.Entry[] entries =
@@ -481,7 +483,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Collects the identified descendants of {@code root}: the nav's own subtree (item 80).
+     * Collects the identified descendants of {@code root}: the nav's own subtree.
      *
      * <p>Only identified views are collected, so the overlay outlines the entries a report would
      * name (tabs, wordmark, logo, back button) rather than every anonymous wrapper, and the
@@ -502,14 +504,14 @@ public class BaseActivity extends AppCompatActivity {
             try {
                 return view.getResources().getResourceEntryName(view.getId());
             } catch (android.content.res.Resources.NotFoundException ignored) {
-                // A view tagged with a non-resource id; fall through to the class name.
+                AppLog.warnOnce("GlowberryClient", "BaseActivity:507", "Ignored a failure at BaseActivity:507", ignored);
             }
         }
         return view.getClass().getSimpleName();
     }
 
     /**
-     * Logs the inputs to the navigation-shape decision once per screen (item 94).
+     * Logs the inputs to the navigation-shape decision once per screen.
      *
      * <p>A "the layout is wrong on my device" report is otherwise unanswerable: the shape is a
      * function of two width readings, the density and the mode, and none of them appear anywhere.
@@ -530,7 +532,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Puts the shared motion system into the scheme this screen should use (items 75, 345).
+     * Puts the shared motion system into the scheme this screen should use.
      *
      * <p>{@link DynamicAnim} holds one static scheme, and only {@code MainActivity} used to set it.
      * Every other screen therefore animated with whatever the previous screen had left behind -
@@ -547,7 +549,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * The platform animation scale (item 75).
+     * The platform animation scale.
      *
      * <p>Read as the multiplier Android stores it as rather than collapsed to a boolean, so a user on
      * a 0.5x or 2x system scale gets motion at that speed and only a 0 stops it. An unreadable or
@@ -679,7 +681,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * The next visible destination {@code steps} away from {@code current}, wrapping (item 272).
+     * The next visible destination {@code steps} away from {@code current}, wrapping.
      *
      * <p>{@link LauncherTab#offset} walks the full enum, which under guest mode would step onto the
      * hidden Mods tab and open it. This walks the visible list instead, so a bumper press can never
@@ -706,7 +708,7 @@ public class BaseActivity extends AppCompatActivity {
     /** True on a narrow window, where only the selected tab shows its label. */
     private boolean compactNavTabs;
     /**
-     * The destination views, captured once when the nav is inflated (item 83).
+     * The destination views, captured once when the nav is inflated.
      *
      * <p>The badge pass runs from {@code onResume}, and looking the tabs up again there would both
      * repeat work the inflation already did and add a lookup per destination per resume. Holding the
@@ -728,7 +730,7 @@ public class BaseActivity extends AppCompatActivity {
         View appName = findViewById(R.id.nav_app_name);
         if (appName != null) {
             // The wordmark is a width decision on the bar and a label decision on the rail
-            // (item 84). Hiding it on every compact window left the bar with empty space beside
+            //. Hiding it on every compact window left the bar with empty space beside
             // the icon-only tabs, so the brand was invisible even where it fit; the bar's own
             // constraints (the wordmark is pinned between the logo and the tab strip) are what
             // keep it off the tabs, so a width threshold is safe to introduce.
@@ -760,7 +762,7 @@ public class BaseActivity extends AppCompatActivity {
     private void setupBaseNavBar() {
         PersonalizationManager pm = new PersonalizationManager(this);
 
-        // Item 85: the rail's width and the fold control follow the user's choice, applied before
+        // The rail's width and the fold control follow the user's choice, applied before
         // the label configuration so the two agree on whether the rail is folded.
         applyRailWidth();
         setupRailToggle();
@@ -770,7 +772,7 @@ public class BaseActivity extends AppCompatActivity {
         // by the resource system and cannot be half-applied.
         applyNavCompactMode();
 
-        // Guest mode removes a destination entirely rather than disabling it (item 272): a
+        // Guest mode removes a destination entirely rather than disabling it: a
         // greyed-out Mods tab would tell a guest the owner has mods, which is what the mode exists
         // to avoid. Hidden from the layout, the key cycle and the long-press menu alike, because
         // all three read `visibleTabs`.
@@ -800,7 +802,7 @@ public class BaseActivity extends AppCompatActivity {
             int color = getResources().getColor(R.color.text_secondary, getTheme());
             // The one type system (U8): a destination label is the LABEL role, so its size and its
             // variable-font weight come from the shared scale rather than the layout's own values.
-            // Applied once at inflation (item 73); setActiveNavTab only changes the weight axis,
+            // Applied once at inflation; setActiveNavTab only changes the weight axis,
             // which is a state, not a re-application of the typeface.
             UiType.apply(tab, UiType.Role.LABEL);
             tab.setTextColor(color);
@@ -832,9 +834,9 @@ public class BaseActivity extends AppCompatActivity {
         View backButton = findViewById(R.id.nav_back_button);
         if (backButton != null) {
             // A root destination has nothing to go back to, and a disabled arrow reads as a broken
-            // button rather than "you are home" (item 90). Hidden rather than greyed so the header
+            // button rather than "you are home". Hidden rather than greyed so the header
             // only offers an action that works. Predictive back goes through the dispatcher, which
-            // is the AndroidX path available on every supported version (item 89).
+            // is the AndroidX path available on every supported version.
             boolean isRootDestination = LauncherTab.forActivity(getClass()) == LauncherTab.LAUNCH;
             backButton.setVisibility(isRootDestination ? View.GONE : View.VISIBLE);
             backButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
@@ -842,7 +844,7 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         // The logo is a real target, not decoration: tapping the brand is the universal "go home"
-        // gesture, and a 28dp view is under the 48dp minimum (item 91). A TouchDelegate widens the
+        // gesture, and a 28dp view is under the 48dp minimum. A TouchDelegate widens the
         // hit area around it without changing how it draws, and the click routes to the launch tab
         // so the affordance does something rather than swallowing the tap.
         View logo = findViewById(R.id.nav_logo);
@@ -910,7 +912,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Offers a destination's sections on a long press (item 92).
+     * Offers a destination's sections on a long press.
      *
      * <p>A tab is a navigation entry, so its press navigates; the long press is the place for the
      * sections underneath it (Library holds Instances/Install/Replay, Settings holds Diagnostics).
@@ -920,7 +922,7 @@ public class BaseActivity extends AppCompatActivity {
      * the listener returns true.
      */
     /**
-     * Puts the attention dot on whichever destination has something waiting (item 83).
+     * Puts the attention dot on whichever destination has something waiting.
      *
      * <p>The signals come from the subsystems that already know them - the mod load diagnostics,
      * the crash guard, the safe-mode escape and the update check - and the decision of which tab
@@ -1113,6 +1115,7 @@ public class BaseActivity extends AppCompatActivity {
                     bmp = android.graphics.BitmapFactory.decodeStream(imgResp.body().byteStream());
                 }
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseActivity:1118", "Ignored a failure at BaseActivity:1118", ignored);
             }
 
             final Bitmap loaded = bmp;
@@ -1148,7 +1151,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setActiveNavTab(int activeTabId) {
-        // Remember the destination so a cold start reopens where the user left off (item 77).
+        // Remember the destination so a cold start reopens where the user left off.
         // Recorded here, in the one place that knows the active tab, rather than in each
         // activity's onCreate: every screen already calls this to tint its own entry, so the
         // memory cannot drift from the highlight.
@@ -1164,7 +1167,7 @@ public class BaseActivity extends AppCompatActivity {
         int onSurface = getResources().getColor(R.color.on_surface, getTheme());
         // The accent is only usable as the active-tab colour if it is readable on the navigation
         // surface. Under Material You it comes from the wallpaper, so it can land almost on top of
-        // the surface and make the selected destination unreadable (item 87); NavAccent applies the
+        // the surface and make the selected destination unreadable; NavAccent applies the
         // contrast floor and falls back to on-surface, which the indicator and the weight still
         // distinguish.
         int surface = getResources().getColor(R.color.ui_bg_surface, getTheme());
@@ -1172,7 +1175,7 @@ public class BaseActivity extends AppCompatActivity {
         int inactive = getResources().getColor(R.color.text_secondary, getTheme());
 
         // The two colours are installed once as a state list, so every tab recolours itself from
-        // its own `selected` state and this method never branches on the colour (item 88). The
+        // its own `selected` state and this method never branches on the colour. The
         // state list is rebuilt here because the accent can change while the app is running.
         ColorStateList tabTint = navTabTint(accentColor, inactive);
 
@@ -1204,8 +1207,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * The state list every destination is tinted from (item 88), with the focus state added so a
-     * D-pad or keyboard user can see where focus is (item 76).
+     * The state list every destination is tinted from, with the focus state added so a
+     * D-pad or keyboard user can see where focus is.
      *
      * <p>Building it here rather than branching inside the update loop means the text colour, the
      * compound icon and anything else state-aware all recolour from the tab's own
@@ -1405,7 +1408,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * The destination a cold start should open, or null to leave the caller's own default
-     * (item 77).
+     *.
      *
      * <p>Reads the persisted tab name through {@link LauncherTab#fromStoredName}, so a name this
      * build no longer has - or a settings file written by an older build - is "no preference"
@@ -1512,7 +1515,7 @@ public class BaseActivity extends AppCompatActivity {
         hideSystemUI();
         // A window that crosses a breakpoint (a foldable unfolding, a tablet entering split screen)
         // needs the other navigation shape. The nav is swapped in place rather than by recreating
-        // the activity (item 67): a recreate would throw away the screen's scroll position, any
+        // the activity: a recreate would throw away the screen's scroll position, any
         // in-progress text and the whole view hierarchy, for a change that only concerns the nav
         // chrome. Only the nav view and the content's layout params are rebuilt.
         NavLayoutMode next = resolveNavLayoutMode();
@@ -1523,7 +1526,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * Replaces the navigation view with the one for {@code mode}, keeping the content view and the
-     * activity state (item 67).
+     * activity state.
      *
      * <p>The column holds exactly two children - the nav and the content - and only the nav is
      * recreated. The content's layout params swap axis with the column so the rail's leading

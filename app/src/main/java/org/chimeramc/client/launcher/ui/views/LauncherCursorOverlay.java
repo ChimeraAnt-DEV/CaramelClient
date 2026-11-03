@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.ui.views;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -154,7 +156,7 @@ public final class LauncherCursorOverlay extends View {
             root.dispatchTouchEvent(down);
             root.dispatchTouchEvent(up);
         } catch (Throwable ignored) {
-            // A screen that throws while handling the tap must not take the launcher down.
+            AppLog.warnOnce("GlowberryClient", "LauncherCursorOverlay:159", "Ignored a failure at LauncherCursorOverlay:159", ignored);
         } finally {
             dispatchingSyntheticTap = false;
         }

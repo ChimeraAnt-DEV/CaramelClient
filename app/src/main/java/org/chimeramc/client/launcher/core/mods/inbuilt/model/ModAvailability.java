@@ -23,6 +23,12 @@ public final class ModAvailability {
 
     /** The reason shown on a module that cannot run, or null when the module is usable. */
     public static String unavailableReason(String modId) {
+        if (ModIds.requiresBackendFeature(modId)) {
+            // A module that needs a backend capability the active backend does not advertise is not
+            // waiting for game data; it is waiting for a backend. Saying "no game data" would be
+            // factually wrong.
+            return REASON_NO_BACKEND;
+        }
         if (!ModIds.requiresGameData(modId)) return null;
         // A catalogue entry is badged for one of two distinct causes, and telling them apart matters:
         // an engine-hook module is waiting for a feed this build cannot yet read, while a
@@ -72,6 +78,12 @@ public final class ModAvailability {
 
     /** A stable id for the reason, so a future cause can be told apart from this one. */
     public static final String REASON_NO_GAME_DATA = "no_game_data";
+
+    /**
+     * A stable id for the reason shown when a module needs a backend capability the active backend
+     * does not advertise (zoom without a field-of-view provider).
+     */
+    public static final String REASON_NO_BACKEND = "no_backend";
 
     private ModAvailability() {}
 }

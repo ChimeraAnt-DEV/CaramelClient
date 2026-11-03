@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Counts backend calls so a runaway script is visible before it is felt (item 504).
+ * Counts backend calls so a runaway script is visible before it is felt.
  *
  * <p>A per-frame look delta is a legitimate call, so a raw total says nothing. What matters is the
  * <em>rate</em>: a script that calls {@code sendKey} a few thousand times a second is a bug that

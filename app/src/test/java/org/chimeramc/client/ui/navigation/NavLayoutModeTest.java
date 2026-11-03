@@ -90,7 +90,7 @@ public class NavLayoutModeTest {
 
     @Test
     public void theBarShowsTheWordmarkOnlyWhenItHasRoom() {
-        // Item 84: the wordmark used to be hidden on every compact window, which left a wide
+        // The wordmark used to be hidden on every compact window, which left a wide
         // phone's bar with empty space beside icon-only tabs and no brand anywhere. On the bar it
         // is a width decision, so the threshold is pinned either side.
         assertFalse(NavLayoutMode.BOTTOM_NAV.showsWordmark(NavLayoutMode.WORDMARK_WIDTH_DP - 1));
@@ -110,7 +110,7 @@ public class NavLayoutModeTest {
     @Test
     public void forWindowIsTheSmallerClassificationAtEveryBoundary() {
         // 599/600 and 839/840 are the only two places the answer changes, so both readings are
-        // swept either side of each (item 96).
+        // swept either side of each.
         int[][] cases = {
                 {599, 599, NavLayoutMode.BOTTOM_NAV.ordinal()},
                 {599, 600, NavLayoutMode.BOTTOM_NAV.ordinal()},

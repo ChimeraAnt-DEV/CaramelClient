@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
 /**
- * The pure rule behind the Optifine crash-loop quarantine (item 19).
+ * The pure rule behind the Optifine crash-loop quarantine.
  *
  * <p>An item that is switched off by the crash guard reads the same as one the user turned off by
  * hand, so the settings screen could not say why. This rule turns the persisted state into an

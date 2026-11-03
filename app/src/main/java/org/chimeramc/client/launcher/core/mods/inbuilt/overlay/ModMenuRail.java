@@ -50,13 +50,20 @@ final class ModMenuRail {
 
         int size = (int) (UiTokens.RAIL_BUTTON * density());
         int gap = (int) (8 * density());
+        // The bar may be a vertical rail or a horizontal bottom bar; the gap goes on the axis the
+        // tiles are laid out on, so a horizontal bar spaces them sideways instead of stacking them.
+        boolean horizontal = container.getOrientation() == LinearLayout.HORIZONTAL;
         for (final ModMenuPage page : ModMenuPage.pages()) {
             // A fixed-size tile with a centred icon, matching the VIP rail. A TextView with a
             // compound drawable positions the icon against an empty text line box, so it drifts
             // off centre at some densities.
             FrameLayout tile = new FrameLayout(activity);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
-            lp.bottomMargin = gap;
+            if (horizontal) {
+                lp.rightMargin = gap;
+            } else {
+                lp.bottomMargin = gap;
+            }
             tile.setLayoutParams(lp);
             tile.setClickable(true);
             tile.setFocusable(false);

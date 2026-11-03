@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """Fail a build that adds an untranslated string, a layout literal or a findViewById.
 
-Three hygiene budgets the project cannot regress (items 111, 136, 333). Each one has a baseline
+Three hygiene budgets the project cannot regress. Each one has a baseline
 file under `scripts/hygiene/`; the check compares the current tree against it and fails only on a
 *new* offender. That is the honest gate: the existing debt is large and translating 1,348 strings
 or removing 892 findViewById calls is not a single change, but nothing may make it larger.
 
-  * `translation-baseline.txt`  — default strings with no translation in a locale (item 333). A new
+  * `translation-baseline.txt`  — default strings with no translation in a locale. A new
     string must either be translated, marked `translatable="false"`, or be listed here on purpose.
-  * `layout-literals-baseline.txt` — hardcoded `android:text` and colour literals in layouts
-    (item 136). A new one must come from `@string` / the theme tokens.
-  * `findviewbyid-baseline.txt` — one line per file and count (item 111). The total may only fall.
+  * `layout-literals-baseline.txt` — hardcoded `android:text` and colour literals in layouts. A new one must come from `@string` / the theme tokens.
+  * `findviewbyid-baseline.txt` — one line per file and count. The total may only fall.
 
 `--update` rewrites all three baselines, so the intended workflow is: make the change, run with
 `--update`, and commit the baseline diff alongside it. That makes the diff reviewable rather than

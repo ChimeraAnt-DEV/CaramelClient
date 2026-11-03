@@ -6,7 +6,7 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-/** Item 221: the HUD editor's corner resize handles. */
+/** The HUD editor's corner resize handles. */
 public class OverlayResizeHandleTest {
 
     private static final float DENSITY = 2f;

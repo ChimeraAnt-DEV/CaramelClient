@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import org.chimeramc.client.util.ApiLevels
 
 import android.app.Activity
@@ -317,6 +319,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             )
             org.chimeramc.client.core.mods.ModLoadDiagnostics.record(this, merged)
         } catch (ignored: Throwable) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
         }
     }
 
@@ -691,7 +694,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
     }
 
     /**
-     * Accumulates look travel rather than sending it immediately (item 216).
+     * Accumulates look travel rather than sending it immediately.
      *
      * <p>Several move events can arrive between two game frames, and the game samples the look it
      * is handed on its own tick. Sending per event dropped all but the last delta of the frame, so
@@ -755,7 +758,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         if (!hasFocus) {
             // Losing focus must not leave a key or mouse button held down in the game: nothing will
             // send the matching release once another app has the window. The overlays also drop
-            // their own held state so an indicator cannot claim a module is still armed (item 195).
+            // their own held state so an indicator cannot claim a module is still armed.
             GameBridge.releaseAll()
             overlayManager?.onWindowFocusLost()
             // Any look travel that arrived but has not been sent belongs to the frame that was
@@ -862,7 +865,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         // the install has run, so the steady-state cost is negligible. It runs before super.tick()
         // so the hook exists before the frame it will observe renders.
         ModManager.pumpGameHookInstall()
-        // One shaped look call per frame, from this frame's accumulated travel (item 216). Before
+        // One shaped look call per frame, from this frame's accumulated travel. Before
         // super.tick() so the game's own tick reads this frame's aim rather than the previous one's.
         flushLookDelta()
         super.tick()

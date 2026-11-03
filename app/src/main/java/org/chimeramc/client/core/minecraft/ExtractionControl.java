@@ -3,7 +3,7 @@ package org.chimeramc.client.core.minecraft;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The cancellation signal an extraction checks between files (item 306).
+ * The cancellation signal an extraction checks between files.
  *
  * <p>Extraction of a Bedrock package copies hundreds of megabytes. Until now a launch that the user
  * had given up on - backing out of the loading screen, or the launcher being closed - kept copying

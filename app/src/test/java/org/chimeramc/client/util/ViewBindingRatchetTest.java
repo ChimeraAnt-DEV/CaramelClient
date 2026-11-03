@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 /**
- * A ratchet on {@code findViewById} (item 111).
+ * A ratchet on {@code findViewById}.
  *
  * <p>View binding is on, yet the tree holds hundreds of {@code findViewById} calls. Converting them
  * all at once would be a change no one could review, so the plan's rule is the right one: convert

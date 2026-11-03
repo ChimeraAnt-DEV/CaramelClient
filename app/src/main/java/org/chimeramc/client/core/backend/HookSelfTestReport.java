@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The preloader's hook self-test report, parsed for the Diagnostics screen (item 452).
+ * The preloader's hook self-test report, parsed for the Diagnostics screen.
  *
  * <p>The self-test installs and removes every hook site once, so its report answers "can these hooks
  * install on this build at all" — a different question from the per-feature availability report,

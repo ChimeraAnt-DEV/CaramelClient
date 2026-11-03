@@ -95,7 +95,7 @@ public final class OptifineModeManager {
             PreloaderInput.configureOptifineMode(blob);
             int targetHz = OptifineRefreshRateRule.resolveTargetHz(context);
             PreloaderInput.setOptifineRefreshTarget(targetHz);
-            // Item 11: the same target is the interval the frame-pacing reading compares against, so
+            // The same target is the interval the frame-pacing reading compares against, so
             // a "vsync-locked" verdict is measured against the rate the game was actually asked for.
             PreloaderInput.setDisplayRefreshHz(targetHz);
             PreloaderInput.configureRenderDistance(

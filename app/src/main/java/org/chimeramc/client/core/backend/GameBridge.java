@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.backend;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -26,21 +28,20 @@ public final class GameBridge {
         try {
             android.util.Log.w("GameBridge", message, cause);
         } catch (Throwable ignored) {
-            // Off-device (a JVM unit test) android.util.Log is not present; a diagnostic must
-            // never be the thing that takes the process down.
+            AppLog.warnOnce("GlowberryClient", "GameBridge:31", "Ignored a failure at GameBridge:31", ignored);
         }
     };
 
     private static volatile GameBackend backend;
     private static volatile Logger logger = DEFAULT_LOGGER;
     /**
-     * Per-feature call rate, for the developer overlay (item 504). Advanced from the call paths
+     * Per-feature call rate, for the developer overlay. Advanced from the call paths
      * below, which run on whichever thread makes the call; the meter is deliberately lock-free.
      */
     private static final BackendCallMeter callMeter = new BackendCallMeter();
     /**
      * Watches for a backend that has stopped answering and, when it trips, releases every injected
-     * input and tells the user (item 490). A key held down by a hung backend is the failure this
+     * input and tells the user. A key held down by a hung backend is the failure this
      * exists to prevent.
      */
     private static final BackendDeadManSwitch deadManSwitch = new BackendDeadManSwitch();
@@ -90,7 +91,7 @@ public final class GameBridge {
     }
 
     /**
-     * The per-feature call meter (item 504).
+     * The per-feature call meter.
      *
      * <p>Exposed rather than hidden behind a getter per feature: the developer overlay reads it on a
      * timer and rotates the bucket itself, so a second in which nothing was called still advances.
@@ -99,7 +100,7 @@ public final class GameBridge {
         return callMeter;
     }
 
-    /** The dead-man switch (item 490). Exposed so a host can reset it on a session boundary. */
+    /** The dead-man switch. Exposed so a host can reset it on a session boundary. */
     public static BackendDeadManSwitch deadManSwitch() {
         return deadManSwitch;
     }
@@ -217,7 +218,7 @@ public final class GameBridge {
     }
 
     /**
-     * A one-line description of the active backend for About and Diagnostics (item 492).
+     * A one-line description of the active backend for About and Diagnostics.
      *
      * <p>Pure string work from the backend's own name/version, so the wording is unit-tested and the
      * two screens cannot describe the same state differently. A build with no backend says so
@@ -256,7 +257,7 @@ public final class GameBridge {
             return false;
         }
         // One clock read for both counters: this runs on the per-frame look path, so a second
-        // System.currentTimeMillis call per event is exactly the kind of cost item 485 forbids.
+        // System.currentTimeMillis call per event is exactly the kind of cost this path must not pay.
         long now = System.currentTimeMillis();
         callMeter.record(feature, now);
         boolean ok;
@@ -272,7 +273,7 @@ public final class GameBridge {
 
     /**
      * Feeds one call outcome to the dead-man switch and, when it trips, releases every injected key
-     * and button so a hung backend cannot leave input stuck (item 490).
+     * and button so a hung backend cannot leave input stuck.
      */
     private static void noteLiveness(boolean ok, long now) {
         if (deadManSwitch.record(ok, now)) {

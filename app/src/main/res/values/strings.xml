@@ -725,7 +725,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="dialog_message_exit_app">Are you sure you want to exit?</string>
     <string name="dialog_positive_exit">Exit</string>
     <string name="show_logcat_overlay">Logcat overlay</string>
-    <!-- Privacy modes (items 272, 277). -->
+    <string name="show_launch_log">Show launch log</string>
+    <string name="show_launch_log_desc">Show the raw launch log on the launch screen instead of the logo and status ring.</string>
+    <!-- Privacy modes. -->
     <string name="guest_mode_title">Guest mode</string>
     <string name="guest_mode_desc">Hides mods, servers and voice chat on a shared or borrowed device. Nothing is deleted and the game still launches; turn it off to see them again.</string>
     <string name="streaming_safe_title">Streaming-safe mode</string>
@@ -1009,8 +1011,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_menu_opacity">Mod Menu Opacity</string>
     <string name="mod_menu_button_opacity">Mod Menu Button Opacity</string>
     <string name="mod_menu_primary_opacity">Primary Colour Opacity</string>
-    <string name="launch_head_pod_description">Your player head, turning slowly. Drag to rotate, tap to change your skin.</string>
-    <string name="launch_head_pod_hint">Drag to spin · Tap to change skin</string>
     <string name="mod_menu_primary_opacity_desc">How solid the accent (buttons, toggles, selected rows) is. Independent of the panel opacity, so a clear panel can keep a bold accent.</string>
     <string name="mod_menu_background_opacity_desc">How solid the menu panel itself is.</string>
     <string name="mod_menu_compact">Compact Mod Menu</string>
@@ -1219,6 +1219,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_unavailable_message">This Module doesn\'t work or is bugged</string>
     <string name="mod_unavailable_reason">Needs a game data feed this build cannot provide yet. It is disabled until then.</string>
     <string name="mod_unavailable_reason_server">Not shipped: the server decides this outcome, or automating it would be a ban risk.</string>
+    <string name="mod_unavailable_reason_backend">Needs a backend feature no runtime provides yet. It is disabled until one does.</string>
     <string name="mod_notification_enabled">%s enabled</string>
     <string name="mod_overlay_fps_unknown">FPS: --</string>
     <string name="mod_overlay_data_unavailable">Waiting for game data…</string>
@@ -1387,7 +1388,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="nav_skins">Skins</string>
     <string name="nav_customize">Customize</string>
     <string name="nav_back">Back</string>
-    <!-- Item 85: the wide rail can be folded to icons only; the control names the action it
+    <!-- The wide rail can be folded to icons only; the control names the action it
          performs, not the state, so it reads correctly to a screen reader. -->
     <string name="nav_rail_collapse">Collapse rail</string>
     <string name="nav_rail_expand">Expand rail</string>
@@ -1640,15 +1641,15 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_field_berry_api">BerryAPI backend</string>
     <string name="diagnostics_field_input_backend">Input backend</string>
     <string name="diagnostics_field_hooks">Preloader hooks</string>
-    <!-- Item 453: the preloader's own per-feature report, distinct from the hook table above. -->
+    <!-- The preloader's own per-feature report, distinct from the hook table above. -->
     <string name="diagnostics_field_feature_availability">Feature availability</string>
-    <!-- Item 452: the hook install/remove round-trip result, distinct from the row above. -->
+    <!-- The hook install/remove round-trip result, distinct from the row above. -->
     <string name="diagnostics_field_hook_self_test">Hook self-test</string>
     <string name="diagnostics_field_preloader_abi">Preloader ABI</string>
     <string name="diagnostics_preloader_abi_ok">v%1$d (matches client)</string>
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
     <string name="diagnostics_no_mod_errors">No mod load errors on record.</string>
-    <!-- Local launch/crash statistics (item 282). Local data only; nothing is uploaded. -->
+    <!-- Local launch/crash statistics. Local data only; nothing is uploaded. -->
     <string name="diagnostics_section_stats">Launch statistics</string>
     <string name="diagnostics_stats_desc">Counted on this device only. Nothing is uploaded.</string>
     <string name="diagnostics_stats_launches">Launches</string>
@@ -2106,6 +2107,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="inbuilt_mod_vertical_render_coalesce_desc">Batches the launcher\'s own overlay updates and keeps cosmetic atlases resident.</string>
     <string name="inbuilt_mod_tick_rate_predictor">Launcher Polling Throttle</string>
     <string name="inbuilt_mod_tick_rate_predictor_desc">Throttles the launcher\'s own background polling and per-frame overlay work.</string>
+    <string name="inbuilt_mod_adaptive_frame_pacing">Adaptive Frame Pacing</string>
+    <string name="inbuilt_mod_adaptive_frame_pacing_desc">Steps the launcher\'s own overlay work down when frames run slow.</string>
+    <string name="inbuilt_mod_thermal_quality_hold">Thermal Quality Hold</string>
+    <string name="inbuilt_mod_thermal_quality_hold_desc">Reduces the launcher\'s own work while the device is throttled.</string>
     <string name="fps_modules_scope_note">These modules reduce work the launcher itself does while a session runs: they slow the launcher\'s own overlay and background updates, which on a weak phone can free real CPU for the game. A launcher cannot change the game\'s draw calls, cull its geometry or raise its frame rate — the game\'s visuals are set by the player and the server — so no switch here promises a frame rate.</string>
     <string name="mod_config_category_culling">Culling</string>
     <string name="mod_config_category_batching">Batching</string>
@@ -2562,7 +2567,28 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_step_signin_body">Sign in with your Microsoft account to play online and keep your progress.</string>
     <string name="setup_step_signin_action">Sign in</string>
     <string name="setup_skip">Skip for now</string>
-    <!-- First-run device compatibility pass (item 284). Each row is a check with its own fix. -->
+    <string name="replay_berry_read_failed">Could not read the replay file.</string>
+    <string name="replay_berry_load_failed">BerryAPI refused this replay (%1$s).</string>
+    <string name="replay_berry_playing">Playing the BerryAPI replay (%1$d ticks).</string>
+
+    <!-- Account section (Customize tab). The friends list is honest: this build has no Xbox Live
+         PeopleHub integration, so it says so rather than showing an empty list. -->
+    <string name="account_section_title">Your account</string>
+    <string name="account_signed_out">You are not signed in. Sign in with your Microsoft account to play online and see your account details.</string>
+    <string name="account_sign_in">Sign in</string>
+    <string name="account_email">Microsoft email</string>
+    <string name="account_gamertag">Xbox gamertag</string>
+    <string name="account_minecraft_name">Minecraft name</string>
+    <string name="account_xuid">Xbox Live ID</string>
+    <string name="account_details_unavailable">Account details are not available for this account yet.</string>
+    <string name="account_friends_title">Minecraft friends</string>
+    <string name="account_friends_loading">Reading your Xbox Live friends…</string>
+    <string name="account_friends_empty">No friends yet. Add one below.</string>
+    <string name="account_friends_error">Could not read your friends list.</string>
+    <string name="account_friends_signed_out">Sign in to see your friends.</string>
+    <string name="account_add_friend">Add a friend</string>
+    <string name="account_customize_tab">Account</string>
+    <!-- First-run device compatibility pass. Each row is a check with its own fix. -->
     <string name="setup_compat_title">Device check</string>
     <string name="setup_compat_all_ok">Everything checks out.</string>
     <string name="setup_compat_free_space">Free space</string>
@@ -2581,6 +2607,29 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_compat_perm_blocking">Denied; grant access so game data can be written</string>
     <string name="setup_compat_fix">Fix</string>
     <string name="setup_import_failed">Import failed: %1$s</string>
+
+    <!-- The five-step setup wizard. The licence is the only mandatory step; the rest can be skipped. -->
+    <string name="setup_license_title">GlowberryClient License Agreement</string>
+    <string name="setup_license_body">GlowberryClient is an unofficial Minecraft Bedrock launcher. Read the terms below, then tick the box to continue.</string>
+    <string name="setup_license_agree">I have read and accept these terms</string>
+    <string name="setup_license_terms"><b>1. Unofficial software.</b> GlowberryClient is not affiliated with, endorsed by, or sponsored by Mojang Studios, Microsoft, or the Minecraft brand. Minecraft is a trademark of Mojang Synergies AB.\n\n<b>2. You must own Minecraft.</b> You need a genuine, licensed copy of Minecraft Bedrock Edition to use this client. Do not use it with pirated or otherwise unlicensed copies.\n\n<b>3. Google Play versions are not fully supported.</b> A copy of Minecraft installed from the Google Play Store is stripped of a file the client needs, so it cannot be launched through GlowberryClient. To use every feature, import an authentic Minecraft APK you obtained yourself from the Library.\n\n<b>4. No piracy, no cheating.</b> Do not use this client to pirate the game, to bypass account checks, or to cheat on servers. Server bans and account actions are your own responsibility.\n\n<b>5. Mods and content are your responsibility.</b> Mods, resource packs, scripts and cosmetics you install run at your own risk. The authors and the GlowberryClient team are not responsible for damage, data loss, bans, or account suspension caused by third-party content.\n\n<b>6. Accounts and data.</b> Signing in with a Microsoft account stores a token on this device, protected by the Android Keystore. You can sign out at any time; signing out removes the stored token.\n\n<b>7. Privacy.</b> The client sends nothing about you unless you turn on an opt-in reporting switch, and each switch shows exactly what it would send before you turn it on.\n\n<b>8. No warranty.</b> The software is provided \"as is\", without warranty of any kind. The team is not liable for any claim, damage or other liability arising from its use.\n\n<b>9. Changes.</b> These terms may change between releases; a material change is shown again for your acceptance.\n\nBy continuing you confirm you have read and accept these terms.</string>
+    <string name="setup_instance_title">Install an instance</string>
+    <string name="setup_instance_body">Import an authentic Minecraft Bedrock APK to create your first instance. You can add more later from the Library.</string>
+    <string name="setup_instance_action">Import an instance</string>
+    <string name="setup_signin_title">Sign in to Microsoft</string>
+    <string name="setup_signin_body">Sign in with your Microsoft account to play online, keep your progress, and see your Xbox friends. You can skip this and sign in later from Accounts.</string>
+    <string name="setup_signin_action">Sign in</string>
+    <string name="setup_customize_title">Customise your UI</string>
+    <string name="setup_customize_body">Choose a theme, accent and animation level. You can change any of this later in Settings.</string>
+    <string name="setup_customize_action">Open Customize</string>
+    <string name="setup_finish_title">What\'s new and where to find us</string>
+    <string name="setup_finish_body">See what changed in this release, and join the community on Discord for support and updates.</string>
+    <string name="setup_finish_changelog">View changelog</string>
+    <string name="setup_finish_discord">Join our Discord</string>
+    <string name="setup_next">Next</string>
+    <string name="setup_back">Back</string>
+    <string name="setup_finish">Finish</string>
+    <string name="setup_progress_of">Step %1$d of %2$d</string>
 
     <!-- Named launch failure states (U14). Each cause gets its own copy so a report can name it. -->
     <string name="launch_failure_title_play_store">Can\'t open this Minecraft install</string>

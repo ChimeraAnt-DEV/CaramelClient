@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -118,6 +120,7 @@ public final class VoiceNametagOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "VoiceNametagOverlay:123", "Ignored a failure at VoiceNametagOverlay:123", ignored);
         }
         overlayView = null;
         wmParams = null;

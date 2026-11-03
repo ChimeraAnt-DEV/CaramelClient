@@ -25,12 +25,14 @@ import org.junit.Test;
 public class FpsModulesTest {
 
     @Test
-    public void theCatalogueHasTheThreeModulesWithOnlyTheImplementedOptions() {
+    public void theCatalogueHasTheFiveModulesWithOnlyTheImplementedOptions() {
         List<FpsModuleCatalog.Module> modules = FpsModuleCatalog.modules();
-        assertEquals(3, modules.size());
+        assertEquals(5, modules.size());
         assertEquals(1, FpsModuleCatalog.find(FpsModuleCatalog.HYPERSPATIAL_CULL).options.size());
         assertEquals(2, FpsModuleCatalog.find(FpsModuleCatalog.VERTICAL_RENDER_COALESCE).options.size());
         assertEquals(4, FpsModuleCatalog.find(FpsModuleCatalog.TICK_RATE_PREDICTOR).options.size());
+        assertEquals(4, FpsModuleCatalog.find(FpsModuleCatalog.ADAPTIVE_FRAME_PACING).options.size());
+        assertEquals(4, FpsModuleCatalog.find(FpsModuleCatalog.THERMAL_QUALITY_HOLD).options.size());
     }
 
     @Test
@@ -39,7 +41,7 @@ public class FpsModulesTest {
         for (FpsModuleCatalog.Option option : FpsModuleCatalog.allOptions()) {
             assertTrue("duplicate option key: " + option.key, seen.add(option.key));
         }
-        assertEquals(1 + 2 + 4, seen.size());
+        assertEquals(1 + 2 + 4 + 4 + 4, seen.size());
     }
 
     @Test
@@ -54,7 +56,15 @@ public class FpsModulesTest {
                     || option.key.equals("tr_net_interval")
                     || option.key.equals("tr_coalesce_net")
                     || option.key.equals("tr_batch_ticks")
-                    || option.key.equals("tr_batch_n");
+                    || option.key.equals("tr_batch_n")
+                    || option.key.equals("af_enabled")
+                    || option.key.equals("af_target_fps")
+                    || option.key.equals("af_frames_to_react")
+                    || option.key.equals("af_tail_latency")
+                    || option.key.equals("tq_enabled")
+                    || option.key.equals("tq_fair_ceiling")
+                    || option.key.equals("tq_thermal_ceiling")
+                    || option.key.equals("tq_dwell_s");
             assertTrue(option.key + " is shown but no policy reads it", read);
         }
     }

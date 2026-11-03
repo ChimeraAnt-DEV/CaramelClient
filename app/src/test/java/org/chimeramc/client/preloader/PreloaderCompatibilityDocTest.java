@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 /**
  * The preloader/Minecraft compatibility table must match the rules the client actually ships
- * (item 463).
+ *.
  *
  * <p>{@code docs/preloader-compatibility.md} is the page a user reads to answer "does my Minecraft
  * build work", and the answer comes from {@code preloader_signature_rules_source.json}. Two copies

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The languages the app ships, for the system's per-app language picker (item 329).
+    The languages the app ships, for the system's per-app language picker.
 
     On API 33 and up the platform reads this file and shows the app in Settings > System >
     Languages > App languages, so a user can change the launcher's language without opening it.

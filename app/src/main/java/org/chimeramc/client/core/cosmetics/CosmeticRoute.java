@@ -76,7 +76,7 @@ public final class CosmeticRoute {
     /**
      * Whether the running graphics backend is the reason a piece is not live.
      *
-     * <p>Item 12 asked whether hats and pets need marking unsupported on Vulkan. They do not: the
+     * <p>Hats and pets are never marked unsupported on Vulkan, and they need not be: the
      * GLES mesh rasteriser is retired, and every route a cosmetic takes now is backend-agnostic
      * (the cape's engine texture swap, and the native player-render hook, which detours the engine's
      * own render call regardless of whether it draws with GLES or Vulkan). So the backend never

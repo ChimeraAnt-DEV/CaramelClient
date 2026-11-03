@@ -142,7 +142,9 @@ public class ApkUtils {
                     String name = entry.getName();
                     if (name.startsWith("lib/arm64-v8a/")) return true;
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+                AppLog.warnOnce(TAG, "ApkUtils:146", "Ignored a failure at ApkUtils:146", ignored);
+            }
         }
         return false;
     }

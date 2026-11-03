@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * The draw path allocates nothing per frame (items 17, 131, 184-187, 207).
+ * The draw path allocates nothing per frame.
  *
  * <p>An overlay shares the game's frame budget, so an allocation inside {@code onDraw} is not just
  * wasteful — it is a GC pause on the thread that is already drawing the world. The reported sites

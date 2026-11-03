@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -97,6 +99,7 @@ public final class ReachIndicatorOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ReachIndicatorOverlay:102", "Ignored a failure at ReachIndicatorOverlay:102", ignored);
         }
         overlayView = null;
         wmParams = null;
@@ -132,7 +135,7 @@ public final class ReachIndicatorOverlay {
 
         // The caption is reformatted only when the reading actually changes. This view redraws on
         // the 50 ms refresh, and String.format allocates; the same peer at the same distance would
-        // otherwise build an identical string twenty times a second (item 17).
+        // otherwise build an identical string twenty times a second.
         private String cachedText;
         private String cachedPeerId;
         private float cachedDistance = Float.NaN;

@@ -19,7 +19,7 @@ import org.junit.Test;
 
 /**
  * Every API gate lives in one class, and that class is right on both sides of each boundary
- * (items 26, 310).
+ *.
  *
  * <p>The tree had 70-odd inline {@code Build.VERSION.SDK_INT} comparisons. An inline gate cannot be
  * checked on the side the test machine is not running, so the wrong direction on a boundary ships

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -112,6 +114,7 @@ public final class SkinPackActivator {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "SkinPackActivator:117", "Ignored a failure at SkinPackActivator:117", ignored);
         }
         return null;
     }
@@ -242,8 +245,7 @@ public final class SkinPackActivator {
                     }
                 }
             } catch (Exception ignored) {
-                // A corrupt global file is replaced with the entry we are adding; keeping
-                // garbage would stop the game from reading any global pack at all.
+                AppLog.warnOnce("GlowberryClient", "SkinPackActivator:248", "Ignored a failure at SkinPackActivator:248", ignored);
             }
         }
         return result;
@@ -280,6 +282,7 @@ public final class SkinPackActivator {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "SkinPackActivator:285", "Ignored a failure at SkinPackActivator:285", ignored);
         }
         return result;
     }

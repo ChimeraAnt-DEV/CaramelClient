@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
 /**
- * The one rule for turning a library's short name into its file name and back (item 301).
+ * The one rule for turning a library's short name into its file name and back.
  *
  * <p>Split out of {@code GamePackageManager} so the extraction cache, the loader and the repair path
  * all agree on the name. A drift here is silent: a cache check that normalises differently from the

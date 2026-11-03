@@ -55,7 +55,7 @@ public class InbuiltModManager {
     private static final String KEY_SNAPLOOK_KEYBIND = "snaplook_keybind";
     private static final String KEY_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
-    /** The radial wheel's centre dead zone, as a percentage of full stick travel (item 199). */
+    /** The radial wheel's centre dead zone, as a percentage of full stick travel. */
     private static final String KEY_WHEEL_CENTER_DEAD_ZONE = "wheel_center_dead_zone_percent";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
@@ -70,7 +70,7 @@ public class InbuiltModManager {
     private static final String KEY_OVERLAY_POSITION_X_PREFIX = "overlay_pos_x_";
     private static final String KEY_OVERLAY_POSITION_Y_PREFIX = "overlay_pos_y_";
     /**
-     * The same position stored as a fraction of the surface (item 211).
+     * The same position stored as a fraction of the surface.
      *
      * <p>The pixel keys above are kept so a position saved before this change still reads back, but
      * every new save also writes the fraction, and a read prefers the fraction when present. A pixel
@@ -85,7 +85,7 @@ public class InbuiltModManager {
     private static final String KEY_FPS_STATS_PREFIX = "overlay_fps_stats_";
     private static final String KEY_FPS_STATS_WINDOW_PREFIX = "overlay_fps_stats_window_";
 
-    /** The window bounds for the FPS overlay's average and 1% low (item 190). */
+    /** The window bounds for the FPS overlay's average and 1% low. */
     public static final int FPS_STATS_WINDOW_MIN = 10;
     public static final int FPS_STATS_WINDOW_MAX = 120;
     public static final int FPS_STATS_WINDOW_DEFAULT = 60;
@@ -173,12 +173,12 @@ public class InbuiltModManager {
     private static final int DEFAULT_ZOOM_TRANSITION_DURATION = 150;
     private static final int DEFAULT_ZOOM_SCROLL_SENSITIVITY = 100;
     private static final int DEFAULT_ZOOM_SMOOTHING = 0;
-    /** Bounds for the zoom scroll knobs (item 192); the smoothing cap stays below 100. */
+    /** Bounds for the zoom scroll knobs; the smoothing cap stays below 100. */
     public static final int MIN_ZOOM_SCROLL_SENSITIVITY = 10;
     public static final int MAX_ZOOM_SCROLL_SENSITIVITY = 300;
     public static final int MAX_ZOOM_SMOOTHING = 90;
     private static final int DEFAULT_SNAPLOOK_RETURN_SPEED = 50;
-    /** The snap-look return-speed slider bounds (item 193). */
+    /** The snap-look return-speed slider bounds. */
     public static final int MAX_SNAPLOOK_RETURN_SPEED = 100;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
     private static final int DEFAULT_WHEEL_DEAD_ZONE_PERCENT = 15;
@@ -619,7 +619,7 @@ public class InbuiltModManager {
         prefs.edit().putInt(KEY_ZOOM_TRANSITION_DURATION, Math.max(0, Math.min(1000, duration))).apply();
     }
 
-    /** How far one scroll notch moves the zoom, as a percentage of the default (item 192). */
+    /** How far one scroll notch moves the zoom, as a percentage of the default. */
     public int getZoomScrollSensitivity() {
         return prefs.getInt(KEY_ZOOM_SCROLL_SENSITIVITY, DEFAULT_ZOOM_SCROLL_SENSITIVITY);
     }
@@ -630,7 +630,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * How much the scroll zoom is smoothed, 0..90 (item 192).
+     * How much the scroll zoom is smoothed, 0..90.
      *
      * <p>A higher value keeps more of the previous frame's zoom, so a coarse wheel notch eases in
      * rather than stepping. Bounded below 100 so the zoom can always reach its target.
@@ -644,7 +644,7 @@ public class InbuiltModManager {
                 Math.max(0, Math.min(MAX_ZOOM_SMOOTHING, percent))).apply();
     }
 
-    /** The snap-look key, default X (item 193). */
+    /** The snap-look key, default X. */
     public int getSnaplookKeybind() {
         return prefs.getInt(KEY_SNAPLOOK_KEYBIND, KeyEvent.KEYCODE_X);
     }
@@ -654,7 +654,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * How fast the camera returns to the stored heading on a snap-look, 0..100 (item 193).
+     * How fast the camera returns to the stored heading on a snap-look, 0..100.
      *
      * <p>0 is instant, 100 is the slowest eased return. Kept here rather than hard-coded so a
      * player can match it to their look sensitivity.
@@ -677,7 +677,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * The radial wheel's centre dead zone, as a fraction of full stick travel (item 199).
+     * The radial wheel's centre dead zone, as a fraction of full stick travel.
      *
      * <p>Stored as a percentage so the settings slider has integers, and read through
      * {@link RadialWheelMotion#clampCenterDeadZone} so a stored value from an older build, or a
@@ -711,7 +711,7 @@ public class InbuiltModManager {
             .putInt(KEY_OVERLAY_POSITION_X_PREFIX + modId, x)
             .putInt(KEY_OVERLAY_POSITION_Y_PREFIX + modId, y);
         // Store the fraction too, so a later read on a different surface size keeps the widget in
-        // the same relative place (item 211). Without metrics there is nothing to divide by, so the
+        // the same relative place. Without metrics there is nothing to divide by, so the
         // pixel value alone is written and a later read falls back to it.
         if (metrics != null && metrics.widthPixels > 0 && metrics.heightPixels > 0) {
             editor.putFloat(KEY_OVERLAY_POSITION_XF_PREFIX + modId,
@@ -765,7 +765,7 @@ public class InbuiltModManager {
                 return stored;
             }
         }
-        // No fraction yet (a position saved before item 211): derive one from the pixel value.
+        // No fraction yet (a position saved before the fraction format): derive one from the pixel value.
         android.util.DisplayMetrics metrics = overlayMetrics;
         String pxKey = pixelKey + modId;
         if (metrics != null && prefs.contains(pxKey)) {
@@ -815,7 +815,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * Whether the FPS overlay draws its frame-time graph (item 191).
+     * Whether the FPS overlay draws its frame-time graph.
      *
      * <p>A per-module overlay option like the others, stored under the same shared-settings id so a
      * module that shares its overlay appearance (the hotbar slots) also shares this. Off by default:
@@ -830,7 +830,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * Whether the FPS overlay prints its average and 1% low beside the rate (item 190).
+     * Whether the FPS overlay prints its average and 1% low beside the rate.
      *
      * <p>Off by default: the average and the low are extra detail, and a user who wants just the
      * number keeps it. Both are computed over {@link #getFpsStatsWindow(String)} frames.
@@ -843,7 +843,7 @@ public class InbuiltModManager {
         prefs.edit().putBoolean(KEY_FPS_STATS_PREFIX + sharedOverlaySettingsId(modId), enabled).apply();
     }
 
-    /** The number of frames the FPS overlay averages over (item 190); clamped to 10..120. */
+    /** The number of frames the FPS overlay averages over; clamped to 10..120. */
     public int getFpsStatsWindow(String modId) {
         return Math.max(FPS_STATS_WINDOW_MIN,
                 Math.min(FPS_STATS_WINDOW_MAX,

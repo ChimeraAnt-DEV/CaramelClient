@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -96,13 +98,13 @@ public class ModrinthDetailActivity extends BaseActivity {
         TextView author = findViewById(R.id.modrinth_detail_author);
         TextView description = findViewById(R.id.modrinth_detail_description);
 
-        // Item 123: the name the list row declared, so the title flies across.
+        // The name the list row declared, so the title flies across.
         org.chimeramc.client.launcher.ui.util.SceneTransitions.tag(
                 title, org.chimeramc.client.launcher.ui.util.SceneTransitions.NAME_TITLE);
         title.setText(project.displayName());
         author.setText(getString(R.string.modrinth_downloads_format, formatCount(project.downloads))
                 + (project.author != null ? " • " + project.author : ""));
-        // Item 127: a project description is long; measure it off the main thread.
+        // A project description is long; measure it off the main thread.
         AsyncText.apply(description, project.description);
     }
 
@@ -209,7 +211,7 @@ public class ModrinthDetailActivity extends BaseActivity {
                 }
             });
         } catch (RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit.
+            AppLog.warnOnce("GlowberryClient", "ModrinthDetailActivity:214", "Ignored a failure at ModrinthDetailActivity:214", ignored);
         }
     }
 

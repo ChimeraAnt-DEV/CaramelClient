@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.core.crash.CrashReportStore;
 import org.chimeramc.client.core.versions.GameVersion;
@@ -35,7 +37,7 @@ public final class CosmeticsDiagnosticsReport {
         public String appVersion = "unknown";
         public String minecraftVersion = "unknown";
         /**
-         * The device model and Android release, for a reproducible bug report (item 22). A report
+         * The device model and Android release, for a reproducible bug report. A report
          * from an unknown device cannot be compared with another, so this is part of the export
          * rather than something the reporter has to remember.
          */
@@ -47,10 +49,10 @@ public final class CosmeticsDiagnosticsReport {
         public int resolvedBy = -1;
         /** {@code GlBackend}: 0 unknown, 1 GLES, 2 Vulkan. */
         public int glBackend = 0;
-        /** The classified GPU family (item 376): see {@link GpuFamily#fromNativeCode}; -1 not read. */
+        /** The classified GPU family: see {@link GpuFamily#fromNativeCode}; -1 not read. */
         public int gpuFamily = -1;
         /**
-         * The number of distinct targets currently carrying a detour (item 396), or -1 unknown.
+         * The number of distinct targets currently carrying a detour, or -1 unknown.
          *
          * <p>The overlay hooks install through a {@code std::call_once}, so a count that rises on a
          * second init attempt, or falls to zero after a successful install, is a real defect the
@@ -59,7 +61,7 @@ public final class CosmeticsDiagnosticsReport {
         public int hookCount = -1;
         public boolean eglContextCurrent;
         public boolean hookInstalled;
-        /** The exact gate that refused the render hook (item 18): 0 live, 1 version gate,
+        /** The exact gate that refused the render hook: 0 live, 1 version gate,
          * 2 slot unresolved, 3 not executable, 4 hook() failed; -1 unknown/absent. */
         public int renderHookFailureReason = -1;
         /**
@@ -127,27 +129,27 @@ public final class CosmeticsDiagnosticsReport {
         public boolean lastCrashTruncated;
         /** True when the report was generated while a world was loaded (not in a menu). */
         public boolean inWorld;
-        /** Item 11: the render thread's smoothed frame interval in microseconds, or -1 unknown. */
+        /** The render thread's smoothed frame interval in microseconds, or -1 unknown. */
         public int framePacingAverageUs = -1;
-        /** Item 11: the worst frame interval in the recent window, or -1 unknown. */
+        /** The worst frame interval in the recent window, or -1 unknown. */
         public int framePacingWorstUs = -1;
-        /** Item 11: a recent frame was late (a hitch). */
+        /** A recent frame was late (a hitch). */
         public boolean framePacingJittering;
-        /** Item 11: the frame interval matched the display interval. */
+        /** The frame interval matched the display interval. */
         public boolean framePacingVsyncLocked;
-        /** Item 11: whether a frame-pacing reading exists at all this session. */
+        /** Whether a frame-pacing reading exists at all this session. */
         public boolean framePacingAvailable;
-        /** Items 386/387: the median frame interval in microseconds over the long window, or -1. */
+        /** The median frame interval in microseconds over the long window, or -1. */
         public int framePacingP50Us = -1;
-        /** Items 386/387: the 95th percentile frame interval, or -1. */
+        /** The 95th percentile frame interval, or -1. */
         public int framePacingP95Us = -1;
-        /** Items 386/387: the 99th percentile frame interval, or -1. */
+        /** The 99th percentile frame interval, or -1. */
         public int framePacingP99Us = -1;
-        /** Items 386/387: frames above twice the median, per minute, or -1 unknown. */
+        /** Frames above twice the median, per minute, or -1 unknown. */
         public int framePacingHitchesPerMinute = -1;
-        /** Item 415: this process's resident footprint in KiB, or -1 when no source was readable. */
+        /** This process's resident footprint in KiB, or -1 when no source was readable. */
         public int processResidentKb = -1;
-        /** Item 415: this process's proportional (Pss) footprint in KiB, or -1 unknown. */
+        /** This process's proportional (Pss) footprint in KiB, or -1 unknown. */
         public int processProportionalKb = -1;
         /** True when a game session is running (the launcher's own session flag). */
         public boolean sessionActive;
@@ -197,7 +199,7 @@ public final class CosmeticsDiagnosticsReport {
         }
         in.cameraAnchorSource = PreloaderInput.cameraAnchorSource();
 
-        // Item 11: the render-thread frame-pacing reading, when the renderer has produced frames.
+        // The render-thread frame-pacing reading, when the renderer has produced frames.
         try {
             int[] pacing = PreloaderInput.readFramePacing();
             if (pacing != null) {
@@ -208,9 +210,10 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingVsyncLocked = (pacing[3] & 2) != 0;
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:213", "Ignored a failure at CosmeticsDiagnosticsReport:213", ignored);
         }
 
-        // Items 386/387: the percentile + hitch reading. Separate from the per-frame one because it
+        // The percentile + hitch reading. Separate from the per-frame one because it
         // sorts the long window; it is a summary the report shows beside the average.
         try {
             int[] percentiles = PreloaderInput.readFramePacingPercentiles();
@@ -221,9 +224,10 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingHitchesPerMinute = percentiles[4];
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:227", "Ignored a failure at CosmeticsDiagnosticsReport:227", ignored);
         }
 
-        // Item 415: the process footprint, so a session that grows is visible in the report.
+        // The process footprint, so a session that grows is visible in the report.
         try {
             int[] memory = PreloaderInput.readProcessMemory();
             if (memory != null) {
@@ -231,6 +235,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.processProportionalKb = memory[2];
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:238", "Ignored a failure at CosmeticsDiagnosticsReport:238", ignored);
         }
 
         // The local-player feed, decoded from its raw float bits. Only present when live.
@@ -248,11 +253,13 @@ public final class CosmeticsDiagnosticsReport {
                     org.chimeramc.client.core.mods.ModManager.gameHookInstallFrameTicks();
             in.rulesSummary = org.chimeramc.client.core.mods.ModManager.gameHookRulesSummary();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:256", "Ignored a failure at CosmeticsDiagnosticsReport:256", ignored);
         }
         try {
             in.rulesSource = org.chimeramc.client.preloader.PreloaderSignatureRulesManager
                     .getRulesSource(context);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:262", "Ignored a failure at CosmeticsDiagnosticsReport:262", ignored);
         }
         in.capeEngineRouteLive = NativeCosmeticsFeed.isCapeEngineRouteLive();
         in.imagePipelineLive = NativeCosmeticsBridge.isImagePipelineLive();
@@ -260,15 +267,18 @@ public final class CosmeticsDiagnosticsReport {
             in.hookInstallPending =
                     org.chimeramc.client.core.mods.ModManager.isGameHookInstallPending();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:270", "Ignored a failure at CosmeticsDiagnosticsReport:270", ignored);
         }
         try {
             in.sessionActive =
                     org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:276", "Ignored a failure at CosmeticsDiagnosticsReport:276", ignored);
         }
         try {
             in.hudScreenOpen = PreloaderInput.isHudScreenOpen();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:281", "Ignored a failure at CosmeticsDiagnosticsReport:281", ignored);
         }
         // "In a world" is the HUD hook having reported a world at least once and no HUD screen being
         // open right now. Before the hook fires there is no reading at all, so the report says so
@@ -277,9 +287,10 @@ public final class CosmeticsDiagnosticsReport {
         try {
             in.skinCaptured = PreloaderInput.nativeHasCapturedSkin();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:290", "Ignored a failure at CosmeticsDiagnosticsReport:290", ignored);
         }
         in.skinFeedInstalled = GameSkinSource.hasProvider();
-        // Item 3: which stage the skin path reached, so a "skin not visible" report can be routed
+        // Which stage the skin path reached, so a "skin not visible" report can be routed
         // (client never reached the join handler, versus reached it with the outcome unproven).
         try {
             int[] seam = PreloaderInput.readSkinSeam();
@@ -290,6 +301,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.skinSeamNote = PreloaderInput.describeSkinSeam(seam[0]);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:304", "Ignored a failure at CosmeticsDiagnosticsReport:304", ignored);
         }
 
         // The most recent crash report, so a device crash trace can be copied/shared from inside the
@@ -302,8 +314,9 @@ public final class CosmeticsDiagnosticsReport {
                 in.lastCrashTruncated = report.truncated;
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:317", "Ignored a failure at CosmeticsDiagnosticsReport:317", ignored);
         }
-        // Mod-menu build failures the containment guard caught (item 1 of the v3 update).
+        // Mod-menu build failures the containment guard caught.
         in.menuGuardFailures = org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuGuard.format();
 
         // Per-cosmetic asset audit: the real PNG size, the geometry's declared size and the cube
@@ -314,6 +327,7 @@ public final class CosmeticsDiagnosticsReport {
                         path -> context.getAssets().open(path));
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:330", "Ignored a failure at CosmeticsDiagnosticsReport:330", ignored);
         }
         // Faces the scene refused to build, with the reason.
         java.util.List<PreviewSceneDiagnostics.Entry> skipped = PreviewSceneDiagnostics.snapshot();
@@ -459,7 +473,7 @@ public final class CosmeticsDiagnosticsReport {
     private static String deviceModelText() {
         try {
             String model = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
-            // Item 18: the ABI is one of the gates that can refuse a feature, so the report names the
+            // The ABI is one of the gates that can refuse a feature, so the report names the
             // process ABI next to the device. The preloader is arm64-only, so a report from a device
             // where the native library did not load needs the ABI to be diagnosable.
             String abi = android.os.Build.SUPPORTED_ABIS.length > 0
@@ -489,7 +503,7 @@ public final class CosmeticsDiagnosticsReport {
         return v.hookInstallPending ? "waiting for the render context" : "no";
     }
 
-    /** Maps the render hook's refusal reason (item 18) to the exact gate that refused it. */
+    /** Maps the render hook's refusal reason to the exact gate that refused it. */
     private static String hookRefusalText(Inputs v) {
         if (v.hookInstalled) return "n/a (hook live)";
         switch (v.renderHookFailureReason) {
@@ -590,7 +604,7 @@ public final class CosmeticsDiagnosticsReport {
     }
 
     /**
-     * The skin-path seam line (item 3). Pure, so the wording is pinned by a JVM test. A missing
+     * The skin-path seam line. Pure, so the wording is pinned by a JVM test. A missing
      * native library renders "unknown" rather than a confident "not installed".
      */
     private static String skinSeamText(Inputs v) {
@@ -614,7 +628,7 @@ public final class CosmeticsDiagnosticsReport {
     }
 
     /**
-     * The render-thread frame-pacing line (item 11). "no reading yet" is distinct from a bad
+     * The render-thread frame-pacing line. "no reading yet" is distinct from a bad
      * interval: the renderer has to produce two frames before any interval exists. The verdict
      * never claims a lock without a reading, and an unknown display rate is never called locked.
      */
@@ -636,7 +650,7 @@ public final class CosmeticsDiagnosticsReport {
     }
 
     /**
-     * Items 386/387: the median and tail frame intervals plus the hitch rate. A percentile a device
+     * The median and tail frame intervals plus the hitch rate. A percentile a device
      * cannot report reads as "no reading yet", never as 0 ms (which would look like a perfect
      * frame).
      */
@@ -655,7 +669,7 @@ public final class CosmeticsDiagnosticsReport {
     }
 
     /**
-     * Item 415: the process footprint. The proportional figure is the honest one when the kernel
+     * The process footprint. The proportional figure is the honest one when the kernel
      * exposes it (it is this process's share of shared pages); the resident figure counts shared
      * pages in full. An unreadable source says so rather than printing "0 KB".
      */

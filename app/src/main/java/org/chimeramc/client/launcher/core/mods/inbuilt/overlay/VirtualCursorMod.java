@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.view.InputDevice;
 import android.view.MotionEvent;
@@ -142,7 +144,9 @@ public class VirtualCursorMod {
             if (activity instanceof org.chimeramc.client.core.minecraft.MinecraftActivity) {
                 ((org.chimeramc.client.core.minecraft.MinecraftActivity) activity).dispatchTouchEventToGame(downEvent);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "VirtualCursorMod:148", "Ignored a failure at VirtualCursorMod:148", ignored);
+        }
         downEvent.recycle();
 
         MotionEvent upEvent = MotionEvent.obtain(
@@ -157,7 +161,9 @@ public class VirtualCursorMod {
             if (activity instanceof org.chimeramc.client.core.minecraft.MinecraftActivity) {
                 ((org.chimeramc.client.core.minecraft.MinecraftActivity) activity).dispatchTouchEventToGame(upEvent);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "VirtualCursorMod:165", "Ignored a failure at VirtualCursorMod:165", ignored);
+        }
         upEvent.recycle();
     }
 }

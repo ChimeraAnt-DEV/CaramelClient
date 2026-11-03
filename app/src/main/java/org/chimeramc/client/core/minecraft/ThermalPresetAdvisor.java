@@ -3,7 +3,7 @@ package org.chimeramc.client.core.minecraft;
 import org.chimeramc.client.util.ThermalPolicy;
 
 /**
- * Suggests a gentler performance preset while the device is thermally throttled (item 260).
+ * Suggests a gentler performance preset while the device is thermally throttled.
  *
  * <p>A throttled device already has less CPU to give, so chasing the fastest refresh mode and the
  * lowest input latency at that moment works against the user: the extra work is exactly what the

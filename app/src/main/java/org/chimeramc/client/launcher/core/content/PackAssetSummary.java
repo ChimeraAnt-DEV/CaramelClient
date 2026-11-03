@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 /**
- * The size and texture-resolution readout for a resource pack (item 253).
+ * The size and texture-resolution readout for a resource pack.
  *
  * <p>Bedrock draws a pack's textures at whatever resolution they are authored at, so the largest
  * texture is the number that decides how much GPU memory the pack costs and whether it will look

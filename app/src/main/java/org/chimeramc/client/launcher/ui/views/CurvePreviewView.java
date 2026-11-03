@@ -33,7 +33,7 @@ public class CurvePreviewView extends View {
     private int accentColor = 0xFF4CC2FF;
 
     // The response is a pure function of the profile, and this view only redraws when the profile
-    // or the accent changes, so it is rebuilt on setProfile rather than on every draw (item 17).
+    // or the accent changes, so it is rebuilt on setProfile rather than on every draw.
     private ControllerResponse response;
 
     public CurvePreviewView(Context context) {

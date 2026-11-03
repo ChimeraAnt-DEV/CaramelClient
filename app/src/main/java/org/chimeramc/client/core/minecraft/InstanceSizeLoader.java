@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Measures each instance's disk use off the main thread and remembers the answer (item 143).
+ * Measures each instance's disk use off the main thread and remembers the answer.
  *
  * <p>Walking an instance's files touches thousands of entries, so it cannot run while a card is
  * being bound. The loader keeps a cache keyed by instance directory: a card that is bound with a

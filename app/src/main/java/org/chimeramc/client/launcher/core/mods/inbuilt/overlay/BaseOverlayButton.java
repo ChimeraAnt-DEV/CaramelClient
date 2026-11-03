@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -31,7 +33,7 @@ public abstract class BaseOverlayButton {
     private float initialTouchX, initialTouchY;
     private boolean isDragging = false;
     private boolean isLocked = false;
-    // Item 221: the corner being resized in the HUD editor, or null while moving.
+    // The corner being resized in the HUD editor, or null while moving.
     private OverlayResizeHandle.Corner resizeCorner = null;
     private OverlayResizeHandle.Geometry resizeStart;
     private long touchDownTime = 0;
@@ -230,7 +232,9 @@ public abstract class BaseOverlayButton {
                     rootView.removeView(overlayView);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:236", "Ignored a failure at BaseOverlayButton:236", ignored);
+        }
         overlayView = null;
         isShowing = false;
         isHiding = false;
@@ -254,7 +258,7 @@ public abstract class BaseOverlayButton {
     }
 
     /**
-     * Shows the corner handles only on the selected overlay (item 221).
+     * Shows the corner handles only on the selected overlay.
      *
      * <p>Painting handles on every widget at once would cover the HUD the player is trying to place;
      * showing them on the selection is what makes "grab the corner" discoverable without clutter.
@@ -289,6 +293,7 @@ public abstract class BaseOverlayButton {
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:296", "Ignored a failure at BaseOverlayButton:296", ignored);
             }
             notifyOverlayGeometryChanged();
         } else if (overlayView != null && isShowing) {
@@ -348,7 +353,7 @@ public abstract class BaseOverlayButton {
                         manager.selectHudEditorOverlay(this);
                     }
                     // A press on a corner starts a resize, not a move, so the widget grows from the
-                    // corner the player grabbed instead of sliding (item 221).
+                    // corner the player grabbed instead of sliding.
                     beginResize(event.getX(), event.getY());
                 }
                 initialX = wmParams.x;
@@ -419,7 +424,7 @@ public abstract class BaseOverlayButton {
     }
 
     /**
-     * Starts a resize if the press landed on a corner handle (item 221).
+     * Starts a resize if the press landed on a corner handle.
      *
      * <p>Only in the HUD editor and only on the selected overlay, so a gameplay tap is never turned
      * into a resize and an unselected widget still moves when dragged.
@@ -593,7 +598,9 @@ public abstract class BaseOverlayButton {
             wmParams.y = position.y;
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:602", "Ignored a failure at BaseOverlayButton:602", ignored);
+            }
             savePosition(wmParams.x, wmParams.y);
         } else {
             ViewGroup.LayoutParams params = overlayView.getLayoutParams();

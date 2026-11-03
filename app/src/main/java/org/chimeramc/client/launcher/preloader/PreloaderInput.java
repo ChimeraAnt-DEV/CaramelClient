@@ -1,5 +1,7 @@
 package org.chimeramc.client.preloader;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.view.MotionEvent;
 
 import java.io.File;
@@ -42,7 +44,7 @@ public class PreloaderInput {
     private static native int nativeAbiVersion();
     // The mouse button state machine lives in PreloaderMouseState so its rules are unit-testable
     // without a native library; the native declarations have to stay on this class, because a JNI
-    // symbol resolves from the declaring class (item 215).
+    // symbol resolves from the declaring class.
     private static final PreloaderMouseState MOUSE_STATE = new PreloaderMouseState();
     /** Scratch for the per-event button diff, reused so the dispatch path allocates nothing. */
     private static final int[] MOUSE_DIFF = new int[2];
@@ -92,7 +94,7 @@ public class PreloaderInput {
     public static native void nativeConfigureSignatureRules(String rulesPath, String minecraftVersion);
 
     /**
-     * Sets the directory the preloader caches a resolved signature scan in (items 436, 437). The
+     * Sets the directory the preloader caches a resolved signature scan in. The
      * cache is keyed by the game library's ELF build id and stores offsets from its load base, so a
      * repeat launch of the same game build skips the byte-pattern scan and a game update cannot read
      * the previous build's offsets. An empty string disables the cache.
@@ -125,7 +127,7 @@ public class PreloaderInput {
                                                            int fpsThreshold, int stepSize,
                                                            long minDwellMs);
 
-    /** The number of accepted render-distance changes so far (item 383). */
+    /** The number of accepted render-distance changes so far. */
     public static native int nativeRenderDistanceChangeCount();
 
     /** The tick count the callback-trimming hook has observed. */
@@ -204,7 +206,7 @@ public class PreloaderInput {
     public static native int[] nativeReadCosmeticsStats();
 
     /**
-     * Reads the skin-path seam observation (item 3): {@code {stage, packetHookInstalled,
+     * Reads the skin-path seam observation: {@code {stage, packetHookInstalled,
      * packetCalls, textureCalls, skinCaptured}}.
      *
      * <p>This exists because the reported "my skin is not visible to other players" bug cannot be
@@ -278,23 +280,23 @@ public class PreloaderInput {
     public static native int[] nativeReadRenderDiagnostics();
     public static native int nativeRenderHookFailureReason();
 
-    /** Item 11: tells the native side the display refresh rate, so it can decide vsync lock. */
+    /** Tells the native side the display refresh rate, so it can decide vsync lock. */
     public static native void nativeSetDisplayRefreshHz(int hz);
 
     /**
-     * Item 11: the render-thread frame-pacing reading, as {valid, averageUs, worstUs, flags} where
+     * The render-thread frame-pacing reading, as {valid, averageUs, worstUs, flags} where
      * flags bit0 = jittering and bit1 = vsync-locked. Length 1 (or null) means "no reading yet".
      */
     public static native int[] nativeReadFramePacing();
 
     /**
-     * Items 386/387: the percentile + hitch reading over the long frame window, as
+     * The percentile + hitch reading over the long frame window, as
      * {valid, p50Us, p95Us, p99Us, hitchesPerMinute}. Length 1 (or null) means "no reading yet".
      */
     public static native int[] nativeReadFramePacingPercentiles();
 
     /**
-     * Item 415: this process's memory footprint as
+     * This process's memory footprint as
      * {valid, residentKb, proportionalKb, fromPss}. A missing source reads as invalid.
      */
     public static native int[] nativeReadProcessMemory();
@@ -313,7 +315,7 @@ public class PreloaderInput {
     public static native int nativeCameraAnchorSource();
 
     /**
-     * Native declaration: the classified GPU family (item 376), or -1 when not yet read.
+     * Native declaration: the classified GPU family, or -1 when not yet read.
      *
      * <p>0 unknown, 1 Adreno, 2 Mali, 3 Immortalis, 4 PowerVR, 5 Xclipse, 6 NVIDIA, 7 Apple,
      * 8 software rasteriser, 9 generic. See {@link org.chimeramc.client.core.cosmetics.GpuFamily}.
@@ -346,6 +348,7 @@ public class PreloaderInput {
         try {
             nativeConfigureOptifineMode(blob == null ? "" : blob);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:351", "Ignored a failure at PreloaderInput:351", e);
         }
     }
 
@@ -369,6 +372,7 @@ public class PreloaderInput {
         try {
             nativeSetOptifineRefreshTarget(hz);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:375", "Ignored a failure at PreloaderInput:375", e);
         }
     }
 
@@ -378,6 +382,7 @@ public class PreloaderInput {
             nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
                     minDwellMs);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:385", "Ignored a failure at PreloaderInput:385", e);
         }
     }
 
@@ -601,6 +606,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeOverride(playerKey, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:609", "Ignored a failure at PreloaderInput:609", e);
         }
     }
 
@@ -608,6 +614,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeOverrides();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:617", "Ignored a failure at PreloaderInput:617", e);
         }
     }
 
@@ -632,6 +639,7 @@ public class PreloaderInput {
         try {
             nativeSetTextureOverride(textureId, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:642", "Ignored a failure at PreloaderInput:642", e);
         }
     }
 
@@ -639,6 +647,7 @@ public class PreloaderInput {
         try {
             nativeClearTextureOverrides();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:650", "Ignored a failure at PreloaderInput:650", e);
         }
     }
 
@@ -663,6 +672,7 @@ public class PreloaderInput {
         try {
             nativeSetRenderGeometry(data);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:675", "Ignored a failure at PreloaderInput:675", e);
         }
     }
 
@@ -671,6 +681,7 @@ public class PreloaderInput {
         try {
             nativePushCosmeticFrame(frame);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:684", "Ignored a failure at PreloaderInput:684", e);
         }
     }
 
@@ -711,6 +722,7 @@ public class PreloaderInput {
         try {
             nativeSetPieceAtlas(piece, rgba, width, height);
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:725", "Ignored a failure at PreloaderInput:725", ignored);
         }
     }
 
@@ -719,6 +731,7 @@ public class PreloaderInput {
         try {
             nativeClearPieceAtlases();
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:734", "Ignored a failure at PreloaderInput:734", ignored);
         }
     }
 
@@ -732,7 +745,7 @@ public class PreloaderInput {
     }
 
     /**
-     * Item 3: the skin-path seam observation, or null when the native library is absent.
+     * The skin-path seam observation, or null when the native library is absent.
      *
      * <p>{@code {stage, packetHookInstalled, packetCalls, textureCalls, skinCaptured}}; the stage is
      * 0 join hook absent, 1 hook idle, 2 joins observed.
@@ -774,7 +787,7 @@ public class PreloaderInput {
     }
 
     /**
-     * The exact gate that refused the native render hook (item 18), for the diagnostics report:
+     * The exact gate that refused the native render hook, for the diagnostics report:
      * 0 live (or reason predates the field), 1 version gate, 2 slot unresolved, 3 not executable,
      * 4 hook() failed; -1 when the native library is absent.
      */
@@ -786,16 +799,17 @@ public class PreloaderInput {
         }
     }
 
-    /** Item 11: forwards the display refresh rate to the native frame-pacing reading. */
+    /** Forwards the display refresh rate to the native frame-pacing reading. */
     public static void setDisplayRefreshHz(int hz) {
         try {
             nativeSetDisplayRefreshHz(hz);
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:807", "Ignored a failure at PreloaderInput:807", ignored);
         }
     }
 
     /**
-     * Item 11: the render-thread frame-pacing reading, or null when there is no reading yet. The
+     * The render-thread frame-pacing reading, or null when there is no reading yet. The
      * array is {valid, averageUs, worstUs, flags}; flags bit0 = jittering, bit1 = vsync-locked.
      */
     public static int[] readFramePacing() {
@@ -808,11 +822,11 @@ public class PreloaderInput {
     }
 
     /**
-     * Items 386/387: the percentile + hitch reading, or null when there is no reading yet. The
+     * The percentile + hitch reading, or null when there is no reading yet. The
      * array is {valid, p50Us, p95Us, p99Us, hitchesPerMinute}.
      */
     /**
-     * Item 415: the process footprint, or null when no source could be read. The array is
+     * The process footprint, or null when no source could be read. The array is
      * {valid, residentKb, proportionalKb, fromPss}.
      */
     public static int[] readProcessMemory() {
@@ -861,7 +875,7 @@ public class PreloaderInput {
     }
 
     /**
-     * The classified GPU family (item 376), or -1 when the native side has not read the driver
+     * The classified GPU family, or -1 when the native side has not read the driver
      * strings yet (no library, or no GLES context at the time of the call).
      *
      * <p>Map it with {@link org.chimeramc.client.core.cosmetics.GpuFamily#fromNativeCode}; a
@@ -918,6 +932,7 @@ public class PreloaderInput {
         try {
             nativeSetContentSubstitution(sourceBytes, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:935", "Ignored a failure at PreloaderInput:935", e);
         }
     }
 
@@ -925,6 +940,7 @@ public class PreloaderInput {
         try {
             nativeClearContentSubstitutions();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:943", "Ignored a failure at PreloaderInput:943", e);
         }
     }
 
@@ -940,6 +956,7 @@ public class PreloaderInput {
         try {
             nativeArmNextImageOverride(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:959", "Ignored a failure at PreloaderInput:959", e);
         }
     }
 
@@ -947,6 +964,7 @@ public class PreloaderInput {
         try {
             nativeClearNextImageOverride();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:967", "Ignored a failure at PreloaderInput:967", e);
         }
     }
 
@@ -971,6 +989,7 @@ public class PreloaderInput {
         try {
             nativeClearCapturedCape();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:992", "Ignored a failure at PreloaderInput:992", e);
         }
     }
 
@@ -979,6 +998,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeSubstitution(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1001", "Ignored a failure at PreloaderInput:1001", e);
         }
     }
 
@@ -986,6 +1006,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeSubstitution();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1009", "Ignored a failure at PreloaderInput:1009", e);
         }
     }
 
@@ -1084,6 +1105,7 @@ public class PreloaderInput {
                     error == null ? "" : error
             );
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1108", "Ignored a failure at PreloaderInput:1108", e);
         }
     }
 
@@ -1187,6 +1209,7 @@ public class PreloaderInput {
         try {
             nativeSetActivity(activity);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1212", "Ignored a failure at PreloaderInput:1212", e);
         }
     }
 
@@ -1195,6 +1218,7 @@ public class PreloaderInput {
         try {
             nativeClearActivity();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1221", "Ignored a failure at PreloaderInput:1221", e);
         }
     }
 }

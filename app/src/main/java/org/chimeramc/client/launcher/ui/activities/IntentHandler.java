@@ -28,7 +28,7 @@ public class IntentHandler extends BaseActivity {
     }
 
     private void handleDeepLink(Intent originalIntent) {
-        // The deep link is external input (item 178): this activity is exported with a VIEW filter,
+        // The deep link is external input: this activity is exported with a VIEW filter,
         // so any app or web page can reach it. Only a scheme the launcher is willing to be pointed
         // at is accepted, and the extras are length-checked before use.
         Uri data = IntentSanitizer.sanitizeUri(originalIntent.getData());

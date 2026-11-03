@@ -106,7 +106,7 @@ public final class RenderDebugOverlay {
             String rendered = b.toString().trim();
             // The readout is a diagnostics dump, so a SetText on an unchanged dump is pure cost.
             // The gate rebuilds it on change and repaints at most once per interval otherwise
-            // (item 187).
+            //.
             if (refreshGate.shouldRefresh(rendered, SystemClock.uptimeMillis())) {
                 text.setText(rendered);
             }

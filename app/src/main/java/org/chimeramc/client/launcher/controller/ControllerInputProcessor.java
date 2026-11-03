@@ -158,7 +158,7 @@ public final class ControllerInputProcessor {
                 ControllerType type = ControllerType.from(device);
                 if (type != null) {
                     // A device binding wins over the type's active slot, so two pads of the same
-                    // family can carry different profiles (item 219).
+                    // family can carry different profiles.
                     ControllerDeviceKey key = ControllerDeviceKey.of(
                             device.getVendorId(), device.getProductId());
                     ControllerProfile profile = new ControllerProfileManager(context)

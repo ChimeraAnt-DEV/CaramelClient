@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The schema-to-control rules (item 203).
+ * The schema-to-control rules.
  *
  * <p>A slider whose bounds disagree with the schema writes a value the mod clamps or ignores, and
  * the user sees a control that does nothing. These pin the bounds, the step arithmetic and the

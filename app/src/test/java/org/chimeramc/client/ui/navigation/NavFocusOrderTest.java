@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The navigation's TalkBack focus order is back button, tabs, then the trailing controls (item 343).
+ * The navigation's TalkBack focus order is back button, tabs, then the trailing controls.
  *
  * <p>Android walks the view hierarchy in declaration order when nothing overrides it, so the order a
  * screen-reader user hears is the order the ids are written in the layout — and nothing in the build

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The touch-target arithmetic (items 91, 339).
+ * The touch-target arithmetic.
  *
  * <p>These are the cases that made a {@code TouchDelegate} fail in practice: a target that hangs
  * off the parent's edge (a close button in the corner) and one that is already big enough. Both

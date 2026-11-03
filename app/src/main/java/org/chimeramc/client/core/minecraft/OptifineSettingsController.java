@@ -124,7 +124,7 @@ public final class OptifineSettingsController {
             String label = context.getString(OptifineStatus.labelRes(status));
             String detail = state == null ? "" : state.detail;
             String line = detail == null || detail.isEmpty() ? label : label + " — " + detail;
-            // Item 19: say *why* an item is off. The preloader reports "auto-disabled" only when a
+            // Say *why* an item is off. The preloader reports "auto-disabled" only when a
             // launch reached it; when the item is already off, the crash guard is the reason and the
             // row would otherwise read like a user choice.
             String quarantine = OptifineQuarantine.describe(OptifineQuarantine.classify(

@@ -12,7 +12,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 
-/** Pins the private-directory rule for loading native code (item 512). */
+/** Pins the private-directory rule for loading native code. */
 public class NativeLoadPolicyTest {
 
     @Rule

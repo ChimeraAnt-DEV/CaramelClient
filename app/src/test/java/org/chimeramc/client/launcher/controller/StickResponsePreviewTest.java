@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The live raw-vs-filtered reading behind the dead-zone editor (item 220).
+ * The live raw-vs-filtered reading behind the dead-zone editor.
  *
  * <p>The value of this class is that the picture agrees with the game, so the tests pin it to the
  * same {@link ControllerResponse} the input path runs rather than to a copy of the maths.

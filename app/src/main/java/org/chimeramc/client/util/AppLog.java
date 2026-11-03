@@ -121,14 +121,16 @@ public final class AppLog {
                     break;
             }
         } catch (Throwable ignored) {
-            // Off-device. The launch-log mirror below is the fallback.
+            // best-effort: off-device the platform logger is absent; the launch-log mirror below is
+            // the fallback. Reporting here would recurse into this same sink.
         }
         Context context = appContext;
         if (context == null) return;
         try {
             LaunchLog.appendLogcat(context, level, tag, line);
         } catch (Throwable ignored) {
-            // The log file is best-effort; never let reporting a failure cause one.
+            // best-effort: the log file is best-effort; never let reporting a failure cause one, and
+            // reporting here would recurse into this same sink.
         }
     }
 }

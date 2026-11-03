@@ -100,7 +100,7 @@ public class EdgeToEdgeInsetsTest {
 
     @Test
     public void aCutoutLargerThanTheSystemBarWinsOnEveryEdge() {
-        // Item 93: the union used to be an inline Math.max at the call site, untested. A landscape
+        // The union used to be an inline Math.max at the call site, untested. A landscape
         // notch reports a cutout on one side that the system bars do not describe, and a tall
         // status bar reports a top inset the cutout does not; whichever is larger on each edge is
         // what actually has to be cleared.

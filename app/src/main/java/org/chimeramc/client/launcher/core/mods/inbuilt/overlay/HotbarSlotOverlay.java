@@ -43,13 +43,13 @@ public final class HotbarSlotOverlay extends BaseOverlayButton {
     private volatile boolean lastBitmapItemState;
     /**
      * The last state handed to the backend, so a repeated call with nothing changed is skipped
-     * (item 196). The slot's state is pushed from several paths (geometry, press, visibility,
+     *. The slot's state is pushed from several paths (geometry, press, visibility,
      * config) and those can fire back to back; without this guard the backend would be told the
      * same thing more than once for one visible state.
      */
     private final HotbarSlotSync slotSync = new HotbarSlotSync();
     /**
-     * Minimum gap between backend item polls (item 196). {@link #tick()} runs on the game's frame
+     * Minimum gap between backend item polls. {@link #tick()} runs on the game's frame
      * tick, so polling every frame would call the backend ~60-120 times a second to learn something
      * that changes only when the player swaps an item; 250ms is imperceptible for an icon.
      */

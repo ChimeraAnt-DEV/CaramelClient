@@ -3,7 +3,7 @@ package org.chimeramc.client.launcher.util;
 import java.util.Locale;
 
 /**
- * Builds the one-line build identity shown on the About screen and copied into a report (item 177).
+ * Builds the one-line build identity shown on the About screen and copied into a report.
  *
  * <p>Pure and Android-free, so the formatting — the part that silently drops the commit or prints
  * "null" — is unit-tested without a device. The About screen and the diagnostics report both read

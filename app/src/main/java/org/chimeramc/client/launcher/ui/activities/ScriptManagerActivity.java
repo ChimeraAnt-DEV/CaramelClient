@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -27,7 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * The script manager screen (item 226).
+ * The script manager screen.
  *
  * <p>Lists every package in the {@code .AntEgg} sandbox with its declared dependencies, the order
  * the loader would install them, and a per-package enable switch. Disabling a script stops it being
@@ -180,7 +182,7 @@ public class ScriptManagerActivity extends BaseActivity implements ScriptManager
         try {
             worker.execute(task);
         } catch (RejectedExecutionException rejected) {
-            // The screen is gone; dropping the work is the right outcome.
+            AppLog.warnOnce("GlowberryClient", "ScriptManagerActivity:185", "Ignored a failure at ScriptManagerActivity:185", rejected);
         }
     }
 

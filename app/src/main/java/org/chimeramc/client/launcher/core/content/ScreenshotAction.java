@@ -8,7 +8,7 @@ import org.chimeramc.client.R;
 import java.io.File;
 
 /**
- * The one screenshot entry point (item 224).
+ * The one screenshot entry point.
  *
  * <p>The catalogue's {@code util_screenshot} module and the in-game pause-menu row both take a
  * screenshot, and they must behave identically: same folder, same reporting, same failure message.

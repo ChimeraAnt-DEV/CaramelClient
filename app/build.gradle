@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 def localProperties = new Properties()
@@ -75,7 +76,7 @@ static def getVersionCodeByTimestamp() {
 // G6: stale-stub trap guard. The native build compiles the preloader and libHttpClient git
 // submodules. If they were never checked out (a shallow clone / a zip download), the extracted
 // directory is empty or holds a leftover stub, and CMake either fails with a confusing error or
-// silently builds against a stale libgxcore.so. Fail fast here with the fix instead of letting a
+// silently builds against a stale native output. Fail fast here with the fix instead of letting a
 // broken assembly reach the APK.
 def requiredSubmoduleCmake = [
         new File("${projectDir}/src/main/cpp/preloader/CMakeLists.txt"),
@@ -89,7 +90,7 @@ def verifySubmodules = tasks.register("verifyNativeSubmodules") {
             throw new GradleException(
                     "Native build submodules are not checked out. Missing: ${missing.collect { it.path }}.\n" +
                             "Run: git submodule sync && git submodule update --init --recursive, then ./gradlew clean\n" +
-                            "(a stale stub libgxcore.so can persist otherwise)."
+                            "(a stale native build output can persist otherwise)."
             )
         }
     }
@@ -153,6 +154,7 @@ android {
         viewBinding true
         prefab true
         buildConfig true
+        compose true
     }
     sourceSets {
         main {
@@ -225,6 +227,11 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
+    }
+    // The Kotlin toolchain must match the Java target: the Compose compiler emits JVM 21 bytecode
+    // to sit beside the Java sources, so Kotlin cannot default to a lower jvmTarget.
+    kotlin {
+        jvmToolchain(21)
     }
 
     // Item 330/346: lint is a gate, not advice. The accessibility and unused-resource checks are
@@ -310,6 +317,18 @@ dependencies {
     // the application class; a release build never sees the dependency.
     debugImplementation libs.leakcanary.android
     implementation libs.glide
+    // Compose. The BOM aligns every androidx.compose.* version; the rest carry no version.
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui
+    implementation libs.compose.ui.graphics
+    implementation libs.compose.ui.tooling.preview
+    implementation libs.compose.foundation
+    implementation libs.compose.material3
+    implementation libs.compose.material.icons.extended
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.lifecycle.runtime.compose
+    debugImplementation libs.compose.ui.tooling
 }
 
 // Item 270: the in-app changelog renders the repo's CHANGELOG.md, so there is one source of truth.

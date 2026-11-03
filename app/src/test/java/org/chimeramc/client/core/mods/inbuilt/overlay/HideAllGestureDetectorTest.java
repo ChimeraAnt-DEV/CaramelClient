@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** The three-finger hide-all tap (item 213). */
+/** The three-finger hide-all tap. */
 public class HideAllGestureDetectorTest {
 
     private static final int DOWN = 0;

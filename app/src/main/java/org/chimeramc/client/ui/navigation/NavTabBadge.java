@@ -1,7 +1,7 @@
 package org.chimeramc.client.ui.navigation;
 
 /**
- * Whether a navigation destination carries an attention dot (item 83).
+ * Whether a navigation destination carries an attention dot.
  *
  * <p>A tab that is a list of things the user has to act on - mods that failed to load, mods the
  * crash guard disabled, an update waiting - is worth a dot, because the failure is otherwise only

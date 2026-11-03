@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The zoom scroll sensitivity and smoothing filter (item 192).
+ * The zoom scroll sensitivity and smoothing filter.
  *
  * <p>Pins the multiplier, the pass-through at smoothing 0, the one-pole easing that keeps the
  * configured fraction of the previous value, the clamp that stops smoothing 100 freezing the output,

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the heading description rule (item 341) and the layout invariant behind it.
+ * Pins the heading description rule and the layout invariant behind it.
  *
  * <p>{@link UiAccessibility#headingDescription} is pure, so it is tested directly. The layout half
  * reads the real resource files: a section title that is not marked as a heading is exactly the

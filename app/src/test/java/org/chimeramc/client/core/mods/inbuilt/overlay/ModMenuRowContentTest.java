@@ -9,7 +9,7 @@ import java.util.Map;
 import org.junit.Test;
 
 /**
- * The module row's content comparison (item 202).
+ * The module row's content comparison.
  *
  * <p>Pins that the RecyclerView diff sees every field the row draws from. The failure this guards
  * against is silent: a missed field means a row that never refreshes, so it keeps showing the old

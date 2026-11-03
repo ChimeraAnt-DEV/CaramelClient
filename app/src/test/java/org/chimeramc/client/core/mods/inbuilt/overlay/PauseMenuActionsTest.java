@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Pins the pause-menu button row's entries (item 224).
+ * Pins the pause-menu button row's entries.
  *
  * <p>The row and the menu it appears in must agree about what the actions are, and each must have a
  * label and an icon or it renders as a blank button.

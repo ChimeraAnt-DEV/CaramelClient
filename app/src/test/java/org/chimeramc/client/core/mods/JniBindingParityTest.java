@@ -90,10 +90,9 @@ public class JniBindingParityTest {
             "io.bambosan.mbloader.launcherUtils.LibBindings"));
 
     /**
-     * Preloader exports with no Java declaration. Empty: the last entry ({@code nativeSetupRuntime},
-     * declared by the deleted {@code org.levimc} bridge for the prebuilt {@code libgxcore.so}) was
-     * removed from the preloader together with the class that declared it, so the parity check now
-     * runs with no C++ exemption at all.
+     * Preloader exports with no Java declaration. Empty: the last such export was removed from the
+     * preloader together with the Java class that declared it, so the parity check now runs with no
+     * C++ exemption at all.
      */
     private static final Set<String> PENDING_PRELOADER_REMOVALS = Collections.emptySet();
 
@@ -115,7 +114,7 @@ public class JniBindingParityTest {
     }
 
     /**
-     * The JNI entry-point table (item 470) must list every owner class the preloader exports for.
+     * The JNI entry-point table must list every owner class the preloader exports for.
      *
      * <p>The table is prose, so nothing else keeps it in step with the code: a new {@code Java_…}
      * export whose owner class is missing from the table would leave the documentation wrong while

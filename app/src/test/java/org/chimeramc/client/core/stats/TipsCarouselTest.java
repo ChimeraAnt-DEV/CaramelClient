@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the tip carousel's two rules (item 283): the carousel retires after a fixed number of
+ * Pins the tip carousel's two rules: the carousel retires after a fixed number of
  * launches, and a rotation never re-shows the tip that is already on screen.
  */
 public class TipsCarouselTest {

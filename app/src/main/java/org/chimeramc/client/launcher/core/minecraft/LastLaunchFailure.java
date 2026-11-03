@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.minecraft;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import java.io.File;
@@ -212,6 +214,7 @@ public final class LastLaunchFailure {
                 out.flush();
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LastLaunchFailure:217", "Ignored a failure at LastLaunchFailure:217", ignored);
         }
     }
 
@@ -254,6 +257,7 @@ public final class LastLaunchFailure {
                 target.deleteOnExit();
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LastLaunchFailure:260", "Ignored a failure at LastLaunchFailure:260", ignored);
         }
     }
 

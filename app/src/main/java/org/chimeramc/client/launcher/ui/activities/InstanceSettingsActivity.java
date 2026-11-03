@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.Manifest;
@@ -90,6 +92,7 @@ public class InstanceSettingsActivity extends BaseActivity {
             try {
                 getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "InstanceSettingsActivity:95", "Ignored a failure at InstanceSettingsActivity:95", ignored);
             }
             shortcutIconUri = uri.toString();
             updateShortcutIconPreview();
@@ -98,7 +101,7 @@ public class InstanceSettingsActivity extends BaseActivity {
 
         android.view.View instanceContent = findViewById(android.R.id.content);
         DynamicAnim.applyPressScaleRecursively(instanceContent);
-        // Items 341/342: the same heading and one-focus-stop rules as the global Settings screen.
+        // The same heading and one-focus-stop rules as the global Settings screen.
         org.chimeramc.client.ui.components.UiAccessibility.wireToggleRows(instanceContent);
 
         setupNavBar();
@@ -408,7 +411,7 @@ public class InstanceSettingsActivity extends BaseActivity {
     }
 
     /**
-     * Measures the instance's disk use off the main thread and renders the breakdown (item 265).
+     * Measures the instance's disk use off the main thread and renders the breakdown.
      *
      * <p>The walk touches every file under the instance, so it must not run on the UI thread. The
      * measurement is recomputed after a cache clear, so the figure the user sees is the real one.
@@ -498,7 +501,7 @@ public class InstanceSettingsActivity extends BaseActivity {
     }
 
     /**
-     * Debounces the note save (item 278) the same way the name is debounced, so a typed sentence
+     * Debounces the note save the same way the name is debounced, so a typed sentence
      * writes once after the user pauses rather than once per keystroke.
      */
     private void scheduleInstanceNotesSave() {
@@ -633,7 +636,7 @@ public class InstanceSettingsActivity extends BaseActivity {
         backupProgressDialog.setTitleText(getString(R.string.instance_backup_title));
         backupProgressDialog.setStatusText(getString(R.string.instance_backup_in_progress));
         backupProgressDialog.setProgress(0);
-        // A large instance backup can be cancelled part-way (item 144).
+        // A large instance backup can be cancelled part-way.
         backupProgressDialog.setCancelAction(() -> {
             if (backupManager != null) backupManager.cancel();
         });

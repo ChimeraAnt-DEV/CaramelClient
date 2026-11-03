@@ -7,7 +7,7 @@ import android.view.WindowInsets;
 import java.util.List;
 
 /**
- * The HUD editor's safe area and grid snap (item 210).
+ * The HUD editor's safe area and grid snap.
  *
  * <p>Two rules live here so the editor cannot disagree with itself about where an overlay may sit:
  *

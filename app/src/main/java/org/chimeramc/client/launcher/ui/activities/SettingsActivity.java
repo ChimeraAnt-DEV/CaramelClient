@@ -132,24 +132,24 @@ public class SettingsActivity extends BaseActivity {
     private TextView worldBackupStatus;
     private WorldBackupConfig worldBackupConfig;
 
-    /** The container of the settings sections, animated on a tab change (item 124). */
+    /** The container of the settings sections, animated on a tab change. */
     private ViewGroup settingsContent;
 
     /**
-     * The generated binding for the settings tree (item 111).
+     * The generated binding for the settings tree.
      *
      * <p>Bound once in {@link #onContentReady()} so a newly added row is reached through a typed
      * field rather than another {@code findViewById}, which is the count the hygiene gate holds.
      */
     private org.chimeramc.client.databinding.ActivitySettingsBinding settingsBinding;
 
-    /** Held so the thermal advice can be re-evaluated in {@link #onResume()} (item 260). */
+    /** Held so the thermal advice can be re-evaluated in {@link #onResume()}. */
     private MaterialButtonToggleGroup performancePresetGroup;
 
     @Override
     protected void onResume() {
         super.onResume();
-        // A device that heats up after the screen opened must still see the advice (item 260).
+        // A device that heats up after the screen opened must still see the advice.
         if (performancePresetGroup != null) {
             refreshThermalPresetAdvice();
         }
@@ -160,7 +160,7 @@ public class SettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         // Everything that does not need a view runs first, because the layout is inflated off the
-        // main thread (item 130) and the activity-result launchers must be registered before
+        // main thread and the activity-result launchers must be registered before
         // onStart - registering them from the inflate callback would throw if it landed late.
         personalizationManager = new PersonalizationManager(this);
 
@@ -214,16 +214,16 @@ public class SettingsActivity extends BaseActivity {
                 }
         );
 
-        // Item 130: this layout is over two thousand lines, so it is parsed on a background thread.
+        // This layout is over two thousand lines, so it is parsed on a background thread.
         setContentViewAsync(R.layout.activity_settings, this::onContentReady);
     }
 
-    /** Runs once the asynchronously inflated settings tree is attached (item 130). */
+    /** Runs once the asynchronously inflated settings tree is attached. */
     private void onContentReady() {
         View content = findViewById(android.R.id.content);
         settingsBinding = org.chimeramc.client.databinding.ActivitySettingsBinding.bind(content);
         DynamicAnim.applyPressScaleRecursively(content);
-        // Items 341/342: section titles are headings and each label+switch row is one focus stop,
+        // Section titles are headings and each label+switch row is one focus stop,
         // wired in one pass so a newly added row cannot be the one that was forgotten.
         org.chimeramc.client.ui.components.UiAccessibility.wireToggleRows(content);
 
@@ -251,7 +251,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     /**
-     * Shows or hides a section, animating the size change when motion is allowed (item 124).
+     * Shows or hides a section, animating the size change when motion is allowed.
      *
      * <p>{@code TransitionManager} animates the container's own layout, so a section that grows
      * from hidden to visible slides its siblings down instead of appearing at full height in one
@@ -303,7 +303,7 @@ public class SettingsActivity extends BaseActivity {
 
         int accent = personalizationManager.getAccentColor();
 
-        // Item 124: animate the swap of the visible section. TransitionManager works on every
+        // Animate the swap of the visible section. TransitionManager works on every
         // supported version and needs no shared-element plumbing; the removed alpha tween did not
         // animate the size change, so a tall section appeared with a jump. Under reduced motion the
         // transition is skipped and the swap is instant.
@@ -364,7 +364,7 @@ public class SettingsActivity extends BaseActivity {
             openVoice.setOnClickListener(v -> startActivity(
                     new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
             DynamicAnim.applyPressScale(openVoice);
-            // Guest mode removes voice chat, so its Settings entry goes with it (item 272).
+            // Guest mode removes voice chat, so its Settings entry goes with it.
             openVoice.setVisibility(
                     org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesVoice()
                             ? View.GONE : View.VISIBLE);
@@ -495,6 +495,10 @@ public class SettingsActivity extends BaseActivity {
             });
         }
 
+        SwitchMaterial switchLaunchLog = findViewById(R.id.switch_launch_log);
+        switchLaunchLog.setChecked(fs.isLaunchLogEnabled());
+        switchLaunchLog.setOnCheckedChangeListener((btn, checked) -> fs.setLaunchLogEnabled(checked));
+
         SwitchMaterial switchLogcat = findViewById(R.id.switch_logcat);
         switchLogcat.setChecked(fs.isLogcatOverlayEnabled());
         switchLogcat.setOnCheckedChangeListener((btn, checked) -> {
@@ -502,7 +506,9 @@ public class SettingsActivity extends BaseActivity {
             try {
                 LogcatOverlayManager mgr = LogcatOverlayManager.getInstance();
                 if (mgr != null) mgr.refreshVisibility();
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "SettingsActivity:506", "Ignored a failure at SettingsActivity:506", ignored);
+            }
         });
 
         SwitchMaterial switchCrashUpload = findViewById(R.id.switch_crash_upload);
@@ -513,7 +519,7 @@ public class SettingsActivity extends BaseActivity {
         // so rather than pretend.
         boolean crashUploadConfigured = CrashReportUploader.isConfigured();
         switchCrashUpload.setEnabled(crashUploadConfigured);
-        // Item 518: turning the switch on is the opt-in, so it shows what would be sent first and
+        // Turning the switch on is the opt-in, so it shows what would be sent first and
         // only records consent once the user confirms. Turning it off is immediate - a withdrawal
         // of consent must never be gated behind a dialog.
         switchCrashUpload.setOnCheckedChangeListener((btn, checked) -> {
@@ -543,14 +549,14 @@ public class SettingsActivity extends BaseActivity {
             crashUploadUnavailable.setVisibility(crashUploadConfigured ? View.GONE : View.VISIBLE);
         }
 
-        // Item 518: consent is only meaningful if the user can see what they are consenting to, so
+        // Consent is only meaningful if the user can see what they are consenting to, so
         // the report's headers and body are shown before anything is sent.
         View crashUploadPreview = findViewById(R.id.button_crash_upload_preview);
         if (crashUploadPreview != null) {
             crashUploadPreview.setOnClickListener(v -> showCrashUploadPreview());
         }
 
-        // Item 281: the anonymous usage counter. Off by default, disabled with a stated reason when
+        // The anonymous usage counter. Off by default, disabled with a stated reason when
         // this build has no collector, and the preview button shows the exact fields first.
         SwitchMaterial switchUsageStats = settingsBinding != null
                 ? settingsBinding.switchUsageStats : null;
@@ -616,7 +622,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        // Privacy modes (items 272, 277). Guest mode hides mods/servers/voice; streaming-safe
+        // Privacy modes. Guest mode hides mods/servers/voice; streaming-safe
         // masks names, coordinates and server addresses. Both are read through PrivacyModes, so a
         // screen that already drew its shortcuts is refreshed by recreating this one, which is
         // where the nav bar and the Settings entries are built.
@@ -635,7 +641,7 @@ public class SettingsActivity extends BaseActivity {
                     (btn, checked) -> fs.setStreamingSafeModeEnabled(checked));
         }
 
-        // Cosmetic sync (item 466): the switch lives here, in Settings, as the one place a user
+        // Cosmetic sync: the switch lives here, in Settings, as the one place a user
         // expects to turn a network feature off. It defaults on, so an existing setup keeps the
         // behaviour it already had, and the panel's own toggle reads the same preference.
         SwitchMaterial switchCosmeticSync = org.chimeramc.client.databinding
@@ -650,7 +656,7 @@ public class SettingsActivity extends BaseActivity {
                     (btn, checked) -> manager.setCosmeticSyncEnabled(checked));
         }
 
-        // Backup retention (item 144): the slider maps 0..9 to 1..10 backups kept per instance.
+        // Backup retention: the slider maps 0..9 to 1..10 backups kept per instance.
         SeekBar seekBackupRetention = findViewById(R.id.seek_backup_retention);
         TextView valueBackupRetention = findViewById(R.id.value_backup_retention);
         if (seekBackupRetention != null) {
@@ -767,7 +773,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     /**
-     * Shows the thermal-throttle suggestion (item 260).
+     * Shows the thermal-throttle suggestion.
      *
      * <p>The reading is only meaningful while the screen is open, so it is refreshed in
      * {@link #onResume()} as well as here: a device that heats up after the screen was opened
@@ -1332,12 +1338,13 @@ public class SettingsActivity extends BaseActivity {
                 }
             });
         } catch (PackageManager.NameNotFoundException ignored) {
+            AppLog.warnOnce(TAG, "SettingsActivity:1337", "Ignored a failure at SettingsActivity:1337", ignored);
         }
 
         Button btnCheckUpdate = findViewById(R.id.btn_check_update);
         btnCheckUpdate.setOnClickListener(v -> handleUpdateButtonClick());
 
-        // Item 273: one mod-update notification a day, not a prompt per mod. The row is disabled
+        // One mod-update notification a day, not a prompt per mod. The row is disabled
         // with a stated reason when this build has no feed URL, so a switch that cannot do anything
         // says so instead of pretending.
         SwitchMaterial switchModUpdate = settingsBinding != null
@@ -1511,7 +1518,7 @@ public class SettingsActivity extends BaseActivity {
             getContentResolver().takePersistableUriPermission(uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } catch (SecurityException e) {
-            // Permission not persistable is fine — the run still checks access each time.
+            AppLog.warnOnce(TAG, "SettingsActivity:1517", "Ignored a failure at SettingsActivity:1517", e);
         }
         worldBackupConfig.setFolderUri(uri);
         worldBackupConfig.setEnabled(true);
@@ -1610,7 +1617,7 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
-    /** Shows exactly what a crash report upload would contain (item 518). */
+    /** Shows exactly what a crash report upload would contain. */
     private void showCrashUploadPreview() {
         String preview = CrashReportUploader.describeNextUpload(this);
         new org.chimeramc.client.ui.dialogs.CustomAlertDialog(this)

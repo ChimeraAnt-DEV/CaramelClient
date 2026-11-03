@@ -1,7 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
 /**
- * The "press a button to set the modifier" state machine (item 218).
+ * The "press a button to set the modifier" state machine.
  *
  * <p>Extracted from the settings fragment, which used to hold the pending-layer field and decide
  * inline whether a key press was a capture or an ordinary press. That decision is the mapping

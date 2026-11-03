@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The per-device profile key (item 219). Pure, so the identity rules are pinned without a pad.
+ * The per-device profile key. Pure, so the identity rules are pinned without a pad.
  */
 public class ControllerDeviceKeyTest {
 

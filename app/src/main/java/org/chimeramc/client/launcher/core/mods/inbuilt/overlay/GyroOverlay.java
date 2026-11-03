@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -58,7 +60,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
     private final float[] inverseReferenceMatrix = new float[9];
     private boolean hasReference = false;
 
-    // Bias capture and live dead-zone preview (item 194).
+    // Bias capture and live dead-zone preview.
     private static final long LONG_PRESS_MS = 450L;
     private static final long STATE_LABEL_INTERVAL_MS = 100L;
     private final GyroCalibration calibration = new GyroCalibration();
@@ -214,7 +216,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
     }
 
     /**
-     * Starts a bias capture (item 194): the player holds the device still for ~0.3s and the mean
+     * Starts a bias capture: the player holds the device still for ~0.3s and the mean
      * gyro rate over that window becomes the offset subtracted from every later sample. Only
      * meaningful on a raw gyroscope; a rotation-vector sensor is already fused and drift-free, so
      * on that path the capture just re-zeros the reference pose.
@@ -249,7 +251,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
 
     /**
      * Shows the raw turn magnitude against the dead-zone threshold, so the dead zone is a live
-     * preview (item 194). Throttled to {@link #STATE_LABEL_INTERVAL_MS}: the sensor runs at
+     * preview. Throttled to {@link #STATE_LABEL_INTERVAL_MS}: the sensor runs at
      * SENSOR_DELAY_GAME (~50Hz), and setting text every sample would thrash the label.
      */
     private void updateStateLabel() {
@@ -348,7 +350,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
         float dt = 0.02f;
 
         // Feed the raw sample to a running calibration and, once it is armed, treat this sample as
-        // calibration input rather than look input (item 194) -- so the player holding the device
+        // calibration input rather than look input -- so the player holding the device
         // still does not also drag the camera while the bias is being measured.
         if (calibration.isActive()) {
             calibration.add(event.values[0], event.values[1], event.values[2]);
@@ -390,7 +392,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
         sendLookDelta(deltaYaw, deltaPitch);
     }
 
-    /** Refreshes the live level label at most every {@link #STATE_LABEL_INTERVAL_MS} (item 194). */
+    /** Refreshes the live level label at most every {@link #STATE_LABEL_INTERVAL_MS}. */
     private void maybeRefreshLabel() {
         long now = SystemClock.uptimeMillis();
         if (now - lastLabelUpdate < STATE_LABEL_INTERVAL_MS) return;
@@ -417,7 +419,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
         try {
             PojavControlsMod.nativeSendLookDelta(dx, dy);
         } catch (Throwable ignored) {
-            // No native look path on this build.
+            AppLog.warnOnce("GlowberryClient", "GyroOverlay:422", "Ignored a failure at GyroOverlay:422", ignored);
         }
     }
 

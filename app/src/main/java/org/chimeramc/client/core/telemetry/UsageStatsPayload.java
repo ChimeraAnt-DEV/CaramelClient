@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Builds exactly what the anonymous usage counter would send (item 281).
+ * Builds exactly what the anonymous usage counter would send.
  *
  * <p>The list of fields is short on purpose and is a property of this class rather than of a
  * request builder, so the in-app preview and the upload cannot disagree about what leaves the

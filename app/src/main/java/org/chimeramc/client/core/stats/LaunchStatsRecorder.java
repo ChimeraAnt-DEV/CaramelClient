@@ -1,9 +1,11 @@
 package org.chimeramc.client.core.stats;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 /**
- * The single place a launch/crash statistic is recorded (item 282).
+ * The single place a launch/crash statistic is recorded.
  *
  * <p>Every method here is best-effort and never throws: these counters are diagnostic, and a
  * statistic must never be the reason a launch path fails. The rules themselves live in
@@ -19,6 +21,7 @@ public final class LaunchStatsRecorder {
         try {
             LaunchStatsStore.update(context, LaunchStats::recordLaunch);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:24", "Ignored a failure at LaunchStatsRecorder:24", ignored);
         }
     }
 
@@ -36,6 +39,7 @@ public final class LaunchStatsRecorder {
                 stats.withFirstFrame(firstFrameMs);
             });
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:42", "Ignored a failure at LaunchStatsRecorder:42", ignored);
         }
     }
 
@@ -44,6 +48,7 @@ public final class LaunchStatsRecorder {
         try {
             LaunchStatsStore.update(context, LaunchStats::recordCrash);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:51", "Ignored a failure at LaunchStatsRecorder:51", ignored);
         }
     }
 

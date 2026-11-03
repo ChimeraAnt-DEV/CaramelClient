@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Decides which installed mods have a newer version published (item 273).
+ * Decides which installed mods have a newer version published.
  *
  * <p>The point of this class is that the launcher makes <em>one</em> statement about updates rather
  * than interrupting per mod. A mod hub that prompts for each mod turns a library of twenty mods into
@@ -76,7 +76,7 @@ public final class ModUpdatePlan {
 
     /**
      * A stable fingerprint of a set of updates, used to decide whether anything changed since the
-     * last announcement (item 273).
+     * last announcement.
      *
      * <p>Sorted so feed order cannot produce a different fingerprint for the same updates, and
      * built from {@code id@version} so a mod that gains a newer version changes it. An empty list

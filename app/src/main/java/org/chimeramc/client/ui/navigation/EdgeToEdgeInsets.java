@@ -63,7 +63,7 @@ public final class EdgeToEdgeInsets {
     }
 
     /**
-     * The single reader of a window's insets (item 93).
+     * The single reader of a window's insets.
      *
      * <p>Every screen used to build this object inline from two {@code WindowInsetsCompat} calls,
      * which put an untested {@code Math.max} at each call site. The union lives here instead, so the

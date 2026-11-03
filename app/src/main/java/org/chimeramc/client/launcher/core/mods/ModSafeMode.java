@@ -115,7 +115,7 @@ public final class ModSafeMode {
     }
 
     /**
-     * Requests that the next launch load no mods at all (item 285).
+     * Requests that the next launch load no mods at all.
      *
      * <p>This is the "restart without mods" action the launch watchdog offers: a one-shot flag, not
      * a persisted per-mod change, because the point is to answer one question ("is a mod causing

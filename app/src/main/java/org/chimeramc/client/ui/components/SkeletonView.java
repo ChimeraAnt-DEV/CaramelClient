@@ -15,7 +15,7 @@ import android.view.animation.LinearInterpolator;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 
 /**
- * A placeholder shimmer for a list that is still loading (items 125, 126).
+ * A placeholder shimmer for a list that is still loading.
  *
  * <p>A spinner says "wait"; a skeleton says "a grid of cards is coming", which is the difference
  * between a delay that reads as progress and one that reads as a stall. It is one {@link View}

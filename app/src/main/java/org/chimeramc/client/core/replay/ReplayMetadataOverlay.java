@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -115,7 +117,7 @@ final class ReplayMetadataOverlay {
             try {
                 windowManager.removeView(root);
             } catch (Throwable ignored) {
-                // Already gone; nothing to do.
+                AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:120", "Ignored a failure at ReplayMetadataOverlay:120", ignored);
             }
         }
         root = null;
@@ -129,12 +131,13 @@ final class ReplayMetadataOverlay {
                 fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
             }
         } catch (Throwable ignored) {
-            // The em dash is the honest fallback for a native read that is not ready.
+            AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:134", "Ignored a failure at ReplayMetadataOverlay:134", ignored);
         }
         int combo = 0;
         try {
             if (HitTimingMod.isActive()) combo = HitTimingMod.getCombo();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:140", "Ignored a failure at ReplayMetadataOverlay:140", ignored);
         }
         long elapsed = Math.max(0L, System.currentTimeMillis() - startedAtMs);
         String line = ReplayMetadata.line(ReplayMetadata.defaultFields(), fps, 0, elapsed, -1, combo);

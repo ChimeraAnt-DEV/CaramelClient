@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The navigation attention dot (item 83).
+    The navigation attention dot.
 
     A single small filled circle shown as the destination's compound drawable end when that screen
     has something the user must act on (a mod that failed to load, a mod the crash guard disabled, a

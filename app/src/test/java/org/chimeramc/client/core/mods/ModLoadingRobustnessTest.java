@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * The launcher stays usable when the mods folder is empty, a mod is corrupt, or a mod was built for
- * a newer game version (item 354).
+ * a newer game version.
  *
  * <p>These are the three states a user actually reaches by accident, and each one has to end in a
  * named refusal rather than a crash or a half-loaded mod: an empty folder is not an error at all, a

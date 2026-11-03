@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
- * A cancelled extraction must stop at the next safe boundary (item 306).
+ * A cancelled extraction must stop at the next safe boundary.
  */
 public class ExtractionControlTest {
 

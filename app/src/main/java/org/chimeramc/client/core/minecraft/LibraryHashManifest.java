@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 /**
  * A record of each extracted library's size, modification time and SHA-256, and the rule that
- * decides whether the files on disk still match it (item 303).
+ * decides whether the files on disk still match it.
  *
  * <p>A presence-and-length check is not enough to trust an extracted cache. A library can be the
  * right size and still be wrong: a partially overwritten file, a corrupted sector, a file another
@@ -94,8 +96,7 @@ public final class LibraryHashManifest {
             try {
                 out.put(parts[0], new Entry(parts[0], Long.parseLong(parts[1]), Long.parseLong(parts[2]), parts[3]));
             } catch (NumberFormatException ignored) {
-                // A line we cannot read is not a line we may act on; skipping it makes the file
-                // read as NO_RECORD rather than as a spurious mismatch.
+                AppLog.warnOnce("GlowberryClient", "LibraryHashManifest:99", "Ignored a failure at LibraryHashManifest:99", ignored);
             }
         }
         return out;

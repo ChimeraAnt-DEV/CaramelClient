@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.voice;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
@@ -170,6 +172,7 @@ public final class VoiceTransport implements VoiceLink {
         try {
             active.leaveGroup(InetAddress.getByName(GROUP));
         } catch (IOException ignored) {
+            AppLog.warnOnce(TAG, "VoiceTransport:175", "Ignored a failure at VoiceTransport:175", ignored);
         }
         active.close();
     }
@@ -181,6 +184,7 @@ public final class VoiceTransport implements VoiceLink {
         try {
             if (lock.isHeld()) lock.release();
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "VoiceTransport:187", "Ignored a failure at VoiceTransport:187", ignored);
         }
     }
 }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -197,7 +199,7 @@ public class ModConfigActivity extends BaseActivity {
         try {
             worker.execute(task);
         } catch (RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit; nothing to do.
+            AppLog.warnOnce("GlowberryClient", "ModConfigActivity:202", "Ignored a failure at ModConfigActivity:202", ignored);
         }
     }
 

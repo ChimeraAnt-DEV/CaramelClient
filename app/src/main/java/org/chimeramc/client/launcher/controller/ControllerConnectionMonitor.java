@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.hardware.input.InputManager;
 import android.os.Handler;
@@ -153,6 +155,7 @@ public final class ControllerConnectionMonitor {
             inputManager.registerInputDeviceListener(deviceListener, mainHandler);
             registered = true;
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:158", "Ignored a failure at ControllerConnectionMonitor:158", ignored);
         }
     }
 
@@ -161,6 +164,7 @@ public final class ControllerConnectionMonitor {
         try {
             inputManager.unregisterInputDeviceListener(deviceListener);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:167", "Ignored a failure at ControllerConnectionMonitor:167", ignored);
         }
         registered = false;
     }
@@ -328,7 +332,7 @@ public final class ControllerConnectionMonitor {
                 return profile.getName();
             }
         } catch (Exception ignored) {
-            // A profile failure must not stop the notification from being shown.
+            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:335", "Ignored a failure at ControllerConnectionMonitor:335", ignored);
         }
         return null;
     }

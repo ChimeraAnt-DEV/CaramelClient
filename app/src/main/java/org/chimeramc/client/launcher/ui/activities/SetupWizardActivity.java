@@ -1,7 +1,10 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,44 +16,49 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.databinding.ActivitySetupWizardBinding;
-import org.chimeramc.client.core.auth.MsftAccountStore;
-import org.chimeramc.client.core.versions.GameVersion;
-import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.launcher.core.setup.SetupWizard;
-import org.chimeramc.client.settings.FeatureSettings;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.util.ApkImportManager;
 import org.chimeramc.client.util.PersonalizationManager;
 
 /**
- * The first-run wizard (U13): import the game, pick a version, sign in, ready.
+ * The five-step first-run wizard: licence, install an instance, sign in, customise, changelog/Discord.
  *
- * <p>The step order and the resume behaviour live in {@link SetupWizard} (pure and unit-tested);
- * this screen only renders the current step and performs the action each one needs. That split is
- * deliberate — the ordering rules are the part that can be wrong in a way nobody notices until a
- * user hits the dead end, so they are not entangled with a Context.
+ * <p>The ordering and the rules live in {@link SetupWizard} (pure and unit-tested); this screen only
+ * renders the current step and performs its action. Only the licence is mandatory — its checkbox
+ * gates the Next button — and every later step can be skipped, so a user who wants to play now is
+ * never trapped.
  *
- * <p>The wizard is skippable. A user who already has a working install must never be trapped in it,
- * so "Skip" marks it done and opens the launcher. It is also only ever shown when the launcher has
- * no installed instance, so an existing user never sees it at all.
+ * <p>The wizard is shown only on a first launch with no installed instance, so an existing user
+ * upgrading into a build with the wizard never sees it.
  */
 public class SetupWizardActivity extends BaseActivity {
 
     /** Set once the user finishes or skips; the splash reads it to decide whether to show this. */
     public static final String KEY_WIZARD_DONE = "setup_wizard_done";
 
-    private VersionManager versionManager;
-    private ApkImportManager apkImportManager;
-    private ActivityResultLauncher<Intent> importLauncher;
-
     private ActivitySetupWizardBinding binding;
+    private TextView stepLabel;
     private TextView title;
     private TextView body;
     private TextView status;
-    private Button primaryButton;
-    private Button secondaryButton;
+    private TextView terms;
+    private View termsScroll;
+    private View licenseCheck;
+    private View finishActions;
+    private Button primary;
+    private Button back;
+    private Button skip;
+    private Button changelog;
+    private Button discord;
     private LinearLayout rail;
     private LinearLayout compatRows;
+
+    private ApkImportManager apkImportManager;
+    private ActivityResultLauncher<Intent> importLauncher;
+
+    private SetupWizard.Step step = SetupWizard.Step.LICENSE;
+    private boolean licenseAccepted;
 
     /** A single thread for the compatibility gather; a newer render supersedes an older result. */
     private final java.util.concurrent.ExecutorService compatExecutor =
@@ -62,13 +70,48 @@ public class SetupWizardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySetupWizardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        versionManager = VersionManager.get(this);
+
+        stepLabel = binding.setupStepLabel;
+        title = binding.setupTitle;
+        body = binding.setupBody;
+        status = binding.setupStatus;
+        terms = binding.setupTerms;
+        termsScroll = binding.setupTermsScroll;
+        licenseCheck = binding.setupLicenseCheck;
+        finishActions = binding.setupFinishActions;
+        primary = binding.setupPrimary;
+        back = binding.setupBack;
+        skip = binding.setupSkip;
+        changelog = binding.setupChangelog;
+        discord = binding.setupDiscord;
+        rail = binding.setupRail;
+        compatRows = binding.setupCompatRows;
+
+        terms.setText(R.string.setup_license_terms);
+
+        if (licenseCheck instanceof com.google.android.material.checkbox.MaterialCheckBox) {
+            ((com.google.android.material.checkbox.MaterialCheckBox) licenseCheck)
+                    .setOnCheckedChangeListener((btn, checked) -> {
+                        licenseAccepted = checked;
+                        updatePrimaryState();
+                    });
+        }
+        primary.setOnClickListener(v -> onNext());
+        back.setOnClickListener(v -> onBack());
+        skip.setOnClickListener(v -> onSkip());
+        if (changelog != null) {
+            changelog.setOnClickListener(v -> startActivity(
+                    new Intent(this, org.chimeramc.client.launcher.ui.activities.ChangelogActivity.class)));
+        }
+        if (discord != null) {
+            discord.setOnClickListener(v -> openDiscord());
+        }
+        DynamicAnim.applyPressScale(primary);
+        DynamicAnim.applyPressScale(back);
+        DynamicAnim.applyPressScale(skip);
 
         apkImportManager = new ApkImportManager(this, null);
-        apkImportManager.setOnImportCompleteListener(() -> {
-            versionManager.loadAllVersions();
-            render();
-        });
+        apkImportManager.setOnImportCompleteListener(this::render);
         apkImportManager.setOnImportFailedListener((message, versionName) -> {
             if (status != null) {
                 status.setText(getString(R.string.setup_import_failed, message));
@@ -83,157 +126,120 @@ public class SetupWizardActivity extends BaseActivity {
                     }
                 });
 
-        title = binding.setupTitle;
-        body = binding.setupBody;
-        status = binding.setupStatus;
-        rail = binding.setupRail;
-        compatRows = binding.setupCompatRows;
-        primaryButton = binding.setupPrimary;
-        secondaryButton = binding.setupSecondary;
-
-        if (primaryButton != null) primaryButton.setOnClickListener(v -> onPrimary());
-        if (secondaryButton != null) {
-            secondaryButton.setOnClickListener(v -> onSecondary());
-            DynamicAnim.applyPressScale(secondaryButton);
-        }
-        if (primaryButton != null) DynamicAnim.applyPressScale(primaryButton);
-
         render();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // An import or a sign-in happens on another screen; re-read the facts when we come back so
-        // the wizard advances without the user having to press anything.
+        // An import or a sign-in happens on another screen; re-render on return.
         render();
-    }
-
-    // ---------------------------------------------------------------------------- facts
-
-    private SetupWizard.Facts facts() {
-        boolean imported = hasInstalledVersion();
-        GameVersion selected = versionManager != null ? versionManager.getSelectedVersion() : null;
-        boolean signInRequired = FeatureSettings.getInstance().isLauncherManagedMcLoginEnabled();
-        return new SetupWizard.Facts()
-                .gameImported(imported)
-                .versionChosen(selected != null)
-                .signInRequired(signInRequired)
-                .signedIn(isSignedIn());
-    }
-
-    private boolean hasInstalledVersion() {
-        try {
-            return versionManager != null && !versionManager.getInstalledVersions().isEmpty();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isSignedIn() {
-        try {
-            for (MsftAccountStore.MsftAccount account : MsftAccountStore.list(this)) {
-                if (account.active && account.minecraftUsername != null
-                        && !account.minecraftUsername.isEmpty()) {
-                    return true;
-                }
-            }
-        } catch (Throwable ignored) {
-        }
-        return false;
     }
 
     // ---------------------------------------------------------------------------- render
 
     private void render() {
-        SetupWizard.Facts facts = facts();
-        SetupWizard.Step step = SetupWizard.currentStep(facts);
-
         if (step == SetupWizard.Step.READY) {
             finishWizard();
             return;
         }
+        if (status != null && step != SetupWizard.Step.INSTALL_INSTANCE) {
+            status.setVisibility(View.GONE);
+        }
 
-        renderRail(facts);
-        renderCompat(facts);
-        if (status != null) status.setVisibility(View.GONE);
+        renderRail();
+        renderStepContent();
+        renderCompat();
+    }
+
+    private void renderStepContent() {
+        boolean license = step == SetupWizard.Step.LICENSE;
+        termsScroll.setVisibility(license ? View.VISIBLE : View.GONE);
+        licenseCheck.setVisibility(license ? View.VISIBLE : View.GONE);
+        finishActions.setVisibility(step == SetupWizard.Step.CHANGELOG_DISCORD
+                ? View.VISIBLE : View.GONE);
 
         switch (step) {
-            case IMPORT_GAME:
-                title.setText(R.string.setup_step_import_title);
-                body.setText(R.string.setup_step_import_body);
-                primaryButton.setText(R.string.setup_step_import_action);
-                secondaryButton.setText(R.string.setup_skip);
+            case LICENSE:
+                title.setText(R.string.setup_license_title);
+                body.setText(R.string.setup_license_body);
                 break;
-            case PICK_VERSION:
-                title.setText(R.string.setup_step_version_title);
-                body.setText(R.string.setup_step_version_body);
-                primaryButton.setText(R.string.setup_step_version_action);
-                secondaryButton.setText(R.string.setup_skip);
+            case INSTALL_INSTANCE:
+                title.setText(R.string.setup_instance_title);
+                body.setText(R.string.setup_instance_body);
                 break;
             case SIGN_IN:
-                title.setText(R.string.setup_step_signin_title);
-                body.setText(R.string.setup_step_signin_body);
-                primaryButton.setText(R.string.setup_step_signin_action);
-                secondaryButton.setText(R.string.setup_skip);
+                title.setText(R.string.setup_signin_title);
+                body.setText(R.string.setup_signin_body);
+                break;
+            case CUSTOMIZE:
+                title.setText(R.string.setup_customize_title);
+                body.setText(R.string.setup_customize_body);
+                break;
+            case CHANGELOG_DISCORD:
+                title.setText(R.string.setup_finish_title);
+                body.setText(R.string.setup_finish_body);
                 break;
             default:
                 break;
         }
+        primary.setText(step == SetupWizard.Step.CHANGELOG_DISCORD
+                ? R.string.setup_finish : R.string.setup_next);
+        back.setVisibility(step == SetupWizard.Step.LICENSE ? View.INVISIBLE : View.VISIBLE);
+        skip.setVisibility(SetupWizard.canSkip(step) ? View.VISIBLE : View.GONE);
+        updatePrimaryState();
     }
 
-    /**
-     * Draws the progress rail from the *active* steps, so a wizard with sign-in off shows three
-     * dots rather than four with one greyed out. The fill follows {@link SetupWizard#currentIndex}.
-     */
-    private void renderRail(SetupWizard.Facts facts) {
+    private void updatePrimaryState() {
+        SetupWizard.Facts facts = new SetupWizard.Facts().licenseAccepted(licenseAccepted);
+        primary.setEnabled(SetupWizard.canProceed(step, facts));
+        primary.setAlpha(primary.isEnabled() ? 1f : 0.5f);
+    }
+
+    /** Draws the progress line and the "Step N of 5" label from the pure step list. */
+    private void renderRail() {
+        int index = SetupWizard.index(step);
+        stepLabel.setText(getString(R.string.setup_progress_of, index + 1, SetupWizard.STEPS.length));
         if (rail == null) return;
         rail.removeAllViews();
-        SetupWizard.Step[] steps = SetupWizard.activeSteps(facts);
-        int current = SetupWizard.currentIndex(facts);
         float density = getResources().getDisplayMetrics().density;
         int accent = new PersonalizationManager(this).getAccentColor();
         if (accent == 0) accent = getColor(R.color.primary);
-
-        for (int i = 0; i < steps.length; i++) {
+        for (int i = 0; i < SetupWizard.STEPS.length; i++) {
             View dot = new View(this);
-            int size = (int) ((i == current ? 10 : 8) * density);
+            int size = (int) ((i == index ? 10 : 8) * density);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
             lp.setMargins((int) (4 * density), 0, (int) (4 * density), 0);
             dot.setLayoutParams(lp);
             android.graphics.drawable.GradientDrawable shape =
                     new android.graphics.drawable.GradientDrawable();
             shape.setShape(android.graphics.drawable.GradientDrawable.OVAL);
-            shape.setColor(i <= current ? accent : getColor(R.color.text_secondary));
+            shape.setColor(i <= index ? accent : getColor(R.color.text_secondary));
             dot.setBackground(shape);
             rail.addView(dot);
         }
     }
 
     /**
-     * Renders the device compatibility pass (item 284).
-     *
-     * <p>The check only means something once there is a version to judge (its ABI and game-files
-     * facts are about the selected instance), so it is shown from the pick-version step onward and
-     * hidden on the import step, where there is nothing to check yet.
+     * Renders the device compatibility pass, which only means something once an instance exists, so
+     * it is shown from the sign-in step onward and hidden before that. Gathering reads the disk and
+     * opens the APK, so it runs off the UI thread; a generation counter drops a stale result.
      */
-    private void renderCompat(SetupWizard.Facts facts) {
+    private void renderCompat() {
         if (compatRows == null) return;
-        android.view.View card = binding.setupCompat;
+        View card = binding.setupCompat;
         if (card == null) return;
 
-        if (!facts.gameImported) {
+        boolean relevant = SetupWizard.index(step) >= SetupWizard.index(SetupWizard.Step.SIGN_IN);
+        if (!relevant || !hasInstalledVersion()) {
             card.setVisibility(View.GONE);
             return;
         }
         card.setVisibility(View.VISIBLE);
 
-        // Gathering reads the disk (free space) and opens the APK (ABI), so it runs off the UI
-        // thread; the rows are painted back on it. A gather generation counter drops a result whose
-        // screen has already moved on.
         final int generation = ++compatGeneration;
-        final GameVersion selected = versionManager != null
-                ? versionManager.getSelectedVersion() : null;
+        final org.chimeramc.client.core.versions.GameVersion selected =
+                org.chimeramc.client.core.versions.VersionManager.get(this).getSelectedVersion();
         compatExecutor.execute(() -> {
             final org.chimeramc.client.core.setup.CompatibilityCheck.Facts checkFacts =
                     org.chimeramc.client.launcher.core.setup.CompatibilityProbe.gather(
@@ -350,20 +356,17 @@ public class SetupWizardActivity extends BaseActivity {
 
     private void openStorageSettings() {
         try {
-            Intent intent = new Intent(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS);
-            startActivity(intent);
+            startActivity(new Intent(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS));
         } catch (Throwable t) {
-            // Not every OEM exposes the internal-storage settings screen; fall back to the app's own
-            // settings page rather than leaving the button dead.
+            // Not every OEM exposes the internal-storage screen; fall back to the app's own settings.
             openAppSettings();
         }
     }
 
     private void openAppSettings() {
         try {
-            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    android.net.Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
+            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + getPackageName())));
         } catch (Throwable t) {
             if (status != null) {
                 status.setText(R.string.setup_compat_perm_blocking);
@@ -374,28 +377,44 @@ public class SetupWizardActivity extends BaseActivity {
 
     // ---------------------------------------------------------------------------- actions
 
-    private void onPrimary() {
-        SetupWizard.Step step = SetupWizard.currentStep(facts());
-        switch (step) {
-            case IMPORT_GAME:
-                startImportPicker();
+    private void onNext() {
+        SetupWizard.Facts facts = new SetupWizard.Facts().licenseAccepted(licenseAccepted);
+        if (!SetupWizard.canProceed(step, facts)) return;
+        performStepAction(step);
+        step = SetupWizard.next(step);
+        render();
+    }
+
+    private void onBack() {
+        step = SetupWizard.previous(step);
+        render();
+    }
+
+    private void onSkip() {
+        if (!SetupWizard.canSkip(step)) return;
+        step = SetupWizard.next(step);
+        render();
+    }
+
+    /** Performs the action a step's Next triggers; steps with no action simply advance. */
+    private void performStepAction(SetupWizard.Step current) {
+        switch (current) {
+            case LICENSE:
+                getSharedPreferences("LauncherPrefs", MODE_PRIVATE)
+                        .edit().putBoolean("eula_accepted", true).apply();
                 break;
-            case PICK_VERSION:
-                // The Library tab is where instances are chosen; opening it is the step's action
-                // rather than duplicating a picker here.
-                startActivity(new Intent(this, LibraryActivity.class));
+            case INSTALL_INSTANCE:
+                startImportPicker();
                 break;
             case SIGN_IN:
                 startActivity(new Intent(this, AccountsActivity.class));
                 break;
+            case CUSTOMIZE:
+                startActivity(new Intent(this, CustomizeActivity.class));
+                break;
             default:
-                finishWizard();
                 break;
         }
-    }
-
-    private void onSecondary() {
-        finishWizard();
     }
 
     private void startImportPicker() {
@@ -410,6 +429,29 @@ public class SetupWizardActivity extends BaseActivity {
         importLauncher.launch(intent);
     }
 
+    private void openDiscord() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(getString(R.string.discord_join_url))));
+        } catch (Throwable t) {
+            if (status != null) {
+                status.setText(R.string.discord_join_failed);
+                status.setVisibility(View.VISIBLE);
+            }
+            AppLog.warnOnce("GlowberryClient", "SetupWizard:discord",
+                    "Could not open the Discord invite", t);
+        }
+    }
+
+    private boolean hasInstalledVersion() {
+        try {
+            return !org.chimeramc.client.core.versions.VersionManager.get(this)
+                    .getInstalledVersions().isEmpty();
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
     /** Marks the wizard done and opens the launcher. */
     private void finishWizard() {
         getSharedPreferences("glowberry_setup", MODE_PRIVATE)
@@ -420,12 +462,8 @@ public class SetupWizardActivity extends BaseActivity {
     }
 
     /**
-     * Whether the wizard should be shown on this launch.
-     *
-     * <p>Two conditions, and both matter: the user has not finished it before, *and* there is no
-     * installed instance. The second means an existing user upgrading into a build that has the
-     * wizard never sees it — their install already answers the first step, so showing a "welcome"
-     * would be pure friction.
+     * Whether the wizard should be shown on this launch: the user has not finished it before, and
+     * there is no installed instance, so an existing user never sees it.
      */
     public static boolean shouldShow(Activity activity) {
         if (activity == null) return false;
@@ -434,7 +472,8 @@ public class SetupWizardActivity extends BaseActivity {
             return false;
         }
         try {
-            return VersionManager.get(activity).getInstalledVersions().isEmpty();
+            return org.chimeramc.client.core.versions.VersionManager.get(activity)
+                    .getInstalledVersions().isEmpty();
         } catch (Throwable t) {
             return false;
         }
@@ -443,7 +482,6 @@ public class SetupWizardActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         compatExecutor.shutdownNow();
-        // The wizard's import manager owns a single-thread pool; without this it outlived the wizard.
         if (apkImportManager != null) {
             apkImportManager.release();
             apkImportManager = null;

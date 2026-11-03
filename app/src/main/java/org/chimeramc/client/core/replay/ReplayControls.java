@@ -29,13 +29,13 @@ public final class ReplayControls {
         SCRUB_FORWARD,
         /** Steps the playback speed of the open clip. */
         SPEED,
-        /** Steps one frame toward the start (item 242). */
+        /** Steps one frame toward the start. */
         FRAME_STEP_BACK,
-        /** Steps one frame toward the end (item 242). */
+        /** Steps one frame toward the end. */
         FRAME_STEP_FORWARD,
-        /** Jumps to the previous recorded marker (item 241). */
+        /** Jumps to the previous recorded marker. */
         MARKER_PREV,
-        /** Jumps to the next recorded marker (item 241). */
+        /** Jumps to the next recorded marker. */
         MARKER_NEXT
     }
 

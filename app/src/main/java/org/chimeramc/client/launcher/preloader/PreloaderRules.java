@@ -301,7 +301,7 @@ public final class PreloaderRules {
 
     /**
      * True when [version] is newer than every rule's coverage, i.e. the installed game is ahead of
-     * the signature set rather than merely falling in a gap between rules (item 256).
+     * the signature set rather than merely falling in a gap between rules.
      *
      * <p>This is a stricter statement than "no rule covers it": a version can be uncovered because
      * it sits between two ranges, or because it is beyond the newest range. The two read very

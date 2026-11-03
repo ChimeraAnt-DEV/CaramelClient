@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The colour-literal parser a mod config uses (item 350).
+ * The colour-literal parser a mod config uses.
  *
  * <p>The two config editors used to call {@code Color.parseColor} inside an empty catch, so a
  * malformed stored value silently became white and nothing recorded that the value was wrong. This

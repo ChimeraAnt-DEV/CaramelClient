@@ -100,7 +100,7 @@ public class DebugScreenTextTest {
 
     @Test
     public void streamingSafeModeHidesPositionButKeepsTheFrameRate() {
-        // Item 277: the position, block, chunk and facing lines are masked, because they are what
+        // The position, block, chunk and facing lines are masked, because they are what
         // gives away where the player is. The frame rate and the version stay, because a debug
         // screenshot a maintainer is reading still needs them.
         DebugScreenText.Snapshot s = full();

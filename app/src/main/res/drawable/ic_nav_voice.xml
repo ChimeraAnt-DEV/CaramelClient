@@ -9,6 +9,8 @@
       android:pathData="M12,3A3,3 0,0 1,15 6L15,11A3,3 0,0 1,9 11L9,6A3,3 0,0 1,12 3Z"
       android:strokeColor="#000000"
       android:strokeWidth="1.5"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
       android:fillColor="@android:color/transparent" />
 
   <!-- Cradle and stand. -->

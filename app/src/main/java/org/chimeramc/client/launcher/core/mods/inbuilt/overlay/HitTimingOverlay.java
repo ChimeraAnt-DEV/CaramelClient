@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -129,6 +131,7 @@ public final class HitTimingOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "HitTimingOverlay:134", "Ignored a failure at HitTimingOverlay:134", ignored);
         }
         overlayView = null;
         wmParams = null;
@@ -343,7 +346,7 @@ public final class HitTimingOverlay {
                 // Label: a short verb in the state colour. The remaining time is drawn as a
                 // separate dim caption so the two do not compete for the same line.
                 // Constants, not built per frame: the label is one of three fixed verbs and drawing
-                // runs on the game's frame tick (item 17).
+                // runs on the game's frame tick.
                 String label = idle ? LABEL_READY : (decision.isGreen() ? LABEL_HIT : LABEL_WAIT);
                 textPaint.setColor(color);
                 float textCenterY = h / 2f - (textPaint.descent() + textPaint.ascent()) / 2f;

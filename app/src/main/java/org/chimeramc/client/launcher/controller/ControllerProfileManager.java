@@ -112,7 +112,7 @@ public class ControllerProfileManager {
     }
 
     /**
-     * Binds a profile slot to one physical controller model (item 219).
+     * Binds a profile slot to one physical controller model.
      *
      * <p>A {@link ControllerType} is a family, so without this two Xbox pads share one active
      * profile. The binding is keyed by vendor/product, which is stable across reconnects, so a

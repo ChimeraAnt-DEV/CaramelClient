@@ -287,7 +287,9 @@ public class ChickPetOverlay {
             wmParams.y = posY;
             try {
                 windowManager.updateViewLayout(chickView, wmParams);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce(TAG, "ChickPetOverlay:291", "Ignored a failure at ChickPetOverlay:291", ignored);
+            }
         }
     }
 
@@ -308,7 +310,9 @@ public class ChickPetOverlay {
             if (chickView != null && windowManager != null) {
                 windowManager.removeView(chickView);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "ChickPetOverlay:314", "Ignored a failure at ChickPetOverlay:314", ignored);
+        }
         chickView = null;
         isHiding = false;
     }

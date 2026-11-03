@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * The notification stack's bounded-queue rule (item 201).
+ * The notification stack's bounded-queue rule.
  *
  * <p>Pins that a burst never exceeds the cap and that the entries dropped are the oldest, so the
  * notification the player just triggered is always the one still shown.

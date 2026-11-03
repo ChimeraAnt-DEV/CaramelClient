@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * The colour-blind-safe rule for a HUD reading (item 344).
+ * The colour-blind-safe rule for a HUD reading.
  *
  * <p>A HUD that says "good" or "bad" with colour alone is unreadable to a user with a colour
  * vision deficiency, and on an OLED phone in daylight the difference between a green and a red

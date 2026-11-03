@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -164,7 +166,7 @@ public final class NativeCosmeticsBridge {
         try {
             uploadPieceAtlases(context, cape, accessory, pet);
         } catch (Throwable ignored) {
-            // A texture problem must never take the process down.
+            AppLog.warnOnce("GlowberryClient", "NativeCosmeticsBridge:169", "Ignored a failure at NativeCosmeticsBridge:169", ignored);
         }
     }
 

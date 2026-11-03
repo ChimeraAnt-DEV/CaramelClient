@@ -430,6 +430,7 @@ public final class LauncherStorage {
                 }
                 if (!duplicate) dirs.add(dir);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "LauncherStorage:433", "Ignored a failure at LauncherStorage:433", ignored);
             }
         }
         return dirs;
@@ -493,6 +494,7 @@ public final class LauncherStorage {
             if (parent != null) ensureDir(parent);
             if (!noMediaFile.exists()) noMediaFile.createNewFile();
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "LauncherStorage:497", "Ignored a failure at LauncherStorage:497", ignored);
         }
     }
 

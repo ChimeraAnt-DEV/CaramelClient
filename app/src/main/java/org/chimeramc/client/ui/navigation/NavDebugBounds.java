@@ -1,7 +1,7 @@
 package org.chimeramc.client.ui.navigation;
 
 /**
- * The navigation's real laid-out geometry, formatted for a debug log (item 80).
+ * The navigation's real laid-out geometry, formatted for a debug log.
  *
  * <p>The nav bugs in this file's history - a rail row padded by the rail's own width, a header that
  * centred a pair instead of stacking, a wordmark shown on a bar with no room for it - all share one
