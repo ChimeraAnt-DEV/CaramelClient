@@ -213,6 +213,17 @@ import okhttp3.OkHttpClient;
     private Runnable shimmerRunnable;
     private boolean shimmerRunning;
     private org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView launchPreview;
+
+    /** The Compose hero host and the state it renders; set up in setupLaunchHero(). */
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchHeroState> heroState;
+    private androidx.compose.ui.platform.ComposeView heroCompose;
+    private String heroName = "";
+    private String heroVersion = "";
+    private org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind heroAbi =
+            org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind.NONE;
+    private int heroInstancesCount;
+    private int heroModsCount;
+    private String heroPlaytime = "0m";
     /** True while a launch is in flight, so the hero card and Play button cannot double-fire. */
     private boolean launchInProgress;
     private ValueAnimator activeProgressAnimator;
@@ -316,7 +327,7 @@ import okhttp3.OkHttpClient;
             case ACCOUNT:
                 return findViewById(R.id.account_status_bar);
             case HERO:
-                return findViewById(R.id.last_played_card);
+                return findViewById(R.id.launch_hero_compose);
             case TOGGLES:
                 return findViewById(R.id.launch_toggle_antegg);
             case CONTENT:
@@ -1503,7 +1514,7 @@ import okhttp3.OkHttpClient;
         }
 
         int[] cardIds = {
-                R.id.last_played_card,
+                R.id.launch_hero_compose,
                 R.id.launch_toggle_antegg,
                 R.id.launch_toggle_voice,
                 R.id.launch_toggle_replay
@@ -1512,7 +1523,7 @@ import okhttp3.OkHttpClient;
             View card = findViewById(id);
             if (card != null) {
                 card.setElevation(enabled ? dp(4f) : dp(0f));
-                if (enabled && card.getBackground() instanceof GradientDrawable && card.getId() == R.id.last_played_card) {
+                if (enabled && card.getBackground() instanceof GradientDrawable && card.getId() == R.id.launch_hero_compose) {
                     GradientDrawable bg = (GradientDrawable) card.getBackground().mutate();
                     int accent = new PersonalizationManager(this).getAccentColor();
                     bg.setStroke((int) dp(1.5f), accent != 0 ? accent : getColor(R.color.grad_pulse_glow));
@@ -1522,7 +1533,7 @@ import okhttp3.OkHttpClient;
     }
     
     private void startHeroCardPulse() {
-        View heroCard = findViewById(R.id.last_played_card);
+        View heroCard = findViewById(R.id.launch_hero_compose);
         if (heroCard == null) return;
         PersonalizationManager pm = new PersonalizationManager(this);
         if (!pm.isShowAnimations()) return;
@@ -1575,7 +1586,7 @@ import okhttp3.OkHttpClient;
             uiHandler.removeCallbacks(pulseRunnable);
             pulseRunnable = null;
         }
-        View heroCard = findViewById(R.id.last_played_card);
+        View heroCard = findViewById(R.id.launch_hero_compose);
         if (heroCard != null) {
             heroCard.animate().cancel();
             heroCard.animate().translationZ(0f).alpha(1f)
@@ -1736,12 +1747,8 @@ import okhttp3.OkHttpClient;
     }
 
     private void setupQuickActions() {
-        // Last Played Hero Card
-        View lastPlayedCard = findViewById(R.id.last_played_card);
-        if (lastPlayedCard != null) {
-            lastPlayedCard.setOnClickListener(v -> launchGame());
-            DynamicAnim.applyPressScale(lastPlayedCard);
-        }
+        // The hero is a Compose screen now and owns its own click (the host passes launchGame as
+        // onHeroClick), so there is nothing to wire here beyond the sections below.
 
         // Refresh hero card stats
         refreshLastPlayedCard();
@@ -1760,15 +1767,7 @@ import okhttp3.OkHttpClient;
      * that feature's live state on its own status line, refreshed whenever the tab resumes.
      */
     private void setupLaunchToggles() {
-        View hero = findViewById(R.id.launch_hero);
-        if (hero != null) {
-            launchPreview = hero.findViewById(R.id.launch_player_preview);
-            if (launchPreview != null) {
-                launchPreview.setAlwaysAnimate(true);
-                bindLaunchPreviewCosmetics();
-                launchPreview.startPreview();
-            }
-        }
+        setupLaunchHero();
         View antEgg = findViewById(R.id.launch_toggle_antegg);
         if (antEgg != null) {
             antEgg.setOnClickListener(v -> openModsFullscreen());
@@ -2765,88 +2764,39 @@ import okhttp3.OkHttpClient;
             List<org.chimeramc.client.core.versions.GameVersion> custom = versionManager.getCustomVersions();
             installedCount = (installed != null ? installed.size() : 0) + (custom != null ? custom.size() : 0);
         }
-        TextView instancesStat = findViewById(R.id.last_played_instances_stat);
-        if (instancesStat != null) {
-            // Count up from zero rather than appearing at the final value: the hero card is the
-            // first thing drawn after the splash, so the numbers should settle, not blink in.
-            final int count = installedCount;
-            DynamicAnim.countUp(count, 400L,
-                    value -> setAnimatedStatText(instancesStat,
-                            getResources().getQuantityString(R.plurals.stat_instances_count, (int) value, (int) value)));
-        }
+        // The hero's stats are rendered by the Compose hero; refreshHero recomposes them from the
+        // live values, so the count-up below only drives the animated number into that state.
+        final int count = installedCount;
+        DynamicAnim.countUp(count, 400L, value -> {
+            heroInstancesCount = (int) value;
+            refreshHero();
+        });
         // The mods count comes from the live mod list, not from a count captured here: the list
         // loads asynchronously per instance, so reading it at bind time would report the previous
         // instance (usually zero). updateModsUI recomputes it whenever the list changes.
         if (viewModel != null) {
             refreshActiveModsStat(viewModel.getModsLiveData().getValue());
         }
-        TextView playtimeStat = findViewById(R.id.last_played_time_stat);
-        if (playtimeStat != null) {
-            long totalPlaytime = selectedVersion != null
-                    ? PlaytimeManager.getTotalMs(MinecraftLauncher.getStorageProfileId(selectedVersion))
-                    : 0L;
-            playtimeStat.setText(PlaytimeManager.formatPlaytime(totalPlaytime));
-        }
+        long totalPlaytime = selectedVersion != null
+                ? PlaytimeManager.getTotalMs(MinecraftLauncher.getStorageProfileId(selectedVersion))
+                : 0L;
+        heroPlaytime = PlaytimeManager.formatPlaytime(totalPlaytime);
         updateLastPlayedName(
                 selectedVersion != null ? getInstanceDisplayName(selectedVersion) : null,
                 selectedVersion
         );
     }
 
-    private void setAnimatedStatText(TextView view, String text) {
-        if (view == null) return;
-        PersonalizationManager pm = new PersonalizationManager(this);
-        if (!pm.isShowAnimations()) {
-            view.setText(text);
-            return;
-        }
-        String current = view.getText().toString();
-        if (current.equals(text)) {
-            return;
-        }
-        view.setText(text);
-        view.setScaleX(0.6f);
-        view.setScaleY(0.6f);
-        view.setAlpha(0.3f);
-        view.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .alpha(1f)
-                .setDuration(320L)
-                .setInterpolator(DynamicAnim.getDefaultInterpolator())
-                .withLayer()
-                .start();
-    }
-
     private void updateLastPlayedName(String instanceName, GameVersion selectedVersion) {
-        TextView heroName = findViewById(R.id.last_played_name);
-        String name = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
-        if (heroName != null) {
-            heroName.setText(name);
-        }
-        TextView heroVersion = findViewById(R.id.last_played_version);
-        if (heroVersion != null) {
-            String versionText = selectedVersion != null ? getInstanceVersionText(selectedVersion) : "";
-            // Instances are commonly named after their version, so the same "26.51" would appear
-            // twice. The name is the identity; only show the version line when it adds anything.
-            if (versionText != null && versionText.equals(name)) {
-                versionText = "";
-            }
-            heroVersion.setText(versionText);
-            heroVersion.setVisibility(TextUtils.isEmpty(versionText) ? View.GONE : View.VISIBLE);
-        }
-        TextView abiBadge = findViewById(R.id.last_played_abi_badge);
-        if (abiBadge != null) {
-            String abi = selectedVersion != null ? selectedVersion.abiList : null;
-            if (TextUtils.isEmpty(abi)) {
-                abiBadge.setVisibility(View.GONE);
-            } else {
-                boolean is32Bit = "armeabi-v7a".equals(abi) || "x86".equals(abi);
-                abiBadge.setText(is32Bit ? getString(R.string.abi_32_bit) : getString(R.string.abi_64_bit));
-                abiBadge.setTextColor(is32Bit ? 0xFFF6A821 : 0xFF0F5BE4);
-                abiBadge.setVisibility(View.VISIBLE);
-            }
-        }
+        heroName = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
+        String versionText = selectedVersion != null ? getInstanceVersionText(selectedVersion) : "";
+        // Instances are commonly named after their version, so the same "26.51" would appear twice.
+        // The rule lives in LaunchHeroState so it is unit-tested; the hero renders the result.
+        heroVersion = org.chimeramc.client.ui.compose.launch.LaunchHeroState
+                .versionOrEmpty(heroName, versionText);
+        heroAbi = org.chimeramc.client.ui.compose.launch.LaunchHeroState
+                .abiKind(selectedVersion != null ? selectedVersion.abiList : null);
+        refreshHero();
     }
 
     private boolean isVersionManagerReady() {
@@ -2977,11 +2927,56 @@ import okhttp3.OkHttpClient;
     }
 
     private void refreshActiveModsStat(List<Mod> mods) {
-        TextView modsStat = findViewById(R.id.last_played_mods_stat);
-        if (modsStat == null) return;
         int count = Mod.countEnabled(mods);
-        DynamicAnim.countUp(count, 400L,
-                value -> setAnimatedStatText(modsStat, getString(R.string.stat_mods_count, (int) value)));
+        DynamicAnim.countUp(count, 400L, value -> {
+            heroModsCount = (int) value;
+            refreshHero();
+        });
+    }
+
+    /**
+     * Builds the Launch-tab hero once and hosts it in its ComposeView.
+     *
+     * <p>The hero is a Compose screen now, but it is still the real character preview: the host binds
+     * the equipped cape/hat/pet from the CosmeticStore (which the composable cannot read) and starts
+     * the preview, then keeps the [LaunchHeroState] in step so a recomposition shows the new values.
+     */
+    private void setupLaunchHero() {
+        View host = findViewById(R.id.launch_hero_compose);
+        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
+        heroCompose = (androidx.compose.ui.platform.ComposeView) host;
+        heroState = org.chimeramc.client.ui.compose.launch.LaunchHeroHost.state(buildHeroState());
+        heroCompose.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.launch.LaunchHeroHost.setContent(
+                heroCompose,
+                heroState,
+                this::openProfileSheet,
+                this::launchGame,
+                view -> {
+                    launchPreview = view;
+                    bindLaunchPreviewCosmetics();
+                    if (launchPreview != null) launchPreview.startPreview();
+                });
+    }
+
+    /** Rebuilds the hero state from the live fields and recomposes. */
+    private void refreshHero() {
+        if (heroState == null) return;
+        heroState.setValue(buildHeroState());
+    }
+
+    private org.chimeramc.client.ui.compose.launch.LaunchHeroState buildHeroState() {
+        return new org.chimeramc.client.ui.compose.launch.LaunchHeroState(
+                getString(R.string.last_played_title),
+                getString(R.string.last_played_tap),
+                heroName.isEmpty() ? getString(R.string.not_found_version) : heroName,
+                heroVersion,
+                heroAbi,
+                heroInstancesCount,
+                heroModsCount,
+                heroPlaytime,
+                getString(R.string.cosmetics_preview_description));
     }
 
     private void setupNavBar() {
@@ -2991,10 +2986,9 @@ import okhttp3.OkHttpClient;
 
     @Override
     protected void onDestroy() {
-        if (launchPreview != null) {
-            launchPreview.release();
-            launchPreview = null;
-        }
+        // The Compose hero releases its own preview when the composition leaves, so there is no
+        // manual release here: doing both would release the same view twice.
+        launchPreview = null;
         unbindStorageMigrationService();
         dismissStorageMigrationDialog(null);
         // Both managers own a single-thread pool; without this they outlived the Activity.

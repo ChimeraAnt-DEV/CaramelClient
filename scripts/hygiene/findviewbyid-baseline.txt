@@ -40,7 +40,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivit
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 56
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 48
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModDetailActivity.java 23
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModHubActivity.java 17

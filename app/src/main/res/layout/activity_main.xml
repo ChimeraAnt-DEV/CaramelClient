@@ -114,10 +114,11 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_max="@dimen/page_max_width">
 
-                <!-- Hero panel: live 3D player preview (left) + instance identity and stats (right). -->
-                <include
-                    layout="@layout/include_hero_panel"
-                    android:id="@+id/launch_hero"
+                <!-- Hero panel: the Compose hero (instance identity + stats on the left, the live
+                     3D character preview on the right). Hosted in a ComposeView so the launch tab
+                     can move off XML one block at a time; the real CapePreviewView still renders. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_hero_compose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
