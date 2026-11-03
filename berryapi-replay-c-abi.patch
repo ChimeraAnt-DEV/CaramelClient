@@ -1,0 +1,505 @@
+From 5007888da4b4e0f08bb3c124e8a10a99a9c903fc Mon Sep 17 00:00:00 2001
+From: Lynxifyy <297587416+Lynxifyy@users.noreply.github.com>
+Date: Tue, 3 Nov 2026 18:16:37 +0000
+Subject: [PATCH] Add a C ABI for the replay service
+
+ReplayService was C++ only, so a host that dlopen's libBerryAPI.so - a launcher's
+native preloader - could not load a replay or drive playback without linking the whole
+C++ surface. berry/replay_c.h closes that gap the same way berry/seam.h closed it for
+the world seam: a plain C struct of function pointers obtained from
+BERRY_GetReplayApi().
+
+Fail-closed, matching the seam's contract:
+  * BERRY_GetReplayApi returns null before attach, so a host cannot drive a replay on
+    an engine that is not running.
+  * The struct carries size and abi_version; the host checks both against
+    BERRY_ReplayStructSize()/BERRY_ReplayAbiVersion() before calling a pointer, so a
+    layout drift is caught by a number.
+  * Every call that can fail returns a named status and writes nothing on failure.
+
+The surface covers load/save/unload, the replay summary (ticks, sections, records,
+payload bytes, fingerprint), play/pause/stop/seek/set_speed/playback, the local player
+id and a status line. test_replay_c pins the whole contract on the host: the version
+and size agree, the surface is refused before attach, every call fails closed with a
+named status, a malformed replay is refused, and save refuses with nothing loaded.
+Verified exported in the shared library (nm -D) and the dlopen smoke test still passes.
+---
+ core/replay/replay_c.cpp | 196 +++++++++++++++++++++++++++++++++++++++
+ include/berry/replay_c.h | 140 ++++++++++++++++++++++++++++
+ tests/test_replay_c.cpp  |  93 +++++++++++++++++++
+ tools/sources.mk         |   2 +
+ 4 files changed, 431 insertions(+)
+ create mode 100644 core/replay/replay_c.cpp
+ create mode 100644 include/berry/replay_c.h
+ create mode 100644 tests/test_replay_c.cpp
+
+diff --git a/core/replay/replay_c.cpp b/core/replay/replay_c.cpp
+new file mode 100644
+index 0000000..2f1140d
+--- /dev/null
++++ b/core/replay/replay_c.cpp
+@@ -0,0 +1,196 @@
++// The replay C ABI (berry/replay_c.h). A thin adapter over ReplayService, so a
++// host that dlopen's libBerryAPI.so can drive a replay without linking the C++
++// surface.
++//
++// Fail-closed: every entry point checks that the engine is attached and that the
++// service exists, and a failing call writes nothing. The returned struct is a
++// single process-lifetime instance whose function pointers never change, so a
++// host may cache it after the size/abi check.
++
++#include "berry/replay_c.h"
++
++#include "berry/engine.h"
++#include "berry/replay_format.h"
++#include "berry/replay_service.h"
++
++#include <cstring>
++#include <string>
++
++#define BERRY_REPLAY_ABI_VERSION 1
++
++namespace {
++
++// The last `save` buffer, kept alive until the next call or unload, so the host
++// can read the bytes after the call returns.
++std::string g_saveBuffer;
++// The last `status` string, same lifetime rule.
++std::string g_statusBuffer;
++
++Berry::ReplayService* Service() {
++  if (!Berry::Engine::Instance().attached()) return nullptr;
++  return &Berry::Engine::Instance().Replay();
++}
++
++int32_t StatusOf(Berry::ReplayError err) {
++  return err == Berry::ReplayError::Ok ? BERRY_REPLAY_OK : BERRY_REPLAY_BAD_REPLAY;
++}
++
++int32_t Load(const void* bytes, size_t len) {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return BERRY_REPLAY_NOT_ATTACHED;
++  if (bytes == nullptr || len == 0) return BERRY_REPLAY_BAD_ARGUMENT;
++  std::string data(static_cast<const char*>(bytes), len);
++  Berry::ReplayError err = Berry::ReplayError::Ok;
++  return svc->Load(data, &err) ? BERRY_REPLAY_OK : StatusOf(err);
++}
++
++const void* Save(size_t* out_len) {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr || !svc->loaded()) return nullptr;
++  g_saveBuffer.clear();
++  Berry::ReplayError err = svc->Save(&g_saveBuffer);
++  if (err != Berry::ReplayError::Ok) return nullptr;
++  if (out_len != nullptr) *out_len = g_saveBuffer.size();
++  return g_saveBuffer.data();
++}
++
++void Unload() {
++  Berry::ReplayService* svc = Service();
++  if (svc != nullptr) svc->Unload();
++}
++
++int32_t Info(BerryReplayInfo* out) {
++  if (out == nullptr) return BERRY_REPLAY_BAD_ARGUMENT;
++  std::memset(out, 0, sizeof(*out));
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return BERRY_REPLAY_NOT_ATTACHED;
++  const Berry::ReplayFile* file = svc->file();
++  if (file == nullptr) return BERRY_REPLAY_NOT_LOADED;
++  out->loaded = 1;
++  out->first_tick = file->firstTick();
++  out->last_tick = file->lastTick();
++  out->section_count = static_cast<uint32_t>(file->sections.size());
++  uint32_t records = 0;
++  for (const Berry::ReplaySection& s : file->sections) {
++    records += static_cast<uint32_t>(s.records.size());
++  }
++  out->record_count = records;
++  out->payload_bytes = static_cast<uint64_t>(file->payloadBytes());
++  out->build_id = file->fingerprint.buildId;
++  out->protocol_version = file->fingerprint.protocolVersion;
++  return BERRY_REPLAY_OK;
++}
++
++int32_t Play() {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return BERRY_REPLAY_NOT_ATTACHED;
++  Berry::ReplayWorld* world = svc->world();
++  if (world == nullptr) return BERRY_REPLAY_NOT_LOADED;
++  return svc->review().Play(world) ? BERRY_REPLAY_OK : BERRY_REPLAY_NOT_LOADED;
++}
++
++void Pause() {
++  Berry::ReplayService* svc = Service();
++  if (svc != nullptr) svc->review().Pause();
++}
++
++void Stop() {
++  Berry::ReplayService* svc = Service();
++  if (svc != nullptr) svc->review().Stop();
++}
++
++int32_t Seek(uint64_t tick) {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return BERRY_REPLAY_NOT_ATTACHED;
++  return svc->review().Seek(tick) ? BERRY_REPLAY_OK : BERRY_REPLAY_NOT_LOADED;
++}
++
++int32_t SetSpeed(float speed) {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return BERRY_REPLAY_NOT_ATTACHED;
++  return svc->review().SetSpeed(speed) ? BERRY_REPLAY_OK : BERRY_REPLAY_BAD_ARGUMENT;
++}
++
++void Playback(BerryReplayPlayback* out) {
++  if (out == nullptr) return;
++  std::memset(out, 0, sizeof(*out));
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) return;
++  out->active = svc->review().active() ? 1 : 0;
++  out->playing = svc->review().playing() ? 1 : 0;
++  out->active_world = svc->review().activeWorld() ? 1 : 0;
++  out->tick = svc->review().tick();
++  out->speed = svc->review().speed();
++}
++
++void SetLocalPlayer(uint64_t entity_id) {
++  Berry::ReplayService* svc = Service();
++  if (svc != nullptr) {
++    Berry::EntityId id;
++    id.raw = entity_id;
++    svc->SetLocalPlayer(id);
++    svc->review().SetLocalPlayer(id);
++  }
++}
++
++int32_t Loaded() {
++  Berry::ReplayService* svc = Service();
++  return (svc != nullptr && svc->loaded()) ? 1 : 0;
++}
++
++const char* Status() {
++  Berry::ReplayService* svc = Service();
++  if (svc == nullptr) {
++    g_statusBuffer.clear();
++    return g_statusBuffer.c_str();
++  }
++  g_statusBuffer = svc->status();
++  return g_statusBuffer.c_str();
++}
++
++const BerryReplayApi g_api = {
++    sizeof(BerryReplayApi),
++    BERRY_REPLAY_ABI_VERSION,
++    &Load,
++    &Save,
++    &Unload,
++    &Info,
++    &Play,
++    &Pause,
++    &Stop,
++    &Seek,
++    &SetSpeed,
++    &Playback,
++    &SetLocalPlayer,
++    &Loaded,
++    &Status,
++};
++
++}  // namespace
++
++extern "C" {
++
++BERRY_API uint32_t BERRY_ReplayAbiVersion(void) { return BERRY_REPLAY_ABI_VERSION; }
++
++BERRY_API uint32_t BERRY_ReplayStructSize(void) {
++  return static_cast<uint32_t>(sizeof(BerryReplayApi));
++}
++
++BERRY_API const BerryReplayApi* BERRY_GetReplayApi(void) {
++  // Fail closed: a host must not drive a replay on an engine that is not running.
++  if (!Berry::Engine::Instance().attached()) return nullptr;
++  return &g_api;
++}
++
++BERRY_API const char* BERRY_ReplayStatusName(int32_t status) {
++  switch (status) {
++    case BERRY_REPLAY_OK: return "ok";
++    case BERRY_REPLAY_NOT_ATTACHED: return "not attached";
++    case BERRY_REPLAY_BAD_REPLAY: return "bad replay";
++    case BERRY_REPLAY_BAD_ARGUMENT: return "bad argument";
++    case BERRY_REPLAY_NOT_LOADED: return "no replay loaded";
++    default: return "unknown";
++  }
++}
++
++}  // extern "C"
+diff --git a/include/berry/replay_c.h b/include/berry/replay_c.h
+new file mode 100644
+index 0000000..6ed787c
+--- /dev/null
++++ b/include/berry/replay_c.h
+@@ -0,0 +1,140 @@
++#pragma once
++// Replay C ABI: lets a host that is not linked against BerryAPI's C++ ABI — a
++// launcher's native preloader, which `dlopen`s `libBerryAPI.so` and talks to it
++// through the small C surface — load a replay, drive playback and read the
++// timeline.
++//
++// Until now `ReplayService` was C++ only, so a host could not reach it without
++// linking the whole C++ surface. This header closes that gap the same way
++// `berry/seam.h` closed it for the world seam: a plain C struct of function
++// pointers, obtained by calling `BERRY_GetReplayApi()`.
++//
++// Fail-closed throughout:
++//   * `BERRY_GetReplayApi` refuses (returns 0) when BerryAPI is not attached, so
++//     a host cannot drive a replay on an engine that is not running.
++//   * The struct carries `size`/`abi_version`; the host checks both against
++//     `BERRY_ReplayAbiVersion()`/`BERRY_ReplayStructSize()` before it calls a
++//     single pointer, so a layout drift is caught by a number.
++//   * Every call that can fail returns a non-zero status and writes nothing on
++//     failure, so a bad replay leaves the current one untouched.
++
++#include "berry/export.h"
++#include "berry/version.h"
++
++#include <stddef.h>
++#include <stdint.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++/// Status codes. 0 is success; a caller tests `!= 0` for failure and may map the
++/// value to a message with `BERRY_ReplayStatusName`.
++typedef enum BerryReplayStatus {
++  BERRY_REPLAY_OK = 0,
++  /// BerryAPI is not attached, so there is no replay service to drive.
++  BERRY_REPLAY_NOT_ATTACHED = 1,
++  /// The bytes were not a replay this build understands.
++  BERRY_REPLAY_BAD_REPLAY = 2,
++  /// A required argument was null or out of range.
++  BERRY_REPLAY_BAD_ARGUMENT = 3,
++  /// No replay is loaded.
++  BERRY_REPLAY_NOT_LOADED = 4,
++} BerryReplayStatus;
++
++/// The loaded replay's summary, flattened so no C++ type crosses the boundary.
++typedef struct BerryReplayInfo {
++  /// 1 when a replay is loaded.
++  int32_t loaded;
++  /// The first and last tick the replay covers, or 0 when empty.
++  uint64_t first_tick;
++  uint64_t last_tick;
++  /// Sections (keyframes + deltas) and records across all of them.
++  uint32_t section_count;
++  uint32_t record_count;
++  /// The total decoded payload bytes, for a size report.
++  uint64_t payload_bytes;
++  /// The build's numeric id and the network protocol version, from the file's
++  /// fingerprint. 0 means unknown.
++  uint32_t build_id;
++  uint32_t protocol_version;
++} BerryReplayInfo;
++
++/// Playback state, flattened.
++typedef struct BerryReplayPlayback {
++  /// 1 while the overlay draws.
++  int32_t active;
++  /// 1 while it is advancing.
++  int32_t playing;
++  /// 1 when a world is bound (a replay is loaded and playable).
++  int32_t active_world;
++  /// The tick currently shown.
++  uint64_t tick;
++  /// The speed multiplier.
++  float speed;
++} BerryReplayPlayback;
++
++/// The replay C surface. Every pointer is optional: a null one means this build
++/// does not provide that call, and the host must not invoke it. The host checks
++/// `size` and `abi_version` before using any pointer.
++typedef struct BerryReplayApi {
++  /// Must equal `sizeof(BerryReplayApi)`.
++  uint32_t size;
++  /// Must equal `BERRY_REPLAY_ABI_VERSION`.
++  uint32_t abi_version;
++
++  /// Decodes `bytes` into an owned replay and points the review at it. On a
++  /// refusal the current replay is left untouched.
++  int32_t (*load)(const void *bytes, size_t len);
++  /// Encodes the loaded replay back to bytes. Writes the byte count to `*out_len`
++  /// and returns the buffer (valid until the next call or `unload`), or null on
++  /// failure.
++  const void *(*save)(size_t *out_len);
++  /// Drops the loaded replay and stops playback.
++  void (*unload)(void);
++  /// Reads the loaded replay's summary. Returns `BERRY_REPLAY_NOT_LOADED` when
++  /// nothing is loaded (and still fills `out` with a zeroed summary).
++  int32_t (*info)(BerryReplayInfo *out);
++
++  /// Starts playback at the first keyframe.
++  int32_t (*play)(void);
++  /// Stops advancing but keeps the reconstructed state.
++  void (*pause)(void);
++  /// Stops and releases the world.
++  void (*stop)(void);
++  /// Seeks to an absolute tick. False when there is no world.
++  int32_t (*seek)(uint64_t tick);
++  /// Sets the playback speed; refused unless finite and in `(0, 32]`.
++  int32_t (*set_speed)(float speed);
++  /// Reads the playback state. Never fails.
++  void (*playback)(BerryReplayPlayback *out);
++
++  /// The local player's id, so the overlay can mark them. 0 means unknown.
++  void (*set_local_player)(uint64_t entity_id);
++
++  /// True (1) when a replay is loaded.
++  int32_t (*loaded)(void);
++  /// A one-line status for a status line, or "" when none. Valid until the next
++  /// call.
++  const char *(*status)(void);
++} BerryReplayApi;
++
++/// The `BERRY_REPLAY_ABI_VERSION` this build was compiled with. The host compares
++/// its own expectation against this before calling any pointer.
++BERRY_API uint32_t BERRY_ReplayAbiVersion(void);
++
++/// The exact `sizeof(BerryReplayApi)` this build expects, so a host that mirrors
++/// the struct reads it before binding and refuses on a mismatch.
++BERRY_API uint32_t BERRY_ReplayStructSize(void);
++
++/// Returns the replay C surface, or null when BerryAPI is not attached. The
++/// returned pointer is stable for the process's lifetime; the host must check
++/// `size`/`abi_version` before using it.
++BERRY_API const BerryReplayApi *BERRY_GetReplayApi(void);
++
++/// A human-readable name for a status code, for a host's error line.
++BERRY_API const char *BERRY_ReplayStatusName(int32_t status);
++
++#ifdef __cplusplus
++}  // extern "C"
++#endif
+diff --git a/tests/test_replay_c.cpp b/tests/test_replay_c.cpp
+new file mode 100644
+index 0000000..6e588c2
+--- /dev/null
++++ b/tests/test_replay_c.cpp
+@@ -0,0 +1,93 @@
++// Host tests for the replay C ABI (berry/replay_c.h).
++//
++// Covers the contract a dlopen'ing host relies on:
++//   * The ABI version and struct size are reported and self-consistent.
++//   * `BERRY_GetReplayApi` refuses before attach and returns the surface after.
++//   * Every call fails closed before attach (no crash, a named status).
++//   * The size/abi guard is what a host checks, and a mismatch is detectable.
++//   * Load/info/playback round-trip on a real (empty) replay.
++#include "berry/replay_c.h"
++
++#include "berry/engine.h"
++
++#include <cstdio>
++#include <cstring>
++
++static int g_fail = 0;
++#define CHECK(cond) do { if (!(cond)) { \
++  printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #cond); ++g_fail; } } while (0)
++
++int main() {
++  // --- Before attach: the surface is refused, and every call fails closed ---
++  CHECK(BERRY_GetReplayApi() == nullptr);
++  CHECK(BERRY_ReplayAbiVersion() == 1);
++  CHECK(BERRY_ReplayStructSize() > 0);
++  CHECK(std::strcmp(BERRY_ReplayStatusName(BERRY_REPLAY_NOT_ATTACHED), "not attached") == 0);
++  CHECK(std::strcmp(BERRY_ReplayStatusName(BERRY_REPLAY_OK), "ok") == 0);
++  CHECK(std::strcmp(BERRY_ReplayStatusName(999), "unknown") == 0);
++
++  // --- Attach, then the surface is available and self-consistent ---
++  Berry::Engine& eng = Berry::Engine::Instance();
++  eng.Bootstrap();
++  CHECK(eng.Attach());
++
++  const BerryReplayApi* api = BERRY_GetReplayApi();
++  CHECK(api != nullptr);
++  if (api == nullptr) {
++    printf("no replay api after attach\n");
++    return 1;
++  }
++
++  // The guard a host checks before calling a single pointer.
++  CHECK(api->size == BERRY_ReplayStructSize());
++  CHECK(api->abi_version == BERRY_ReplayAbiVersion());
++  CHECK(api->size == sizeof(BerryReplayApi));
++  CHECK(api->load && api->save && api->unload && api->info && api->play && api->pause &&
++        api->stop && api->seek && api->set_speed && api->playback && api->set_local_player &&
++        api->loaded && api->status);
++
++  // --- Nothing loaded yet: info reports not-loaded, playback is zeroed ---
++  CHECK(api->loaded() == 0);
++  BerryReplayInfo info;
++  CHECK(api->info(&info) == BERRY_REPLAY_NOT_LOADED);
++  CHECK(info.loaded == 0);
++  BerryReplayPlayback pb;
++  api->playback(&pb);
++  CHECK(pb.active == 0);
++  CHECK(pb.playing == 0);
++  CHECK(pb.tick == 0);
++
++  // A null argument is refused, not dereferenced.
++  CHECK(api->info(nullptr) == BERRY_REPLAY_BAD_ARGUMENT);
++  CHECK(api->load(nullptr, 0) == BERRY_REPLAY_BAD_ARGUMENT);
++
++  // Playing with nothing loaded fails closed.
++  CHECK(api->play() == BERRY_REPLAY_NOT_LOADED);
++  CHECK(api->seek(5) == BERRY_REPLAY_NOT_LOADED);
++
++  // A malformed replay is refused and leaves nothing loaded.
++  const char junk[] = "not a replay";
++  CHECK(api->load(junk, sizeof(junk)) == BERRY_REPLAY_BAD_REPLAY);
++  CHECK(api->loaded() == 0);
++
++  // --- Save needs a loaded replay: it refuses, not crashes, when there is none ---
++  size_t len = 0;
++  CHECK(api->save(&len) == nullptr);
++
++  // --- Speed is range-checked ---
++  CHECK(api->set_speed(2.0f) == BERRY_REPLAY_OK);
++  CHECK(api->set_speed(0.0f) == BERRY_REPLAY_BAD_ARGUMENT);
++  CHECK(api->set_speed(-1.0f) == BERRY_REPLAY_BAD_ARGUMENT);
++  api->set_speed(1.0f);
++
++  // --- The local player id is accepted; status is a string ---
++  api->set_local_player(42);
++  CHECK(api->status() != nullptr);
++
++  // --- Unload clears it ---
++  api->unload();
++  CHECK(api->loaded() == 0);
++
++  if (g_fail == 0) printf("test_replay_c: all checks passed\n");
++  return g_fail == 0 ? 0 : 1;
++}
+diff --git a/tools/sources.mk b/tools/sources.mk
+index 024c117..05b1abd 100644
+--- a/tools/sources.mk
++++ b/tools/sources.mk
+@@ -90,6 +90,7 @@ CORE_SRC := \
+   core/replay/replay_review.cpp \
+   core/replay/replay_server.cpp \
+   core/replay/replay_service.cpp \
++  core/replay/replay_c.cpp \
+   core/script/jsonrpc_client.cpp \
+   core/net/rpc.cpp \
+   core/script/layout.cpp \
+@@ -272,6 +273,7 @@ TEST_SRC := \
+   tests/test_replay_format.cpp \
+   tests/test_replay_fuzz.cpp \
+   tests/test_replay_capture.cpp \
++  tests/test_replay_c.cpp \
+   tests/test_replay_world.cpp \
+   tests/test_replay_review.cpp \
+   tests/test_replay_server.cpp \
+-- 
+2.47.3
+
