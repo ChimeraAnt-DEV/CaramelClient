@@ -207,6 +207,18 @@ public class BaseActivity extends AppCompatActivity {
     private View navShapeView;
     /** The screen's own content view, re-measured when the nav shape changes. */
     private View navContentView;
+
+    /**
+     * The inflated root of the screen's own layout, or null before it is attached.
+     *
+     * <p>A screen that uses a generated binding must bind against this, not
+     * {@code android.R.id.content}: that id is the activity's {@code ContentFrameLayout}, and the
+     * generated {@code bind} casts to the layout's own root type, so binding against the frame
+     * throws a {@code ClassCastException} the moment the screen opens.
+     */
+    protected View screenContentView() {
+        return navContentView;
+    }
     /** The debug bounds overlay, or null when the debug layout toggle is off. */
     @Nullable
     private org.chimeramc.client.ui.navigation.NavBoundsOverlay navBoundsOverlay;
@@ -455,7 +467,13 @@ public class BaseActivity extends AppCompatActivity {
      * <p>Debug-only, and inert in release: there is no toggle to ship and nothing to remove.
      */
     private void installNavDebugBounds() {
-        if (!org.chimeramc.client.BuildConfig.DEBUG || navShapeView == null) return;
+        // Opt-in, not debug-build-wide: the overlay paints a green outline over the navigation, and
+        // installing it on every debug build made a tester's APK look like it had a rendering fault.
+        if (!org.chimeramc.client.settings.FeatureSettings.getInstance()
+                .isNavDebugBoundsEnabled()) {
+            return;
+        }
+        if (navShapeView == null) return;
         if (navBoundsOverlay != null) return;
         navShapeView.post(() -> {
             if (isFinishing() || navShapeView == null) return;
