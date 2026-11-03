@@ -2563,6 +2563,21 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_step_signin_body">Sign in with your Microsoft account to play online and keep your progress.</string>
     <string name="setup_step_signin_action">Sign in</string>
     <string name="setup_skip">Skip for now</string>
+
+    <!-- Account section (Customize tab). The friends list is honest: this build has no Xbox Live
+         PeopleHub integration, so it says so rather than showing an empty list. -->
+    <string name="account_section_title">Your account</string>
+    <string name="account_signed_out">You are not signed in. Sign in with your Microsoft account to play online and see your account details.</string>
+    <string name="account_sign_in">Sign in</string>
+    <string name="account_email">Microsoft email</string>
+    <string name="account_gamertag">Xbox gamertag</string>
+    <string name="account_minecraft_name">Minecraft name</string>
+    <string name="account_xuid">Xbox Live ID</string>
+    <string name="account_details_unavailable">Account details are not available for this account yet.</string>
+    <string name="account_friends_title">Minecraft friends</string>
+    <string name="account_friends_not_available">Your friends list is not available on this build yet. Xbox Live friends are read through the Xbox friends page for now.</string>
+    <string name="account_add_friend">Add a friend</string>
+    <string name="account_customize_tab">Account</string>
     <!-- First-run device compatibility pass. Each row is a check with its own fix. -->
     <string name="setup_compat_title">Device check</string>
     <string name="setup_compat_all_ok">Everything checks out.</string>

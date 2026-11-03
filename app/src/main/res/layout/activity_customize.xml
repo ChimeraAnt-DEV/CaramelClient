@@ -73,6 +73,22 @@
                 android:clickable="true"
                 android:focusable="true" />
 
+            <TextView
+                android:id="@+id/customize_tab_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:layout_marginStart="@dimen/space_2"
+                android:paddingHorizontal="@dimen/space_4"
+                android:gravity="center"
+                android:fontFamily="@font/misans"
+                android:text="@string/account_customize_tab"
+                android:textColor="@color/on_surface"
+                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:background="@drawable/bg_filter_chip"
+                android:clickable="true"
+                android:focusable="true" />
+
         </LinearLayout>
     </HorizontalScrollView>
 

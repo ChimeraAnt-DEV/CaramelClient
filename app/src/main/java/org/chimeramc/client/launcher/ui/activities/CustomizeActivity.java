@@ -1,5 +1,6 @@
 package org.chimeramc.client.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.AppLog;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.fragments.ControllerSettingsFragment;
 import org.chimeramc.client.ui.fragments.SkinsSettingsFragment;
@@ -32,9 +34,12 @@ public class CustomizeActivity extends BaseActivity {
     public static final String EXTRA_INITIAL_TAB = "customize_initial_tab";
     public static final int TAB_CONTROLLER = 0;
     public static final int TAB_SKINS = 1;
+    public static final int TAB_ACCOUNT = 2;
 
     private TextView controllerTab;
     private TextView skinsTab;
+    private TextView accountTab;
+    private androidx.compose.ui.platform.ComposeView accountCompose;
     private int accent;
 
     @Override
@@ -51,10 +56,13 @@ public class CustomizeActivity extends BaseActivity {
 
         controllerTab = findViewById(R.id.customize_tab_controller);
         skinsTab = findViewById(R.id.customize_tab_skins);
+        accountTab = findViewById(R.id.customize_tab_account);
         controllerTab.setOnClickListener(v -> showController());
         skinsTab.setOnClickListener(v -> showSkins());
+        accountTab.setOnClickListener(v -> showAccount());
         DynamicAnim.applyPressScale(controllerTab);
         DynamicAnim.applyPressScale(skinsTab);
+        DynamicAnim.applyPressScale(accountTab);
 
         int initialTab = getIntent() == null
                 ? TAB_CONTROLLER
@@ -62,6 +70,8 @@ public class CustomizeActivity extends BaseActivity {
         if (savedInstanceState == null) {
             if (initialTab == TAB_SKINS) {
                 showSkins();
+            } else if (initialTab == TAB_ACCOUNT) {
+                showAccount();
             } else {
                 showController();
             }
@@ -85,6 +95,66 @@ public class CustomizeActivity extends BaseActivity {
         styleTabs(false);
     }
 
+    /**
+     * Shows the account section: the signed-in account's email, gamertag and Minecraft name, and the
+     * friends list. It is a Compose screen, so it replaces the fragment container with a ComposeView
+     * built from the account store.
+     */
+    private void showAccount() {
+        if (accountCompose == null) {
+            accountCompose = new androidx.compose.ui.platform.ComposeView(this);
+            accountCompose.setViewCompositionStrategy(
+                    androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        }
+        android.view.ViewGroup container = findViewById(R.id.customize_container);
+        container.removeAllViews();
+        container.addView(accountCompose,
+                new android.view.ViewGroup.LayoutParams(
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                        android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        org.chimeramc.client.ui.compose.account.AccountSectionHost.setContent(
+                accountCompose,
+                buildAccountState(),
+                this::openXboxFriends,
+                () -> startActivity(new Intent(this, AccountsActivity.class)));
+        styleTabs(TAB_CONTROLLER, false);
+        styleTabs(TAB_ACCOUNT, true);
+    }
+
+    /** Reads the active account into the section's data. */
+    private org.chimeramc.client.ui.compose.account.AccountSectionState buildAccountState() {
+        try {
+            for (org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount account
+                    : org.chimeramc.client.core.auth.MsftAccountStore.list(this)) {
+                if (account.active) {
+                    return new org.chimeramc.client.ui.compose.account.AccountSectionState(
+                            true,
+                            account.msUserId,
+                            account.xboxGamertag,
+                            account.minecraftUsername,
+                            account.xuid,
+                            account.xboxAvatarUrl,
+                            org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.NOT_AVAILABLE);
+                }
+            }
+        } catch (Throwable t) {
+            AppLog.warnOnce("GlowberryClient", "CustomizeActivity:account",
+                    "Could not read the account for the account section", t);
+        }
+        return org.chimeramc.client.ui.compose.account.AccountSectionState.signedOut();
+    }
+
+    /** Opens the account's Xbox friends page, which is where friends are managed for now. */
+    private void openXboxFriends() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    android.net.Uri.parse("https://www.xbox.com/play/user")));
+        } catch (Throwable t) {
+            AppLog.warnOnce("GlowberryClient", "CustomizeActivity:xbox",
+                    "Could not open the Xbox friends page", t);
+        }
+    }
+
     private void replace(Fragment fragment, String tag) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -94,8 +164,14 @@ public class CustomizeActivity extends BaseActivity {
     }
 
     private void styleTabs(boolean controllerActive) {
-        styleTab(controllerTab, controllerActive);
-        styleTab(skinsTab, !controllerActive);
+        styleTabs(controllerActive ? TAB_CONTROLLER : TAB_SKINS, controllerActive);
+    }
+
+    /** Styles the chips for a selected tab id, so three tabs cannot disagree. */
+    private void styleTabs(int selectedTab, boolean ignored) {
+        styleTab(controllerTab, selectedTab == TAB_CONTROLLER);
+        styleTab(skinsTab, selectedTab == TAB_SKINS);
+        styleTab(accountTab, selectedTab == TAB_ACCOUNT);
     }
 
     private void styleTab(TextView tab, boolean active) {

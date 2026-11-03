@@ -35,7 +35,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentDetailsActi
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentListActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/CurseForgeActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomFlatWorldActivity.java 6
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.java 3
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
