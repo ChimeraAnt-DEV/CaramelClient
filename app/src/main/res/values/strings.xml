@@ -725,6 +725,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="dialog_message_exit_app">Are you sure you want to exit?</string>
     <string name="dialog_positive_exit">Exit</string>
     <string name="show_logcat_overlay">Logcat overlay</string>
+    <string name="show_launch_log">Show launch log</string>
+    <string name="show_launch_log_desc">Show the raw launch log on the launch screen instead of the logo and status ring.</string>
     <!-- Privacy modes. -->
     <string name="guest_mode_title">Guest mode</string>
     <string name="guest_mode_desc">Hides mods, servers and voice chat on a shared or borrowed device. Nothing is deleted and the game still launches; turn it off to see them again.</string>

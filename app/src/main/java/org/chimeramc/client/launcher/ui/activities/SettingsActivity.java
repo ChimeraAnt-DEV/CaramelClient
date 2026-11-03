@@ -495,6 +495,10 @@ public class SettingsActivity extends BaseActivity {
             });
         }
 
+        SwitchMaterial switchLaunchLog = findViewById(R.id.switch_launch_log);
+        switchLaunchLog.setChecked(fs.isLaunchLogEnabled());
+        switchLaunchLog.setOnCheckedChangeListener((btn, checked) -> fs.setLaunchLogEnabled(checked));
+
         SwitchMaterial switchLogcat = findViewById(R.id.switch_logcat);
         switchLogcat.setChecked(fs.isLogcatOverlayEnabled());
         switchLogcat.setOnCheckedChangeListener((btn, checked) -> {

@@ -42,7 +42,10 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private val executor = Executors.newSingleThreadExecutor()
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
 
-    private lateinit var progressBar: ProgressBar
+    private lateinit var ring: org.chimeramc.client.launcher.ui.views.LaunchRingView
+    private lateinit var logContainer: android.view.View
+    private var launchFailed = false
+    private var launchReady = false
     private lateinit var statusView: TextView
     private lateinit var detailView: TextView
     private lateinit var logView: TextView
@@ -91,7 +94,12 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         setContentView(R.layout.activity_minecraft_loading)
         hideSystemUi()
 
-        progressBar = findViewById(R.id.minecraftLaunchProgress)
+        ring = findViewById(R.id.minecraftLaunchRing)
+        logContainer = findViewById(R.id.minecraftLaunchLogContainer)
+        // The raw log is opt-in; the default launch screen is the logo, the status and the ring.
+        logContainer.visibility =
+                if (org.chimeramc.client.settings.FeatureSettings.getInstance()
+                        .isLaunchLogEnabled()) android.view.View.VISIBLE else android.view.View.GONE
         statusView = findViewById(R.id.minecraftLaunchStatus)
         detailView = findViewById(R.id.minecraftLaunchDetail)
         logView = findViewById(R.id.minecraftLaunchLog)
@@ -199,6 +207,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
 
             mainHandler.post {
                 if (returningToLauncher || isFinishing || isDestroyed) return@post
+                launchReady = true
                 updateProgress(
                     100,
                     getString(R.string.minecraft_loading_complete),
@@ -328,7 +337,8 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
 
     private fun updateProgress(progress: Int, status: String, detail: String?) {
         if (isFinishing || isDestroyed) return
-        animateProgressTo(progress.coerceIn(0, 100))
+        val clamped = progress.coerceIn(0, 100)
+        if (::ring.isInitialized) ring.setState(launchFailed, launchReady, clamped)
         scheduleStatusRender(status, detail)
     }
 
@@ -380,6 +390,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // Google Play version or a version missing a file needed to launch the game".
         val cause = LaunchErrorDiagnosis.classify(throwable)
         val causeLine = getString(LaunchErrorDiagnosis.messageRes(cause))
+        launchFailed = true
         updateProgress(100, getString(LaunchErrorDiagnosis.titleRes(cause)), null)
         detailView.visibility = View.GONE
         trace.error("Launch failed", message)
@@ -398,13 +409,13 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     }
 
     private fun animateProgressTo(targetProgress: Int) {
-        if (progressBar.progress == targetProgress) return
+        if (currentProgress == targetProgress) return
         progressAnimator?.cancel()
         progressAnimator = ValueAnimator.ofInt(currentProgress, targetProgress).apply {
             duration = PROGRESS_ANIMATION_MS
             addUpdateListener { animator ->
                 currentProgress = animator.animatedValue as Int
-                progressBar.progress = currentProgress
+                if (::ring.isInitialized) ring.setState(launchFailed, launchReady, currentProgress)
             }
             start()
         }
@@ -416,12 +427,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         val accentTint = ColorStateList.valueOf(accent)
         val secondaryText = ContextCompat.getColor(this, R.color.text_secondary)
 
-        progressBar.progressTintList = accentTint
-        progressBar.progressBackgroundTintList = ColorStateList.valueOf(withAlpha(accent, TRACK_ALPHA))
-        progressBar.indeterminateTintList = accentTint
-        if (ApiLevels.atLeastQ()) {
-            progressBar.progressDrawable?.colorFilter = null
-        }
+        // The ring owns its own colour from the launch phase; only the log surface is themed here.
 
         logScroll.background = GradientDrawable().apply {
             cornerRadius = dp(8).toFloat()

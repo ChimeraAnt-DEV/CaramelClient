@@ -7,6 +7,15 @@ public class FeatureSettings {
     private static Context appContext;
     private boolean launcherManagedMcLoginEnabled = false;
     private boolean logcatOverlayEnabled = false;
+
+    /**
+     * Whether the launch screen shows the raw launch log instead of the logo + status ring.
+     *
+     * <p>Off by default: the launch screen is a calm "Preparing to launch" surface, and the raw log is
+     * a diagnostic a user opts into from Settings. A file written before this switch existed loads it
+     * off, which is the documented default.
+     */
+    private boolean launchLogEnabled = false;
     private boolean lowInputDelayEnabled = false;
     /**
      * Crash report upload. Off until the user opts in: a report carries a stack trace
@@ -147,6 +156,14 @@ public class FeatureSettings {
 
     public boolean isLauncherManagedMcLoginEnabled() { return launcherManagedMcLoginEnabled; }
     public void setLauncherManagedMcLoginEnabled(boolean enabled) { this.launcherManagedMcLoginEnabled = enabled; autoSave(); }
+
+    public boolean isLaunchLogEnabled() { return launchLogEnabled; }
+
+    public void setLaunchLogEnabled(boolean enabled) {
+        if (this.launchLogEnabled == enabled) return;
+        this.launchLogEnabled = enabled;
+        autoSave();
+    }
 
     public boolean isLogcatOverlayEnabled() { return logcatOverlayEnabled; }
     public void setLogcatOverlayEnabled(boolean enabled) { this.logcatOverlayEnabled = enabled; autoSave(); }

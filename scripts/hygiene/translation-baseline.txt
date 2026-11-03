@@ -1109,6 +1109,8 @@ values-es:settings_world_backup_retention
 values-es:settings_world_backup_title
 values-es:shader_compat_desc
 values-es:shader_compat_title
+values-es:show_launch_log
+values-es:show_launch_log_desc
 values-es:skins_applied
 values-es:skins_applied_to
 values-es:skins_apply
@@ -2385,6 +2387,8 @@ values-fr:settings_world_backup_retention
 values-fr:settings_world_backup_title
 values-fr:shader_compat_desc
 values-fr:shader_compat_title
+values-fr:show_launch_log
+values-fr:show_launch_log_desc
 values-fr:skins_applied
 values-fr:skins_applied_to
 values-fr:skins_apply
@@ -3661,6 +3665,8 @@ values-hi:settings_world_backup_retention
 values-hi:settings_world_backup_title
 values-hi:shader_compat_desc
 values-hi:shader_compat_title
+values-hi:show_launch_log
+values-hi:show_launch_log_desc
 values-hi:skins_applied
 values-hi:skins_applied_to
 values-hi:skins_apply
@@ -4937,6 +4943,8 @@ values-id:settings_world_backup_retention
 values-id:settings_world_backup_title
 values-id:shader_compat_desc
 values-id:shader_compat_title
+values-id:show_launch_log
+values-id:show_launch_log_desc
 values-id:skins_applied
 values-id:skins_applied_to
 values-id:skins_apply
@@ -6213,6 +6221,8 @@ values-ja:settings_world_backup_retention
 values-ja:settings_world_backup_title
 values-ja:shader_compat_desc
 values-ja:shader_compat_title
+values-ja:show_launch_log
+values-ja:show_launch_log_desc
 values-ja:skins_applied
 values-ja:skins_applied_to
 values-ja:skins_apply
@@ -7489,6 +7499,8 @@ values-pt:settings_world_backup_retention
 values-pt:settings_world_backup_title
 values-pt:shader_compat_desc
 values-pt:shader_compat_title
+values-pt:show_launch_log
+values-pt:show_launch_log_desc
 values-pt:skins_applied
 values-pt:skins_applied_to
 values-pt:skins_apply
@@ -8765,6 +8777,8 @@ values-ru:settings_world_backup_retention
 values-ru:settings_world_backup_title
 values-ru:shader_compat_desc
 values-ru:shader_compat_title
+values-ru:show_launch_log
+values-ru:show_launch_log_desc
 values-ru:skins_applied
 values-ru:skins_applied_to
 values-ru:skins_apply
@@ -10041,6 +10055,8 @@ values-tr:settings_world_backup_retention
 values-tr:settings_world_backup_title
 values-tr:shader_compat_desc
 values-tr:shader_compat_title
+values-tr:show_launch_log
+values-tr:show_launch_log_desc
 values-tr:skins_applied
 values-tr:skins_applied_to
 values-tr:skins_apply
@@ -11317,6 +11333,8 @@ values-vi:settings_world_backup_retention
 values-vi:settings_world_backup_title
 values-vi:shader_compat_desc
 values-vi:shader_compat_title
+values-vi:show_launch_log
+values-vi:show_launch_log_desc
 values-vi:skins_applied
 values-vi:skins_applied_to
 values-vi:skins_apply
@@ -12590,6 +12608,8 @@ values-zh-rCN:settings_world_backup_retention
 values-zh-rCN:settings_world_backup_title
 values-zh-rCN:shader_compat_desc
 values-zh-rCN:shader_compat_title
+values-zh-rCN:show_launch_log
+values-zh-rCN:show_launch_log_desc
 values-zh-rCN:skins_applied
 values-zh-rCN:skins_applied_to
 values-zh-rCN:skins_apply
