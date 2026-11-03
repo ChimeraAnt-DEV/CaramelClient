@@ -78,6 +78,7 @@ public class HudOverlay extends View {
                         imageCache.put(imageId, bitmap);
                         return bitmap;
                     } catch (Exception e) {
+                        AppLog.warnOnce(TAG, "HudOverlay:81", "Ignored a failure at HudOverlay:81", e);
                     }
                 }
             }
@@ -215,6 +216,7 @@ public class HudOverlay extends View {
                 hiddenInHudCache.put(obj.optString("module_id", ""),
                     obj.optBoolean("hide_in_hud_editor", false));
             } catch (Exception ignored) {
+                AppLog.warnOnce(TAG, "HudOverlay:219", "Ignored a failure at HudOverlay:219", ignored);
             }
         }
         hiddenInHudCacheLoaded = true;

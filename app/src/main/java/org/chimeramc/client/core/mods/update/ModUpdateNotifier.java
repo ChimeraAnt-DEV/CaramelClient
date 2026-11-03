@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.update;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -60,7 +62,7 @@ public final class ModUpdateNotifier {
         try {
             manager.notify(NOTIFICATION_ID, notification);
         } catch (RuntimeException ignored) {
-            // Posting is best-effort; a missing permission must not break the check.
+            AppLog.warnOnce("GlowberryClient", "ModUpdateNotifier:65", "Ignored a failure at ModUpdateNotifier:65", ignored);
         }
     }
 

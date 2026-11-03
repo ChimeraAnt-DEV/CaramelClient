@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.antegg;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,7 +38,7 @@ public final class AntEggImport {
                 }
             }
         } catch (Exception ignored) {
-            // Fall through to the path-based name; a picker without DISPLAY_NAME is not fatal.
+            AppLog.warnOnce("GlowberryClient", "AntEggImport:41", "Ignored a failure at AntEggImport:41", ignored);
         }
         String path = uri.getLastPathSegment();
         return path == null || path.isEmpty() ? "mod.antegg" : new File(path).getName();

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -595,7 +597,7 @@ public final class CosmeticsPanel {
             out.geoTexH = geometry.models.isEmpty()
                     ? atlasHeight : geometry.models.get(0).description.textureHeight;
         } catch (Throwable ignored) {
-            // Fail-closed: no mesh means the procedural box stack draws the tile.
+            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:600", "Ignored a failure at CosmeticsPanel:600", ignored);
         }
         return out;
     }
@@ -632,7 +634,7 @@ public final class CosmeticsPanel {
             out.geoTexH = geometry.models.isEmpty()
                     ? atlasHeight : geometry.models.get(0).description.textureHeight;
         } catch (Throwable ignored) {
-            // Fail-closed: no mesh means the procedural body plan draws the tile.
+            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:637", "Ignored a failure at CosmeticsPanel:637", ignored);
         }
         return out;
     }
@@ -778,7 +780,7 @@ public final class CosmeticsPanel {
                     store.getEquippedPet());
             NativeCosmeticsRuntime.setFrameGait(preview.getPetLocomotion());
         } catch (Throwable ignored) {
-            // Fail-closed: the preview and the equipped selection are unaffected.
+            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:783", "Ignored a failure at CosmeticsPanel:783", ignored);
         }
         CosmeticSyncModule.requestAnnounce();
         refreshGameStatus();
@@ -862,6 +864,7 @@ public final class CosmeticsPanel {
         try {
             preview.refreshSkin();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:867", "Ignored a failure at CosmeticsPanel:867", ignored);
         }
     }
 

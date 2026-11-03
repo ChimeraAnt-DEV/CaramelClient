@@ -548,8 +548,7 @@ public class LogcatOverlay extends FrameLayout {
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            // The overlay was hidden between the check and the submit; nothing to refresh, and a
-            // rejection here is the expected path rather than a fault, so it is not logged.
+            AppLog.warnOnce(TAG, "LogcatOverlay:551", "Ignored a failure at LogcatOverlay:551", ignored);
         }
     }
 

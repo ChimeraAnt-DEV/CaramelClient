@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -326,7 +328,7 @@ public class QuickLaunchActivity extends BaseActivity {
                 });
             });
         } catch (RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit.
+            AppLog.warnOnce("GlowberryClient", "QuickLaunchActivity:331", "Ignored a failure at QuickLaunchActivity:331", ignored);
         }
     }
 

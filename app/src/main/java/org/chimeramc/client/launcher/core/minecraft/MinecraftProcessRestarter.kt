@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import org.chimeramc.client.util.ApiLevels
 
 import android.app.AlarmManager
@@ -67,7 +69,7 @@ object MinecraftProcessRestarter {
 
         try {
             appContext.startActivity(intent)
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
             Process.killProcess(oldPid)
             exitProcess(0)
         }
@@ -80,7 +82,8 @@ object MinecraftProcessRestarter {
         try {
             alarmManager.cancel(pendingIntent)
             pendingIntent.cancel()
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftProcessRestarter:86", "Ignored a failure at MinecraftProcessRestarter:86", t)
         }
     }
 

@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import org.chimeramc.client.util.SafeExecutor;
@@ -614,8 +616,7 @@ import okhttp3.OkHttpClient;
                         }
                         runOnUiThread(() -> { if (bmp != null) headerAvatar.setImageBitmap(bmp); });
                     } catch (Throwable ignored) {
-                        // Best-effort avatar: a decode failure, including a heap exhaustion while
-                        // decoding, must not kill the executor thread.
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:619", "Ignored a failure at MainActivity:619", ignored);
                     }
                 });
             }
@@ -749,7 +750,9 @@ import okhttp3.OkHttpClient;
         popup.setOnDismissListener(() -> {
             if (root != null && scrim != null) {
                 scrim.animate().alpha(0f).setDuration(120).withEndAction(() -> {
-                    try { root.removeView(scrim); } catch (Exception ignored) {}
+                    try { root.removeView(scrim); } catch (Exception ignored) {
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:754", "Ignored a failure at MainActivity:754", ignored);
+                    }
                 }).start();
             }
         });
@@ -1036,6 +1039,7 @@ import okhttp3.OkHttpClient;
                 try {
                     shouldOfferMigration = storageMigrationManager.shouldOfferMigration();
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "MainActivity:1042", "Ignored a failure at MainActivity:1042", ignored);
                 }
                 boolean finalShouldOfferMigration = shouldOfferMigration;
                 runOnUiThread(() -> {
@@ -1714,6 +1718,7 @@ import okhttp3.OkHttpClient;
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(announcement.url)));
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce("GlowberryClient", "MainActivity:1721", "Ignored a failure at MainActivity:1721", ignored);
                     }
                 });
             } else if (link != null) {
@@ -1896,6 +1901,7 @@ import okhttp3.OkHttpClient;
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:1904", "Ignored a failure at MainActivity:1904", ignored);
         }
     }
 
@@ -1916,7 +1922,7 @@ import okhttp3.OkHttpClient;
             // game through the engine hook when available) rather than a stale or generic one.
             launchPreview.refreshSkin();
         } catch (Throwable ignored) {
-            // A preview must never block the Launch tab; the placeholder skin is fine.
+            AppLog.warnOnce("GlowberryClient", "MainActivity:1925", "Ignored a failure at MainActivity:1925", ignored);
         }
     }
 
@@ -2212,7 +2218,7 @@ import okhttp3.OkHttpClient;
         try {
             new org.chimeramc.client.launcher.ui.dialogs.ProfileSheet(this).show();
         } catch (Throwable ignored) {
-            // A sheet that cannot inflate must never take the Play screen down with it.
+            AppLog.warnOnce("GlowberryClient", "MainActivity:2221", "Ignored a failure at MainActivity:2221", ignored);
         }
     }
 
@@ -2362,6 +2368,7 @@ import okhttp3.OkHttpClient;
             try {
                 GamePackageManager.invalidateExtractionCache(this, version);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "MainActivity:2371", "Ignored a failure at MainActivity:2371", ignored);
             }
         }
         if (readiness == LaunchReadiness.State.GAME_NEWER_THAN_RULES) {
@@ -2389,6 +2396,7 @@ import okhttp3.OkHttpClient;
         try {
             covered = PreloaderSignatureRulesManager.highestCoveredVersion(this);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:2399", "Ignored a failure at MainActivity:2399", ignored);
         }
         String message = getString(R.string.launch_failure_message_newer_game);
         if (covered != null && !covered.isEmpty()) {

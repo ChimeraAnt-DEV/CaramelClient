@@ -631,6 +631,7 @@ public class DiagnosticsActivity extends BaseActivity {
                         : -1L);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "DiagnosticsActivity:634", "Ignored a failure at DiagnosticsActivity:634", ignored);
         }
         try {
             snapshot.skinLookupEnabled(AccountSkinService.isEnabled(this));
@@ -641,6 +642,7 @@ public class DiagnosticsActivity extends BaseActivity {
             snapshot.skinCached(AccountSkinCache.isValidFor(entry,
                     AccountSkinService.activeXuid(this)));
         } catch (Throwable ignored) {
+            AppLog.warnOnce(TAG, "DiagnosticsActivity:645", "Ignored a failure at DiagnosticsActivity:645", ignored);
         }
         return snapshot;
     }

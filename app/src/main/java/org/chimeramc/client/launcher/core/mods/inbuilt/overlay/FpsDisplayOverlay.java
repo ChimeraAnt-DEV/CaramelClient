@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -257,7 +259,7 @@ public class FpsDisplayOverlay {
                 return fps > 0 ? fps : 0;
             }
         } catch (Throwable ignored) {
-            // A build without the native hook; fall through to the host meter.
+            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:262", "Ignored a failure at FpsDisplayOverlay:262", ignored);
         }
         return 0;
     }
@@ -285,7 +287,9 @@ public class FpsDisplayOverlay {
             if (wmParams != null && windowManager != null && overlayView != null && isShowing) {
                 try {
                     clampCurrentPosition(true);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:291", "Ignored a failure at FpsDisplayOverlay:291", ignored);
+                }
             }
         }
     }
@@ -434,7 +438,9 @@ public class FpsDisplayOverlay {
                     rootView.removeView(overlayView);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:442", "Ignored a failure at FpsDisplayOverlay:442", ignored);
+        }
         overlayView = null;
         statsText = null;
         graphView = null;

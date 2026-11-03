@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -193,7 +195,7 @@ public final class ReplayMarkers {
                 String detail = entry.substring(second + 1).trim();
                 out.markers.add(new Marker(tMs, kind, detail));
             } catch (IllegalArgumentException ignored) {
-                // A corrupt entry is dropped; the rest of the set is still valid.
+                AppLog.warnOnce("GlowberryClient", "ReplayMarkers:198", "Ignored a failure at ReplayMarkers:198", ignored);
             }
         }
         Collections.sort(out.markers, (a, b) -> Long.compare(a.tMs, b.tMs));

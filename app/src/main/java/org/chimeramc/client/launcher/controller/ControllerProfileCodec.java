@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
+import org.chimeramc.client.util.AppLog;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -124,6 +126,7 @@ public final class ControllerProfileCodec {
                 if (type.name().equals(envelope.controllerType)) return type;
             }
         } catch (JsonSyntaxException ignored) {
+            AppLog.warnOnce("GlowberryClient", "ControllerProfileCodec:129", "Ignored a failure at ControllerProfileCodec:129", ignored);
         }
         return null;
     }

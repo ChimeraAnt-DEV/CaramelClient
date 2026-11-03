@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 
@@ -99,7 +101,7 @@ public final class ReplayClipRepository {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
-                // Nothing useful to do; the retriever is discarded either way.
+                AppLog.warnOnce("GlowberryClient", "ReplayClipRepository:104", "Ignored a failure at ReplayClipRepository:104", ignored);
             }
         }
     }

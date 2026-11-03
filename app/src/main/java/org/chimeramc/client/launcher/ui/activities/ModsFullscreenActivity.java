@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -428,7 +430,7 @@ public class ModsFullscreenActivity extends BaseActivity {
         try {
             worker.execute(task);
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit.
+            AppLog.warnOnce("GlowberryClient", "ModsFullscreenActivity:433", "Ignored a failure at ModsFullscreenActivity:433", ignored);
         }
     }
 

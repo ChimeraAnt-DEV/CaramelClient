@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -139,6 +141,7 @@ public class SetupWizardActivity extends BaseActivity {
                 }
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "SetupWizardActivity:144", "Ignored a failure at SetupWizardActivity:144", ignored);
         }
         return false;
     }

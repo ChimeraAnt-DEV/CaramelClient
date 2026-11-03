@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -481,7 +483,9 @@ public class FileHandler {
         tv.setText(label);
         tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 10);
         int secondaryColor = 0xFFAAAAAA;
-        try { secondaryColor = context.getResources().getColor(R.color.text_secondary, context.getTheme()); } catch (Exception ignored) {}
+        try { secondaryColor = context.getResources().getColor(R.color.text_secondary, context.getTheme()); } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "FileHandler:487", "Ignored a failure at FileHandler:487", ignored);
+        }
         tv.setTextColor(secondaryColor);
         tv.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
                 android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
@@ -492,7 +496,9 @@ public class FileHandler {
         et.setText(defaultValue);
         et.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 14);
         int primaryColor = 0xFFFFFFFF;
-        try { primaryColor = context.getResources().getColor(R.color.text_primary, context.getTheme()); } catch (Exception ignored) {}
+        try { primaryColor = context.getResources().getColor(R.color.text_primary, context.getTheme()); } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "FileHandler:500", "Ignored a failure at FileHandler:500", ignored);
+        }
         et.setTextColor(primaryColor);
         et.setHintTextColor(secondaryColor);
         et.setBackground(null);
@@ -938,6 +944,7 @@ public class FileHandler {
                 files.add(file);
             }
         } catch (UnsupportedOperationException | IllegalStateException ignored) {
+            AppLog.warnOnce(TAG, "FileHandler:947", "Ignored a failure at FileHandler:947", ignored);
         }
     }
 
@@ -952,6 +959,7 @@ public class FileHandler {
                 folders.add(folder);
             }
         } catch (UnsupportedOperationException | IllegalStateException ignored) {
+            AppLog.warnOnce(TAG, "FileHandler:962", "Ignored a failure at FileHandler:962", ignored);
         }
     }
 

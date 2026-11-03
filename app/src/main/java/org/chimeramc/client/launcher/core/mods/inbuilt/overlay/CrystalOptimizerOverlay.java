@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -94,6 +96,7 @@ public final class CrystalOptimizerOverlay {
         try {
             if (overlayView != null && wmParams != null) windowManager.removeView(overlayView);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "CrystalOptimizerOverlay:99", "Ignored a failure at CrystalOptimizerOverlay:99", ignored);
         }
         overlayView = null;
         wmParams = null;

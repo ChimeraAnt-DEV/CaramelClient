@@ -44,7 +44,7 @@ public class ThemeManager {
             if (!DynamicColors.isDynamicColorAvailable()) return;
             DynamicColors.applyToActivityIfAvailable(activity);
         } catch (Throwable ignored) {
-            // A device without the Material You resources simply keeps the static palette.
+            AppLog.warnOnce("GlowberryClient", "ThemeManager:47", "Ignored a failure at ThemeManager:47", ignored);
         }
     }
 

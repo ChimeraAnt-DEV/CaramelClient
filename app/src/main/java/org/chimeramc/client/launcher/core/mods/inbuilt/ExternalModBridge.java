@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.util.Log;
 
 import org.chimeramc.client.core.mods.ModManager;
@@ -294,6 +296,7 @@ public class ExternalModBridge {
         try {
             nativeSetHudSurfaceSize(width, height);
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce(TAG, "ExternalModBridge:299", "Ignored a failure at ExternalModBridge:299", ignored);
         }
     }
 

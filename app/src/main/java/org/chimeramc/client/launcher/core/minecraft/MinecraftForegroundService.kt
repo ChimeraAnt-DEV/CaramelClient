@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import org.chimeramc.client.util.ApiLevels
 
 import android.app.Notification
@@ -85,14 +87,16 @@ class MinecraftForegroundService : Service() {
     private fun releaseBackgroundLocks() {
         try {
             if (wifiLock?.isHeld == true) wifiLock?.release()
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftForegroundService:91", "Ignored a failure at MinecraftForegroundService:91", t)
         } finally {
             wifiLock = null
         }
 
         try {
             if (wakeLock?.isHeld == true) wakeLock?.release()
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            AppLog.warnOnce("GlowberryClient", "MinecraftForegroundService:99", "Ignored a failure at MinecraftForegroundService:99", t)
         } finally {
             wakeLock = null
         }

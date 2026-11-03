@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -1524,6 +1526,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setAimCrosshairColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1529", "Ignored a failure at InbuiltModuleProvider:1529", ignored);
                 }
                 break;
             }
@@ -1614,6 +1617,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setTrajectoryColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1620", "Ignored a failure at InbuiltModuleProvider:1620", ignored);
                 }
                 break;
             case CFG_HIT_PREDICTION_LOOKAHEAD:
@@ -1626,6 +1630,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setKillEffectColor(Color.parseColor(value));
                 } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "InbuiltModuleProvider:1633", "Ignored a failure at InbuiltModuleProvider:1633", ignored);
                 }
                 break;
             case CFG_VOICE_MIC:

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.javabridge;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import org.chimeramc.client.settings.LowLatencyNetworkManager;
@@ -96,7 +98,7 @@ public final class OpenAiCompatibleLlmClient implements LlmClient {
                 builder.socketFactory(LowLatencyNetworkManager.createSocketFactory());
             }
         } catch (Throwable ignored) {
-            // The low-latency toggle is an optimisation; a failure here must not block a port.
+            AppLog.warnOnce("GlowberryClient", "OpenAiCompatibleLlmClient:101", "Ignored a failure at OpenAiCompatibleLlmClient:101", ignored);
         }
         return builder.build();
     }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -417,7 +419,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
         try {
             PojavControlsMod.nativeSendLookDelta(dx, dy);
         } catch (Throwable ignored) {
-            // No native look path on this build.
+            AppLog.warnOnce("GlowberryClient", "GyroOverlay:422", "Ignored a failure at GyroOverlay:422", ignored);
         }
     }
 

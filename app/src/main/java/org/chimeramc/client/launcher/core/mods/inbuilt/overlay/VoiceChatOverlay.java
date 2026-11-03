@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -117,6 +119,7 @@ public final class VoiceChatOverlay {
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "VoiceChatOverlay:122", "Ignored a failure at VoiceChatOverlay:122", ignored);
             }
         } else if (overlayView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
             FrameLayout.LayoutParams params =
@@ -154,6 +157,7 @@ public final class VoiceChatOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "VoiceChatOverlay:160", "Ignored a failure at VoiceChatOverlay:160", ignored);
         }
         overlayView = null;
         micView = null;
@@ -230,6 +234,7 @@ public final class VoiceChatOverlay {
                     try {
                         windowManager.updateViewLayout(view, wmParams);
                     } catch (Exception ignored) {
+                        AppLog.warnOnce("GlowberryClient", "VoiceChatOverlay:237", "Ignored a failure at VoiceChatOverlay:237", ignored);
                     }
                 } else {
                     ViewGroup.LayoutParams params = view.getLayoutParams();

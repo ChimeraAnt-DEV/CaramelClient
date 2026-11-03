@@ -234,6 +234,7 @@ public final class WorldBackupStore {
             try {
                 cursor.close();
             } catch (Exception ignored) {
+                AppLog.warnOnce(TAG, "WorldBackupStore:237", "Ignored a failure at WorldBackupStore:237", ignored);
             }
         }
     }

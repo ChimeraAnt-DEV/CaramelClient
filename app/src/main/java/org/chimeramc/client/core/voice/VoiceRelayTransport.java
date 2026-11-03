@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.voice;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.util.Log;
 
 import org.chimeramc.client.util.SignalGate;
@@ -350,6 +352,7 @@ public final class VoiceRelayTransport implements VoiceLink {
             try {
                 active.close();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "VoiceRelayTransport:355", "Ignored a failure at VoiceRelayTransport:355", ignored);
             }
         }
     }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,7 +259,7 @@ public final class ReplayTrack {
                         Float.parseFloat(parts[5].trim()),
                         Float.parseFloat(parts[6].trim())));
             } catch (NumberFormatException ignored) {
-                // A corrupt frame is dropped; the rest of the track is still valid.
+                AppLog.warnOnce("GlowberryClient", "ReplayTrack:262", "Ignored a failure at ReplayTrack:262", ignored);
             }
         }
         return track;

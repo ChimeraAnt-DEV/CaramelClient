@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -275,7 +277,7 @@ public class PauseMenuRow {
                 if (rootView != null) rootView.removeView(rowView);
             }
         } catch (Exception ignored) {
-            // A view already detached by the framework is not an error.
+            AppLog.warnOnce(TAG, "PauseMenuRow:280", "Ignored a failure at PauseMenuRow:280", ignored);
         }
         rowView = null;
         isAttached = false;

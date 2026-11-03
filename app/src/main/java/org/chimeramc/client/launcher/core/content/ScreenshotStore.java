@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,7 +40,7 @@ public final class ScreenshotStore {
                     LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
                     FeatureSettings.StorageType.INTERNAL.name()));
         } catch (Throwable ignored) {
-            // A malformed preference reads as the default rather than aborting the capture.
+            AppLog.warnOnce("GlowberryClient", "ScreenshotStore:43", "Ignored a failure at ScreenshotStore:43", ignored);
         }
         FeatureSettings.StorageType resolved = LauncherStorage.normalizeContentStorageType(
                 stored, version.versionIsolation);

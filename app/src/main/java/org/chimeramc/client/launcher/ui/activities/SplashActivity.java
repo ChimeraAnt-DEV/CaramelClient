@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.animation.Animator;
@@ -544,6 +546,7 @@ public class SplashActivity extends BaseActivity {
                     }
                 }
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "SplashActivity:549", "Ignored a failure at SplashActivity:549", ignored);
             }
         }
     }

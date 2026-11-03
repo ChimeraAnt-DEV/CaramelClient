@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -170,6 +172,7 @@ public final class CosmeticSyncCloudRelay {
                                 sb.append((char) Integer.parseInt(json.substring(i + 1, i + 5), 16));
                                 i += 4;
                             } catch (NumberFormatException ignored) {
+                                AppLog.warnOnce("GlowberryClient", "CosmeticSyncCloudRelay:175", "Ignored a failure at CosmeticSyncCloudRelay:175", ignored);
                             }
                         }
                         break;

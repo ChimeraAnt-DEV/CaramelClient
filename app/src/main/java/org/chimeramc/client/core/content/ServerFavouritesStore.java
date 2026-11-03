@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -54,7 +56,7 @@ public final class ServerFavouritesStore {
                     .putStringSet(KEY, copy)
                     .apply();
         } catch (Throwable ignored) {
-            // A favourite that cannot be written costs one star, not the screen.
+            AppLog.warnOnce("GlowberryClient", "ServerFavouritesStore:59", "Ignored a failure at ServerFavouritesStore:59", ignored);
         }
     }
 

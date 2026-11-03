@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -50,7 +52,9 @@ public class LoadingDialog extends Dialog {
             if (accent != 0 && progressBar != null) {
                 progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "LoadingDialog:56", "Ignored a failure at LoadingDialog:56", ignored);
+        }
     }
 
     public void setMessage(CharSequence message) {

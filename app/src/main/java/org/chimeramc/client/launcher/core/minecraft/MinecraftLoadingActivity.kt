@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 import org.chimeramc.client.util.ApiLevels
 
 import android.animation.ValueAnimator
@@ -308,7 +310,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             startActivity(Intent(this, org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity::class.java))
         } catch (ignored: Throwable) {
-            // The log viewer is a convenience; a failure to open it must not take the launch down.
+            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:313", "Ignored a failure at MinecraftLoadingActivity:313", ignored)
         }
         scheduleWatchdog()
     }
@@ -318,7 +320,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.mods.ModSafeMode.suppressModsForNextLaunch(this)
         } catch (ignored: Throwable) {
-            // Best effort: the restart still proceeds even if the flag could not be written.
+            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:323", "Ignored a failure at MinecraftLoadingActivity:323", ignored)
         }
         appendLog("Restarting without mods")
         returnToLauncher()
@@ -516,7 +518,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()
         } catch (ignored: Throwable) {
-            // Cancelling is best effort; returning to the launcher must not depend on it.
+            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:521", "Ignored a failure at MinecraftLoadingActivity:521", ignored)
         }
         appendLog("Returning to launcher")
         returnToLauncher()

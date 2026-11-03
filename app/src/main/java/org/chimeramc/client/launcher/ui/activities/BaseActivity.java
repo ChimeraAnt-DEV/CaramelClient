@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import org.chimeramc.client.util.SafeExecutor;
@@ -502,7 +504,7 @@ public class BaseActivity extends AppCompatActivity {
             try {
                 return view.getResources().getResourceEntryName(view.getId());
             } catch (android.content.res.Resources.NotFoundException ignored) {
-                // A view tagged with a non-resource id; fall through to the class name.
+                AppLog.warnOnce("GlowberryClient", "BaseActivity:507", "Ignored a failure at BaseActivity:507", ignored);
             }
         }
         return view.getClass().getSimpleName();
@@ -1113,6 +1115,7 @@ public class BaseActivity extends AppCompatActivity {
                     bmp = android.graphics.BitmapFactory.decodeStream(imgResp.body().byteStream());
                 }
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseActivity:1118", "Ignored a failure at BaseActivity:1118", ignored);
             }
 
             final Bitmap loaded = bmp;

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content;
 
+import org.chimeramc.client.util.AppLog;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -520,8 +522,7 @@ public final class InGamePackChanger {
                 return parsed.getAsJsonArray();
             }
         } catch (Exception ignored) {
-            // A corrupt list is treated as empty and rewritten by the next toggle; keeping
-            // unparseable bytes would stop the game from reading any global pack.
+            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:525", "Ignored a failure at InGamePackChanger:525", ignored);
         }
         return null;
     }
@@ -563,6 +564,7 @@ public final class InGamePackChanger {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:567", "Ignored a failure at InGamePackChanger:567", ignored);
         }
         return pack.getName();
     }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.stats;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 /**
@@ -19,6 +21,7 @@ public final class LaunchStatsRecorder {
         try {
             LaunchStatsStore.update(context, LaunchStats::recordLaunch);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:24", "Ignored a failure at LaunchStatsRecorder:24", ignored);
         }
     }
 
@@ -36,6 +39,7 @@ public final class LaunchStatsRecorder {
                 stats.withFirstFrame(firstFrameMs);
             });
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:42", "Ignored a failure at LaunchStatsRecorder:42", ignored);
         }
     }
 
@@ -44,6 +48,7 @@ public final class LaunchStatsRecorder {
         try {
             LaunchStatsStore.update(context, LaunchStats::recordCrash);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsRecorder:51", "Ignored a failure at LaunchStatsRecorder:51", ignored);
         }
     }
 

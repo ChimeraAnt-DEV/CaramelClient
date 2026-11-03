@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.app.Notification;
@@ -230,6 +232,7 @@ public class ReplayCaptureService extends Service {
             try {
                 virtualDisplay.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayCaptureService:235", "Ignored a failure at ReplayCaptureService:235", ignored);
             }
             virtualDisplay = null;
         }
@@ -237,12 +240,13 @@ public class ReplayCaptureService extends Service {
             try {
                 recorder.stop();
             } catch (Throwable ignored) {
-                // stop() throws when no frames were written; the empty file is discarded above.
+                AppLog.warnOnce(TAG, "ReplayCaptureService:243", "Ignored a failure at ReplayCaptureService:243", ignored);
             }
             try {
                 recorder.reset();
                 recorder.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayCaptureService:249", "Ignored a failure at ReplayCaptureService:249", ignored);
             }
             recorder = null;
         }
@@ -250,6 +254,7 @@ public class ReplayCaptureService extends Service {
             try {
                 projection.stop();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayCaptureService:257", "Ignored a failure at ReplayCaptureService:257", ignored);
             }
             projection = null;
         }

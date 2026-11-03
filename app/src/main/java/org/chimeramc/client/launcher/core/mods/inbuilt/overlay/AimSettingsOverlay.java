@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -64,6 +66,7 @@ public class AimSettingsOverlay {
         try {
             if (view != null) windowManager.removeView(view);
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "AimSettingsOverlay:69", "Ignored a failure at AimSettingsOverlay:69", ignored);
         }
         view = null;
         showing = false;
@@ -185,6 +188,7 @@ public class AimSettingsOverlay {
                 int themed = new PersonalizationManager(activity).getAccentColor();
                 if (themed != 0) return themed;
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "AimSettingsOverlay:191", "Ignored a failure at AimSettingsOverlay:191", ignored);
             }
             return 0xFF0F5BE4;
         }

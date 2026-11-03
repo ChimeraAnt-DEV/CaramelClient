@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.backend;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -236,7 +238,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectKey(key, false);
             } catch (Throwable ignored) {
-                // Best effort: the session is losing focus, so nothing useful can be reported here.
+                AppLog.warnOnce("GlowberryClient", "LauncherGameBackend:241", "Ignored a failure at LauncherGameBackend:241", ignored);
             }
         }
 
@@ -246,6 +248,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectMouseButton(button, false);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "LauncherGameBackend:251", "Ignored a failure at LauncherGameBackend:251", ignored);
             }
         }
     }

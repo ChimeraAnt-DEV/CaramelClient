@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
@@ -582,7 +584,7 @@ public class JavaBridgeActivity extends BaseActivity {
                 }
             }
         } catch (Exception ignored) {
-            // Fall through to the path-based name.
+            AppLog.warnOnce("GlowberryClient", "JavaBridgeActivity:587", "Ignored a failure at JavaBridgeActivity:587", ignored);
         }
         String path = uri.getLastPathSegment();
         return path == null ? null : new File(path).getName();

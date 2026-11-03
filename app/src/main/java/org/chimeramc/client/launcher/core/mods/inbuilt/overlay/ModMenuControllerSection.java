@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
@@ -185,6 +187,7 @@ final class ModMenuControllerSection {
                     android.widget.Toast.makeText(activity, R.string.vip_controller_step_failed,
                             android.widget.Toast.LENGTH_SHORT).show();
                 } catch (Throwable ignored) {
+                    AppLog.warnOnce("GlowberryClient", "ModMenuControllerSection:190", "Ignored a failure at ModMenuControllerSection:190", ignored);
                 }
             }
         });

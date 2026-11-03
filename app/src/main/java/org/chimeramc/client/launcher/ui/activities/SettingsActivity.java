@@ -502,7 +502,9 @@ public class SettingsActivity extends BaseActivity {
             try {
                 LogcatOverlayManager mgr = LogcatOverlayManager.getInstance();
                 if (mgr != null) mgr.refreshVisibility();
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "SettingsActivity:506", "Ignored a failure at SettingsActivity:506", ignored);
+            }
         });
 
         SwitchMaterial switchCrashUpload = findViewById(R.id.switch_crash_upload);
@@ -1332,6 +1334,7 @@ public class SettingsActivity extends BaseActivity {
                 }
             });
         } catch (PackageManager.NameNotFoundException ignored) {
+            AppLog.warnOnce(TAG, "SettingsActivity:1337", "Ignored a failure at SettingsActivity:1337", ignored);
         }
 
         Button btnCheckUpdate = findViewById(R.id.btn_check_update);
@@ -1511,7 +1514,7 @@ public class SettingsActivity extends BaseActivity {
             getContentResolver().takePersistableUriPermission(uri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         } catch (SecurityException e) {
-            // Permission not persistable is fine — the run still checks access each time.
+            AppLog.warnOnce(TAG, "SettingsActivity:1517", "Ignored a failure at SettingsActivity:1517", e);
         }
         worldBackupConfig.setFolderUri(uri);
         worldBackupConfig.setEnabled(true);

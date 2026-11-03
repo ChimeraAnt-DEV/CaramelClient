@@ -1,5 +1,7 @@
 package org.chimeramc.client.preloader;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.view.MotionEvent;
 
 import java.io.File;
@@ -346,6 +348,7 @@ public class PreloaderInput {
         try {
             nativeConfigureOptifineMode(blob == null ? "" : blob);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:351", "Ignored a failure at PreloaderInput:351", e);
         }
     }
 
@@ -369,6 +372,7 @@ public class PreloaderInput {
         try {
             nativeSetOptifineRefreshTarget(hz);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:375", "Ignored a failure at PreloaderInput:375", e);
         }
     }
 
@@ -378,6 +382,7 @@ public class PreloaderInput {
             nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
                     minDwellMs);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:385", "Ignored a failure at PreloaderInput:385", e);
         }
     }
 
@@ -601,6 +606,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeOverride(playerKey, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:609", "Ignored a failure at PreloaderInput:609", e);
         }
     }
 
@@ -608,6 +614,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeOverrides();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:617", "Ignored a failure at PreloaderInput:617", e);
         }
     }
 
@@ -632,6 +639,7 @@ public class PreloaderInput {
         try {
             nativeSetTextureOverride(textureId, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:642", "Ignored a failure at PreloaderInput:642", e);
         }
     }
 
@@ -639,6 +647,7 @@ public class PreloaderInput {
         try {
             nativeClearTextureOverrides();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:650", "Ignored a failure at PreloaderInput:650", e);
         }
     }
 
@@ -663,6 +672,7 @@ public class PreloaderInput {
         try {
             nativeSetRenderGeometry(data);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:675", "Ignored a failure at PreloaderInput:675", e);
         }
     }
 
@@ -671,6 +681,7 @@ public class PreloaderInput {
         try {
             nativePushCosmeticFrame(frame);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:684", "Ignored a failure at PreloaderInput:684", e);
         }
     }
 
@@ -711,6 +722,7 @@ public class PreloaderInput {
         try {
             nativeSetPieceAtlas(piece, rgba, width, height);
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:725", "Ignored a failure at PreloaderInput:725", ignored);
         }
     }
 
@@ -719,6 +731,7 @@ public class PreloaderInput {
         try {
             nativeClearPieceAtlases();
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:734", "Ignored a failure at PreloaderInput:734", ignored);
         }
     }
 
@@ -791,6 +804,7 @@ public class PreloaderInput {
         try {
             nativeSetDisplayRefreshHz(hz);
         } catch (UnsatisfiedLinkError ignored) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:807", "Ignored a failure at PreloaderInput:807", ignored);
         }
     }
 
@@ -918,6 +932,7 @@ public class PreloaderInput {
         try {
             nativeSetContentSubstitution(sourceBytes, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:935", "Ignored a failure at PreloaderInput:935", e);
         }
     }
 
@@ -925,6 +940,7 @@ public class PreloaderInput {
         try {
             nativeClearContentSubstitutions();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:943", "Ignored a failure at PreloaderInput:943", e);
         }
     }
 
@@ -940,6 +956,7 @@ public class PreloaderInput {
         try {
             nativeArmNextImageOverride(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:959", "Ignored a failure at PreloaderInput:959", e);
         }
     }
 
@@ -947,6 +964,7 @@ public class PreloaderInput {
         try {
             nativeClearNextImageOverride();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:967", "Ignored a failure at PreloaderInput:967", e);
         }
     }
 
@@ -971,6 +989,7 @@ public class PreloaderInput {
         try {
             nativeClearCapturedCape();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:992", "Ignored a failure at PreloaderInput:992", e);
         }
     }
 
@@ -979,6 +998,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeSubstitution(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1001", "Ignored a failure at PreloaderInput:1001", e);
         }
     }
 
@@ -986,6 +1006,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeSubstitution();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1009", "Ignored a failure at PreloaderInput:1009", e);
         }
     }
 
@@ -1084,6 +1105,7 @@ public class PreloaderInput {
                     error == null ? "" : error
             );
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1108", "Ignored a failure at PreloaderInput:1108", e);
         }
     }
 
@@ -1187,6 +1209,7 @@ public class PreloaderInput {
         try {
             nativeSetActivity(activity);
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1212", "Ignored a failure at PreloaderInput:1212", e);
         }
     }
 
@@ -1195,6 +1218,7 @@ public class PreloaderInput {
         try {
             nativeClearActivity();
         } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1221", "Ignored a failure at PreloaderInput:1221", e);
         }
     }
 }

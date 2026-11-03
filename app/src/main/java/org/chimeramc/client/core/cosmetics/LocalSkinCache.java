@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -150,6 +152,7 @@ public final class LocalSkinCache {
                         identity = jsonString(text, "identity");
                     }
                 } catch (IOException ignored) {
+                    AppLog.warnOnce("GlowberryClient", "LocalSkinCache:155", "Ignored a failure at LocalSkinCache:155", ignored);
                 }
             }
             return new Entry(width, height, arm, geometry, time, identity, argb);

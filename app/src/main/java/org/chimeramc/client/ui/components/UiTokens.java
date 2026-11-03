@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.components;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import org.chimeramc.client.util.PersonalizationManager;
@@ -255,6 +257,7 @@ public final class UiTokens {
             int accent = new PersonalizationManager(context).getAccentColor();
             if (accent != 0) return accent;
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "UiTokens:260", "Ignored a failure at UiTokens:260", ignored);
         }
         return ACCENT_500;
     }

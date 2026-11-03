@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -590,7 +592,9 @@ public final class MoreButtonsEditor {
         void acceptSvg(Uri uri, boolean pressed) {
             try {
                 int flags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
-                try { activity.getContentResolver().takePersistableUriPermission(uri, flags); } catch (Exception ignored) {}
+                try { activity.getContentResolver().takePersistableUriPermission(uri, flags); } catch (Exception ignored) {
+                    AppLog.warnOnce("GlowberryClient", "MoreButtonsEditor:596", "Ignored a failure at MoreButtonsEditor:596", ignored);
+                }
                 byte[] bytes = readLimited(activity, uri, MoreButtonsManager.MAX_SVG_BYTES);
                 String svg = new String(bytes, StandardCharsets.UTF_8);
                 if (!MoreButtonsManager.looksLikeSvg(svg)) {
@@ -842,6 +846,7 @@ public final class MoreButtonsEditor {
                 }
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "MoreButtonsEditor:849", "Ignored a failure at MoreButtonsEditor:849", ignored);
         }
         String last = uri.getLastPathSegment();
         return last == null ? "icon.svg" : last;

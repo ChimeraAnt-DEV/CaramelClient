@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -111,6 +113,7 @@ public final class MenuCursorOverlay extends View {
             root.dispatchTouchEvent(down);
             root.dispatchTouchEvent(up);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "MenuCursorOverlay:116", "Ignored a failure at MenuCursorOverlay:116", ignored);
         }
         down.recycle();
         up.recycle();

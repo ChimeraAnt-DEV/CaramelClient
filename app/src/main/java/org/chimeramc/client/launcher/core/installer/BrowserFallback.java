@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.installer;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
@@ -140,7 +142,7 @@ public class BrowserFallback {
             webView.stopLoading();
             webView.setWebViewClient(null);
         } catch (Exception ignored) {
-            // The WebView may already be torn down; nothing to cancel then.
+            AppLog.warnOnce("GlowberryClient", "BrowserFallback:145", "Ignored a failure at BrowserFallback:145", ignored);
         }
     }
 

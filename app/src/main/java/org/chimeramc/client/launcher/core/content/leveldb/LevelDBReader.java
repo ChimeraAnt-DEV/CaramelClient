@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content.leveldb;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -202,6 +204,7 @@ public class LevelDBReader {
                 return new String(key, StandardCharsets.UTF_8);
             }
         } catch (Exception e) {
+            AppLog.warnOnce(TAG, "LevelDBReader:207", "Ignored a failure at LevelDBReader:207", e);
         }
         return null;
     }

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.minecraft
 
+import org.chimeramc.client.util.AppLog
+
 /**
  * Pure ABI/bitness decisions, separated from [GamePackageManager] so they can be unit
  * tested without an Android runtime.
@@ -97,8 +99,8 @@ object AbiBitness {
                         }
                     }
                 }
-            } catch (_: Exception) {
-                // An unreadable archive contributes nothing; the caller falls back.
+            } catch (t: Exception) {
+                AppLog.warnOnce("GlowberryClient", "AbiBitness:103", "Ignored a failure at AbiBitness:103", t)
             }
         }
         return shipped

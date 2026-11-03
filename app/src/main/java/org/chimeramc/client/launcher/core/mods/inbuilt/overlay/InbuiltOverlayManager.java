@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.view.MotionEvent;
 
@@ -842,7 +844,9 @@ public class InbuiltOverlayManager {
                 if (enabled) {
                     enabledModules.add(moduleId);
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "InbuiltOverlayManager:848", "Ignored a failure at InbuiltOverlayManager:848", ignored);
+            }
         }
 
         for (String moduleId : enabledModules) {

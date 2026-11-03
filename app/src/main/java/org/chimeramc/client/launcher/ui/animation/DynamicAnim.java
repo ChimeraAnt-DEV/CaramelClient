@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.animation;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -371,7 +373,7 @@ public final class DynamicAnim {
                     .setInterpolator(getDefaultInterpolator())
                     .start();
         } catch (Throwable ignored) {
-            // Elevation is purely cosmetic; never break touch handling.
+            AppLog.warnOnce("GlowberryClient", "DynamicAnim:376", "Ignored a failure at DynamicAnim:376", ignored);
         }
     }
 

@@ -1,5 +1,7 @@
 package org.chimeramc.client.launcher.core.setup;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.content.Context;
@@ -51,6 +53,7 @@ public final class CompatibilityProbe {
             try {
                 target = LauncherStorage.getStorageFilesRoot(context, null, false, false);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "CompatibilityProbe:56", "Ignored a failure at CompatibilityProbe:56", ignored);
             }
             if (target == null) {
                 target = context != null ? context.getFilesDir() : null;

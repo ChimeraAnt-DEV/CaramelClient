@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.downloads;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.os.Environment;
 
@@ -96,7 +98,7 @@ public final class DownloadsScanner {
                 roots.add(publicDownloads);
             }
         } catch (Throwable ignored) {
-            // Some devices/API levels refuse to hand out a public dir path.
+            AppLog.warnOnce("GlowberryClient", "DownloadsScanner:101", "Ignored a failure at DownloadsScanner:101", ignored);
         }
         return roots;
     }

@@ -158,6 +158,7 @@ public final class UsageStatsReporter {
             app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putLong(KEY_LAST_SENT, System.currentTimeMillis()).apply();
         } catch (RuntimeException ignored) {
+            AppLog.warnOnce(TAG, "UsageStatsReporter:161", "Ignored a failure at UsageStatsReporter:161", ignored);
         }
     }
 }

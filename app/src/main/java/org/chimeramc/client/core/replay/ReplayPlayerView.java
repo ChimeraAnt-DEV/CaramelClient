@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -158,6 +160,7 @@ public final class ReplayPlayerView {
                     try {
                         player.setDisplay(null);
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:163", "Ignored a failure at ReplayPlayerView:163", ignored);
                     }
                 }
             }
@@ -454,6 +457,7 @@ public final class ReplayPlayerView {
         try {
             player.setDisplay(holder);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:460", "Ignored a failure at ReplayPlayerView:460", ignored);
         }
     }
 
@@ -536,6 +540,7 @@ public final class ReplayPlayerView {
             try {
                 player.setPlaybackParams(player.getPlaybackParams().setSpeed(1f));
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:543", "Ignored a failure at ReplayPlayerView:543", ignored);
             }
             return;
         }
@@ -544,7 +549,7 @@ public final class ReplayPlayerView {
             params.setSpeed(speed);
             player.setPlaybackParams(params);
         } catch (Throwable ignored) {
-            // Pre-N decoders may not support speed; playback stays at 1x.
+            AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:552", "Ignored a failure at ReplayPlayerView:552", ignored);
         }
     }
 
@@ -631,11 +636,13 @@ public final class ReplayPlayerView {
             try {
                 player.setDisplay(null);
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:639", "Ignored a failure at ReplayPlayerView:639", ignored);
             }
             try {
                 player.reset();
                 player.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce("GlowberryClient", "ReplayPlayerView:645", "Ignored a failure at ReplayPlayerView:645", ignored);
             }
             player = null;
         }

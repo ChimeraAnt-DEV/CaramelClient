@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.SafeExecutor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -288,6 +290,7 @@ public class CustomFlatWorldActivity extends BaseActivity {
                                 int count = Integer.parseInt(s.toString());
                                 layers.get(adapterPos).count = Math.max(1, Math.min(count, 256));
                             } catch (NumberFormatException e) {
+                                AppLog.warnOnce("GlowberryClient", "CustomFlatWorldActivity:293", "Ignored a failure at CustomFlatWorldActivity:293", e);
                             }
                         }
                     }

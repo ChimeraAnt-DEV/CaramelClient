@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -218,6 +220,7 @@ public final class PlayerSkinProvider {
                 if (decoded != null) return normalise(decoded);
             }
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "PlayerSkinProvider:223", "Ignored a failure at PlayerSkinProvider:223", ignored);
         }
         // 2. No cache: schedule a background fetch and return null now, so the caller does not block
         //    on the network. The next resolve (e.g. when the panel is reopened) finds the cache.
@@ -264,8 +267,7 @@ public final class PlayerSkinProvider {
                 if (found != null) return found;
             }
         } catch (Throwable ignored) {
-            // A missing version, an unreadable pack list or a corrupt pack must not stop the
-            // preview from drawing something.
+            AppLog.warnOnce("GlowberryClient", "PlayerSkinProvider:270", "Ignored a failure at PlayerSkinProvider:270", ignored);
         }
         return null;
     }

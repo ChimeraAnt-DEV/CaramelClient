@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.content.ContentValues;
@@ -79,6 +81,7 @@ public final class ReplayExporter {
                 try {
                     context.getContentResolver().delete(target, null, null);
                 } catch (Throwable ignored) {
+                    AppLog.warnOnce(TAG, "ReplayExporter:84", "Ignored a failure at ReplayExporter:84", ignored);
                 }
             }
             return null;
@@ -167,17 +170,20 @@ public final class ReplayExporter {
             try {
                 extractor.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayExporter:173", "Ignored a failure at ReplayExporter:173", ignored);
             }
             if (muxer != null) {
                 if (muxerStarted) {
                     try {
                         muxer.stop();
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce(TAG, "ReplayExporter:180", "Ignored a failure at ReplayExporter:180", ignored);
                     }
                 }
                 try {
                     muxer.release();
                 } catch (Throwable ignored) {
+                    AppLog.warnOnce(TAG, "ReplayExporter:186", "Ignored a failure at ReplayExporter:186", ignored);
                 }
             }
         }
@@ -243,11 +249,13 @@ public final class ReplayExporter {
                     try {
                         muxer.stop();
                     } catch (Throwable ignored) {
+                        AppLog.warnOnce(TAG, "ReplayExporter:252", "Ignored a failure at ReplayExporter:252", ignored);
                     }
                 }
                 try {
                     muxer.release();
                 } catch (Throwable ignored) {
+                    AppLog.warnOnce(TAG, "ReplayExporter:258", "Ignored a failure at ReplayExporter:258", ignored);
                 }
             }
         }
@@ -293,6 +301,7 @@ public final class ReplayExporter {
             try {
                 extractor.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayExporter:304", "Ignored a failure at ReplayExporter:304", ignored);
             }
         }
         return maxTimeUs;
@@ -319,6 +328,7 @@ public final class ReplayExporter {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayExporter:331", "Ignored a failure at ReplayExporter:331", ignored);
             }
         }
     }

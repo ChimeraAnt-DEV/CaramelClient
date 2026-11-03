@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.content.leveldb;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.nio.charset.StandardCharsets;
 
 public class LevelDBKey {
@@ -146,6 +148,7 @@ public class LevelDBKey {
                     return keyStr.substring("structuretemplate_".length());
                 }
             } catch (Exception e) {
+                AppLog.warnOnce("GlowberryClient", "LevelDBKey:151", "Ignored a failure at LevelDBKey:151", e);
             }
         }
         return null;

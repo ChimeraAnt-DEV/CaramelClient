@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -138,7 +140,7 @@ public final class QuickSettingsApplier {
                     LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
                     FeatureSettings.StorageType.INTERNAL.name()));
         } catch (Throwable ignored) {
-            // A malformed preference reads as the default rather than aborting the write.
+            AppLog.warnOnce("GlowberryClient", "QuickSettingsApplier:143", "Ignored a failure at QuickSettingsApplier:143", ignored);
         }
         FeatureSettings.StorageType resolved = LauncherStorage.normalizeContentStorageType(
                 stored, version.versionIsolation);

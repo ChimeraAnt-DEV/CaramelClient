@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 
 import org.json.JSONArray;
@@ -45,6 +47,7 @@ public final class ExternalModuleProvider {
                 UnifiedMod mod = parse(activity, new JSONObject(ExternalModBridge.getExternalModInfo(i)), externalGroupNames);
                 if (mod != null) modules.add(mod);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "ExternalModuleProvider:50", "Ignored a failure at ExternalModuleProvider:50", ignored);
             }
         }
         return modules;
@@ -166,6 +169,7 @@ public final class ExternalModuleProvider {
                                 : displayName.trim());
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ExternalModuleProvider:172", "Ignored a failure at ExternalModuleProvider:172", ignored);
         }
         return names;
     }

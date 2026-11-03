@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.stats;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -60,6 +62,7 @@ public final class LaunchStatsStore {
                     .putLong(KEY_FIRST_FRAME_TOTAL, stats.firstFrameTotalMs())
                     .apply();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsStore:65", "Ignored a failure at LaunchStatsStore:65", ignored);
         }
     }
 
@@ -79,6 +82,7 @@ public final class LaunchStatsStore {
                     .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().clear().apply();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "LaunchStatsStore:85", "Ignored a failure at LaunchStatsStore:85", ignored);
         }
     }
 

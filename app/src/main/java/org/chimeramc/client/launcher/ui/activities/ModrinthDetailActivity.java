@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.activities;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -209,7 +211,7 @@ public class ModrinthDetailActivity extends BaseActivity {
                 }
             });
         } catch (RejectedExecutionException ignored) {
-            // The screen was destroyed between the check and the submit.
+            AppLog.warnOnce("GlowberryClient", "ModrinthDetailActivity:214", "Ignored a failure at ModrinthDetailActivity:214", ignored);
         }
     }
 

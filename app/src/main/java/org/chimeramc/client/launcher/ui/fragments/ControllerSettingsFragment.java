@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.fragments;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -276,6 +278,7 @@ public class ControllerSettingsFragment extends Fragment {
             try {
                 inputManager.unregisterInputDeviceListener(deviceListener);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "ControllerSettingsFragment:281", "Ignored a failure at ControllerSettingsFragment:281", ignored);
             }
         }
         illustration = null;

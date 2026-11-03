@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -139,7 +141,9 @@ public class ApkVersionConfirmDialog extends DialogFragment {
                 btnInstall.setBackgroundTintList(ColorStateList.valueOf(accent));
                 btnInstall.setTextColor(Color.WHITE);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ApkVersionConfirmDialog:145", "Ignored a failure at ApkVersionConfirmDialog:145", ignored);
+        }
 
         return dialog;
     }

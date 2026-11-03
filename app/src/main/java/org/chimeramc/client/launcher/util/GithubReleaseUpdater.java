@@ -94,7 +94,7 @@ public class GithubReleaseUpdater {
                     .getSharedPreferences(PREF_UPDATE_STATE, Context.MODE_PRIVATE)
                     .edit().putString(KEY_LATEST_SEEN, version).apply();
         } catch (RuntimeException ignored) {
-            // The dot is cosmetic; a prefs failure must not surface.
+            AppLog.warnOnce(TAG, "GithubReleaseUpdater:97", "Ignored a failure at GithubReleaseUpdater:97", ignored);
         }
     }
 
@@ -312,10 +312,12 @@ public class GithubReleaseUpdater {
                     try {
                         if (is != null) is.close();
                     } catch (Exception ignored) {
+                        AppLog.warnOnce(TAG, "GithubReleaseUpdater:315", "Ignored a failure at GithubReleaseUpdater:315", ignored);
                     }
                     try {
                         if (fos != null) fos.close();
                     } catch (Exception ignored) {
+                        AppLog.warnOnce(TAG, "GithubReleaseUpdater:320", "Ignored a failure at GithubReleaseUpdater:320", ignored);
                     }
                 }
             }

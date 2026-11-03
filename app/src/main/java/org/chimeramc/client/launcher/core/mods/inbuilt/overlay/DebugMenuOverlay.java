@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.os.SystemClock;
 
@@ -38,6 +40,7 @@ public class DebugMenuOverlay extends TextOverlay {
         try {
             frameMeter.start(fps -> { });
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "DebugMenuOverlay:43", "Ignored a failure at DebugMenuOverlay:43", ignored);
         }
     }
 
@@ -46,6 +49,7 @@ public class DebugMenuOverlay extends TextOverlay {
         try {
             frameMeter.stop();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "DebugMenuOverlay:52", "Ignored a failure at DebugMenuOverlay:52", ignored);
         }
         super.hide();
     }

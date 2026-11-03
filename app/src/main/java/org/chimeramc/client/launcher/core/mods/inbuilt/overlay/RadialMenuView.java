@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -1892,6 +1894,7 @@ public class RadialMenuView extends View {
         try {
             paint.setFontVariationSettings("'wght' " + weight);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "RadialMenuView:1897", "Ignored a failure at RadialMenuView:1897", ignored);
         }
     }
 

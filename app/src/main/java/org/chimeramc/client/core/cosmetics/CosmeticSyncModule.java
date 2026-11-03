@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
@@ -303,7 +305,7 @@ public final class CosmeticSyncModule {
             try {
                 target.leaveGroup(InetAddress.getByName(GROUP));
             } catch (IOException ignored) {
-                // Leaving a group we are about to close anyway is best-effort.
+                AppLog.warnOnce(TAG, "CosmeticSyncModule:308", "Ignored a failure at CosmeticSyncModule:308", ignored);
             }
             target.close();
         }
@@ -335,7 +337,7 @@ public final class CosmeticSyncModule {
         try {
             executor.execute(this::broadcastNow);
         } catch (java.util.concurrent.RejectedExecutionException e) {
-            // Raced with stop(); the module is shutting down and there is nothing to send.
+            AppLog.warnOnce(TAG, "CosmeticSyncModule:340", "Ignored a failure at CosmeticSyncModule:340", e);
         }
     }
 
@@ -379,7 +381,7 @@ public final class CosmeticSyncModule {
                 target.send(new DatagramPacket(data, data.length,
                         InetAddress.getByName(GROUP), PORT));
             } catch (IOException e) {
-                // Recovered by the next timer tick; never fatal.
+                AppLog.warnOnce(TAG, "CosmeticSyncModule:384", "Ignored a failure at CosmeticSyncModule:384", e);
             }
         }
         // Relay: wrap the manifest in a v4 frame the relay fans out.
@@ -395,7 +397,7 @@ public final class CosmeticSyncModule {
                     manual.send(new DatagramPacket(data, data.length, manualPeer));
                 }
             } catch (IOException e) {
-                // The peer may be offline; the next tick retries.
+                AppLog.warnOnce(TAG, "CosmeticSyncModule:400", "Ignored a failure at CosmeticSyncModule:400", e);
             }
         }
     }
@@ -458,7 +460,7 @@ public final class CosmeticSyncModule {
                                 android.util.Base64.NO_WRAP);
                         handleIncoming(raw);
                     } catch (RuntimeException ignored) {
-                        // A malformed payload is skipped; it cannot be a real advertisement.
+                        AppLog.warnOnce(TAG, "CosmeticSyncModule:463", "Ignored a failure at CosmeticSyncModule:463", ignored);
                     }
                 }
                 // Advance the cursor so the next poll only returns newer messages.
@@ -590,7 +592,7 @@ public final class CosmeticSyncModule {
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
                 handleRelayFrame(data);
             } catch (SocketTimeoutException timeout) {
-                // Expected: fall through to the keepalive below.
+                AppLog.warnOnce(TAG, "CosmeticSyncModule:595", "Ignored a failure at CosmeticSyncModule:595", timeout);
             } catch (IOException e) {
                 if (!running.get()) break;
             }
@@ -611,7 +613,7 @@ public final class CosmeticSyncModule {
             byte[] hello = VoiceProtocol.encodeHello(displayName, config.channel, credential);
             target.send(new DatagramPacket(hello, hello.length, server));
         } catch (IOException e) {
-            // The loop retries; a failed hello is not fatal.
+            AppLog.warnOnce(TAG, "CosmeticSyncModule:616", "Ignored a failure at CosmeticSyncModule:616", e);
         }
     }
 
@@ -623,7 +625,7 @@ public final class CosmeticSyncModule {
             byte[] pong = VoiceProtocol.encodePong(relayClientId);
             target.send(new DatagramPacket(pong, pong.length, server));
         } catch (IOException e) {
-            // Keepalive is best-effort.
+            AppLog.warnOnce(TAG, "CosmeticSyncModule:628", "Ignored a failure at CosmeticSyncModule:628", e);
         }
     }
 
@@ -638,7 +640,7 @@ public final class CosmeticSyncModule {
             if (frame.length == 0) return;
             target.send(new DatagramPacket(frame, frame.length, server));
         } catch (IOException e) {
-            // The next announce tick retries.
+            AppLog.warnOnce(TAG, "CosmeticSyncModule:643", "Ignored a failure at CosmeticSyncModule:643", e);
         }
     }
 
@@ -694,7 +696,7 @@ public final class CosmeticSyncModule {
                 System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
                 handleIncoming(data);
             } catch (SocketTimeoutException timeout) {
-                // Expected; loop to re-check running.
+                AppLog.warnOnce(TAG, "CosmeticSyncModule:699", "Ignored a failure at CosmeticSyncModule:699", timeout);
             } catch (IOException e) {
                 if (!running.get()) break;
             }
@@ -719,7 +721,7 @@ public final class CosmeticSyncModule {
         try {
             if (multicastLock != null && multicastLock.isHeld()) multicastLock.release();
         } catch (Throwable ignored) {
-            // Releasing a lock we may not hold must not throw out of stop().
+            AppLog.warnOnce(TAG, "CosmeticSyncModule:724", "Ignored a failure at CosmeticSyncModule:724", ignored);
         }
         multicastLock = null;
     }

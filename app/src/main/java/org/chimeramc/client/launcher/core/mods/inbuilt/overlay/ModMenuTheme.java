@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.content.Context;
 
 import org.chimeramc.client.ui.components.UiTokens;
@@ -68,6 +70,7 @@ final class ModMenuTheme {
             glow = new org.chimeramc.client.util.PersonalizationManager(context)
                     .isEnableGlowEffects();
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "ModMenuTheme:73", "Ignored a failure at ModMenuTheme:73", ignored);
         }
         this.glowEnabled = glow;
 

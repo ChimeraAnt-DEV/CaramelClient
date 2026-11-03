@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -277,6 +279,7 @@ public final class ReplayManager {
             try {
                 metadataOverlay.detach();
             } catch (Throwable ignored) {
+                AppLog.warnOnce(TAG, "ReplayManager:282", "Ignored a failure at ReplayManager:282", ignored);
             }
             metadataOverlay = null;
         }

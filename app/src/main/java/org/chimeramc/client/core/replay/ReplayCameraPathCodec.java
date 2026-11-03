@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.replay;
 
+import org.chimeramc.client.util.AppLog;
+
 /**
  * Encodes a {@link ReplayCameraPath} to a single sidecar value and back.
  *
@@ -48,7 +50,7 @@ public final class ReplayCameraPathCodec {
                         Float.parseFloat(fields[4].trim()),
                         Float.parseFloat(fields[5].trim())));
             } catch (NumberFormatException ignored) {
-                // Skip a malformed keyframe rather than discarding the whole path.
+                AppLog.warnOnce("GlowberryClient", "ReplayCameraPathCodec:53", "Ignored a failure at ReplayCameraPathCodec:53", ignored);
             }
         }
         path.setPreset(preset);

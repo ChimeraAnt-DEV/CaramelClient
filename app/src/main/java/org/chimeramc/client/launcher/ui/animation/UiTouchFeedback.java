@@ -1,5 +1,7 @@
 package org.chimeramc.client.ui.animation;
 
+import org.chimeramc.client.util.AppLog;
+
 import org.chimeramc.client.util.ApiLevels;
 
 import android.content.Context;
@@ -90,7 +92,7 @@ public final class UiTouchFeedback {
                     vibrator.vibrate(VibrationEffect.createPredefined(predefined));
                     return;
                 } catch (Throwable ignored) {
-                    // Some OEM vibrators reject predefined effects; fall through to a one-shot.
+                    AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:95", "Ignored a failure at UiTouchFeedback:95", ignored);
                 }
                 vibrator.vibrate(VibrationEffect.createOneShot(fallbackMs, VibrationEffect.DEFAULT_AMPLITUDE));
             } else if (ApiLevels.atLeastO()) {
@@ -99,7 +101,7 @@ public final class UiTouchFeedback {
                 vibrator.vibrate(fallbackMs);
             }
         } catch (Throwable ignored) {
-            // Haptics are cosmetic; never crash on a broken vibrator.
+            AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:104", "Ignored a failure at UiTouchFeedback:104", ignored);
         }
     }
 
@@ -109,6 +111,7 @@ public final class UiTouchFeedback {
         try {
             view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
         } catch (Throwable ignored) {
+            AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:114", "Ignored a failure at UiTouchFeedback:114", ignored);
         }
     }
 }

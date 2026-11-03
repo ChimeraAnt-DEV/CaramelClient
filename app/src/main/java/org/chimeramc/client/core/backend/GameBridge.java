@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.backend;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -26,8 +28,7 @@ public final class GameBridge {
         try {
             android.util.Log.w("GameBridge", message, cause);
         } catch (Throwable ignored) {
-            // Off-device (a JVM unit test) android.util.Log is not present; a diagnostic must
-            // never be the thing that takes the process down.
+            AppLog.warnOnce("GlowberryClient", "GameBridge:31", "Ignored a failure at GameBridge:31", ignored);
         }
     };
 

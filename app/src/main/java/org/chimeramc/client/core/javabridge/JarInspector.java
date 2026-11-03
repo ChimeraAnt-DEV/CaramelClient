@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.javabridge;
 
+import org.chimeramc.client.util.AppLog;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -227,7 +229,7 @@ public final class JarInspector {
                 }
             }
         } catch (IOException ignored) {
-            // An unreadable jar yields an empty list; the caller reports the inspection error.
+            AppLog.warnOnce("GlowberryClient", "JarInspector:232", "Ignored a failure at JarInspector:232", ignored);
         }
         return classes;
     }

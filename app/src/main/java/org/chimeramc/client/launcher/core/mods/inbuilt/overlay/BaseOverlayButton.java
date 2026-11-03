@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -230,7 +232,9 @@ public abstract class BaseOverlayButton {
                     rootView.removeView(overlayView);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:236", "Ignored a failure at BaseOverlayButton:236", ignored);
+        }
         overlayView = null;
         isShowing = false;
         isHiding = false;
@@ -289,6 +293,7 @@ public abstract class BaseOverlayButton {
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
             } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:296", "Ignored a failure at BaseOverlayButton:296", ignored);
             }
             notifyOverlayGeometryChanged();
         } else if (overlayView != null && isShowing) {
@@ -593,7 +598,9 @@ public abstract class BaseOverlayButton {
             wmParams.y = position.y;
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:602", "Ignored a failure at BaseOverlayButton:602", ignored);
+            }
             savePosition(wmParams.x, wmParams.y);
         } else {
             ViewGroup.LayoutParams params = overlayView.getLayoutParams();

@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.os.FileObserver;
 import android.util.Log;
 
@@ -427,7 +429,9 @@ public class ModManager {
                 configList.add(item);
             }
             gson.toJson(configList, writer);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, "ModManager:433", "Ignored a failure at ModManager:433", ignored);
+        }
     }
 
     private void initFileObserver() {
@@ -779,6 +783,7 @@ public class ModManager {
                 versions.add(pattern.trim());
             }
         } catch (UnsupportedOperationException | IllegalStateException ignored) {
+            AppLog.warnOnce(TAG, "ModManager:786", "Ignored a failure at ModManager:786", ignored);
         }
     }
 

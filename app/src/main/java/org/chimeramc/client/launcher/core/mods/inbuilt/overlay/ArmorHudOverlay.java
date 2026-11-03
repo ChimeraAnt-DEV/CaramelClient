@@ -1,5 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
+import org.chimeramc.client.util.AppLog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -116,6 +118,7 @@ public final class ArmorHudOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
+            AppLog.warnOnce("GlowberryClient", "ArmorHudOverlay:121", "Ignored a failure at ArmorHudOverlay:121", ignored);
         }
         overlayView = null;
         wmParams = null;

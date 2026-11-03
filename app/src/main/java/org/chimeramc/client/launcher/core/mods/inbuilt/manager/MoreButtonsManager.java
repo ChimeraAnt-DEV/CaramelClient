@@ -266,8 +266,7 @@ public final class MoreButtonsManager {
                 Log.w(TAG, message, cause);
             }
         } catch (Throwable ignored) {
-            // Off-device; nothing to report to. The log call above is itself the report, so there is
-            // no second sink to write to here.
+            AppLog.warnOnce(TAG, "MoreButtonsManager:269", "Ignored a failure at MoreButtonsManager:269", ignored);
         }
     }
 
