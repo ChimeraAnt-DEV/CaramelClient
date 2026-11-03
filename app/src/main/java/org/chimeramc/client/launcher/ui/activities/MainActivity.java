@@ -224,6 +224,11 @@ import okhttp3.OkHttpClient;
     private int heroInstancesCount;
     private int heroModsCount;
     private String heroPlaytime = "0m";
+    private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>> toggleState;
+    private androidx.compose.ui.platform.ComposeView toggleCompose;
+    private String antEggStatusText = "";
+    private String voiceStatusText = "";
+    private String replayStatusText = "";
     /** True while a launch is in flight, so the hero card and Play button cannot double-fire. */
     private boolean launchInProgress;
     private ValueAnimator activeProgressAnimator;
@@ -328,7 +333,7 @@ import okhttp3.OkHttpClient;
             case HERO:
                 return findViewById(R.id.launch_hero_compose);
             case TOGGLES:
-                return findViewById(R.id.launch_toggle_antegg);
+                return findViewById(R.id.launch_toggles_compose);
             case CONTENT:
                 return findViewById(R.id.section_content);
             case DOCK:
@@ -1490,9 +1495,7 @@ import okhttp3.OkHttpClient;
 
         int[] cardIds = {
                 R.id.launch_hero_compose,
-                R.id.launch_toggle_antegg,
-                R.id.launch_toggle_voice,
-                R.id.launch_toggle_replay
+                R.id.launch_toggles_compose
         };
         for (int id : cardIds) {
             View card = findViewById(id);
@@ -1743,29 +1746,55 @@ import okhttp3.OkHttpClient;
      */
     private void setupLaunchToggles() {
         setupLaunchHero();
-        View antEgg = findViewById(R.id.launch_toggle_antegg);
-        if (antEgg != null) {
-            antEgg.setOnClickListener(v -> openModsFullscreen());
-            DynamicAnim.applyPressScale(antEgg);
-        }
-        View voice = findViewById(R.id.launch_toggle_voice);
-        if (voice != null) {
-            voice.setOnClickListener(v -> startActivity(
-                    new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
-            DynamicAnim.applyPressScale(voice);
-        }
-        // Guest mode removes the Mods and Voice shortcuts from this tab. The nav bar
-        // hides the Mods destination, but the Launch tab reaches the same places through these
-        // cards, so both are resolved through the same rule here rather than left as an open door.
-        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
-        setRowVisible(antEgg, !guest);
-        setRowVisible(voice, !guest);
-        View replay = findViewById(R.id.launch_toggle_replay);
-        if (replay != null) {
-            replay.setOnClickListener(v -> LibraryActivity.open(this, LibraryActivity.TAB_REPLAY));
-            DynamicAnim.applyPressScale(replay);
-        }
+        setupLaunchToggleRow();
         refreshLaunchToggles();
+    }
+
+    /** Hosts the Compose quick-toggle row and keeps its data in step with the live statuses. */
+    private void setupLaunchToggleRow() {
+        View host = findViewById(R.id.launch_toggles_compose);
+        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
+        toggleCompose = (androidx.compose.ui.platform.ComposeView) host;
+        toggleState = org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.state(
+                buildToggleRow());
+        toggleCompose.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.setContent(
+                toggleCompose,
+                toggleState,
+                kind -> {
+                    switch (kind) {
+                        case ANTEGG:
+                            openModsFullscreen();
+                            break;
+                        case VOICE:
+                            startActivity(new Intent(this,
+                                    org.chimeramc.client.ui.activities.VoiceChatActivity.class));
+                            break;
+                        case REPLAY:
+                            LibraryActivity.open(this, LibraryActivity.TAB_REPLAY);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+    }
+
+    /** The row's data: guest mode hides Mods and Voice, and Replays always stays. */
+    private java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>
+            buildToggleRow() {
+        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
+        return org.chimeramc.client.ui.compose.launch.LaunchToggleState.visible(
+                guest,
+                getString(R.string.launch_toggle_antegg), antEggStatusText,
+                getString(R.string.launch_toggle_voice), voiceStatusText,
+                getString(R.string.launch_toggle_replay), replayStatusText);
+    }
+
+    /** Rebuilds the toggle row from the live statuses and recomposes. */
+    private void refreshToggleRow() {
+        if (toggleState == null) return;
+        toggleState.setValue(buildToggleRow());
     }
 
     /**
@@ -1833,25 +1862,20 @@ import okhttp3.OkHttpClient;
      * library's clip count. Nothing here is a second source of truth.
      */
     private void refreshLaunchToggles() {
-        TextView antEggStatus = findViewById(R.id.launch_antegg_status);
-        TextView voiceStatus = findViewById(R.id.launch_voice_status);
-        TextView replayStatus = findViewById(R.id.launch_replay_status);
-
-        // Voice is in-memory state, so it is painted straight away.
-        if (voiceStatus != null) {
-            org.chimeramc.client.core.voice.VoiceChatModule module =
-                    org.chimeramc.client.core.voice.VoiceChatModule.peek();
-            boolean on = module != null && module.isRunning();
-            voiceStatus.setText(on
-                    ? getString(R.string.launch_voice_status_on, getVoiceRouteLabel())
-                    : getString(R.string.launch_voice_status_off));
-        }
+        // Voice is in-memory state, so it is refreshed straight away.
+        org.chimeramc.client.core.voice.VoiceChatModule module =
+                org.chimeramc.client.core.voice.VoiceChatModule.peek();
+        boolean on = module != null && module.isRunning();
+        voiceStatusText = on
+                ? getString(R.string.launch_voice_status_on, getVoiceRouteLabel())
+                : getString(R.string.launch_voice_status_off);
+        refreshToggleRow();
 
         // The other two read the disk: the AntEgg count lists a directory and the Replay count
         // scans the replays folder and asks MediaMetadataRetriever for every clip's duration. On
         // the UI thread that ran on every onResume, so returning from any screen blocked the frame
         // while the video metadata was parsed. Gather both on a worker and paint when they arrive.
-        if (antEggStatus == null && replayStatus == null) return;
+        if (toggleState == null) return;
         // onResume can run against an executor that onDestroy has already shut down, and an
         // escaping RejectedExecutionException would take the Launch tab down with it. The statuses
         // then simply keep their last painted value, which is the right degradation for a
@@ -1862,16 +1886,13 @@ import okhttp3.OkHttpClient;
                 final int replayCount = countReplayClips();
                 uiHandler.post(() -> {
                     if (isFinishing() || isDestroyed()) return;
-                    if (antEggStatus != null) {
-                        antEggStatus.setText(antEggCount > 0
-                                ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
-                                : getString(R.string.launch_antegg_status_none));
-                    }
-                    if (replayStatus != null) {
-                        replayStatus.setText(replayCount > 0
-                                ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
-                                : getString(R.string.launch_replay_status_none));
-                    }
+                    antEggStatusText = antEggCount > 0
+                            ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
+                            : getString(R.string.launch_antegg_status_none);
+                    replayStatusText = replayCount > 0
+                            ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
+                            : getString(R.string.launch_replay_status_none);
+                    refreshToggleRow();
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException ignored) {

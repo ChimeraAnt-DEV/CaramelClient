@@ -138,9 +138,10 @@
                     android:layout_marginTop="@dimen/space_4"
                     android:layout_marginBottom="@dimen/space_3" />
 
-                <!-- Quick-toggle cards: AntEgg packs, Voice, Replays, each with a live status. -->
-                <include
-                    layout="@layout/include_launch_toggles"
+                <!-- Quick-toggle cards: AntEgg packs, Voice, Replays, each with a live status.
+                     A Compose row now; the host binds the live statuses. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_toggles_compose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
