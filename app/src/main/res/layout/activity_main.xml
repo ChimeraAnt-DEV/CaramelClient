@@ -383,46 +383,7 @@
                         app:tint="@color/text_secondary" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/miscDiscordRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_2"
-                    android:background="@drawable/glass_card"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/space_4"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="@dimen/space_3"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_discord"
-                        app:tint="@color/accent_sky" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/discord_join"
-                        android:fontFamily="@font/misans"
-                        android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body" />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginStart="@dimen/space_2"
-                        android:alpha="0.7"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_secondary" />
-                </LinearLayout>
-
+                
                 <LinearLayout
                     android:id="@+id/miscAccountsRow"
                     android:layout_width="match_parent"

@@ -2583,6 +2583,29 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_compat_fix">Fix</string>
     <string name="setup_import_failed">Import failed: %1$s</string>
 
+    <!-- The five-step setup wizard. The licence is the only mandatory step; the rest can be skipped. -->
+    <string name="setup_license_title">GlowberryClient License Agreement</string>
+    <string name="setup_license_body">GlowberryClient is an unofficial Minecraft Bedrock launcher. Read the terms below, then tick the box to continue.</string>
+    <string name="setup_license_agree">I have read and accept these terms</string>
+    <string name="setup_license_terms"><b>1. Unofficial software.</b> GlowberryClient is not affiliated with, endorsed by, or sponsored by Mojang Studios, Microsoft, or the Minecraft brand. Minecraft is a trademark of Mojang Synergies AB.\n\n<b>2. You must own Minecraft.</b> You need a genuine, licensed copy of Minecraft Bedrock Edition to use this client. Do not use it with pirated or otherwise unlicensed copies.\n\n<b>3. Google Play versions are not fully supported.</b> A copy of Minecraft installed from the Google Play Store is stripped of a file the client needs, so it cannot be launched through GlowberryClient. To use every feature, import an authentic Minecraft APK you obtained yourself from the Library.\n\n<b>4. No piracy, no cheating.</b> Do not use this client to pirate the game, to bypass account checks, or to cheat on servers. Server bans and account actions are your own responsibility.\n\n<b>5. Mods and content are your responsibility.</b> Mods, resource packs, scripts and cosmetics you install run at your own risk. The authors and the GlowberryClient team are not responsible for damage, data loss, bans, or account suspension caused by third-party content.\n\n<b>6. Accounts and data.</b> Signing in with a Microsoft account stores a token on this device, protected by the Android Keystore. You can sign out at any time; signing out removes the stored token.\n\n<b>7. Privacy.</b> The client sends nothing about you unless you turn on an opt-in reporting switch, and each switch shows exactly what it would send before you turn it on.\n\n<b>8. No warranty.</b> The software is provided \"as is\", without warranty of any kind. The team is not liable for any claim, damage or other liability arising from its use.\n\n<b>9. Changes.</b> These terms may change between releases; a material change is shown again for your acceptance.\n\nBy continuing you confirm you have read and accept these terms.</string>
+    <string name="setup_instance_title">Install an instance</string>
+    <string name="setup_instance_body">Import an authentic Minecraft Bedrock APK to create your first instance. You can add more later from the Library.</string>
+    <string name="setup_instance_action">Import an instance</string>
+    <string name="setup_signin_title">Sign in to Microsoft</string>
+    <string name="setup_signin_body">Sign in with your Microsoft account to play online, keep your progress, and see your Xbox friends. You can skip this and sign in later from Accounts.</string>
+    <string name="setup_signin_action">Sign in</string>
+    <string name="setup_customize_title">Customise your UI</string>
+    <string name="setup_customize_body">Choose a theme, accent and animation level. You can change any of this later in Settings.</string>
+    <string name="setup_customize_action">Open Customize</string>
+    <string name="setup_finish_title">What\'s new and where to find us</string>
+    <string name="setup_finish_body">See what changed in this release, and join the community on Discord for support and updates.</string>
+    <string name="setup_finish_changelog">View changelog</string>
+    <string name="setup_finish_discord">Join our Discord</string>
+    <string name="setup_next">Next</string>
+    <string name="setup_back">Back</string>
+    <string name="setup_finish">Finish</string>
+    <string name="setup_progress_of">Step %1$d of %2$d</string>
+
     <!-- Named launch failure states (U14). Each cause gets its own copy so a report can name it. -->
     <string name="launch_failure_title_play_store">Can\'t open this Minecraft install</string>
     <string name="launch_failure_message_play_store">This is either a Google Play version of Minecraft or a version missing a specific file needed to launch the game.\n\nThe launcher has to load the game\'s native library directly, and the Play Store build keeps it inside the installed app where this launcher cannot reach it.\n\nTo play, import a Minecraft APK from the Library instead. A Play Store install can stay on your device — you do not have to remove it.</string>

@@ -262,7 +262,6 @@ import okhttp3.OkHttpClient;
         if (!isInstanceShortcutIntent()) {
             new GithubReleaseUpdater(this, GithubReleaseUpdater.REPO_OWNER, GithubReleaseUpdater.REPO_NAME, permissionResultLauncher).checkUpdateOnLaunch();
         }
-        showEulaIfNeeded();
         setupOnBackPressedCallback();
 
         accountLoginLauncher = registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(), result -> {
@@ -1097,8 +1096,7 @@ import okhttp3.OkHttpClient;
     }
 
     private void showPostEulaFlow() {
-        SharedPreferences prefs = getSharedPreferences("LauncherPrefs", MODE_PRIVATE);
-        if (!prefs.getBoolean("eula_accepted", false) || postEulaFlowRunning) return;
+        if (postEulaFlowRunning) return;
         if (isInstanceShortcutIntent()) {
             showStorageMigrationPromptIfNeeded();
             return;
@@ -1327,29 +1325,6 @@ import okhttp3.OkHttpClient;
             return getString(R.string.storage_migration_duration_minutes_seconds, minutes, remainingSeconds);
         }
         return getString(R.string.storage_migration_duration_seconds, remainingSeconds);
-    }
-
-    private void showEulaIfNeeded() {
-        SharedPreferences prefs = getSharedPreferences("LauncherPrefs", MODE_PRIVATE);
-        if (!prefs.getBoolean("eula_accepted", false)) {
-            showEulaDialog();
-        }
-    }
-
-    private void showEulaDialog() {
-        CustomAlertDialog dia = new CustomAlertDialog(this)
-                .setTitleText(getString(R.string.eula_title))
-                .setMessage(getString(R.string.eula_message))
-                .setUseBorderedBackground(true)
-                .setBlurBackground(true)
-                .setPositiveButton(getString(R.string.eula_agree), v -> {
-                    getSharedPreferences("LauncherPrefs", MODE_PRIVATE)
-                            .edit().putBoolean("eula_accepted", true).apply();
-                    binding.getRoot().postDelayed(this::showPostEulaFlow, 220L);
-                })
-                .setNegativeButton(getString(R.string.eula_exit), v -> finishAffinity());
-        dia.setCancelable(false);
-        dia.show();
     }
 
     @Override
@@ -2152,10 +2127,6 @@ import okhttp3.OkHttpClient;
         boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
         setRowVisible(binding.miscModHubRow, !guest);
         setRowVisible(binding.miscCurseforgeRow, !guest);
-        if (binding.miscDiscordRow != null) {
-            binding.miscDiscordRow.setOnClickListener(v -> openDiscordInvite());
-            DynamicAnim.applyPressScale(binding.miscDiscordRow);
-        }
         binding.miscAccountsRow.setOnClickListener(v -> startActivity(new Intent(this, AccountsActivity.class)));
         binding.miscQuickLaunchRow.setOnClickListener(v -> startActivity(new Intent(this, QuickLaunchActivity.class)));
         DynamicAnim.applyPressScale(binding.miscCurseforgeRow);
@@ -2237,21 +2208,6 @@ import okhttp3.OkHttpClient;
     private void openModsFullscreen() {
         Intent intent = new Intent(this, ModsFullscreenActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Opens the community Discord invite. The URL is a plain https link (a string resource), so any
-     * installed Discord app or a browser can handle it; a failure to resolve is reported rather than
-     * crashing.
-     */
-    private void openDiscordInvite() {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    android.net.Uri.parse(getString(R.string.discord_join_url)));
-            startActivity(intent);
-        } catch (Throwable t) {
-            Toast.makeText(this, R.string.discord_join_failed, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void launchGame() {
