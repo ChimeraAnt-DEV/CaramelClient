@@ -18,7 +18,7 @@ public class AccountSectionStateTest {
 
     private static AccountSectionState signedIn() {
         return new AccountSectionState(true, "a@b.com", "Gamertag", "Steve", "12345", "url",
-                AccountSectionState.FriendsStatus.NOT_AVAILABLE);
+                AccountSectionState.FriendsStatus.LOADING, java.util.Collections.emptyList(), "");
     }
 
     @Test
@@ -32,7 +32,7 @@ public class AccountSectionStateTest {
         assertEquals("12345", rows.get(3).value);
 
         AccountSectionState partial = new AccountSectionState(true, "a@b.com", "", "Steve", "",
-                "", AccountSectionState.FriendsStatus.NOT_AVAILABLE);
+                "", AccountSectionState.FriendsStatus.LOADING, java.util.Collections.emptyList(), "");
         List<AccountSectionState.Row> partialRows = partial
                 .rows("Email", "Gamertag", "Minecraft", "XUID");
         assertEquals("an empty field must be omitted, not shown blank", 2, partialRows.size());
@@ -43,7 +43,7 @@ public class AccountSectionStateTest {
     @Test
     public void nullFieldsAreTreatedAsEmpty() {
         AccountSectionState s = new AccountSectionState(true, null, null, null, null, null,
-                AccountSectionState.FriendsStatus.NOT_AVAILABLE);
+                AccountSectionState.FriendsStatus.LOADING, null, null);
         assertTrue(s.rows("a", "b", "c", "d").isEmpty());
         assertEquals("", s.email);
     }
@@ -58,8 +58,24 @@ public class AccountSectionStateTest {
     }
 
     @Test
-    public void theFriendsStatusIsHonestOnASignedInAccount() {
-        assertEquals("friends are not listable on this build, so the section says so",
-                AccountSectionState.FriendsStatus.NOT_AVAILABLE, signedIn().friendsStatus);
+    public void aFriendsResultUpdatesInPlace() {
+        // The account details survive a friends update; only the friends fields change.
+        AccountSectionState updated = signedIn().withFriends(
+                AccountSectionState.FriendsStatus.LOADED,
+                java.util.List.of(new org.chimeramc.client.core.xbox.XboxPeopleHub.Friend(
+                        "1", "Steve", "", "", "Online", "Playing")),
+                "");
+        assertEquals("a@b.com", updated.email);
+        assertEquals(AccountSectionState.FriendsStatus.LOADED, updated.friendsStatus);
+        assertEquals(1, updated.friends.size());
+        assertTrue(updated.friends.get(0).isOnline());
+    }
+
+    @Test
+    public void anErrorCarriesItsReason() {
+        AccountSectionState failed = signedIn().withFriends(
+                AccountSectionState.FriendsStatus.ERROR, null, "Unauthorized");
+        assertEquals("Unauthorized", failed.friendsError);
+        assertTrue(failed.friends.isEmpty());
     }
 }

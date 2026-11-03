@@ -2575,7 +2575,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="account_xuid">Xbox Live ID</string>
     <string name="account_details_unavailable">Account details are not available for this account yet.</string>
     <string name="account_friends_title">Minecraft friends</string>
-    <string name="account_friends_not_available">Your friends list is not available on this build yet. Xbox Live friends are read through the Xbox friends page for now.</string>
+    <string name="account_friends_loading">Reading your Xbox Live friends…</string>
+    <string name="account_friends_empty">No friends yet. Add one below.</string>
+    <string name="account_friends_error">Could not read your friends list.</string>
+    <string name="account_friends_signed_out">Sign in to see your friends.</string>
     <string name="account_add_friend">Add a friend</string>
     <string name="account_customize_tab">Account</string>
     <!-- First-run device compatibility pass. Each row is a check with its own fix. -->

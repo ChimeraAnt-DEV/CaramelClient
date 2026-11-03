@@ -14,10 +14,14 @@ import java.util.List;
  */
 public final class AccountSectionState {
 
-    /** Why the friends list has no entries. */
+    /** The friends list's load state. */
     public enum FriendsStatus {
-        /** A signed-in account whose friends could not be listed (no PeopleHub in this build). */
-        NOT_AVAILABLE,
+        /** A signed-in account; the friends are being read from Xbox Live PeopleHub. */
+        LOADING,
+        /** The friends were read. The list may be empty, which is a real "no friends" answer. */
+        LOADED,
+        /** The read failed; {@link #friendsError} says why. */
+        ERROR,
         /** No account is signed in. */
         SIGNED_OUT,
     }
@@ -33,11 +37,19 @@ public final class AccountSectionState {
     public final String xuid;
     public final String avatarUrl;
     public final FriendsStatus friendsStatus;
+    /** The friends read from PeopleHub, empty until {@link FriendsStatus#LOADED}. */
+    public final java.util.List<org.chimeramc.client.core.xbox.XboxPeopleHub.Friend> friends;
+    /** The failure reason when {@link FriendsStatus#ERROR}, else empty. */
+    public final String friendsError;
 
     public AccountSectionState(boolean signedIn, String email, String gamertag,
                                String minecraftName, String xuid, String avatarUrl,
-                               FriendsStatus friendsStatus) {
+                               FriendsStatus friendsStatus,
+                               java.util.List<org.chimeramc.client.core.xbox.XboxPeopleHub.Friend> friends,
+                               String friendsError) {
         this.signedIn = signedIn;
+        this.friends = friends == null ? java.util.Collections.emptyList() : friends;
+        this.friendsError = safe(friendsError);
         this.email = safe(email);
         this.gamertag = safe(gamertag);
         this.minecraftName = safe(minecraftName);
@@ -52,7 +64,8 @@ public final class AccountSectionState {
 
     /** The signed-out state. */
     public static AccountSectionState signedOut() {
-        return new AccountSectionState(false, "", "", "", "", "", FriendsStatus.SIGNED_OUT);
+        return new AccountSectionState(false, "", "", "", "", "", FriendsStatus.SIGNED_OUT,
+                java.util.Collections.emptyList(), "");
     }
 
     /**
@@ -69,6 +82,14 @@ public final class AccountSectionState {
         if (!minecraftName.isEmpty()) out.add(new Row(minecraftLabel, minecraftName));
         if (!xuid.isEmpty()) out.add(new Row(xuidLabel, xuid));
         return out;
+    }
+
+    /** The same account details with a new friends result, for the screen to update in place. */
+    public AccountSectionState withFriends(FriendsStatus status,
+            java.util.List<org.chimeramc.client.core.xbox.XboxPeopleHub.Friend> friends,
+            String error) {
+        return new AccountSectionState(signedIn, email, gamertag, minecraftName, xuid, avatarUrl,
+                status, friends, error);
     }
 
     /** Whether the Add Friend action can be offered (it needs a signed-in account). */

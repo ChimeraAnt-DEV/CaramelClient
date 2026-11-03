@@ -218,6 +218,35 @@ public final class MsftAuthManager {
         return authManager;
     }
 
+    /**
+     * The account's Xbox Live XSTS token, for a PeopleHub read.
+     *
+     * <p>Reuses the deserialize path {@link #refreshAndAuth} uses, so the token is the account's own
+     * — the relying party is {@code http://xboxlive.com}, which is what PeopleHub accepts. The call
+     * refreshes the token if it has expired, so it can hit the network and must run off the UI thread.
+     *
+     * @return a two-element array {@code {userHash, token}}, or null when the account cannot produce
+     *     one (missing or damaged account data, or a failed refresh).
+     */
+    public static String[] xboxLiveXsts(MsftAccountStore.MsftAccount account) {
+        if (account == null || TextUtils.isEmpty(account.serializedAuthManager)) return null;
+        try {
+            HttpClient httpClient = createHttpClient();
+            JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
+            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, GAME_VERSION, json);
+            net.raphimc.minecraftauth.xbl.model.XblXstsToken xsts =
+                    authManager.getXboxLiveXstsToken().getUpToDate();
+            if (xsts == null) return null;
+            String token = xsts.getToken();
+            String userHash = xsts.getUserHash();
+            if (TextUtils.isEmpty(token) || TextUtils.isEmpty(userHash)) return null;
+            return new String[] { userHash, token };
+        } catch (Throwable t) {
+            Log.w(TAG, "Could not mint the Xbox Live XSTS token", t);
+            return null;
+        }
+    }
+
     public static MsftAccountStore.MsftAccount saveAccountAndActivateWithRetry(
             Context context,
             BedrockAuthManager authManager,

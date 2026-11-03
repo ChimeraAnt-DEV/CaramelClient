@@ -1,13 +1,16 @@
 package org.chimeramc.client.ui.compose.account
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -121,11 +124,38 @@ fun AccountSection(
                     fontWeight = FontWeight.Bold,
                 )
                 Spacer(Modifier.height(GlowDimens.SPACE_2.dp))
-                Text(
-                    text = stringResource(R.string.account_friends_not_available),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.textSecondary,
-                )
+                when (state.friendsStatus) {
+                    AccountSectionState.FriendsStatus.LOADING -> Text(
+                        text = stringResource(R.string.account_friends_loading),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.textSecondary,
+                    )
+                    AccountSectionState.FriendsStatus.ERROR -> Text(
+                        text = state.friendsError.ifEmpty {
+                            stringResource(R.string.account_friends_error)
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.danger,
+                    )
+                    AccountSectionState.FriendsStatus.LOADED -> if (state.friends.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.account_friends_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = colors.textSecondary,
+                        )
+                    } else {
+                        Column {
+                            for (friend in state.friends) {
+                                FriendRow(friend)
+                            }
+                        }
+                    }
+                    else -> Text(
+                        text = stringResource(R.string.account_friends_signed_out),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.textSecondary,
+                    )
+                }
                 Spacer(Modifier.height(GlowDimens.SPACE_4.dp))
                 Button(
                     onClick = onAddFriend,
@@ -133,6 +163,46 @@ fun AccountSection(
                 ) {
                     Text(stringResource(R.string.account_add_friend))
                 }
+            }
+        }
+    }
+}
+
+/** One friend: gamertag, online dot and the presence line. */
+@Composable
+private fun FriendRow(friend: org.chimeramc.client.core.xbox.XboxPeopleHub.Friend) {
+    val colors = glowColors
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = GlowDimens.SPACE_2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .size(GlowDimens.NAV_TAB_DOT_SIZE.dp)
+                .background(
+                    if (friend.isOnline) colors.success else colors.textDisabled,
+                    RoundedCornerShape(percent = 50),
+                ),
+        )
+        Spacer(Modifier.width(GlowDimens.SPACE_3.dp))
+        Column {
+            Text(
+                text = friend.gamertag,
+                style = MaterialTheme.typography.bodyMedium,
+                color = colors.textPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (friend.presenceText.isNotEmpty()) {
+                Text(
+                    text = friend.presenceText,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colors.textSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
     }

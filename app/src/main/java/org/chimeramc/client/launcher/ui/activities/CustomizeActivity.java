@@ -40,6 +40,10 @@ public class CustomizeActivity extends BaseActivity {
     private TextView skinsTab;
     private TextView accountTab;
     private androidx.compose.ui.platform.ComposeView accountCompose;
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.account.AccountSectionState> accountState;
+    private final org.chimeramc.client.core.xbox.XboxFriendsClient friendsClient =
+            new org.chimeramc.client.core.xbox.XboxFriendsClient();
+    private org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount activeAccount;
     private int accent;
 
     @Override
@@ -112,21 +116,26 @@ public class CustomizeActivity extends BaseActivity {
                 new android.view.ViewGroup.LayoutParams(
                         android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                         android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        accountState = org.chimeramc.client.ui.compose.account.AccountSectionHost.state(
+                buildAccountState());
         org.chimeramc.client.ui.compose.account.AccountSectionHost.setContent(
                 accountCompose,
-                buildAccountState(),
+                accountState,
                 this::openXboxFriends,
                 () -> startActivity(new Intent(this, AccountsActivity.class)));
+        loadFriends();
         styleTabs(TAB_CONTROLLER, false);
         styleTabs(TAB_ACCOUNT, true);
     }
 
-    /** Reads the active account into the section's data. */
+    /** Reads the active account into the section's data; friends start in the loading state. */
     private org.chimeramc.client.ui.compose.account.AccountSectionState buildAccountState() {
+        activeAccount = null;
         try {
             for (org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount account
                     : org.chimeramc.client.core.auth.MsftAccountStore.list(this)) {
                 if (account.active) {
+                    activeAccount = account;
                     return new org.chimeramc.client.ui.compose.account.AccountSectionState(
                             true,
                             account.msUserId,
@@ -134,7 +143,9 @@ public class CustomizeActivity extends BaseActivity {
                             account.minecraftUsername,
                             account.xuid,
                             account.xboxAvatarUrl,
-                            org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.NOT_AVAILABLE);
+                            org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.LOADING,
+                            java.util.Collections.emptyList(),
+                            "");
                 }
             }
         } catch (Throwable t) {
@@ -142,6 +153,46 @@ public class CustomizeActivity extends BaseActivity {
                     "Could not read the account for the account section", t);
         }
         return org.chimeramc.client.ui.compose.account.AccountSectionState.signedOut();
+    }
+
+    /**
+     * Reads the active account's Xbox Live friends from PeopleHub.
+     *
+     * <p>The XSTS token is minted off the UI thread (it can refresh over the network), then the
+     * friends read runs on the client's own thread; the result is pushed into the account state, so
+     * the section moves from "Reading…" to the list, an empty list, or a named error.
+     */
+    private void loadFriends() {
+        if (activeAccount == null || accountState == null) return;
+        final org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount account =
+                activeAccount;
+        org.chimeramc.client.util.AppExecutors.run(
+                org.chimeramc.client.util.AppExecutors.Kind.NETWORK, "xbox-friends-token", () -> {
+            String[] xsts = org.chimeramc.client.core.auth.MsftAuthManager
+                    .xboxLiveXsts(account);
+            if (xsts == null) {
+                runOnUiThread(() -> setFriendsState(
+                        org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.ERROR,
+                        java.util.Collections.emptyList(),
+                        getString(R.string.account_friends_error)));
+                return;
+            }
+            friendsClient.fetch(account.xuid, xsts[0], xsts[1], (friends, error) ->
+                    runOnUiThread(() -> setFriendsState(
+                            error == null
+                                    ? org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.LOADED
+                                    : org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus.ERROR,
+                            friends, error)));
+        });
+    }
+
+    /** Pushes a friends result into the Compose state. */
+    private void setFriendsState(
+            org.chimeramc.client.ui.compose.account.AccountSectionState.FriendsStatus status,
+            java.util.List<org.chimeramc.client.core.xbox.XboxPeopleHub.Friend> friends,
+            String error) {
+        if (accountState == null || isFinishing() || isDestroyed()) return;
+        accountState.setValue(accountState.getValue().withFriends(status, friends, error));
     }
 
     /** Opens the account's Xbox friends page, which is where friends are managed for now. */
