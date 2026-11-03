@@ -1055,6 +1055,18 @@ public final class InbuiltModuleProvider {
                     "120", "10", "200",
                     String.valueOf(manager.getCursorSensitivity())));
         } else if (ModIds.ZOOM.equals(modId)) {
+            // The keybind is always offered: it is the input that would drive zoom once a backend
+            // provides one. The four shaping sliders are hidden while no backend advertises
+            // Feature.ZOOM, because they change a field-of-view zoom nothing can apply — offering
+            // them would be four controls that visibly do nothing.
+            configs.add(config(CFG_ZOOM_KEYBIND,
+                    context.getString(R.string.mod_config_zoom_keybind),
+                    UnifiedMod.ConfigType.KEYBIND,
+                    "", "", "",
+                    String.valueOf(manager.getZoomKeybind())));
+            if (ModIds.requiresBackendFeature(ModIds.ZOOM)) {
+                return configs;
+            }
             configs.add(config(CFG_ZOOM_LEVEL,
                     context.getString(R.string.mod_config_zoom_level_percent),
                     UnifiedMod.ConfigType.SLIDER_INT,
@@ -1065,11 +1077,6 @@ public final class InbuiltModuleProvider {
                     UnifiedMod.ConfigType.SLIDER_INT,
                     "150", "0", "1000",
                     String.valueOf(manager.getZoomTransitionDuration())));
-            configs.add(config(CFG_ZOOM_KEYBIND,
-                    context.getString(R.string.mod_config_zoom_keybind),
-                    UnifiedMod.ConfigType.KEYBIND,
-                    "", "", "",
-                    String.valueOf(manager.getZoomKeybind())));
             configs.add(config(CFG_ZOOM_SCROLL_SENSITIVITY,
                     context.getString(R.string.mod_config_zoom_scroll_sensitivity),
                     UnifiedMod.ConfigType.SLIDER_INT,

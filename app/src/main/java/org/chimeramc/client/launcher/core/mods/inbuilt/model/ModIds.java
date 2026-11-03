@@ -1,5 +1,6 @@
 package org.chimeramc.client.core.mods.inbuilt.model;
 
+import org.chimeramc.client.core.backend.GameBackend;
 import org.chimeramc.client.util.Api28Compat;
 
 public final class ModIds {
@@ -153,6 +154,32 @@ public final class ModIds {
         return Api28Compat.listOf(FPS_DISPLAY, CPS_DISPLAY, ARMOR_HUD, HIT_TIMING, HITBOX,
                 AIM_SETTINGS, TOGGLE_HUD, LIST_PLAYERS, DEBUG_MENU, VIRTUAL_CURSOR, HOTBAR_SLOT,
                 CHICK_PET, REACH_INDICATOR, HIT_PREDICTION, TRAJECTORY_PREDICTION, KILL_EFFECTS);
+    }
+
+    /**
+     * The backend capability a module needs before it can run, or null when it needs none.
+     *
+     * <p>A module whose only route to an effect is a backend feature must be badged while no backend
+     * advertises that feature. Zoom is the one such module: a field-of-view change is not something
+     * the launcher can do by injecting input, so with no backend that reports
+     * {@link GameBackend.Feature#ZOOM} (a future backend reaches it through BerryAPI's
+     * {@code render.set_zoom}) the module cannot produce anything and must read as not available
+     * rather than toggling to no effect.
+     */
+    public static GameBackend.Feature requiredBackendFeature(String modId) {
+        return ZOOM.equals(modId) ? GameBackend.Feature.ZOOM : null;
+    }
+
+    /**
+     * True when the active backend does not provide what the module needs.
+     *
+     * <p>Reads {@link org.chimeramc.client.core.backend.GameBridge}, so the answer follows the live
+     * backend: registering one that provides the feature un-badges the module without a rebuild.
+     */
+    public static boolean requiresBackendFeature(String modId) {
+        GameBackend.Feature feature = requiredBackendFeature(modId);
+        return feature != null
+                && !org.chimeramc.client.core.backend.GameBridge.supports(feature);
     }
 
     /**
