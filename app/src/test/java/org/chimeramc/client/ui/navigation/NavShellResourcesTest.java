@@ -99,7 +99,7 @@ public class NavShellResourcesTest {
 
     @Test
     public void theRailFoldControlStartsHiddenAndIsATouchTarget() throws IOException {
-        // Item 85. The control is shown only on an expanded rail, so it must be declared gone (the
+        // The control is shown only on an expanded rail, so it must be declared gone (the
         // first frame on a phone must not flash it) and must meet the 48dp target when it is shown.
         String rail = read("app/src/main/res/layout/nav_rail.xml");
         Matcher m = Pattern.compile(
@@ -157,7 +157,7 @@ public class NavShellResourcesTest {
 
     @Test
     public void noPaddingIsEverSetFromAWidthDimen() throws IOException {
-        // Item 82. The original rail bug was a tab whose paddingStart was @dimen/nav_rail_width:
+        // The original rail bug was a tab whose paddingStart was @dimen/nav_rail_width:
         // a match_parent row then pushes its icon and label off the right edge, which no build
         // machine can see. The general shape of that mistake is a padding attribute fed from a
         // dimen whose name says "width", so that is what this forbids, in every layout and every
@@ -191,7 +191,7 @@ public class NavShellResourcesTest {
 
     @Test
     public void theBarChainDeclaresItsStyleAndBiasOnceOnTheHead() throws IOException {
-        // Item 69. The wordmark and the tab strip are one packed horizontal chain. A packed chain
+        // The wordmark and the tab strip are one packed horizontal chain. A packed chain
         // reads its style and its bias from the head element only, so a bias on the middle element
         // is dead configuration - it reads as if it positions the strip and it does nothing. The
         // declaration therefore lives on the wordmark (the head, which starts the chain) and the
@@ -216,7 +216,7 @@ public class NavShellResourcesTest {
 
     @Test
     public void theAttentionDotExistsAndIsSmallerThanATouchTarget() throws IOException {
-        // Item 83. The dot is a marker, not a control: it must have a real drawable and its own
+        // The dot is a marker, not a control: it must have a real drawable and its own
         // dimen, and it must be small enough to read as "something is waiting" rather than as a
         // button. A dot sized like a touch target is the mistake this forbids.
         String dimens = read("app/src/main/res/values/dimens.xml");

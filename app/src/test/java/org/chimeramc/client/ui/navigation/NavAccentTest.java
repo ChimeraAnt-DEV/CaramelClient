@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the active-tab contrast floor (item 87).
+ * Pins the active-tab contrast floor.
  *
  * <p>Under Material You the accent is whatever the wallpaper produces, so the failure this guards
  * is a selected tab whose label is the same lightness as the navigation surface. The tests use

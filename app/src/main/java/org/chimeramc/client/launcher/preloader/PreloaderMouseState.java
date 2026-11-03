@@ -3,7 +3,7 @@ package org.chimeramc.client.preloader;
 import android.view.MotionEvent;
 
 /**
- * The launcher-side mouse button state machine (item 215).
+ * The launcher-side mouse button state machine.
  *
  * <p>Split out of {@code PreloaderInput} so the transition rules are testable without a native
  * library and so the input facade is one concern lighter. The native declarations must stay on

@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Every exported component is a deliberate decision (item 513).
+ * Every exported component is a deliberate decision.
  *
  * <p>Reads the real manifest and fails when a component is exported without a recorded reason, so a
  * new {@code android:exported="true"} cannot slip in un-reviewed. The complementary direction is

@@ -22,7 +22,7 @@ public class InbuiltOverlayManager {
         /**
          * Reports the selected overlay's size and opacity.
          *
-         * <p>Item 221 asks for per-button opacity in the editor. The opacity rides this callback
+         * <p>The HUD editor gives each overlay its own opacity. It rides this callback
          * rather than a second listener so the panel cannot show a size from one overlay and an
          * opacity from another: both values are read from the same selection in one pass.
          */
@@ -68,9 +68,9 @@ public class InbuiltOverlayManager {
     private String selectedDisplayModId;
     private HudEditorSelectionListener hudEditorSelectionListener;
     private boolean hudEditorMode = false;
-    /** True while the player has hidden the HUD overlays for a screenshot (item 213). */
+    /** True while the player has hidden the HUD overlays for a screenshot. */
     private boolean overlaysHiddenForScreenshot;
-    /** Recognises the three-finger hide-all tap (item 213); UI-thread only. */
+    /** Recognises the three-finger hide-all tap; UI-thread only. */
     private final HideAllGestureDetector hideAllGesture = new HideAllGestureDetector();
     private int baseY = 150;
     private static final int SPACING = 70;
@@ -101,7 +101,7 @@ public class InbuiltOverlayManager {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         if (!manager.isModMenuEnabled()) return;
 
-        // Overlay positions are stored as fractions of the surface (item 211); record the surface
+        // Overlay positions are stored as fractions of the surface; record the surface
         // they are relative to before any position is read or written.
         manager.setOverlaySurfaceMetrics(activity.getResources().getDisplayMetrics());
 
@@ -209,7 +209,7 @@ public class InbuiltOverlayManager {
 
         modMenuButton = new ModMenuButton(activity);
         modMenuButton.show(START_X, nextY);
-        // The pause-menu button row (item 224) attaches with the session and is shown only while
+        // The pause-menu button row attaches with the session and is shown only while
         // the game's pause menu is open, so it never competes with gameplay.
         if (pauseMenuRow == null) {
             pauseMenuRow = new PauseMenuRow(activity);
@@ -221,7 +221,7 @@ public class InbuiltOverlayManager {
         CatalogModuleHost.restoreEnabled(activity, this, manager);
         refreshExternalButtons();
         // A layout the player had active comes back with this session, so a PvP arrangement
-        // survives a relaunch without a trip through the manager (item 212).
+        // survives a relaunch without a trip through the manager.
         restoreActiveOverlayLayout(manager);
         refreshRuntimeVisibility();
     }
@@ -914,7 +914,7 @@ public class InbuiltOverlayManager {
 
 
     /**
-     * Tells the overlays the game window lost focus (item 195).
+     * Tells the overlays the game window lost focus.
      *
      * <p>A module that holds a key for the player must not stay armed while another app owns the
      * window: the backend releases the key, and the overlay drops its own flag so the indicator and
@@ -925,7 +925,7 @@ public class InbuiltOverlayManager {
             autoSprintOverlay.onFocusLost();
         }
         // A gesture that was in flight when the window lost focus must not complete later and
-        // toggle the HUD by surprise (item 213).
+        // toggle the HUD by surprise.
         resetHideAllGesture();
     }
 
@@ -1351,7 +1351,7 @@ public class InbuiltOverlayManager {
 
     public boolean handleTouchEvent(MotionEvent event) {
         // A three-finger tap hides every HUD overlay for a clean screenshot, and the same gesture
-        // brings them back (item 213). It is checked first so the gesture is recognised whatever
+        // brings them back. It is checked first so the gesture is recognised whatever
         // else would otherwise consume the event.
         if (handleHideAllGesture(event)) {
             return true;
@@ -1363,7 +1363,7 @@ public class InbuiltOverlayManager {
     }
 
     /**
-     * Feeds one touch event to the three-finger hide-all detector (item 213).
+     * Feeds one touch event to the three-finger hide-all detector.
      *
      * @return true when the gesture completed and the overlays were toggled
      */
@@ -1381,7 +1381,7 @@ public class InbuiltOverlayManager {
     }
 
     /**
-     * Hides or restores every HUD overlay for a screenshot (item 213).
+     * Hides or restores every HUD overlay for a screenshot.
      *
      * <p>The flag is part of the visibility state hash, so the tick that follows re-applies the
      * change; nothing else has to know the overlays are hidden.
@@ -1520,7 +1520,7 @@ public class InbuiltOverlayManager {
 
     public void setHudEditorMode(boolean active) {
         hudEditorMode = active;
-        // Item 210: enable grid snapping for every overlay drag while the editor is open, and clear
+        // Enable grid snapping for every overlay drag while the editor is open, and clear
         // it on exit so a gameplay drag is never silently quantised.
         OverlaySafeArea.setEditorGrid(active
                 ? Math.round(OverlaySafeArea.DEFAULT_GRID_DP
@@ -1638,7 +1638,7 @@ public class InbuiltOverlayManager {
         return 0;
     }
 
-    /** The selected overlay's opacity, or 0 when nothing is selected (item 221). */
+    /** The selected overlay's opacity, or 0 when nothing is selected. */
     public int getSelectedHudEditorOpacity() {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         if (selectedHudEditorOverlay != null) {
@@ -1650,7 +1650,7 @@ public class InbuiltOverlayManager {
         return 0;
     }
 
-    /** Applies an opacity to the selected overlay and refreshes it live (item 221). */
+    /** Applies an opacity to the selected overlay and refreshes it live. */
     public void setSelectedHudEditorOpacity(int opacity) {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         if (selectedHudEditorOverlay != null) {
@@ -1784,7 +1784,7 @@ public class InbuiltOverlayManager {
         tick();
     }
 
-    // --- Overlay layouts (item 212) -----------------------------------------------------------
+    // --- Overlay layouts -----------------------------------------------------------
     //
     // A layout is a named set of overlay positions, so a player can keep a PvP arrangement and a
     // survival one and switch between them from the wheel. Only positions are captured: which

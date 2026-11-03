@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fold scripts/translations_priority.json into values-<locale>/strings.xml (items 24, 331).
+"""Fold scripts/translations_priority.json into values-<locale>/strings.xml.
 
 A translation batch is data, not a hand edit: this script applies it, refuses anything that would
 break at runtime, and is idempotent, so the batch can be reviewed, regenerated and re-applied

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The streaming-safe masks (item 277), tested without a device.
+ * The streaming-safe masks, tested without a device.
  *
  * <p>The rules must mask what is identifying and leave everything else alone: over-masking a log
  * hides the bug being reported, and under-masking leaks what the mode exists to protect.

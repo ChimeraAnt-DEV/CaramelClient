@@ -8,7 +8,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Writes a file so a crash or a kill can never leave a half-written one behind (item 302).
+ * Writes a file so a crash or a kill can never leave a half-written one behind.
  *
  * <p>A plain {@code writeText} truncates the target and then streams the new content into it. If
  * the process dies between those two moments - and a launcher writing its extraction manifest

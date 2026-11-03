@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Enlarges a small control's touch area without changing how it looks (items 91, 339).
+ * Enlarges a small control's touch area without changing how it looks.
  *
  * <p>A 27dp icon button is the right size to draw and the wrong size to press; Material's minimum
  * is 48dp. The two ways to fix that are to draw the button bigger, which pushes the row it sits in

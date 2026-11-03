@@ -75,7 +75,7 @@ public final class FrameRateMeter {
         return counter.onePercentLowFps();
     }
 
-    /** The rolling frame-interval history, for the overlay's graph mode (item 191). */
+    /** The rolling frame-interval history, for the overlay's graph mode. */
     public FrameTimeHistory history() {
         return history;
     }

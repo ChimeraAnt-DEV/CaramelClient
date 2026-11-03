@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Describes exactly what a crash report upload contains, before it is sent (item 518).
+ * Describes exactly what a crash report upload contains, before it is sent.
  *
  * <p>The Settings switch is a consent, and consent is only meaningful if the user can see what they
  * are consenting to. This class builds that description from the same values the uploader sends —

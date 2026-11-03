@@ -85,7 +85,7 @@ public class DisplayModePreferenceTest {
         assertEquals(2, DisplayModePreference.selectHighRefreshModeId(modes, 1080, 2400));
     }
 
-    // --- Frame cap (item 225) --------------------------------------------------------------
+    // --- Frame cap --------------------------------------------------------------
 
     @Test
     public void aCapPicksTheFastestSameResolutionModeAtOrBelowIt() {

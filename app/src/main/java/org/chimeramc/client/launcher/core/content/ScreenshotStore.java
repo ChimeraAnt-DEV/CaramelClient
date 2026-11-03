@@ -12,7 +12,7 @@ import org.chimeramc.client.util.LauncherStorage;
 import java.io.File;
 
 /**
- * Resolves the selected instance's {@code Screenshots} folder (item 224).
+ * Resolves the selected instance's {@code Screenshots} folder.
  *
  * <p>Two callers now need it — the catalogue's screenshot action and the pause-menu button row —
  * and a second copy of the storage-type resolution is exactly how the two would drift onto

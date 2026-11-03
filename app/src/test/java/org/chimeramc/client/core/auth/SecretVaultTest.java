@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Item 515 — the rules of the Keystore vault that do not need a device.
+ * The rules of the Keystore vault that do not need a device.
  *
  * <p>The Keystore itself only exists on Android, so the round-trip is a device test. What is
  * pinned here is the classification and the failure contract: a value is either recognisably ours

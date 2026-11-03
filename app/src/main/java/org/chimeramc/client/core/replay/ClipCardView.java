@@ -201,7 +201,7 @@ final class ClipCardView extends FrameLayout {
                 scrubDownY = event.getY();
                 return false;
             case android.view.MotionEvent.ACTION_MOVE: {
-                // The slop/horizontal decision and the fraction are pure rules (item 206), so the
+                // The slop/horizontal decision and the fraction are pure rules, so the
                 // view only feeds them the touch coordinates.
                 if (!scrubActive) {
                     int slop = android.view.ViewConfiguration.get(context).getScaledTouchSlop();

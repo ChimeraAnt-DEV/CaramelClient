@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 
 /**
- * The files item 13 named as silently swallowing failures must not regress (items 13, 300).
+ * The files that silently swallowed failures must not regress.
  *
  * <p>A truly empty catch — {@code catch (Exception ignored) {}} — turns a failure into nothing:
  * the feature stops working and no one, including the in-app log viewer, is told. That is how a

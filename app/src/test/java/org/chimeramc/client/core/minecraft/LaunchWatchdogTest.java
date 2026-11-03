@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the launch-watchdog rule (item 285).
+ * Pins the launch-watchdog rule.
  *
  * <p>The boundaries matter: a launch that is still progressing must never be interrupted, and the
  * two escalation states must not fire a moment early or a moment late.

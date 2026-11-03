@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * The one place work is posted to the main thread (items 14, 295).
+ * The one place work is posted to the main thread.
  *
  * <p>There were 77 {@code new Handler(Looper.getMainLooper())} constructions. Most were an instance
  * field that posts a repeating tick and removes it in {@code onDestroy} — but a tick that is posted

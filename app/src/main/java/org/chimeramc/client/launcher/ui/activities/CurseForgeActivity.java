@@ -85,7 +85,7 @@ public class CurseForgeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Guest mode removes every mod surface (item 272). The launch rows are hidden, but these
+        // Guest mode removes every mod surface. The launch rows are hidden, but these
         // screens are exported and can be started by name, so each refuses rather than showing what
         // the mode exists to hide.
         if (org.chimeramc.client.core.privacy.PrivacyModes.current(this).hidesMods()) {
@@ -307,7 +307,7 @@ public class CurseForgeActivity extends BaseActivity {
     private void onContentClick(Content content, View icon, View title) {
         Intent intent = new Intent(this, ContentDetailsActivity.class);
         intent.putExtra(ContentDetailsActivity.EXTRA_CONTENT, content);
-        // Item 123: carry the row's icon and title across instead of cutting to the detail screen.
+        // Carry the row's icon and title across instead of cutting to the detail screen.
         SceneTransitions.start(this, intent,
                 SceneTransitions.icon(icon), SceneTransitions.title(title));
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The server row's favourite star (item 254): filled when the row is starred, an outline when it
+    The server row's favourite star: filled when the row is starred, an outline when it
     is not. A state-list drawable rather than two swaps in code, so the star's appearance and the
     button's selected state cannot disagree.
 -->

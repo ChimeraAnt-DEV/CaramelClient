@@ -77,7 +77,7 @@ public final class AntEggLinkDownloader {
         void onError(String message);
 
         /**
-         * The declared size of the download, reported once the response headers arrive (item 233).
+         * The declared size of the download, reported once the response headers arrive.
          *
          * <p>A negative value means the server declared no length. Defaulted so an existing caller
          * needs no change; a caller that shows a preview overrides it.

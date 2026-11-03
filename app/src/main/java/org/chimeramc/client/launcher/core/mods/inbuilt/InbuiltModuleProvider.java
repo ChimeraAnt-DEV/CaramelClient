@@ -970,7 +970,7 @@ public final class InbuiltModuleProvider {
                     String.valueOf(manager.isOverlayShowEverywhere(modId))));
         }
 
-        // The frame-time graph is an FPS-overlay-only option (item 191): it needs the FPS meter,
+        // The frame-time graph is an FPS-overlay-only option: it needs the FPS meter,
         // which only that overlay runs.
         if (ModIds.FPS_DISPLAY.equals(modId)) {
             configs.add(config(CFG_FRAME_GRAPH,

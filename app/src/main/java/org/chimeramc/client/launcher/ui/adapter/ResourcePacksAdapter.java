@@ -21,7 +21,7 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
 
     private List<ResourcePackItem> resourcePacks = new ArrayList<>();
     private OnResourcePackActionListener onResourcePackActionListener;
-    /** Size and texture-resolution scans run off the main thread and are cached (item 253). */
+    /** Size and texture-resolution scans run off the main thread and are cached. */
     private final org.chimeramc.client.core.content.PackAssetSummaryCache assetCache =
             new org.chimeramc.client.core.content.PackAssetSummaryCache();
 
@@ -119,7 +119,7 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
 
     /**
      * Appends the pack's largest-texture resolution to the size line once the background scan
-     * completes (item 253). The size is shown immediately; the resolution fills in when known.
+     * completes. The size is shown immediately; the resolution fills in when known.
      */
     private void bindResolution(TextView sizeView, ResourcePackItem pack) {
         org.chimeramc.client.core.content.PackAssetSummary.Result cached =
@@ -131,7 +131,7 @@ public class ResourcePacksAdapter extends RecyclerView.Adapter<ResourcePacksAdap
         assetCache.get(pack.getFile(), (dir, result) -> {
             if (result == null) return;
             // Notify the one row rather than the whole list: a resolution arriving must not
-            // rebuild every row and lose the list's scroll and animations (item 12).
+            // rebuild every row and lose the list's scroll and animations.
             for (int i = 0; i < resourcePacks.size(); i++) {
                 if (resourcePacks.get(i).getFile() != null
                         && resourcePacks.get(i).getFile().equals(dir)) {

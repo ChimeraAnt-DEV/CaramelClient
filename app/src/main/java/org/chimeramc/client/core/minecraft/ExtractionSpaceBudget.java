@@ -3,7 +3,7 @@ package org.chimeramc.client.core.minecraft;
 import java.util.Collection;
 
 /**
- * How much free storage an extraction needs, and whether there is enough (item 304).
+ * How much free storage an extraction needs, and whether there is enough.
  *
  * <p>Extraction writes every `.so` a package ships for one ABI. Those files are stored compressed
  * inside the APK, so the extracted set is at least as large as the bytes it came from and can be

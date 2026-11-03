@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * A record of each extracted library's size, modification time and SHA-256, and the rule that
- * decides whether the files on disk still match it (item 303).
+ * decides whether the files on disk still match it.
  *
  * <p>A presence-and-length check is not enough to trust an extracted cache. A library can be the
  * right size and still be wrong: a partially overwritten file, a corrupted sector, a file another

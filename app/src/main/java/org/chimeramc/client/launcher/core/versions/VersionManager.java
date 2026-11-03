@@ -674,7 +674,7 @@ public class VersionManager {
                     }
                 } catch (IOException e) {
                     // An unreadable marker is not evidence of a current one, but a silent failure
-                    // here is indistinguishable from a genuinely stale cache (item 300).
+                    // here is indistinguishable from a genuinely stale cache.
                     org.chimeramc.client.util.AppLog.warnOnce("VersionManager", "marker-read",
                             "Could not read the extraction marker", e);
                 }
@@ -855,7 +855,7 @@ public class VersionManager {
     }
 
     /**
-     * Stores a free-form note for an instance (item 278).
+     * Stores a free-form note for an instance.
      *
      * <p>The text is normalised by {@link InstanceNotes} before it is written, so a pasted newline
      * cannot break the JSON metadata and an empty note is stored as null rather than {@code ""}.
@@ -877,7 +877,7 @@ public class VersionManager {
         }
     }
 
-    /** The note kept for an instance (item 278), or null when none is set. */
+    /** The note kept for an instance, or null when none is set. */
     public String getInstanceNotes(GameVersion version) {
         return version == null ? null : version.notes;
     }
@@ -1281,7 +1281,7 @@ public class VersionManager {
             } catch (SecurityException e) {
                 // Fall through: the deletes below are the authority on whether it worked. Logged
                 // once so a permissions problem is visible rather than looking like a dead delete
-                // loop (item 300).
+                // loop.
                 org.chimeramc.client.util.AppLog.warnOnce("VersionManager", "set-writable",
                         "Could not make a directory writable before deleting it", e);
             }

@@ -477,7 +477,7 @@ public class ModConfigAdapter extends RecyclerView.Adapter<ModConfigAdapter.Conf
             });
             editText.setOnEditorActionListener((v, actionId, event) -> {
                 // Only leave the field when the value is acceptable; an out-of-range entry keeps
-                // focus so the user can correct it where the error is shown (item 156).
+                // focus so the user can correct it where the error is shown.
                 if (commitText(node, editText, numeric)) {
                     editText.clearFocus();
                 }
@@ -487,7 +487,7 @@ public class ModConfigAdapter extends RecyclerView.Adapter<ModConfigAdapter.Conf
         }
 
         /**
-         * Commits an edited value, showing the reason inline when it is rejected (item 156).
+         * Commits an edited value, showing the reason inline when it is rejected.
          *
          * <p>The old behaviour popped a modal dialog for a bad number and left the bad text in the
          * field, so the user had to dismiss a dialog to see the field again. The error now sits on

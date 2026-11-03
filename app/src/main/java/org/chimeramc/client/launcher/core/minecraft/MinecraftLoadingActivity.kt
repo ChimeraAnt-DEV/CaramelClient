@@ -53,7 +53,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private var preparingStarted = false
     private var firstFrameFallback: Runnable? = null
     private var enteringGame = false
-    // Item 285: the launch watchdog. It tracks the last sign of progress and, when a launch goes
+    // The launch watchdog. It tracks the last sign of progress and, when a launch goes
     // silent for too long, offers the two actions that actually help instead of an endless spinner.
     private var launchStartedMs = 0L
     private var lastProgressMs = 0L
@@ -65,7 +65,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private var logRenderScheduled = false
     private var statusRenderScheduled = false
     // Time to the loading screen's first drawn frame, or NO_FIRST_FRAME when it was never observed
-    // (the fallback path fired before a draw). Fed into the local statistics (item 282).
+    // (the fallback path fired before a draw). Fed into the local statistics.
     private var firstFrameMs = org.chimeramc.client.core.stats.LaunchStats.NO_FIRST_FRAME
     private var lastRenderedStatus: String? = null
     private var lastRenderedDetail: String? = null
@@ -104,7 +104,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         applyLaunchTheme()
 
         MinecraftLaunchSession.clear()
-        // Item 282: count the launch the moment the launch screen is reached. This is the widest
+        // Count the launch the moment the launch screen is reached. This is the widest
         // point a launch can be observed from -- before it can fail in runtime preparation -- so a
         // failure later still leaves the launch counted.
         org.chimeramc.client.core.stats.LaunchStatsRecorder.recordLaunch(this)
@@ -204,7 +204,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                 )
                 trace.milestone("Entering game")
                 // The launch reached the game, so it counts as a completed launch and its first-frame
-                // time joins the local mean (item 282).
+                // time joins the local mean.
                 org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCompletedLaunch(
                     this, firstFrameMs)
                 appendLog("Entering Minecraft")
@@ -223,7 +223,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         } catch (cancelled: org.chimeramc.client.core.minecraft.ExtractionControl.ExtractionCancelledException) {
             // The user gave up on the launch while it was extracting. That is not a failure to
             // report: the loading screen is already on its way back to the launcher, and showing
-            // a "launch failed" dialog on top of it would read as a bug (item 306).
+            // a "launch failed" dialog on top of it would read as a bug.
             appendLog("Extraction cancelled")
         } catch (throwable: Throwable) {
             mainHandler.post {
@@ -247,7 +247,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     }
 
     /**
-     * Arms the launch watchdog (item 285).
+     * Arms the launch watchdog.
      *
      * <p>One wake-up is scheduled at the next threshold the pure rule reports, rather than polling
      * every frame, so a launch that is progressing costs a single timer. Each call reschedules from
@@ -390,7 +390,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // this screen is authoritative whenever it can be shown.
         LastLaunchFailure.write(this, throwable, true)
         // A launch that died here never reached a session, so it is a failed launch in the local
-        // statistics (item 282).
+        // statistics.
         org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCrash(this)
         returnButton.visibility = View.VISIBLE
     }
@@ -511,7 +511,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     override fun onBackPressed() {
         // A launch that is still extracting can be given up on. The signal is checked between
         // files, so the copy stops at the next safe boundary instead of running to completion for
-        // a user who has already left (item 306). The instance is cleared inside returnToLauncher,
+        // a user who has already left. The instance is cleared inside returnToLauncher,
         // so a cancel that lands after the extraction finished is a no-op.
         try {
             org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()

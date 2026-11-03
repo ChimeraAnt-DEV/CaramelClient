@@ -32,7 +32,7 @@ public class GameVersion implements Parcelable {
      * {@code InstanceAccountBinding}.
      */
     public String boundAccountId;
-    /** A free-form note shown on the instance card (item 278), or null when empty. */
+    /** A free-form note shown on the instance card, or null when empty. */
     public String notes;
     public final File modsDir;
 

@@ -3,7 +3,7 @@ package org.chimeramc.client.util;
 import android.view.View;
 
 /**
- * Keeps a hardware layer only while it is earning its keep (item 189).
+ * Keeps a hardware layer only while it is earning its keep.
  *
  * <p>{@code LAYER_TYPE_HARDWARE} uploads the view to a texture so an animated alpha or
  * transformation is composited on the GPU instead of repainted each frame. That is a real win while

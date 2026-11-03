@@ -17,7 +17,7 @@ import org.chimeramc.client.ui.animation.DynamicAnim;
 import java.util.List;
 
 /**
- * Renders the script manager's rows (item 226).
+ * Renders the script manager's rows.
  *
  * <p>A {@link ListAdapter} with a {@link DiffUtil.ItemCallback} so toggling one package animates
  * that row instead of repainting the list, and the row identity is the package id — a package's

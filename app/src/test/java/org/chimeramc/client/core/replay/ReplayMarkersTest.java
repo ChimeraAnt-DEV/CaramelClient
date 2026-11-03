@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * The marker store behind item 241.
+ * The marker store behind the replay marker timeline.
  *
  * <p>No mocks: the class is pure, so the rules (ordering, merging, serialisation, parse tolerance)
  * are exercised directly. The serialisation round-trip is the one that matters most — a marker set

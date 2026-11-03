@@ -104,7 +104,7 @@ public final class CosmeticsPanel {
     private final LinearLayout gridContainer;
     private final ScrollView gridScroll;
     private final TextView gridTitle;
-    /** How many cards of the current category are built so far (item 205). */
+    /** How many cards of the current category are built so far. */
     private int builtCount;
     /** The cards of the current category, so a later page can append without recomputing them. */
     private List<Card> currentCards = new ArrayList<>();
@@ -167,7 +167,7 @@ public final class CosmeticsPanel {
         gridContainer = new LinearLayout(activity);
         gridContainer.setOrientation(LinearLayout.VERTICAL);
         gridScroll.addView(gridContainer);
-        // Lazy paging (item 205): the first page is built on open, later pages as the player scrolls
+        // Lazy paging: the first page is built on open, later pages as the player scrolls
         // near the end, so opening the Closet does not render a bitmap per cosmetic up front.
         gridScroll.getViewTreeObserver().addOnScrollChangedListener(() -> {
             View child = gridScroll.getChildAt(0);
@@ -185,7 +185,7 @@ public final class CosmeticsPanel {
                 0, ViewGroup.LayoutParams.MATCH_PARENT, compact ? 0.5f : 0.4f);
         root.addView(previewColumn, previewParams);
         // The preview sits in a FrameLayout so a "preparing preview" placeholder can cover it until
-        // the first frame is rendered (item 205), instead of showing an empty box while the software
+        // the first frame is rendered, instead of showing an empty box while the software
         // rasteriser builds the scene and decodes atlases.
         FrameLayout previewHolder = new FrameLayout(activity);
         preview = new CapePreviewView(activity);
@@ -401,7 +401,7 @@ public final class CosmeticsPanel {
     }
 
     /**
-     * Builds the next page of cards (item 205). A row is only opened when a card is added to it, so
+     * Builds the next page of cards. A row is only opened when a card is added to it, so
      * a page that does not end on a column boundary still renders (the partial last row is fine);
      * the running {@link #builtCount} is the single source of how much has been built, so a scroll
      * callback and the initial build cannot double-add.

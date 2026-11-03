@@ -12,7 +12,7 @@ is a red build rather than a silently stale page.
 
 - **A build is supported when a rule's range contains it.** The rules are per-range, not per-exact
   build, so a point release inside a range is covered without a new rule.
-- **A build above every range is unsupported, not broken.** The client warns (item 256), the hooks
+- **A build above every range is unsupported, not broken.** The client warns, the hooks
   fail closed, and the launcher still starts the game — no hook means no in-game modules, not a
   crash.
 - **A build below every range is unsupported the same way.** There is no floor rule older than the
@@ -25,7 +25,7 @@ is a red build rather than a silently stale page.
 
 The table is generated from `preloader_signature_rules_source.json` (revision 7 at the time of
 writing). "Hooks" is the set of native seams the range resolves for; an unresolved seam disables
-only the features that need it (item 453).
+only the features that need it.
 
 <!-- BEGIN GENERATED: preloader-compatibility -->
 | Range (min - max) | Hooks resolved |

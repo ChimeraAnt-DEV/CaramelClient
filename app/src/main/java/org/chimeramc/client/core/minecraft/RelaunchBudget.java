@@ -5,7 +5,7 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * Caps how often a session may relaunch itself in a row (item 274).
+ * Caps how often a session may relaunch itself in a row.
  *
  * <p>The relaunch exists to apply a change that needs a fresh load. It is also the one action that
  * can turn a bad state into a loop: if the game dies immediately after every relaunch, an unlimited

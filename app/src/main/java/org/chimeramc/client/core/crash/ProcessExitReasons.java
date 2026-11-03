@@ -9,7 +9,7 @@ import android.os.Build;
 import java.util.List;
 
 /**
- * Reads the platform's record of why the previous process ended (item 167).
+ * Reads the platform's record of why the previous process ended.
  *
  * <p>{@code ActivityManager.getHistoricalProcessExitReasons} exists from API 30, so the call lives
  * in a nested {@link Api30} holder reached only behind an {@code SDK_INT} guard. That split is not

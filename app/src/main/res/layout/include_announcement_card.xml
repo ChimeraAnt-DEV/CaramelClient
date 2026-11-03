@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The Launch-tab announcement card (item 255). Hidden until the announcement feed yields a card
+    The Launch-tab announcement card. Hidden until the announcement feed yields a card
     that applies to this build and has not been dismissed. It is a plain glass card so it matches the
     rest of the Launch tab, with a title, a body, an optional link action and a dismiss button.
 -->

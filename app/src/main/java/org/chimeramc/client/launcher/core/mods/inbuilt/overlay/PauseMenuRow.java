@@ -25,7 +25,7 @@ import org.chimeramc.client.util.MainThread;
 import java.util.List;
 
 /**
- * The in-game pause-menu button row (item 224).
+ * The in-game pause-menu button row.
  *
  * <p>A compact glass strip pinned to the bottom of the screen offering the four actions a player
  * reaches for while paused: take a screenshot, hide the HUD, switch to the next overlay layout and
@@ -168,7 +168,7 @@ public class PauseMenuRow {
     }
 
     /**
-     * Shares the newest screenshot (item 276).
+     * Shares the newest screenshot.
      *
      * <p>A file picker cannot open over a live game session, so the row shares what is already on
      * disk rather than asking for a file. With no screenshot yet it says so instead of opening an

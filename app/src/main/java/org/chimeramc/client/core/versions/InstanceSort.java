@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The order the Instances list renders in (item 143).
+ * The order the Instances list renders in.
  *
  * <p>The list used to sort on the version code alone, so an instance played this morning sat
  * wherever its version string fell. The default is now most-recently-played first, because the

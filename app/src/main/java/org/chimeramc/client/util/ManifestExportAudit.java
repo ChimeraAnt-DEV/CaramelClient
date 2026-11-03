@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * The audit of the launcher's exported manifest components (item 513).
+ * The audit of the launcher's exported manifest components.
  *
  * <p>An {@code android:exported="true"} component can be started by any other app on the device, so
  * every one of them is a deliberate decision with a reason, not a default. This class records the
@@ -46,7 +46,7 @@ public final class ManifestExportAudit {
                 "Opens a game package or an .AntEgg from another app (ACTION_VIEW). Every extra is "
                         + "validated and size-limited by IntentHandler before it is used."));
         out.add(new Exported("org.chimeramc.client.launcher.settings.PerformanceTileService",
-                "Quick Settings tile (item 268). Started by the system Quick Settings panel with "
+                "Quick Settings tile. Started by the system Quick Settings panel with "
                         + "BIND_QUICK_SETTINGS_TILE, which the platform holds; the service only "
                         + "cycles the performance preset through FeatureSettings and reads no "
                         + "caller-supplied extras."));

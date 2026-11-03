@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** The HUD editor's safe-area and grid-snap geometry (item 210). */
+/** The HUD editor's safe-area and grid-snap geometry. */
 public class OverlaySafeAreaTest {
 
     @Test

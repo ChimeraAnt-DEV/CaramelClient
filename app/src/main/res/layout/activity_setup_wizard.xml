@@ -60,7 +60,7 @@
             android:visibility="gone" />
 
         <!--
-            The device compatibility pass (item 284). Each row is a check with its own fix, so a
+            The device compatibility pass. Each row is a check with its own fix, so a
             first-run failure is named before the user picks a version and presses Play.
         -->
         <LinearLayout

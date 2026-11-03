@@ -139,7 +139,7 @@ public class ZoomOverlay extends BaseOverlayButton {
         }
     }
 
-    /** Prints the current zoom level beside the icon (item 192). */
+    /** Prints the current zoom level beside the icon. */
     private void updateZoomLevelLabel() {
         if (levelView == null) return;
         levelView.setText(zoomLevelText());

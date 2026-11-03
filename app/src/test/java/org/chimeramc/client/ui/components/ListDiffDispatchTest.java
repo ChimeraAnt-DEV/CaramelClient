@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The mapping from a diff to the adapter calls it stands for (items 12, 141-143).
+ * The mapping from a diff to the adapter calls it stands for.
  *
  * <p>It is a thin class, but it is the one that decides whether a change reaches the adapter as
  * "these rows moved" or as "everything is unknown", so the call sequence is asserted directly. The

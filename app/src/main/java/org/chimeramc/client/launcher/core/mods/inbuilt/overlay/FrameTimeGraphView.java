@@ -11,7 +11,7 @@ import org.chimeramc.client.core.mods.inbuilt.overlay.FrameTimeGraph;
 import org.chimeramc.client.core.mods.inbuilt.overlay.FrameTimeHistory;
 
 /**
- * Draws the FPS overlay's frame-time graph (item 191): a polyline of the last
+ * Draws the FPS overlay's frame-time graph: a polyline of the last
  * {@link FrameTimeHistory#CAPACITY} frame intervals, oldest on the left.
  *
  * <p>The mapping lives in the pure {@link FrameTimeGraph}; this view only strokes the result. Every

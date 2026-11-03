@@ -50,7 +50,7 @@ public final class LauncherGameBackend implements GameBackend {
     private boolean autoSprintActive;
 
     /**
-     * The keys and buttons this backend has pressed and not yet released (item 217).
+     * The keys and buttons this backend has pressed and not yet released.
      *
      * <p>Needed because the backend is the only thing that knows what it injected. When the window
      * loses focus or the activity pauses, nothing will ever send the matching release, so a key held
@@ -192,7 +192,7 @@ public final class LauncherGameBackend implements GameBackend {
         autoSprintActive = enabled;
         if (enabled) {
             // The double-tap goes through sendKey, not the host directly, so the held key is
-            // tracked and released if the window loses focus mid-sprint (item 217).
+            // tracked and released if the window loses focus mid-sprint.
             sendKey(BEDROCK_KEY_W, true);
             sendKey(BEDROCK_KEY_W, false);
             sendKey(BEDROCK_KEY_W, true);

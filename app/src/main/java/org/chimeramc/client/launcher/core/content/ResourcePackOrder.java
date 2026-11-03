@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The rule for ordering an instance's active resource packs (item 253).
+ * The rule for ordering an instance's active resource packs.
  *
  * <p>Bedrock applies active packs bottom-up: the pack <em>last</em> in
  * {@code global_resource_packs.json} wins a conflict. The order in that array is therefore the

@@ -23,7 +23,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Sends the opt-in anonymous usage counter (item 281).
+ * Sends the opt-in anonymous usage counter.
  *
  * <p>Three gates, all of which must pass, and all of which are checked before any request is built:
  * the user's switch ({@link FeatureSettings#isUsageStatsEnabled()}), a collector address for this

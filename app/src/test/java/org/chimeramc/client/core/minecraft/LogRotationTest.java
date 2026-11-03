@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 /**
- * Pins the log-rotation rule (item 309).
+ * Pins the log-rotation rule.
  *
  * <p>The launch log is flushed per line, so it must be capped or a long session can fill storage.
  * The cap has to keep the <em>newest</em> lines: after a crash, the end of the log is what a debug

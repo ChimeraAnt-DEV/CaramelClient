@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Persists {@link LaunchStats} locally (item 282).
+ * Persists {@link LaunchStats} locally.
  *
  * <p>Kept deliberately separate from {@link LaunchStats}: the counters and their arithmetic are
  * pure and unit-tested, while this class is the small amount of Android code that reads and writes

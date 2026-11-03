@@ -5,7 +5,7 @@ import android.util.Log;
 import org.chimeramc.client.BuildConfig;
 
 /**
- * Times an overlay's {@code onDraw} and logs an overrun in debug builds (item 214).
+ * Times an overlay's {@code onDraw} and logs an overrun in debug builds.
  *
  * <p>The clock and the threshold live in {@link OverlayDrawBudget} so the rule is testable; this
  * class is only the Android-side plumbing that turns a returned {@code true} into a log line. The

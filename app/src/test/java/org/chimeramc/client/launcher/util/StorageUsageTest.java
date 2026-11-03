@@ -11,7 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/** Pins the disk-usage walk and formatting (item 265). */
+/** Pins the disk-usage walk and formatting. */
 public class StorageUsageTest {
 
     @Rule

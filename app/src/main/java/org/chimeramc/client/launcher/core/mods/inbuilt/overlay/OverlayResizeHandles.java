@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 /**
- * The four corner handles drawn over the selected overlay in the HUD editor (item 221).
+ * The four corner handles drawn over the selected overlay in the HUD editor.
  *
  * <p>It is a {@link Drawable} installed as the widget's foreground rather than a sibling view. The
  * overlays live in their own windows, so a layer added to the activity's content root would have to

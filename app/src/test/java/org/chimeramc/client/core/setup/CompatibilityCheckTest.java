@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * The first-run compatibility checks (item 284). Pure: no device.
+ * The first-run compatibility checks. Pure: no device.
  */
 public class CompatibilityCheckTest {
 

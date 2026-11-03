@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The timestamped markers on a recording (item 241).
+ * The timestamped markers on a recording.
  *
  * <p>A replay is more useful when the moments that matter are labelled: a death, a kill streak, a
  * combo, a join. This class is the pure store for those labels so the timeline can draw a tick at

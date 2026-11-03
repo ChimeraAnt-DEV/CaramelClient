@@ -134,7 +134,7 @@ public final class RadialWheelLayout {
     }
 
     /**
-     * The centre point of a ring slot's touch target, in view coordinates (item 200).
+     * The centre point of a ring slot's touch target, in view coordinates.
      *
      * <p>Screen-reader virtual nodes need a rectangle per slot, and the wheel draws its sectors on
      * a band, so the centre of the band at the sector's mid-angle is the one point every slot has in

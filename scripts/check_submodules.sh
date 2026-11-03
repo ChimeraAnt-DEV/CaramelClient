@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Verifies the preloader (and every other) submodule is pinned to a commit, not a branch
-# (item 324).
+#.
 #
 # A gitlink is always a commit SHA, so the way a submodule silently floats is a `branch =` entry
 # in .gitmodules: it lets `git submodule update --remote` move the checkout to whatever that branch

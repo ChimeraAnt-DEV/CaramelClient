@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Persists the starred servers (item 254).
+ * Persists the starred servers.
  *
  * <p>A small {@link SharedPreferences} set of {@code ip:port} keys, kept apart from the game's own
  * server file so a star never changes what the game reads. Every write is {@code apply()}: the star

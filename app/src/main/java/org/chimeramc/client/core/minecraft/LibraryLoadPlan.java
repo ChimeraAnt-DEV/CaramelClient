@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The decision half of native-library loading (item 301).
+ * The decision half of native-library loading.
  *
  * <p>{@code GamePackageManager.loadAllLibraries} used to interleave three separate rules — which
  * libraries a 32-bit device may skip, which the caller asked to exclude, and the progress

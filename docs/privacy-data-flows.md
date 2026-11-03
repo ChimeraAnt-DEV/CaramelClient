@@ -1,7 +1,7 @@
 # Data flows: what leaves your device
 
 This page lists every network request the launcher makes, what each one sends and what it receives
-back (item 520). It is the short, concrete companion to the [Privacy Policy](/privacy-policy): the
+back. It is the short, concrete companion to the [Privacy Policy](/privacy-policy): the
 policy states the commitments, this page names the actual endpoints and payloads.
 
 Nothing here is sent in the background on first run. Each flow below is either triggered by an

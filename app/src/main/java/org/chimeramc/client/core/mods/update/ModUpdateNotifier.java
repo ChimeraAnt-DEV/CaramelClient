@@ -15,7 +15,7 @@ import org.chimeramc.client.ui.activities.ModsFullscreenActivity;
 import java.util.List;
 
 /**
- * Posts the single mod-update notification (item 273).
+ * Posts the single mod-update notification.
  *
  * <p>One notification for the whole library, not one per mod: the message names the count and the
  * first mod, and tapping it opens the Mods screen. A per-mod prompt for a library of twenty mods is

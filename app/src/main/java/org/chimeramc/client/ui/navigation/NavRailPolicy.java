@@ -2,7 +2,7 @@ package org.chimeramc.client.ui.navigation;
 
 /**
  * Whether the navigation rail shows its labels, and how wide it is, given the window mode and the
- * user's collapse choice (item 85).
+ * user's collapse choice.
  *
  * <p>The rail's width comes from a resource qualifier ({@code values-sw840dp}), which is a
  * compile-time decision and cannot express "the user folded the rail on this tablet". This class is

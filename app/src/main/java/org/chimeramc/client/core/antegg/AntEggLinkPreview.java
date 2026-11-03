@@ -3,7 +3,7 @@ package org.chimeramc.client.core.antegg;
 import java.util.Locale;
 
 /**
- * Describes a linked {@code .AntEgg} before it is downloaded and installed (item 233).
+ * Describes a linked {@code .AntEgg} before it is downloaded and installed.
  *
  * <p>Importing from a link is the one path where the package comes from a server the user did not
  * choose from a list, so the user is shown the source, the file name and the size before anything

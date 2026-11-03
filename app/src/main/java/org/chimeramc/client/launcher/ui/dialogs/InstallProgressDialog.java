@@ -67,7 +67,7 @@ public class InstallProgressDialog extends Dialog {
     }
 
     /**
-     * Shows a Cancel button that runs [onCancel] (item 144). A long instance backup or restore can
+     * Shows a Cancel button that runs [onCancel]. A long instance backup or restore can
      * be cancelled part-way; the install flow never calls this, so it stays non-cancellable.
      */
     public void setCancelAction(Runnable onCancel) {

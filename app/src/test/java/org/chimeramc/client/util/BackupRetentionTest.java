@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The per-instance backup retention rule (item 144): keep the newest N, never delete the only copy,
+ * The per-instance backup retention rule: keep the newest N, never delete the only copy,
  * and only ever consider files this class owns.
  */
 public class BackupRetentionTest {

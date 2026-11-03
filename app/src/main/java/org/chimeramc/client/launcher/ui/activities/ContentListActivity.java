@@ -107,7 +107,7 @@ public class ContentListActivity extends BaseActivity {
     private ExecutorService pingExecutor;
     /** Server addresses ("ip:port") that already answered; they are not re-pinged every refresh. */
     private final java.util.Set<String> pingedServerKeys = new java.util.HashSet<>();
-    /** Starred server keys, read once and kept in step with the store (item 254). */
+    /** Starred server keys, read once and kept in step with the store. */
     private java.util.Set<String> favouriteServerKeys = java.util.Collections.emptySet();
 
     private void showProgressDialog(String message) {
@@ -140,7 +140,7 @@ public class ContentListActivity extends BaseActivity {
 
         contentType = getIntent().getIntExtra(EXTRA_CONTENT_TYPE, TYPE_WORLDS);
 
-        // Guest mode removes the server list (item 272). This screen can be reached by a deep link
+        // Guest mode removes the server list. This screen can be reached by a deep link
         // or a restore as well as from Content Management, so the refusal lives here rather than
         // only on the button that opens it; showing the category and then failing to load it would
         // be worse than not opening it at all.
@@ -287,7 +287,7 @@ public class ContentListActivity extends BaseActivity {
                 binding.customFlatButton.setText(getString(R.string.quick_launch_add_server));
                 binding.customFlatButton.setVisibility(View.VISIBLE);
                 // Read the stars before the adapter is built so the first paint is already
-                // favourites-first rather than reordering once the list arrives (item 254).
+                // favourites-first rather than reordering once the list arrives.
                 favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.load(this);
                 setupServersRecyclerView();
                 break;
@@ -486,7 +486,7 @@ public class ContentListActivity extends BaseActivity {
                     @Override
                     public void onFavouriteToggle(ServerItem server) {
                         // The star is local presentation state, so the write is a plain
-                        // SharedPreferences apply and the list re-sorts immediately (item 254).
+                        // SharedPreferences apply and the list re-sorts immediately.
                         favouriteServerKeys = org.chimeramc.client.core.content.ServerFavouritesStore.toggle(
                                         ContentListActivity.this,
                                         org.chimeramc.client.core.content.ServerFavourites.key(server));
@@ -1313,7 +1313,7 @@ public class ContentListActivity extends BaseActivity {
             screenshotsAdapter.shutdown();
             screenshotsAdapter = null;
         }
-        // The pack adapter owns a background size/resolution scanner (item 253); it must be
+        // The pack adapter owns a background size/resolution scanner; it must be
         // stopped with the screen or its worker outlives the activity.
         if (packsAdapter != null) {
             packsAdapter.dispose();

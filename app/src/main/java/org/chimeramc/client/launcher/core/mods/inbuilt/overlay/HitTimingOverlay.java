@@ -343,7 +343,7 @@ public final class HitTimingOverlay {
                 // Label: a short verb in the state colour. The remaining time is drawn as a
                 // separate dim caption so the two do not compete for the same line.
                 // Constants, not built per frame: the label is one of three fixed verbs and drawing
-                // runs on the game's frame tick (item 17).
+                // runs on the game's frame tick.
                 String label = idle ? LABEL_READY : (decision.isGreen() ? LABEL_HIT : LABEL_WAIT);
                 textPaint.setColor(color);
                 float textCenterY = h / 2f - (textPaint.descent() + textPaint.ascent()) / 2f;

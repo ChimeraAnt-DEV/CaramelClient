@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 /**
  * The layouts are direction-agnostic, so a right-to-left locale mirrors instead of breaking
- * (item 337).
+ *.
  *
  * <p>{@code paddingLeft}/{@code paddingRight} (and the margin and compound-drawable forms) are
  * absolute: they stay on the physical side when the layout direction flips, so a row that reads

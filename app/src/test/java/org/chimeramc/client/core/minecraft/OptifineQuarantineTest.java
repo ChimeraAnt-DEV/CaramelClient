@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the Optifine crash-loop quarantine rule (item 19). No mocks: the rule is pure.
+ * Pins the Optifine crash-loop quarantine rule. No mocks: the rule is pure.
  */
 public class OptifineQuarantineTest {
 

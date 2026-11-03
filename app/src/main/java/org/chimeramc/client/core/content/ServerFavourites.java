@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Which servers the user starred, and how a starred list is ordered (item 254).
+ * Which servers the user starred, and how a starred list is ordered.
  *
  * <p>The game's own {@code external_servers.txt} is a flat, ordered file with no room for a
  * favourite flag, and rewriting it with an extra field would make the game reject rows it does not

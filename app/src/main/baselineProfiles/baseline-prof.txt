@@ -1,4 +1,4 @@
-# Baseline profile for the startup path (item 292).
+# Baseline profile for the startup path.
 #
 # This is a hand-authored profile, not a Macrobenchmark capture: the device that would produce a
 # capture is not available in this repository. It names the classes and methods the cold start

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The one place a background thread is created (items 14, 294).
+ * The one place a background thread is created.
  *
  * <p>There were 41 {@code new Thread(...)} calls and 77 {@code new Handler(...)} constructions, each
  * naming its own thread or not naming it at all. Two costs, neither of which shows up as a failure:

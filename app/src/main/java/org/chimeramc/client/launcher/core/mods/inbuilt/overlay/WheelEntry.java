@@ -36,7 +36,7 @@ public final class WheelEntry {
         OPEN_HUD,
         /** Open another wheel profile as a nested sub-wheel. */
         OPEN_SUBWHEEL,
-        /** Switch the active overlay layout (item 212). The target is the layout id. */
+        /** Switch the active overlay layout. The target is the layout id. */
         SWITCH_LAYOUT,
     }
 

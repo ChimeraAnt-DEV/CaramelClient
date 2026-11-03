@@ -4,7 +4,7 @@ import android.os.StrictMode;
 
 /**
  * Turns on {@link StrictMode} in debug builds so main-thread disk and network work is caught at the
- * point it is written rather than in a profiling session (item 296).
+ * point it is written rather than in a profiling session.
  *
  * <p>StrictMode is a development tool, so it is a no-op in a release build: the checks add overhead
  * to every file and socket access, and a violation policy that logs is only useful to a developer

@@ -270,7 +270,7 @@
                     android:orientation="vertical" />
             </LinearLayout>
 
-            <!-- Local launch/crash statistics (item 282). Local data only. -->
+            <!-- Local launch/crash statistics. Local data only. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

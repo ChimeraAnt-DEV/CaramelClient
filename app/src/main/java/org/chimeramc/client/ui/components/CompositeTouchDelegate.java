@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link TouchDelegate} that forwards to several delegates (item 339).
+ * A {@link TouchDelegate} that forwards to several delegates.
  *
  * <p>A parent view can hold only <em>one</em> touch delegate, so widening three 32dp icon buttons
  * in one toolbar the obvious way silently keeps only the last: the first two look enlarged and

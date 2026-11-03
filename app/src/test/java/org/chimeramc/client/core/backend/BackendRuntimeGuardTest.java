@@ -7,12 +7,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the two script-runtime safety counters: the per-feature call rate (item 504) and the
- * dead-man switch that releases stuck input (item 490).
+ * Pins the two script-runtime safety counters: the per-feature call rate and the
+ * dead-man switch that releases stuck input.
  */
 public class BackendRuntimeGuardTest {
 
-    // --- BackendCallMeter (item 504) --------------------------------------------------------
+    // --- BackendCallMeter --------------------------------------------------------
 
     @Test
     public void callsAreCountedWithinTheirSecond() {
@@ -85,7 +85,7 @@ public class BackendRuntimeGuardTest {
         assertEquals(0, meter.lastSecondTotal());
     }
 
-    // --- BackendDeadManSwitch (item 490) ----------------------------------------------------
+    // --- BackendDeadManSwitch ----------------------------------------------------
 
     @Test
     public void aFewFailuresDoNotTripTheSwitch() {

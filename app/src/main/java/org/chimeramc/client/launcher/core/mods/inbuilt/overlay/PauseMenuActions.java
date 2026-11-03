@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The pause-menu button row's entries (item 224).
+ * The pause-menu button row's entries.
  *
  * <p>The row offers the four actions a player reaches for while the game is paused — take a
  * screenshot, hide the HUD for that screenshot, switch the overlay layout, and open the log viewer.
@@ -18,7 +18,7 @@ public final class PauseMenuActions {
 
     /** Take a screenshot of the launcher's own window. */
     public static final String ACTION_SCREENSHOT = "screenshot";
-    /** Share the newest screenshot through the system share sheet (item 276). */
+    /** Share the newest screenshot through the system share sheet. */
     public static final String ACTION_SHARE_SCREENSHOT = "share_screenshot";
     /** Hide or show every HUD overlay, the same state the three-finger tap toggles. */
     public static final String ACTION_HIDE_HUD = "hide_hud";
@@ -26,7 +26,7 @@ public final class PauseMenuActions {
     public static final String ACTION_SWITCH_LAYOUT = "switch_layout";
     /** Show or hide the log viewer. */
     public static final String ACTION_OPEN_LOGS = "open_logs";
-    /** Open the in-game quick settings panel (item 225). */
+    /** Open the in-game quick settings panel. */
     public static final String ACTION_QUICK_SETTINGS = "quick_settings";
 
     /** One entry in the row. */

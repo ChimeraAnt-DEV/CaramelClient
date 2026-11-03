@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * The preloader-hook availability table (items 453, 493).
+ * The preloader-hook availability table.
  *
  * <p>A hook that did not resolve must read as not live, never as "unknown-but-try-it": a feature
  * that calls into a missing hook draws nothing, which is the exact ambiguity this table removes. The

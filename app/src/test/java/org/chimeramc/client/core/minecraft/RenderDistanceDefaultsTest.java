@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the invariants the preloader's render-distance governor relies on (items 382, 383).
+ * Pins the invariants the preloader's render-distance governor relies on.
  *
  * <p>The native side clamps each value, so a bad default would not crash — it would silently
  * behave differently from what the Settings screen describes. These are the bounds that make the

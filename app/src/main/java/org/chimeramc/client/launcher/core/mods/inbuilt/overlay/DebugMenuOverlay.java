@@ -71,7 +71,7 @@ public class DebugMenuOverlay extends TextOverlay {
         s.usedMemoryMb = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024);
         s.totalMemoryMb = runtime.totalMemory() / (1024 * 1024);
 
-        // Streaming-safe mode masks the position and facing lines (item 277); the frame rate and
+        // Streaming-safe mode masks the position and facing lines; the frame rate and
         // memory stay visible because they are not identifying.
         s.streamingSafe = org.chimeramc.client.core.privacy.PrivacyModes.current(activity)
                 .hidesCoordinates();

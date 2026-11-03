@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.stats;
 
 /**
- * The loading-screen tip carousel's rules (item 283).
+ * The loading-screen tip carousel's rules.
  *
  * <p>A tip is shown on the launch screen and rotates on a timer, but the carousel retires itself
  * after {@link #MAX_LAUNCHES} launches: a player on their hundredth start does not need to be told

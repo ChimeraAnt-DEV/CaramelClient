@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Persists the mod-update check state (item 273).
+ * Persists the mod-update check state.
  *
  * <p>Three facts are needed for "one notification, not one per mod": when the check last ran (so it
  * is throttled rather than run on every launch), the feed URL (so it is a build value, not a

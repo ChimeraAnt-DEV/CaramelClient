@@ -21,7 +21,7 @@ public final class ModMenuActionCatalog {
     public static final String ACTION_RELOAD_MODULES = "reload_modules";
     /** Open the radial wheel's profile manager. */
     public static final String ACTION_MANAGE_WHEEL = "manage_wheel";
-    /** Open the overlay layout manager (item 212). */
+    /** Open the overlay layout manager. */
     public static final String ACTION_MANAGE_LAYOUTS = "manage_layouts";
     /** Toggle the screenshot hide-all state, the same action the three-finger tap performs. */
     public static final String ACTION_TOGGLE_HUD = "toggle_hud";

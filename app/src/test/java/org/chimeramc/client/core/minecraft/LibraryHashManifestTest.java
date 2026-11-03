@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * An extracted library must be hash-verified, not merely present and the right length (item 303).
+ * An extracted library must be hash-verified, not merely present and the right length.
  *
  * <p>Drives the real rule against a real filesystem with the real SHA-256, so the test proves the
  * property the launcher depends on rather than a mock's idea of it.

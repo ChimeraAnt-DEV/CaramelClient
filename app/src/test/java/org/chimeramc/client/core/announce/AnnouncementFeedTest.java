@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Pins the announcement version gate, parsing and selection (item 255). No mocks. */
+/** Pins the announcement version gate, parsing and selection. No mocks. */
 public class AnnouncementFeedTest {
 
     private static final String FEED = "{"

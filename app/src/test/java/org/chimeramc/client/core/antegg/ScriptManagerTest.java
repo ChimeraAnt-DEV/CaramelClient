@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Pins the script manager read model (item 226).
+ * Pins the script manager read model.
  *
  * <p>The manager is what the screen renders, so the properties worth pinning are the ones a user
  * would notice: an installed package appears with its declared metadata, a dependency that is

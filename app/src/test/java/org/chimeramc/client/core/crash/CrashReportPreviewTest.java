@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-/** Pins the crash-report consent preview (item 518). */
+/** Pins the crash-report consent preview. */
 public class CrashReportPreviewTest {
 
     @Test

@@ -176,7 +176,7 @@ public class LogcatOverlay extends FrameLayout {
         if (copyButton != null) {
             copyButton.setOnClickListener(v -> copyVisibleLogToClipboard());
         }
-        // Item 209: share is its own button, not a hidden long press, so a tester can find it.
+        // Share is its own button, not a hidden long press, so a tester can find it.
         if (shareButton != null) {
             shareButton.setOnClickListener(v -> shareLogFile());
         }
@@ -461,7 +461,7 @@ public class LogcatOverlay extends FrameLayout {
         ioExecutor.submit(() -> {
             StringBuilder sb = new StringBuilder();
             List<String> batch = new ArrayList<>(MAX_BATCH_LINES);
-            // Item 208: coalesce the UI flush. The reader appends to the bounded queue and this loop
+            // Coalesce the UI flush. The reader appends to the bounded queue and this loop
             // drains it; posting a rebuild per drain tick put up to ten main-thread rebuilds a
             // second on the UI thread. The flush now happens at most every FLUSH_INTERVAL_MS, or
             // immediately once the batch is full so a burst is never truncated.
@@ -554,7 +554,7 @@ public class LogcatOverlay extends FrameLayout {
     }
 
     /**
-     * Builds the level chips once (item 209).
+     * Builds the level chips once.
      *
      * <p>A row of chips replaces the old list popup: the options are visible instead of hidden
      * behind a tap, there is no second window to outlive the overlay, and selecting one is a single
@@ -788,7 +788,7 @@ public class LogcatOverlay extends FrameLayout {
             notifyItemRangeInserted(0, items.size());
         }
 
-        /** A snapshot of the visible lines, for copying exactly what is shown (item 209). */
+        /** A snapshot of the visible lines, for copying exactly what is shown. */
         @NonNull
         List<CharSequence> snapshot() {
             return new ArrayList<>(items);
@@ -899,7 +899,7 @@ public class LogcatOverlay extends FrameLayout {
     }
 
     /**
-     * Copies what the overlay is actually showing (item 209).
+     * Copies what the overlay is actually showing.
      *
      * <p>With a level chip or a keyword filter active, copying the whole buffer hands over lines
      * the user filtered out on purpose, so a report ends up full of noise. This copies the adapter's

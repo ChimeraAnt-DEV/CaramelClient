@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the exit-reason mapping (item 167) without a device.
+ * Pins the exit-reason mapping without a device.
  *
  * <p>The codes are the platform's own, so a transcription error here would report the wrong reason
  * for a crash - and the mapping is the only thing standing between a raw int and a user-facing

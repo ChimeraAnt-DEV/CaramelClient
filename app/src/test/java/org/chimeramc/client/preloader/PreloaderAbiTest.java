@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The preloader ABI-version rule (items 442/443).
+ * The preloader ABI-version rule.
  *
  * <p>The preloader is a separate library on its own release schedule, so a client and a preloader
  * built from different ABI revisions can be paired by accident. The client compares the version the

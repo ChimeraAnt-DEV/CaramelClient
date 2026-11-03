@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.backend;
 
 /**
- * Releases injected input when the backend stops responding (item 490).
+ * Releases injected input when the backend stops responding.
  *
  * <p>A backend that hangs mid-session is worse than one that never loaded: a key it injected stays
  * held down in the game, so the player runs forward forever with no way to stop. The dead-man switch

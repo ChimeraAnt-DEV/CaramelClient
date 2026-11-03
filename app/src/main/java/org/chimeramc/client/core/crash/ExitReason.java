@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.crash;
 
 /**
- * Why the previous process ended, from the platform's own record (item 167).
+ * Why the previous process ended, from the platform's own record.
  *
  * <p>On API 30 and up {@code ActivityManager.getHistoricalProcessExitReasons} reports a reason code
  * for the last exit, which is strictly better than guessing from a saved log tail: a native crash, a

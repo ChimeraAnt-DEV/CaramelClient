@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 /**
- * Guards the R8 keep rules that name a package against the real source tree (item 286).
+ * Guards the R8 keep rules that name a package against the real source tree.
  *
  * <p>A {@code -keep class <package>.**} rule that names a package that does not exist is silently
  * useless: R8 renames the class, the mangled JNI symbol

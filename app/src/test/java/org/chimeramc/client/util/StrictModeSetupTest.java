@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
- * Pins the release no-op of {@link StrictModeSetup} (item 296).
+ * Pins the release no-op of {@link StrictModeSetup}.
  *
  * <p>The debug path calls {@code android.os.StrictMode}, which is a stub off-device, so it cannot be
  * exercised in a JVM test. What a unit test can prove is the property that matters for release: with

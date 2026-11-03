@@ -132,7 +132,7 @@ public final class ReachIndicatorOverlay {
 
         // The caption is reformatted only when the reading actually changes. This view redraws on
         // the 50 ms refresh, and String.format allocates; the same peer at the same distance would
-        // otherwise build an identical string twenty times a second (item 17).
+        // otherwise build an identical string twenty times a second.
         private String cachedText;
         private String cachedPeerId;
         private float cachedDistance = Float.NaN;

@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
 /**
- * The rule for capping an append-only log file (item 309).
+ * The rule for capping an append-only log file.
  *
  * <p>The launch log is opened in append mode and flushed on every line so it survives a kill. That
  * is the right durability trade, but it means the file grows without bound: a long session with a

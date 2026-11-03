@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the navigation attention dot (item 83).
+ * Pins the navigation attention dot.
  *
  * <p>A dot that is always on, or that appears for a healthy state, is noise: the user learns to
  * ignore it and then misses the one case that mattered. So the rule is asserted in both

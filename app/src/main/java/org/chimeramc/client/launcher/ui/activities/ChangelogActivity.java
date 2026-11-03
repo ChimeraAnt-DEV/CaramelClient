@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * The in-app changelog screen (item 270), rendered from the repo's {@code CHANGELOG.md}.
+ * The in-app changelog screen, rendered from the repo's {@code CHANGELOG.md}.
  *
  * <p>One source of truth: the file is copied into the assets at build time and parsed by the pure
  * {@link ChangelogMarkdown}, so the screen cannot describe a release differently from the file a

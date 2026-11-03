@@ -79,7 +79,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
      * Reads the cached last capture, so the launcher shows the real skin before the game has run.
      * Fail-closed: no cache, a corrupt cache or a decode failure returns null.
      *
-     * <p>Item 246: the capture lives in the bounded LRU {@link SkinCacheStore} first, keyed by the
+     * <p>The capture lives in the bounded LRU {@link SkinCacheStore} first, keyed by the
      * identity hash, and the single-entry {@link LocalSkinCache} is the fallback for a capture
      * written before the store existed. The store is byte-budgeted, so a long-lived install with
      * many accounts cannot grow the cache without limit.
@@ -112,7 +112,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
             LocalSkinCache.Entry entry = new LocalSkinCache.Entry(w, h,
                     SkinCaptureValidator.ArmModel.WIDE, "", System.currentTimeMillis(),
                     identity, argb);
-            // Item 246: write into the bounded LRU store, and keep the single-entry cache in step so
+            // Write into the bounded LRU store, and keep the single-entry cache in step so
             // a reader that predates the store still finds the latest capture.
             SkinCacheStore.put(context.getFilesDir(),
                     identity.isEmpty() ? "default" : identity, entry,
@@ -125,7 +125,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
 
     /**
      * Reads the capture, preferring the LRU store's slot for the current identity and falling back
-     * to the single-entry cache (item 246).
+     * to the single-entry cache.
      */
     private static LocalSkinCache.Entry readCachedEntry(Context context) {
         try {

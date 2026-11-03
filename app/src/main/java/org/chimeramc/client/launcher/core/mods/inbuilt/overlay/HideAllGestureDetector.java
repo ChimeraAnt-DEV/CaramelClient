@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Detects a three-finger tap, the gesture that hides every HUD overlay for a screenshot (item 213).
+ * Detects a three-finger tap, the gesture that hides every HUD overlay for a screenshot.
  *
  * <p>Pure and Android-free: it is fed the raw facts of each event (the action, the pointer count,
  * the pointer that changed and its position), so the recognition rule is unit-testable without a

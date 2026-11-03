@@ -67,7 +67,7 @@ public final class RadialWheelMotion {
     }
 
     /**
-     * The centre dead zone bounds and default, in dp (item 199).
+     * The centre dead zone bounds and default, in dp.
      *
      * <p>The dead zone is the radius around the hub in which stick movement is ignored, so a
      * resting-but-noisy stick cannot drift the cursor off the hub and highlight a slice the player
@@ -80,7 +80,7 @@ public final class RadialWheelMotion {
     public static final float CENTER_DEAD_ZONE_DEFAULT_DP = 0.15f;
 
     /**
-     * Clamps a requested centre dead zone into the usable range (item 199).
+     * Clamps a requested centre dead zone into the usable range.
      *
      * <p>A non-finite value reads as the default rather than propagating NaN into the shape maths,
      * where it would silence the cursor entirely with no diagnosable cause.

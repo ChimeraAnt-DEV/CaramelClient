@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the library-name rule (item 301).
+ * Pins the library-name rule.
  *
  * <p>The extraction cache, the loader and the repair path all normalise through this class. A drift
  * here is silent: the cache check would stop finding its own files and re-extract on every launch,

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-/** Pins the CHANGELOG.md parse rules (item 270). */
+/** Pins the CHANGELOG.md parse rules. */
 public class ChangelogMarkdownTest {
 
     @Test

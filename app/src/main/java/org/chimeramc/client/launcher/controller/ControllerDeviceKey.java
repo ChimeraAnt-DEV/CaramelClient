@@ -1,7 +1,7 @@
 package org.chimeramc.client.launcher.controller;
 
 /**
- * A stable identity for one physical controller model (item 219).
+ * A stable identity for one physical controller model.
  *
  * <p>A profile list is keyed by {@link ControllerType}, which is a family ("Xbox"), not a device.
  * Two different Xbox pads can want different dead zones and remaps, so a per-device binding needs

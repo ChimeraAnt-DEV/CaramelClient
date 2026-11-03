@@ -104,7 +104,7 @@ public final class VoiceChatOverlay {
     }
 
     /**
-     * Moves the indicator to a pixel position (item 212), so applying an overlay layout moves the
+     * Moves the indicator to a pixel position, so applying an overlay layout moves the
      * live mic indicator rather than only writing its stored position.
      */
     public void updatePosition(int x, int y) {

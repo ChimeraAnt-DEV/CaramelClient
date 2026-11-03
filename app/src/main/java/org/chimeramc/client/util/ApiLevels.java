@@ -3,7 +3,7 @@ package org.chimeramc.client.util;
 import android.os.Build;
 
 /**
- * One owner for every API-level gate in the launcher (items 26, 310).
+ * One owner for every API-level gate in the launcher.
  *
  * <p>{@code minSdk} is 28, yet the tree carried 70-odd {@code ApiLevels.sdkInt()} comparisons
  * scattered across the code, each one a small chance to write the wrong level or the wrong

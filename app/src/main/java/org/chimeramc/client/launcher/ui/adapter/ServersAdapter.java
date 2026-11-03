@@ -35,7 +35,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     private final Map<String, Boolean> pingFailures = new HashMap<>();
     /** The selected instance's version code, used for the compatibility verdict. */
     private String selectedVersionCode;
-    /** Favourite server keys ("ip:port"), read from {@link ServerFavourites} (item 254). */
+    /** Favourite server keys ("ip:port"), read from {@link ServerFavourites}. */
     private java.util.Set<String> favourites = java.util.Collections.emptySet();
 
     public interface OnServerClickListener {
@@ -51,7 +51,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     }
 
     /**
-     * Sets the favourite keys and re-sorts, favourites first (item 254).
+     * Sets the favourite keys and re-sorts, favourites first.
      *
      * <p>The order is a presentation rule, so it is applied where the list is rendered rather than
      * where it is stored: the game's own {@code external_servers.txt} keeps the order it was written
@@ -81,7 +81,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
      */
     public void updateData(List<ServerItem> newServers) {
         List<ServerItem> raw = newServers != null ? newServers : java.util.Collections.emptyList();
-        // Favourites first, then the stored order (item 254). Ordering here, before the diff, is
+        // Favourites first, then the stored order. Ordering here, before the diff, is
         // what keeps a starred row from jumping position when a search filter is applied.
         List<ServerItem> next = ServerFavourites.order(raw, favourites);
         ListDiff.Result diff = ListDiff.compute(this.servers, next,

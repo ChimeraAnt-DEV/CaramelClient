@@ -56,7 +56,7 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /** Per-module row state, from the registry (M10). Absent means "derive from availability". */
     private final Map<String, ModMenuRowState> rowStates = new HashMap<>();
     /**
-     * The row states the visible rows were last bound with (item 202).
+     * The row states the visible rows were last bound with.
      *
      * <p>Distinct from {@link #rowStates}, which is what the next bind will use: the diff needs both
      * sides to notice a module the crash guard disabled without the user's toggle changing.
@@ -493,7 +493,7 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 // The content rule lives in ModMenuRowContent so it is unit-tested; the row state is
                 // compared as "what the old row was bound with" against "what the new row will bind
                 // with", which is what catches a module the crash guard disabled without the user's
-                // toggle changing (item 202).
+                // toggle changing.
                 return ModMenuRowContent.sameContent(
                         oldItem.mod.getName(), newItem.mod.getName(),
                         oldItem.mod.getDescription(), newItem.mod.getDescription(),
@@ -518,7 +518,7 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         favoriteStates.clear();
         favoriteStates.putAll(nextFavoriteStates);
         // The rows about to be bound use the current states; record them so the next diff compares
-        // against what is actually on screen rather than against itself (item 202).
+        // against what is actually on screen rather than against itself.
         boundRowStates.clear();
         boundRowStates.putAll(rowStates);
         diff.dispatchUpdatesTo(this);

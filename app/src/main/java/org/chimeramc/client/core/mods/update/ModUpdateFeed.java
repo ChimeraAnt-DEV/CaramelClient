@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Parses the mod-update feed into an id to version map (item 273).
+ * Parses the mod-update feed into an id to version map.
  *
  * <p>The feed is a tiny document the project hosts, so a new mod release needs no app update:
  * <pre>

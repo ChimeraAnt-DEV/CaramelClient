@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins what a long press on a destination offers (item 92).
+ * Pins what a long press on a destination offers.
  *
  * <p>The menu is the only place a section can be reached without opening its tab first, so the
  * rule is asserted rather than left to the listener: a tab with sections must offer them all, a tab

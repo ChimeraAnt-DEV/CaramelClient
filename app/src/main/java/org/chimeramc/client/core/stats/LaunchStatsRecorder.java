@@ -3,7 +3,7 @@ package org.chimeramc.client.core.stats;
 import android.content.Context;
 
 /**
- * The single place a launch/crash statistic is recorded (item 282).
+ * The single place a launch/crash statistic is recorded.
  *
  * <p>Every method here is best-effort and never throws: these counters are diagnostic, and a
  * statistic must never be the reason a launch path fails. The rules themselves live in

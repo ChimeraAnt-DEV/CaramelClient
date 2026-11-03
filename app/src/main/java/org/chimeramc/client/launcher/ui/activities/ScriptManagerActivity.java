@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * The script manager screen (item 226).
+ * The script manager screen.
  *
  * <p>Lists every package in the {@code .AntEgg} sandbox with its declared dependencies, the order
  * the loader would install them, and a per-package enable switch. Disabling a script stops it being

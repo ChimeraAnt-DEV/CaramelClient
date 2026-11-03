@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.versions;
 
 /**
- * The rule for a per-instance note (item 278).
+ * The rule for a per-instance note.
  *
  * <p>A note is free-form user text that is persisted into the instance's {@code profile.json}, so it
  * is normalised in one place: trimmed, stripped of control characters (a pasted newline or NUL in a

@@ -47,7 +47,7 @@ public final class LaunchReadiness {
         /** The signature rules do not cover this build, so the byte-pattern hooks stay off. */
         SIGNATURE_RULES_MISSING,
         /**
-         * The installed Minecraft build is newer than every rule in the signature set (item 256).
+         * The installed Minecraft build is newer than every rule in the signature set.
          *
          * <p>A distinct state from {@link #SIGNATURE_RULES_MISSING} because the two read
          * differently: this one means the game moved ahead of the launcher's tested range, so the

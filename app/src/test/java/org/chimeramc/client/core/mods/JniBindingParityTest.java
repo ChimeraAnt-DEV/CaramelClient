@@ -115,7 +115,7 @@ public class JniBindingParityTest {
     }
 
     /**
-     * The JNI entry-point table (item 470) must list every owner class the preloader exports for.
+     * The JNI entry-point table must list every owner class the preloader exports for.
      *
      * <p>The table is prose, so nothing else keeps it in step with the code: a new {@code Java_…}
      * export whose owner class is missing from the table would leave the documentation wrong while

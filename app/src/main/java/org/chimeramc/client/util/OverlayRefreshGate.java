@@ -1,7 +1,7 @@
 package org.chimeramc.client.util;
 
 /**
- * Decides whether a periodic overlay refresh should actually touch its view (item 187).
+ * Decides whether a periodic overlay refresh should actually touch its view.
  *
  * <p>The readout overlays run on a timer — 100 ms for CPS, 250 ms for FPS, 33 ms for the combat
  * widgets — and each tick used to call {@code setText} or {@code invalidate} unconditionally. The

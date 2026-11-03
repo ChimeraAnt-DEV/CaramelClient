@@ -247,7 +247,7 @@ public class FileHandler {
                     @Override
                     public void onSuccess(File staged, String fileName) {
                         AppExecutors.run(AppExecutors.Kind.MOD, "antegg-load", () -> {
-                            // Item 233: the digest of the staged package is logged so a link import
+                            // The digest of the staged package is logged so a link import
                             // can be checked against the publisher's value.
                             String digest = org.chimeramc.client.core.antegg.ModHash.sha256(staged);
                             Log.i(TAG, "Linked package " + fileName + " sha256=" + digest);

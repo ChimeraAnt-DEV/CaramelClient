@@ -25,7 +25,7 @@ jobs:
         run: python3 scripts/validate_release_content.py
 
       # A submodule that tracks a branch can move under the build; the pin must be a commit bumped
-      # in a dedicated commit (item 324).
+      # in a dedicated commit.
       - name: Check submodules are pinned
         run: ./scripts/check_submodules.sh
 
@@ -139,13 +139,13 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run preloader host tests
-        # Item 21 (preloader update list): the pure C++ logic (geometry parser, animation
+        # The pure C++ logic (geometry parser, animation
         # solver, socket protocol, hook-install gate, version compare, ...) is device-free and
         # must break the build on every commit, not only on a device. The runner self-fetches
         # nlohmann/json into a gitignored cache when needed.
         run: bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh
 
-      # Items 111, 136, 333: the three hygiene budgets. The existing debt is large and is recorded
+      # The three hygiene budgets. The existing debt is large and is recorded
       # in scripts/hygiene/*.txt; this fails only when a change makes it larger, which is the part a
       # single PR can actually hold the line on.
       - name: Check UI hygiene budgets
@@ -166,7 +166,7 @@ jobs:
 
       - name: Verify the shipped rule signature
         # The rule file decides which addresses the preloader patches, so a signature that does not
-        # match the file would silently disable every remote rule set (item 257). This checks the
+        # match the file would silently disable every remote rule set. This checks the
         # pair the app actually bundles, with the public key the app ships.
         run: python3 scripts/sign_preloader_rules.py --verify
 

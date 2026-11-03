@@ -725,7 +725,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="dialog_message_exit_app">Are you sure you want to exit?</string>
     <string name="dialog_positive_exit">Exit</string>
     <string name="show_logcat_overlay">Logcat overlay</string>
-    <!-- Privacy modes (items 272, 277). -->
+    <!-- Privacy modes. -->
     <string name="guest_mode_title">Guest mode</string>
     <string name="guest_mode_desc">Hides mods, servers and voice chat on a shared or borrowed device. Nothing is deleted and the game still launches; turn it off to see them again.</string>
     <string name="streaming_safe_title">Streaming-safe mode</string>
@@ -1385,7 +1385,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="nav_skins">Skins</string>
     <string name="nav_customize">Customize</string>
     <string name="nav_back">Back</string>
-    <!-- Item 85: the wide rail can be folded to icons only; the control names the action it
+    <!-- The wide rail can be folded to icons only; the control names the action it
          performs, not the state, so it reads correctly to a screen reader. -->
     <string name="nav_rail_collapse">Collapse rail</string>
     <string name="nav_rail_expand">Expand rail</string>
@@ -1638,15 +1638,15 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_field_berry_api">BerryAPI backend</string>
     <string name="diagnostics_field_input_backend">Input backend</string>
     <string name="diagnostics_field_hooks">Preloader hooks</string>
-    <!-- Item 453: the preloader's own per-feature report, distinct from the hook table above. -->
+    <!-- The preloader's own per-feature report, distinct from the hook table above. -->
     <string name="diagnostics_field_feature_availability">Feature availability</string>
-    <!-- Item 452: the hook install/remove round-trip result, distinct from the row above. -->
+    <!-- The hook install/remove round-trip result, distinct from the row above. -->
     <string name="diagnostics_field_hook_self_test">Hook self-test</string>
     <string name="diagnostics_field_preloader_abi">Preloader ABI</string>
     <string name="diagnostics_preloader_abi_ok">v%1$d (matches client)</string>
     <string name="diagnostics_preloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
     <string name="diagnostics_no_mod_errors">No mod load errors on record.</string>
-    <!-- Local launch/crash statistics (item 282). Local data only; nothing is uploaded. -->
+    <!-- Local launch/crash statistics. Local data only; nothing is uploaded. -->
     <string name="diagnostics_section_stats">Launch statistics</string>
     <string name="diagnostics_stats_desc">Counted on this device only. Nothing is uploaded.</string>
     <string name="diagnostics_stats_launches">Launches</string>
@@ -2560,7 +2560,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_step_signin_body">Sign in with your Microsoft account to play online and keep your progress.</string>
     <string name="setup_step_signin_action">Sign in</string>
     <string name="setup_skip">Skip for now</string>
-    <!-- First-run device compatibility pass (item 284). Each row is a check with its own fix. -->
+    <!-- First-run device compatibility pass. Each row is a check with its own fix. -->
     <string name="setup_compat_title">Device check</string>
     <string name="setup_compat_all_ok">Everything checks out.</string>
     <string name="setup_compat_free_space">Free space</string>

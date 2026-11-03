@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.cosmetics;
 
 /**
- * The wait between cloud-relay polls, backing off while the relay is unreachable (item 244).
+ * The wait between cloud-relay polls, backing off while the relay is unreachable.
  *
  * <p>The cloud poll used a fixed one-second interval, so a device whose relay is down (no network,
  * the public relay rate-limiting us, a wrong topic) hammered the endpoint once a second for the

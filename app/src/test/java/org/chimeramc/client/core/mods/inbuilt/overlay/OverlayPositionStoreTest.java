@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Overlay positions stored as surface fractions (item 211). */
+/** Overlay positions stored as surface fractions. */
 public class OverlayPositionStoreTest {
 
     @Test

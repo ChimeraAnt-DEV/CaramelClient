@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Applies the in-game quick settings (item 225).
+ * Applies the in-game quick settings.
  *
  * <p>Two different mechanisms, deliberately kept apart:
  * <ul>

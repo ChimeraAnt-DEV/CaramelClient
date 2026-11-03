@@ -7,7 +7,7 @@ import org.chimeramc.client.settings.FeatureSettings;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * The one place that decides when the mod-update check runs (item 273).
+ * The one place that decides when the mod-update check runs.
  *
  * <p>Both entry points (launcher startup and the Settings "turn it on" action) funnel through here
  * so the throttle, the feature switch and the single-flight rule are applied in one place. Without

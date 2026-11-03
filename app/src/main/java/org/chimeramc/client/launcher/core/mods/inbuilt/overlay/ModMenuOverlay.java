@@ -1286,7 +1286,7 @@ public class ModMenuOverlay {
     }
 
     /**
-     * Binds the radial wheel's centre dead-zone slider (item 199).
+     * Binds the radial wheel's centre dead-zone slider.
      *
      * <p>The value lives in the manager's preferences rather than in {@link ModMenuSettings}: that
      * object is the menu's appearance, and the dead zone is the wheel's input feel, owned by the
@@ -2124,7 +2124,7 @@ public class ModMenuOverlay {
     }
 
     /**
-     * Shows or hides the safe-area frame (item 210).
+     * Shows or hides the safe-area frame.
      *
      * <p>The frame is measured against the window it will cover, so it is populated after the first
      * layout pass rather than at inflation, when the window size is still unknown.
@@ -2800,7 +2800,7 @@ public class ModMenuOverlay {
         if (keep != replayContainer) hideReplay();
         if (keep != voiceContainer) hideVoice();
         // The keyboard page arms a key-capture timeout; leaving the page must cancel it, or it
-        // fires into a detached tree and holds the section alive (item 183).
+        // fires into a detached tree and holds the section alive.
         if (keep != keyboardContainer && keyboardSection != null) keyboardSection.onHidden();
         if (keep != packsContainer && packsContainer != null) {
             packsContainer.setVisibility(View.GONE);

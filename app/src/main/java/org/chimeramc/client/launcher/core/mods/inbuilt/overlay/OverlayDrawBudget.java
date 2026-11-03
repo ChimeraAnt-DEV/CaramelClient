@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Tracks how long each overlay's {@code onDraw} takes and reports the ones that overrun (item 214).
+ * Tracks how long each overlay's {@code onDraw} takes and reports the ones that overrun.
  *
  * <p>An overlay shares the game's frame budget, so a draw that quietly costs several milliseconds is
  * a dropped frame the player feels but never sees attributed. The budget is only enforced in debug

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Pins the per-instance note rules (item 278). */
+/** Pins the per-instance note rules. */
 public class InstanceNotesTest {
 
     @Test

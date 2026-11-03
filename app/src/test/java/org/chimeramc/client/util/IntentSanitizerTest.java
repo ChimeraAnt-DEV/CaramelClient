@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Item 178 — the external-intent scheme rules.
+ * The external-intent scheme rules.
  *
  * <p>The scheme check is the part that decides whether an externally-supplied uri is acted on, and
  * it is pure, so it is tested here without an Android {@code Uri} (which is a stub off-device).

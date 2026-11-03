@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import org.junit.Test;
 
 /**
- * The launcher-side mouse button state machine (item 215).
+ * The launcher-side mouse button state machine.
  *
  * <p>Runs against the real class with real {@code MotionEvent} button masks; no mocks. The Android
  * constants used here are inlined ints, so they resolve on the unit-test classpath.

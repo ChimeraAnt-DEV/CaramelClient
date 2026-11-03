@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The Auto Sprint overlay body: the icon with a persistent on/off label beneath it (item 195), so
+    The Auto Sprint overlay body: the icon with a persistent on/off label beneath it, so
     the armed state is readable at a glance rather than only by the icon's colour. The root keeps the
     shared overlay button id so the base class's touch and layout handling is unchanged.
 -->

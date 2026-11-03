@@ -5,7 +5,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
 /**
- * The one place a screen marks a heading or couples a label to its control (items 341, 342).
+ * The one place a screen marks a heading or couples a label to its control.
  *
  * <p>Two rules are easy to state and easy to forget, which is why they live here rather than in
  * each screen:
@@ -85,7 +85,7 @@ public final class UiAccessibility {
     }
 
     /**
-     * Wires every label+switch row under {@code root} in one pass (item 342).
+     * Wires every label+switch row under {@code root} in one pass.
      *
      * <p>A settings screen has dozens of these rows, and each one wired by hand is a chance to miss
      * one. Two shapes are recognised, because they need different treatment:

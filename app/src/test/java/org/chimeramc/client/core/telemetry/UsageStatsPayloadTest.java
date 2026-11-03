@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-/** Pins exactly what the anonymous usage counter sends (item 281). */
+/** Pins exactly what the anonymous usage counter sends. */
 public class UsageStatsPayloadTest {
 
     @Test

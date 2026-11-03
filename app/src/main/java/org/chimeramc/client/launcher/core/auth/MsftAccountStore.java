@@ -62,7 +62,7 @@ public class MsftAccountStore {
             if (TextUtils.isEmpty(json)) return new ArrayList<>();
             List<MsftAccount> list = GSON.fromJson(json, LIST_TYPE);
             if (list == null) return new ArrayList<>();
-            // The on-disk blob is ciphertext (item 515); every caller wants plaintext, so the
+            // The on-disk blob is ciphertext; every caller wants plaintext, so the
             // decryption happens here rather than at each read site. A value that cannot be
             // decrypted (the Keystore key was invalidated) reads as absent, which the callers
             // already treat as "no auth material" and sign the account out cleanly.
@@ -82,7 +82,7 @@ public class MsftAccountStore {
         File f = getFile(ctx);
         try {
             // Encrypt a copy for disk so the in-memory objects stay plaintext for the callers
-            // (item 515). Encrypting the live list in place would leave the process holding
+            //. Encrypting the live list in place would leave the process holding
             // ciphertext after the first save.
             List<MsftAccount> onDisk = new ArrayList<>(list.size());
             for (MsftAccount a : list) {
@@ -137,7 +137,7 @@ public class MsftAccountStore {
         save(ctx, list);
         if (list.isEmpty()) {
             // No accounts left: drop the Keystore key so a device handed on (or a restored backup)
-            // cannot decrypt anything this vault ever wrote (item 515).
+            // cannot decrypt anything this vault ever wrote.
             SecretVault.deleteKey();
         }
         org.chimeramc.client.core.auth.storage.XalExporter.exportActiveAccount(ctx);

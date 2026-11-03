@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Gyroscope bias capture (item 194).
+ * Gyroscope bias capture.
  *
  * <p>Pins the rules that decide when a calibration is usable: enough samples, a mean that ignores a
  * dropped (NaN) frame, and a capture that is inert until begun.

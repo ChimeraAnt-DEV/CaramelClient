@@ -43,7 +43,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
         void onSaveClick(ScreenshotItem screenshot);
 
         /**
-         * Share the screenshot (item 276). A default no-op keeps every existing caller source
+         * Share the screenshot. A default no-op keeps every existing caller source
          * compatible, so adding the share row did not force a change at each construction site.
          */
         default void onShareClick(ScreenshotItem screenshot) {
@@ -151,7 +151,7 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotsAdapter.
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        // View binding replaces the six findViewById lookups (item 111): the ids and their types
+        // View binding replaces the six findViewById lookups: the ids and their types
         // come from the layout, so a renamed view is a compile error rather than a null at runtime.
         final ItemScreenshotBinding binding;
         final ImageView imageView;

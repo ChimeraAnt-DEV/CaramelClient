@@ -161,7 +161,7 @@ public class ModDetailActivity extends BaseActivity {
                 modDescriptionText.setVisibility(View.GONE);
             } else {
                 modDescriptionText.setVisibility(View.VISIBLE);
-                // Item 127: a mod description can be several paragraphs; measure it off the main
+                // A mod description can be several paragraphs; measure it off the main
                 // thread so binding it does not lay the whole thing out on this frame.
                 AsyncText.apply(modDescriptionText, description);
             }
@@ -169,7 +169,7 @@ public class ModDetailActivity extends BaseActivity {
             versionRow.set(R.string.mod_version_label, version);
             minecraftVersionsRow.set(R.string.mod_minecraft_versions_label, formatMinecraftVersions(mod));
             configFilesRow.set(R.string.mod_config_files_label, formatConfigFiles(mod));
-            // Item 511: a pinned hash is only meaningful if it is visible. Show the verified digest
+            // A pinned hash is only meaningful if it is visible. Show the verified digest
             // and the source file, or say the mod is unpinned, so the screen never implies a check
             // that did not run.
             integrityRow.set(R.string.mod_integrity_label, formatIntegrity(mod));
@@ -182,7 +182,7 @@ public class ModDetailActivity extends BaseActivity {
     }
 
     /**
-     * The integrity line: the verified hash and source file, or an explicit "not pinned" (item 511).
+     * The integrity line: the verified hash and source file, or an explicit "not pinned".
      *
      * <p>A mod that declares {@code sha256} is verified against it at load; showing the digest lets a
      * user compare it with the publisher's own value. A mod that declares none is not verified, and
@@ -292,7 +292,7 @@ public class ModDetailActivity extends BaseActivity {
             card.setTranslationY(dy);
             final int delay = 100 + i * 80;
             // Staggered through the activity's scope, so backing out mid-entrance removes the
-            // pending posts instead of firing them into a detached tree (items 14, 295).
+            // pending posts instead of firing them into a detached tree.
             staggerScope.postDelayed(() -> {
                 DynamicAnim.springAlphaTo(card, 1f).start();
                 DynamicAnim.springTranslationYTo(card, 0f).start();

@@ -18,7 +18,7 @@ class LauncherApplication : Application() {
         // Point the failure reporter at the application context before anything else can fail, so
         // the first failure is durable rather than only reaching logcat.
         org.chimeramc.client.util.AppLog.install(applicationContext)
-        // Item 296: catch main-thread disk/network work in debug builds. A no-op in release.
+        // Catch main-thread disk/network work in debug builds. A no-op in release.
         org.chimeramc.client.util.StrictModeSetup.install(org.chimeramc.client.BuildConfig.DEBUG)
         FeatureSettings.init(applicationContext)
         LowLatencyNetworkManager.init(applicationContext)
@@ -29,7 +29,7 @@ class LauncherApplication : Application() {
         // active for it, so a hook that kills the process cannot trap the user in a crash loop.
         org.chimeramc.client.core.minecraft.OptifineModeManager.reconcileOnStartup(applicationContext)
         CrashReporter.init(this)
-        // Item 493: one table a script or a module can ask before it draws, so a feature whose
+        // One table a script or a module can ask before it draws, so a feature whose
         // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
         // probe is a cached native read, so this is cheap enough to leave installed for the process.
         org.chimeramc.client.core.backend.HookAvailability.install { hook ->
@@ -57,7 +57,7 @@ class LauncherApplication : Application() {
                 // Reporting a crash must never itself crash the launcher; the uploader logs.
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
-        // Item 281: the opt-in anonymous usage counter. Same shape as the crash report above --
+        // The opt-in anonymous usage counter. Same shape as the crash report above --
         // off the main thread, gated on the user's switch and a configured collector, and inert in
         // the shipped source because no endpoint is set. At most one report a day.
         Thread({

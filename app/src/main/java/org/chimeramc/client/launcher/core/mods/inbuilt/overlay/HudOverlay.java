@@ -17,7 +17,7 @@ public class HudOverlay extends View {
     private boolean isShowing = false;
     private final Paint paint = new Paint();
     // Triangle scratch, reused so a TYPE_TRIANGLE_FILLED command does not allocate a Path on
-    // every frame (item 17). The draw path runs on the game's frame tick.
+    // every frame. The draw path runs on the game's frame tick.
     private final android.graphics.Path trianglePath = new android.graphics.Path();
     private final android.graphics.RectF imageDst = new android.graphics.RectF();
 

@@ -37,7 +37,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
 
-        <!-- Item 123: shared-element transitions between a list and its detail screen need both
+        <!-- Shared-element transitions between a list and its detail screen need both
              flags on the destination activity's theme. API 21+, so no version guard is required. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** The logcat overlay's level-filter chips and pass rule (item 209). */
+/** The logcat overlay's level-filter chips and pass rule. */
 public class LogcatLevelFilterTest {
 
     @Test

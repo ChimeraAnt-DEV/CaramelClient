@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The overlay refresh gate (item 187).
+ * The overlay refresh gate.
  *
  * <p>The overlays redraw on a timer that fires far more often than their value changes, so the gate
  * is what stops a static readout repainting an identical frame. The two rules that matter are

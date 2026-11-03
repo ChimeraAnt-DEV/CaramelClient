@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * The rules a diff has to get right, pinned without a device (items 12, 141-143, 202).
+ * The rules a diff has to get right, pinned without a device.
  *
  * <p>These are the cases that decide whether a list animates one row or redraws itself. They are
  * also the cases that crash the adapter when they are wrong, which is why the wrong-index paths
@@ -209,7 +209,7 @@ public class ListDiffTest {
 
     @Test
     public void theDiffNeverRedrawsWhenOnlyContentChanged() {
-        // A content-only change must never reset: that is the whole point of the change (item 202).
+        // A content-only change must never reset: that is the whole point of the change.
         for (int i = 0; i < 5; i++) {
             List<Row> oldList = rows("a=1", "b=2", "c=3", "d=4", "e=5");
             List<Row> newList = rows("a=1", "b=2", "c=3", "d=4", "e=5");

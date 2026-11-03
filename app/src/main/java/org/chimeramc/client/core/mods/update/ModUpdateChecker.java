@@ -21,7 +21,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Runs the mod-update check and reports it as one summary (item 273).
+ * Runs the mod-update check and reports it as one summary.
  *
  * <p>The check is throttled to once a day ({@link ModUpdateStore#CHECK_INTERVAL_MS}), skips while a
  * game session is live (the session gets the network, per {@link

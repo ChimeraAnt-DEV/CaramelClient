@@ -36,7 +36,7 @@ public final class MinecraftSessionRestarter {
     private static final String PREFS = "minecraft_session_restart";
     private static final String KEY_PENDING = "pending_relaunch";
     private static final String KEY_PENDING_AT = "pending_relaunch_at";
-    /** The timestamps of recent relaunches, so a crash loop cannot restart forever (item 274). */
+    /** The timestamps of recent relaunches, so a crash loop cannot restart forever. */
     private static final String KEY_RELAUNCH_HISTORY = "relaunch_history";
     /** A request older than this is ignored, so a failed relaunch cannot auto-start a later cold boot. */
     private static final long PENDING_MAX_AGE_MS = 120_000L;
@@ -62,7 +62,7 @@ public final class MinecraftSessionRestarter {
         }
         if (version == null) return false;
 
-        // Item 274: refuse an unbounded relaunch loop. If the game dies immediately after every
+        // Refuse an unbounded relaunch loop. If the game dies immediately after every
         // relaunch, an unlimited auto-restart would burn battery forever and never show the user the
         // problem. The budget is checked before anything is written, so a refusal is a clean no-op.
         Context appContextForBudget = activity.getApplicationContext();

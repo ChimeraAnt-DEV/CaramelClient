@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * The lifetime rules behind every main-thread post (items 14, 295).
+ * The lifetime rules behind every main-thread post.
  *
  * <p>The scheduler is replaced with a queue a test can drive, so what is asserted is the rule the
  * production code depends on: closing a scope removes exactly the work it posted, and refuses new

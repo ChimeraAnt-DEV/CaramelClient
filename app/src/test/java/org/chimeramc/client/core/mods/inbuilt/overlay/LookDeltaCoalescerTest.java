@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Frame-coalesced look deltas (item 216).
+ * Frame-coalesced look deltas.
  *
  * <p>The property that matters: the travel summed across a frame is what gets sent, so several
  * move events between two frames cannot lose all but the last one.

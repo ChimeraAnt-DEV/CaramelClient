@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The system per-app language list stays in step with the shipped translations (item 329).
+ * The system per-app language list stays in step with the shipped translations.
  *
  * <p>On API 33+ the platform reads {@code res/xml/locales_config.xml} and shows the app in the
  * system's App languages screen. A locale the app ships but the file omits is simply missing from

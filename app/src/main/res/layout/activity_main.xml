@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <!-- Announcement card (item 255): hidden until the feed yields a card that applies
+                <!-- Announcement card: hidden until the feed yields a card that applies
                      to this build and has not been dismissed. -->
                 <include
                     layout="@layout/include_announcement_card"

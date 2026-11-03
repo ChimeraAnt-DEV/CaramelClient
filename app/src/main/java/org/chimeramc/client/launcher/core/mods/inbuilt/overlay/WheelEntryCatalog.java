@@ -108,7 +108,7 @@ public final class WheelEntryCatalog {
 
     /**
      * The choices plus one sub-wheel entry per profile in {@code profiles} and one layout-switch
-     * entry per stored overlay layout (item 212).
+     * entry per stored overlay layout.
      *
      * <p>A layout entry carries the layout's id in {@code target}, so the wheel can switch to it
      * without a second lookup table. Layouts are offered after the sub-wheels so the wheel's own

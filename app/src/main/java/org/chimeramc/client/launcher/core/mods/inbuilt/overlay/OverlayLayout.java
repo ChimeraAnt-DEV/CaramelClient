@@ -5,14 +5,14 @@ import java.util.Map;
 
 /**
  * A named set of overlay positions, so a player can keep a PvP arrangement and a survival one and
- * switch between them (item 212).
+ * switch between them.
  *
  * <p>Only the positions are stored, not the module set: a layout says "the armour HUD sits here,
  * the CPS readout sits there", and which modules are on is the module list's job. Mixing the two
  * would make switching a layout silently change what is enabled, which is not what "where my HUD
  * sits" means.
  *
- * <p>Positions are surface fractions (item 211), so a layout saved in portrait-ish window sizes or
+ * <p>Positions are surface fractions, so a layout saved in portrait-ish window sizes or
  * after a resolution-scale change still places every widget correctly.
  *
  * <p>A plain POJO so Gson round-trips it and the rules around it stay unit-testable.

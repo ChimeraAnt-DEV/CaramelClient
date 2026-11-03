@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The Snap-look overlay body: the icon with an armed/idle label beneath it (item 193), so the state
+    The Snap-look overlay body: the icon with an armed/idle label beneath it, so the state
     is visible at a glance rather than only by the icon's colour. The root keeps the shared overlay
     button id so the base class's touch and layout handling is unchanged.
 -->

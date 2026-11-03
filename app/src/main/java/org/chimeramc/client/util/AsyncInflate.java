@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 
 /**
- * Inflates a heavy layout off the main thread (item 130).
+ * Inflates a heavy layout off the main thread.
  *
  * <p>The Settings screen is over two thousand lines of XML; inflating it on the main thread blocks
  * the first frame for the whole parse and view-construction pass. {@link AsyncLayoutInflater} moves

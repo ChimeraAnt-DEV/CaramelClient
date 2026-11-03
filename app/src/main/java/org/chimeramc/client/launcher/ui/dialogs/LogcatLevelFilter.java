@@ -1,7 +1,7 @@
 package org.chimeramc.client.ui.dialogs;
 
 /**
- * The logcat overlay's level filter, as a pure rule (item 209).
+ * The logcat overlay's level filter, as a pure rule.
  *
  * <p>The overlay offered its levels through a {@link android.widget.ListPopupWindow} anchored to a
  * text view, which is a spinner in all but name: it hides the options until tapped and, being a

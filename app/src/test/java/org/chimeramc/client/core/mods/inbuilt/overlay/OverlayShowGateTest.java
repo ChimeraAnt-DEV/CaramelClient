@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The deferred-attach gate (item 183). Every rule here is an ordering a slow window manager can
+ * The deferred-attach gate. Every rule here is an ordering a slow window manager can
  * actually produce, and each one used to leave the overlay stuck on screen.
  */
 public class OverlayShowGateTest {

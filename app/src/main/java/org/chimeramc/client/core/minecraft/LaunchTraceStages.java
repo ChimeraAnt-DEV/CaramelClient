@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /**
  * The pure half of the launch trace: a bounded, ordered record of the milestones a launch passes
- * through, each with the elapsed time since the launch started (item 307).
+ * through, each with the elapsed time since the launch started.
  *
  * <p>{@link LaunchTrace} writes into this as the launch runs and can ask it for the slowest stages.
  * Keeping the arithmetic and the trimming here — with no Android type in sight — is what lets a JVM

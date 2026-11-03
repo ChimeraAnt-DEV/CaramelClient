@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A bounded, least-recently-used store of captured player skins (item 246).
+ * A bounded, least-recently-used store of captured player skins.
  *
  * <p>The single-entry {@link LocalSkinCache} is enough for "your own skin", but cosmetic sync and
  * the account skin path can hold several atlases, and an unbounded cache of 512x512 atlases grows

@@ -144,7 +144,7 @@ class LauncherRestartActivity : BaseActivity() {
             if (oldPid > 0 && oldPid != Process.myPid()) {
                 Process.killProcess(oldPid)
                 hideSystemUI()
-                // Do not assume a fixed delay is enough for the old process to be gone (item 275):
+                // Do not assume a fixed delay is enough for the old process to be gone:
                 // starting MainActivity while the old process still holds the app's storage and the
                 // game's files is the race the restart exists to avoid. The wait runs off the main
                 // thread so the restart screen stays responsive, and it is bounded so a process that

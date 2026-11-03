@@ -23,7 +23,7 @@ public final class AntEggBridge {
 
     /**
      * Extracts a package. {@code allowedRoot} is the app's private directory the sandbox root must
-     * live under; the native side re-checks it (item 454), so a wrong root is refused on both sides.
+     * live under; the native side re-checks it, so a wrong root is refused on both sides.
      */
     private static native String nativeLoadMod(String filePath, String sandboxRoot,
                                                String allowedRoot);

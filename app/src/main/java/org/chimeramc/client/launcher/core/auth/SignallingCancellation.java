@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.chimeramc.client.util.SignalGate;
 
 /**
- * A {@link Cancellation} that wakes a blocked wait the moment it is cancelled (item 15).
+ * A {@link Cancellation} that wakes a blocked wait the moment it is cancelled.
  *
  * <p>The state is an {@link AtomicBoolean} and the wake-up is a {@link SignalGate}. The two are
  * separate on purpose: the flag is what a caller checks, the gate is only how it stops waiting. A

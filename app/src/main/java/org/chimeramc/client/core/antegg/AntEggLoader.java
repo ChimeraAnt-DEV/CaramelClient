@@ -155,7 +155,7 @@ public final class AntEggLoader {
             return fail(context, manifest.name, "refusing to load: " + abiMismatch,
                     ModLoadDiagnostics.KIND_INCOMPATIBLE);
         }
-        // Item 512: the native entry must sit inside the sandbox the package was extracted to.
+        // The native entry must sit inside the sandbox the package was extracted to.
         // A package whose entry escaped the sandbox (a symlink, or a crafted entry point) is refused
         // before it reaches the injector.
         String refusal = org.chimeramc.client.core.mods.NativeLoadPolicy

@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.privacy;
 
 /**
- * The client's two privacy modes as one rule (items 272, 277).
+ * The client's two privacy modes as one rule.
  *
  * <p>Both modes exist to remove something from view, and both are easy to get half-right: a guest
  * mode that hides the Mods tab but leaves the mod-hub row on the launch screen, or a streaming-safe

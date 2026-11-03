@@ -70,7 +70,7 @@ public final class DisplayModePreference {
     }
 
     /**
-     * Picks the fastest same-resolution mode at or below {@code capHz} (item 225).
+     * Picks the fastest same-resolution mode at or below {@code capHz}.
      *
      * <p>This is the frame-cap counterpart to {@link #selectHighRefreshModeId}: a cap asks for a
      * mode no faster than the requested rate, and the same-resolution rule still applies so honouring

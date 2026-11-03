@@ -177,7 +177,7 @@ public final class PreloaderSignatureRulesManager {
     }
 
     /**
-     * True when the installed build is newer than every rule's range (item 256).
+     * True when the installed build is newer than every rule's range.
      *
      * <p>Distinguished from {@link #coversInstalledVersion} so the launcher can say "your game is
      * newer than this build supports" rather than the generic "no hook definitions", which reads as
@@ -289,7 +289,7 @@ public final class PreloaderSignatureRulesManager {
         String remoteRules = null;
         String failureMessage = "Failed to fetch remote preloader signature rules";
         // The rule file decides which code addresses the preloader patches, so a fetched copy is
-        // verified against the shipped public key before it is accepted (item 257). The key is
+        // verified against the shipped public key before it is accepted. The key is
         // bundled, so a host that is compromised or a man in the middle cannot substitute a rule
         // set: they would have to forge a signature without the private key. A missing bundled key
         // (a broken asset) disables the remote path rather than accepting unsigned rules.

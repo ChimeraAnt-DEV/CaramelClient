@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Signs the preloader signature-rules data file (item 257).
+"""Signs the preloader signature-rules data file.
 
 The rule file is what decides which code addresses the preloader patches, so it is remote input
 with the highest possible blast radius. It ships signed, and the client verifies the detached

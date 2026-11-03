@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The Zoom overlay body: the icon with the current zoom level printed beneath it (item 192), so a
+    The Zoom overlay body: the icon with the current zoom level printed beneath it, so a
     player can see how far the zoom is dialled in without opening the config dialog. The root keeps
     the shared overlay button id so the base class's touch and layout handling is unchanged.
 -->

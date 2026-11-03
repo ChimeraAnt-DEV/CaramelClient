@@ -52,7 +52,7 @@ object LaunchLog {
     }
 
     /**
-     * Caps the log file, keeping the newest half (item 309).
+     * Caps the log file, keeping the newest half.
      *
      * <p>Runs on the writer's own thread under the same lock every append takes, so it cannot race a
      * write. The check is a stat of the open file, so it costs nothing on the common path; the

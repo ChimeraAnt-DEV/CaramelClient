@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Sandbox-root validation for {@code .AntEgg} extraction (item 454).
+ * Sandbox-root validation for {@code .AntEgg} extraction.
  *
  * <p>The sandbox root normally comes from {@link AntEggLoader#sandboxRoot}, which derives it from
  * the app's own context, so it is private by construction. This class exists because the native

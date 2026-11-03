@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Applies the zoom scroll sensitivity and smoothing to a raw scroll delta (item 192).
+ * Applies the zoom scroll sensitivity and smoothing to a raw scroll delta.
  *
  * <p>Pure and Android-free so the two knobs are unit-tested without a device. Sensitivity is a
  * straight multiplier on the notch; smoothing is a one-pole low-pass that keeps {@code smoothing/100}

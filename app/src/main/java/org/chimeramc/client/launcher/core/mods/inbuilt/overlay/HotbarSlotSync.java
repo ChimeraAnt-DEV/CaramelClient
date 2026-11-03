@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Decides whether a hotbar slot's state needs pushing to the backend (item 196).
+ * Decides whether a hotbar slot's state needs pushing to the backend.
  *
  * <p>The slot's state is pushed from several paths — a geometry change, a press, a visibility change
  * and a config change — and those can fire back to back for one visible state. Re-sending the same

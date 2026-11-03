@@ -269,7 +269,7 @@ public final class InGamePackChanger {
     }
 
     /**
-     * The active uuids in the order the global list stores them, first to last (item 253).
+     * The active uuids in the order the global list stores them, first to last.
      *
      * <p>This is the order a reorder starts from: reading it back rather than re-deriving it means
      * a move works from what the game will actually apply, not from the list's display order.
@@ -291,7 +291,7 @@ public final class InGamePackChanger {
     }
 
     /**
-     * Rewrites the global pack list so the active packs appear in {@code order} (item 253).
+     * Rewrites the global pack list so the active packs appear in {@code order}.
      *
      * <p>Bedrock applies active packs bottom-up, so the array order <em>is</em> the priority: the
      * last entry wins a texture conflict. The list is rebuilt from the current file, reordering the

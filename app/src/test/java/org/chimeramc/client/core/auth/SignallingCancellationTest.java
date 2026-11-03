@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * The cancellation seam behind the device-code poll (item 15).
+ * The cancellation seam behind the device-code poll.
  *
  * <p>The property that matters is the one the old sleep-then-recheck could not give: a cancel that
  * arrives while the operation is waiting must release it at once, not at the end of the interval.

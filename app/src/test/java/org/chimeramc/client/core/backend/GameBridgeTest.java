@@ -108,7 +108,7 @@ public class GameBridgeTest {
 
     @Test
     public void statusLineNamesTheBackendOrItsAbsence() {
-        // Item 492: About and Diagnostics show this line, so a build with no backend says so
+        // About and Diagnostics show this line, so a build with no backend says so
         // plainly rather than leaving the user to infer it from a feature that does nothing.
         assertTrue(GameBridge.statusLine(), GameBridge.statusLine().contains("none"));
         GameBridge.register(backend);

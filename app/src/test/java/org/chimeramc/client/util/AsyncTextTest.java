@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the rule that decides when text is measured off the main thread (item 127).
+ * Pins the rule that decides when text is measured off the main thread.
  *
  * <p>The rule is the whole safety of the async path: a future whose metrics do not match is
  * rejected by the platform, so deferring a short string or deferring on a view that cannot consume

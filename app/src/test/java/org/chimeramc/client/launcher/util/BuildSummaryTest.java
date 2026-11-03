@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Pins the About screen's build identity and native status lines (item 177). */
+/** Pins the About screen's build identity and native status lines. */
 public class BuildSummaryTest {
 
     @Test

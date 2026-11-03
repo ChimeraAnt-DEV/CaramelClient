@@ -47,7 +47,7 @@ abstract class TextOverlay {
 
     // The timer fires far more often than the text changes, so an unchanged readout would repaint
     // an identical frame. The gate paints a changed value at once and holds an unchanged one to the
-    // refresh cadence (item 187). Built in the constructor, not here: `refreshIntervalMs()` is
+    // refresh cadence. Built in the constructor, not here: `refreshIntervalMs()` is
     // overridden by the subclasses, and a field initializer would call the override before the
     // subclass's own fields exist.
     private final OverlayRefreshGate refreshGate;

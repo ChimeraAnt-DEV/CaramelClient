@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Assembles the copyable debug bundle for a bug report (items 262 and 263).
+ * Assembles the copyable debug bundle for a bug report.
  *
  * <p>The diagnostics report already describes the app's state; a report a maintainer can act on also
  * needs the recent log, and it must be truncated and redacted before it is copied. Both rules live
@@ -38,7 +38,7 @@ public final class DebugBundle {
     }
 
     /**
-     * Composes the bundle, optionally applying the streaming-safe masks (item 277).
+     * Composes the bundle, optionally applying the streaming-safe masks.
      *
      * <p>With {@code streamingSafe} the report and the log also lose world coordinates and server
      * addresses, on top of the always-on credential redaction. The mask is applied last so a
@@ -81,7 +81,7 @@ public final class DebugBundle {
     }
 
     /**
-     * Redacts anything that looks like a credential (items 517).
+     * Redacts anything that looks like a credential.
      *
      * <p>The rule is deliberately broad and shape-based, because a log line's exact format is not
      * controlled here: a bearer token, an {@code access_token=}/{@code refresh_token=} query value,

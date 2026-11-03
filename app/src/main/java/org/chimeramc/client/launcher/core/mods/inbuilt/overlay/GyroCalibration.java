@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Gyroscope bias capture (item 194).
+ * Gyroscope bias capture.
  *
  * <p>A gyro reports a small non-zero rate while the device is perfectly still, and the drift is
  * device-specific (temperature, mounting). Left uncorrected, that offset is integrated into the

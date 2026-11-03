@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Pins the bounded process-exit wait (item 275) without a device or a second process.
+ * Pins the bounded process-exit wait without a device or a second process.
  *
  * <p>The restart path kills the old launcher process and then starts the replacement. A fixed delay
  * is a guess that can start the new process while the old one still holds the app's storage; the

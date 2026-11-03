@@ -3,7 +3,7 @@ package org.chimeramc.client.ui.components;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Turns a {@link ListDiff.Result} into the adapter notifications it stands for (items 12, 141-143).
+ * Turns a {@link ListDiff.Result} into the adapter notifications it stands for.
  *
  * <p>It exists as its own class so the mapping from a diff to a notify call is written once. The
  * mapping is the part worth testing - a REMOVE must be a range removal, because that is what tells

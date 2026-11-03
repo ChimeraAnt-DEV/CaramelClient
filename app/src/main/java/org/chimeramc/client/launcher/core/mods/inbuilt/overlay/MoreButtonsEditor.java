@@ -138,7 +138,7 @@ public final class MoreButtonsEditor {
             setFocusableInTouchMode(true);
             // The deferred immersive re-apply and the delete-confirm timer both outlive a close if
             // they are not scoped: the host is removed from its parent while the post is pending, so
-            // it would fire against a detached view (items 14, 183, 295).
+            // it would fire against a detached view.
             setOnSystemUiVisibilityChangeListener(
                     visibility -> scope.postDelayed(() -> applyImmersive(activity), 120));
             showMain();

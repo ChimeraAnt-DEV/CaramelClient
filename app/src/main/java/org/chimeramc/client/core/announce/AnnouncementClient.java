@@ -22,7 +22,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Fetches the announcements feed and hands the chosen card to the Launch tab (item 255).
+ * Fetches the announcements feed and hands the chosen card to the Launch tab.
  *
  * <p>Fail-closed in every direction: with no configured URL, no network, a bad document or an HTTP
  * error the card simply does not appear — there is never a placeholder card claiming something the

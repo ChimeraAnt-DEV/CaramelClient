@@ -2,7 +2,7 @@ package org.chimeramc.client.util;
 
 /**
  * A pure parser for the {@code #RGB}/{@code #RRGGBB}/{@code #AARRGGBB} colour literals a mod config
- * stores (item 350).
+ * stores.
  *
  * <p>{@code android.graphics.Color.parseColor} does the same job on a device, but it is not on the
  * unit-test classpath and it throws on anything it does not recognise - which is why both config

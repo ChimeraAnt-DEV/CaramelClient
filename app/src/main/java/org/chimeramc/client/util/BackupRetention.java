@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Keeps a bounded number of instance backups (item 144).
+ * Keeps a bounded number of instance backups.
  *
  * <p>Backups are large zips written to the shared Downloads folder, so without a cap every backup a
  * player ever took stays on disk forever. The rule is "keep the newest N for each instance"; the

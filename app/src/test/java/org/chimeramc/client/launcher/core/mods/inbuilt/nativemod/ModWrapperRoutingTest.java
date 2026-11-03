@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Every {@code nativemod} wrapper is a thin forwarder onto the active backend (item 353).
+ * Every {@code nativemod} wrapper is a thin forwarder onto the active backend.
  *
  * <p>After the {@code org.levimc} strip these classes no longer hold native code of their own: each
  * one must route to {@link GameBridge} and, with no backend registered, do nothing at all - no

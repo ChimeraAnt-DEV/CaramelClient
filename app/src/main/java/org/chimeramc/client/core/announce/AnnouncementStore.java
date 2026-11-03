@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Persists the announcements feed and which cards the user has dismissed (item 255).
+ * Persists the announcements feed and which cards the user has dismissed.
  *
  * <p>Two things are stored: the last feed the app fetched (so a card is still shown offline) and the
  * set of dismissed ids (so a card the user closed stays closed). The dismissed set is bounded so it

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** The overlay draw-time budget (item 214). */
+/** The overlay draw-time budget. */
 public class OverlayDrawBudgetTest {
 
     @Test

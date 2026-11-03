@@ -15,12 +15,12 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 /**
- * Every {@code ImageView} declares whether it is content or decoration (item 338).
+ * Every {@code ImageView} declares whether it is content or decoration.
  *
  * <p>TalkBack announces an image by its {@code contentDescription}; an image with neither a
  * description nor an explicit {@code importantForAccessibility="no"} is announced as an unlabelled
  * node, which is worse than silence because it makes the user stop and interrogate every row. The
- * audit that item 23 named was 39 such views; the rule is that an image must be one of two things:
+ * audit found 39 such views; the rule is that an image must be one of two things:
  * labelled, or deliberately marked decorative.
  *
  * <p>The check scans the real layout tree, so a new unlabelled image fails the build rather than

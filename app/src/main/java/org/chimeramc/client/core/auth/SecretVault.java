@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
 /**
- * Encrypts a secret at rest with a key that never leaves the Android Keystore (item 515).
+ * Encrypts a secret at rest with a key that never leaves the Android Keystore.
  *
  * <p>The account store writes the serialized Microsoft auth manager — an OAuth refresh token plus
  * its session material — into a plain JSON file. On a rooted device or a debug build that file is

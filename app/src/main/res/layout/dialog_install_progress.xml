@@ -65,7 +65,7 @@
         android:progressDrawable="@drawable/bg_libs_repair_progress" />
 
     <!--
-        Cancel (item 144). Hidden until a caller opts in with setCancelAction, so the install flow
+        Cancel. Hidden until a caller opts in with setCancelAction, so the install flow
         that must run to completion keeps its non-cancellable behaviour.
     -->
     <Button

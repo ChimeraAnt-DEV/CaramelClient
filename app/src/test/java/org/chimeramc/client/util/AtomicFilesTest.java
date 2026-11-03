@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * A write must never leave a half-written file behind (item 302).
+ * A write must never leave a half-written file behind.
  *
  * <p>These drive the real helper against a real filesystem - no mocks - because the property being
  * tested is a filesystem property: a reader either sees the whole old file or the whole new one.

@@ -35,7 +35,7 @@ public final class PackChangerPanel {
     private final LinearLayout root;
     private final LinearLayout listColumn;
     private TextView statusLine;
-    /** Sizes and texture resolutions are scanned off the main thread and cached (item 253). */
+    /** Sizes and texture resolutions are scanned off the main thread and cached. */
     private final org.chimeramc.client.core.content.PackAssetSummaryCache assetCache =
             new org.chimeramc.client.core.content.PackAssetSummaryCache();
 
@@ -229,7 +229,7 @@ public final class PackChangerPanel {
      * Fills a row's meta line with the pack's version/state plus its size and texture resolution.
      *
      * <p>The size and resolution come from a background scan, so the line first shows what is known
-     * synchronously and is repainted when the scan lands (item 253).
+     * synchronously and is repainted when the scan lands.
      */
     private void bindPackMeta(TextView meta, InGamePackChanger.PackEntry pack) {
         String state = pack.active ? activity.getString(R.string.pack_changer_on)

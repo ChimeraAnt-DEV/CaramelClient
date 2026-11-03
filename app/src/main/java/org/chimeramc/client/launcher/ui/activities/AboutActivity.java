@@ -107,7 +107,7 @@ public class AboutActivity extends BaseActivity {
      * be inactive before a launch rather than after a silent no-op.
      */
     private void showBackendStatus() {
-        // Item 177: name the exact build (version, commit, type) and the native library status, so a
+        // Name the exact build (version, commit, type) and the native library status, so a
         // screenshot of this screen identifies the revision and says whether the preloader loaded.
         TextView buildInfo = binding.aboutBuildInfo;
         if (buildInfo != null) {

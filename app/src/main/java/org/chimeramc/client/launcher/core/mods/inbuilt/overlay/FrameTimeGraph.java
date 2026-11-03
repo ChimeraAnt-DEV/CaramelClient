@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Maps a {@link FrameTimeHistory} onto screen points for the FPS overlay's graph mode (item 191).
+ * Maps a {@link FrameTimeHistory} onto screen points for the FPS overlay's graph mode.
  *
  * <p>Pure and Android-free so the mapping — oldest frame on the left, newest on the right, a bigger
  * frame interval drawn higher because a longer frame is worse — is a unit test rather than something

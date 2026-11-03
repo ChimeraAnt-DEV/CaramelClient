@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the cloud-relay poll backoff (item 244).
+ * Pins the cloud-relay poll backoff.
  *
  * <p>The property that matters is the shape: a healthy relay keeps the one-second freshness, a
  * single blip does not change anything, and a sustained outage settles at the cap rather than

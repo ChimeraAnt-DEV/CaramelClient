@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * The overlay layout manager (item 212).
+ * The overlay layout manager.
  *
  * <p>A layout is a named set of overlay positions, so a player can keep a PvP arrangement and a
  * survival one. {@link OverlayLayoutStore} owns the storage and {@link InbuiltOverlayManager} owns

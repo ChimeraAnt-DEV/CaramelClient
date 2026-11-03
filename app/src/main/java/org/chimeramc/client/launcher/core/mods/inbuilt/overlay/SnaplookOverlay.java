@@ -47,7 +47,7 @@ public class SnaplookOverlay extends BaseOverlayButton {
         updateStateLabel();
     }
 
-    /** Shows whether snap-look is armed (item 193). */
+    /** Shows whether snap-look is armed. */
     private void updateStateLabel() {
         if (stateView == null) return;
         stateView.setText(isActive ? R.string.mod_overlay_snaplook_on : R.string.mod_overlay_snaplook_off);

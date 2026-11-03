@@ -119,10 +119,10 @@ public final class CosmeticSyncModule {
     /** Wakes the cloud poll loop's interval wait so stop() joins immediately. */
     private final SignalGate cloudGate = new SignalGate();
 
-    /** How often the cloud topic is polled while the relay is healthy (item 244). */
+    /** How often the cloud topic is polled while the relay is healthy. */
     private static final long CLOUD_POLL_INTERVAL_MS = CloudPollBackoff.BASE_DELAY_MS;
     private volatile long cloudSinceSeconds;
-    /** Backs the poll interval off while the cloud relay is unreachable (item 244). */
+    /** Backs the poll interval off while the cloud relay is unreachable. */
     private final CloudPollBackoff cloudBackoff = new CloudPollBackoff();
     private CosmeticSyncCache cache;
 

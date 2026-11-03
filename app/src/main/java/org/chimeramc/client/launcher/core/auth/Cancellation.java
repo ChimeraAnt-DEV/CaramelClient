@@ -5,7 +5,7 @@ import java.util.function.BooleanSupplier;
 import org.chimeramc.client.util.SignalGate;
 
 /**
- * The cancellation seam for a blocking sign-in wait (item 15).
+ * The cancellation seam for a blocking sign-in wait.
  *
  * <p>The device-code flow waits for the user to approve the sign-in in a browser, so the wait is
  * measured in tens of seconds. Polling it on a fixed interval meant a Cancel press was not seen

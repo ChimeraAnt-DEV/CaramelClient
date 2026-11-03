@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Hotbar slot state de-duplication (item 196).
+ * Hotbar slot state de-duplication.
  *
  * <p>Pins the rule that a repeated state is not pushed to the backend, and that any change to any
  * field is.

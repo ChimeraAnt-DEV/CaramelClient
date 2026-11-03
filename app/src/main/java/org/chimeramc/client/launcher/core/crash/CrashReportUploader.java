@@ -74,7 +74,7 @@ public final class CrashReportUploader {
     }
 
     /**
-     * Describes the report that would be sent next, for the consent preview (item 518).
+     * Describes the report that would be sent next, for the consent preview.
      *
      * <p>Reads the same newest-unsent report the uploader would send and renders it through
      * {@link CrashReportPreview}, so what the user is shown is what the request carries. Never

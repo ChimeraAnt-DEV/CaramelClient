@@ -11,7 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 
 /**
- * Pins the sandbox-root containment rule (item 454).
+ * Pins the sandbox-root containment rule.
  *
  * Uses a real temporary directory rather than a mock, because the rule is about canonical paths and
  * a mock cannot answer {@link File#getCanonicalPath}. The containment case (a sibling whose name

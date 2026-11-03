@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The rolling frame-interval history behind the FPS overlay's graph mode (item 191).
+ * The rolling frame-interval history behind the FPS overlay's graph mode.
  *
  * <p>Pins the cases that would otherwise make the graph lie: the first frame (no interval yet), a
  * duplicate stamp, a backwards clock, the ring wrapping at capacity, and an out-of-range index.

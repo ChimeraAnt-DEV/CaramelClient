@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The settings serialisation contract (item 351).
+ * The settings serialisation contract.
  *
  * <p>{@link FeatureSettings} is one Gson object per key in a single JSON blob, so the two failure
  * modes that matter are a <em>missing</em> field and an <em>extra</em> field. A field the JSON

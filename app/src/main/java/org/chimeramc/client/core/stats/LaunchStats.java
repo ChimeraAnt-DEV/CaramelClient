@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.stats;
 
 /**
- * The local launch/crash statistics and the rules for keeping them (item 282).
+ * The local launch/crash statistics and the rules for keeping them.
  *
  * <p>Everything here is computed from data the launcher already owns -- a launch count, a crash
  * count and the time to first frame of each launch -- and nothing leaves the device. The class is

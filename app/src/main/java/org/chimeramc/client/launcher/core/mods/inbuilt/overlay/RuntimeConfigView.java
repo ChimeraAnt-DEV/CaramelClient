@@ -422,7 +422,7 @@ final class RuntimeConfigView {
             case "color": buildColor(card, node); break;
             case "keybind": buildKeybind(card, node); break;
             // Both text kinds share one builder; the multi-line rule lives in the pure control
-            // rules (item 203) so the type check is not repeated here.
+            // rules so the type check is not repeated here.
             case "text":
             case "multiline_text": buildText(card, node, RuntimeConfigControl.multiline(node)); break;
             case "button": buildButton(card, node); break;
@@ -588,7 +588,7 @@ final class RuntimeConfigView {
 
     private void buildChoice(LinearLayout parent, RuntimeConfigSchema.Node node) {
         String current = mod.getConfigValue(node.key, node.defaultValue);
-        // The style rule and the selected-option index are pure (item 203), so the view asks rather
+        // The style rule and the selected-option index are pure, so the view asks rather
         // than re-deriving them; a schema with no matching option reads index 0 on both paths.
         String style = RuntimeConfigControl.choiceStyle(node);
         if ("dropdown".equals(style)) {
@@ -928,7 +928,7 @@ final class RuntimeConfigView {
 
     private void showColorDialog(RuntimeConfigSchema.Node node, String initialValue, Button sourceButton) {
         int initial;
-        // A corrupt stored literal reads as white through the pure parser (item 350) instead of a
+        // A corrupt stored literal reads as white through the pure parser instead of a
         // swallowed exception, so the fallback is a rule with a test rather than an empty catch.
         initial = HexColor.parseOrWhite(initialValue);
         LinearLayout box = new LinearLayout(context);

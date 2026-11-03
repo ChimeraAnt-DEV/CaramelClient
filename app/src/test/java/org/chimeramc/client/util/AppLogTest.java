@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The report-formatting rule (item 300). Every failure the app reports goes through this, so the
+ * The report-formatting rule. Every failure the app reports goes through this, so the
  * line a user pastes into a bug report has to name the failure even when the message is empty.
  */
 public class AppLogTest {

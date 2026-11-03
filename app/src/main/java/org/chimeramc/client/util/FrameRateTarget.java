@@ -1,7 +1,7 @@
 package org.chimeramc.client.util;
 
 /**
- * Maps a frame-rate cap to the arguments {@code Surface.setFrameRate} wants (item 261).
+ * Maps a frame-rate cap to the arguments {@code Surface.setFrameRate} wants.
  *
  * <p>The launcher already picks a display mode for a cap through
  * {@link DisplayModePreference#selectModeAtOrBelow}, and that remains the path on API 28-29. From

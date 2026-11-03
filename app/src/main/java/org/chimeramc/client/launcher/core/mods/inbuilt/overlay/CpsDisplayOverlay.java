@@ -228,7 +228,7 @@ public class CpsDisplayOverlay {
         if (statsText != null) {
             int cps = getCps();
             // The timer runs ten times a second while the count only changes on a click, so an
-            // unchanged readout must not repaint (item 187).
+            // unchanged readout must not repaint.
             if (refreshGate.shouldRefresh(Integer.toString(cps), SystemClock.uptimeMillis())) {
                 statsText.setText(activity.getString(R.string.mod_overlay_cps_value, cps));
             }

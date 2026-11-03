@@ -1,7 +1,7 @@
 package org.chimeramc.client.ui.components;
 
 /**
- * Touch-target geometry (item 91, 339).
+ * Touch-target geometry.
  *
  * <p>A 27dp icon button is the right visual size and the wrong touch size: Material's minimum is
  * 48dp, and anything under it is a target a user misses. The fix is not to inflate the button —
@@ -78,7 +78,7 @@ public final class TouchTargets {
     }
 
     /**
-     * Widens the touch area of every small interactive view under {@code root} (item 339).
+     * Widens the touch area of every small interactive view under {@code root}.
      *
      * <p>A parent can hold only one {@link android.view.TouchDelegate}, so several small siblings
      * are grouped: the parent gets a single {@link CompositeTouchDelegate} that holds one entry per

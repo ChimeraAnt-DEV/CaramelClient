@@ -211,7 +211,7 @@ public class SetupWizardActivity extends BaseActivity {
     }
 
     /**
-     * Renders the device compatibility pass (item 284).
+     * Renders the device compatibility pass.
      *
      * <p>The check only means something once there is a version to judge (its ABI and game-files
      * facts are about the selected instance), so it is shown from the pick-version step onward and

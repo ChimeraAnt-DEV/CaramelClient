@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The colour-blind-safe HUD rule (item 344).
+ * The colour-blind-safe HUD rule.
  *
  * <p>Two properties matter and both are easy to lose by tuning by eye: every level must be
  * distinguishable <em>without</em> colour (a distinct cue, or the level is colour-only), and no two

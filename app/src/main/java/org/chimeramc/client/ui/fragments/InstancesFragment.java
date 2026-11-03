@@ -99,7 +99,7 @@ public class InstancesFragment extends Fragment {
     private boolean firstResume = true;
 
     /**
-     * Measures each instance's disk use off the main thread and remembers it (item 143). A card is
+     * Measures each instance's disk use off the main thread and remembers it. A card is
      * bound with a cached figure; a card whose instance has not been measured schedules one walk
      * and is repainted when it finishes, so a fast scroll does not run the walk once per bind.
      */
@@ -292,7 +292,7 @@ public class InstancesFragment extends Fragment {
         if (installed != null) allVersions.addAll(installed);
         if (custom != null) allVersions.addAll(custom);
 
-        // Item 143: most recently played first, with the version code as the tiebreak. The rule
+        // Most recently played first, with the version code as the tiebreak. The rule
         // lives in InstanceSort so it is unit-tested; the fragment only supplies the last-played
         // time, which is per storage profile.
         Collections.sort(allVersions, org.chimeramc.client.core.versions.InstanceSort.comparator(
@@ -895,7 +895,7 @@ public class InstancesFragment extends Fragment {
         if (emptyView != null) {
             emptyView.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
         }
-        // The empty state's own action (item 180): a message with no way forward is a dead end, so
+        // The empty state's own action: a message with no way forward is a dead end, so
         // the button in the empty view runs the same import the toolbar button does.
         TextView emptyAction = root.findViewById(R.id.empty_instances_action);
         if (emptyAction != null) {
@@ -1037,7 +1037,7 @@ public class InstancesFragment extends Fragment {
         private String lastNotifiedSelection;
 
         /**
-         * Replaces the list, animating only what changed (item 142).
+         * Replaces the list, animating only what changed.
          *
          * <p>An instance's identity is its directory, so a rescan that finds a new import inserts
          * one card instead of rebuilding the grid and losing the scroll position. A version whose
@@ -1058,7 +1058,7 @@ public class InstancesFragment extends Fragment {
 
         /**
          * Shows the instance's cached size, or requests a measurement and shows nothing until it
-         * arrives (item 143). A size of zero is a real reading and is shown; only "not known yet"
+         * arrives. A size of zero is a real reading and is shown; only "not known yet"
          * is blank, so an empty instance does not read as an unmeasured one.
          */
         void bindInstanceSize(VH vh, String instanceKey) {
@@ -1204,7 +1204,7 @@ public class InstancesFragment extends Fragment {
                 if (listener != null) listener.onClick(v);
             });
 
-            // Item 143: the on-disk size, measured off the main thread and cached. A card whose
+            // The on-disk size, measured off the main thread and cached. A card whose
             // instance has not been measured yet shows nothing and requests one walk; the walk
             // repaints the grid through the loader's callback when it finishes.
             String instanceKey = MinecraftLauncher.getStorageProfileId(v);
@@ -1215,7 +1215,7 @@ public class InstancesFragment extends Fragment {
             vh.playtime.setText(holder.itemView.getContext().getString(R.string.playtime_label,
                     org.chimeramc.client.core.minecraft.PlaytimeManager.formatPlaytime(playtimeMs)));
 
-            // Item 278: the note is shown on the card, and the line is hidden entirely when there
+            // The note is shown on the card, and the line is hidden entirely when there
             // is none rather than left as a blank row.
             if (vh.notes != null) {
                 String note = org.chimeramc.client.core.versions.InstanceNotes.normalize(v.notes);

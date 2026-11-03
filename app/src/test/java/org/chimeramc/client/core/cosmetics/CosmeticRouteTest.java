@@ -68,7 +68,7 @@ public class CosmeticRouteTest {
 
     @Test
     public void theGraphicsBackendNeverBlocksAPiece() {
-        // Item 12: hats and pets are not "unsupported on Vulkan". Every route a cosmetic takes is
+        // Hats and pets are not "unsupported on Vulkan". Every route a cosmetic takes is
         // backend-agnostic, so no backend may be reported as the reason a piece is preview-only.
         for (RenderBackend.Kind backend : RenderBackend.Kind.values()) {
             assertFalse("backend " + backend + " must not block a piece",

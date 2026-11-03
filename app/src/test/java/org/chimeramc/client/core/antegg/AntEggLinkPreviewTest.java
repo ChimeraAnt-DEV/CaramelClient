@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/** Pins the pre-download preview of a linked package (item 233). */
+/** Pins the pre-download preview of a linked package. */
 public class AntEggLinkPreviewTest {
 
     @Test

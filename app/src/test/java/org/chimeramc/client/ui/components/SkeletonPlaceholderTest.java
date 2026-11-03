@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * The list screens show a skeleton, not a spinner (item 125).
+ * The list screens show a skeleton, not a spinner.
  *
  * <p>A spinner communicates "wait"; a skeleton communicates "a grid of cards is coming", which is
  * the difference between a delay that reads as progress and one that reads as a stall. The swap is
@@ -56,7 +56,7 @@ public class SkeletonPlaceholderTest {
 
     @Test
     public void theReplaySkeletonIsGoneAndReusesTheSharedView() throws IOException {
-        assertFalse("ReplaySkeletonView was folded into the shared SkeletonView (item 126)",
+        assertFalse("ReplaySkeletonView was folded into the shared SkeletonView",
                 exists("app/src/main/java/org/chimeramc/client/core/replay/ReplaySkeletonView.java"));
         String panel = read("app/src/main/java/org/chimeramc/client/core/replay/ReplayPanel.java");
         assertTrue("the Replay panel should build the shared SkeletonView",

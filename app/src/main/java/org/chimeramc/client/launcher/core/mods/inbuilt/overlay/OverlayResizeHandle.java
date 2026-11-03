@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Corner resize handles for the HUD editor (item 221).
+ * Corner resize handles for the HUD editor.
  *
  * <p>The editor already offered a size slider, but a slider is a number, not a gesture: to make a
  * button match the one beside it the player had to drag the slider and watch. A handle on the

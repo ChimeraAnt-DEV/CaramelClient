@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the debug layout readout (item 80).
+ * Pins the debug layout readout.
  *
  * <p>Every navigation defect fixed so far - the rail row padded by the rail's own width, the header
  * centring a pair, the wordmark on a bar with no room for it - presents the same way: a view that is

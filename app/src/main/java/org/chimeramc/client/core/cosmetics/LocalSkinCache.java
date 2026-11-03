@@ -70,7 +70,7 @@ public final class LocalSkinCache {
 
     /**
      * Writes an entry into an explicit directory, so a multi-entry store can reuse this exact
-     * format for each of its slots (item 246). The single-entry {@link #write} is this call with
+     * format for each of its slots. The single-entry {@link #write} is this call with
      * the cache's own directory.
      */
     public static boolean writeEntry(File d, Entry entry) {
@@ -114,7 +114,7 @@ public final class LocalSkinCache {
         return readEntry(dir(filesRoot));
     }
 
-    /** Reads an entry from an explicit directory; the multi-entry store's per-slot read (item 246). */
+    /** Reads an entry from an explicit directory; the multi-entry store's per-slot read. */
     public static Entry readEntry(File d) {
         if (d == null) return null;
         File bin = new File(d, BIN_NAME);

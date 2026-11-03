@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * The privacy-mode rules (items 272, 277), tested without a device.
+ * The privacy-mode rules, tested without a device.
  *
  * <p>These pin the two things that are easy to get wrong: which surface belongs to which mode, and
  * that neither mode ever hides the game itself.

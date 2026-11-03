@@ -149,7 +149,7 @@ public final class UiTokens {
     public static final long MOTION_MAX_MS = 240L;
 
     /**
-     * The three durations the whole UI animates on (item 121).
+     * The three durations the whole UI animates on.
      *
      * <p>A decorative transition used to be a literal at the call site, so the same "fade a panel
      * in" ran at 140ms here, 180ms there and 220ms somewhere else, and nothing said which was
@@ -163,7 +163,7 @@ public final class UiTokens {
     public static final long MOTION_SLOW_MS = 300L;
 
     /**
-     * The three spring presets (item 121).
+     * The three spring presets.
      *
      * <p>They are the shape of a spring, not a duration: a spring settles on its own, so the
      * damping ratio is what decides whether it bounces. Naming the three uses (a press that must

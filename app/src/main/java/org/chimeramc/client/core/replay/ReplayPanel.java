@@ -746,7 +746,7 @@ public final class ReplayPanel {
                 highlightSelection();
                 showClipActions(clip);
             });
-            // Item 206: one throttle per card, so a fast drag cannot queue a decode per touch
+            // One throttle per card, so a fast drag cannot queue a decode per touch
             // move. `frameAt` decodes at the drag position, so the preview follows the finger
             // without the queue growing behind it.
             final ReplayScrubThrottle scrubThrottle = new ReplayScrubThrottle();
@@ -1218,7 +1218,7 @@ public final class ReplayPanel {
         }
     }
 
-    /** Steps the open clip one frame, for the Replay controller/keyboard route (item 242). */
+    /** Steps the open clip one frame, for the Replay controller/keyboard route. */
     public boolean stepFrame(boolean forward) {
         if (playerView == null) return false;
         playerView.stepFrame(forward);
@@ -1226,7 +1226,7 @@ public final class ReplayPanel {
     }
 
     /**
-     * Jumps to the previous or next recorded marker (item 241).
+     * Jumps to the previous or next recorded marker.
      *
      * @return false when no clip is open or it carries no markers, so a caller can fall through.
      */

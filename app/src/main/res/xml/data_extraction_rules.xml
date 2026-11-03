@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Data-extraction rules for Android 12+ (item 514).
+    Data-extraction rules for Android 12+.
 
     Android 12 replaced `fullBackupContent` with a rules file that distinguishes cloud backup from
     device-to-device transfer. The same reasoning applies to both here: an account token restored

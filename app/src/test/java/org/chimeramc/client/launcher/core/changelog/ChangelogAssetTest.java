@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * The repo's {@code CHANGELOG.md} is the source the in-app screen renders (item 270), so it must
+ * The repo's {@code CHANGELOG.md} is the source the in-app screen renders, so it must
  * exist and parse into something a user can read. A file that only holds a title would open a blank
  * screen, which is the failure this pins.
  */

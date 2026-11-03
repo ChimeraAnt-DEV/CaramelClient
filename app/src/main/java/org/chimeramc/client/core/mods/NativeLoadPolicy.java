@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * The rule for where a native library may be loaded from (item 512).
+ * The rule for where a native library may be loaded from.
  *
  * <p>Native code is loaded with the launcher's own privileges, so the path it comes from is a
  * security boundary: a library under a shared, world-writable or externally-chosen directory can be

@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.mods.inbuilt.overlay;
 
 /**
- * Sums look deltas so exactly one shaped delta is sent per frame (item 216).
+ * Sums look deltas so exactly one shaped delta is sent per frame.
  *
  * <p>Touch, mouse and controller look can each deliver several {@code ACTION_MOVE} events between
  * two game frames. Sending one native look call per event means the game samples only the last one

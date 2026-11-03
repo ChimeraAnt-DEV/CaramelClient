@@ -607,8 +607,6 @@ values-es:launch_error_message_mod_failed
 values-es:launch_error_message_out_of_memory
 values-es:launch_error_message_stale_libs
 values-es:launch_error_message_unknown
-values-es:launch_head_pod_description
-values-es:launch_head_pod_hint
 values-es:launch_preparing
 values-es:launch_quickdock_wheel
 values-es:launch_quickdock_wheel_unavailable
@@ -1884,8 +1882,6 @@ values-fr:launch_error_message_mod_failed
 values-fr:launch_error_message_out_of_memory
 values-fr:launch_error_message_stale_libs
 values-fr:launch_error_message_unknown
-values-fr:launch_head_pod_description
-values-fr:launch_head_pod_hint
 values-fr:launch_preparing
 values-fr:launch_quickdock_wheel
 values-fr:launch_quickdock_wheel_unavailable
@@ -3161,8 +3157,6 @@ values-hi:launch_error_message_mod_failed
 values-hi:launch_error_message_out_of_memory
 values-hi:launch_error_message_stale_libs
 values-hi:launch_error_message_unknown
-values-hi:launch_head_pod_description
-values-hi:launch_head_pod_hint
 values-hi:launch_preparing
 values-hi:launch_quickdock_wheel
 values-hi:launch_quickdock_wheel_unavailable
@@ -4438,8 +4432,6 @@ values-id:launch_error_message_mod_failed
 values-id:launch_error_message_out_of_memory
 values-id:launch_error_message_stale_libs
 values-id:launch_error_message_unknown
-values-id:launch_head_pod_description
-values-id:launch_head_pod_hint
 values-id:launch_preparing
 values-id:launch_quickdock_wheel
 values-id:launch_quickdock_wheel_unavailable
@@ -5715,8 +5707,6 @@ values-ja:launch_error_message_mod_failed
 values-ja:launch_error_message_out_of_memory
 values-ja:launch_error_message_stale_libs
 values-ja:launch_error_message_unknown
-values-ja:launch_head_pod_description
-values-ja:launch_head_pod_hint
 values-ja:launch_preparing
 values-ja:launch_quickdock_wheel
 values-ja:launch_quickdock_wheel_unavailable
@@ -6992,8 +6982,6 @@ values-pt:launch_error_message_mod_failed
 values-pt:launch_error_message_out_of_memory
 values-pt:launch_error_message_stale_libs
 values-pt:launch_error_message_unknown
-values-pt:launch_head_pod_description
-values-pt:launch_head_pod_hint
 values-pt:launch_preparing
 values-pt:launch_quickdock_wheel
 values-pt:launch_quickdock_wheel_unavailable
@@ -8269,8 +8257,6 @@ values-ru:launch_error_message_mod_failed
 values-ru:launch_error_message_out_of_memory
 values-ru:launch_error_message_stale_libs
 values-ru:launch_error_message_unknown
-values-ru:launch_head_pod_description
-values-ru:launch_head_pod_hint
 values-ru:launch_preparing
 values-ru:launch_quickdock_wheel
 values-ru:launch_quickdock_wheel_unavailable
@@ -9546,8 +9532,6 @@ values-tr:launch_error_message_mod_failed
 values-tr:launch_error_message_out_of_memory
 values-tr:launch_error_message_stale_libs
 values-tr:launch_error_message_unknown
-values-tr:launch_head_pod_description
-values-tr:launch_head_pod_hint
 values-tr:launch_preparing
 values-tr:launch_quickdock_wheel
 values-tr:launch_quickdock_wheel_unavailable
@@ -10823,8 +10807,6 @@ values-vi:launch_error_message_mod_failed
 values-vi:launch_error_message_out_of_memory
 values-vi:launch_error_message_stale_libs
 values-vi:launch_error_message_unknown
-values-vi:launch_head_pod_description
-values-vi:launch_head_pod_hint
 values-vi:launch_preparing
 values-vi:launch_quickdock_wheel
 values-vi:launch_quickdock_wheel_unavailable
@@ -12098,8 +12080,6 @@ values-zh-rCN:launch_error_message_mod_failed
 values-zh-rCN:launch_error_message_out_of_memory
 values-zh-rCN:launch_error_message_stale_libs
 values-zh-rCN:launch_error_message_unknown
-values-zh-rCN:launch_head_pod_description
-values-zh-rCN:launch_head_pod_hint
 values-zh-rCN:launch_preparing
 values-zh-rCN:launch_quickdock_wheel
 values-zh-rCN:launch_quickdock_wheel_unavailable

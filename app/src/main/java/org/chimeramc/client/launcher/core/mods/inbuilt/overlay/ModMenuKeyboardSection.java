@@ -148,7 +148,7 @@ final class ModMenuKeyboardSection {
     }
 
     /**
-     * Cancels the pending key-capture timeout (item 183).
+     * Cancels the pending key-capture timeout.
      *
      * <p>The timeout releases a capture that was armed and then abandoned. Left pending past the
      * page switch it would run against a detached tree and reset a label the user can no longer see,

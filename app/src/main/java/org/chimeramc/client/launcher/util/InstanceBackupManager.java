@@ -74,7 +74,7 @@ public class InstanceBackupManager {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     /**
-     * Set when the user cancels a running backup or restore (item 144). The zip loops check it and
+     * Set when the user cancels a running backup or restore. The zip loops check it and
      * abort by throwing, so a cancel stops promptly instead of waiting out a multi-gigabyte copy;
      * the partial archive is then deleted by the existing failure path.
      */
@@ -216,14 +216,14 @@ public class InstanceBackupManager {
                 finishOutputTarget(target, true);
                 postProgress(callback, 100, lastProgress);
 
-                // Verify the archive we just wrote before reporting success (item 144): an archive
+                // Verify the archive we just wrote before reporting success: an archive
                 // that cannot be reopened reads as a backup that exists but cannot be restored, so
                 // a silent corruption would only surface the day the player needs it. A failure
                 // here is reported as a failed backup, not a success.
                 verifyWrittenBackup(target);
 
                 // Enforce the per-instance retention now that the new backup is safely on disk, so
-                // the sweep never races the file it just wrote (item 144).
+                // the sweep never races the file it just wrote.
                 sweepOldBackups(manifest);
 
                 postBackupSuccess(callback, target.displayPath);
@@ -454,7 +454,7 @@ public class InstanceBackupManager {
     }
 
     /**
-     * Reopens the archive that was just written and checks it still carries its manifest (item 144).
+     * Reopens the archive that was just written and checks it still carries its manifest.
      *
      * <p>A backup that cannot be reopened is worse than no backup: it looks like success until the
      * day it is needed. Only the file-backed target can be reopened here (a MediaStore uri is
@@ -490,7 +490,7 @@ public class InstanceBackupManager {
 
     /**
      * Deletes backups past the configured retention for the instance that was just backed up
-     * (item 144). Never deletes the newest backup, so a retention of zero cannot wipe the only copy.
+     *. Never deletes the newest backup, so a retention of zero cannot wipe the only copy.
      * Best-effort: a failure to delete is logged, not reported as a failed backup.
      */
     private void sweepOldBackups(BackupManifest manifest) {

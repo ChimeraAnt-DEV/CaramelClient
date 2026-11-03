@@ -126,7 +126,7 @@ import okhttp3.OkHttpClient;
 
     private static final long TIP_ROTATE_MS = 8000L;
 
-    /** The tip currently shown, or -1 before the first paint (item 283). */
+    /** The tip currently shown, or -1 before the first paint. */
     private int tipIndex = -1;
 
     private ActivityMainBinding binding;
@@ -200,7 +200,7 @@ import okhttp3.OkHttpClient;
     private final ExecutorService launchStatsExecutor = Executors.newSingleThreadExecutor();
 
     private final Handler uiHandler = MainThread.handler();
-    /** The announcements feed client (item 255), shut down in onDestroy. */
+    /** The announcements feed client, shut down in onDestroy. */
     private org.chimeramc.client.core.announce.AnnouncementClient announcementClient;
 
     /** The lifetime of the self-reposting tip rotation, closed in onDestroy. */
@@ -1446,7 +1446,7 @@ import okhttp3.OkHttpClient;
         applyGlowEffects(glow);
 
         // The motion scheme is applied by BaseActivity.applyMotionScheme for every screen, so
-        // this screen must not set it a second time (one owner, item 345).
+        // this screen must not set it a second time (one owner).
     }
     
     private void applyCardRounding(int roundingDp) {
@@ -1680,13 +1680,13 @@ import okhttp3.OkHttpClient;
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
         setupAnnouncementCard();
-        // Item 273: one mod-update notification a day, never a prompt per mod. The scheduler applies
+        // One mod-update notification a day, never a prompt per mod. The scheduler applies
         // the feature switch and the throttle, and does nothing at all when this build has no feed.
         org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
     }
 
     /**
-     * Shows the announcement card when the feed yields one that applies to this build (item 255).
+     * Shows the announcement card when the feed yields one that applies to this build.
      *
      * <p>The card is hidden by default and only made visible for a matching, undismissed card, so a
      * failed fetch leaves the Launch tab exactly as it was. Dismissing writes the id and hides the
@@ -1775,7 +1775,7 @@ import okhttp3.OkHttpClient;
                     new Intent(this, org.chimeramc.client.ui.activities.VoiceChatActivity.class)));
             DynamicAnim.applyPressScale(voice);
         }
-        // Guest mode removes the Mods and Voice shortcuts from this tab (item 272). The nav bar
+        // Guest mode removes the Mods and Voice shortcuts from this tab. The nav bar
         // hides the Mods destination, but the Launch tab reaches the same places through these
         // cards, so both are resolved through the same rule here rather than left as an open door.
         boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
@@ -2017,7 +2017,7 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * Shows the tip carousel, or hides it once the launch budget is spent (item 283).
+     * Shows the tip carousel, or hides it once the launch budget is spent.
      *
      * <p>The retirement and the no-repeat rotation are {@link org.chimeramc.client.core.stats
      * .TipsCarousel}'s rules; this method only paints the result and owns the timer. The panel is
@@ -2043,7 +2043,7 @@ import okhttp3.OkHttpClient;
 
         // The tip rotation is a self-reposting tick. It runs through the activity's scope so
         // onDestroy removes the pending post instead of firing into a destroyed Activity
-        // (items 14, 295).
+        //.
         if (tipScope.isClosed()) return;
         tipScope.postDelayed(new Runnable() {
             @Override
@@ -2142,7 +2142,7 @@ import okhttp3.OkHttpClient;
     private void initMiscellaneousSection() {
         binding.miscCurseforgeRow.setOnClickListener(v -> startActivity(new Intent(this, CurseForgeActivity.class)));
         binding.miscModHubRow.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
-        // Guest mode hides the mod-download rows (item 272); both are binding fields, so this adds
+        // Guest mode hides the mod-download rows; both are binding fields, so this adds
         // no new lookup.
         boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
         setRowVisible(binding.miscModHubRow, !guest);
@@ -2177,7 +2177,7 @@ import okhttp3.OkHttpClient;
             mods.setOnClickListener(v -> startActivity(new Intent(this, ModsFullscreenActivity.class)));
             DynamicAnim.applyPressScale(mods);
             DynamicAnim.applyHoverBloom(mods);
-            // Guest mode removes the Mods shortcut from the dock too (item 272).
+            // Guest mode removes the Mods shortcut from the dock too.
             setRowVisible(mods, !org.chimeramc.client.core.privacy.PrivacyModes.current(this)
                     .isGuestMode());
         }
@@ -2365,7 +2365,7 @@ import okhttp3.OkHttpClient;
             }
         }
         if (readiness == LaunchReadiness.State.GAME_NEWER_THAN_RULES) {
-            // The installed game is ahead of the signature set (item 256). This is a warning, not a
+            // The installed game is ahead of the signature set. This is a warning, not a
             // blocker: the game runs, only the hook-driven features lag. The user is told once, on
             // the launch attempt that hit it, and continuing is a single tap.
             trace.warning("Installed build newer than signature rules", version.versionCode);
@@ -2377,7 +2377,7 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * The warning shown when the installed build is newer than the signature set (item 256).
+     * The warning shown when the installed build is newer than the signature set.
      *
      * <p>It is deliberately a dismissible dialog rather than a silent log line: the features the
      * user expects (overlays, cosmetics, controller hooks) will be missing, and without a word

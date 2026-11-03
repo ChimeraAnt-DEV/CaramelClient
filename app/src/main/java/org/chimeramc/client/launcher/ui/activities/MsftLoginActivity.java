@@ -78,7 +78,7 @@ public class MsftLoginActivity extends BaseActivity {
     private final AtomicBoolean completed = new AtomicBoolean(false);
     private final AtomicLong loginGeneration = new AtomicLong();
     private final Handler mainHandler = MainThread.handler();
-    /** Wakes a blocking sign-in wait the moment the user cancels (item 15). */
+    /** Wakes a blocking sign-in wait the moment the user cancels. */
     private final SignalGate loginGate = new SignalGate();
 
     private View methodPanel;

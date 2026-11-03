@@ -21,7 +21,7 @@ import org.chimeramc.client.ui.components.UiTokens;
 import java.util.List;
 
 /**
- * The in-game quick settings panel (item 225).
+ * The in-game quick settings panel.
  *
  * <p>Two settings a player wants mid-session — the render resolution scale and the frame-rate cap —
  * with each choice applied the moment it is tapped and the panel stating whether that took effect

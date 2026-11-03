@@ -21,7 +21,7 @@ public final class ReplayTimeline {
     private static final int DEFAULT_SPEED_INDEX = 7;
 
     /**
-     * The nominal frame length used to step one frame (item 242).
+     * The nominal frame length used to step one frame.
      *
      * <p>The clip is a constant-frame-rate capture, so a frame step is a fixed jump rather than a
      * decoded-frame lookup. 1/30 s matches the capture cadence; a step is deliberately a visible
@@ -114,7 +114,7 @@ public final class ReplayTimeline {
     }
 
     /**
-     * Steps the position by one frame in the given direction (item 242).
+     * Steps the position by one frame in the given direction.
      *
      * <p>Frame stepping is a paused-frame operation: the transport stops first, so a step while
      * playing lands on the stepped frame and stays there rather than immediately drifting away.

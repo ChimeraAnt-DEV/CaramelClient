@@ -8,7 +8,7 @@ import org.chimeramc.client.settings.PerformancePresetManager;
 import org.chimeramc.client.util.ApiLevels;
 
 /**
- * Quick Settings tile for the performance preset (item 268).
+ * Quick Settings tile for the performance preset.
  *
  * <p>{@code TileService} exists from API 24, so at {@code minSdk 28} it needs no guard and no
  * fallback — the tile is available on every device the launcher runs on. It reuses

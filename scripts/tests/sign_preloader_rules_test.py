@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Host tests for scripts/sign_preloader_rules.py (item 257).
+"""Host tests for scripts/sign_preloader_rules.py.
 
 The signer is what keeps the shipped rule signature honest. These tests exercise the pure parts
 (argument handling, base64 round-trip, the tamper case) with a throwaway key pair generated with

@@ -15,7 +15,7 @@ import org.chimeramc.client.util.LauncherStorage;
 import java.io.File;
 
 /**
- * Gathers the device facts the compatibility checks read (item 284).
+ * Gathers the device facts the compatibility checks read.
  *
  * <p>The decision itself lives in {@link CompatibilityCheck}, which is pure; this is the small
  * amount of Android code that reads the device. Every read is contained here and every read can

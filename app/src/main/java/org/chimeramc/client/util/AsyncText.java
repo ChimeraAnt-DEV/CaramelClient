@@ -11,7 +11,7 @@ import org.chimeramc.client.R;
 import java.util.concurrent.Future;
 
 /**
- * Measures long text off the main thread (item 127).
+ * Measures long text off the main thread.
  *
  * <p>Setting a multi-paragraph string on a {@link TextView} makes the view measure and lay out the
  * whole thing on the frame that sets it, which is a dropped frame on a long mod description or a log

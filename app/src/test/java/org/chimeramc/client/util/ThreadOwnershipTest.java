@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * One owner for threads and main-thread posts (items 14, 294, 295).
+ * One owner for threads and main-thread posts.
  *
  * <p>The migration is only worth anything if it stays done. A rule stated in a comment is a
  * suggestion; a rule a build fails on is not. This scans the real source tree, so it caught every
