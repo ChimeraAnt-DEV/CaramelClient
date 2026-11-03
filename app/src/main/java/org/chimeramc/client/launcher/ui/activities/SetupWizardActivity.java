@@ -430,16 +430,13 @@ public class SetupWizardActivity extends BaseActivity {
     }
 
     private void openDiscord() {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(getString(R.string.discord_join_url))));
-        } catch (Throwable t) {
+        // UrlOpener reports a failure through AppLog; the screen only has to say so.
+        if (!org.chimeramc.client.util.UrlOpener.open(this,
+                getString(R.string.discord_join_url))) {
             if (status != null) {
                 status.setText(R.string.discord_join_failed);
                 status.setVisibility(View.VISIBLE);
             }
-            AppLog.warnOnce("GlowberryClient", "SetupWizard:discord",
-                    "Could not open the Discord invite", t);
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/space_1"
@@ -59,7 +60,7 @@
             android:contentDescription="@string/server_favourite_label"
             android:scaleType="centerInside"
             android:src="@drawable/ic_server_star"
-            android:tint="@color/server_star_tint" />
+            app:tint="@color/server_star_tint" />
 
         <Button
             android:id="@+id/server_delete_button"

@@ -39,7 +39,9 @@
     <plurals name="import_confirmation_message">
         <item quantity="one">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
         <item quantity="other">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
-    </plurals>
+        <item quantity="few">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+        <item quantity="many">Вы уверены в том что хотите импортировать выбранные %d файлы модов?</item>
+</plurals>
     <string name="overwrite_file_title">Файл Уже Существует</string>
     <string name="overwrite_file_message">Файл %s уже существует. Вы хотите перезаписать его?</string>
     <string name="overwrite">Перезаписать</string>
@@ -60,7 +62,9 @@
     <plurals name="files_processed">
         <item quantity="one">Успешно добавлены файлы мода %d </item>
         <item quantity="other">Успешно добавлены файлы мода %d </item>
-    </plurals>
+        <item quantity="few">Успешно добавлены файлы мода %d </item>
+        <item quantity="many">Успешно добавлены файлы мода %d </item>
+</plurals>
     <string name="user_cancelled">Импорт отменен пользователем</string>
 
 
@@ -498,7 +502,9 @@
     <plurals name="structures_found_count">
         <item quantity="one">Найдено %d структур в этом мире</item>
         <item quantity="other">Найдено %d структур в этом мире</item>
-    </plurals>
+        <item quantity="few">Найдено %d структур в этом мире</item>
+        <item quantity="many">Найдено %d структур в этом мире</item>
+</plurals>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Мод-меню</string>
@@ -1286,7 +1292,9 @@
     <plurals name="mod_update_summary">
         <item quantity="one">Для %1$d мода есть обновление</item>
         <item quantity="other">Для %1$d модов есть обновления</item>
-    </plurals>
+        <item quantity="few">Для %1$d модов есть обновления</item>
+        <item quantity="many">Для %1$d модов есть обновления</item>
+</plurals>
     <string name="usage_stats_title">Анонимный счётчик использования</string>
     <string name="usage_stats_desc">По умолчанию выключено. Когда включено — один анонимный отчёт в день: версия приложения, класс устройства, ABI и локальные счётчики запусков. Без аккаунта, геймертага, id устройства, адреса сервера или списка модов.</string>
     <string name="usage_stats_preview">Показать, что будет отправлено</string>
