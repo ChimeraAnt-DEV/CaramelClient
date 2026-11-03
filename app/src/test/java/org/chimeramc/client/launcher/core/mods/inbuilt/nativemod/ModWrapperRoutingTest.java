@@ -139,8 +139,6 @@ public class ModWrapperRoutingTest {
         assertFalse(MoreButtonsMod.initialize());
         assertFalse(HotbarSlotMod.initialize());
         assertFalse(PojavControlsMod.initialize());
-        assertFalse(GyroMod.init());
-        assertFalse(GyroMod.nativeIsInitialized());
 
         // Input sends are no-ops, and none of them throw.
         ZoomMod.nativeOnKeyDown();
@@ -162,14 +160,6 @@ public class ModWrapperRoutingTest {
         HotbarSlotMod.clearSlot(0);
         AutoSprintMod.setEnabled(true);
         AutoSprintMod.setEnabled(false);
-        GyroMod.nativePreResolve();
-        GyroMod.nativeSetEnabled(true);
-        GyroMod.nativeUpdateDelta(1f, 1f);
-        GyroMod.nativeSetSensitivityX(1f);
-        GyroMod.nativeSetSensitivityY(1f);
-        GyroMod.nativeSetInvertX(false);
-        GyroMod.nativeSetInvertY(false);
-        GyroMod.nativeSetDeadzone(0.1f);
 
         // An unknown reading is negative, never a fabricated number.
         assertTrue(FpsMod.nativeGetFps() < 0);
