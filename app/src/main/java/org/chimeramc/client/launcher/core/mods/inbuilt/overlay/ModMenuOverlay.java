@@ -1097,12 +1097,15 @@ public class ModMenuOverlay {
             case UNSUPPORTED:
                 if (org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
                         .isUnavailable(mod.getId())) {
+                    String unavailable = org.chimeramc.client.core.mods.inbuilt.model
+                            .ModAvailability.unavailableReason(mod.getId());
                     int reason = org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
-                            .REASON_SERVER_DECIDED.equals(
-                            org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
-                                    .unavailableReason(mod.getId()))
+                            .REASON_SERVER_DECIDED.equals(unavailable)
                             ? R.string.mod_unavailable_reason_server
-                            : R.string.mod_unavailable_reason;
+                            : (org.chimeramc.client.core.mods.inbuilt.model.ModAvailability
+                                    .REASON_NO_BACKEND.equals(unavailable)
+                                    ? R.string.mod_unavailable_reason_backend
+                                    : R.string.mod_unavailable_reason);
                     return activity.getString(reason);
                 }
                 return activity.getString(R.string.mod_menu_row_unsupported);

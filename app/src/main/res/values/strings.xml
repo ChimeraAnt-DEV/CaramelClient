@@ -1217,6 +1217,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_unavailable_message">This Module doesn\'t work or is bugged</string>
     <string name="mod_unavailable_reason">Needs a game data feed this build cannot provide yet. It is disabled until then.</string>
     <string name="mod_unavailable_reason_server">Not shipped: the server decides this outcome, or automating it would be a ban risk.</string>
+    <string name="mod_unavailable_reason_backend">Needs a backend feature no runtime provides yet. It is disabled until one does.</string>
     <string name="mod_notification_enabled">%s enabled</string>
     <string name="mod_overlay_fps_unknown">FPS: --</string>
     <string name="mod_overlay_data_unavailable">Waiting for game data…</string>

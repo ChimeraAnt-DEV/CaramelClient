@@ -851,6 +851,7 @@ values-es:mod_stats_fps_placeholder
 values-es:mod_stats_ping_placeholder
 values-es:mod_unavailable_message
 values-es:mod_unavailable_reason
+values-es:mod_unavailable_reason_backend
 values-es:mod_unavailable_reason_server
 values-es:mod_verified_badge_desc
 values-es:modrinth_download_version
@@ -2126,6 +2127,7 @@ values-fr:mod_stats_fps_placeholder
 values-fr:mod_stats_ping_placeholder
 values-fr:mod_unavailable_message
 values-fr:mod_unavailable_reason
+values-fr:mod_unavailable_reason_backend
 values-fr:mod_unavailable_reason_server
 values-fr:mod_verified_badge_desc
 values-fr:modrinth_download_version
@@ -3401,6 +3403,7 @@ values-hi:mod_stats_fps_placeholder
 values-hi:mod_stats_ping_placeholder
 values-hi:mod_unavailable_message
 values-hi:mod_unavailable_reason
+values-hi:mod_unavailable_reason_backend
 values-hi:mod_unavailable_reason_server
 values-hi:mod_verified_badge_desc
 values-hi:modrinth_download_version
@@ -4676,6 +4679,7 @@ values-id:mod_stats_fps_placeholder
 values-id:mod_stats_ping_placeholder
 values-id:mod_unavailable_message
 values-id:mod_unavailable_reason
+values-id:mod_unavailable_reason_backend
 values-id:mod_unavailable_reason_server
 values-id:mod_verified_badge_desc
 values-id:modrinth_download_version
@@ -5951,6 +5955,7 @@ values-ja:mod_stats_fps_placeholder
 values-ja:mod_stats_ping_placeholder
 values-ja:mod_unavailable_message
 values-ja:mod_unavailable_reason
+values-ja:mod_unavailable_reason_backend
 values-ja:mod_unavailable_reason_server
 values-ja:mod_verified_badge_desc
 values-ja:modrinth_download_version
@@ -7226,6 +7231,7 @@ values-pt:mod_stats_fps_placeholder
 values-pt:mod_stats_ping_placeholder
 values-pt:mod_unavailable_message
 values-pt:mod_unavailable_reason
+values-pt:mod_unavailable_reason_backend
 values-pt:mod_unavailable_reason_server
 values-pt:mod_verified_badge_desc
 values-pt:modrinth_download_version
@@ -8501,6 +8507,7 @@ values-ru:mod_stats_fps_placeholder
 values-ru:mod_stats_ping_placeholder
 values-ru:mod_unavailable_message
 values-ru:mod_unavailable_reason
+values-ru:mod_unavailable_reason_backend
 values-ru:mod_unavailable_reason_server
 values-ru:mod_verified_badge_desc
 values-ru:modrinth_download_version
@@ -9776,6 +9783,7 @@ values-tr:mod_stats_fps_placeholder
 values-tr:mod_stats_ping_placeholder
 values-tr:mod_unavailable_message
 values-tr:mod_unavailable_reason
+values-tr:mod_unavailable_reason_backend
 values-tr:mod_unavailable_reason_server
 values-tr:mod_verified_badge_desc
 values-tr:modrinth_download_version
@@ -11051,6 +11059,7 @@ values-vi:mod_stats_fps_placeholder
 values-vi:mod_stats_ping_placeholder
 values-vi:mod_unavailable_message
 values-vi:mod_unavailable_reason
+values-vi:mod_unavailable_reason_backend
 values-vi:mod_unavailable_reason_server
 values-vi:mod_verified_badge_desc
 values-vi:modrinth_download_version
@@ -12324,6 +12333,7 @@ values-zh-rCN:mod_stats_fps_placeholder
 values-zh-rCN:mod_stats_ping_placeholder
 values-zh-rCN:mod_unavailable_message
 values-zh-rCN:mod_unavailable_reason
+values-zh-rCN:mod_unavailable_reason_backend
 values-zh-rCN:mod_unavailable_reason_server
 values-zh-rCN:mod_verified_badge_desc
 values-zh-rCN:modrinth_download_version

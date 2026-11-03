@@ -695,11 +695,9 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     listener.onRowReason(mod.getStableKey());
                 } else if (modHolder.unavailableText != null) {
                     // The reason-specific wording: a server-decided module is not waiting for a
-                    // feed, so "no game data" would be wrong for it.
-                    int reason = ModAvailability.REASON_SERVER_DECIDED.equals(
-                            ModAvailability.unavailableReason(mod.getId()))
-                            ? R.string.mod_unavailable_reason_server
-                            : R.string.mod_unavailable_reason;
+                    // feed, and a module waiting on a backend capability is not either, so a single
+                    // "no game data" line would be wrong for both.
+                    int reason = unavailableReasonString(mod.getId());
                     android.widget.Toast.makeText(modHolder.itemView.getContext(),
                             reason, android.widget.Toast.LENGTH_SHORT).show();
                 }
@@ -940,12 +938,24 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    /** The message for a module's badge, chosen from the distinct unavailable reasons. */
+    private static int unavailableReasonString(String modId) {
+        String reason = ModAvailability.unavailableReason(modId);
+        if (ModAvailability.REASON_SERVER_DECIDED.equals(reason)) {
+            return R.string.mod_unavailable_reason_server;
+        }
+        if (ModAvailability.REASON_NO_BACKEND.equals(reason)) {
+            return R.string.mod_unavailable_reason_backend;
+        }
+        return R.string.mod_unavailable_reason;
+    }
+
     /**
      * The one-line reason a row cannot run, or null when it can.
      *
-     * <p>The wording is specific on purpose: a module with no hook on this build and a module whose
-     * game feed has no provider are different problems with different fixes, and a generic
-     * "unavailable" tells the player neither.
+     * <p>The wording is specific on purpose: a module with no hook on this build, a module whose
+     * game feed has no provider and a module waiting on a backend capability are different problems
+     * with different fixes, and a generic "unavailable" tells the player none of them.
      */
     private String reasonFor(UnifiedMod mod, ModMenuRowState state) {
         android.content.Context context = holderContext();
@@ -957,11 +967,7 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return context.getString(R.string.mod_menu_row_crashed);
             case UNSUPPORTED:
                 if (ModAvailability.isUnavailable(mod.getId())) {
-                    int reason = ModAvailability.REASON_SERVER_DECIDED.equals(
-                            ModAvailability.unavailableReason(mod.getId()))
-                            ? R.string.mod_unavailable_reason_server
-                            : R.string.mod_unavailable_reason;
-                    return context.getString(reason);
+                    return context.getString(unavailableReasonString(mod.getId()));
                 }
                 return context.getString(R.string.mod_menu_row_unsupported);
             default:
