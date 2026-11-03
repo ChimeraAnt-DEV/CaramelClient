@@ -6,9 +6,9 @@ A C ABI for BerryAPI's `ReplayService` (`berry/replay_c.h` + its adapter and hos
 so a host that `dlopen`s `libBerryAPI.so` can load a replay and drive playback without
 linking BerryAPI's C++ surface.
 
-It belongs in `Lynxifyy/BerryAPI`, but this environment's credentials have **read-only**
-access to that repository (push, fork, branch-create and file-write all return 403), so it
-is carried here until it can be applied upstream.
+**Applied upstream.** Merged into `Lynxifyy/BerryAPI` as PR #16 (merge commit `b44f8fb4`),
+so the file is kept here only as a historical record of the change; the preloader bridge and
+the client mirror in this repository are built against the merged `berry/replay_c.h`.
 
 To apply:
 
