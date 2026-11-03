@@ -145,44 +145,15 @@
                     android:tint="@color/mod_menu_text_primary" />
             </LinearLayout>
 
-            <!-- Icon rail + content. The rail is populated in code from
-                 ModMenuPage.pages(), the one registry, so the rail cannot drift from the menu. It
-                 scrolls so it survives the landscape height limit; the content keeps the tall
-                 edge. -->
-            <LinearLayout
+            <!-- Content, then a bottom navigation bar. The bar is populated in code from
+                 ModMenuPage.pages(), the one registry, so it cannot drift from the menu. It sits at
+                 the bottom edge where a thumb reaches it and scrolls horizontally, so it survives a
+                 narrow landscape width. -->
+            <FrameLayout
+                android:id="@+id/mod_menu_content_host"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ScrollView
-                    android:id="@+id/mod_menu_tab_host"
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/mod_menu_bg_surface2"
-                    android:fillViewport="true"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/mod_menu_tab_bar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/space_2"
-                        android:paddingBottom="@dimen/space_2" />
-                </ScrollView>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/mod_menu_border_hairline" />
-
-                <FrameLayout
-                    android:id="@+id/mod_menu_content_host"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1491,7 +1462,29 @@
 
                     </LinearLayout>
                 </FrameLayout>
-            </LinearLayout>
+
+                <!-- Bottom navigation bar. Horizontal, populated in code from ModMenuPage.pages().
+                     A horizontal scroll keeps every destination reachable on a narrow landscape
+                     width without shrinking the touch targets. -->
+                <HorizontalScrollView
+                    android:id="@+id/mod_menu_tab_host"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/mod_menu_bg_surface2"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/mod_menu_tab_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/space_3"
+                        android:paddingEnd="@dimen/space_3"
+                        android:paddingTop="@dimen/space_1"
+                        android:paddingBottom="@dimen/space_1" />
+                </HorizontalScrollView>
 
         </LinearLayout>
 
