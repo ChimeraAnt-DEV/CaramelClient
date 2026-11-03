@@ -75,7 +75,7 @@ static def getVersionCodeByTimestamp() {
 // G6: stale-stub trap guard. The native build compiles the preloader and libHttpClient git
 // submodules. If they were never checked out (a shallow clone / a zip download), the extracted
 // directory is empty or holds a leftover stub, and CMake either fails with a confusing error or
-// silently builds against a stale libgxcore.so. Fail fast here with the fix instead of letting a
+// silently builds against a stale native output. Fail fast here with the fix instead of letting a
 // broken assembly reach the APK.
 def requiredSubmoduleCmake = [
         new File("${projectDir}/src/main/cpp/preloader/CMakeLists.txt"),
@@ -89,7 +89,7 @@ def verifySubmodules = tasks.register("verifyNativeSubmodules") {
             throw new GradleException(
                     "Native build submodules are not checked out. Missing: ${missing.collect { it.path }}.\n" +
                             "Run: git submodule sync && git submodule update --init --recursive, then ./gradlew clean\n" +
-                            "(a stale stub libgxcore.so can persist otherwise)."
+                            "(a stale native build output can persist otherwise)."
             )
         }
     }

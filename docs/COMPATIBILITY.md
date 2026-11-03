@@ -19,7 +19,7 @@ The launcher is a 64-bit process. A version is **launchable** when the APK you i
 arm64 libraries at all**; the launch preflight then names the ABI it found.
 
 There is no setting that runs a 32-bit-only version: Android cannot run part of an app 32-bit and
-part 64-bit, and the prebuilt `libgxcore.so`-era native library is arm64-only by design. The honest
+part 64-bit, and the app ships arm64-v8a only by design. The honest
 deliverable is the preflight message, which fires only when nothing can load.
 
 ## Test matrix

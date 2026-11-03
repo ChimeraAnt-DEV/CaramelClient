@@ -16,8 +16,7 @@ git submodule update --init --recursive
 
 The native build needs `app/src/main/cpp/preloader` and `app/src/main/cpp/libHttpClient`. If a
 build fails with a missing native source, run `git submodule sync && git submodule update --init
---recursive` and then `./gradlew clean` — a stale `libgxcore.so`-era build output can otherwise
-persist.
+--recursive` and then `./gradlew clean` — a stale native build output can otherwise persist.
 
 ```bash
 # 2. Toolchain: JDK 21 and an Android SDK (compileSdk 36, NDK 28.x, CMake 3.22.1).

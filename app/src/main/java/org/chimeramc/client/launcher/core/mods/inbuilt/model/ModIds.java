@@ -184,10 +184,9 @@ public final class ModIds {
         return ARMOR_HUD.equals(modId) || CRYSTAL_OPTIMIZER.equals(modId)
                 || TRAJECTORY_PREDICTION.equals(modId) || KILL_EFFECTS.equals(modId)
                 // These visual modules act on the game's rendered frame or its entity list, which
-                // this build exposes to no mod yet (the prebuilt libinbuiltmods.so supports only
-                // AutoSprint/Fps/Gyro/HotbarSlot/MoreButtons/PojavControls/Snaplook/Zoom), so with
-                // no native provider they cannot produce anything. Listing them as if they worked
-                // would be the defect. Not listed here, because they reach a result through a route
+                // this build exposes to no mod yet, so with no native provider they cannot produce
+                // anything. Listing them as if they worked would be the defect. Not listed here,
+                // because they reach a result through a route
                 // this build already has: Fullbright (a brightness option), Crosshair (an overlay),
                 // and List Players / Debug Menu (the local-player feed and the proximity-voice peer
                 // list).

@@ -316,7 +316,7 @@ jobs:
     # Manual only, and here is why it cannot be an automatic gate.
     #
     # The APK ships arm64-v8a only (app/build.gradle sets abiFilters 'arm64-v8a': an Android process
-    # locks in one bitness and the prebuilt libgxcore.so has no 32-bit or x86 build). That rules out
+    # locks in one bitness, and the game's native library is arm64-only here). That rules out
     # the usual x86_64 emulator - the install is refused with "No compatible devices connected"
     # before a single test runs, which is what this job used to do on every push.
     #
