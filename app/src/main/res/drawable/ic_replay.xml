@@ -22,7 +22,7 @@
     <path
         android:pathData="M10.5,9.2L15,12L10.5,14.8Z"
         android:strokeColor="#000000"
-        android:strokeWidth="1.4"
+        android:strokeWidth="1.5"
         android:strokeLineJoin="round"
         android:fillColor="@android:color/transparent" />
 

@@ -161,6 +161,8 @@
       android:fillColor="#a1d3a2"/>
   <path
       android:strokeWidth="1"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"
       android:pathData="M52.48,14.13l28.17,12.81C82.08,27.58 83,29.01 83,30.58v39.85c0,1.57 -0.92,2.99 -2.35,3.64L52.48,86.87c-1.58,0.72 -3.39,0.72 -4.97,0L19.34,74.07C17.92,73.42 17,71.99 17,70.42V30.58c0,-1.57 0.92,-2.99 2.35,-3.64l28.17,-12.81C49.1,13.41 50.9,13.41 52.48,14.13z"
       android:fillColor="#00000000"
       android:strokeColor="#000"/>
