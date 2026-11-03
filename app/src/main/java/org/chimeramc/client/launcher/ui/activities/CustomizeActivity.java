@@ -197,13 +197,7 @@ public class CustomizeActivity extends BaseActivity {
 
     /** Opens the account's Xbox friends page, which is where friends are managed for now. */
     private void openXboxFriends() {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW,
-                    android.net.Uri.parse("https://www.xbox.com/play/user")));
-        } catch (Throwable t) {
-            AppLog.warnOnce("GlowberryClient", "CustomizeActivity:xbox",
-                    "Could not open the Xbox friends page", t);
-        }
+        org.chimeramc.client.util.UrlOpener.open(this, "https://www.xbox.com/play/user");
     }
 
     private void replace(Fragment fragment, String tag) {
