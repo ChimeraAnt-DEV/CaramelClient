@@ -186,3 +186,37 @@ This supersedes the memory-offset search for the recorder's purposes: it gives t
 from the stream the client already receives, which is both what the spec asked for and reachable
 without a per-build disassembly pass. The memory route is still the way to fill the *live* seam
 (`AllEntities` for the combat modules), but the replay recorder does not need it.
+
+### The packet-capture route: what is built, and the exact remaining gap
+
+Built (three PRs):
+- **BerryAPI PR #2** — the replay C ABI grew `capture_start` / `capture_stop` / `capture_state` /
+  `capture_packet` (ABI v2), so a host can feed the recorder the packet stream. `make test` passes.
+- **preloader PR #30** — `BerryReplayMirror` mirrors those four calls and targets ABI v2;
+  `BerryApiJni` bridges them to Java, fail-closed.
+- **The launcher** — `BerryApi.replayCapture*`, `BerryReplaySource.capture*` (over its backend seam,
+  so the direction/empty-payload/unavailable rules are unit-tested) and `ReplayManager`'s
+  `startPacketCapture` / `stopPacketCapture` / `savePacketCapture`.
+
+**The one gap.** Something has to turn a game packet *object* into `{id, payload bytes}` before it can
+be fed to `capture_packet`. Two places could do it, and both need the same missing datum:
+
+- The preloader's own packet hook (`ClientNetworkHandler` vtable slot 40, verified `0xb80f518`) is a
+  register-preserving passthrough: it sees `x0` (the network handler) and `x1` (the packet) but
+  forwards everything untouched, because the **argument layout of the hooked function is not known**.
+- BerryAPI's own `PacketReceiveHook` (in `berry/packet_capture.h`) *can* decode a packet, but it
+  takes a `PacketReceiveAbi{ decode, tick }` — a `decode(packet, &id, &payload)` callback — and
+  BerryAPI's `BerryClient` is built with **no `packetReceiveTarget`**, so its own hook is not
+  installed (`"packet capture hub ready (no receive target; capture disabled)"`).
+
+So the remaining work is one RE item, not a wiring item: **recover the packet object's layout** — how
+to read its packet id and its payload bytes from the `x1` pointer the receive hook already receives.
+With that, either the preloader forwards the payload, or it supplies BerryAPI a `decode` ABI (and a
+`packetReceiveTarget`), and the recorder fills from the stream. Everything downstream — the recorder,
+the container, `save`, the viewer, the launcher controls — is already in place and tested.
+
+**Why this is the right last step.** It is a single, well-bounded disassembly target (the packet
+class's id/payload accessors) rather than the open-ended entity-list search, and the packet stream is
+what the original task asked for ("Hook into the BerryAPI network stream … record everything"). It is
+also the same class of work the cosmetics seams already did successfully (recover an offset, then
+verify it with a host test before it touches the game thread).
