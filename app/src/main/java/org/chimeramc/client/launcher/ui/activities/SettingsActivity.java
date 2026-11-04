@@ -1717,6 +1717,21 @@ public class SettingsActivity extends BaseActivity {
             openAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
         }
 
+        View runSetup = findViewById(R.id.settings_run_setup);
+        if (runSetup != null) {
+            runSetup.setOnClickListener(v -> {
+                // Clear the completed flag so the wizard opens, then start it. The user asked for
+                // it, so this is not a surprise prompt.
+                getSharedPreferences("glowberry_setup", MODE_PRIVATE)
+                        .edit().putBoolean(
+                                org.chimeramc.client.ui.activities.SetupWizardActivity
+                                        .KEY_WIZARD_DONE, false)
+                        .apply();
+                startActivity(new Intent(this,
+                        org.chimeramc.client.ui.activities.SetupWizardActivity.class));
+            });
+        }
+
         View openChangelog = findViewById(R.id.settings_open_changelog);
         if (openChangelog != null) {
             openChangelog.setOnClickListener(v -> startActivity(new Intent(this,

@@ -106,6 +106,17 @@ public final class SetupWizard {
         return step == Step.READY;
     }
 
+    /**
+     * Whether the wizard should be shown on this launch.
+     *
+     * <p>One rule: it has not been completed. It used to also require no installed instance, which
+     * meant an existing user never saw it — but the wizard now owns the licence, the account, the
+     * theme and the changelog, so having an instance is not a reason to skip it.
+     */
+    public static boolean shouldShow(boolean wizardCompleted) {
+        return !wizardCompleted;
+    }
+
     /** A stable key for the step, for persistence and the diagnostics report. */
     public static String key(Step step) {
         return step == null ? "unknown" : step.name().toLowerCase(Locale.ROOT);

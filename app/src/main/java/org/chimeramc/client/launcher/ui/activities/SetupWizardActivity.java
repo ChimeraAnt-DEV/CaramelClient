@@ -459,21 +459,18 @@ public class SetupWizardActivity extends BaseActivity {
     }
 
     /**
-     * Whether the wizard should be shown on this launch: the user has not finished it before, and
-     * there is no installed instance, so an existing user never sees it.
+     * Whether the wizard should be shown on this launch.
+     *
+     * <p>The rule is one thing: it has not been completed. It used to also require no installed
+     * instance, so an existing user never saw it — but the wizard owns the licence, the account, the
+     * theme and the changelog, so an installed instance is not a reason to skip it. The rule itself
+     * lives in {@link SetupWizard#shouldShow(boolean)} so it is unit-tested.
      */
     public static boolean shouldShow(Activity activity) {
         if (activity == null) return false;
-        if (activity.getSharedPreferences("glowberry_setup", Activity.MODE_PRIVATE)
-                .getBoolean(KEY_WIZARD_DONE, false)) {
-            return false;
-        }
-        try {
-            return org.chimeramc.client.core.versions.VersionManager.get(activity)
-                    .getInstalledVersions().isEmpty();
-        } catch (Throwable t) {
-            return false;
-        }
+        boolean completed = activity.getSharedPreferences("glowberry_setup", Activity.MODE_PRIVATE)
+                .getBoolean(KEY_WIZARD_DONE, false);
+        return SetupWizard.shouldShow(completed);
     }
 
     @Override
