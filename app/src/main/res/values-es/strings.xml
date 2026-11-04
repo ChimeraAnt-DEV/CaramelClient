@@ -1264,4 +1264,16 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="usage_stats_unavailable">Esta compilación no tiene colector configurado, así que no se puede enviar nada.</string>
     <string name="diagnostics_field_feature_availability">Disponibilidad de funciones</string>
     <string name="diagnostics_field_hook_self_test">Autoprueba de hooks</string>
+    <string name="replay_cinematic_motion_title">Movimiento</string>
+    <string name="replay_cinematic_easing">Suavizado</string>
+    <string name="replay_cinematic_easing_linear">Lineal</string>
+    <string name="replay_cinematic_easing_in">Entrada suave</string>
+    <string name="replay_cinematic_easing_out">Salida suave</string>
+    <string name="replay_cinematic_easing_in_out">Entrada y salida suaves</string>
+    <string name="replay_cinematic_smoothing">Suavizado de ruta</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Campo de visión</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Más amplio</string>
+    <string name="replay_cinematic_fov_narrow">Más estrecho</string>
 </resources>

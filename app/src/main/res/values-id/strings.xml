@@ -1288,4 +1288,16 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="usage_stats_unavailable">Build ini tidak punya kolektor, jadi tidak ada yang bisa dikirim.</string>
     <string name="diagnostics_field_feature_availability">Ketersediaan fitur</string>
     <string name="diagnostics_field_hook_self_test">Uji mandiri hook</string>
+    <string name="replay_cinematic_motion_title">Gerakan</string>
+    <string name="replay_cinematic_easing">Peredaman</string>
+    <string name="replay_cinematic_easing_linear">Linear</string>
+    <string name="replay_cinematic_easing_in">Mulai lambat</string>
+    <string name="replay_cinematic_easing_out">Akhir lambat</string>
+    <string name="replay_cinematic_easing_in_out">Mulai dan akhir lambat</string>
+    <string name="replay_cinematic_smoothing">Penghalusan jalur</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Bidang pandang</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Lebih lebar</string>
+    <string name="replay_cinematic_fov_narrow">Lebih sempit</string>
 </resources>

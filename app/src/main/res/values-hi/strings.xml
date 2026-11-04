@@ -1292,4 +1292,16 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="usage_stats_unavailable">इस बिल्ड में कोई संग्रहक कॉन्फ़िगर नहीं है, कुछ नहीं भेजा जा सकता।</string>
     <string name="diagnostics_field_feature_availability">फ़ीचर उपलब्धता</string>
     <string name="diagnostics_field_hook_self_test">हुक स्व-परीक्षण</string>
+    <string name="replay_cinematic_motion_title">गति</string>
+    <string name="replay_cinematic_easing">स्मूदिंग</string>
+    <string name="replay_cinematic_easing_linear">रैखिक</string>
+    <string name="replay_cinematic_easing_in">धीमी शुरुआत</string>
+    <string name="replay_cinematic_easing_out">धीमा अंत</string>
+    <string name="replay_cinematic_easing_in_out">धीमी शुरुआत और अंत</string>
+    <string name="replay_cinematic_smoothing">पथ स्मूदिंग</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">दृश्य क्षेत्र</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">चौड़ा</string>
+    <string name="replay_cinematic_fov_narrow">संकरा</string>
 </resources>

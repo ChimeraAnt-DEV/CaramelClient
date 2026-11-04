@@ -1303,4 +1303,16 @@
     <string name="usage_stats_unavailable">В этой сборке не настроен сборщик, отправить нечего.</string>
     <string name="diagnostics_field_feature_availability">Доступность функций</string>
     <string name="diagnostics_field_hook_self_test">Самотест хуков</string>
+    <string name="replay_cinematic_motion_title">Движение</string>
+    <string name="replay_cinematic_easing">Сглаживание</string>
+    <string name="replay_cinematic_easing_linear">Линейно</string>
+    <string name="replay_cinematic_easing_in">Плавный вход</string>
+    <string name="replay_cinematic_easing_out">Плавный выход</string>
+    <string name="replay_cinematic_easing_in_out">Плавный вход и выход</string>
+    <string name="replay_cinematic_smoothing">Сглаживание пути</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Угол обзора</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Шире</string>
+    <string name="replay_cinematic_fov_narrow">Уже</string>
 </resources>

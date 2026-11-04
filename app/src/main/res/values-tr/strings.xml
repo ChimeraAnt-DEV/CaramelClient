@@ -1291,4 +1291,16 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="usage_stats_unavailable">Bu derlemede toplayıcı yapılandırılmamış, hiçbir şey gönderilemez.</string>
     <string name="diagnostics_field_feature_availability">Özellik kullanılabilirliği</string>
     <string name="diagnostics_field_hook_self_test">Kanca öz testi</string>
+    <string name="replay_cinematic_motion_title">Hareket</string>
+    <string name="replay_cinematic_easing">Yumuşatma</string>
+    <string name="replay_cinematic_easing_linear">Doğrusal</string>
+    <string name="replay_cinematic_easing_in">Yavaş başlangıç</string>
+    <string name="replay_cinematic_easing_out">Yavaş bitiş</string>
+    <string name="replay_cinematic_easing_in_out">Yavaş başlangıç ve bitiş</string>
+    <string name="replay_cinematic_smoothing">Yol yumuşatma</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Görüş alanı</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Daha geniş</string>
+    <string name="replay_cinematic_fov_narrow">Daha dar</string>
 </resources>

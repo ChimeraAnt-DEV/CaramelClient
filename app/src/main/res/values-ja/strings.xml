@@ -1261,4 +1261,16 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="usage_stats_unavailable">このビルドには収集先が設定されていないため、何も送信できません。</string>
     <string name="diagnostics_field_feature_availability">機能の可用性</string>
     <string name="diagnostics_field_hook_self_test">フックのセルフテスト</string>
+    <string name="replay_cinematic_motion_title">モーション</string>
+    <string name="replay_cinematic_easing">イージング</string>
+    <string name="replay_cinematic_easing_linear">リニア</string>
+    <string name="replay_cinematic_easing_in">イーズイン</string>
+    <string name="replay_cinematic_easing_out">イーズアウト</string>
+    <string name="replay_cinematic_easing_in_out">イーズインアウト</string>
+    <string name="replay_cinematic_smoothing">パスのスムージング</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">視野角</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">広く</string>
+    <string name="replay_cinematic_fov_narrow">狭く</string>
 </resources>

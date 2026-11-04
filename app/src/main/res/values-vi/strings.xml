@@ -1294,4 +1294,16 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="usage_stats_unavailable">Bản dựng này không có bộ thu thập, không thể gửi gì.</string>
     <string name="diagnostics_field_feature_availability">Tính khả dụng của tính năng</string>
     <string name="diagnostics_field_hook_self_test">Tự kiểm tra hook</string>
+    <string name="replay_cinematic_motion_title">Chuyển động</string>
+    <string name="replay_cinematic_easing">Làm mượt</string>
+    <string name="replay_cinematic_easing_linear">Tuyến tính</string>
+    <string name="replay_cinematic_easing_in">Vào chậm</string>
+    <string name="replay_cinematic_easing_out">Ra chậm</string>
+    <string name="replay_cinematic_easing_in_out">Vào và ra chậm</string>
+    <string name="replay_cinematic_smoothing">Làm mượt đường đi</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Trường nhìn</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Rộng hơn</string>
+    <string name="replay_cinematic_fov_narrow">Hẹp hơn</string>
 </resources>

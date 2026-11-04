@@ -1264,4 +1264,16 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="usage_stats_unavailable">Cette version n\'a aucun collecteur configuré, rien ne peut être envoyé.</string>
     <string name="diagnostics_field_feature_availability">Disponibilité des fonctionnalités</string>
     <string name="diagnostics_field_hook_self_test">Autotest des hooks</string>
+    <string name="replay_cinematic_motion_title">Mouvement</string>
+    <string name="replay_cinematic_easing">Adoucissement</string>
+    <string name="replay_cinematic_easing_linear">Linéaire</string>
+    <string name="replay_cinematic_easing_in">Entrée progressive</string>
+    <string name="replay_cinematic_easing_out">Sortie progressive</string>
+    <string name="replay_cinematic_easing_in_out">Entrée et sortie progressives</string>
+    <string name="replay_cinematic_smoothing">Lissage du trajet</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Champ de vision</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Plus large</string>
+    <string name="replay_cinematic_fov_narrow">Plus étroit</string>
 </resources>

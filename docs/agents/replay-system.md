@@ -48,3 +48,17 @@
   malformed, truncated or foreign file parses to an empty recording, never a throw; a missing field
   reads as empty (or `-1` for the time of day), never a plausible 0. `ReplayDocumentTest` pins the
   round trip, the self-describing envelope, the file write/read, the fail-closed rules and the bridge.
+
+- **The cinematic rig's motion controls live in the pure path.** The spec asks the timeline to "set the
+  FOV", "add smooth interpolation (Bezier curves)" and a "path smoothing" control; the path had
+  presets and Catmull-Rom but none of the three. `ReplayCamera` gained a clamped field of view
+  (`MIN_FOV`..`MAX_FOV`, default 70), each `ReplayCameraPath.Keyframe` carries its own `fovDeg` (the
+  6-arg constructor still defaults it, so existing callers are unchanged), and `ReplayCameraPath` has
+  an `Easing` (`LINEAR`/`EASE_IN`/`EASE_OUT`/`EASE_IN_OUT`, real cubic-Bezier timings solved by
+  Newton with a bisection fallback) and a `smoothing` (0 = straight hop, 1 = full Catmull-Rom curve).
+  `sample` reshapes the segment time by the easing first, then blends the curve toward the straight
+  line by the smoothing, and interpolates the FOV along the reshaped segment so a zoom rides the move.
+  `ReplayCinematicControls` holds the button arithmetic (step size, direction, clamp, easing cycle) so
+  the editor's three rows cannot drift; `ReplayCinematicDialog` wires them. The codec writes
+  `preset;e=<Easing>;s=<smoothing>;time,x,y,z,yaw,pitch,fov;...` and still parses the old six-field,
+  no-metadata form. `ReplayCameraFovTest` and `ReplayCinematicControlsTest` pin it.

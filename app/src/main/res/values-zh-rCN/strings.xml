@@ -1285,4 +1285,16 @@
     <string name="usage_stats_unavailable">此构建未配置收集器，无法发送任何内容。</string>
     <string name="diagnostics_field_feature_availability">功能可用性</string>
     <string name="diagnostics_field_hook_self_test">钩子自检</string>
+    <string name="replay_cinematic_motion_title">运动</string>
+    <string name="replay_cinematic_easing">缓动</string>
+    <string name="replay_cinematic_easing_linear">线性</string>
+    <string name="replay_cinematic_easing_in">缓入</string>
+    <string name="replay_cinematic_easing_out">缓出</string>
+    <string name="replay_cinematic_easing_in_out">缓入缓出</string>
+    <string name="replay_cinematic_smoothing">路径平滑</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">视野</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">更宽</string>
+    <string name="replay_cinematic_fov_narrow">更窄</string>
 </resources>
