@@ -33,8 +33,13 @@ public final class PreviewCharacterScene {
      */
     public static void addCharacter(PreviewScene scene, int[] atlas, int atlasSize,
                                     float headPitch, float headYaw) {
-        if (scene == null || atlas == null || atlasSize <= 0) return;
-        addCharacter(scene, atlas, atlasSize, headPitch, headYaw, null);
+        addCharacter(scene, atlas, atlasSize, headPitch, headYaw, null, CharacterPose.relaxedHero());
+    }
+
+    /** Adds the character in the rest pose, for a caller that wants no articulation. */
+    public static void addCharacterRest(PreviewScene scene, int[] atlas, int atlasSize,
+                                        float headPitch, float headYaw) {
+        addCharacter(scene, atlas, atlasSize, headPitch, headYaw, null, CharacterPose.rest());
     }
 
     /**
@@ -45,7 +50,23 @@ public final class PreviewCharacterScene {
      */
     public static void addCharacter(PreviewScene scene, int[] atlas, int atlasSize,
                                     float headPitch, float headYaw, String onlyHead) {
+        // The hub shows only the head, which has no limbs, so the rest pose is right there; the
+        // whole figure gets the hero stance.
+        addCharacter(scene, atlas, atlasSize, headPitch, headYaw, onlyHead,
+                onlyHead != null ? CharacterPose.rest() : CharacterPose.relaxedHero());
+    }
+
+    /**
+     * Adds the character with an explicit pose.
+     *
+     * <p>A limb's faces are rotated about the limb's joint, so the shoulder or hip stays attached to
+     * the body while the limb swings. The head keeps its own look rotation, applied about the neck.
+     */
+    public static void addCharacter(PreviewScene scene, int[] atlas, int atlasSize,
+                                    float headPitch, float headYaw, String onlyHead,
+                                    CharacterPose pose) {
         if (scene == null || atlas == null || atlasSize <= 0) return;
+        if (pose == null) pose = CharacterPose.rest();
         float[] p = new float[3];
         float[] n = new float[3];
         for (SkinModel.Box box : SkinModel.boxes()) {
@@ -55,7 +76,7 @@ public final class PreviewCharacterScene {
                 SkinModel.Uv baseUv = box.baseUv(face);
                 if (baseUv != null) {
                     PreviewScene.Face f = addFace(scene, box, face, baseUv, atlas, atlasSize,
-                            head, headPitch, headYaw, p, n);
+                            head, headPitch, headYaw, pose, p, n);
                     if (f != null) {
                         f.alphaTest = false;
                         f.blend = false;
@@ -65,7 +86,7 @@ public final class PreviewCharacterScene {
                 SkinModel.Uv overUv = box.overlayUv(face);
                 if (overUv != null) {
                     PreviewScene.Face f = addFace(scene, box, face, overUv, atlas, atlasSize,
-                            head, headPitch, headYaw, p, n);
+                            head, headPitch, headYaw, pose, p, n);
                     if (f != null) {
                         f.alphaTest = true;
                         f.blend = true;
@@ -85,30 +106,35 @@ public final class PreviewCharacterScene {
     private static PreviewScene.Face addFace(PreviewScene scene, SkinModel.Box box,
                                              SkinModel.Face face, SkinModel.Uv uv, int[] atlas,
                                              int atlasSize, boolean head, float headPitch,
-                                             float headYaw, float[] p, float[] n) {
+                                             float headYaw, CharacterPose pose, float[] p,
+                                             float[] n) {
         float[][] c = box.faceCorners(face);
         float[][] corners = new float[4][3];
+        // A limb rotates about its joint, which is the top of the box (centre + half its height).
+        float jointY = box.cy + box.h / 2f;
         for (int i = 0; i < 4; i++) {
+            p[0] = c[i][0]; p[1] = c[i][1]; p[2] = c[i][2];
             if (head) {
-                p[0] = c[i][0]; p[1] = c[i][1]; p[2] = c[i][2];
                 HeadLookTransform.apply(headPitch, headYaw, p);
-                corners[i][0] = p[0]; corners[i][1] = p[1]; corners[i][2] = p[2];
-            } else {
-                corners[i][0] = c[i][0]; corners[i][1] = c[i][1]; corners[i][2] = c[i][2];
+            } else if (pose != null) {
+                pose.apply(box.id, jointY, p);
             }
+            corners[i][0] = p[0]; corners[i][1] = p[1]; corners[i][2] = p[2];
         }
         float u0 = uv.u / (float) atlasSize, v0 = uv.v / (float) atlasSize;
         float u1 = (uv.u + uv.w) / (float) atlasSize, v1 = (uv.v + uv.h) / (float) atlasSize;
         float[] uvArr = {u0, v0, u1, v0, u0, v1, u1, v1};
         PreviewScene.Face f = scene.addQuad(corners, uvArr, atlas, atlasSize, atlasSize);
         if (f == null) return null;
+        n[0] = face.nx; n[1] = face.ny; n[2] = face.nz;
         if (head) {
-            n[0] = face.nx; n[1] = face.ny; n[2] = face.nz;
             HeadLookTransform.applyVector(headPitch, headYaw, n);
-            f.nx = n[0]; f.ny = n[1]; f.nz = n[2];
-        } else {
-            f.nx = face.nx; f.ny = face.ny; f.nz = face.nz;
+        } else if (pose != null) {
+            // A rotated limb's face points a different way, so its normal must rotate with it or the
+            // shading is wrong (a swung-out arm would still be lit as if it hung straight down).
+            pose.applyVector(box.id, n);
         }
+        f.nx = n[0]; f.ny = n[1]; f.nz = n[2];
         return f;
     }
 }
