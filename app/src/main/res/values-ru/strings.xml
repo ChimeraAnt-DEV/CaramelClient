@@ -1326,4 +1326,5 @@
     <string name="replay_save_native">Сохранить повтор игры</string>
     <string name="replay_save_native_done">Сохранено %1$s</string>
     <string name="replay_save_native_empty">Пока нет повтора игры для сохранения. Сначала запишите.</string>
+    <string name="settings_run_setup">Запустить настройку снова</string>
 </resources>

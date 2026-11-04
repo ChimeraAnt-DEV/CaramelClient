@@ -1284,4 +1284,5 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="replay_save_native">ゲームのリプレイを保存</string>
     <string name="replay_save_native_done">%1$s を保存しました</string>
     <string name="replay_save_native_empty">保存できるゲームのリプレイがまだありません。まず録画してください。</string>
+    <string name="settings_run_setup">セットアップを再実行</string>
 </resources>

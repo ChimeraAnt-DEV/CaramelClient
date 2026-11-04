@@ -2950,7 +2950,7 @@ import okhttp3.OkHttpClient;
      * the equipped cosmetics.
      */
     private void setupLaunchPreviewStage() {
-        View stageHost = findViewById(R.id.launch_preview_stage);
+        View stageHost = binding.launchPreviewStage;
         if (!(stageHost instanceof androidx.compose.ui.platform.ComposeView)) return;
         String saved = org.chimeramc.client.settings.FeatureSettings.getInstance()
                 .getLaunchBackgroundId();
@@ -2971,7 +2971,7 @@ import okhttp3.OkHttpClient;
                     if (launchPreview != null) launchPreview.startPreview();
                 });
 
-        View pickerHost = findViewById(R.id.launch_background_picker);
+        View pickerHost = binding.launchBackgroundPicker;
         if (pickerHost instanceof androidx.compose.ui.platform.ComposeView) {
             backgroundPickerCompose = (androidx.compose.ui.platform.ComposeView) pickerHost;
             backgroundPickerCompose.setViewCompositionStrategy(
@@ -2986,7 +2986,7 @@ import okhttp3.OkHttpClient;
 
     /** Shows or hides the background picker; the long-press on the stage calls this. */
     private void toggleBackgroundPicker() {
-        View picker = findViewById(R.id.launch_background_picker);
+        View picker = binding.launchBackgroundPicker;
         if (picker == null) return;
         boolean show = picker.getVisibility() != View.VISIBLE;
         picker.setVisibility(show ? View.VISIBLE : View.GONE);

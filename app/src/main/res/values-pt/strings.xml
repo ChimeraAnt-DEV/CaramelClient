@@ -1287,4 +1287,5 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="replay_save_native">Salvar a repetição do jogo</string>
     <string name="replay_save_native_done">Salvo %1$s</string>
     <string name="replay_save_native_empty">Ainda não há uma repetição do jogo para salvar. Grave uma primeiro.</string>
+    <string name="settings_run_setup">Executar a configuração novamente</string>
 </resources>

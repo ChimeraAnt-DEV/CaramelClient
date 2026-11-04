@@ -1311,4 +1311,5 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="replay_save_native">Simpan ulangan game</string>
     <string name="replay_save_native_done">Tersimpan %1$s</string>
     <string name="replay_save_native_empty">Belum ada ulangan game untuk disimpan. Rekam dulu.</string>
+    <string name="settings_run_setup">Jalankan penyiapan lagi</string>
 </resources>

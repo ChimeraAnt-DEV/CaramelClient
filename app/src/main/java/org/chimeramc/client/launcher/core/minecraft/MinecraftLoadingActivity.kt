@@ -42,6 +42,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private val executor = Executors.newSingleThreadExecutor()
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
 
+    private lateinit var binding: org.chimeramc.client.databinding.ActivityMinecraftLoadingBinding
     private lateinit var ring: org.chimeramc.client.launcher.ui.views.LaunchRingView
     private lateinit var logContainer: android.view.View
     private var launchFailed = false
@@ -91,21 +92,25 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                 window.decorView.post { hideSystemUi() }
             }
         }
-        setContentView(R.layout.activity_minecraft_loading)
+        binding = org.chimeramc.client.databinding.ActivityMinecraftLoadingBinding
+                .inflate(layoutInflater)
+        setContentView(binding.root)
         hideSystemUi()
 
-        ring = findViewById(R.id.minecraftLaunchRing)
-        logContainer = findViewById(R.id.minecraftLaunchLogContainer)
+        // View binding, not findViewById: the hygiene gate holds the per-file findViewById count,
+        // and the binding is also type-safe, so a renamed id is a compile error rather than a null.
+        ring = binding.minecraftLaunchRing
+        logContainer = binding.minecraftLaunchLogContainer
         // The raw log is opt-in; the default launch screen is the logo, the status and the ring.
         logContainer.visibility =
                 if (org.chimeramc.client.settings.FeatureSettings.getInstance()
                         .isLaunchLogEnabled()) android.view.View.VISIBLE else android.view.View.GONE
-        statusView = findViewById(R.id.minecraftLaunchStatus)
-        detailView = findViewById(R.id.minecraftLaunchDetail)
-        renderChangelogLine(findViewById(R.id.minecraftLaunchChangelog))
-        logView = findViewById(R.id.minecraftLaunchLog)
-        logScroll = findViewById(R.id.minecraftLaunchLogScroll)
-        returnButton = findViewById(R.id.minecraftLaunchReturn)
+        statusView = binding.minecraftLaunchStatus
+        detailView = binding.minecraftLaunchDetail
+        renderChangelogLine(binding.minecraftLaunchChangelog)
+        logView = binding.minecraftLaunchLog
+        logScroll = binding.minecraftLaunchLogScroll
+        returnButton = binding.minecraftLaunchReturn
 
         returnButton.setOnClickListener {
             appendLog("Returning to launcher")

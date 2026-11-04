@@ -1317,4 +1317,5 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="replay_save_native">Lưu bản phát lại của trò chơi</string>
     <string name="replay_save_native_done">Đã lưu %1$s</string>
     <string name="replay_save_native_empty">Chưa có bản phát lại trò chơi để lưu. Hãy ghi một bản trước.</string>
+    <string name="settings_run_setup">Chạy lại thiết lập</string>
 </resources>

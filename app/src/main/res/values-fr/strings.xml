@@ -1287,4 +1287,5 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="replay_save_native">Enregistrer le replay du jeu</string>
     <string name="replay_save_native_done">Enregistré %1$s</string>
     <string name="replay_save_native_empty">Il n\'y a pas encore de replay du jeu à enregistrer. Enregistrez-en un d\'abord.</string>
+    <string name="settings_run_setup">Relancer la configuration</string>
 </resources>
