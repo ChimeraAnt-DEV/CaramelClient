@@ -74,3 +74,17 @@
   `timeForX`, `nearestMarker`, `keyframeFractions`), so the snapping rule is unit-tested off-device.
   `ReplayTimelineHost` is the Java-facing seam, and `ReplayCinematicDialog` mounts the strip and
   samples the path on scrub so the camera previews the shot. `ReplayTimelineLayoutTest` pins it.
+
+- **The recorder writes a portable `.glowreplay`, not only a sidecar.** `ReplayRecorder` is the
+  capture half of the engine: it owns the local-player track, the markers and the metadata, and
+  produces a `ReplayDocument`. It works in two modes on one object — a `ReplayTrackRecorder.Source`
+  it pulls from on `tick` (what `ReplayManager` uses), or pushed `sample` calls (what a test uses) —
+  so the marker-merge and finish rules are shared. `start` adds the `JOIN` marker at time zero,
+  `finish` is idempotent and refuses a later sample. `ReplayManager` now holds one `ReplayRecorder`
+  for the clip in flight: `recordMarker` goes through it, `onRecordingFinished` builds the document
+  once and writes both the sidecar and the portable container beside the MP4
+  (`writePortableReplay`), and the sidecar now carries the camera path too. Honest scope: the build
+  exposes only the local player's position, facing and health through the feed, so the recorder
+  captures exactly that and leaves world/server/seed/time-of-day empty rather than inventing them;
+  the same limitation the rest of the replay system states. `ReplayRecorderTest` pins the two modes,
+  the markers, the metadata and the file write.
