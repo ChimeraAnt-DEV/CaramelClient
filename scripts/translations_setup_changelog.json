@@ -1,0 +1,102 @@
+{
+  "es": {
+    "setup_instance_list_title": "Tus instancias",
+    "setup_instance_list_empty": "Aún no hay instancias. Importa un APK para crear la primera.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Has añadido el máximo de %1$d instancias en la configuración. Añade más cuando quieras desde la Biblioteca.",
+    "setup_instance_limit_remaining": "Puedes añadir %1$d más aquí, o instancias ilimitadas después desde la Biblioteca.",
+    "changelog_section_newest": "Novedades",
+    "changelog_section_upcoming": "Próximamente",
+    "changelog_section_sneak_peeks": "Avances"
+  },
+  "fr": {
+    "setup_instance_list_title": "Vos instances",
+    "setup_instance_list_empty": "Aucune instance pour l'instant. Importez un APK pour créer la première.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Vous avez atteint le maximum de %1$d instances pendant la configuration. Ajoutez-en d'autres depuis la Bibliothèque.",
+    "setup_instance_limit_remaining": "Vous pouvez en ajouter %1$d ici, ou autant que vous voulez plus tard depuis la Bibliothèque.",
+    "changelog_section_newest": "Nouveautés",
+    "changelog_section_upcoming": "À venir",
+    "changelog_section_sneak_peeks": "Aperçus"
+  },
+  "hi": {
+    "setup_instance_list_title": "आपके इंस्टेंस",
+    "setup_instance_list_empty": "अभी कोई इंस्टेंस नहीं। पहला बनाने के लिए APK आयात करें।",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "सेटअप में आपने अधिकतम %1$d इंस्टेंस जोड़ लिए हैं। लाइब्रेरी से और जोड़ सकते हैं।",
+    "setup_instance_limit_remaining": "यहाँ %1$d और जोड़ सकते हैं, या बाद में लाइब्रेरी से असीमित जोड़ सकते हैं।",
+    "changelog_section_newest": "नवीनतम",
+    "changelog_section_upcoming": "आने वाला",
+    "changelog_section_sneak_peeks": "झलकियाँ"
+  },
+  "id": {
+    "setup_instance_list_title": "Instans Anda",
+    "setup_instance_list_empty": "Belum ada instans. Impor APK untuk membuat yang pertama.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Anda telah menambahkan maksimum %1$d instans saat penyiapan. Tambah lagi kapan saja dari Pustaka.",
+    "setup_instance_limit_remaining": "Anda dapat menambah %1$d lagi di sini, atau tanpa batas nanti dari Pustaka.",
+    "changelog_section_newest": "Terbaru",
+    "changelog_section_upcoming": "Akan datang",
+    "changelog_section_sneak_peeks": "Intip"
+  },
+  "ja": {
+    "setup_instance_list_title": "インスタンス",
+    "setup_instance_list_empty": "まだインスタンスがありません。APK をインポートして最初のものを作成してください。",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "セットアップで追加できる最大 %1$d 個に達しました。ライブラリからいつでも追加できます。",
+    "setup_instance_limit_remaining": "ここであと %1$d 個追加できます。後でライブラリから無制限に追加できます。",
+    "changelog_section_newest": "最新",
+    "changelog_section_upcoming": "今後",
+    "changelog_section_sneak_peeks": "スニークピーク"
+  },
+  "pt": {
+    "setup_instance_list_title": "Suas instâncias",
+    "setup_instance_list_empty": "Nenhuma instância ainda. Importe um APK para criar a primeira.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Você atingiu o máximo de %1$d instâncias na configuração. Adicione mais quando quiser na Biblioteca.",
+    "setup_instance_limit_remaining": "Você pode adicionar mais %1$d aqui, ou ilimitadas depois na Biblioteca.",
+    "changelog_section_newest": "Novidades",
+    "changelog_section_upcoming": "Em breve",
+    "changelog_section_sneak_peeks": "Prévias"
+  },
+  "ru": {
+    "setup_instance_list_title": "Ваши экземпляры",
+    "setup_instance_list_empty": "Экземпляров пока нет. Импортируйте APK, чтобы создать первый.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Вы добавили максимум %1$d экземпляров в настройке. Добавьте ещё в Библиотеке.",
+    "setup_instance_limit_remaining": "Здесь можно добавить ещё %1$d, или без ограничений позже в Библиотеке.",
+    "changelog_section_newest": "Новое",
+    "changelog_section_upcoming": "Скоро",
+    "changelog_section_sneak_peeks": "Превью"
+  },
+  "tr": {
+    "setup_instance_list_title": "Örnekleriniz",
+    "setup_instance_list_empty": "Henüz örnek yok. İlkini oluşturmak için bir APK içe aktarın.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Kurulumda en fazla %1$d örnek eklediniz. Kitaplıktan istediğiniz zaman ekleyin.",
+    "setup_instance_limit_remaining": "Burada %1$d tane daha ekleyebilirsiniz, veya sonra Kitaplıktan sınırsız ekleyebilirsiniz.",
+    "changelog_section_newest": "En yeni",
+    "changelog_section_upcoming": "Yakında",
+    "changelog_section_sneak_peeks": "Ön izlemeler"
+  },
+  "vi": {
+    "setup_instance_list_title": "Các bản cài của bạn",
+    "setup_instance_list_empty": "Chưa có bản cài nào. Nhập một APK để tạo bản đầu tiên.",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "Bạn đã thêm tối đa %1$d bản cài trong thiết lập. Thêm nữa bất cứ lúc nào từ Thư viện.",
+    "setup_instance_limit_remaining": "Bạn có thể thêm %1$d bản nữa ở đây, hoặc không giới hạn sau đó từ Thư viện.",
+    "changelog_section_newest": "Mới nhất",
+    "changelog_section_upcoming": "Sắp ra mắt",
+    "changelog_section_sneak_peeks": "Xem trước"
+  },
+  "zh-rCN": {
+    "setup_instance_list_title": "你的实例",
+    "setup_instance_list_empty": "还没有实例。导入一个 APK 来创建第一个。",
+    "setup_instance_list_item": "%1$s · %2$s",
+    "setup_instance_limit_reached": "你在设置中已添加最多 %1$d 个实例。随时可从库中添加更多。",
+    "setup_instance_limit_remaining": "你还可以在这里添加 %1$d 个，或之后从库中添加无限个。",
+    "changelog_section_newest": "最新",
+    "changelog_section_upcoming": "即将推出",
+    "changelog_section_sneak_peeks": "抢先看"
+  }
+}

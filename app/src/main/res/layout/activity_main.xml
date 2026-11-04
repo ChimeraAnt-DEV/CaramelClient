@@ -114,9 +114,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_max="@dimen/page_max_width">
 
-                <!-- Hero panel: the Compose hero (instance identity + stats on the left, the live
-                     3D character preview on the right). Hosted in a ComposeView so the launch tab
-                     can move off XML one block at a time; the real CapePreviewView still renders. -->
+                <!-- The preview stage: the character centred on a paint-splat background.
+                     Long-press opens the background picker below it. Its own ComposeView so the
+                     stage can be replaced without touching the identity block. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_preview_stage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!-- The background picker, hidden until the stage is long-pressed. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_background_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <!-- Identity and stats, below the stage. -->
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/launch_hero_compose"
                     android:layout_width="match_parent"

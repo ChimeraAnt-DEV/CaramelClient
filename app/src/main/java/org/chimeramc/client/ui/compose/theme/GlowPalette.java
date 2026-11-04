@@ -61,6 +61,19 @@ public final class GlowPalette {
     public static final int WARNING = 0xFFFBBF5C;
     public static final int DANGER = 0xFFFF6B6B;
 
+    // --- Glass (the shared card material) ----------------------------------------------------
+
+    /**
+     * The glass surface's light, mirroring {@code res/drawable/glass_card.xml} so a Compose card and
+     * a View card read as the same material. A flat fill with a hairline reads as a grey rectangle;
+     * what makes a surface read as glass is a brighter top edge, a sheen that falls off downward and
+     * a rim that is brighter at the top than the bottom.
+     */
+    public static final int GLASS_RIM_TOP = 0x66FFFFFF;
+    public static final int GLASS_RIM_BOTTOM = 0x1FFFFFFF;
+    public static final int GLASS_SHEEN = 0x1AFFFFFF;
+    public static final int GLASS_SHEEN_END = 0x00FFFFFF;
+
     // --- Derived: the three schemes ----------------------------------------------------------
 
     /** One scheme's window, surface, raised surface and stroke. */

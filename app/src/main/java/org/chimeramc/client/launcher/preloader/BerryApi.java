@@ -185,6 +185,27 @@ public final class BerryApi {
 
     private static native String nativeReplayStatus();
 
+    /**
+     * Encodes the library's replay — the loaded one, or its capture of the live stream — to bytes.
+     *
+     * <p>This is the recorder half: BerryAPI's replay service keeps a capture of the session, and its
+     * {@code save} exports it. The launcher writes the bytes to a {@code .glowreplay} file, so a
+     * recording made inside the game becomes a replay the launcher can list and play.
+     *
+     * @return the container bytes, or an empty array when there is nothing to save or the surface is
+     *         absent
+     */
+    public static byte[] replaySave() {
+        try {
+            byte[] bytes = nativeReplaySave();
+            return bytes != null ? bytes : new byte[0];
+        } catch (UnsatisfiedLinkError e) {
+            return new byte[0];
+        }
+    }
+
+    private static native byte[] nativeReplaySave();
+
     // --- Governor surface -------------------------------------------------------------------
     //
     // BerryAPI's adaptive quality governor. The launcher reads it for its FPS diagnostics and can

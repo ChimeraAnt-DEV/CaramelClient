@@ -1471,7 +1471,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/mod_menu_bg_surface2"
-                    android:fillViewport="true"
                     android:scrollbars="none">
 
                     <LinearLayout

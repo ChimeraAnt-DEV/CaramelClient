@@ -28,6 +28,9 @@ public final class SplashIsland {
     /** How fast the island turns, in degrees per second. Slow enough to read as a slow orbit. */
     public static final float SPIN_DEG_PER_SEC = 7.5f;
 
+    /** The satellite islet's orbit speed, faster and the other way, so the two read as a pair. */
+    public static final float SATELLITE_SPIN_DEG_PER_SEC = 13.0f;
+
     /** Upper bound on island blocks, so the view can size its scratch arrays once. */
     public static final int MAX_BLOCKS = 512;
 
@@ -35,6 +38,8 @@ public final class SplashIsland {
     private final int[] y = new int[MAX_BLOCKS];
     private final int[] z = new int[MAX_BLOCKS];
     private final int[] kind = new int[MAX_BLOCKS];
+    /** 0 for the main island, 1 for the satellite islet. */
+    private final int[] group = new int[MAX_BLOCKS];
     private int count;
 
     public int blockCount() {
@@ -57,9 +62,30 @@ public final class SplashIsland {
         return kind[i];
     }
 
+    /** 0 for the main island, 1 for the satellite islet that orbits beside it. */
+    public int group(int i) {
+        return group[i];
+    }
+
+    /** The islet's own orbit yaw at time {@code t}: faster and counter-turning against the island. */
+    public float satelliteYaw(float t) {
+        return -(t * SATELLITE_SPIN_DEG_PER_SEC) % 360f;
+    }
+
     /** The island's yaw at scene time {@code t} seconds, in degrees. */
     public float yaw(float t) {
         return (t * SPIN_DEG_PER_SEC) % 360f;
+    }
+
+    /**
+     * The rotation a block is drawn at: the island's yaw, shared by every block.
+     *
+     * <p>The whole model is one turntable, so a block's own rotation is the island's yaw and not a
+     * per-block value. Drawing each cube at its own angle would tumble the blocks independently and
+     * the island would read as a pile of loose boxes rather than a solid, floating rock.
+     */
+    public float blockYaw(int i, float t) {
+        return yaw(t);
     }
 
     /**
@@ -107,6 +133,22 @@ public final class SplashIsland {
         add(4, 2, -3, KIND_DIRT);
         add(-5, 2, 2, KIND_STONE);
         add(-4, 2, 2, KIND_STONE);
+
+        // A small satellite islet, clearly separated from the main mass, so the backdrop has a
+        // second focal point and reads as a sky with more than one thing in it. Its grass cap sits
+        // at y=0 like the main island's, and its own lift is applied by the view, so the model keeps
+        // one convention: grass is always the top of a landmass. It is its own group so the view can
+        // turn it on its own faster orbit, the two counter-turning.
+        add(7, 0, 1, KIND_GRASS, 1);
+        add(8, 0, 1, KIND_GRASS, 1);
+        add(7, 0, 2, KIND_GRASS, 1);
+        add(8, 0, 2, KIND_GRASS, 1);
+        add(7, -1, 1, KIND_DIRT, 1);
+        add(8, -1, 2, KIND_DIRT, 1);
+        add(8, -1, 1, KIND_STONE, 1);
+        add(8, 1, 1, KIND_LOG, 1);
+        add(8, 2, 1, KIND_LEAVES, 1);
+        add(8, 2, 2, KIND_LEAVES, 1);
     }
 
     /** Fills a disc of the given radius at height {@code yy}, with a deterministic eroded rim. */
@@ -122,11 +164,16 @@ public final class SplashIsland {
     }
 
     private void add(int bx, int by, int bz, int material) {
+        add(bx, by, bz, material, 0);
+    }
+
+    private void add(int bx, int by, int bz, int material, int grp) {
         if (count >= MAX_BLOCKS) return;
         x[count] = bx;
         y[count] = by;
         z[count] = bz;
         kind[count] = material;
+        group[count] = grp;
         count++;
     }
 }

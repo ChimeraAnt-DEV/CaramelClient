@@ -101,25 +101,23 @@ public final class ReplayManager {
     private Activity foregroundActivity;
     private ReplayMetadataOverlay metadataOverlay;
 
-    /** Samples the local-player feed into the clip's gameplay track while a capture runs. */
-    private ReplayTrackRecorder trackRecorder;
-
     /**
-     * The markers recorded for the clip in flight.
+     * The capture engine for the clip in flight: the gameplay track, the markers and the metadata.
      *
-     * <p>A marker is added by the same trigger that flags a highlight — a death, a kill streak, a
-     * combo — plus a {@link ReplayMarkers.Kind#JOIN} at the start of the recording. They live on the
-     * main thread with the rest of the recording state and are written into the sidecar when the
-     * clip is finalised, so the timeline can draw a tick at each one.
+     * <p>One object owns all three so the recorder is the single place a recording is assembled, and
+     * the finished {@link ReplayDocument} it produces is both what the sidecar is written from and
+     * what the portable {@code .glowreplay} file is.
      */
-    private ReplayMarkers markers = ReplayMarkers.empty();
+    private ReplayRecorder recorder;
 
     private final Runnable trackTick = new Runnable() {
         @Override
         public void run() {
-            ReplayTrackRecorder recorder = trackRecorder;
-            if (recorder == null || state != State.RECORDING) return;
-            recorder.tick(elapsedMs());
+            ReplayRecorder active = recorder;
+            if (active == null || state != State.RECORDING) return;
+            long elapsed = elapsedMs();
+            active.tick(elapsed);
+            sampleVoicePeers(active, elapsed);
             // Re-arm on the same cadence the track stores at, so the loop does no work the track
             // would drop.
             mainHandler.postDelayed(this, ReplayTrack.MIN_SAMPLE_INTERVAL_MS);
@@ -214,11 +212,7 @@ public final class ReplayManager {
         this.profile = profile;
         this.state = State.RECORDING;
         this.trigger = ReplaySettings.get(appContext).newTrigger();
-        this.markers = ReplayMarkers.empty();
-        // The clip starts when the world it is recording was already joined, so the opening marker
-        // is the start of the recording itself — the one moment the client knows for certain.
-        this.markers.add(0L, ReplayMarkers.Kind.JOIN, "");
-        startTrackRecording();
+        startTrackRecording(startedAtMs);
         attachMetadataOverlay(startedAtMs);
         notifyState();
     }
@@ -231,8 +225,8 @@ public final class ReplayManager {
      * can be read as movement. It reads the same feed the HUD uses and degrades to an empty track
      * (the clip still plays as video) when no live read is available.
      */
-    private void startTrackRecording() {
-        trackRecorder = new ReplayTrackRecorder(new ReplayTrackRecorder.Source() {
+    private void startTrackRecording(long startedAtMs) {
+        recorder = new ReplayRecorder(new ReplayTrackRecorder.Source() {
             @Override
             public float[] position() {
                 return PreloaderInput.readLocalPlayerPosition();
@@ -248,10 +242,40 @@ public final class ReplayManager {
                 return PreloaderInput.readLocalPlayerHealth();
             }
         });
+        // The recording starts when the world was already joined, so the opening marker is the start
+        // of the recording itself — the one moment the client knows for certain. The skin id is the
+        // account's, so a shared replay names the player it belongs to.
+        recorder.start(startedAtMs, gameVersionForClip(), "", accountSkinId());
         // Sample immediately so a short clip still carries a starting pose, then keep sampling.
-        trackRecorder.tick(0L);
+        recorder.tick(0L);
         mainHandler.removeCallbacks(trackTick);
         mainHandler.postDelayed(trackTick, ReplayTrack.MIN_SAMPLE_INTERVAL_MS);
+    }
+
+    /** The selected instance's version code, or empty when none is selected. */
+    private String gameVersionForClip() {
+        try {
+            org.chimeramc.client.core.versions.GameVersion version =
+                    org.chimeramc.client.core.versions.VersionManager.get(appContext)
+                            .getSelectedVersion();
+            return version == null ? "" : version.versionCode;
+        } catch (Throwable t) {
+            return "";
+        }
+    }
+
+    /** The signed-in account's skin texture id, or empty. Used as the recording's player skin. */
+    private String accountSkinId() {
+        try {
+            org.chimeramc.client.core.cosmetics.AccountSkinCache.Entry entry =
+                    org.chimeramc.client.core.cosmetics.AccountSkinCache.read(
+                            appContext.getFilesDir());
+            if (entry == null) return "";
+            String key = entry.accountKey;
+            return key.startsWith("account:") ? key.substring("account:".length()) : key;
+        } catch (Throwable t) {
+            return "";
+        }
     }
 
     /**
@@ -287,17 +311,21 @@ public final class ReplayManager {
 
     public void onRecordingFinished(File file, long durationMs) {
         detachMetadataOverlay();
-        ReplayTrack finishedTrack = stopTrackRecording();
-        // The markers are captured before the state resets so the sidecar writes the set that
-        // belongs to this clip, not whatever a later recording leaves behind.
-        ReplayMarkers finishedMarkers = markers;
+        ReplayRecorder finished = stopTrackRecording();
+        // The document is built before the state resets so it carries the set that belongs to this
+        // clip, not whatever a later recording leaves behind.
+        final ReplayDocument document = finished == null
+                ? ReplayDocument.of(System.currentTimeMillis(), "", "", "")
+                : finished.finish();
         this.state = State.SAVING;
         notifyState();
         final ReplayQuality.Profile finishedProfile = profile;
-        // The sidecar and the storage prune are file work; keep them off the main thread.
+        // The sidecar, the portable container and the storage prune are file work; keep them off the
+        // main thread.
         AppExecutors.run(AppExecutors.Kind.DISK, "replay-finalize", () -> {
             try {
-                writeSidecar(file, durationMs, finishedProfile, finishedTrack, finishedMarkers);
+                writeSidecar(file, durationMs, finishedProfile, document);
+                writePortableReplay(file, document);
                 pruneIfNeeded();
             } catch (Throwable t) {
                 Log.w(TAG, "Post-recording bookkeeping failed", t);
@@ -314,7 +342,6 @@ public final class ReplayManager {
     public void onRecordingFailed() {
         detachMetadataOverlay();
         stopTrackRecording();
-        this.markers = ReplayMarkers.empty();
         state = State.IDLE;
         profile = null;
         notifyState();
@@ -328,11 +355,11 @@ public final class ReplayManager {
      * released. Returns an empty track when no recording was in flight, which the sidecar writes as
      * "no track" rather than an empty string that would look like a corrupt one.
      */
-    private ReplayTrack stopTrackRecording() {
+    private ReplayRecorder stopTrackRecording() {
         mainHandler.removeCallbacks(trackTick);
-        ReplayTrackRecorder recorder = trackRecorder;
-        trackRecorder = null;
-        return recorder == null ? ReplayTrack.empty() : recorder.track();
+        ReplayRecorder finished = recorder;
+        recorder = null;
+        return finished;
     }
 
     private void notifyCaptureFailed() {
@@ -348,18 +375,44 @@ public final class ReplayManager {
     }
 
     private void writeSidecar(File file, long durationMs, ReplayQuality.Profile profile,
-                              ReplayTrack track, ReplayMarkers clipMarkers) {
+                              ReplayDocument document) {
         ReplaySidecar sidecar = ReplaySidecar.of(System.currentTimeMillis(),
-                "", "", "");
+                document.world(), document.gameVersion(), document.gameMode());
         sidecar.set("durationMs", String.valueOf(durationMs));
         sidecar.set("resolution", profile == null ? "" : profile.label());
+        ReplayTrack track = document.track();
         if (track != null && !track.isEmpty()) {
             sidecar.setTrack(track);
         }
+        ReplayMarkers clipMarkers = document.markers();
         if (clipMarkers != null && !clipMarkers.isEmpty()) {
             sidecar.setMarkers(clipMarkers);
         }
+        ReplayCameraPath path = document.cameraPath();
+        if (path != null && !path.isEmpty()) {
+            sidecar.setCameraPath(path);
+        }
         ReplayStorage.writeSidecar(file, sidecar.serialize());
+    }
+
+    /**
+     * Writes the portable {@code .glowreplay} container beside the clip.
+     *
+     * <p>The sidecar is the launcher's internal, per-clip metadata; the container is the replay as a
+     * single movable file — the metadata, the track, the markers and the camera path in one
+     * self-describing document. It sits beside the MP4 with the same base name, so the library lists
+     * both and the clip can be shared or moved as a replay rather than only as a video.
+     */
+    private void writePortableReplay(File clipFile, ReplayDocument document) {
+        if (clipFile == null || document == null) return;
+        try {
+            String name = clipFile.getName();
+            int dot = name.lastIndexOf('.');
+            String base = dot > 0 ? name.substring(0, dot) : name;
+            ReplayDocument.write(clipFile.getParentFile(), base, document);
+        } catch (Throwable t) {
+            Log.w(TAG, "Could not write the portable replay container", t);
+        }
     }
 
     /** Applies the storage cap: prunes the oldest non-favorited clips so the new one fits. */
@@ -399,9 +452,37 @@ public final class ReplayManager {
      * no clip to attach to, and adding it to the next recording would put an event on a timeline it
      * did not happen on.
      */
+    /**
+     * Samples the proximity-voice peers' advertised poses into the recording's entity track.
+     *
+     * <p>The build cannot read other <em>game</em> entities (the game classes are stripped of
+     * symbols), so the only honest source of another player's position is the voice protocol, which
+     * already advertises it for the nametag icons. Recording those gives a replay the other players
+     * it can actually show, and nothing is invented when the voice module is down: the entity track
+     * is simply empty.
+     */
+    private void sampleVoicePeers(ReplayRecorder active, long elapsedMs) {
+        try {
+            java.util.List<org.chimeramc.client.core.voice.VoicePeer> peers =
+                    org.chimeramc.client.core.mods.inbuilt.overlay.PeerHitboxSource
+                            .readPeers();
+            for (org.chimeramc.client.core.voice.VoicePeer peer : peers) {
+                if (peer == null) continue;
+                active.sampleEntity(elapsedMs, peer.id, peer.x, peer.y, peer.z,
+                        peer.yaw, peer.pitch);
+            }
+        } catch (Throwable t) {
+            // The entity track is best-effort: a voice failure must never disturb the recording.
+            AppLog.warnOnce(TAG, "ReplayManager:voicePeers",
+                    "Ignored a failure sampling the voice peers", t);
+        }
+    }
+
     private void recordMarker(ReplayMarkers.Kind kind, String detail) {
         if (state != State.RECORDING) return;
-        markers.add(elapsedMs(), kind, detail);
+        ReplayRecorder active = recorder;
+        if (active == null) return;
+        active.addMarker(elapsedMs(), kind, detail);
     }
 
     /**

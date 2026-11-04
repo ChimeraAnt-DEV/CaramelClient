@@ -20,10 +20,18 @@ public final class ReplayCamera {
     /** The default fly speed, in blocks per second. */
     public static final float DEFAULT_SPEED = 12f;
 
+    /** The default field of view, in degrees: the usual Minecraft camera angle. */
+    public static final float DEFAULT_FOV = 70f;
+    /** The narrowest field of view: a telephoto look, past which the view is a tunnel. */
+    public static final float MIN_FOV = 20f;
+    /** The widest field of view: a fisheye look, past which the view distorts unusably. */
+    public static final float MAX_FOV = 120f;
+
     private float x, y, z;
     private float yawDeg;
     private float pitchDeg;
     private float speed = DEFAULT_SPEED;
+    private float fovDeg = DEFAULT_FOV;
 
     public float x() {
         return x;
@@ -51,6 +59,23 @@ public final class ReplayCamera {
 
     public void setSpeed(float speed) {
         this.speed = Math.max(0.5f, speed);
+    }
+
+    /** The camera's field of view in degrees, clamped to {@link #MIN_FOV}..{@link #MAX_FOV}. */
+    public float fovDeg() {
+        return fovDeg;
+    }
+
+    /**
+     * Sets the field of view, clamping to the visible range.
+     *
+     * <p>A narrower field of view is a longer lens (the subject fills more of the frame), which is
+     * what a cinematic zoom is. A non-finite value is ignored rather than clamping to a bound, so a
+     * bad read cannot silently pin the camera to a fisheye or a tunnel.
+     */
+    public void setFov(float fovDeg) {
+        if (Float.isNaN(fovDeg) || Float.isInfinite(fovDeg)) return;
+        this.fovDeg = Math.max(MIN_FOV, Math.min(MAX_FOV, fovDeg));
     }
 
     /** Places the camera at a pose, e.g. the recorded view when detaching. */
@@ -109,6 +134,7 @@ public final class ReplayCamera {
         if (other == null) return;
         set(other.x, other.y, other.z, other.yawDeg, other.pitchDeg);
         setSpeed(other.speed);
+        setFov(other.fovDeg);
     }
 
     static float clampPitch(float pitch) {

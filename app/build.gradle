@@ -334,11 +334,23 @@ dependencies {
 // Item 270: the in-app changelog renders the repo's CHANGELOG.md, so there is one source of truth.
 // This copies it into the packaged assets at build time instead of keeping a second hand-edited
 // copy that drifts.
+//
+// The two-section feed (resources/launcher/changelog_feed.json) is NOT copied here: `resources/` is
+// already an assets source root (see sourceSets above), so it reaches the APK on its own. Copying it
+// as well made mergeDebugAssets fail with "Duplicate resources" — the same asset from two roots.
+// The sneak-peek images do need copying, because docs/assets is not an assets root.
 def changelogAssetsDir = layout.buildDirectory.dir('generated/changelogAssets')
 
 tasks.register('syncChangelogAsset', Copy) {
     from(rootProject.file('CHANGELOG.md')) {
         into 'launcher'
+    }
+    // The sneak-peek images the feed names, copied to launcher/sneak/ so the app can load them by
+    // the file name the feed carries. These are the real peeks pulled from the Discord channel, not
+    // the repo's generated mockups, so the in-app feed shows what was actually posted.
+    from(rootProject.file('docs/assets/sneakpeeks')) {
+        into 'launcher/sneak'
+        include '*.png'
     }
     into changelogAssetsDir
 }

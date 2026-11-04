@@ -30,12 +30,6 @@
             android:contentDescription="@string/splash_logo_desc"
             android:src="@drawable/ic_glowberry_logo" />
 
-        <org.chimeramc.client.launcher.ui.views.LaunchRingView
-            android:id="@+id/minecraftLaunchRing"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="@dimen/space_6"
-            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/minecraftLaunchStatus"
@@ -57,6 +51,25 @@
             android:gravity="center"
             android:textColor="@color/text_secondary"
             android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+
+        <!--
+            The changelog line: the newest release's headline and the upcoming one, on the launch
+            screen. The launch screen is the one place every player passes through on every launch,
+            so it is where "what changed" and "what is next" actually get read; the full screen is
+            still reachable from Settings. Hidden when no feed is bundled.
+        -->
+        <TextView
+            android:id="@+id/minecraftLaunchChangelog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/text_secondary"
+            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- The raw log, shown only when the user turns on "Show launch log" in Settings. -->
@@ -104,6 +117,17 @@
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
         </ScrollView>
     </LinearLayout>
+
+    <!-- The launch ring, pinned to the bottom-right so it reads as a spinner beside the screen
+         rather than part of the centred message. The status keeps the centre to itself. -->
+    <org.chimeramc.client.launcher.ui.views.LaunchRingView
+        android:id="@+id/minecraftLaunchRing"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_6"
+        android:layout_marginBottom="@dimen/space_8"
+        android:importantForAccessibility="no" />
 
     <Button
         android:id="@+id/minecraftLaunchReturn"

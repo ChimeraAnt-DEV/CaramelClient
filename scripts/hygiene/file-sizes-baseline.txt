@@ -8,9 +8,9 @@ app/src/main/java/org/chimeramc/client/launcher/core/mods/FileHandler.java 1544
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/InbuiltModuleProvider.java 1765
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/manager/InbuiltModManager.java 1722
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/InbuiltOverlayManager.java 2129
-app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 3395
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 3400
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/RadialMenuView.java 1940
 app/src/main/java/org/chimeramc/client/launcher/core/versions/VersionManager.java 1505
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 1645
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 3036
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 1818
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 1663
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 3066
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 1840

@@ -48,6 +48,45 @@ import java.util.Base64;
 public final class AccountSkinService {
 
     /** The GeyserMC global API: {@code /v2/skin/<xuid>} returns a Texture Data pair. */
+    /**
+     * Called when a background skin fetch finishes, whether it succeeded or failed.
+     *
+     * <p>A caller that resolved the skin while the fetch was in flight registered one of these, so it
+     * can refresh as soon as the real skin lands rather than waiting for the screen to be reopened.
+     */
+    public interface Listener {
+        void onSkinFetchFinished();
+    }
+
+    /** Listeners, a set so a double registration fires once. */
+    private static final java.util.Set<Listener> LISTENERS =
+            java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Registers a listener; the caller must remove it when its owner goes away. */
+    public static void addListener(Listener listener) {
+        if (listener != null) LISTENERS.add(listener);
+    }
+
+    /** Removes a listener. */
+    public static void removeListener(Listener listener) {
+        if (listener != null) LISTENERS.remove(listener);
+    }
+
+    /**
+     * Wakes every listener. Best-effort: a listener that throws must not stop the others, because the
+     * fetch has already done its real work by this point.
+     */
+    private static void notifyListeners() {
+        for (Listener listener : LISTENERS) {
+            try {
+                listener.onSkinFetchFinished();
+            } catch (Throwable t) {
+                AppLog.warnOnce("AccountSkinService", "listener",
+                        "A skin-fetch listener threw", t);
+            }
+        }
+    }
+
     public static final String DEFAULT_ENDPOINT = "https://api.geysermc.org/v2/skin/";
     /** The Mojang texture CDN the {@code value} field points at. */
     public static final String TEXTURE_HOST = "https://textures.minecraft.net/texture/";
@@ -188,7 +227,8 @@ public final class AccountSkinService {
             Bitmap atlas = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.length);
             if (atlas == null) return null;
             AccountSkinCache.write(context.getFilesDir(),
-                    new AccountSkinCache.Entry(png, AccountSkinCache.accountKeyFor(xuid)));
+                    new AccountSkinCache.Entry(png, AccountSkinCache.accountKeyFor(xuid),
+                            System.currentTimeMillis()));
             return PlayerSkinProvider.normalise(atlas);
         } catch (Throwable t) {
             return null;
@@ -198,6 +238,27 @@ public final class AccountSkinService {
     /** True when the lookup should even be attempted: enabled, and a XUID is recorded. */
     public static boolean canLookup(android.content.Context context) {
         return isEnabled(context) && activeXuid(context) != null;
+    }
+
+    /**
+     * Re-syncs the account skin when the cache is missing, belongs to another account, or is older
+     * than {@link AccountSkinCache#MAX_AGE_MS}.
+     *
+     * <p>This is the "constant sync" entry point: called once when the launcher starts (from the
+     * deferred startup work, off the UI thread) and again whenever a preview resolves a stale skin, so
+     * a player who changes their Bedrock skin sees it on the next launch rather than having to clear
+     * app data. It reads the cache, so it must not run on the UI thread; the fetch itself is
+     * backgrounded either way.
+     */
+    public static void refreshIfStale(android.content.Context context) {
+        if (context == null || !canLookup(context)) return;
+        String xuid = activeXuid(context);
+        if (xuid == null) return;
+        AccountSkinCache.Entry entry = AccountSkinCache.read(context.getFilesDir());
+        if (AccountSkinCache.shouldRefresh(entry, xuid, System.currentTimeMillis(),
+                AccountSkinCache.MAX_AGE_MS)) {
+            refreshInBackground(context, xuid);
+        }
     }
 
     private static final java.util.concurrent.atomic.AtomicBoolean refreshRunning =
@@ -222,6 +283,9 @@ public final class AccountSkinService {
                 AppLog.warn("AccountSkinService", "Account skin fetch failed", error);
             } finally {
                 refreshRunning.set(false);
+                // In the finally: a caller that registered to hear the outcome must be woken whether
+                // the fetch succeeded or failed, or it waits forever for a skin that is not coming.
+                notifyListeners();
             }
         });
     }

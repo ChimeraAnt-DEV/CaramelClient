@@ -23,6 +23,16 @@ public final class AccountSkinCache {
     /** The cached atlas file name. */
     public static final String PNG_NAME = "account_skin.png";
 
+    /**
+     * How long a cached account skin is trusted before the service re-syncs it.
+     *
+     * <p>Bedrock skins change server-side and the client is never told, so a cache with no expiry
+     * meant a player who changed their skin kept seeing the old one until they cleared app data.
+     * A day is short enough to notice a change and long enough that the third-party lookup is not
+     * hammered on every launch.
+     */
+    public static final long MAX_AGE_MS = 24L * 60L * 60L * 1000L;
+
     private AccountSkinCache() {
     }
 
@@ -30,10 +40,22 @@ public final class AccountSkinCache {
     public static final class Entry {
         public final byte[] png;
         public final String accountKey;
+        /**
+         * When the entry was fetched, in wall-clock ms, or 0 when unknown.
+         *
+         * <p>A 0 stamp (an entry written before the stamp existed) reads as stale, so it is
+         * refreshed once rather than trusted forever.
+         */
+        public final long fetchedAtMs;
 
         public Entry(byte[] png, String accountKey) {
+            this(png, accountKey, 0L);
+        }
+
+        public Entry(byte[] png, String accountKey, long fetchedAtMs) {
             this.png = png;
             this.accountKey = accountKey == null ? "" : accountKey;
+            this.fetchedAtMs = fetchedAtMs;
         }
     }
 
@@ -56,6 +78,21 @@ public final class AccountSkinCache {
         String expected = accountKeyFor(xuid);
         if (expected.isEmpty()) return false;
         return expected.equals(entry.accountKey);
+    }
+
+    /**
+     * Whether a cached entry should be re-synced from the service.
+     *
+     * <p>The one rule the constant sync needs, so the service does not re-implement it: refresh when
+     * there is no usable entry for this account, or when the entry is older than {@code maxAgeMs}. A
+     * non-positive {@code maxAgeMs} disables the age check (so the cache is trusted indefinitely),
+     * which is what the "off" state and the tests use; a wrong account is still refreshed either way.
+     */
+    public static boolean shouldRefresh(Entry entry, String xuid, long nowMs, long maxAgeMs) {
+        if (!isValidFor(entry, xuid)) return true;
+        if (maxAgeMs <= 0L) return false;
+        if (entry.fetchedAtMs <= 0L) return true;  // no stamp: refresh once
+        return nowMs - entry.fetchedAtMs >= maxAgeMs;
     }
 
     public static File file(File filesRoot) {
@@ -85,6 +122,14 @@ public final class AccountSkinCache {
         } catch (java.io.IOException ignored) {
             AppLog.warnOnce("GlowberryClient", "AccountSkinCache:86", "Ignored a failure at AccountSkinCache:86", ignored);
         }
+        // The fetch time lives in its own sibling too, so the PNG and key stay untouched by it.
+        try (java.io.FileOutputStream out =
+                     new java.io.FileOutputStream(new File(target.getParentFile(), PNG_NAME + ".time"))) {
+            out.write(Long.toString(entry.fetchedAtMs)
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        } catch (java.io.IOException ignored) {
+            AppLog.warnOnce("GlowberryClient", "AccountSkinCache:time", "Ignored a failure writing the skin fetch time", ignored);
+        }
         return true;
     }
 
@@ -101,7 +146,18 @@ public final class AccountSkinCache {
                 key = new String(java.nio.file.Files.readAllBytes(keyFile.toPath()),
                         java.nio.charset.StandardCharsets.UTF_8).trim();
             }
-            return new Entry(png, key);
+            long fetchedAtMs = 0L;
+            File timeFile = new File(target.getParentFile(), PNG_NAME + ".time");
+            if (timeFile.exists()) {
+                try {
+                    fetchedAtMs = Long.parseLong(new String(
+                            java.nio.file.Files.readAllBytes(timeFile.toPath()),
+                            java.nio.charset.StandardCharsets.UTF_8).trim());
+                } catch (NumberFormatException ignored) {
+                    fetchedAtMs = 0L;
+                }
+            }
+            return new Entry(png, key, fetchedAtMs);
         } catch (java.io.IOException e) {
             return null;
         }
@@ -114,6 +170,8 @@ public final class AccountSkinCache {
         boolean ok = !target.exists() || target.delete();
         File keyFile = new File(target.getParentFile(), PNG_NAME + ".key");
         if (keyFile.exists()) ok &= keyFile.delete();
+        File timeFile = new File(target.getParentFile(), PNG_NAME + ".time");
+        if (timeFile.exists()) ok &= timeFile.delete();
         return ok;
     }
 }

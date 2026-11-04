@@ -16,6 +16,25 @@ public class FeatureSettings {
      * off, which is the documented default.
      */
     private boolean launchLogEnabled = false;
+
+    /**
+     * Whether the navigation bounds overlay is drawn.
+     *
+     * <p>A diagnostic that outlines every nav view in translucent green (red on one it thinks is
+     * clipped), for chasing a layout bug. Off by default: it used to be installed on every debug
+     * build, so a tester's debug APK showed green rectangles over the navigation and read as a
+     * rendering fault rather than a tool. A diagnostic must be asked for.
+     */
+    private boolean navDebugBoundsEnabled = false;
+
+    /**
+     * The launch tab's preview background id, or null for the default.
+     *
+     * <p>Stored as the catalogue's stable id rather than an index, so reordering the backgrounds
+     * cannot point a saved choice at a different image. A null or unknown id resolves to the
+     * default in {@code PreviewBackground}.
+     */
+    private String launchBackgroundId = null;
     private boolean lowInputDelayEnabled = false;
     /**
      * Crash report upload. Off until the user opts in: a report carries a stack trace
@@ -156,6 +175,22 @@ public class FeatureSettings {
 
     public boolean isLauncherManagedMcLoginEnabled() { return launcherManagedMcLoginEnabled; }
     public void setLauncherManagedMcLoginEnabled(boolean enabled) { this.launcherManagedMcLoginEnabled = enabled; autoSave(); }
+
+    public String getLaunchBackgroundId() { return launchBackgroundId; }
+
+    public void setLaunchBackgroundId(String id) {
+        if (id != null && id.equals(this.launchBackgroundId)) return;
+        this.launchBackgroundId = id;
+        autoSave();
+    }
+
+    public boolean isNavDebugBoundsEnabled() { return navDebugBoundsEnabled; }
+
+    public void setNavDebugBoundsEnabled(boolean enabled) {
+        if (this.navDebugBoundsEnabled == enabled) return;
+        this.navDebugBoundsEnabled = enabled;
+        autoSave();
+    }
 
     public boolean isLaunchLogEnabled() { return launchLogEnabled; }
 

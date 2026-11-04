@@ -42,6 +42,14 @@ public final class BerryReplaySource {
         void setSpeed(float speed);
 
         String status();
+
+        /**
+         * Encodes the library's replay (the loaded one, or its capture) to container bytes.
+         *
+         * <p>The recorder half: a recording made inside the game is exported here so the launcher can
+         * write it as a replay file and list it.
+         */
+        byte[] save();
     }
 
     /** The default backend: the preloader bridge onto BerryAPI. */
@@ -81,6 +89,9 @@ public final class BerryReplaySource {
         }
         @Override public String status() {
             return org.chimeramc.client.preloader.BerryApi.replayStatus();
+        }
+        @Override public byte[] save() {
+            return org.chimeramc.client.preloader.BerryApi.replaySave();
         }
     }
 
@@ -198,6 +209,19 @@ public final class BerryReplaySource {
     /** The library's status line, or an empty string. */
     public String status() {
         return available() ? backend.status() : "";
+    }
+
+    /**
+     * Encodes the library's replay to container bytes, or an empty array when there is nothing to
+     * save or the surface is absent.
+     *
+     * <p>This is the recorder half of the BerryAPI route: the library keeps a capture of the live
+     * session, and this exports it. The caller writes the bytes to a replay file.
+     */
+    public byte[] save() {
+        if (!available()) return new byte[0];
+        byte[] bytes = backend.save();
+        return bytes != null ? bytes : new byte[0];
     }
 
     private static Snapshot empty() {

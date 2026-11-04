@@ -1,6 +1,5 @@
 package org.chimeramc.client.ui.compose.account
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.chimeramc.client.R
+import org.chimeramc.client.ui.compose.theme.GlassSurface
 import org.chimeramc.client.ui.compose.theme.GlowDimens
 import org.chimeramc.client.ui.compose.theme.glowColors
 
@@ -61,10 +60,8 @@ fun AccountSection(
         )
 
         if (!state.signedIn) {
-            Surface(
+            GlassSurface(
                 shape = RoundedCornerShape(GlowDimens.CARD_RADIUS.dp),
-                color = colors.surface,
-                border = BorderStroke(GlowDimens.CARD_BORDER_WIDTH.dp, colors.stroke),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Column(modifier = Modifier.padding(GlowDimens.CARD_PADDING.dp)) {
@@ -83,10 +80,8 @@ fun AccountSection(
         }
 
         // The identity card: avatar + rows.
-        Surface(
+        GlassSurface(
             shape = RoundedCornerShape(GlowDimens.CARD_RADIUS.dp),
-            color = colors.surface,
-            border = BorderStroke(GlowDimens.CARD_BORDER_WIDTH.dp, colors.stroke),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(modifier = Modifier.padding(GlowDimens.CARD_PADDING.dp)) {
@@ -110,10 +105,8 @@ fun AccountSection(
         }
 
         // The friends card.
-        Surface(
+        GlassSurface(
             shape = RoundedCornerShape(GlowDimens.CARD_RADIUS.dp),
-            color = colors.surface,
-            border = BorderStroke(GlowDimens.CARD_BORDER_WIDTH.dp, colors.stroke),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(modifier = Modifier.padding(GlowDimens.CARD_PADDING.dp)) {

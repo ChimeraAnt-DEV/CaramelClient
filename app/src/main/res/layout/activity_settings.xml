@@ -2212,6 +2212,22 @@
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
 
+                    <!-- Reopens the first-run wizard. The wizard owns the licence, the account,
+                         the theme and the changelog, so a user who skipped a step needs a way back
+                         without clearing app data. -->
+                    <Button
+                        android:id="@+id/settings_run_setup"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_2"
+                        android:minHeight="44dp"
+                        android:fontFamily="@font/misans"
+                        android:text="@string/settings_run_setup"
+                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary" />
+
                     <Button
                         android:id="@+id/settings_open_changelog"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"

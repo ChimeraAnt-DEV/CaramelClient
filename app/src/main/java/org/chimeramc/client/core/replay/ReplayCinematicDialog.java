@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.ui.compose.replay.ReplayTimelineHost;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 
 import java.util.function.Consumer;
@@ -65,8 +66,25 @@ final class ReplayCinematicDialog {
         root.addView(count, countParams);
 
         final ReplayCameraPath[] holder = {working};
-        Runnable refresh = () -> count.setText(activity.getString(
-                R.string.replay_cinematic_keyframes, holder[0].size()));
+
+        // The keyframe timeline the spec asks for: a Compose strip showing the path's keyframes and
+        // a draggable playhead. Scrubbing samples the path at that time, so the camera previews the
+        // shot; adding or clearing a keyframe rebuilds the snapshot so the diamonds redraw.
+        final androidx.compose.ui.platform.ComposeView timeline =
+                new androidx.compose.ui.platform.ComposeView(activity);
+        final androidx.compose.runtime.MutableState<ReplayTimelineData> timelineState =
+                ReplayTimelineHost.state(ReplayTimelineData.of(durationMs, 0L, working, null));
+        ReplayTimelineHost.setContent(timeline, timelineState, ms -> holder[0].sample(ms, camera));
+        LinearLayout.LayoutParams timelineParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 44));
+        timelineParams.topMargin = dp(activity, 8);
+        root.addView(timeline, timelineParams);
+
+        Runnable refresh = () -> {
+            count.setText(activity.getString(
+                    R.string.replay_cinematic_keyframes, holder[0].size()));
+            timelineState.setValue(ReplayTimelineData.of(durationMs, 0L, holder[0], null));
+        };
 
         // Every preset is listed, one row each. A preset regenerates the whole shot, which is what
         // "a preset shot" means; the count updates so the user sees the path was replaced, not
@@ -85,6 +103,54 @@ final class ReplayCinematicDialog {
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 260));
         scrollParams.topMargin = dp(activity, 8);
         root.addView(presetScroll, scrollParams);
+
+        // The motion controls the spec asks for beyond presets: the interpolation easing, the path
+        // smoothing and the field of view. Each is one row of a label, a live value and the buttons
+        // that step it; the arithmetic lives in ReplayCinematicControls so the three cannot drift.
+        root.addView(sectionLabel(activity, style, R.string.replay_cinematic_motion_title));
+
+        TextView easingValue = valueLabel(activity, style,
+                activity.getString(easingLabelRes(holder[0].easing())));
+        LinearLayout easingRow = motionRow(activity, style, R.string.replay_cinematic_easing,
+                easingValue, null, null);
+        easingRow.setOnClickListener(v -> {
+            holder[0].setEasing(ReplayCinematicControls.nextEasing(holder[0].easing()));
+            easingValue.setText(activity.getString(easingLabelRes(holder[0].easing())));
+        });
+        root.addView(easingRow);
+
+        TextView smoothingValue = valueLabel(activity, style, activity.getString(
+                R.string.replay_cinematic_smoothing_value, Math.round(holder[0].smoothing() * 100f)));
+        root.addView(motionRow(activity, style, R.string.replay_cinematic_smoothing, smoothingValue,
+                () -> {
+                    holder[0].setSmoothing(
+                            ReplayCinematicControls.stepSmoothing(holder[0].smoothing(), -1));
+                    smoothingValue.setText(activity.getString(
+                            R.string.replay_cinematic_smoothing_value,
+                            Math.round(holder[0].smoothing() * 100f)));
+                },
+                () -> {
+                    holder[0].setSmoothing(
+                            ReplayCinematicControls.stepSmoothing(holder[0].smoothing(), 1));
+                    smoothingValue.setText(activity.getString(
+                            R.string.replay_cinematic_smoothing_value,
+                            Math.round(holder[0].smoothing() * 100f)));
+                }));
+
+        TextView fovValue = valueLabel(activity, style, activity.getString(
+                R.string.replay_cinematic_fov_value, Math.round(camera.fovDeg())));
+        root.addView(motionRow(activity, style, R.string.replay_cinematic_fov, fovValue,
+                () -> {
+                    // "Narrower" is a longer lens, so it is the left (minus) button.
+                    camera.setFov(ReplayCinematicControls.stepFov(camera.fovDeg(), -1));
+                    fovValue.setText(activity.getString(
+                            R.string.replay_cinematic_fov_value, Math.round(camera.fovDeg())));
+                },
+                () -> {
+                    camera.setFov(ReplayCinematicControls.stepFov(camera.fovDeg(), 1));
+                    fovValue.setText(activity.getString(
+                            R.string.replay_cinematic_fov_value, Math.round(camera.fovDeg())));
+                }));
 
         LinearLayout buttons = new LinearLayout(activity);
         buttons.setOrientation(LinearLayout.HORIZONTAL);
@@ -209,6 +275,95 @@ final class ReplayCinematicDialog {
         button.setLayoutParams(params);
         DynamicAnim.applyPressScale(button);
         return button;
+    }
+
+    /** A small section heading above a group of controls. */
+    private static TextView sectionLabel(Activity activity, ReplayStyle style, int labelRes) {
+        TextView label = new TextView(activity);
+        label.setText(labelRes);
+        label.setTextColor(style.textSecondary());
+        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        label.setTypeface(null, Typeface.BOLD);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = dp(activity, 12);
+        label.setLayoutParams(params);
+        return label;
+    }
+
+    /** The live value shown at the end of a motion row. */
+    private static TextView valueLabel(Activity activity, ReplayStyle style, String text) {
+        TextView value = new TextView(activity);
+        value.setText(text);
+        value.setTextColor(style.textPrimary());
+        value.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        value.setTypeface(null, Typeface.BOLD);
+        return value;
+    }
+
+    /**
+     * A motion row with a label and a live value.
+     *
+     * <p>The minus and plus buttons are optional, so the easing row (which cycles through four
+     * values) and the smoothing and field-of-view rows (which step by a value) share one builder.
+     */
+    private static LinearLayout motionRow(Activity activity, ReplayStyle style, int labelRes,
+                                          TextView value, Runnable onMinus, Runnable onPlus) {
+        LinearLayout row = new LinearLayout(activity);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(dp(activity, 12), dp(activity, 8), dp(activity, 12), dp(activity, 8));
+        row.setBackground(ReplayStyle.rounded(style.surfaceElevated(), 12f, activity));
+
+        TextView label = new TextView(activity);
+        label.setText(labelRes);
+        label.setTextColor(style.textPrimary());
+        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
+        row.addView(label, new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        if (onMinus != null) row.addView(stepButton(activity, style, "\u2212", onMinus));
+        row.addView(value);
+        if (onPlus != null) row.addView(stepButton(activity, style, "+", onPlus));
+
+        DynamicAnim.applyPressScale(row);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = dp(activity, 6);
+        row.setLayoutParams(params);
+        return row;
+    }
+
+    /** A round stepper button showing a glyph. */
+    private static TextView stepButton(Activity activity, ReplayStyle style, String glyph,
+                                       Runnable onClick) {
+        TextView button = new TextView(activity);
+        button.setText(glyph);
+        button.setTextColor(style.textPrimary());
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
+        button.setGravity(Gravity.CENTER);
+        button.setBackground(ReplayStyle.rippled(
+                ReplayStyle.pill(style.surfaceElevated(), activity),
+                style.accentFill(60), activity));
+        int size = dp(activity, 30);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
+        params.setMarginStart(dp(activity, 6));
+        button.setLayoutParams(params);
+        button.setOnClickListener(v -> onClick.run());
+        DynamicAnim.applyPressScale(button);
+        return button;
+    }
+
+    /** The string for an easing name. */
+    static int easingLabelRes(ReplayCameraPath.Easing easing) {
+        if (easing == null) return R.string.replay_cinematic_easing_linear;
+        switch (easing) {
+            case EASE_IN: return R.string.replay_cinematic_easing_in;
+            case EASE_OUT: return R.string.replay_cinematic_easing_out;
+            case EASE_IN_OUT: return R.string.replay_cinematic_easing_in_out;
+            case LINEAR:
+            default: return R.string.replay_cinematic_easing_linear;
+        }
     }
 
     private static int dp(Activity activity, float value) {

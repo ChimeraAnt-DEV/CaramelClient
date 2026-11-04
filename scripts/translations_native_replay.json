@@ -1,0 +1,52 @@
+{
+  "es": {
+    "replay_save_native": "Guardar la repetición del juego",
+    "replay_save_native_done": "Guardado %1$s",
+    "replay_save_native_empty": "Aún no hay una repetición del juego que guardar. Graba una primero."
+  },
+  "fr": {
+    "replay_save_native": "Enregistrer le replay du jeu",
+    "replay_save_native_done": "Enregistré %1$s",
+    "replay_save_native_empty": "Il n'y a pas encore de replay du jeu à enregistrer. Enregistrez-en un d'abord."
+  },
+  "hi": {
+    "replay_save_native": "गेम का रीप्ले सहेजें",
+    "replay_save_native_done": "%1$s सहेजा गया",
+    "replay_save_native_empty": "सहेजने के लिए अभी कोई गेम रीप्ले नहीं है। पहले एक रिकॉर्ड करें।"
+  },
+  "id": {
+    "replay_save_native": "Simpan ulangan game",
+    "replay_save_native_done": "Tersimpan %1$s",
+    "replay_save_native_empty": "Belum ada ulangan game untuk disimpan. Rekam dulu."
+  },
+  "ja": {
+    "replay_save_native": "ゲームのリプレイを保存",
+    "replay_save_native_done": "%1$s を保存しました",
+    "replay_save_native_empty": "保存できるゲームのリプレイがまだありません。まず録画してください。"
+  },
+  "pt": {
+    "replay_save_native": "Salvar a repetição do jogo",
+    "replay_save_native_done": "Salvo %1$s",
+    "replay_save_native_empty": "Ainda não há uma repetição do jogo para salvar. Grave uma primeiro."
+  },
+  "ru": {
+    "replay_save_native": "Сохранить повтор игры",
+    "replay_save_native_done": "Сохранено %1$s",
+    "replay_save_native_empty": "Пока нет повтора игры для сохранения. Сначала запишите."
+  },
+  "tr": {
+    "replay_save_native": "Oyun tekrarını kaydet",
+    "replay_save_native_done": "%1$s kaydedildi",
+    "replay_save_native_empty": "Kaydedilecek bir oyun tekrarı yok. Önce bir tane kaydedin."
+  },
+  "vi": {
+    "replay_save_native": "Lưu bản phát lại của trò chơi",
+    "replay_save_native_done": "Đã lưu %1$s",
+    "replay_save_native_empty": "Chưa có bản phát lại trò chơi để lưu. Hãy ghi một bản trước."
+  },
+  "zh-rCN": {
+    "replay_save_native": "保存游戏回放",
+    "replay_save_native_done": "已保存 %1$s",
+    "replay_save_native_empty": "还没有可保存的游戏回放。请先录制一个。"
+  }
+}

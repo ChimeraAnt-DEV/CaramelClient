@@ -153,6 +153,10 @@ public class InstallationsFragment extends Fragment {
         pager = new ListingPager(source.listingUrl(), savedWalk, savedNext);
 
         bindViews();
+        // The buttons in this screen are plain TextViews with the accent background, so they carry
+        // the ripple but no press-scale; one recursive pass gives every clickable in the tree the
+        // shared press feedback, so tapping a button here feels like tapping one anywhere else.
+        DynamicAnim.applyPressScaleRecursively(root);
         fallback = new BrowserFallback(browser);
         setupRecycler();
         refreshStagedPackages();

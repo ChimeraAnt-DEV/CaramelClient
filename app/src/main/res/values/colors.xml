@@ -49,6 +49,20 @@
     <!-- Brand accents (formerly accent_purple / accent_blue / primary_dark). -->
     <color name="accent_violet">#3682E2</color>
     <color name="accent_sky">#0F5BE4</color>
+
+    <!-- The Minecraft-style button family: a flat face with a darker bottom edge, so the control
+         reads as a slab rather than a Material pill. -->
+    <color name="mc_button_top">#9FD0FF</color>
+    <color name="mc_button_face">#7FBEF7</color>
+    <color name="mc_button_bottom">#5FA6E8</color>
+    <color name="mc_button_edge">#3E7DBE</color>
+    <color name="mc_button_stroke">#2A5C93</color>
+    <color name="mc_button_text">#0B2A47</color>
+    <!-- The neutral stone slab the instance dropdown uses. -->
+    <color name="mc_stone_face">#6E6E6E</color>
+    <color name="mc_stone_pressed">#7E7E7E</color>
+    <color name="mc_stone_stroke">#3A3A3A</color>
+    <color name="mc_stone_text">#F2F2F2</color>
     <color name="brand_header_start">#10254F</color>
     <color name="brand_header_end">#0F5BE4</color>
 
@@ -56,6 +70,13 @@
     <color name="glass_background">#33FFFFFF</color>
     <color name="glass_background_elevated">#44FFFFFF</color>
     <color name="glass_border">#55FFFFFF</color>
+
+    <!-- The glass rim and sheen: a brighter top edge and a downward falloff are what make a surface
+         read as glass rather than as a flat grey rectangle. -->
+    <color name="glass_rim_top">#66FFFFFF</color>
+    <color name="glass_rim_bottom">#1FFFFFFF</color>
+    <color name="glass_sheen">#1AFFFFFF</color>
+    <color name="glass_sheen_end">#00FFFFFF</color>
 
     <!-- Blueberry UI tokens (mirror UiTokens.java). The mod-menu layouts reference these; the
          overlays draw from UiTokens directly. -->
@@ -73,6 +94,15 @@
     <color name="ui_text_secondary">#9AA0A6</color>
     <color name="ui_text_disabled">#5F6368</color>
     <color name="ui_toggle_off">#2A2D33</color>
+    <!-- The button press light: a translucent white the pressed face is overlaid with, so it
+         lightens by the same 12% the code-side UiButton.pressFill uses and follows a custom accent
+         instead of being a fixed colour. -->
+    <color name="ui_button_press_overlay">#1FFFFFFF</color>
+    <color name="ui_disabled_fill">#332A2D33</color>
+    <!-- The focus ring: a bright halo a controller or keyboard user sees around the selected
+         control. High-contrast by design, because its whole job is to be unmistakable. -->
+    <color name="ui_focus_ring">#FFFFFFFF</color>
+    <color name="ui_focus_ring_overlay">#33FFFFFF</color>
     <color name="ui_success">#3DDC84</color>
     <color name="ui_warning">#FFB020</color>
     <color name="ui_danger">#FF5C5C</color>

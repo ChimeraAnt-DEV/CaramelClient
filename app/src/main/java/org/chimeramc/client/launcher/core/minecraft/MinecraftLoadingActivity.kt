@@ -42,6 +42,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private val executor = Executors.newSingleThreadExecutor()
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.US)
 
+    private lateinit var binding: org.chimeramc.client.databinding.ActivityMinecraftLoadingBinding
     private lateinit var ring: org.chimeramc.client.launcher.ui.views.LaunchRingView
     private lateinit var logContainer: android.view.View
     private var launchFailed = false
@@ -91,20 +92,25 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                 window.decorView.post { hideSystemUi() }
             }
         }
-        setContentView(R.layout.activity_minecraft_loading)
+        binding = org.chimeramc.client.databinding.ActivityMinecraftLoadingBinding
+                .inflate(layoutInflater)
+        setContentView(binding.root)
         hideSystemUi()
 
-        ring = findViewById(R.id.minecraftLaunchRing)
-        logContainer = findViewById(R.id.minecraftLaunchLogContainer)
+        // View binding, not findViewById: the hygiene gate holds the per-file findViewById count,
+        // and the binding is also type-safe, so a renamed id is a compile error rather than a null.
+        ring = binding.minecraftLaunchRing
+        logContainer = binding.minecraftLaunchLogContainer
         // The raw log is opt-in; the default launch screen is the logo, the status and the ring.
         logContainer.visibility =
                 if (org.chimeramc.client.settings.FeatureSettings.getInstance()
                         .isLaunchLogEnabled()) android.view.View.VISIBLE else android.view.View.GONE
-        statusView = findViewById(R.id.minecraftLaunchStatus)
-        detailView = findViewById(R.id.minecraftLaunchDetail)
-        logView = findViewById(R.id.minecraftLaunchLog)
-        logScroll = findViewById(R.id.minecraftLaunchLogScroll)
-        returnButton = findViewById(R.id.minecraftLaunchReturn)
+        statusView = binding.minecraftLaunchStatus
+        detailView = binding.minecraftLaunchDetail
+        renderChangelogLine(binding.minecraftLaunchChangelog)
+        logView = binding.minecraftLaunchLog
+        logScroll = binding.minecraftLaunchLogScroll
+        returnButton = binding.minecraftLaunchReturn
 
         returnButton.setOnClickListener {
             appendLog("Returning to launcher")
@@ -333,6 +339,34 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         }
         appendLog("Restarting without mods")
         returnToLauncher()
+    }
+
+    /**
+     * Shows the newest and upcoming changelog headlines on the launch screen.
+     *
+     * <p>The launch screen is the one place every player passes through on every launch, so it is
+     * where "what changed" and "what is next" actually get read. The line is the two headlines
+     * joined; the full changelog screen is still reachable from Settings. The read is off the UI
+     * thread, and an absent feed simply leaves the line hidden.
+     */
+    private fun renderChangelogLine(view: android.widget.TextView?) {
+        if (view == null) return
+        Thread({
+            val line = try {
+                assets.open("launcher/changelog_feed.json").use { input ->
+                    val text = input.readBytes().toString(Charsets.UTF_8)
+                    org.chimeramc.client.core.changelog.ChangelogFeed.parse(text).headlineLine()
+                }
+            } catch (t: Throwable) {
+                ""
+            }
+            if (line.isEmpty()) return@Thread
+            mainHandler.post {
+                if (isFinishing || isDestroyed) return@post
+                view.text = line
+                view.visibility = android.view.View.VISIBLE
+            }
+        }, "changelog-line").apply { isDaemon = true }.start()
     }
 
     private fun updateProgress(progress: Int, status: String, detail: String?) {

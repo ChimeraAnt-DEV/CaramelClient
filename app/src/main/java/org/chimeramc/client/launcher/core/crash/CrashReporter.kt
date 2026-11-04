@@ -48,6 +48,17 @@ object CrashReporter {
                 setJavaRethrow(false)
                 setNativeRethrow(false)
                 setAnrRethrow(false)
+                // Do not dump the file-descriptor table. Enumerating /proc/self/fd reads each
+                // link's target through NewStringUTF, and a target that is not valid Modified UTF-8
+                // makes JNI abort the process *while xCrash is writing the report* - which is the
+                // two field crashes whose tombstone backtrace is
+                // xcrash.Util.getFds -> Os.readlink -> CheckJNI::NewStringUTF with the abort
+                // "input is not valid Modified UTF-8". That turns one crash into a crash loop and
+                // loses the report. The FD table is diagnostic garnish; the tombstone is useful
+                // without it, so it is disabled on all three handlers.
+                setJavaDumpFds(false)
+                setNativeDumpFds(false)
+                setAnrDumpFds(false)
             })
         }
     }

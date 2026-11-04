@@ -1,0 +1,32 @@
+{
+  "es": {
+    "settings_run_setup": "Volver a ejecutar la configuración"
+  },
+  "fr": {
+    "settings_run_setup": "Relancer la configuration"
+  },
+  "hi": {
+    "settings_run_setup": "सेटअप दोबारा चलाएँ"
+  },
+  "id": {
+    "settings_run_setup": "Jalankan penyiapan lagi"
+  },
+  "ja": {
+    "settings_run_setup": "セットアップを再実行"
+  },
+  "pt": {
+    "settings_run_setup": "Executar a configuração novamente"
+  },
+  "ru": {
+    "settings_run_setup": "Запустить настройку снова"
+  },
+  "tr": {
+    "settings_run_setup": "Kurulumu yeniden çalıştır"
+  },
+  "vi": {
+    "settings_run_setup": "Chạy lại thiết lập"
+  },
+  "zh-rCN": {
+    "settings_run_setup": "重新运行设置"
+  }
+}

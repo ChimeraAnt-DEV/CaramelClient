@@ -85,6 +85,33 @@ public class SplashIslandTest {
     }
 
     @Test
+    public void everyBlockTurnsWithTheIslandRatherThanTumbling() {
+        SplashIsland island = seeded();
+        // Each cube is drawn at its block's own rotation. If that rotation were a per-block value
+        // the island would be a jumble of independently spinning cubes; a turntable means every
+        // block shares the island's yaw, so the whole model turns as one solid object.
+        float t = 3.3f;
+        for (int i = 0; i < island.blockCount(); i++) {
+            assertEquals("block " + i + " must turn with the island",
+                    island.yaw(t), island.blockYaw(i, t), 0.0001f);
+        }
+        // And the shared rotation actually advances with time.
+        assertTrue(island.blockYaw(0, 5f) != island.blockYaw(0, 0f));
+    }
+
+    @Test
+    public void thereIsASatelliteIsletApartFromTheMainMass() {
+        SplashIsland island = seeded();
+        // A single island reads as a lone prop; a smaller islet drifting off the rim gives the
+        // backdrop composition. It must be clearly separated, not just another cap block.
+        int farBlocks = 0;
+        for (int i = 0; i < island.blockCount(); i++) {
+            if (Math.abs(island.x(i)) >= 6 || Math.abs(island.z(i)) >= 6) farBlocks++;
+        }
+        assertTrue("there should be a satellite islet away from the main mass", farBlocks >= 3);
+    }
+
+    @Test
     public void theShapeIsStableForAGivenSeed() {
         SplashIsland a = seeded();
         SplashIsland b = seeded();

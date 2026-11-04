@@ -44,6 +44,82 @@ public final class SetupWizard {
             Step.CHANGELOG_DISCORD,
     };
 
+    /**
+     * How many instances the wizard may import.
+     *
+     * <p>The wizard is a getting-started flow, not the library: a handful is enough to start, and
+     * every extra one is time spent before the first launch. The library screen is where a user
+     * builds a real collection, and it is unlimited. Five is the spec's number.
+     */
+    public static final int IMPORT_LIMIT = 5;
+
+    /**
+     * Whether the wizard may import another instance.
+     *
+     * <p>Counts only what the wizard itself imported this run, not the instances that were already
+     * installed, so a user who already has a library is not blocked from importing their first
+     * wizard instance.
+     *
+     * @param importedThisRun instances imported during this wizard run
+     */
+    public static boolean canImportMore(int importedThisRun) {
+        return importedThisRun < IMPORT_LIMIT;
+    }
+
+    /**
+     * Whether the sign-in step can do anything.
+     *
+     * <p>When the launcher-managed Microsoft sign-in is switched off, the Accounts screen shows a
+     * "feature disabled" placeholder — so sending the user there from the wizard is a dead end that
+     * looks like a bug. The wizard hides the step instead when the feature is off, and skips past it
+     * if it is reached by Back/Next.
+     */
+    public static boolean signInAvailable(boolean launcherManagedSignInEnabled) {
+        return launcherManagedSignInEnabled;
+    }
+
+    /**
+     * The next step to actually show, skipping a step that cannot do anything.
+     *
+     * <p>Only the sign-in step is conditional today. Returning the plain {@link #next} result when
+     * the feature is on keeps the ordinary path untouched.
+     */
+    public static Step nextVisible(Step step, boolean launcherManagedSignInEnabled) {
+        Step candidate = next(step);
+        if (candidate == Step.SIGN_IN && !signInAvailable(launcherManagedSignInEnabled)) {
+            return next(candidate);
+        }
+        return candidate;
+    }
+
+    /** The previous step to actually show, skipping the sign-in step when it is unavailable. */
+    public static Step previousVisible(Step step, boolean launcherManagedSignInEnabled) {
+        Step candidate = previous(step);
+        if (candidate == Step.SIGN_IN && !signInAvailable(launcherManagedSignInEnabled)) {
+            return previous(candidate);
+        }
+        return candidate;
+    }
+
+    /** The steps a user actually sees, in order, with unavailable ones removed. */
+    public static Step[] visibleSteps(boolean launcherManagedSignInEnabled) {
+        if (signInAvailable(launcherManagedSignInEnabled)) return STEPS;
+        java.util.List<Step> out = new java.util.ArrayList<>();
+        for (Step s : STEPS) {
+            if (s != Step.SIGN_IN) out.add(s);
+        }
+        return out.toArray(new Step[0]);
+    }
+
+    /** The 0-based index of a step within the visible list, or -1 when it is not shown. */
+    public static int visibleIndex(Step step, boolean launcherManagedSignInEnabled) {
+        Step[] visible = visibleSteps(launcherManagedSignInEnabled);
+        for (int i = 0; i < visible.length; i++) {
+            if (visible[i] == step) return i;
+        }
+        return -1;
+    }
+
     /** The facts the wizard reads. */
     public static final class Facts {
         public boolean licenseAccepted;
@@ -104,6 +180,17 @@ public final class SetupWizard {
     /** Whether the wizard is finished and the launcher should open normally. */
     public static boolean isComplete(Step step) {
         return step == Step.READY;
+    }
+
+    /**
+     * Whether the wizard should be shown on this launch.
+     *
+     * <p>One rule: it has not been completed. It used to also require no installed instance, which
+     * meant an existing user never saw it — but the wizard now owns the licence, the account, the
+     * theme and the changelog, so having an instance is not a reason to skip it.
+     */
+    public static boolean shouldShow(boolean wizardCompleted) {
+        return !wizardCompleted;
     }
 
     /** A stable key for the step, for persistence and the diagnostics report. */

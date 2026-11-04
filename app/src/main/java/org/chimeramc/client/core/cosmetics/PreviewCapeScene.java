@@ -28,7 +28,29 @@ public final class PreviewCapeScene {
      * @param cloth  the stepped Verlet mesh
      */
     public static void addCape(PreviewScene scene, CosmeticCatalog.Cape cape, CapeSimulator cloth) {
+        addCape(scene, cape, cloth, null, 0, 0);
+    }
+
+    /**
+     * Adds the cloth quads to {@code scene}, preferring the cape's authored artwork when it has any.
+     *
+     * <p>When {@code atlas} is a real authored 64x32 sheet, each cell's colour is sampled from its
+     * visible panel ({@link CapeAtlas}) instead of the procedural weave, so the preview shows the
+     * artwork the player picked rather than a template. A null or undersized atlas falls back to the
+     * weave, so an id with no authored image still draws.
+     *
+     * @param scene  the scene to add to (not cleared)
+     * @param cape   the equipped cape (pattern + colours)
+     * @param cloth  the stepped Verlet mesh
+     * @param atlas  the authored 64x32 ARGB sheet, or null to use the procedural weave
+     * @param atlasW the atlas width in pixels
+     * @param atlasH the atlas height in pixels
+     */
+    public static void addCape(PreviewScene scene, CosmeticCatalog.Cape cape, CapeSimulator cloth,
+                               int[] atlas, int atlasW, int atlasH) {
         if (scene == null || cape == null || cloth == null) return;
+        boolean authored = atlas != null && atlas.length >= atlasW * atlasH
+                && atlasW > 0 && atlasH > 0;
         int cols = CapeSimulator.COLS;
         int rows = CapeSimulator.ROWS;
         if (cloth.size() < cols * rows) return;
@@ -55,11 +77,17 @@ public final class PreviewCapeScene {
 
                 float u = (c + 0.5f) / Math.max(1f, cols - 1f);
                 float wv = (r + 0.5f) / Math.max(1f, rows - 1f);
-                int clothColor = CapePatterns.colorAt(cape.pattern, u, wv,
-                        cape.color, cape.accentColor);
-                if (cape.pattern == CosmeticCatalog.CapePattern.OPTIFINE
-                        && CapePatterns.optifineMonogramAt(u, wv)) {
-                    clothColor = cape.accentColor;
+                int clothColor;
+                if (authored) {
+                    // The authored art already carries the trim and pattern; sample it directly.
+                    clothColor = CapeAtlas.sample(atlas, atlasW, atlasH, u, wv);
+                    if ((clothColor >>> 24) == 0) {
+                        // A transparent pixel on the panel falls back to the weave, so a partly
+                        // authored sheet never shows a hole.
+                        clothColor = weaveColor(cape, u, wv);
+                    }
+                } else {
+                    clothColor = weaveColor(cape, u, wv);
                 }
                 int shaded = PreviewLighting.shadeColorForNormal(clothColor, n[0], n[1], n[2]);
 
@@ -72,6 +100,16 @@ public final class PreviewCapeScene {
                 f.nx = n[0]; f.ny = n[1]; f.nz = n[2];
             }
         }
+    }
+
+    /** The procedural weave colour at a normalised cloth point, including the Optifine monogram. */
+    private static int weaveColor(CosmeticCatalog.Cape cape, float u, float v) {
+        int clothColor = CapePatterns.colorAt(cape.pattern, u, v, cape.color, cape.accentColor);
+        if (cape.pattern == CosmeticCatalog.CapePattern.OPTIFINE
+                && CapePatterns.optifineMonogramAt(u, v)) {
+            clothColor = cape.accentColor;
+        }
+        return clothColor;
     }
 
     private static float[] sub(float[] a, float[] b) {

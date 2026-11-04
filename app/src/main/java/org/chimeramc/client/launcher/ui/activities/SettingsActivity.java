@@ -220,7 +220,11 @@ public class SettingsActivity extends BaseActivity {
 
     /** Runs once the asynchronously inflated settings tree is attached. */
     private void onContentReady() {
-        View content = findViewById(android.R.id.content);
+        // Bind against the layout's own root, not android.R.id.content: the generated bind casts
+        // to the layout's root type, and the content frame is a FrameLayout, so binding against it
+        // threw a ClassCastException as the screen opened.
+        View content = screenContentView();
+        if (content == null) content = findViewById(android.R.id.content);
         settingsBinding = org.chimeramc.client.databinding.ActivitySettingsBinding.bind(content);
         DynamicAnim.applyPressScaleRecursively(content);
         // Section titles are headings and each label+switch row is one focus stop,
@@ -644,8 +648,11 @@ public class SettingsActivity extends BaseActivity {
         // Cosmetic sync: the switch lives here, in Settings, as the one place a user
         // expects to turn a network feature off. It defaults on, so an existing setup keeps the
         // behaviour it already had, and the panel's own toggle reads the same preference.
+        // Same rule as the bind above: the real root, never the activity content frame.
+        View cosmeticRoot = screenContentView();
+        if (cosmeticRoot == null) return;
         SwitchMaterial switchCosmeticSync = org.chimeramc.client.databinding
-                .ActivitySettingsBinding.bind(findViewById(android.R.id.content))
+                .ActivitySettingsBinding.bind(cosmeticRoot)
                 .switchCosmeticSync;
         if (switchCosmeticSync != null) {
             org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager manager =
@@ -1708,6 +1715,21 @@ public class SettingsActivity extends BaseActivity {
         View openAbout = findViewById(R.id.settings_open_about);
         if (openAbout != null) {
             openAbout.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
+        }
+
+        View runSetup = findViewById(R.id.settings_run_setup);
+        if (runSetup != null) {
+            runSetup.setOnClickListener(v -> {
+                // Clear the completed flag so the wizard opens, then start it. commit(), not
+                // apply(): the wizard starts immediately after and reads the flag.
+                getSharedPreferences("glowberry_setup", MODE_PRIVATE)
+                        .edit().putBoolean(
+                                org.chimeramc.client.ui.activities.SetupWizardActivity
+                                        .KEY_WIZARD_DONE, false)
+                        .commit();
+                startActivity(new Intent(this,
+                        org.chimeramc.client.ui.activities.SetupWizardActivity.class));
+            });
         }
 
         View openChangelog = findViewById(R.id.settings_open_changelog);

@@ -72,12 +72,6 @@ public class VoiceChatActivity extends BaseActivity {
     private boolean refreshing;
 
     private SwitchMaterial masterSwitch;
-    private SwitchMaterial relaySwitch;
-    private EditText relayAddress;
-    private EditText relayPassword;
-    private EditText relayTokenSecret;
-    private TextView relaySaveButton;
-    private TextView relayStatus;
     private TextView masterState;
     private TextView channelName;
     private TextView channelKind;
@@ -172,12 +166,6 @@ public class VoiceChatActivity extends BaseActivity {
 
     private void bindViews() {
         masterSwitch = findViewById(R.id.voice_master_switch);
-        relaySwitch = findViewById(R.id.voice_relay_switch);
-        relayAddress = findViewById(R.id.voice_relay_address);
-        relayPassword = findViewById(R.id.voice_relay_password);
-        relayTokenSecret = findViewById(R.id.voice_relay_token_secret);
-        relaySaveButton = findViewById(R.id.voice_relay_save_button);
-        relayStatus = findViewById(R.id.voice_relay_status);
         masterState = findViewById(R.id.voice_master_state);
         channelName = findViewById(R.id.voice_channel_name);
         channelKind = findViewById(R.id.voice_channel_kind);
@@ -323,53 +311,6 @@ public class VoiceChatActivity extends BaseActivity {
         });
         copyCodeButton.setOnClickListener(v -> copyToClipboard(manager().getVoiceChannel()));
         shareCodeButton.setOnClickListener(v -> shareCode(manager().getVoiceChannel()));
-        wireRelayControls();
-    }
-
-    /**
-     * Wires the relay server fields.
-     *
-     * <p>Applying the settings persists them and restarts the link, because a running session holds
-     * the transport it started with: changing the address without a restart would leave the old
-     * socket live and the new one unused. If the link is not running there is nothing to restart,
-     * and the values are simply stored for the next start.
-     */
-    private void wireRelayControls() {
-        if (relaySwitch == null) return;
-        relaySwitch.setChecked(manager().isVoiceRelayEnabled());
-        relayAddress.setText(manager().getVoiceRelayAddress());
-        relayPassword.setText(manager().getVoiceRelayPassword());
-        if (relayTokenSecret != null) relayTokenSecret.setText(manager().getVoiceRelayTokenSecret());
-
-        relaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            manager().setVoiceRelayEnabled(isChecked);
-            applyRelaySettings();
-        });
-        relaySaveButton.setOnClickListener(v -> applyRelaySettings());
-    }
-
-    private void applyRelaySettings() {
-        manager().setVoiceRelayAddress(relayAddress.getText() == null
-                ? "" : relayAddress.getText().toString());
-        manager().setVoiceRelayPassword(relayPassword.getText() == null
-                ? "" : relayPassword.getText().toString());
-        if (relayTokenSecret != null) {
-            manager().setVoiceRelayTokenSecret(relayTokenSecret.getText() == null
-                    ? "" : relayTokenSecret.getText().toString());
-        }
-
-        if (manager().isVoiceRelayEnabled()
-                && org.chimeramc.client.core.voice.VoiceRelayAddress.parse(
-                        manager().getVoiceRelayAddress()) == null) {
-            Toast.makeText(this, R.string.voice_relay_address_invalid, Toast.LENGTH_SHORT).show();
-        }
-
-        VoiceChatModule module = VoiceChatModule.peek();
-        if (module != null && module.isRunning()) {
-            module.stop();
-            module.start(manager());
-        }
-        refresh();
     }
 
     /** Starts or stops the link from the launcher, requesting the mic only when transmitting. */
@@ -555,7 +496,6 @@ public class VoiceChatActivity extends BaseActivity {
         renderMembers();
         renderBlocked();
         renderDirectory();
-        renderRelayStatus();
     }
 
     /**
@@ -571,45 +511,6 @@ public class VoiceChatActivity extends BaseActivity {
         VoiceChatModule module = VoiceChatModule.peek();
         boolean live = module != null && module.isRunning() && module.hasLivePosition();
         proximityMode.setText(live ? R.string.voice_proximity_on : R.string.voice_proximity_waiting);
-    }
-
-    /**
-     * Renders the relay connection state.
-     *
-     * <p>It reads the module's live view rather than the preferences: the setting says what the
-     * player asked for, the status says what actually happened, and a reconnect is only visible in
-     * the second. A configured relay that has not connected yet reads as connecting, not as
-     * connected, so the status never claims a link that is not there.
-     */
-    private void renderRelayStatus() {
-        if (relayStatus == null) return;
-        if (!manager().isVoiceRelayEnabled()) {
-            relayStatus.setText(R.string.voice_relay_off);
-            return;
-        }
-        String configured = manager().getVoiceRelayAddress();
-        org.chimeramc.client.core.voice.VoiceRelayAddress parsed =
-                org.chimeramc.client.core.voice.VoiceRelayAddress.parse(configured);
-        if (parsed == null) {
-            relayStatus.setText(R.string.voice_relay_address_invalid);
-            return;
-        }
-
-        VoiceChatModule module = VoiceChatModule.peek();
-        if (module == null || !module.isRunning() || !module.isRelayMode()) {
-            relayStatus.setText(getString(R.string.voice_relay_connecting, parsed.display()));
-            return;
-        }
-        if (module.isRelayConnected()) {
-            String codec = module.isUsingOpus() ? "Opus" : "PCM";
-            relayStatus.setText(getString(R.string.voice_relay_connected_codec,
-                    parsed.display(), module.relayClientId(), codec));
-        } else {
-            String error = module.transportError();
-            relayStatus.setText(error == null
-                    ? getString(R.string.voice_relay_reconnecting, parsed.display())
-                    : getString(R.string.voice_relay_error, error));
-        }
     }
 
     private boolean isVoiceRunning() {

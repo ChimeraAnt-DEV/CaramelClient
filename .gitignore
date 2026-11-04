@@ -18,6 +18,7 @@ app.apk
 
 # Dependencies
 .gradle/
+.kotlin/
 node_modules/
 venv/
 .venv/

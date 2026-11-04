@@ -1928,6 +1928,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="changelog_continue">Continue</string>
     <string name="changelog_screen_title">Changelog</string>
     <string name="changelog_empty">No changelog is bundled with this build.</string>
+    <string name="changelog_section_newest">Newest</string>
+    <string name="changelog_section_upcoming">Upcoming</string>
+    <string name="changelog_section_sneak_peeks">Sneak peeks</string>
     <string name="settings_open_changelog">View full changelog</string>
     <string name="instance_notes_title">Note</string>
     <string name="instance_notes_desc">A private note about this instance, shown on its card. Not used by the game.</string>
@@ -2213,18 +2216,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="voice_directory_empty">No public channels are advertising nearby yet. Private channels never appear here - join one with its code.</string>
 
     <!-- Relay server (internet voice) -->
-    <string name="voice_relay_title">Relay server</string>
-    <string name="voice_relay_address_hint">host or host:port (e.g. voice.example.com:47902)</string>
-    <string name="voice_relay_password_hint">Server password (optional)</string>
-    <string name="voice_relay_token_hint">Join token secret (optional; used instead of the password if the server runs in token mode)</string>
-    <string name="voice_relay_apply">Apply &amp; reconnect</string>
-    <string name="voice_relay_off">LAN only - not using a relay server</string>
-    <string name="voice_relay_connecting">Connecting to %1$s\u2026</string>
-    <string name="voice_relay_connected_codec">Connected to %1$s as client %2$d \u00b7 %3$s</string>
-    <string name="voice_relay_address_invalid">Enter a host or host:port, e.g. voice.example.com:47902</string>
-    <string name="voice_relay_reconnecting">Reconnecting to %1$s\u2026</string>
-    <string name="voice_relay_error">%1$s</string>
-    <string name="voice_relay_scope_note">The relay forwards voice between players who are not on the same Wi-Fi. Leave this off to stay on the local network. Audio is Opus-compressed and is not end-to-end encrypted - the server carries your voice, so only use one you trust.</string>
     <string name="voice_directory_current" formatted="false">%1$s (you are here)</string>
     <string name="voice_leave_channel">Leave channel (back to world)</string>
     <string name="voice_copy_code">Copy code</string>
@@ -2356,6 +2347,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_capture_notification_text">Chimera Replay is capturing your screen. Open the launcher to stop.</string>
     <string name="replay_header_title">Replay</string>
     <string name="replay_header_subtitle">Capture, review and export your clips</string>
+    <string name="replay_save_native">Save the game\'s replay</string>
+    <string name="replay_save_native_done">Saved %1$s</string>
+    <string name="replay_save_native_empty">There is no game replay to save yet. Record one first.</string>
     <string name="replay_record_start">Start recording</string>
     <string name="replay_record_stop">Stop recording</string>
     <string name="replay_recording_elapsed">%1$s</string>
@@ -2468,6 +2462,18 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_cinematic_keyframes">%1$d keyframes</string>
     <string name="replay_cinematic_clear">Clear path</string>
     <string name="replay_cinematic_saved">Camera path saved to the clip</string>
+    <string name="replay_cinematic_motion_title">Motion</string>
+    <string name="replay_cinematic_easing">Easing</string>
+    <string name="replay_cinematic_easing_linear">Linear</string>
+    <string name="replay_cinematic_easing_in">Ease in</string>
+    <string name="replay_cinematic_easing_out">Ease out</string>
+    <string name="replay_cinematic_easing_in_out">Ease in-out</string>
+    <string name="replay_cinematic_smoothing">Path smoothing</string>
+    <string name="replay_cinematic_smoothing_value">%1$d%%</string>
+    <string name="replay_cinematic_fov">Field of view</string>
+    <string name="replay_cinematic_fov_value">%1$d°</string>
+    <string name="replay_cinematic_fov_wide">Wider</string>
+    <string name="replay_cinematic_fov_narrow">Narrower</string>
     <string name="replay_controller_hint">A play · Start pause · L2/R2 scrub · Select speed · X delete · Y favorite · L1/R1 cycle</string>
     <string name="replay_keyboard_hint">Click select · Del delete · Space play · Arrows scrub · , . step a frame · [ ] jump marker · Free-camera button detaches the view</string>
     <string name="replay_permission_denied">Screen capture was not granted</string>
@@ -2567,6 +2573,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_step_signin_body">Sign in with your Microsoft account to play online and keep your progress.</string>
     <string name="setup_step_signin_action">Sign in</string>
     <string name="setup_skip">Skip for now</string>
+    <string name="settings_run_setup">Run setup again</string>
     <string name="replay_berry_read_failed">Could not read the replay file.</string>
     <string name="replay_berry_load_failed">BerryAPI refused this replay (%1$s).</string>
     <string name="replay_berry_playing">Playing the BerryAPI replay (%1$d ticks).</string>
@@ -2616,6 +2623,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_instance_title">Install an instance</string>
     <string name="setup_instance_body">Import an authentic Minecraft Bedrock APK to create your first instance. You can add more later from the Library.</string>
     <string name="setup_instance_action">Import an instance</string>
+    <string name="setup_instance_list_title">Your instances</string>
+    <string name="setup_instance_list_empty">No instances yet. Import an APK to create your first one.</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">You have added the maximum of %1$d instances in setup. Add more any time from the Library.</string>
+    <string name="setup_instance_limit_remaining">You can add %1$d more here, or add unlimited instances later from the Library.</string>
     <string name="setup_signin_title">Sign in to Microsoft</string>
     <string name="setup_signin_body">Sign in with your Microsoft account to play online, keep your progress, and see your Xbox friends. You can skip this and sign in later from Accounts.</string>
     <string name="setup_signin_action">Sign in</string>

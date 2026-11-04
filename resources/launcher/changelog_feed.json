@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "newest": {
+    "version": "BETA3",
+    "headline": "Glass, capes and a cinematic replay engine",
+    "items": [
+      {
+        "text": "The shared cards read as glass on every Compose screen, not a flat grey rectangle."
+      },
+      {
+        "text": "Buttons now press: a ripple and a depressed face on the accent, Play and instance controls, plus a visible focus ring for controller and keyboard."
+      },
+      {
+        "text": "The character preview samples the authored cape art, and the cape textures carry real shading."
+      },
+      {
+        "text": "The splash island turns as one solid rock instead of a pile of loose boxes."
+      },
+      {
+        "text": "The account skin re-syncs every 24 hours, at startup and when a preview resolves."
+      },
+      {
+        "text": "Replay: a .glowreplay container, an offline simulator, a cinematic camera rig with FOV and Bezier easing, and a Compose keyframe timeline."
+      }
+    ]
+  },
+  "upcoming": {
+    "headline": "What is being worked on next",
+    "items": [
+      {
+        "text": "The replay recorder capturing the full world from BerryAPI's native world feed, not only the local player and voice peers."
+      },
+      {
+        "text": "BerryAPI's encrypted voice system, replacing the launcher's own relay settings."
+      },
+      {
+        "text": "More authored cape art and preview poses."
+      }
+    ]
+  },
+  "sneakPeeks": [
+    {
+      "caption": "here comes the updatess",
+      "image": "peek_01.png",
+      "source": "discord",
+      "messageId": "1567425051811250208"
+    },
+    {
+      "caption": "here comes the updatess",
+      "image": "peek_02.png",
+      "source": "discord",
+      "messageId": "1567425051811250208"
+    },
+    {
+      "caption": "here comes the updatess",
+      "image": "peek_03.png",
+      "source": "discord",
+      "messageId": "1567425051811250208"
+    },
+    {
+      "caption": "here comes the updatess",
+      "image": "peek_04.png",
+      "source": "discord",
+      "messageId": "1567425051811250208"
+    },
+    {
+      "caption": "here comes the updatess",
+      "image": "peek_05.png",
+      "source": "discord",
+      "messageId": "1567425051811250208"
+    },
+    {
+      "caption": "Launch loading screen",
+      "image": "peek_06.png",
+      "source": "discord",
+      "messageId": "1567322568522989642"
+    },
+    {
+      "caption": "in game loading screen",
+      "image": "peek_07.png",
+      "source": "discord",
+      "messageId": "1566285056174063626"
+    },
+    {
+      "caption": "UI REVAMP, RADIAL WHEEL ADDED FROM BLUEBERRY CLIENT, 3D PREVIEW FIX",
+      "image": "peek_08.png",
+      "source": "discord",
+      "messageId": "1559710634227011614"
+    },
+    {
+      "caption": "UI REVAMP, RADIAL WHEEL ADDED FROM BLUEBERRY CLIENT, 3D PREVIEW FIX",
+      "image": "peek_09.png",
+      "source": "discord",
+      "messageId": "1559710634227011614"
+    },
+    {
+      "caption": "UI REVAMP, RADIAL WHEEL ADDED FROM BLUEBERRY CLIENT, 3D PREVIEW FIX",
+      "image": "peek_10.png",
+      "source": "discord",
+      "messageId": "1559710634227011614"
+    }
+  ]
+}
