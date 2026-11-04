@@ -62,3 +62,15 @@
   the editor's three rows cannot drift; `ReplayCinematicDialog` wires them. The codec writes
   `preset;e=<Easing>;s=<smoothing>;time,x,y,z,yaw,pitch,fov;...` and still parses the old six-field,
   no-metadata form. `ReplayCameraFovTest` and `ReplayCinematicControlsTest` pin it.
+
+- **The keyframe timeline is a Compose strip.** The spec asks for a keyframe timeline the user can
+  place keyframes on. `ReplayTimelineStrip` (package `ui.compose.replay`) draws the camera path's
+  keyframes as diamonds, the clip's markers as ticks below the bar, and the scrub position as a
+  playhead; tapping or dragging the bar reports the time under the finger, snapping to a marker within
+  900 ms so a marker is reachable by touch. The strip draws from an immutable `ReplayTimelineData`
+  snapshot (keyframe fractions, marker times/fractions, duration, position), rebuilt by the dialog
+  whenever a keyframe is added or cleared, so the strip redraws where mutating the path would not
+  recompose. All the arithmetic is in the pure `ReplayTimelineLayout` (`fraction`, `xForTime`,
+  `timeForX`, `nearestMarker`, `keyframeFractions`), so the snapping rule is unit-tested off-device.
+  `ReplayTimelineHost` is the Java-facing seam, and `ReplayCinematicDialog` mounts the strip and
+  samples the path on scrub so the camera previews the shot. `ReplayTimelineLayoutTest` pins it.

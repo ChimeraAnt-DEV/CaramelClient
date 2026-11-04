@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.ui.compose.replay.ReplayTimelineHost;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 
 import java.util.function.Consumer;
@@ -65,8 +66,25 @@ final class ReplayCinematicDialog {
         root.addView(count, countParams);
 
         final ReplayCameraPath[] holder = {working};
-        Runnable refresh = () -> count.setText(activity.getString(
-                R.string.replay_cinematic_keyframes, holder[0].size()));
+
+        // The keyframe timeline the spec asks for: a Compose strip showing the path's keyframes and
+        // a draggable playhead. Scrubbing samples the path at that time, so the camera previews the
+        // shot; adding or clearing a keyframe rebuilds the snapshot so the diamonds redraw.
+        final androidx.compose.ui.platform.ComposeView timeline =
+                new androidx.compose.ui.platform.ComposeView(activity);
+        final androidx.compose.runtime.MutableState<ReplayTimelineData> timelineState =
+                ReplayTimelineHost.state(ReplayTimelineData.of(durationMs, 0L, working, null));
+        ReplayTimelineHost.setContent(timeline, timelineState, ms -> holder[0].sample(ms, camera));
+        LinearLayout.LayoutParams timelineParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 44));
+        timelineParams.topMargin = dp(activity, 8);
+        root.addView(timeline, timelineParams);
+
+        Runnable refresh = () -> {
+            count.setText(activity.getString(
+                    R.string.replay_cinematic_keyframes, holder[0].size()));
+            timelineState.setValue(ReplayTimelineData.of(durationMs, 0L, holder[0], null));
+        };
 
         // Every preset is listed, one row each. A preset regenerates the whole shot, which is what
         // "a preset shot" means; the count updates so the user sees the path was replaced, not
