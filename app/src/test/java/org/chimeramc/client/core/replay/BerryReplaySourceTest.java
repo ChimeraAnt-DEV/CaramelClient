@@ -42,6 +42,16 @@ public class BerryReplaySourceTest {
         @Override public String status() { return "status"; }
         @Override public byte[] save() { calls.add("save"); return saved; }
         byte[] saved = new byte[] {1, 2, 3};
+        boolean captureReady = true;
+        int captureState = 0;
+        @Override public boolean captureAvailable() { return captureReady; }
+        @Override public int captureStart() { calls.add("captureStart"); captureState = 1; return ReplayAbi.OK; }
+        @Override public int captureStop() { calls.add("captureStop"); captureState = 0; return ReplayAbi.OK; }
+        @Override public int captureState() { return captureState; }
+        @Override public int capturePacket(int dir, int id, byte[] payload, long tick) {
+            calls.add("capturePacket:" + dir + ":" + id + ":" + payload.length + ":" + tick);
+            return ReplayAbi.OK;
+        }
     }
 
     @Test
@@ -155,5 +165,34 @@ public class BerryReplaySourceTest {
         Fake nuller = new Fake();
         nuller.saved = null;
         assertEquals(0, new BerryReplaySource(nuller).save().length);
+    }
+
+    @Test
+    public void thePacketCaptureFailsClosedAndForwardsWhenAvailable() {
+        Fake fake = new Fake();
+        BerryReplaySource src = new BerryReplaySource(fake);
+        assertTrue("the capture is available when the backend says so", src.captureAvailable());
+        assertEquals(ReplayAbi.OK, src.captureStart());
+        assertEquals(1, src.captureState());
+        assertEquals(ReplayAbi.OK, src.capturePacket(true, 7, new byte[] {1, 2}, 40));
+        // An inbound packet forwards dir 0; a sent one dir 1.
+        assertEquals(ReplayAbi.OK, src.capturePacket(false, 9, new byte[] {3}, 60));
+        assertTrue(fake.calls.contains("capturePacket:0:7:2:40"));
+        assertTrue(fake.calls.contains("capturePacket:1:9:1:60"));
+        // An empty payload is refused before the backend is called.
+        assertEquals(ReplayAbi.BAD_ARGUMENT, src.capturePacket(true, 7, new byte[0], 40));
+        assertEquals(ReplayAbi.OK, src.captureStop());
+        assertEquals(0, src.captureState());
+
+        // Unavailable: every capture call answers the fail-closed default.
+        Fake off = new Fake();
+        off.captureReady = false;
+        BerryReplaySource offSrc = new BerryReplaySource(off);
+        assertFalse(offSrc.captureAvailable());
+        assertEquals(ReplayAbi.NOT_ATTACHED, offSrc.captureStart());
+        assertEquals(ReplayAbi.NOT_ATTACHED, offSrc.captureStop());
+        assertEquals(-1, offSrc.captureState());
+        assertEquals(ReplayAbi.NOT_ATTACHED, offSrc.capturePacket(true, 1, new byte[] {1}, 0));
+        assertFalse("an unavailable surface must not be driven", off.calls.contains("captureStart"));
     }
 }

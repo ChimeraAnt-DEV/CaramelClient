@@ -520,4 +520,48 @@ public final class ReplayManager {
             }
         });
     }
+
+    // --- BerryAPI packet capture -------------------------------------------------------------
+    //
+    // The packet stream is the world data: a Bedrock session's entity spawns, movement, block
+    // updates and inventory all arrive as packets, and BerryAPI's recorder stores them verbatim. So
+    // a recording made this way reconstructs the world with no game-memory offset. The capture runs
+    // in the game process (the launcher and the game share one), so these are the launcher-side
+    // controls; the preloader forwards the packets.
+
+    /** The BerryAPI replay source, for the packet capture controls. */
+    private final BerryReplaySource berrySource = new BerryReplaySource();
+
+    /** True when BerryAPI's packet capture (ABI v2) is present. */
+    public boolean packetCaptureAvailable() {
+        return berrySource.captureAvailable();
+    }
+
+    /** True while a BerryAPI packet capture is running. */
+    public boolean isPacketCapturing() {
+        return berrySource.captureState() == 1;
+    }
+
+    /** Begins a BerryAPI packet capture. Returns false when the surface is absent. */
+    public boolean startPacketCapture() {
+        return berrySource.captureStart() == ReplayAbi.OK;
+    }
+
+    /** Ends a BerryAPI packet capture, keeping the recording for {@link #savePacketCapture}. */
+    public boolean stopPacketCapture() {
+        return berrySource.captureStop() == ReplayAbi.OK;
+    }
+
+    /**
+     * Ends the capture and writes the recording into the library as a replay file.
+     *
+     * @return the written file, or null when there was nothing to save
+     */
+    public File savePacketCapture() {
+        berrySource.captureStop();
+        byte[] bytes = berrySource.save();
+        if (bytes.length == 0) return null;
+        return repository.writeBerryReplay(bytes,
+                "packets_" + ReplayMetadata.fileStamp(System.currentTimeMillis()));
+    }
 }

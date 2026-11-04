@@ -50,6 +50,21 @@ public final class BerryReplaySource {
          * write it as a replay file and list it.
          */
         byte[] save();
+
+        /** True when the surface provides the packet capture (ABI v2). */
+        boolean captureAvailable();
+
+        /** Begins a capture session. Returns the ABI status. */
+        int captureStart();
+
+        /** Ends a capture session, keeping the sections for {@link #save()}. */
+        int captureStop();
+
+        /** The capture state: 0 idle, 1 recording, 2 throttled, 3 stopped, -1 unavailable. */
+        int captureState();
+
+        /** Records one packet. Returns the ABI status. */
+        int capturePacket(int dir, int id, byte[] payload, long tick);
     }
 
     /** The default backend: the preloader bridge onto BerryAPI. */
@@ -92,6 +107,21 @@ public final class BerryReplaySource {
         }
         @Override public byte[] save() {
             return org.chimeramc.client.preloader.BerryApi.replaySave();
+        }
+        @Override public boolean captureAvailable() {
+            return org.chimeramc.client.preloader.BerryApi.replayCaptureAvailable();
+        }
+        @Override public int captureStart() {
+            return org.chimeramc.client.preloader.BerryApi.replayCaptureStart();
+        }
+        @Override public int captureStop() {
+            return org.chimeramc.client.preloader.BerryApi.replayCaptureStop();
+        }
+        @Override public int captureState() {
+            return org.chimeramc.client.preloader.BerryApi.replayCaptureState();
+        }
+        @Override public int capturePacket(int dir, int id, byte[] payload, long tick) {
+            return org.chimeramc.client.preloader.BerryApi.replayCapturePacket(dir, id, payload, tick);
         }
     }
 
@@ -222,6 +252,44 @@ public final class BerryReplaySource {
         if (!available()) return new byte[0];
         byte[] bytes = backend.save();
         return bytes != null ? bytes : new byte[0];
+    }
+
+    /**
+     * Whether the surface provides the packet capture (ABI v2).
+     *
+     * <p>The recorder half: the packet stream is the world data, so a host that can record it
+     * reconstructs the world with no game-memory offset. A library built before the capture ABI
+     * answers false, and the recorder then records nothing rather than being driven through a null.
+     */
+    public boolean captureAvailable() {
+        return available() && backend.captureAvailable();
+    }
+
+    /** Begins a capture session. Returns the ABI status; {@link ReplayAbi#NOT_ATTACHED} when absent. */
+    public int captureStart() {
+        return captureAvailable() ? backend.captureStart() : ReplayAbi.NOT_ATTACHED;
+    }
+
+    /** Ends a capture session, keeping the captured replay for {@link #save()}. */
+    public int captureStop() {
+        return captureAvailable() ? backend.captureStop() : ReplayAbi.NOT_ATTACHED;
+    }
+
+    /** The capture state: 0 idle, 1 recording, 2 throttled, 3 stopped, or -1 when unavailable. */
+    public int captureState() {
+        return captureAvailable() ? backend.captureState() : -1;
+    }
+
+    /**
+     * Records one packet from the network stream.
+     *
+     * @param inbound true for a received packet, false for a sent one
+     * @return the ABI status; {@link ReplayAbi#BAD_ARGUMENT} for an empty payload
+     */
+    public int capturePacket(boolean inbound, int id, byte[] payload, long tick) {
+        if (!captureAvailable()) return ReplayAbi.NOT_ATTACHED;
+        if (payload == null || payload.length == 0) return ReplayAbi.BAD_ARGUMENT;
+        return backend.capturePacket(inbound ? 0 : 1, id, payload, tick);
     }
 
     private static Snapshot empty() {
