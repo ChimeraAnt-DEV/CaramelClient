@@ -151,3 +151,38 @@ still missing is the one datum: the byte offset of the entity-list vector inside
 (and the entity field offsets). That needs a disassembler pass that follows a *specific* function —
 most promisingly an entity-iterating system such as `SpawnActorSystem` or `ActorPostAiStepTickSystem`,
 whose RTTI names resolve — rather than a global pattern scan.
+
+### The better path: the packet stream, not the memory list
+
+Five sessions of trying to reach the entity list through game memory have established that it is the
+*hard* route: the container is not RTTI-named, the level pointer needs a method body read, and every
+heuristic scan lands in the renderer. There is a tractable route that the original spec actually
+named, and it should be the next direction:
+
+**BerryAPI's replay recorder already accepts the raw packet stream.** `ReplayCapture::CapturePacket(
+dir, id, payload, tick, kind)` stores each packet verbatim — its header comment says so: *"It also
+takes the raw packet stream … That is the material a loopback replay server needs to drive the
+game's own parsers."* A Bedrock session's entity spawns, movement, block updates and inventory all
+arrive as packets, so capturing the packet stream reconstructs the world **without any memory
+offset at all**. This is exactly what the original task described: *"Hook into the BerryAPI network
+stream. Instead of just recording chunk packets, record everything."*
+
+**What already exists for it:**
+- The preloader already hooks the packet seam: `ClientNetworkHandler` vtable slot 40 (verified,
+  `0x1520ef98` + slot 40 → `0xb80f518`), installed as a passthrough veneer that preserves the full
+  register set. It currently only counts.
+- BerryAPI's `ReplayCapture::CapturePacket` is the consumer, and the loopback `ReplayServer` plays
+  the captured packets back into the game's own parsers.
+
+**What is missing (the next concrete work, and it is small):**
+1. A C ABI entry for the packet capture, mirroring how `save` was added to `berry/replay_c.h` — e.g.
+   `capture_packet(dir, id, payload, len, tick)` on the same `BerryReplayApi` struct (an ABI bump).
+2. The preloader's packet hook, which already sees the arguments, forwards the payload to that call
+   instead of only counting. The register set is already preserved, so the payload bytes are in hand.
+3. Then the recorder's sections carry the world, and `ReplayWorld`/`ReplayServer` reconstruct it —
+   no entity-list offset required.
+
+This supersedes the memory-offset search for the recorder's purposes: it gives the full world data
+from the stream the client already receives, which is both what the spec asked for and reachable
+without a per-build disassembly pass. The memory route is still the way to fill the *live* seam
+(`AllEntities` for the combat modules), but the replay recorder does not need it.
