@@ -105,3 +105,4 @@ file is missing from the index.
 - [Real Minecraft skin (engine-hook seam, wired)](docs/agents/real-minecraft-skin.md)
 - [Radial wheel glass overhaul (R1-R13)](docs/agents/radial-wheel-glass-overhaul.md)
 - [Update-list audit (GlowberryClient) — what is shipped, what is honest, what cannot be built](docs/agents/update-list-audit-what-is-shipped-what-is-honest-what-cannot-be-built.md)
+- [World reconstruction — RE groundwork and the remaining wall](docs/agents/world-reconstruction-re-groundwork.md)
