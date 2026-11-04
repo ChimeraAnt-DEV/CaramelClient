@@ -48,6 +48,45 @@ import java.util.Base64;
 public final class AccountSkinService {
 
     /** The GeyserMC global API: {@code /v2/skin/<xuid>} returns a Texture Data pair. */
+    /**
+     * Called when a background skin fetch finishes, whether it succeeded or failed.
+     *
+     * <p>A caller that resolved the skin while the fetch was in flight registered one of these, so it
+     * can refresh as soon as the real skin lands rather than waiting for the screen to be reopened.
+     */
+    public interface Listener {
+        void onSkinFetchFinished();
+    }
+
+    /** Listeners, a set so a double registration fires once. */
+    private static final java.util.Set<Listener> LISTENERS =
+            java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Registers a listener; the caller must remove it when its owner goes away. */
+    public static void addListener(Listener listener) {
+        if (listener != null) LISTENERS.add(listener);
+    }
+
+    /** Removes a listener. */
+    public static void removeListener(Listener listener) {
+        if (listener != null) LISTENERS.remove(listener);
+    }
+
+    /**
+     * Wakes every listener. Best-effort: a listener that throws must not stop the others, because the
+     * fetch has already done its real work by this point.
+     */
+    private static void notifyListeners() {
+        for (Listener listener : LISTENERS) {
+            try {
+                listener.onSkinFetchFinished();
+            } catch (Throwable t) {
+                AppLog.warnOnce("AccountSkinService", "listener",
+                        "A skin-fetch listener threw", t);
+            }
+        }
+    }
+
     public static final String DEFAULT_ENDPOINT = "https://api.geysermc.org/v2/skin/";
     /** The Mojang texture CDN the {@code value} field points at. */
     public static final String TEXTURE_HOST = "https://textures.minecraft.net/texture/";
@@ -222,6 +261,9 @@ public final class AccountSkinService {
                 AppLog.warn("AccountSkinService", "Account skin fetch failed", error);
             } finally {
                 refreshRunning.set(false);
+                // In the finally: a caller that registered to hear the outcome must be woken whether
+                // the fetch succeeded or failed, or it waits forever for a skin that is not coming.
+                notifyListeners();
             }
         });
     }

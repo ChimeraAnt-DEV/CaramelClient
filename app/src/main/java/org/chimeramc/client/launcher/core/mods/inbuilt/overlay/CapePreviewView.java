@@ -118,6 +118,16 @@ public class CapePreviewView extends View {
 
     private final CapeSimulator capeSim = new CapeSimulator();
 
+    /**
+     * Refreshes the preview when a background account-skin fetch finishes.
+     *
+     * <p>The first resolve after a sign-in schedules the fetch and shows the fallback, so without
+     * this the real skin only appeared when the screen was reopened. Registered while attached and
+     * removed on detach, so a discarded view is never woken.
+     */
+    private final org.chimeramc.client.core.cosmetics.AccountSkinService.Listener skinListener =
+            () -> post(this::refreshSkin);
+
     /** Offscreen 2x supersample target; reallocated only when the view size changes. */
     private Bitmap frame;
     /**
@@ -405,12 +415,14 @@ public class CapePreviewView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        org.chimeramc.client.core.cosmetics.AccountSkinService.addListener(skinListener);
         attached = true;
         syncAnimation();
     }
 
     @Override
     protected void onDetachedFromWindow() {
+        org.chimeramc.client.core.cosmetics.AccountSkinService.removeListener(skinListener);
         attached = false;
         stopAnimation();
         super.onDetachedFromWindow();
