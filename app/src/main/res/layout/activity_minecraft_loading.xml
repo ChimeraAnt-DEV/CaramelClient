@@ -51,6 +51,25 @@
             android:gravity="center"
             android:textColor="@color/text_secondary"
             android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+
+        <!--
+            The changelog line: the newest release's headline and the upcoming one, on the launch
+            screen. The launch screen is the one place every player passes through on every launch,
+            so it is where "what changed" and "what is next" actually get read; the full screen is
+            still reachable from Settings. Hidden when no feed is bundled.
+        -->
+        <TextView
+            android:id="@+id/minecraftLaunchChangelog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/text_secondary"
+            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- The raw log, shown only when the user turns on "Show launch log" in Settings. -->

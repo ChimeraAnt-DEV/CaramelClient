@@ -102,6 +102,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
                         .isLaunchLogEnabled()) android.view.View.VISIBLE else android.view.View.GONE
         statusView = findViewById(R.id.minecraftLaunchStatus)
         detailView = findViewById(R.id.minecraftLaunchDetail)
+        renderChangelogLine(findViewById(R.id.minecraftLaunchChangelog))
         logView = findViewById(R.id.minecraftLaunchLog)
         logScroll = findViewById(R.id.minecraftLaunchLogScroll)
         returnButton = findViewById(R.id.minecraftLaunchReturn)
@@ -333,6 +334,34 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         }
         appendLog("Restarting without mods")
         returnToLauncher()
+    }
+
+    /**
+     * Shows the newest and upcoming changelog headlines on the launch screen.
+     *
+     * <p>The launch screen is the one place every player passes through on every launch, so it is
+     * where "what changed" and "what is next" actually get read. The line is the two headlines
+     * joined; the full changelog screen is still reachable from Settings. The read is off the UI
+     * thread, and an absent feed simply leaves the line hidden.
+     */
+    private fun renderChangelogLine(view: android.widget.TextView?) {
+        if (view == null) return
+        Thread({
+            val line = try {
+                assets.open("launcher/changelog_feed.json").use { input ->
+                    val text = input.readBytes().toString(Charsets.UTF_8)
+                    org.chimeramc.client.core.changelog.ChangelogFeed.parse(text).headlineLine()
+                }
+            } catch (t: Throwable) {
+                ""
+            }
+            if (line.isEmpty()) return@Thread
+            mainHandler.post {
+                if (isFinishing || isDestroyed) return@post
+                view.text = line
+                view.visibility = android.view.View.VISIBLE
+            }
+        }, "changelog-line").apply { isDaemon = true }.start()
     }
 
     private fun updateProgress(progress: Int, status: String, detail: String?) {

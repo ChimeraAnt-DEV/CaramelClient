@@ -333,12 +333,23 @@ dependencies {
 
 // Item 270: the in-app changelog renders the repo's CHANGELOG.md, so there is one source of truth.
 // This copies it into the packaged assets at build time instead of keeping a second hand-edited
-// copy that drifts.
+// copy that drifts. The two-section feed (newest + upcoming + sneak peeks) is copied the same way,
+// and its sneak-peek images come from docs/assets/mockups so a peek is the repo's own art rather
+// than a second copy.
 def changelogAssetsDir = layout.buildDirectory.dir('generated/changelogAssets')
 
 tasks.register('syncChangelogAsset', Copy) {
     from(rootProject.file('CHANGELOG.md')) {
         into 'launcher'
+    }
+    from(rootProject.file('resources/launcher/changelog_feed.json')) {
+        into 'launcher'
+    }
+    // The sneak-peek images the feed names, copied to launcher/sneak/ so the app can load them by
+    // the file name the feed carries.
+    from(rootProject.file('docs/assets/mockups')) {
+        into 'launcher/sneak'
+        include '*.png'
     }
     into changelogAssetsDir
 }
