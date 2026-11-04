@@ -40,6 +40,8 @@ public class BerryReplaySourceTest {
         @Override public void unload() { calls.add("unload"); loaded = false; }
         @Override public void setSpeed(float s) { calls.add("speed:" + s); speedApplied = true; }
         @Override public String status() { return "status"; }
+        @Override public byte[] save() { calls.add("save"); return saved; }
+        byte[] saved = new byte[] {1, 2, 3};
     }
 
     @Test
@@ -132,5 +134,26 @@ public class BerryReplaySourceTest {
         assertFalse("negative is out of range", src.setSpeed(-1f));
         assertFalse("above the library's cap is refused", src.setSpeed(33f));
         assertFalse("NaN is refused", src.setSpeed(Float.NaN));
+    }
+
+    @Test
+    public void saveExportsTheLibraryReplayAndFailsClosedWhenUnavailable() {
+        Fake fake = new Fake();
+        BerryReplaySource src = new BerryReplaySource(fake);
+        byte[] bytes = src.save();
+        assertEquals(3, bytes.length);
+        assertTrue("save must reach the backend", fake.calls.contains("save"));
+
+        // Unavailable: no bytes, and the backend is never called.
+        Fake off = new Fake();
+        off.available = false;
+        BerryReplaySource offSrc = new BerryReplaySource(off);
+        assertEquals(0, offSrc.save().length);
+        assertFalse("an unavailable surface must not call save", off.calls.contains("save"));
+
+        // A null backend answer reads as "nothing to save", never a null return.
+        Fake nuller = new Fake();
+        nuller.saved = null;
+        assertEquals(0, new BerryReplaySource(nuller).save().length);
     }
 }

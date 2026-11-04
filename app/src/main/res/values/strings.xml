@@ -2347,6 +2347,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="replay_capture_notification_text">Chimera Replay is capturing your screen. Open the launcher to stop.</string>
     <string name="replay_header_title">Replay</string>
     <string name="replay_header_subtitle">Capture, review and export your clips</string>
+    <string name="replay_save_native">Save the game\'s replay</string>
+    <string name="replay_save_native_done">Saved %1$s</string>
+    <string name="replay_save_native_empty">There is no game replay to save yet. Record one first.</string>
     <string name="replay_record_start">Start recording</string>
     <string name="replay_record_stop">Stop recording</string>
     <string name="replay_recording_elapsed">%1$s</string>

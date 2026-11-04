@@ -1308,4 +1308,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="changelog_section_newest">Terbaru</string>
     <string name="changelog_section_upcoming">Akan datang</string>
     <string name="changelog_section_sneak_peeks">Intip</string>
+    <string name="replay_save_native">Simpan ulangan game</string>
+    <string name="replay_save_native_done">Tersimpan %1$s</string>
+    <string name="replay_save_native_empty">Belum ada ulangan game untuk disimpan. Rekam dulu.</string>
 </resources>

@@ -323,7 +323,58 @@ public final class ReplayPanel {
         DynamicAnim.applyPressScale(settings);
         row.addView(settings, settingsParams);
 
+        // The native export: BerryAPI keeps a capture of the session in this same process, and its
+        // save exports it. Shown only when the surface is actually present, so a build without
+        // BerryAPI never offers a button that cannot work.
+        if (berryReplay.available()) {
+            ImageView save = new ImageView(activity);
+            save.setImageResource(R.drawable.ic_replay_play);
+            save.setColorFilter(style.textSecondary());
+            save.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            save.setBackground(ReplayStyle.rippled(
+                    ReplayStyle.rounded(style.surfaceElevated(), 10f, activity),
+                    style.accentFill(60), activity));
+            save.setPadding(ReplayStyle.dpInt(activity, 9), ReplayStyle.dpInt(activity, 4),
+                    ReplayStyle.dpInt(activity, 9), ReplayStyle.dpInt(activity, 4));
+            save.setContentDescription(activity.getString(R.string.replay_save_native));
+            LinearLayout.LayoutParams saveParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            saveParams.setMarginStart(ReplayStyle.dpInt(activity, 10));
+            save.setOnClickListener(v -> saveNativeReplay());
+            DynamicAnim.applyPressScale(save);
+            row.addView(save, saveParams);
+        }
+
         return row;
+    }
+
+    /**
+     * Exports BerryAPI's capture of this session as a replay file.
+     *
+     * <p>BerryAPI runs in this process (the game and the launcher share one), so its replay service
+     * holds the capture and its {@code save} encodes it. The bytes are written into the library as a
+     * {@code .glowreplay} file carrying BerryAPI's own {@code BRPL} magic, which the panel's
+     * magic-based routing sends back to BerryAPI to play. Runs off the UI thread because the capture
+     * can be large; a refusal names the reason rather than leaving the screen blank.
+     */
+    private void saveNativeReplay() {
+        runOnIo(() -> {
+            final byte[] bytes = berryReplay.save();
+            final java.io.File written = bytes.length == 0 ? null
+                    : repository.writeBerryReplay(bytes,
+                            "native_" + org.chimeramc.client.core.replay.ReplayMetadata
+                                    .fileStamp(System.currentTimeMillis()));
+            activity.runOnUiThread(() -> {
+                if (written == null) {
+                    Toast.makeText(activity, R.string.replay_save_native_empty,
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                refreshLibrary();
+                Toast.makeText(activity, activity.getString(R.string.replay_save_native_done,
+                        written.getName()), Toast.LENGTH_LONG).show();
+            });
+        });
     }
 
     private View buildStorageMeter() {
@@ -1010,9 +1061,30 @@ public final class ReplayPanel {
      * by extension and magic so a renamed file cannot be routed to the wrong player.
      */
     private boolean isBerryReplay(ReplayClip clip) {
+        if (clip == null || clip.file() == null) return false;
         String name = clip.file().getName().toLowerCase(java.util.Locale.ROOT);
         if (name.endsWith(".berryreplay") || name.endsWith(".breplay")) return true;
-        return false;
+        // A BerryAPI container exported as .glowreplay carries the BRPL magic, so it is routed by
+        // its bytes rather than its name; reading the head also catches a launcher document renamed
+        // to a BerryAPI extension.
+        byte[] head = readHead(clip.file());
+        return org.chimeramc.client.core.replay.ReplayContainerKind.of(clip.file().getName(), head)
+                == org.chimeramc.client.core.replay.ReplayContainerKind.Kind.BERRY;
+    }
+
+    /** The first few bytes of a file, or null when it cannot be read. */
+    private static byte[] readHead(java.io.File file) {
+        try (java.io.FileInputStream in = new java.io.FileInputStream(file)) {
+            byte[] head = new byte[8];
+            int read = in.read(head);
+            if (read <= 0) return null;
+            if (read == head.length) return head;
+            byte[] shortHead = new byte[read];
+            System.arraycopy(head, 0, shortHead, 0, read);
+            return shortHead;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     /**

@@ -1281,4 +1281,7 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="changelog_section_newest">最新</string>
     <string name="changelog_section_upcoming">今後</string>
     <string name="changelog_section_sneak_peeks">スニークピーク</string>
+    <string name="replay_save_native">ゲームのリプレイを保存</string>
+    <string name="replay_save_native_done">%1$s を保存しました</string>
+    <string name="replay_save_native_empty">保存できるゲームのリプレイがまだありません。まず録画してください。</string>
 </resources>

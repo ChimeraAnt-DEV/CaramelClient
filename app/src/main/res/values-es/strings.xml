@@ -1284,4 +1284,7 @@ La migración debe completarse antes de continuar con GlowberryClient.</string>
     <string name="changelog_section_newest">Novedades</string>
     <string name="changelog_section_upcoming">Próximamente</string>
     <string name="changelog_section_sneak_peeks">Avances</string>
+    <string name="replay_save_native">Guardar la repetición del juego</string>
+    <string name="replay_save_native_done">Guardado %1$s</string>
+    <string name="replay_save_native_empty">Aún no hay una repetición del juego que guardar. Graba una primero.</string>
 </resources>

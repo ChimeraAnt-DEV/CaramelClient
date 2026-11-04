@@ -1305,4 +1305,7 @@
     <string name="changelog_section_newest">最新</string>
     <string name="changelog_section_upcoming">即将推出</string>
     <string name="changelog_section_sneak_peeks">抢先看</string>
+    <string name="replay_save_native">保存游戏回放</string>
+    <string name="replay_save_native_done">已保存 %1$s</string>
+    <string name="replay_save_native_empty">还没有可保存的游戏回放。请先录制一个。</string>
 </resources>

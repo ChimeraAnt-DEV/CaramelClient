@@ -1312,4 +1312,7 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="changelog_section_newest">नवीनतम</string>
     <string name="changelog_section_upcoming">आने वाला</string>
     <string name="changelog_section_sneak_peeks">झलकियाँ</string>
+    <string name="replay_save_native">गेम का रीप्ले सहेजें</string>
+    <string name="replay_save_native_done">%1$s सहेजा गया</string>
+    <string name="replay_save_native_empty">सहेजने के लिए अभी कोई गेम रीप्ले नहीं है। पहले एक रिकॉर्ड करें।</string>
 </resources>

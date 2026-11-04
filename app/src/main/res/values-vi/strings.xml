@@ -1314,4 +1314,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="changelog_section_newest">Mới nhất</string>
     <string name="changelog_section_upcoming">Sắp ra mắt</string>
     <string name="changelog_section_sneak_peeks">Xem trước</string>
+    <string name="replay_save_native">Lưu bản phát lại của trò chơi</string>
+    <string name="replay_save_native_done">Đã lưu %1$s</string>
+    <string name="replay_save_native_empty">Chưa có bản phát lại trò chơi để lưu. Hãy ghi một bản trước.</string>
 </resources>

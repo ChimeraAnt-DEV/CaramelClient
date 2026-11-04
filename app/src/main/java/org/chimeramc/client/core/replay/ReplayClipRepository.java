@@ -184,6 +184,37 @@ public final class ReplayClipRepository {
         return deleted;
     }
 
+    /**
+     * Writes a BerryAPI replay's bytes into the library as a {@code .glowreplay} file.
+     *
+     * <p>The BerryAPI route's recorder half: the library exports its capture (or a loaded replay),
+     * and this writes the bytes where the library lists them. The file carries BerryAPI's own
+     * container magic, so the panel routes it back to BerryAPI to play rather than to the launcher's
+     * embedded MP4 player.
+     *
+     * @param bytes the container bytes from {@code BerryReplaySource.save()}
+     * @param baseName the desired file name (without extension); sanitised and made unique
+     * @return the written file, or null when there is nothing to write or it cannot be written
+     */
+    public File writeBerryReplay(byte[] bytes, String baseName) {
+        if (bytes == null || bytes.length == 0) return null;
+        File dir = ReplayStorage.replayDir(context);
+        String safe = sanitizeName(baseName);
+        if (safe.isEmpty()) safe = "native_replay";
+        if (!safe.toLowerCase(Locale.US).endsWith(ReplayDocument.EXTENSION)) {
+            safe += ReplayDocument.EXTENSION;
+        }
+        File target = ReplayStorage.uniqueFile(dir, safe);
+        try (java.io.FileOutputStream out = new java.io.FileOutputStream(target)) {
+            out.write(bytes);
+            return target;
+        } catch (java.io.IOException e) {
+            AppLog.warnOnce("GlowberryClient", "ReplayClipRepository:berryWrite",
+                    "Could not write the native replay file", e);
+            return null;
+        }
+    }
+
     /** Strips path separators and control characters so a typed name cannot escape the folder. */
     static String sanitizeName(String raw) {
         if (raw == null) return "";

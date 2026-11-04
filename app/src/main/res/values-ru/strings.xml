@@ -1323,4 +1323,7 @@
     <string name="changelog_section_newest">Новое</string>
     <string name="changelog_section_upcoming">Скоро</string>
     <string name="changelog_section_sneak_peeks">Превью</string>
+    <string name="replay_save_native">Сохранить повтор игры</string>
+    <string name="replay_save_native_done">Сохранено %1$s</string>
+    <string name="replay_save_native_empty">Пока нет повтора игры для сохранения. Сначала запишите.</string>
 </resources>

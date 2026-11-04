@@ -1311,4 +1311,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="changelog_section_newest">En yeni</string>
     <string name="changelog_section_upcoming">Yakında</string>
     <string name="changelog_section_sneak_peeks">Ön izlemeler</string>
+    <string name="replay_save_native">Oyun tekrarını kaydet</string>
+    <string name="replay_save_native_done">%1$s kaydedildi</string>
+    <string name="replay_save_native_empty">Kaydedilecek bir oyun tekrarı yok. Önce bir tane kaydedin.</string>
 </resources>
