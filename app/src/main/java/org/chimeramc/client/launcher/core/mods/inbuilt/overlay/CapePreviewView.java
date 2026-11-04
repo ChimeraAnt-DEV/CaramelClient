@@ -16,6 +16,7 @@ import org.chimeramc.client.core.cosmetics.HeadLookTransform;
 import org.chimeramc.client.core.cosmetics.AccessoryGeometry;
 import org.chimeramc.client.core.cosmetics.AuthoredHatModels;
 import org.chimeramc.client.core.cosmetics.AuthoredGeometry;
+import org.chimeramc.client.core.cosmetics.AuthoredCapeTextures;
 import org.chimeramc.client.core.cosmetics.AuthoredPetModels;
 import org.chimeramc.client.core.cosmetics.PetModel;
 import org.chimeramc.client.core.cosmetics.PetGeometry;
@@ -110,6 +111,17 @@ public class CapePreviewView extends View {
      */
     private PlayerSkinProvider.SkinBitmap skin;
     private CosmeticCatalog.Cape cape;
+    /**
+     * The equipped cape's authored 64x32 sheet as ARGB, or null when it has no authored texture.
+     *
+     * <p>Loaded once per selection, never per frame. When present, the preview samples the cape's
+     * real artwork instead of the procedural weave, so the hand-designed capes actually show in the
+     * preview.
+     */
+    private int[] capeAtlas;
+    private int capeAtlasW;
+    private int capeAtlasH;
+    private boolean capeAtlasLoaded;
     private CosmeticCatalog.Accessory accessory;
     private CosmeticCatalog.Pet pet;
     private CosmeticCatalog.PetLocomotion petLocomotion = CosmeticCatalog.PetLocomotion.WALK;
@@ -279,6 +291,7 @@ public class CapePreviewView extends View {
         this.cape = cape;
         markSceneDirty();
         if (cape != null) capeSim.reset(0f, 0f, 0f);
+        loadCapeAtlas();
         rebuildCapeScene();
         syncAnimation();
         invalidate();
@@ -856,6 +869,35 @@ public class CapePreviewView extends View {
     }
 
     /**
+     * Loads the equipped cape's authored sheet into {@link #capeAtlas}, once per selection.
+     *
+     * <p>An authored cape carries artwork a generator cannot, so the preview samples it instead of
+     * the procedural weave. A cape with no authored id leaves the atlas null and the weave draws, so
+     * the hundred-plus generated palette capes keep working. Fail-closed: a missing or undecodable
+     * asset leaves the atlas null rather than throwing.
+     */
+    private void loadCapeAtlas() {
+        capeAtlas = null;
+        capeAtlasW = 0;
+        capeAtlasH = 0;
+        capeAtlasLoaded = true;
+        if (cape == null || !AuthoredCapeTextures.hasAuthoredTexture(cape.id)) return;
+        try (java.io.InputStream input = openAsset(
+                AuthoredCapeTextures.DIR + "/" + AuthoredCapeTextures.fileFor(cape.id))) {
+            android.graphics.Bitmap bitmap =
+                    android.graphics.BitmapFactory.decodeStream(input);
+            if (bitmap == null) return;
+            capeAtlas = atlasPixels(bitmap);
+            capeAtlasW = bitmap.getWidth();
+            capeAtlasH = bitmap.getHeight();
+            bitmap.recycle();
+        } catch (Throwable t) {
+            // An absent or unreadable authored asset falls back to the weave, never to a crash.
+            capeAtlas = null;
+        }
+    }
+
+    /**
      * Rebuilds the cape cloth scene from the current simulator state. Called when the cloth steps.
      */
     private void rebuildCapeScene() {
@@ -864,7 +906,7 @@ public class CapePreviewView extends View {
             return;
         }
         capeScene = new PreviewScene();
-        PreviewCapeScene.addCape(capeScene, cape, capeSim);
+        PreviewCapeScene.addCape(capeScene, cape, capeSim, capeAtlas, capeAtlasW, capeAtlasH);
     }
 
     /**

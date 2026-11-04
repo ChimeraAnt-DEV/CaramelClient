@@ -11,3 +11,15 @@
 - **The preview lights from one model, in `PreviewLighting`.** A key light plus a weak counter-fill (`FILL`), a soft radial contact shadow, and per-face shading driven by each surface's **rotated** normal for animated parts. Shading an animated limb from its resting normal leaves it at a constant brightness while the geometry moves, which is what makes it read as a flat sticker. `drawBox` (accessories) and `drawPetBox` both shade per face now.
 - **The themed particle FX were part of the pack and are gone** (`CosmeticEffects` deleted). A themed cosmetic no longer emits a `particle_effects` render controller.
 - **A cosmetic swap publishes to the native registry.** `CosmeticsPanel.onCosmeticChanged` -> `NativeCosmeticsBridge.publishLocal` hands the equipped set (textures + geometry) to the native renderer; there is no pack write and no world reload. See "Cosmetics are native-only".
+
+- **The preview samples the authored cape art, and the art has real depth.** The preview drew the
+  cape with the procedural weave only, so an authored cape — the point of the hand-designed set —
+  never appeared in the preview: the player picked artwork and saw a template. `CapeAtlas.sample`
+  maps normalised cloth coordinates onto the visible panel (`x=1..10, y=1..16`, the box "front" face
+  the player sees after the vanilla cape bone's 180-degree turn) and `CapePreviewScene.addCape`
+  takes the cape's authored 64x32 sheet, falling back to the weave when there is none or a panel
+  pixel is transparent. `CapePreviewView.loadCapeAtlas` loads it once per selection. The authored
+  PNGs themselves are shaded (a top highlight, a bottom shadow, a 2x2 fabric weave, an inner outline
+  and ordered dither), so a cape reads as cloth rather than 2-3 flat colour blocks.
+  `CapeAtlasTest` pins the panel mapping and `CapeAssetTest.everyAuthoredCapeHasRealDepthNotFlatBlocks`
+  pins the shading.
