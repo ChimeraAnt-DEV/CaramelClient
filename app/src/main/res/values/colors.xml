@@ -70,6 +70,13 @@
     <color name="glass_background_elevated">#44FFFFFF</color>
     <color name="glass_border">#55FFFFFF</color>
 
+    <!-- The glass rim and sheen: a brighter top edge and a downward falloff are what make a surface
+         read as glass rather than as a flat grey rectangle. -->
+    <color name="glass_rim_top">#66FFFFFF</color>
+    <color name="glass_rim_bottom">#1FFFFFFF</color>
+    <color name="glass_sheen">#1AFFFFFF</color>
+    <color name="glass_sheen_end">#00FFFFFF</color>
+
     <!-- Blueberry UI tokens (mirror UiTokens.java). The mod-menu layouts reference these; the
          overlays draw from UiTokens directly. -->
     <color name="ui_bg_window">#F5111214</color>
