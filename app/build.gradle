@@ -346,8 +346,9 @@ tasks.register('syncChangelogAsset', Copy) {
         into 'launcher'
     }
     // The sneak-peek images the feed names, copied to launcher/sneak/ so the app can load them by
-    // the file name the feed carries.
-    from(rootProject.file('docs/assets/mockups')) {
+    // the file name the feed carries. These are the real peeks pulled from the Discord channel, not
+    // the repo's generated mockups, so the in-app feed shows what was actually posted.
+    from(rootProject.file('docs/assets/sneakpeeks')) {
         into 'launcher/sneak'
         include '*.png'
     }
