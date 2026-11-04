@@ -1928,6 +1928,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="changelog_continue">Continue</string>
     <string name="changelog_screen_title">Changelog</string>
     <string name="changelog_empty">No changelog is bundled with this build.</string>
+    <string name="changelog_section_newest">Newest</string>
+    <string name="changelog_section_upcoming">Upcoming</string>
+    <string name="changelog_section_sneak_peeks">Sneak peeks</string>
     <string name="settings_open_changelog">View full changelog</string>
     <string name="instance_notes_title">Note</string>
     <string name="instance_notes_desc">A private note about this instance, shown on its card. Not used by the game.</string>
@@ -2213,18 +2216,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="voice_directory_empty">No public channels are advertising nearby yet. Private channels never appear here - join one with its code.</string>
 
     <!-- Relay server (internet voice) -->
-    <string name="voice_relay_title">Relay server</string>
-    <string name="voice_relay_address_hint">host or host:port (e.g. voice.example.com:47902)</string>
-    <string name="voice_relay_password_hint">Server password (optional)</string>
-    <string name="voice_relay_token_hint">Join token secret (optional; used instead of the password if the server runs in token mode)</string>
-    <string name="voice_relay_apply">Apply &amp; reconnect</string>
-    <string name="voice_relay_off">LAN only - not using a relay server</string>
-    <string name="voice_relay_connecting">Connecting to %1$s\u2026</string>
-    <string name="voice_relay_connected_codec">Connected to %1$s as client %2$d \u00b7 %3$s</string>
-    <string name="voice_relay_address_invalid">Enter a host or host:port, e.g. voice.example.com:47902</string>
-    <string name="voice_relay_reconnecting">Reconnecting to %1$s\u2026</string>
-    <string name="voice_relay_error">%1$s</string>
-    <string name="voice_relay_scope_note">The relay forwards voice between players who are not on the same Wi-Fi. Leave this off to stay on the local network. Audio is Opus-compressed and is not end-to-end encrypted - the server carries your voice, so only use one you trust.</string>
     <string name="voice_directory_current" formatted="false">%1$s (you are here)</string>
     <string name="voice_leave_channel">Leave channel (back to world)</string>
     <string name="voice_copy_code">Copy code</string>
@@ -2629,6 +2620,11 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_instance_title">Install an instance</string>
     <string name="setup_instance_body">Import an authentic Minecraft Bedrock APK to create your first instance. You can add more later from the Library.</string>
     <string name="setup_instance_action">Import an instance</string>
+    <string name="setup_instance_list_title">Your instances</string>
+    <string name="setup_instance_list_empty">No instances yet. Import an APK to create your first one.</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">You have added the maximum of %1$d instances in setup. Add more any time from the Library.</string>
+    <string name="setup_instance_limit_remaining">You can add %1$d more here, or add unlimited instances later from the Library.</string>
     <string name="setup_signin_title">Sign in to Microsoft</string>
     <string name="setup_signin_body">Sign in with your Microsoft account to play online, keep your progress, and see your Xbox friends. You can skip this and sign in later from Accounts.</string>
     <string name="setup_signin_action">Sign in</string>

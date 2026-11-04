@@ -1304,4 +1304,12 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="replay_cinematic_fov_value">%1$d°</string>
     <string name="replay_cinematic_fov_wide">चौड़ा</string>
     <string name="replay_cinematic_fov_narrow">संकरा</string>
+    <string name="setup_instance_list_title">आपके इंस्टेंस</string>
+    <string name="setup_instance_list_empty">अभी कोई इंस्टेंस नहीं। पहला बनाने के लिए APK आयात करें।</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">सेटअप में आपने अधिकतम %1$d इंस्टेंस जोड़ लिए हैं। लाइब्रेरी से और जोड़ सकते हैं।</string>
+    <string name="setup_instance_limit_remaining">यहाँ %1$d और जोड़ सकते हैं, या बाद में लाइब्रेरी से असीमित जोड़ सकते हैं।</string>
+    <string name="changelog_section_newest">नवीनतम</string>
+    <string name="changelog_section_upcoming">आने वाला</string>
+    <string name="changelog_section_sneak_peeks">झलकियाँ</string>
 </resources>

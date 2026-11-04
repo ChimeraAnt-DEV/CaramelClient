@@ -1276,4 +1276,12 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="replay_cinematic_fov_value">%1$d°</string>
     <string name="replay_cinematic_fov_wide">Plus large</string>
     <string name="replay_cinematic_fov_narrow">Plus étroit</string>
+    <string name="setup_instance_list_title">Vos instances</string>
+    <string name="setup_instance_list_empty">Aucune instance pour l\'instant. Importez un APK pour créer la première.</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">Vous avez atteint le maximum de %1$d instances pendant la configuration. Ajoutez-en d\'autres depuis la Bibliothèque.</string>
+    <string name="setup_instance_limit_remaining">Vous pouvez en ajouter %1$d ici, ou autant que vous voulez plus tard depuis la Bibliothèque.</string>
+    <string name="changelog_section_newest">Nouveautés</string>
+    <string name="changelog_section_upcoming">À venir</string>
+    <string name="changelog_section_sneak_peeks">Aperçus</string>
 </resources>

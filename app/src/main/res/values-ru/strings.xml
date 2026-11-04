@@ -1315,4 +1315,12 @@
     <string name="replay_cinematic_fov_value">%1$d°</string>
     <string name="replay_cinematic_fov_wide">Шире</string>
     <string name="replay_cinematic_fov_narrow">Уже</string>
+    <string name="setup_instance_list_title">Ваши экземпляры</string>
+    <string name="setup_instance_list_empty">Экземпляров пока нет. Импортируйте APK, чтобы создать первый.</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">Вы добавили максимум %1$d экземпляров в настройке. Добавьте ещё в Библиотеке.</string>
+    <string name="setup_instance_limit_remaining">Здесь можно добавить ещё %1$d, или без ограничений позже в Библиотеке.</string>
+    <string name="changelog_section_newest">Новое</string>
+    <string name="changelog_section_upcoming">Скоро</string>
+    <string name="changelog_section_sneak_peeks">Превью</string>
 </resources>

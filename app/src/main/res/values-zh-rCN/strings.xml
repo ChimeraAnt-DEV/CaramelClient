@@ -1297,4 +1297,12 @@
     <string name="replay_cinematic_fov_value">%1$d°</string>
     <string name="replay_cinematic_fov_wide">更宽</string>
     <string name="replay_cinematic_fov_narrow">更窄</string>
+    <string name="setup_instance_list_title">你的实例</string>
+    <string name="setup_instance_list_empty">还没有实例。导入一个 APK 来创建第一个。</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">你在设置中已添加最多 %1$d 个实例。随时可从库中添加更多。</string>
+    <string name="setup_instance_limit_remaining">你还可以在这里添加 %1$d 个，或之后从库中添加无限个。</string>
+    <string name="changelog_section_newest">最新</string>
+    <string name="changelog_section_upcoming">即将推出</string>
+    <string name="changelog_section_sneak_peeks">抢先看</string>
 </resources>

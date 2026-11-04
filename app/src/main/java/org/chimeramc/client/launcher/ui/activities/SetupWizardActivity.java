@@ -59,6 +59,16 @@ public class SetupWizardActivity extends BaseActivity {
 
     private SetupWizard.Step step = SetupWizard.Step.LICENSE;
     private boolean licenseAccepted;
+    /** How many instances the wizard imported this run, capped by SetupWizard.IMPORT_LIMIT. */
+    private int importedThisRun;
+    /** The list of instances shown on the install step, rebuilt when the set changes. */
+    private LinearLayout instanceList;
+    private View instanceSection;
+    private TextView instanceEmpty;
+    private Button instanceImport;
+    private TextView instanceLimit;
+    /** Whether the launcher-managed Microsoft sign-in is available; the sign-in step needs it. */
+    private boolean signInAvailable;
 
     /** A single thread for the compatibility gather; a newer render supersedes an older result. */
     private final java.util.concurrent.ExecutorService compatExecutor =
@@ -86,6 +96,17 @@ public class SetupWizardActivity extends BaseActivity {
         discord = binding.setupDiscord;
         rail = binding.setupRail;
         compatRows = binding.setupCompatRows;
+        instanceList = binding.setupInstanceList;
+        instanceSection = binding.setupInstanceSection;
+        instanceEmpty = binding.setupInstanceEmpty;
+        instanceImport = binding.setupInstanceImport;
+        instanceLimit = binding.setupInstanceLimit;
+
+        // The sign-in step can only do something when the launcher-managed Microsoft sign-in is on;
+        // when it is off the Accounts screen shows a "feature disabled" placeholder, so the wizard
+        // hides the step rather than sending the user to a dead end.
+        signInAvailable = org.chimeramc.client.settings.FeatureSettings.getInstance()
+                .isLauncherManagedMcLoginEnabled();
 
         terms.setText(R.string.setup_license_terms);
 
@@ -99,6 +120,13 @@ public class SetupWizardActivity extends BaseActivity {
         primary.setOnClickListener(v -> onNext());
         back.setOnClickListener(v -> onBack());
         skip.setOnClickListener(v -> onSkip());
+        if (instanceImport != null) {
+            // Import straight from the step, rather than only as a side effect of Next. The old
+            // flow opened the file picker when the user pressed Next, which meant the picker
+            // appeared only after they had already moved on, and the step itself looked inert.
+            instanceImport.setOnClickListener(v -> startImportPicker());
+            DynamicAnim.applyPressScale(instanceImport);
+        }
         if (changelog != null) {
             changelog.setOnClickListener(v -> startActivity(
                     new Intent(this, org.chimeramc.client.launcher.ui.activities.ChangelogActivity.class)));
@@ -111,7 +139,10 @@ public class SetupWizardActivity extends BaseActivity {
         DynamicAnim.applyPressScale(skip);
 
         apkImportManager = new ApkImportManager(this, null);
-        apkImportManager.setOnImportCompleteListener(this::render);
+        apkImportManager.setOnImportCompleteListener(() -> {
+            importedThisRun++;
+            render();
+        });
         apkImportManager.setOnImportFailedListener((message, versionName) -> {
             if (status != null) {
                 status.setText(getString(R.string.setup_import_failed, message));
@@ -154,10 +185,15 @@ public class SetupWizardActivity extends BaseActivity {
 
     private void renderStepContent() {
         boolean license = step == SetupWizard.Step.LICENSE;
+        boolean install = step == SetupWizard.Step.INSTALL_INSTANCE;
         termsScroll.setVisibility(license ? View.VISIBLE : View.GONE);
         licenseCheck.setVisibility(license ? View.VISIBLE : View.GONE);
         finishActions.setVisibility(step == SetupWizard.Step.CHANGELOG_DISCORD
                 ? View.VISIBLE : View.GONE);
+        if (instanceSection != null) {
+            instanceSection.setVisibility(install ? View.VISIBLE : View.GONE);
+        }
+        if (install) renderInstances();
 
         switch (step) {
             case LICENSE:
@@ -190,22 +226,84 @@ public class SetupWizardActivity extends BaseActivity {
         updatePrimaryState();
     }
 
+    /**
+     * Draws the install step's list of instances and its import button.
+     *
+     * <p>The list is what the step was missing: a user could import and never see what they had.
+     * The button is gated by the wizard's own {@link SetupWizard#IMPORT_LIMIT}, and the remaining
+     * count is stated so the limit is a rule the user can see rather than a surprise.
+     */
+    private void renderInstances() {
+        if (instanceList == null) return;
+        java.util.List<org.chimeramc.client.core.versions.GameVersion> installed;
+        try {
+            installed = org.chimeramc.client.core.versions.VersionManager.get(this)
+                    .getInstalledVersions();
+        } catch (Throwable t) {
+            installed = java.util.Collections.emptyList();
+        }
+        if (installed == null) installed = java.util.Collections.emptyList();
+
+        instanceList.removeAllViews();
+        for (org.chimeramc.client.core.versions.GameVersion version : installed) {
+            if (version == null) continue;
+            TextView row = new TextView(this);
+            String name = version.displayName != null && !version.displayName.isEmpty()
+                    ? version.displayName
+                    : (version.versionCode != null ? version.versionCode : version.directoryName);
+            String code = version.versionCode != null ? version.versionCode : "";
+            row.setText(getString(R.string.setup_instance_list_item, name, code));
+            row.setTextColor(getColor(R.color.ui_text_primary));
+            row.setTextAppearance(this, com.google.android.material.R.style
+                    .TextAppearance_Material3_BodyMedium);
+            row.setPadding(0, (int) (4 * getResources().getDisplayMetrics().density),
+                    0, (int) (4 * getResources().getDisplayMetrics().density));
+            instanceList.addView(row);
+        }
+        boolean empty = installed.isEmpty();
+        if (instanceEmpty != null) instanceEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+
+        boolean canImport = SetupWizard.canImportMore(importedThisRun);
+        if (instanceImport != null) {
+            instanceImport.setEnabled(canImport);
+            instanceImport.setAlpha(canImport ? 1f : 0.5f);
+        }
+        if (instanceLimit != null) {
+            if (canImport) {
+                instanceLimit.setText(getString(R.string.setup_instance_limit_remaining,
+                        SetupWizard.IMPORT_LIMIT - importedThisRun));
+            } else {
+                instanceLimit.setText(getString(R.string.setup_instance_limit_reached,
+                        SetupWizard.IMPORT_LIMIT));
+            }
+            instanceLimit.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void updatePrimaryState() {
         SetupWizard.Facts facts = new SetupWizard.Facts().licenseAccepted(licenseAccepted);
         primary.setEnabled(SetupWizard.canProceed(step, facts));
         primary.setAlpha(primary.isEnabled() ? 1f : 0.5f);
     }
 
-    /** Draws the progress line and the "Step N of 5" label from the pure step list. */
+    /**
+     * Draws the progress line and the "Step N of M" label from the visible step list.
+     *
+     * <p>The count is the number of steps the user will actually see, so with the sign-in step
+     * hidden the label reads "of 4" rather than "of 5" — a progress line that counts a step the user
+     * can never reach is a small lie the spec asks us not to tell.
+     */
     private void renderRail() {
-        int index = SetupWizard.index(step);
-        stepLabel.setText(getString(R.string.setup_progress_of, index + 1, SetupWizard.STEPS.length));
+        SetupWizard.Step[] visible = SetupWizard.visibleSteps(signInAvailable);
+        int index = SetupWizard.visibleIndex(step, signInAvailable);
+        if (index < 0) index = 0;
+        stepLabel.setText(getString(R.string.setup_progress_of, index + 1, visible.length));
         if (rail == null) return;
         rail.removeAllViews();
         float density = getResources().getDisplayMetrics().density;
         int accent = new PersonalizationManager(this).getAccentColor();
         if (accent == 0) accent = getColor(R.color.primary);
-        for (int i = 0; i < SetupWizard.STEPS.length; i++) {
+        for (int i = 0; i < visible.length; i++) {
             View dot = new View(this);
             int size = (int) ((i == index ? 10 : 8) * density);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
@@ -230,7 +328,8 @@ public class SetupWizardActivity extends BaseActivity {
         View card = binding.setupCompat;
         if (card == null) return;
 
-        boolean relevant = SetupWizard.index(step) >= SetupWizard.index(SetupWizard.Step.SIGN_IN);
+        boolean relevant = SetupWizard.visibleIndex(step, signInAvailable)
+                >= SetupWizard.visibleIndex(SetupWizard.Step.INSTALL_INSTANCE, signInAvailable);
         if (!relevant || !hasInstalledVersion()) {
             card.setVisibility(View.GONE);
             return;
@@ -381,18 +480,18 @@ public class SetupWizardActivity extends BaseActivity {
         SetupWizard.Facts facts = new SetupWizard.Facts().licenseAccepted(licenseAccepted);
         if (!SetupWizard.canProceed(step, facts)) return;
         performStepAction(step);
-        step = SetupWizard.next(step);
+        step = SetupWizard.nextVisible(step, signInAvailable);
         render();
     }
 
     private void onBack() {
-        step = SetupWizard.previous(step);
+        step = SetupWizard.previousVisible(step, signInAvailable);
         render();
     }
 
     private void onSkip() {
         if (!SetupWizard.canSkip(step)) return;
-        step = SetupWizard.next(step);
+        step = SetupWizard.nextVisible(step, signInAvailable);
         render();
     }
 
@@ -404,10 +503,15 @@ public class SetupWizardActivity extends BaseActivity {
                         .edit().putBoolean("eula_accepted", true).apply();
                 break;
             case INSTALL_INSTANCE:
-                startImportPicker();
+                // The step has its own Import button, so Next only advances. Opening the picker
+                // here is what made the file manager appear after the user had already moved on.
                 break;
             case SIGN_IN:
-                startActivity(new Intent(this, AccountsActivity.class));
+                // Only reachable when the feature is on; a dead-end "disabled" screen is never
+                // shown because the step is hidden otherwise.
+                if (SetupWizard.signInAvailable(signInAvailable)) {
+                    startActivity(new Intent(this, AccountsActivity.class));
+                }
                 break;
             case CUSTOMIZE:
                 startActivity(new Intent(this, CustomizeActivity.class));
@@ -449,13 +553,29 @@ public class SetupWizardActivity extends BaseActivity {
         }
     }
 
-    /** Marks the wizard done and opens the launcher. */
+    /** The prefs file the wizard's completion flag lives in. */
+    private static final String PREFS = "glowberry_setup";
+
+    /**
+     * Marks the wizard done and opens the launcher.
+     *
+     * <p>{@code commit()} rather than {@code apply()}: the flag decides whether the wizard is shown
+     * on the next launch, and {@code apply()} writes asynchronously. Finishing the wizard and then
+     * having the process torn down (or the game launched immediately) before the async write landed
+     * is exactly how the wizard came back every launch — the user had completed it, but the flag
+     * had never reached disk. The write is a few bytes, once, so the synchronous cost is nothing.
+     */
     private void finishWizard() {
-        getSharedPreferences("glowberry_setup", MODE_PRIVATE)
-                .edit().putBoolean(KEY_WIZARD_DONE, true).apply();
+        markCompleted(this);
         startActivity(new Intent(this, MainActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
+    }
+
+    /** Writes the completion flag durably. Exposed so a test can pin that it is a commit. */
+    static void markCompleted(Activity activity) {
+        activity.getSharedPreferences(PREFS, Activity.MODE_PRIVATE)
+                .edit().putBoolean(KEY_WIZARD_DONE, true).commit();
     }
 
     /**
@@ -465,10 +585,13 @@ public class SetupWizardActivity extends BaseActivity {
      * instance, so an existing user never saw it — but the wizard owns the licence, the account, the
      * theme and the changelog, so an installed instance is not a reason to skip it. The rule itself
      * lives in {@link SetupWizard#shouldShow(boolean)} so it is unit-tested.
+     *
+     * <p>It is shown only on the first run because completion is written with {@code commit()} (see
+     * {@link #markCompleted}); an asynchronous write is what let it reappear on every launch.
      */
     public static boolean shouldShow(Activity activity) {
         if (activity == null) return false;
-        boolean completed = activity.getSharedPreferences("glowberry_setup", Activity.MODE_PRIVATE)
+        boolean completed = activity.getSharedPreferences(PREFS, Activity.MODE_PRIVATE)
                 .getBoolean(KEY_WIZARD_DONE, false);
         return SetupWizard.shouldShow(completed);
     }

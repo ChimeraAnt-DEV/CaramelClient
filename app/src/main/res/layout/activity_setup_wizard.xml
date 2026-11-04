@@ -127,6 +127,67 @@
                 android:text="@string/setup_finish_discord" />
         </LinearLayout>
 
+        <!--
+            Step 2 only: the installed instances, then the import button. The list is what the step
+            was missing — the user could import but never saw what they had, so "Install an instance"
+            gave no feedback that anything had happened. The import button is gated by the wizard's
+            own limit (SetupWizard.IMPORT_LIMIT).
+        -->
+        <LinearLayout
+            android:id="@+id/setup_instance_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_instance_list_title"
+                android:textColor="@color/ui_text_primary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:accessibilityHeading="true" />
+
+            <LinearLayout
+                android:id="@+id/setup_instance_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/setup_instance_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_instance_list_empty"
+                android:textColor="@color/ui_text_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/setup_instance_import"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_instance_action" />
+
+            <TextView
+                android:id="@+id/setup_instance_limit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:fontFamily="@font/misans"
+                android:textColor="@color/ui_text_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:visibility="gone" />
+        </LinearLayout>
+
         <!-- Device compatibility, shown from the instance step onward. -->
         <LinearLayout
             android:id="@+id/setup_compat"

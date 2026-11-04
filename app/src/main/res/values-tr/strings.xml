@@ -1303,4 +1303,12 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="replay_cinematic_fov_value">%1$d°</string>
     <string name="replay_cinematic_fov_wide">Daha geniş</string>
     <string name="replay_cinematic_fov_narrow">Daha dar</string>
+    <string name="setup_instance_list_title">Örnekleriniz</string>
+    <string name="setup_instance_list_empty">Henüz örnek yok. İlkini oluşturmak için bir APK içe aktarın.</string>
+    <string name="setup_instance_list_item">%1$s · %2$s</string>
+    <string name="setup_instance_limit_reached">Kurulumda en fazla %1$d örnek eklediniz. Kitaplıktan istediğiniz zaman ekleyin.</string>
+    <string name="setup_instance_limit_remaining">Burada %1$d tane daha ekleyebilirsiniz, veya sonra Kitaplıktan sınırsız ekleyebilirsiniz.</string>
+    <string name="changelog_section_newest">En yeni</string>
+    <string name="changelog_section_upcoming">Yakında</string>
+    <string name="changelog_section_sneak_peeks">Ön izlemeler</string>
 </resources>
