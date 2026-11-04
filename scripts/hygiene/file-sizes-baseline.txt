@@ -12,5 +12,5 @@ app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMen
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/RadialMenuView.java 1940
 app/src/main/java/org/chimeramc/client/launcher/core/versions/VersionManager.java 1505
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 1663
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 3036
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 3066
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java 1840

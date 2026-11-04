@@ -216,6 +216,9 @@ import okhttp3.OkHttpClient;
 
     /** The Compose hero host and the state it renders; set up in setupLaunchHero(). */
     private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchHeroState> heroState;
+    /** The preview stage's background state, and the picker host shown on a long-press. */
+    private androidx.compose.runtime.MutableState<String> backgroundState;
+    private androidx.compose.ui.platform.ComposeView backgroundPickerCompose;
     private androidx.compose.ui.platform.ComposeView heroCompose;
     private String heroName = "";
     private String heroVersion = "";
@@ -2919,6 +2922,7 @@ import okhttp3.OkHttpClient;
      * the preview, then keeps the [LaunchHeroState] in step so a recomposition shows the new values.
      */
     private void setupLaunchHero() {
+        setupLaunchPreviewStage();
         View host = findViewById(R.id.launch_hero_compose);
         if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
         heroCompose = (androidx.compose.ui.platform.ComposeView) host;
@@ -2935,6 +2939,61 @@ import okhttp3.OkHttpClient;
                     bindLaunchPreviewCosmetics();
                     if (launchPreview != null) launchPreview.startPreview();
                 });
+    }
+
+    /**
+     * Mounts the preview stage and its background picker.
+     *
+     * <p>The stage shows the character centred on the saved background; a long-press reveals the
+     * picker, which shows each background and stores the choice by its stable id. The character view
+     * is still the real CapePreviewView, handed back through onPreviewReady so the activity binds
+     * the equipped cosmetics.
+     */
+    private void setupLaunchPreviewStage() {
+        View stageHost = findViewById(R.id.launch_preview_stage);
+        if (!(stageHost instanceof androidx.compose.ui.platform.ComposeView)) return;
+        String saved = org.chimeramc.client.settings.FeatureSettings.getInstance()
+                .getLaunchBackgroundId();
+        backgroundState = org.chimeramc.client.ui.compose.launch.LaunchPreviewHost
+                .state(org.chimeramc.client.ui.compose.launch.PreviewBackground.resolve(saved).id);
+        androidx.compose.ui.platform.ComposeView stage =
+                (androidx.compose.ui.platform.ComposeView) stageHost;
+        stage.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.launch.LaunchPreviewHost.setStageContent(
+                stage,
+                backgroundState,
+                getString(R.string.cosmetics_preview_description),
+                this::toggleBackgroundPicker,
+                view -> {
+                    launchPreview = view;
+                    bindLaunchPreviewCosmetics();
+                    if (launchPreview != null) launchPreview.startPreview();
+                });
+
+        View pickerHost = findViewById(R.id.launch_background_picker);
+        if (pickerHost instanceof androidx.compose.ui.platform.ComposeView) {
+            backgroundPickerCompose = (androidx.compose.ui.platform.ComposeView) pickerHost;
+            backgroundPickerCompose.setViewCompositionStrategy(
+                    androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+            org.chimeramc.client.ui.compose.launch.LaunchPreviewHost.setPickerContent(
+                    backgroundPickerCompose,
+                    backgroundState,
+                    id -> org.chimeramc.client.settings.FeatureSettings.getInstance()
+                            .setLaunchBackgroundId(id));
+        }
+    }
+
+    /** Shows or hides the background picker; the long-press on the stage calls this. */
+    private void toggleBackgroundPicker() {
+        View picker = findViewById(R.id.launch_background_picker);
+        if (picker == null) return;
+        boolean show = picker.getVisibility() != View.VISIBLE;
+        picker.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            picker.setAlpha(0f);
+            picker.animate().alpha(1f).setDuration(180L).start();
+        }
     }
 
     /** Rebuilds the hero state from the live fields and recomposes. */
