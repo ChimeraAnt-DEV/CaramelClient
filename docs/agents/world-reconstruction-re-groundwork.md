@@ -97,3 +97,30 @@ Follow a `BlockSource` construction back to its `Level`: a `BlockSource` is buil
 and `+0x38`) shows the call site that already holds the `Level*`. From that `Level*`, the actor
 container is one more field chase — the same shape as the `Level` getters above, but the field
 holds a container rather than a scalar.
+
+### Session 3 probes
+
+- **`EntityRegistry` is real but not RTTI-resolvable.** It appears in the binary's template-instantiation
+  names (`Global<BlockCollisionEvaluationQueueComponent>::_unwrap(gsl::not_null<EntityRegistry *>)`
+  at `.rodata 0x242e55d`), so it is a real engine type — but it is **not polymorphic**, so it has no
+  typeinfo and no vtable, and `resolveVtableFunction("...EntityRegistry...")` finds nothing. The
+  entity list is a *member* of Level/Dimension, reached by a field offset, and that offset can only
+  come from disassembling a function that reads it. Heuristic scans do not find it.
+- **`IEntityRegistryOwner` resolves but is an interface.** vtable `0x155b53a8`, four text slots
+  (`0x11619e60`, `0x11619ef4`, `0x115cb660`, `0x115cb76c`). The first two are destructors (they store
+  the vtable and free members), so this is the abstract owner, not the concrete registry.
+- **The scripting bindings are reachable but do not name the accessor.** `ScriptDimension`'s
+  `getEntitiesFromRay` binding resolves at `0x101b5f70` (via its property-name string), and it is a
+  large function that builds a `ScriptApi` call — it does not inline the entity-list accessor, so it
+  is not a shortcut to the offset.
+- **Member-name strings are absent.** `mEntityRegistry`, `mRuntimeActorList`, `mActorManager`,
+  `getActorManager` and `getEntityRegistry` are all 0 hits; the engine keeps no member names.
+
+### Where the search has to go next
+
+The offset is only reachable by **focused disassembly of the `Dimension`/`Level` constructor** (or of
+a function that iterates entities, e.g. the `SkipAiStepComponent` system whose name is at
+`.rodata 0x24bbfe7`): read the constructor, find the field it initialises with an entity-registry
+`std::unordered_map`-shaped object (a `bucket_count`/`begin`/`end` triple), and take its offset. That
+is a bounded job for one build, not a guess, but it is disassembly work rather than pattern scanning
+and is the next concrete step.
