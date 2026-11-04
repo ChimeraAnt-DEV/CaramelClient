@@ -70,3 +70,30 @@ Level's actor list, and this is where it stops:
 documents as the fail-closed default, so the recorder captures what it honestly can (the local
 player's own session plus the markers and the camera path) and the replay viewer says the world is
 not reconstructed rather than drawing a fabricated one.
+
+### Session 2 probes (what was tried and ruled out)
+
+- **The assertion-string table is a dead end.** `"Level has no actor."` (0x2a05943),
+  `"Duplicated entity, entity trying to load with player's Actor"` (0x2a05943's neighbour) and
+  `"Chunk not found."` sit in a `boost::assert`-style table at `.data.rel.ro 0x1562e780`, and the
+  table's own vtable is `0x1562e7b0` (dtor `0x11bb4fac`). But **no code references the table
+  entries**: an ADRP+ADD/LDR xref for the slot addresses finds nothing, and there are no 8-byte
+  literal pools holding them. The asserts are reached through the table's vtable, not by address, so
+  they cannot anchor a scan to the actor-list code.
+- **`BlockSource`'s accessors return its own pointers, not the world.** Its small vtable getters are
+  `slot[37]/[38] -> self+0x38` and `slot[42]/[43] -> self+0x28` — the `Level`/`Dimension` handles a
+  BlockSource holds, which is useful once the BlockSource is in hand but does not itself give the
+  entity list.
+- **`Actor`/`Player`/`LocalPlayer` have no one-line getters.** Their vtable slots are all
+  multi-instruction methods, so the "find the tiny `ldr x0,[x0,#off]; ret` accessor" heuristic that
+  worked for `Level` and `BlockSource` does not apply to them. Reading an Actor's fields means
+  reading the ones already known from the local-player seam (`+0x230` position, `+0x238` rotation)
+  plus disassembling the specific getters by hand.
+
+### Next concrete probe
+
+Follow a `BlockSource` construction back to its `Level`: a `BlockSource` is built from a
+`Level*` (and a `Dimension*`), so disassembling the constructor (it stores those two at `+0x28`
+and `+0x38`) shows the call site that already holds the `Level*`. From that `Level*`, the actor
+container is one more field chase — the same shape as the `Level` getters above, but the field
+holds a container rather than a scalar.
