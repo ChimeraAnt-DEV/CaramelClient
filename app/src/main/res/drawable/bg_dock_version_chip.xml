@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The version chip in the launch dock (U15). A pill, not a button: a single-line value with a
-    caret, so it reads as the current selection rather than as an action of its own.
+    The instance-select dropdown: its own slab, matching the Play button's squared-off Minecraft
+    look but in the neutral stone tone, so the two read as siblings that are not joined.
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/dock_version_bg" />
-    <corners android:radius="@dimen/radius_pill" />
-    <stroke
-        android:width="1dp"
-        android:color="@color/launch_dock_stroke" />
+    <solid android:color="@color/mc_stone_face" />
+    <corners android:radius="@dimen/radius_button_mc" />
+    <stroke android:width="1dp" android:color="@color/mc_stone_stroke" />
 </shape>

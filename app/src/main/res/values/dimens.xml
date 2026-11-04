@@ -26,6 +26,8 @@
     <dimen name="radius_window">@dimen/radius_xlarge</dimen>
     <dimen name="radius_chip">@dimen/radius_medium</dimen>
     <dimen name="radius_button">@dimen/radius_large</dimen>
+    <!-- The Minecraft button slab: a small radius, not a pill. -->
+    <dimen name="radius_button_mc">6dp</dimen>
     <dimen name="radius_field">@dimen/radius_small</dimen>
     <dimen name="radius_toggle">999dp</dimen>
 
