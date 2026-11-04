@@ -124,3 +124,30 @@ a function that iterates entities, e.g. the `SkipAiStepComponent` system whose n
 `std::unordered_map`-shaped object (a `bucket_count`/`begin`/`end` triple), and take its offset. That
 is a bounded job for one build, not a guess, but it is disassembly work rather than pattern scanning
 and is the next concrete step.
+
+### Session 4 probes
+
+- **The vector-iteration shape is identifiable but not yet the entity list.** The pattern
+  `ldr x0,[xN],#8; ldr x8,[x0]; ldr x8,[x8,#slot]; blr x8` (walk a vector of pointers, call a virtual
+  on each) matches **57 sites** in `.text`. The ones disassembled are all **renoir renderer** internals
+  (`CommandProcessor::ProcessLayer`, `CapturedCommandsImpl::Release`, `RenderFrameCommands::FreeRenoirCommands`),
+  so the pattern alone does not locate the actor list. Narrowing it needs the entity-specific body
+  (a per-entity position/type read), not just the loop shape.
+- **`ClientInstance` slot 31 is `getLocalPlayer`, confirmed again.** Its body loads `x1 = self + 0x240`
+  as the out-parameter and calls a helper; that is the same `+0x240` the doc records, and the same
+  slot the local-player feed already hooks. `ClientInstance`'s other early slots are destructor /
+  swap-shaped, not a `getLevel` getter, so the `Level*` is not on a small ClientInstance slot.
+- **`getLevel` is not a one-instruction accessor on this build.** Unlike `Level`'s own field getters
+  (which are `ldr x0,[x0,#off]; ret`), no `ClientInstance` or `Actor` slot returns a `Level*` in one
+  load, so the level pointer is reached by a method body that has to be read, not pattern-matched.
+
+### The state of the search
+
+Four sessions have: validated the RTTI/vtable resolver and the xref scanner against known values,
+mapped the `ClientInstance`/`Level`/`Actor`/`BlockSource`/`Dimension` vtables, ruled out the
+assertion table, the scripting bindings, the member-name strings and the naive iteration scan, and
+built the walker (`EntityListWalk.hpp`) that turns the answer into a one-line activation. What is
+still missing is the one datum: the byte offset of the entity-list vector inside `Level`/`Dimension`
+(and the entity field offsets). That needs a disassembler pass that follows a *specific* function —
+most promisingly an entity-iterating system such as `SpawnActorSystem` or `ActorPostAiStepTickSystem`,
+whose RTTI names resolve — rather than a global pattern scan.
