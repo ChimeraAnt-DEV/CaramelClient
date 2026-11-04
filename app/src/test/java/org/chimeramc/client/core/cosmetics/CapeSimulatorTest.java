@@ -70,7 +70,13 @@ public class CapeSimulatorTest {
         assertEquals(hz, sim.z(hem), 1e-4f);
     }
 
-    /** Moving leans the hem back: the hem swings to a positive Z (behind the player). */
+    /**
+     * Moving leans the hem back.
+     *
+     * <p>Behind the player is -z (see {@link CosmeticLayering}), so leaning back means a <em>smaller</em>
+     * z, not a larger one. This test previously asserted a positive z and called it "behind", which
+     * is the backwards physics that was reported: the hem was swinging into the player's back.
+     */
     @Test
     public void movingLeansTheHemBack() {
         CapeSimulator sim = new CapeSimulator();
@@ -79,7 +85,8 @@ public class CapeSimulatorTest {
         for (int i = 0; i < 120; i++) {
             sim.step(CapeSimulator.FIXED_DT, 0f, 0f, 0f, 0f, 0f, CapeSimulator.FULL_SWING_SPEED);
         }
-        assertTrue("a running player's cape must lean back", sim.z(hem) > 0.1f);
+        assertTrue("a running player's cape must lean behind them, which is -z",
+                sim.z(hem) < -0.1f);
         assertTrue("the hem must still hang below the hinge", sim.y(hem) < 0f);
     }
 
@@ -97,8 +104,11 @@ public class CapeSimulatorTest {
             sim.step(CapeSimulator.FIXED_DT, 0f, 0f, 0f, 0f, 0f, CapeSimulator.FULL_SWING_SPEED);
         }
         float settled = sim.z(hem);
-        assertTrue("the first frame must not snap to full lean", afterOneFrame < settled * 0.5f);
-        assertTrue("sustained running must reach a real lean", settled > 0.15f);
+        // z is negative behind the player, so "further back" is a more negative z: the first frame's
+        // magnitude must be well under the settled one's.
+        assertTrue("the first frame must not snap to full lean",
+                Math.abs(afterOneFrame) < Math.abs(settled) * 0.5f);
+        assertTrue("sustained running must reach a real lean", settled < -0.15f);
     }
 
     @Test

@@ -34,6 +34,14 @@ public final class CapeSimulator {
     public static final float HEIGHT_BLOCKS = 1f;
 
     /**
+     * Cape thickness in blocks: one pixel, from the 16x10x1 texture.
+     *
+     * <p>A cape is a slab, not a plane. A zero-thickness quad read as a thin sheet with no body,
+     * which is the "no chunkiness" report.
+     */
+    public static final float THICKNESS_BLOCKS = 1f / 16f;
+
+    /**
      * Fixed timestep in seconds. Time is accumulated and consumed in fixed slices so a background
      * frame hitch cannot make the swing jump.
      */
@@ -126,11 +134,26 @@ public final class CapeSimulator {
         // and a still player's target is exactly zero, so the cape hangs straight.
         float speed = Float.isFinite(speedBlocks) ? Math.max(0f, speedBlocks) : 0f;
         float fraction = Math.min(1f, speed / FULL_SWING_SPEED);
-        float target = -MAX_SWING_DEG * fraction;
+        // Positive, because -z is behind the player: place() maps the angle to z = sin(angle) * ly
+        // with ly negative below the hinge, so a positive angle moves the hem to a smaller z (behind
+        // the back). The old negative sign moved it to +z, into the player.
+        float target = MAX_SWING_DEG * fraction;
         // First-order lag: an exponential approach whose per-step factor derives from the time
         // constant, so the settling time does not change with the timestep.
         float alpha = 1f - (float) Math.exp(-dt / SWING_SMOOTHING_SECONDS);
         swingDeg += (target - swingDeg) * alpha;
+    }
+
+    /**
+     * The z a point on the hem reaches at a swing angle, for the physics test.
+     *
+     * <p>The hem is one cape height below the hinge, so its rest offset is {@code -HEIGHT_BLOCKS} in
+     * y. This is the same rotation {@link #place} applies, exposed so the sign is pinned without a
+     * device.
+     */
+    static float hemZForTest(float swingDegrees) {
+        double radians = Math.toRadians(swingDegrees);
+        return (float) (-HEIGHT_BLOCKS * Math.sin(radians));
     }
 
     /** Positions every particle as one rigid rotation of the rest quad about the top hinge. */
