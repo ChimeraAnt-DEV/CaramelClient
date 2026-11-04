@@ -69,6 +69,13 @@ public final class ReplayClipRepository {
     }
 
     private static ReplayClip readClip(File file) {
+        // A portable .glowreplay is self-describing: its metadata, track and duration all live in
+        // the one file, so it is read as a document rather than via a sidecar and a media probe.
+        if (file.getName().toLowerCase(java.util.Locale.US)
+                .endsWith(ReplayDocument.EXTENSION)) {
+            ReplayDocument doc = ReplayDocument.read(file);
+            return doc.toClip(file, doc.track().durationMs());
+        }
         String sidecarText = readSidecarText(file);
         long duration = readDurationMs(file);
         return fromFileAndSidecar(file, sidecarText, duration);

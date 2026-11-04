@@ -32,3 +32,19 @@
   consent without holding its own activity reference.
 - Tests: `ReplayLogicTest` (pure rules - sanitize, sidecar merge, missing-sidecar listing, filter
   and sort), `VipMenuLogicTest` (tab order). No mocks.
+
+- **The portable container is `.glowreplay`.** A replay used to be scattered across a sidecar's flat
+  `key=value` keys and the native capture file, so it was not a thing you could move or share. `ReplayDocument`
+  is the spec's container: a self-describing JSON document (a `format` tag and a `version` on the wire)
+  holding the metadata a replay needs to make sense on its own (player skin, world seed, time of day,
+  server address), plus the track, markers and camera path, each via its existing codec
+  (`ReplayTrack.serializeLine`, `ReplayMarkers.serialize`, `ReplayCameraPathCodec`) rather than a fourth
+  format. It is JSON, not binary, because the recording is small and the pieces already serialise to
+  text; a future binary payload (the world geometry the recorder cannot capture) can be a base64 field
+  without changing the envelope. `ReplayStorage.isClip` lists `.mp4` and `.glowreplay`, and
+  `ReplayClipRepository.readClip` reads a `.glowreplay` as a document (no sidecar, no media probe).
+  `ReplayDocument.toClip`/`fromClip` bridge it to the library, and `ReplaySharing.mimeType` declares it
+  `application/json` (a JSON document declared `video/mp4` makes a receiver fail to play it). A
+  malformed, truncated or foreign file parses to an empty recording, never a throw; a missing field
+  reads as empty (or `-1` for the time of day), never a plausible 0. `ReplayDocumentTest` pins the
+  round trip, the self-describing envelope, the file write/read, the fail-closed rules and the bridge.

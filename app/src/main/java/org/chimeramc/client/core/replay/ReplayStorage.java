@@ -98,7 +98,11 @@ public final class ReplayStorage {
 
     /** True when the file is a clip the library should list. */
     public static boolean isClip(File file) {
-        return file != null && file.isFile() && file.getName().toLowerCase(Locale.US).endsWith(".mp4");
+        if (file == null || !file.isFile()) return false;
+        String name = file.getName().toLowerCase(Locale.US);
+        // A recorded clip is an MP4; a portable replay is a .glowreplay container. Both are listed
+        // in the library, so a replay shared from another install shows up beside the local ones.
+        return name.endsWith(".mp4") || name.endsWith(ReplayDocument.EXTENSION);
     }
 
     /** True when the external volume is mounted and writable. */

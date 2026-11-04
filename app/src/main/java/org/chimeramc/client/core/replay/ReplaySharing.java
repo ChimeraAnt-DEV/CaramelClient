@@ -19,6 +19,15 @@ public final class ReplaySharing {
     /** The MIME type a recorded clip is shared as. */
     public static final String MIME_TYPE = "video/mp4";
 
+    /**
+     * The MIME type a portable {@code .glowreplay} recording is shared as.
+     *
+     * <p>It is a JSON document, not a video, so declaring {@code video/mp4} would make a receiver
+     * try to play it and fail. {@code application/json} is the honest type; the extension still
+     * tells a Glowberry install what it is.
+     */
+    public static final String REPLAY_MIME_TYPE = "application/json";
+
     /** Shown when the clip has no usable name, so the subject is never empty. */
     public static final String FALLBACK_TITLE = "GlowberryClient clip";
 
@@ -36,11 +45,16 @@ public final class ReplaySharing {
     /**
      * The MIME type to declare for a file.
      *
-     * <p>Always {@code video/mp4}: every clip this app records is an MP4, and guessing from the
-     * extension would let a renamed file be declared as something a receiver cannot play. A file
-     * with no name at all still gets the video type rather than {@code *&#47;*}.
+     * <p>A {@code .glowreplay} container is a JSON document, so it is declared as JSON; anything
+     * else is {@code video/mp4}, because every clip this app records is an MP4. Guessing from an
+     * arbitrary extension would let a renamed file be declared as something a receiver cannot play,
+     * so only the one extension this app defines is special-cased. A file with no name at all still
+     * gets the video type rather than {@code *&#47;*}.
      */
     public static String mimeType(File file) {
+        if (file != null && ReplayDocument.EXTENSION.substring(1).equals(extension(file.getName()))) {
+            return REPLAY_MIME_TYPE;
+        }
         return MIME_TYPE;
     }
 
