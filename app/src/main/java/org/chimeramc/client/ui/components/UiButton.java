@@ -56,6 +56,29 @@ public final class UiButton {
         return UiTokens.blend(resting, 0xFFFFFFFF, 0.12f);
     }
 
+    /**
+     * Draws the focus ring around a button.
+     *
+     * <p>The app is driven by a controller and a keyboard as well as touch, so a focused button must
+     * be unmistakable. A 2dp white ring inset by the stroke width, drawn outside the fill so it reads
+     * on any accent. No-op when not focused.
+     *
+     * @param focusColor the ring colour (the caller supplies the token)
+     */
+    public static void drawFocusRing(Canvas c, Paint paint, RectF b, float radius, boolean focused,
+                                     int focusColor) {
+        if (!focused) return;
+        paint.reset();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        float stroke = Math.max(2f, radius / 7f);
+        paint.setStrokeWidth(stroke);
+        paint.setColor(focusColor);
+        float inset = stroke / 2f;
+        c.drawRoundRect(new RectF(b.left + inset, b.top + inset, b.right - inset, b.bottom - inset),
+                radius, radius, paint);
+    }
+
     /** Draws the button. {@code radius} and {@code glowRadius} are px. */
     public static void draw(Canvas c, Paint paint, RectF b, float radius, int accent, Style style,
                             boolean pressed, boolean enabled) {

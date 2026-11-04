@@ -14,6 +14,36 @@
     android:color="?attr/colorControlHighlight">
     <item>
         <selector>
+            <!-- Focused: a bright ring around the slab, so a controller user sees the selection. -->
+            <item android:state_focused="true">
+                <layer-list>
+                    <item>
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button_mc" />
+                            <stroke android:width="2dp" android:color="@color/ui_focus_ring" />
+                        </shape>
+                    </item>
+                    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="5dp">
+                        <shape android:shape="rectangle">
+                            <gradient
+                                android:startColor="@color/mc_button_top"
+                                android:centerColor="@color/mc_button_face"
+                                android:endColor="@color/mc_button_bottom"
+                                android:angle="270" />
+                            <corners android:radius="@dimen/radius_button_mc" />
+                        </shape>
+                    </item>
+                    <item android:left="2dp" android:right="2dp" android:bottom="2dp">
+                        <shape android:shape="rectangle">
+                            <gradient
+                                android:startColor="@color/mc_button_edge"
+                                android:endColor="@color/mc_button_edge"
+                                android:angle="270" />
+                            <corners android:radius="@dimen/radius_button_mc" />
+                        </shape>
+                    </item>
+                </layer-list>
+            </item>
             <!-- Pressed: the face only, shifted down by the edge depth, so the edge vanishes. -->
             <item android:state_pressed="true">
                 <layer-list>

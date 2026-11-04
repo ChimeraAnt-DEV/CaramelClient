@@ -16,6 +16,28 @@
     android:color="?attr/colorControlHighlight">
     <item>
         <selector>
+            <item android:state_focused="true">
+                <layer-list>
+                    <item>
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button" />
+                            <stroke android:width="2dp" android:color="@color/ui_focus_ring" />
+                        </shape>
+                    </item>
+                    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button" />
+                            <solid android:color="@color/ui_focus_ring_overlay" />
+                        </shape>
+                    </item>
+                    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button" />
+                            <solid android:color="?attr/colorPrimary" />
+                        </shape>
+                    </item>
+                </layer-list>
+            </item>
             <item android:state_pressed="true">
                 <layer-list>
                     <!-- The white overlay lightens whatever the accent is. -->

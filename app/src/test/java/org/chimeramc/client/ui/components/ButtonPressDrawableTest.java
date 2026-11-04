@@ -51,6 +51,23 @@ public class ButtonPressDrawableTest {
                 xml.contains("@color/mc_stone_pressed"));
     }
 
+    @Test
+    public void everyButtonDeclaresAVisibleFocusState() throws IOException {
+        // The app is driven by a controller and a keyboard as well as touch, so a focusable button
+        // with no visible focus state leaves a controller user with no idea what is selected. Every
+        // shared button drawable must declare a focused look.
+        String[] buttons = {
+                "app/src/main/res/drawable/button_accent.xml",
+                "app/src/main/res/drawable/bg_dock_play.xml",
+                "app/src/main/res/drawable/bg_dock_version_chip.xml",
+        };
+        for (String path : buttons) {
+            String xml = read(path);
+            assertTrue(path + " must declare a focused state, or a controller user cannot see "
+                    + "what is selected", xml.contains("android:state_focused=\"true\""));
+        }
+    }
+
     private static String read(String relativePath) throws IOException {
         return new String(Files.readAllBytes(root().resolve(relativePath)), StandardCharsets.UTF_8);
     }

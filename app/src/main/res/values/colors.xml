@@ -99,6 +99,10 @@
          instead of being a fixed colour. -->
     <color name="ui_button_press_overlay">#1FFFFFFF</color>
     <color name="ui_disabled_fill">#332A2D33</color>
+    <!-- The focus ring: a bright halo a controller or keyboard user sees around the selected
+         control. High-contrast by design, because its whole job is to be unmistakable. -->
+    <color name="ui_focus_ring">#FFFFFFFF</color>
+    <color name="ui_focus_ring_overlay">#33FFFFFF</color>
     <color name="ui_success">#3DDC84</color>
     <color name="ui_warning">#FFB020</color>
     <color name="ui_danger">#FF5C5C</color>
