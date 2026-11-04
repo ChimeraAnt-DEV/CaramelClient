@@ -144,6 +144,13 @@ class LauncherApplication : Application() {
             org.chimeramc.client.core.minecraft.OptifineModeManager
                 .reconcileOnStartup(applicationContext)
         }
+        // Keep the account skin in sync: if the cache is missing, for another account, or older than
+        // the trust window, re-fetch it in the background. Off the main thread because it reads the
+        // cache, and off the critical path because the first frame does not need it.
+        step("account_skin_sync") {
+            org.chimeramc.client.core.cosmetics.AccountSkinService
+                .refreshIfStale(applicationContext)
+        }
     }
 
     /**

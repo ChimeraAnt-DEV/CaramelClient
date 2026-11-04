@@ -50,6 +50,8 @@ public final class StartupPhases {
         REPLAY_MANAGER,
         /** Native cosmetics: publishes geometry to the native registry, needed when drawing. */
         NATIVE_COSMETICS,
+        /** The account skin re-sync: a cache read plus a background fetch, not needed to draw. */
+        ACCOUNT_SKIN_SYNC,
     }
 
     private StartupPhases() {

@@ -227,7 +227,8 @@ public final class AccountSkinService {
             Bitmap atlas = android.graphics.BitmapFactory.decodeByteArray(png, 0, png.length);
             if (atlas == null) return null;
             AccountSkinCache.write(context.getFilesDir(),
-                    new AccountSkinCache.Entry(png, AccountSkinCache.accountKeyFor(xuid)));
+                    new AccountSkinCache.Entry(png, AccountSkinCache.accountKeyFor(xuid),
+                            System.currentTimeMillis()));
             return PlayerSkinProvider.normalise(atlas);
         } catch (Throwable t) {
             return null;
@@ -237,6 +238,27 @@ public final class AccountSkinService {
     /** True when the lookup should even be attempted: enabled, and a XUID is recorded. */
     public static boolean canLookup(android.content.Context context) {
         return isEnabled(context) && activeXuid(context) != null;
+    }
+
+    /**
+     * Re-syncs the account skin when the cache is missing, belongs to another account, or is older
+     * than {@link AccountSkinCache#MAX_AGE_MS}.
+     *
+     * <p>This is the "constant sync" entry point: called once when the launcher starts (from the
+     * deferred startup work, off the UI thread) and again whenever a preview resolves a stale skin, so
+     * a player who changes their Bedrock skin sees it on the next launch rather than having to clear
+     * app data. It reads the cache, so it must not run on the UI thread; the fetch itself is
+     * backgrounded either way.
+     */
+    public static void refreshIfStale(android.content.Context context) {
+        if (context == null || !canLookup(context)) return;
+        String xuid = activeXuid(context);
+        if (xuid == null) return;
+        AccountSkinCache.Entry entry = AccountSkinCache.read(context.getFilesDir());
+        if (AccountSkinCache.shouldRefresh(entry, xuid, System.currentTimeMillis(),
+                AccountSkinCache.MAX_AGE_MS)) {
+            refreshInBackground(context, xuid);
+        }
     }
 
     private static final java.util.concurrent.atomic.AtomicBoolean refreshRunning =

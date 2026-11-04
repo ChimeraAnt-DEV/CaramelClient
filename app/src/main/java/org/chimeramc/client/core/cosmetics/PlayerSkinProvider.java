@@ -197,37 +197,44 @@ public final class PlayerSkinProvider {
      * The signed-in player's Bedrock skin, from the account lookup or its on-disk cache.
      *
      * <p>Cache first: the atlas fetched on a previous launch is re-read here without a request, so
-     * the launcher (which runs before the game) and the radial wheel show the real skin offline. A
-     * live fetch only happens when the lookup is enabled <em>and</em> there is no cached atlas. Any
-     * failure returns null and the caller continues down the chain.
+     * the launcher (which runs before the game) and the radial wheel show the real skin offline.
      *
-     * <p>Never blocks on the UI thread: the network path is only taken when the cache is empty, and
-     * even then the result is delivered by a background refresh (see
-     * {@link AccountSkinService#canLookup}). A missing cache therefore degrades to the next rung for
-     * the first frame and a later refresh fills it in.
+     * <p>The cache is kept in sync rather than fetched once: when it is missing, belongs to another
+     * account, or is older than {@link AccountSkinCache#MAX_AGE_MS}, a background refresh is
+     * scheduled. The cached atlas is still returned for this frame, so a stale skin is updated
+     * without the preview flashing the fallback. Any failure returns null and the caller continues
+     * down the chain.
+     *
+     * <p>Never blocks on the UI thread: the network path is only taken when the cache is stale, and
+     * the result is delivered by a background refresh (see {@link AccountSkinService#canLookup}).
      */
     private static Bitmap readAccountSkin(Context context) {
         if (context == null) return null;
         if (!AccountSkinService.isEnabled(context)) return null;
         String xuid = AccountSkinService.activeXuid(context);
         // 1. The cached PNG from a previous fetch, which the game's own capture never writes.
+        boolean stale = true;
+        Bitmap cached = null;
         try {
             AccountSkinCache.Entry entry = AccountSkinCache.read(context.getFilesDir());
             // The entry must belong to the account that is signed in now. Serving a cache written for
             // a different account is the "my skin is the wrong account's" bug.
+            stale = AccountSkinCache.shouldRefresh(entry, xuid, System.currentTimeMillis(),
+                    AccountSkinCache.MAX_AGE_MS);
             if (AccountSkinCache.isValidFor(entry, xuid)) {
                 Bitmap decoded = BitmapFactory.decodeByteArray(entry.png, 0, entry.png.length);
-                if (decoded != null) return normalise(decoded);
+                if (decoded != null) cached = normalise(decoded);
             }
         } catch (Throwable ignored) {
             AppLog.warnOnce("GlowberryClient", "PlayerSkinProvider:223", "Ignored a failure at PlayerSkinProvider:223", ignored);
         }
-        // 2. No cache: schedule a background fetch and return null now, so the caller does not block
-        //    on the network. The next resolve (e.g. when the panel is reopened) finds the cache.
-        if (xuid != null && AccountSkinService.canLookup(context)) {
+        // 2. Re-sync when the cache is missing, for another account, or older than the trust window.
+        //    The cached skin is still returned now, so the preview does not flash the fallback while
+        //    the refresh runs; the listener wakes it with the new skin when the fetch lands.
+        if (stale && xuid != null && AccountSkinService.canLookup(context)) {
             AccountSkinService.refreshInBackground(context, xuid);
         }
-        return null;
+        return cached;
     }
 
     private static SharedPreferences prefs(Context context) {

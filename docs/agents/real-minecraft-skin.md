@@ -21,3 +21,14 @@
   skin. Whether the game routes the player's skin through this seam is **unverified (needs device)**.
   The `SerializedSkinRef` base-skin `mce::Image` at `+0x78` would give attribution but its internal
   pixel pointer is not recoverable from the stripped binary, so that route stays documented-only.
+
+- **The account skin is kept in sync, not fetched once.** `AccountSkinCache.Entry` carries
+  `fetchedAtMs`, and `AccountSkinCache.shouldRefresh(entry, xuid, now, MAX_AGE_MS)` is the one rule:
+  refresh when there is no entry for this account or it is older than the trust window (24h). Two
+  callers use it: `AccountSkinService.refreshIfStale` runs as a **deferred startup step**
+  (`StartupPhases.Step.ACCOUNT_SKIN_SYNC`, wired in `Application.runDeferredStartup`) so a changed
+  Bedrock skin is picked up on the next launch without opening a preview, and
+  `PlayerSkinProvider.readAccountSkin` re-syncs on the same rule while still returning the cached
+  atlas, so a stale skin updates without the preview flashing the fallback. A 0 stamp (a cache
+  written before the stamp existed) reads as stale and is refreshed once. `AccountSkinFreshnessTest`
+  pins the rule, the stamp round-trip and the startup wiring.
