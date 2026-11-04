@@ -30,12 +30,6 @@
             android:contentDescription="@string/splash_logo_desc"
             android:src="@drawable/ic_glowberry_logo" />
 
-        <org.chimeramc.client.launcher.ui.views.LaunchRingView
-            android:id="@+id/minecraftLaunchRing"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="@dimen/space_6"
-            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/minecraftLaunchStatus"
@@ -104,6 +98,17 @@
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
         </ScrollView>
     </LinearLayout>
+
+    <!-- The launch ring, pinned to the bottom-right so it reads as a spinner beside the screen
+         rather than part of the centred message. The status keeps the centre to itself. -->
+    <org.chimeramc.client.launcher.ui.views.LaunchRingView
+        android:id="@+id/minecraftLaunchRing"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_6"
+        android:layout_marginBottom="@dimen/space_8"
+        android:importantForAccessibility="no" />
 
     <Button
         android:id="@+id/minecraftLaunchReturn"
