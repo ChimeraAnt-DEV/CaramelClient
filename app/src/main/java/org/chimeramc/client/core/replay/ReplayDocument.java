@@ -115,6 +115,16 @@ public final class ReplayDocument {
         return ReplayCameraPathCodec.parse(optString("cameraPath", ""));
     }
 
+    /**
+     * The other players' recorded tracks, or an empty track.
+     *
+     * <p>The build cannot read other game entities, but a voice peer advertises its position, so
+     * these are the entities a replay can honestly show.
+     */
+    public ReplayEntityTrack entities() {
+        return ReplayEntityTrack.parse(optString("entities", ""));
+    }
+
     /** A fresh document with the required identity fields. */
     public static ReplayDocument of(long recordedAtMs, String world, String gameVersion,
                                     String gameMode) {
@@ -160,6 +170,12 @@ public final class ReplayDocument {
 
     public ReplayDocument setCameraPath(ReplayCameraPath path) {
         root.addProperty("cameraPath", ReplayCameraPathCodec.serialize(path));
+        return this;
+    }
+
+    /** Stores the other players' tracks; an empty track clears the key. */
+    public ReplayDocument setEntities(ReplayEntityTrack entities) {
+        root.addProperty("entities", entities == null ? "" : entities.serialize());
         return this;
     }
 

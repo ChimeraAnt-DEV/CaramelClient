@@ -88,3 +88,14 @@
   captures exactly that and leaves world/server/seed/time-of-day empty rather than inventing them;
   the same limitation the rest of the replay system states. `ReplayRecorderTest` pins the two modes,
   the markers, the metadata and the file write.
+
+- **The recorder captures the other players from the one honest entity feed.** A replay with only the
+  local player has nothing beside the camera. The build cannot read other *game* entities (the game
+  classes are stripped of symbols, per the native-feed doc), but a proximity voice peer advertises its
+  position and facing, and the client already reads that for the nametag icons. `ReplayEntityTrack` is
+  the pure, per-entity store (keyed by peer id, 10 Hz, interpolated, bounded to 64 entities), and
+  `ReplayManager.sampleVoicePeers` fills it each tick from `PeerHitboxSource.readPeers()`. It is in the
+  `.glowreplay` container as the `entities` key. Honest scope: the entity set is "players who were on
+  voice", not every entity in the world — a replay with no voice peers has an empty entity track, and
+  that is correct. `ReplayEntityTrackTest` pins the interpolation, the cadence, the bounds and the
+  serialisation.

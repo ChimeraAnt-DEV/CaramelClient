@@ -34,6 +34,11 @@ public final class ReplayRecorder {
     private final ReplayTrackRecorder sampler;
     private ReplayMarkers markers = ReplayMarkers.empty();
     private ReplayCameraPath cameraPath;
+    /**
+     * The other players' tracks. The build cannot read other game entities, but a voice peer
+     * advertises its position, so those are the entities a replay can honestly show.
+     */
+    private final ReplayEntityTrack entities = ReplayEntityTrack.empty();
 
     private boolean recording;
     private long startedAtMs;
@@ -67,6 +72,7 @@ public final class ReplayRecorder {
         this.recording = true;
         this.markers = ReplayMarkers.empty();
         this.markers.add(0L, ReplayMarkers.Kind.JOIN, "");
+        this.cameraPath = null;
     }
 
     public boolean isRecording() {
@@ -92,6 +98,22 @@ public final class ReplayRecorder {
                           float health) {
         if (!recording || sampler != null) return false;
         return track.sample(elapsedMs, x, y, z, yawDeg, pitchDeg, health);
+    }
+
+    /**
+     * Stores one pose for another player when the cadence allows.
+     *
+     * @return true when the frame was stored
+     */
+    public boolean sampleEntity(long elapsedMs, String entityId, float x, float y, float z,
+                                float yawDeg, float pitchDeg) {
+        if (!recording) return false;
+        return entities.sample(elapsedMs, entityId, x, y, z, yawDeg, pitchDeg);
+    }
+
+    /** The other players' tracks captured so far. */
+    public ReplayEntityTrack entities() {
+        return entities;
     }
 
     /** Adds a marker, merging into an existing one of the same kind inside the window. */
@@ -126,7 +148,8 @@ public final class ReplayRecorder {
         ReplayDocument doc = ReplayDocument.of(startedAtMs, "", gameVersion, gameMode)
                 .setPlayerSkin(playerSkin)
                 .setTrack(track())
-                .setMarkers(markers);
+                .setMarkers(markers)
+                .setEntities(entities);
         if (cameraPath != null && !cameraPath.isEmpty()) {
             doc.setCameraPath(cameraPath);
         }

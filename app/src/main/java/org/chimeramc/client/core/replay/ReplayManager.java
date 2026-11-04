@@ -115,7 +115,9 @@ public final class ReplayManager {
         public void run() {
             ReplayRecorder active = recorder;
             if (active == null || state != State.RECORDING) return;
-            active.tick(elapsedMs());
+            long elapsed = elapsedMs();
+            active.tick(elapsed);
+            sampleVoicePeers(active, elapsed);
             // Re-arm on the same cadence the track stores at, so the loop does no work the track
             // would drop.
             mainHandler.postDelayed(this, ReplayTrack.MIN_SAMPLE_INTERVAL_MS);
@@ -450,6 +452,32 @@ public final class ReplayManager {
      * no clip to attach to, and adding it to the next recording would put an event on a timeline it
      * did not happen on.
      */
+    /**
+     * Samples the proximity-voice peers' advertised poses into the recording's entity track.
+     *
+     * <p>The build cannot read other <em>game</em> entities (the game classes are stripped of
+     * symbols), so the only honest source of another player's position is the voice protocol, which
+     * already advertises it for the nametag icons. Recording those gives a replay the other players
+     * it can actually show, and nothing is invented when the voice module is down: the entity track
+     * is simply empty.
+     */
+    private void sampleVoicePeers(ReplayRecorder active, long elapsedMs) {
+        try {
+            java.util.List<org.chimeramc.client.core.voice.VoicePeer> peers =
+                    org.chimeramc.client.core.mods.inbuilt.overlay.PeerHitboxSource
+                            .readPeers();
+            for (org.chimeramc.client.core.voice.VoicePeer peer : peers) {
+                if (peer == null) continue;
+                active.sampleEntity(elapsedMs, peer.id, peer.x, peer.y, peer.z,
+                        peer.yaw, peer.pitch);
+            }
+        } catch (Throwable t) {
+            // The entity track is best-effort: a voice failure must never disturb the recording.
+            AppLog.warnOnce(TAG, "ReplayManager:voicePeers",
+                    "Ignored a failure sampling the voice peers", t);
+        }
+    }
+
     private void recordMarker(ReplayMarkers.Kind kind, String detail) {
         if (state != State.RECORDING) return;
         ReplayRecorder active = recorder;
