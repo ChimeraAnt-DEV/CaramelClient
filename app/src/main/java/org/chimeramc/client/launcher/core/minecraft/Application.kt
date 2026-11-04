@@ -22,14 +22,9 @@ class LauncherApplication : Application() {
         org.chimeramc.client.util.AppLog.install(applicationContext)
         // Catch main-thread disk/network work in debug builds. A no-op in release.
         org.chimeramc.client.util.StrictModeSetup.install(org.chimeramc.client.BuildConfig.DEBUG)
+        // The critical path: only what a screen drawn on the first frame reads. Everything else is
+        // deferred below, because running it here blocked the first frame (the startup-time report).
         FeatureSettings.init(applicationContext)
-        LowLatencyNetworkManager.init(applicationContext)
-        ThermalGovernor.init(applicationContext)
-        org.chimeramc.client.core.minecraft.FpsOptimizationService.init(applicationContext)
-        org.chimeramc.client.core.mods.fps.FpsModulesService.init(applicationContext)
-        // Attribute a launch that never reported a session to the optifine items that were
-        // active for it, so a hook that kills the process cannot trap the user in a crash loop.
-        org.chimeramc.client.core.minecraft.OptifineModeManager.reconcileOnStartup(applicationContext)
         CrashReporter.init(this)
         // One table a script or a module can ask before it draws, so a feature whose
         // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
@@ -100,6 +95,55 @@ class LauncherApplication : Application() {
         org.chimeramc.client.core.cosmetics.NativeCosmeticsRuntime.init(applicationContext)
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+        // Everything the first frame does not read, off the main thread. Each of these is read only
+        // when its own feature is used, so running it late is invisible; running it on the main
+        // thread before the first frame is what made the start slow. Posted after the main thread has
+        // had a chance to draw, so the launcher's first screen is not competing with it.
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
+            org.chimeramc.client.util.AppExecutors.run(
+                org.chimeramc.client.util.AppExecutors.Kind.DISK, "startup-deferred",
+            ) {
+                runDeferredStartup()
+            }
+        }
+    }
+
+    /**
+     * The startup work that does not have to finish before the first frame.
+     *
+     * <p>Runs on the shared disk executor after the main thread has drawn. Each step is wrapped so one
+     * failure cannot stop the rest: a feature whose init fails is degraded, not a reason for the app
+     * to be missing every other feature. The classification is {@code StartupPhases}, which is
+     * unit-tested, so a new init step has to say which phase it belongs to.
+     */
+    private fun runDeferredStartup() {
+        fun step(name: String, work: () -> Unit) {
+            try {
+                work()
+            } catch (t: Throwable) {
+                org.chimeramc.client.util.AppLog.warnOnce(
+                    "Application", "deferred:$name", "Deferred startup step failed", t,
+                )
+            }
+        }
+        step("low_latency_network") {
+            org.chimeramc.client.settings.LowLatencyNetworkManager
+                .init(applicationContext)
+        }
+        step("thermal_governor") {
+            org.chimeramc.client.settings.ThermalGovernor.init(applicationContext)
+        }
+        step("fps_optimizer") {
+            org.chimeramc.client.core.minecraft.FpsOptimizationService.init(applicationContext)
+        }
+        step("fps_modules") {
+            org.chimeramc.client.core.mods.fps.FpsModulesService.init(applicationContext)
+        }
+        step("optifine_reconcile") {
+            org.chimeramc.client.core.minecraft.OptifineModeManager
+                .reconcileOnStartup(applicationContext)
+        }
     }
 
     /**
