@@ -90,6 +90,16 @@ public final class SplashSceneView extends View {
     // Island draw order (far to near), rebuilt per frame without allocating.
     private final int[] islandOrder = new int[SplashIsland.MAX_BLOCKS];
     private final float[] islandDepth = new float[SplashIsland.MAX_BLOCKS];
+    // Scratch for one block's model-space position, reused so the per-frame pass allocates nothing.
+    private final double[] blockModel = new double[3];
+
+    // The satellite islet's own centre in the model, and the radius and lift of its orbit about the
+    // island centre. Its blocks are stored around this centre, so it can turn and circle on its own.
+    private static final double SATELLITE_CX = 7.5;
+    private static final double SATELLITE_CY = 1.0;
+    private static final double SATELLITE_CZ = 1.5;
+    private static final double SATELLITE_ORBIT_R = 8.0;
+    private static final double SATELLITE_LIFT = 2.5;
 
     public SplashSceneView(Context context) {
         super(context);
@@ -288,9 +298,14 @@ public final class SplashSceneView extends View {
      *
      * <p>Every block is a full cube drawn with the same flat-shaded pass as the floating cubes, and
      * the blocks are ordered far to near by their projected depth so a nearer block paints over one
-     * behind it. Without that sort the island would read as a jumble of see-through cubes. The whole
-     * model is turned by {@link SplashIsland#yaw(float)} so the island slowly orbits, which is what
-     * keeps the backdrop from ever looking static.
+     * behind it. Without that sort the island would read as a jumble of see-through cubes.
+     *
+     * <p>Each cube is also <em>turned</em> to the island's yaw, not left axis-aligned. Drawing the
+     * cubes upright while only their positions orbit is what made the model read as a pile of loose
+     * boxes: a cube whose faces stay square to the screen never shows the shading that says "solid
+     * block". Turning each cube with the model makes the whole thing read as one rotating rock, the
+     * way a Minecraft item in the inventory spins. The satellite islet is its own group, so it spins
+     * and orbits on its own faster, counter-turning against the main island.
      */
     private void drawIsland(Canvas canvas, int w, int h, float density, float t) {
         int blocks = island.blockCount();
@@ -310,18 +325,17 @@ public final class SplashSceneView extends View {
         // A gentle bob, in phase with nothing else, so the island breathes on its own.
         float bob = (float) Math.sin(t * 0.7f) * h * 0.006f;
 
-        int drawable = 0;
         for (int i = 0; i < blocks; i++) {
-            float bx = island.x(i);
-            float bz = island.z(i);
+            islandBlockPos(i, t, blockModel);
+            double bx = blockModel[0];
+            double by = blockModel[1];
+            double bz = blockModel[2];
             // Rotate the block centre about Y then pitch about X (a fixed viewing tilt).
             double z1 = -bx * sinY + bz * cosY;
-            double z2 = island.y(i) * sinP + z1 * cosP;
+            double z2 = by * sinP + z1 * cosP;
             islandDepth[i] = (float) z2;
             islandOrder[i] = i;
-            drawable++;
         }
-        if (drawable == 0) return;
         // Insertion sort by depth (small z is far), so we paint far to near. Blocks are few and
         // mostly pre-sorted, so this is near-linear and allocates nothing.
         for (int i = 1; i < blocks; i++) {
@@ -337,21 +351,51 @@ public final class SplashSceneView extends View {
 
         for (int n = 0; n < blocks; n++) {
             int i = islandOrder[n];
-            float bx = island.x(i);
-            float by = island.y(i);
-            float bz = island.z(i);
+            islandBlockPos(i, t, blockModel);
+            double bx = blockModel[0];
+            double by = blockModel[1];
+            double bz = blockModel[2];
             double x1 = bx * cosY + bz * sinY;
             double z1 = -bx * sinY + bz * cosY;
             double y1 = by * cosP - z1 * sinP;
-            double z2 = by * sinP + z1 * cosP;
             float px = cx + (float) (x1 * scale);
             float py = cy - (float) (y1 * scale) + bob;
             int k = island.kind(i);
-            // The block positions carry the island's turn; each block stays axis-aligned so the
-            // voxel model reads as a turntable rather than every cube tumbling independently.
-            drawVoxelCube(canvas, px, py, scale * 1.02f, 0f,
+            // The satellite islet turns on its own faster orbit; the main island's blocks all share
+            // the island's yaw, so the model turns as one solid object rather than tumbling.
+            float rot = island.group(i) == 1 ? island.satelliteYaw(t) : island.blockYaw(i, t);
+            drawVoxelCube(canvas, px, py, scale * 1.02f, rot,
                     islandTop[k], islandSide[k], islandFront[k]);
         }
+    }
+
+    /**
+     * The model-space position of a block at time {@code t}, into {@code out}.
+     *
+     * <p>The main island's blocks are fixed. The satellite islet's blocks are taken relative to the
+     * islet's own centre, spun by the islet's yaw, then placed on a ring that orbits the island
+     * centre, so the islet drifts around the main mass and turns as it goes. {@code out} is a reused
+     * scratch array, so this allocates nothing per frame.
+     */
+    private void islandBlockPos(int i, float t, double[] out) {
+        if (island.group(i) == 0) {
+            out[0] = island.x(i);
+            out[1] = island.y(i);
+            out[2] = island.z(i);
+            return;
+        }
+        double spin = Math.toRadians(island.satelliteYaw(t));
+        double cos = Math.cos(spin);
+        double sin = Math.sin(spin);
+        double lx = island.x(i) - SATELLITE_CX;
+        double ly = island.y(i) - SATELLITE_CY;
+        double lz = island.z(i) - SATELLITE_CZ;
+        double rx = lx * cos + lz * sin;
+        double rz = -lx * sin + lz * cos;
+        // Orbit around the island centre at the islet's own distance, so it circles the main mass.
+        out[0] = rx + Math.cos(spin) * SATELLITE_ORBIT_R;
+        out[1] = ly + SATELLITE_CY + SATELLITE_LIFT;
+        out[2] = rz + Math.sin(spin) * SATELLITE_ORBIT_R;
     }
 
     private void drawStars(Canvas canvas, int w, int h, float density) {

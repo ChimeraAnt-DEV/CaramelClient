@@ -4,12 +4,17 @@
 - `setPalette(accent, dark)` and `setAnimationsEnabled(animate)` are set from `applySplashTheme`/`startSplashSequence`; under reduced motion the scene paints one static frame instead of going blank.
 - The sequence also runs a slow **halo breathe** (`startLogoBreathe`, a 2.4s reverse scale/alpha ValueAnimator with a start delay so it does not fight the entrance) so the lockup never looks frozen on a slow warm-up.
 - **The floating voxel island is the backdrop's hero.** `SplashIsland` is a pure, seeded block model
-  (grass disc, tapered dirt/stone underside, a tree, drifting rocks) drawn by `SplashSceneView` as a
-  depth-sorted turntable of flat-shaded cubes on top of the star/terrain/cube/ember scene. Blocks are
-  ordered far-to-near by projected depth (a nearer block paints over one behind it), and the block
-  positions carry the island's yaw while each cube stays axis-aligned, so it reads as a turntable
-  rather than every cube tumbling. `SplashIslandTest` pins the silhouette and the turn.
-  `SplashIsland.MAX_BLOCKS` sizes the view's scratch arrays; the model must never exceed it.
+  (grass disc, tapered dirt/stone underside, a tree, drifting rocks, and a small satellite islet in
+  its own group) drawn by `SplashSceneView` as a depth-sorted turntable of flat-shaded cubes on top
+  of the star/terrain/cube/ember scene. Blocks are ordered far-to-near by projected depth (a nearer
+  block paints over one behind it). **Each cube is drawn turned to the island's yaw** (`blockYaw`),
+  not left axis-aligned: a cube whose faces stay square to the screen never shows the face shading,
+  which is exactly what made the model read as "low quality boxes". Turning every cube with the
+  model makes the whole thing read as one solid rotating rock. The satellite islet (`group == 1`) is
+  lifted and spun by `SplashSceneView` on its own faster, counter-turning orbit
+  (`SplashIsland.satelliteYaw`). `SplashIslandTest` pins the silhouette, the shared turntable
+  rotation and the satellite islet; `SplashIsland.MAX_BLOCKS` sizes the view's scratch arrays, so
+  the model must never exceed it.
 
 - The sequence already animates: glow scale-in, mark scale-in, orbiting dot (`startOrbitAnimation`, 3s loop), halo pulse (`startGlowPulse`), progress tween тЖТ `navigateToMain`. Keep new motion on these ValueAnimators rather than swapping in a static PNG.
 - All three tints (`orbitRing`, `orbitDot`, `logoGlow`) are accent-derived; if a colour looks off it is the accent resolver, not the drawable.
