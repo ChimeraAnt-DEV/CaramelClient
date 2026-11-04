@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import org.chimeramc.client.ui.compose.theme.GlassSurface
 import org.chimeramc.client.ui.compose.theme.GlowDimens
 import org.chimeramc.client.ui.compose.theme.glowColors
 
@@ -106,13 +106,9 @@ fun LaunchBackgroundPicker(
     modifier: Modifier = Modifier,
 ) {
     val colors = glowColors
-    Surface(
+    GlassSurface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(GlowDimens.CARD_RADIUS.dp),
-        color = colors.surface,
-        border = androidx.compose.foundation.BorderStroke(
-            GlowDimens.CARD_BORDER_WIDTH.dp, colors.stroke,
-        ),
     ) {
         Column(modifier = Modifier.padding(GlowDimens.CARD_PADDING.dp)) {
             Text(

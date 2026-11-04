@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.chimeramc.client.R
+import org.chimeramc.client.ui.compose.theme.GlassSurface
 import org.chimeramc.client.ui.compose.theme.GlowDimens
 import org.chimeramc.client.ui.compose.theme.glowColors
 import org.chimeramc.client.ui.compose.theme.glowMotion
@@ -75,7 +76,7 @@ fun LaunchHero(
         label = "heroPress",
     )
 
-    Surface(
+    GlassSurface(
         modifier = modifier
             .fillMaxWidth()
             .scale(scale)
@@ -85,8 +86,6 @@ fun LaunchHero(
                 onClick = onHeroClick,
             ),
         shape = RoundedCornerShape(GlowDimens.CARD_RADIUS.dp),
-        color = colors.surface,
-        border = BorderStroke(GlowDimens.CARD_BORDER_WIDTH.dp, colors.stroke),
     ) {
         Row(
             modifier = Modifier
