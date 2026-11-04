@@ -60,6 +60,7 @@
     <color name="mc_button_text">#0B2A47</color>
     <!-- The neutral stone slab the instance dropdown uses. -->
     <color name="mc_stone_face">#6E6E6E</color>
+    <color name="mc_stone_pressed">#7E7E7E</color>
     <color name="mc_stone_stroke">#3A3A3A</color>
     <color name="mc_stone_text">#F2F2F2</color>
     <color name="brand_header_start">#10254F</color>
@@ -93,6 +94,11 @@
     <color name="ui_text_secondary">#9AA0A6</color>
     <color name="ui_text_disabled">#5F6368</color>
     <color name="ui_toggle_off">#2A2D33</color>
+    <!-- The button press light: a translucent white the pressed face is overlaid with, so it
+         lightens by the same 12% the code-side UiButton.pressFill uses and follows a custom accent
+         instead of being a fixed colour. -->
+    <color name="ui_button_press_overlay">#1FFFFFFF</color>
+    <color name="ui_disabled_fill">#332A2D33</color>
     <color name="ui_success">#3DDC84</color>
     <color name="ui_warning">#FFB020</color>
     <color name="ui_danger">#FF5C5C</color>

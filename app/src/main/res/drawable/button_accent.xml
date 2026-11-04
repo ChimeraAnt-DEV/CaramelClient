@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="?attr/colorPrimary" />
-    <corners android:radius="@dimen/radius_small" />
-</shape>
+<!--
+    The accent button background. It presses.
+
+    A plain shape with no pressed state is the "animated UI buttons look trash" report: tapping one
+    changed nothing, so the control felt dead. Two things give it life:
+      * a ripple, the platform's own touch animation, which costs nothing to declare; and
+      * a pressed face a little brighter than the resting one, so the surface reads as catching the
+        light as the finger lands.
+
+    The resting fill stays the theme's primary; the pressed face is the primary with a translucent
+    white overlay on top, so it lightens by the same 12% the code-side UiButton.pressFill uses and
+    follows a custom accent rather than being a fixed colour.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <selector>
+            <item android:state_pressed="true">
+                <layer-list>
+                    <!-- The white overlay lightens whatever the accent is. -->
+                    <item>
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button" />
+                            <solid android:color="@color/ui_button_press_overlay" />
+                        </shape>
+                    </item>
+                    <item>
+                        <shape android:shape="rectangle">
+                            <corners android:radius="@dimen/radius_button" />
+                            <solid android:color="?attr/colorPrimary" />
+                        </shape>
+                    </item>
+                </layer-list>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_button" />
+                    <solid android:color="?attr/colorPrimary" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>
+
