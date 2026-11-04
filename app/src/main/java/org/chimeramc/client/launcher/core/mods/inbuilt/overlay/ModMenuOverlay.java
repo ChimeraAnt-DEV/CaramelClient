@@ -454,7 +454,12 @@ public class ModMenuOverlay {
             if (menuContainer != null) {
                 animateMenuEnter(menuContainer);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            // Throwable, not Exception: an UnsatisfiedLinkError from a native symbol this build does
+            // not ship is an Error, so it escaped the old catch and took the whole app down the
+            // moment the menu opened. The fallback path still shows the menu.
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:show",
+                    "The mod menu could not open; falling back", e);
             showFallback();
         }
     }
