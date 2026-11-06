@@ -218,6 +218,14 @@ object MinecraftRuntimePreparer {
         // place and reported, never silently re-pointed; a failure is logged and the launch
         // continues, because an account problem must not block a launch.
         try {
+            // Refresh the sign-in material before it is exported. A serialised chain is a snapshot
+            // with its own expiries, so an account signed in a day ago holds an expired certificate
+            // and exporting it as-is gives the game a sign-in it rejects -- the game starts signed
+            // out and the user is asked to sign in again. This is a network call once per launch,
+            // and a failure leaves the stored chain untouched so an offline launch still exports
+            // what it has rather than nothing.
+            refreshAccountsForLaunch(context, fileListener, trace)
+
             val boundAccountId = version.boundAccountId
             if (boundAccountId != null && boundAccountId.isNotEmpty()) {
                 val accounts = MsftAccountStore.list(context).map {
@@ -615,6 +623,38 @@ object MinecraftRuntimePreparer {
         } catch (throwable: Throwable) {
             listener.onLog("Failed to load shader compatibility fixer: ${throwable.message ?: throwable.javaClass.simpleName}")
             trace.error("Shader compatibility fixer load failed", throwable.message ?: throwable.javaClass.simpleName)
+        }
+    }
+
+    /**
+     * Refreshes the sign-in material of the account(s) this launch will export.
+     *
+     * <p>Only accounts whose snapshot is older than the trust window are refreshed, so a launch right
+     * after a sign-in does no network work. Failures are logged and never block the launch.
+     */
+    private fun refreshAccountsForLaunch(
+        context: android.content.Context,
+        fileListener: ProgressListener,
+        trace: LaunchTrace,
+    ) {
+        try {
+            val now = System.currentTimeMillis()
+            for (account in MsftAccountStore.list(context)) {
+                if (!org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
+                        account.lastUpdated, now)) {
+                    continue
+                }
+                if (org.chimeramc.client.core.auth.MsftAuthManager
+                        .refreshStoredAccount(context, account)) {
+                    fileListener.onLog("Refreshed the sign-in for ${account.xboxGamertag ?: account.id}")
+                    trace.mark("Sign-in refreshed", account.id)
+                } else {
+                    trace.mark("Sign-in refresh skipped", account.id)
+                }
+            }
+        } catch (error: Throwable) {
+            // An account problem must never block a launch; the export below still runs.
+            trace.error("Sign-in refresh failed", error.javaClass.simpleName)
         }
     }
 

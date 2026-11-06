@@ -121,6 +121,27 @@ public class MsftAccountStore {
         return target;
     }
 
+    /**
+     * Replaces one account's stored sign-in material and stamps it as just refreshed.
+     *
+     * <p>The stamp is what {@code AccountTokenFreshness} reads, so a renewed chain is not renewed
+     * again on the next launch. The active flag and every other field are untouched: refreshing a
+     * token must not change which account the launcher is using.
+     */
+    public static synchronized void updateAuthMaterial(Context ctx, String id, String serialized) {
+        if (id == null || serialized == null) return;
+        List<MsftAccount> accounts = list(ctx);
+        boolean changed = false;
+        for (MsftAccount a : accounts) {
+            if (id.equals(a.id)) {
+                a.serializedAuthManager = serialized;
+                a.lastUpdated = System.currentTimeMillis();
+                changed = true;
+            }
+        }
+        if (changed) save(ctx, accounts);
+    }
+
     public static synchronized void remove(Context ctx, String id) {
         List<MsftAccount> list = list(ctx);
         Iterator<MsftAccount> it = list.iterator();

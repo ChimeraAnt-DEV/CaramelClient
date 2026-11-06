@@ -190,6 +190,20 @@
                                     app:icon="@drawable/ic_internet"
                                     app:iconGravity="textStart"
                                     app:iconTint="@android:color/white" />
+                            <!-- The device-code method is the one that keeps skin sync correct. -->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:background="@drawable/ms_method_label_ok"
+                                android:fontFamily="@font/misans"
+                                android:paddingStart="@dimen/space_3"
+                                android:paddingEnd="@dimen/space_3"
+                                android:paddingTop="@dimen/space_2"
+                                android:paddingBottom="@dimen/space_2"
+                                android:text="@string/ms_method_skin_ok"
+                                android:textColor="@color/method_ok_text"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
 
@@ -256,6 +270,20 @@
                                     app:cornerRadius="10dp"
                                     app:icon="@drawable/ic_monitor"
                                     app:iconGravity="textStart" />
+                                                        <!-- This method will not keep skin sync correct. -->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:background="@drawable/ms_method_label_warn"
+                                android:fontFamily="@font/misans"
+                                android:paddingStart="@dimen/space_3"
+                                android:paddingEnd="@dimen/space_3"
+                                android:paddingTop="@dimen/space_2"
+                                android:paddingBottom="@dimen/space_2"
+                                android:text="@string/ms_method_skin_warning"
+                                android:textColor="@color/method_warn_text"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
 
@@ -321,6 +349,20 @@
                                     app:cornerRadius="10dp"
                                     app:icon="@drawable/ic_qa_account"
                                     app:iconGravity="textStart" />
+                                                        <!-- This method will not keep skin sync correct. -->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2"
+                                android:background="@drawable/ms_method_label_warn"
+                                android:fontFamily="@font/misans"
+                                android:paddingStart="@dimen/space_3"
+                                android:paddingEnd="@dimen/space_3"
+                                android:paddingTop="@dimen/space_2"
+                                android:paddingBottom="@dimen/space_2"
+                                android:text="@string/ms_method_skin_warning"
+                                android:textColor="@color/method_warn_text"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>

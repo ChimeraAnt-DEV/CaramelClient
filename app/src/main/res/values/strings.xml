@@ -633,6 +633,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_web_login_desc">Sign in directly within the app using an embedded web view.</string>
     
     <!-- Microsoft OAuth / MSAL Strings -->
+    <!-- Sign-in method guidance: the device-code path is the one that keeps skin sync correct. -->
+    <string name="ms_method_skin_ok">This sign-in method is the only one that works correctly with skin sync</string>
+    <string name="ms_method_skin_warning">This sign-in method will not work correctly with skin sync</string>
     <string name="ms_oauth_option_title">Microsoft OAuth (Official)</string>
     <string name="ms_oauth_desc">Sign in using the official Microsoft Authentication Library (MSAL).</string>
     <string name="ms_oauth_initializing">Initializing Microsoft OAuth…</string>

@@ -52,6 +52,45 @@ public final class MsftAuthManager {
 
     private static final String TAG = "MsftAuthManager";
     private static final String GAME_VERSION = "1.21.110";
+
+    // --------------------------------------------------------------- sign-in freshness rule
+    //
+    // Inlined here rather than living in its own file: a serialised BedrockAuthManager is a
+    // *snapshot* of the whole token chain, and BedrockAuthManager.fromJson() does not renew
+    // anything. An account signed in a day ago therefore holds an expired certificate, and
+    // XalExporter writes that stale snapshot into the game's XAL directory at launch — the game
+    // then starts signed out, which is why a user who was already signed in kept being asked to
+    // sign in again. refreshStoredAccount() below is what renews it.
+
+    /**
+     * How long a serialised chain is trusted without a refresh.
+     *
+     * <p>Bedrock's Minecraft certificate chain is valid for about 24 hours and the XSTS token for
+     * roughly 12, so 12 hours means at most two refreshes a day while keeping margin before
+     * anything actually expires.
+     */
+    public static final long TOKEN_MAX_TRUST_MS = 12L * 60L * 60L * 1000L;
+
+    /**
+     * Whether a stored chain must be refreshed before it is exported for a launch.
+     *
+     * @param lastUpdatedMs when the snapshot was written, or 0 when unknown
+     * @param nowMs         the current wall clock
+     */
+    public static boolean shouldRefreshTokens(long lastUpdatedMs, long nowMs) {
+        if (lastUpdatedMs <= 0) return true;   // never stamped: cannot be trusted
+        if (nowMs <= 0) return false;          // a nonsense clock must not force a refresh loop
+        final long age = nowMs - lastUpdatedMs;
+        if (age < 0) return false;             // clock moved backwards: keep what we have
+        return age >= TOKEN_MAX_TRUST_MS;
+    }
+
+    /** Whether a stored chain can be used at all (it exists and is the JSON the library writes). */
+    public static boolean hasUsableAuthMaterial(String serializedAuthManager) {
+        if (serializedAuthManager == null) return false;
+        final String trimmed = serializedAuthManager.trim();
+        return !trimmed.isEmpty() && trimmed.startsWith("{");
+    }
     private static final long MIN_DEVICE_POLL_INTERVAL_MS = 1000L;
     /**
      * How often a wait re-checks the cancel flag.
@@ -228,6 +267,56 @@ public final class MsftAuthManager {
      * @return a two-element array {@code {userHash, token}}, or null when the account cannot produce
      *     one (missing or damaged account data, or a failed refresh).
      */
+    /**
+     * Refreshes a stored account's sign-in material and writes the renewed chain back.
+     *
+     * <p><b>Why this exists.</b> A serialised {@code BedrockAuthManager} is a snapshot of the whole
+     * token chain (MSA, XBL, XSTS, the Minecraft certificate), and every step in it has its own
+     * expiry. Reading the snapshot back does <em>not</em> renew anything, so an account signed in a
+     * day or two ago holds an expired certificate. Exporting that snapshot as-is gives the game a
+     * sign-in it rejects, which is why a user who was already signed in kept being asked to sign in
+     * again. {@link BedrockAuthManager#fromJson} plus {@code getUpToDate()} on each step is what
+     * actually renews, and the renewed chain is what gets serialised back.
+     *
+     * <p>Best-effort by contract: a failure returns false and leaves the stored material untouched,
+     * so a launch with no network still exports the previous chain rather than nothing. That is the
+     * same fail-open choice {@code XalExporter} already makes.
+     *
+     * @return true when the stored chain was refreshed and rewritten.
+     */
+    public static boolean refreshStoredAccount(Context context, MsftAccountStore.MsftAccount account) {
+        if (context == null || account == null) return false;
+        if (!hasUsableAuthMaterial(account.serializedAuthManager)) return false;
+        try {
+            HttpClient httpClient = createHttpClient();
+            JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
+            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, GAME_VERSION, json);
+
+            // Touch every step so each renews if it is near expiry, then serialise the result. The
+            // certificate chain is the one the game validates, so it is the last to be pulled.
+            // The XBL token has no public accessor; it is pulled implicitly by the XSTS request,
+            // which is the step that actually needs it. Touching MSA, XSTS, the certificate chain
+            // and PlayFab covers every step the login path serialises.
+            authManager.getMsaToken().getUpToDate();
+            authManager.getXboxLiveXstsToken().getUpToDate();
+            authManager.getMinecraftCertificateChain().getUpToDate();
+            try {
+                authManager.getPlayFabXstsToken().getUpToDate();
+            } catch (Exception e) {
+                // PlayFab is only used for telemetry, so a failure must not fail the refresh — but
+                // it is logged rather than swallowed, so a persistent failure is visible.
+                Log.w(TAG, "PlayFab token unavailable during refresh", e);
+            }
+
+            String refreshed = BedrockAuthManager.toJson(authManager).toString();
+            MsftAccountStore.updateAuthMaterial(context, account.id, refreshed);
+            return true;
+        } catch (Throwable t) {
+            Log.w(TAG, "Could not refresh the stored sign-in material", t);
+            return false;
+        }
+    }
+
     public static String[] xboxLiveXsts(MsftAccountStore.MsftAccount account) {
         if (account == null || TextUtils.isEmpty(account.serializedAuthManager)) return null;
         try {
