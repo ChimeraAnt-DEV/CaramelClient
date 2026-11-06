@@ -873,6 +873,21 @@ GlowberryClient must complete the migration before continuing.</string>
 
     <!-- Mod Menu -->
     <string name="mod_menu">Mod Menu</string>
+    <!-- Mod Menu (Compose rebuild): the sidebar's four destinations -->
+    <string name="mod_menu_title">Mod Menu</string>
+    <string name="mod_menu_tab_modules">Modules</string>
+    <string name="mod_menu_tab_cosmetics">Cosmetics</string>
+    <string name="mod_menu_tab_save">Save</string>
+    <string name="mod_menu_tab_settings">Settings</string>
+    <string name="mod_menu_empty_modules">No modules match this search.</string>
+    <string name="mod_menu_active_count">%1$d active</string>
+    <string name="mod_menu_no_description">No description</string>
+    <string name="mod_menu_unavailable">Not available</string>
+    <string name="mod_menu_close">Close</string>
+    <string name="mod_menu_collapse">Collapse</string>
+    <string name="mod_menu_config">Configure</string>
+    <string name="mod_menu_save_empty">No saved configurations yet.</string>
+    <string name="mod_menu_save_hint">Saved configurations let you switch whole mod loadouts at once.</string>
     <string name="mod_menu_general">General</string>
     <string name="mod_menu_open_button">Open the Mod Menu</string>
     <string name="mod_menu_favorites">Favorites</string>
