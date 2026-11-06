@@ -79,8 +79,8 @@ public class RadialWheelRoutingTest {
     public void theWheelModuleFiltersAreTheOnesTheMenuUnderstands() {
         // The wheel asks for ALL and HUD through the public filter enum, so those two constants
         // must exist for the routing to compile against them at all.
-        assertNotNull(ModMenuOverlay.ModuleFilter.valueOf("ALL"));
-        assertNotNull(ModMenuOverlay.ModuleFilter.valueOf("HUD"));
+        assertNotNull(ModuleFilter.valueOf("ALL"));
+        assertNotNull(ModuleFilter.valueOf("HUD"));
     }
 
     @Test
