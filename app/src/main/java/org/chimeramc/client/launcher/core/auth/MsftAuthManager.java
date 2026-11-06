@@ -1,6 +1,8 @@
 package org.chimeramc.client.core.auth;
 
 import android.content.Context;
+
+import androidx.annotation.Nullable;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -52,6 +54,61 @@ public final class MsftAuthManager {
 
     private static final String TAG = "MsftAuthManager";
     private static final String GAME_VERSION = "1.21.110";
+
+    /**
+     * The Bedrock Android title id, used for every sign-in flow.
+     *
+     * <p>The device-code and WebView flows already used {@code MsaConstants.BEDROCK_ANDROID_TITLE_ID};
+     * the MSAL flow was handed the literal string {@code "YOUR_CLIENT_ID_HERE"} instead, so that
+     * button could never complete a sign-in. Exposing the real id here means the three flows cannot
+     * disagree about which application they are signing in as.
+     */
+    public static String bedrockClientId() {
+        return MsaConstants.BEDROCK_ANDROID_TITLE_ID;
+    }
+
+    /**
+     * The MSAL redirect URI for this package.
+     *
+     * <p>Must match the {@code msauth://<package>/<signature-hash>} form the app registers, and the
+     * signature hash is the URL-encoded class name MSAL uses for a public client on Android.
+     */
+    public static String msalRedirectUri(Context context) {
+        return "msauth://" + context.getPackageName() + "/"
+                + android.net.Uri.encode("com.microsoft.identity.client.SignActivity");
+    }
+
+    /**
+     * Completes the sign-in chain from an MSA access token obtained outside this library.
+     *
+     * <p>This is the bridge the MSAL flow needs. MSAL returns only an MSA token; the game needs the
+     * full chain (XBL, XSTS, the Minecraft certificate). {@code Builder.login(MsaToken)} is the
+     * library's documented seam for "a token obtained manually/externally", and everything after it
+     * — the Xbox Live exchange, the certificate chain — is the same code the device-code path runs.
+     * Without this the MSAL flow returned a username and nothing else, so the game launched signed
+     * out even though the launcher said the user was signed in.
+     *
+     * @param accessToken  the MSA access token from MSAL
+     * @param expiresAtMs  its expiry, in wall-clock milliseconds
+     * @param refreshToken MSAL's refresh token when it exposes one, else null. A null refresh token
+     *                     means the chain cannot renew itself later; {@link #refreshStoredAccount}
+     *                     reports that rather than pretending otherwise.
+     */
+    public static BedrockAuthManager loginWithMsaToken(String accessToken,
+                                                       long expiresAtMs,
+                                                       @Nullable String refreshToken) throws Exception {
+        if (TextUtils.isEmpty(accessToken)) {
+            throw new IllegalArgumentException("MSAL returned no access token.");
+        }
+        HttpClient httpClient = createHttpClient();
+        MsaApplicationConfig config = getAppConfig();
+        net.raphimc.minecraftauth.msa.model.MsaToken msaToken =
+                new net.raphimc.minecraftauth.msa.model.MsaToken(
+                        expiresAtMs, accessToken, refreshToken);
+        return BedrockAuthManager.create(httpClient, GAME_VERSION)
+                .msaApplicationConfig(config)
+                .login(msaToken);
+    }
 
     // --------------------------------------------------------------- sign-in freshness rule
     //
