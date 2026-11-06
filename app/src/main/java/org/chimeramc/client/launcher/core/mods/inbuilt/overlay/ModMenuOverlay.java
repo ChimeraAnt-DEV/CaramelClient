@@ -230,6 +230,18 @@ public class ModMenuOverlay {
     private List<UnifiedMod> allMods = new ArrayList<>();
     private List<UnifiedMod> filteredMods = new ArrayList<>();
     private final Set<String> favoriteKeys = new HashSet<>();
+
+    /**
+     * The Compose menu host, when the Compose presentation is in use.
+     *
+     * <p>The rebuild is opt-in through {@link #useComposeMenu}: it is on for this build, and the
+     * flag lets the View path stay reachable as a fallback if Compose fails to initialise on a
+     * device, rather than removing a working screen and having nothing to fall back to.
+     */
+    private androidx.compose.ui.platform.ComposeView composeMenuView;
+    private androidx.compose.runtime.MutableState<
+            org.chimeramc.client.ui.compose.modmenu.ModMenuState> composeMenuState;
+    private static final boolean useComposeMenu = true;
     private ModuleFilter activeFilter = ModuleFilter.ALL;
     /**
      * How many one-shot action rows the current section shows (M3).
@@ -413,6 +425,7 @@ public class ModMenuOverlay {
 
             setupViews();
             loadMods();
+            attachComposeMenu();
             disableFocusHighlight(overlayView);
 
             wmParams = new WindowManager.LayoutParams(
@@ -462,6 +475,116 @@ public class ModMenuOverlay {
                     "The mod menu could not open; falling back", e);
             showFallback();
         }
+    }
+
+    /**
+     * Builds the Compose menu and adds it over the View menu's container.
+     *
+     * <p>The Compose tree is the presentation; the View tree underneath stays inflated so the
+     * backdrop capture, the bind dialog and the panels that are still Views keep working, and so a
+     * Compose failure leaves a working menu rather than a blank window.
+     */
+    private void attachComposeMenu() {
+        if (!useComposeMenu || overlayView == null) return;
+        try {
+            composeMenuState = org.chimeramc.client.ui.compose.modmenu.ModMenuHost.state(
+                    org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder.build(
+                            allMods,
+                            favoriteKeys,
+                            org.chimeramc.client.ui.compose.modmenu.ModMenuDestination.MODULES));
+
+            composeMenuView = new androidx.compose.ui.platform.ComposeView(activity);
+            composeMenuView.setLayoutParams(new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT));
+
+            org.chimeramc.client.ui.compose.modmenu.ModMenuHost.setContent(
+                    composeMenuView,
+                    composeMenuState,
+                    destination -> {
+                        if (composeMenuState == null) return;
+                        composeMenuState.setValue(
+                                composeMenuState.getValue().withDestination(destination));
+                    },
+                    query -> {
+                        if (composeMenuState == null) return;
+                        composeMenuState.setValue(
+                                composeMenuState.getValue().withSearch(query));
+                    },
+                    (stableKey, enabled) -> onComposeModuleToggle(stableKey, enabled),
+                    stableKey -> onComposeFavoriteToggle(stableKey),
+                    () -> {
+                        if (composeMenuState == null) return;
+                        composeMenuState.setValue(composeMenuState.getValue()
+                                .withFavoritesOnly(!composeMenuState.getValue()
+                                        .getFavoritesOnly()));
+                    },
+                    (key, enabled) -> onComposeSettingToggle(key, enabled),
+                    this::hide);
+
+            FrameLayout host = overlayView.findViewById(R.id.mod_menu_container);
+            if (host != null) {
+                host.addView(composeMenuView);
+            } else {
+                ((android.view.ViewGroup) overlayView).addView(composeMenuView);
+            }
+        } catch (Throwable e) {
+            // Compose failing must never take the menu down: the View menu is already inflated
+            // underneath, so dropping the Compose layer leaves a working screen.
+            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:compose",
+                    "The Compose Mod Menu could not start; using the View menu", e);
+            composeMenuView = null;
+            composeMenuState = null;
+        }
+    }
+
+    /** Persists a module toggle from the Compose menu and refreshes the rows. */
+    private void onComposeModuleToggle(String stableKey, boolean enabled) {
+        for (UnifiedMod mod : allMods) {
+            if (!org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder
+                    .matchesKey(mod, stableKey)) {
+                continue;
+            }
+            boolean applied = org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder
+                    .toggle(mod, enabled);
+            InbuiltModManager manager = InbuiltModManager.getInstance(activity);
+            if (mod.getSource() == UnifiedMod.Source.INBUILT) {
+                manager.setInbuiltModEnabled(mod.getModId(), applied);
+            } else {
+                manager.setExternalModuleEnabled(mod.getModId(), applied);
+            }
+            break;
+        }
+        refreshComposeMenu();
+    }
+
+    /** Persists a favorite toggle from the Compose menu. */
+    private void onComposeFavoriteToggle(String stableKey) {
+        boolean nowFavorite = !favoriteKeys.contains(stableKey);
+        if (nowFavorite) {
+            favoriteKeys.add(stableKey);
+        } else {
+            favoriteKeys.remove(stableKey);
+        }
+        InbuiltModManager.getInstance(activity).setModFavorite(stableKey, nowFavorite);
+        refreshComposeMenu();
+    }
+
+    /** Applies a settings toggle from the Compose menu's Settings destination. */
+    private void onComposeSettingToggle(String key, boolean enabled) {
+        InbuiltModManager.getInstance(activity).setModConfigBool(key, enabled);
+        refreshComposeMenu();
+    }
+
+    /** Rebuilds the Compose state from the mod list, preserving the destination and the filters. */
+    private void refreshComposeMenu() {
+        if (composeMenuState == null) return;
+        var current = composeMenuState.getValue();
+        var rebuilt = org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder.build(
+                allMods, favoriteKeys, current.getDestination());
+        composeMenuState.setValue(rebuilt
+                .withSearch(current.getSearch())
+                .withFavoritesOnly(current.getFavoritesOnly()));
     }
 
     private void showFallback() {

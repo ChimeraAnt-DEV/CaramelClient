@@ -87,4 +87,28 @@ data class ModMenuState(
         }
 
     val activeCount: Int get() = rows.count { it.enabled }
+
+    // Java-facing helpers. The generated `copy` takes nine positional arguments, which is easy to
+    // mis-order from Java; these name the one field each changes, so the overlay cannot transpose
+    // two of them.
+    fun withDestination(destination: ModMenuDestination): ModMenuState =
+        copy(destination = destination)
+
+    fun withSearch(search: String): ModMenuState = copy(search = search)
+
+    fun withFavoritesOnly(favoritesOnly: Boolean): ModMenuState =
+        copy(favoritesOnly = favoritesOnly)
+
+    fun withRows(rows: List<ModRow>): ModMenuState = copy(rows = rows)
+
+    fun withSettings(settings: List<SettingsRow>): ModMenuState = copy(settings = settings)
+
+    fun withLoadouts(loadouts: List<SavedLoadout>): ModMenuState = copy(loadouts = loadouts)
+
+    /** Rebuilds the row list from a fresh catalogue, keeping the destination and the filters. */
+    fun withCatalogue(
+        rows: List<ModRow>,
+        loadouts: List<SavedLoadout>,
+        settings: List<SettingsRow>,
+    ): ModMenuState = copy(rows = rows, loadouts = loadouts, settings = settings)
 }
