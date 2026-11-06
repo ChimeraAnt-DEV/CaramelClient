@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ViewConfiguration;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -186,15 +185,12 @@ public class ModMenuOverlay {
     private TextView modMenuPrimaryOpacityText;
     private SeekBar modMenuButtonOpacitySeekBar;
     private TextView modMenuButtonOpacityText;
-    private SeekBar hudButtonSizeSeekBar;
-    private SeekBar hudButtonOpacitySeekBar;
-    private TextView hudButtonOpacityText;
-    private HudSafeAreaView hudSafeAreaView;
-    private View hudEditorToolsView;
-    private TextView hudButtonSizeText;
-    private boolean updatingHudButtonSize = false;
-    private boolean updatingHudButtonOpacity = false;
-    private boolean compactMode = false;
+                    /**
+     * The HUD editor: drag handle, safe-area guide, button size/opacity controls and the mode
+     * switch. Extracted so this class keeps headroom under the file-size budget.
+     */
+    private HudEditorController hudEditor;
+                private boolean compactMode = false;
     private GridLayoutManager modsLayoutManager;
 
     /** Live keybind labels on the Settings tab, refreshed when a bind is set or cleared. */
@@ -680,60 +676,32 @@ public class ModMenuOverlay {
         pauseMenuOnlySwitch = overlayView.findViewById(R.id.switch_pause_menu_only);
         compactModeSwitch = overlayView.findViewById(R.id.switch_compact_mod_menu);
 
-        View hudEditorTools = overlayView.findViewById(R.id.hud_editor_tools);
-        hudEditorToolsView = hudEditorTools;
-        hudSafeAreaView = overlayView.findViewById(R.id.hud_safe_area);
-        View hudEditorDragHandle = overlayView.findViewById(R.id.hud_editor_drag_handle);
-        if (hudEditorDragHandle != null) setupHudEditorDragHandle(hudEditorDragHandle, hudEditorTools);
-        View btnHudSave = overlayView.findViewById(R.id.btn_hud_save);
-        View btnHudCancel = overlayView.findViewById(R.id.btn_hud_cancel);
         View modMenuContainer = overlayView.findViewById(R.id.mod_menu_container);
-        hudButtonSizeSeekBar = overlayView.findViewById(R.id.seekbar_hud_button_size);
-        hudButtonSizeText = overlayView.findViewById(R.id.text_hud_button_size);
-        hudButtonOpacitySeekBar = overlayView.findViewById(R.id.seekbar_hud_button_opacity);
-        hudButtonOpacityText = overlayView.findViewById(R.id.text_hud_button_opacity);
 
-        if (hudButtonSizeSeekBar != null) {
-            hudButtonSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        // The HUD editor owns its tool views, drag handle, sliders and the floating-window switch.
+        // It is created here, after the overlay is inflated, and re-pointed at the current window
+        // params on every show.
+        if (hudEditor == null) {
+            hudEditor = new HudEditorController(activity, new HudEditorController.Host() {
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (!fromUser || updatingHudButtonSize) return;
-                    InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
-                    if (manager != null) {
-                        manager.setSelectedHudEditorButtonSize(progress);
-                    }
-                    updateHudButtonSizeText(progress);
+                public void onEditorNavigation() {
+                    updateNavigationItems(false, false, true, false, false, false, false);
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
-            });
-            updateHudEditorSizeControls(0);
-        }
-
-        if (hudButtonOpacitySeekBar != null) {
-            hudButtonOpacitySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (!fromUser || updatingHudButtonOpacity) return;
-                    InbuiltOverlayManager manager = InbuiltOverlayManager.getInstance();
-                    if (manager != null) {
-                        manager.setSelectedHudEditorOpacity(progress);
-                    }
-                    updateHudButtonOpacityText(progress);
+                public void onEditorClosed() {
+                    showModulesSection();
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
+                public void animateMenuEnter(View container) {
+                    ModMenuOverlay.this.animateMenuEnter(container);
+                }
             });
-            updateHudEditorSizeControls(0);
         }
+        hudEditor.updateWindow(windowManager, wmParams);
+        hudEditor.bind(overlayView, windowManager, wmParams);
+
 
         // Touch feedback on the stable chrome (filter chips + close). Recycler rows get their own
         // feedback in the adapter, since they are recycled and rebound; the rail tiles get theirs
@@ -753,35 +721,19 @@ public class ModMenuOverlay {
             TouchTargetHelper.expand(overlayView.findViewById(id));
         }
 
-        if (btnHudSave != null) {
-            btnHudSave.setOnClickListener(v -> {
-                exitHudEditorMode(modMenuContainer, hudEditorTools);
-            });
-        }
-
-        View btnHudReset = overlayView.findViewById(R.id.btn_hud_reset);
-        if (btnHudReset != null) {
-            btnHudReset.setOnClickListener(v -> {
-                InbuiltOverlayManager.getInstance().resetAllPositionsToCenter();
-            });
-        }
-
-        if (btnHudCancel != null) {
-            btnHudCancel.setOnClickListener(v -> {
-                exitHudEditorMode(modMenuContainer, hudEditorTools);
-            });
-        }
+        // Save / reset / cancel are wired by HudEditorController.bind().
 
         // Close on background tap
         overlayView.setOnClickListener(v -> {
             // Only hide if not in HUD editor mode
-            if (hudEditorTools == null || hudEditorTools.getVisibility() != View.VISIBLE) {
+            if (hudEditor == null || !hudEditor.isOpen()) {
                 hide();
             }
         });
         menuContainer.setOnClickListener(v -> {}); // Consume clicks
-        if (hudEditorTools != null) {
-            hudEditorTools.setOnClickListener(v -> {}); // Consume clicks
+        View hudTools = hudEditor != null ? hudEditor.toolsView() : null;
+        if (hudTools != null) {
+            hudTools.setOnClickListener(v -> {}); // Consume clicks
         }
 
         closeBtn.setOnClickListener(v -> hide());
@@ -2089,235 +2041,6 @@ public class ModMenuOverlay {
         }
     }
 
-    private void setupHudEditorDragHandle(View handle, View tools) {
-        final int touchSlop = ViewConfiguration.get(activity).getScaledTouchSlop();
-        handle.setOnTouchListener(new View.OnTouchListener() {
-            private float downX, downY;
-            private int startX, startY;
-            private int pointerId = -1;
-            private boolean dragging;
-
-            @Override public boolean onTouch(View view, MotionEvent event) {
-                if (overlayView == null || tools == null || tools.getVisibility() != View.VISIBLE) return false;
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        pointerId = event.getPointerId(0);
-                        downX = event.getRawX();
-                        downY = event.getRawY();
-                        dragging = false;
-                        if (wmParams != null) {
-                            startX = wmParams.x;
-                            startY = wmParams.y;
-                        } else {
-                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) overlayView.getLayoutParams();
-                            startX = params.leftMargin;
-                            startY = params.topMargin;
-                        }
-                        view.getParent().requestDisallowInterceptTouchEvent(true);
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        if (pointerId < 0 || event.getPointerId(0) != pointerId) return true;
-                        float dx = event.getRawX() - downX;
-                        float dy = event.getRawY() - downY;
-                        if (Math.abs(dx) > touchSlop || Math.abs(dy) > touchSlop) dragging = true;
-                        if (dragging) moveHudEditorTools(startX + Math.round(dx), startY + Math.round(dy));
-                        return true;
-                    case MotionEvent.ACTION_POINTER_UP:
-                        if (event.getPointerId(event.getActionIndex()) != pointerId) return true;
-                        pointerId = -1;
-                        view.getParent().requestDisallowInterceptTouchEvent(false);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        if (pointerId >= 0 && !dragging) view.performClick();
-                        // Fall through to release the gesture on both up and cancellation.
-                    case MotionEvent.ACTION_CANCEL:
-                        pointerId = -1;
-                        dragging = false;
-                        view.getParent().requestDisallowInterceptTouchEvent(false);
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        });
-    }
-
-    private void moveHudEditorTools(int x, int y) {
-        if (overlayView == null) return;
-        OverlayBounds.Position position = OverlayBounds.clampPosition(activity, overlayView, x, y);
-        if (wmParams != null && windowManager != null) {
-            wmParams.x = position.x;
-            wmParams.y = position.y;
-            windowManager.updateViewLayout(overlayView, wmParams);
-        } else if (overlayView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) overlayView.getLayoutParams();
-            params.leftMargin = position.x;
-            params.topMargin = position.y;
-            overlayView.setLayoutParams(params);
-        }
-    }
-
-    /**
-     * Shows or hides the safe-area frame.
-     *
-     * <p>The frame is measured against the window it will cover, so it is populated after the first
-     * layout pass rather than at inflation, when the window size is still unknown.
-     */
-    private void showHudSafeArea(boolean show) {
-        if (hudSafeAreaView == null) return;
-        if (!show) {
-            hudSafeAreaView.setVisibility(View.GONE);
-            return;
-        }
-        hudSafeAreaView.setVisibility(View.VISIBLE);
-        hudSafeAreaView.post(() -> {
-            if (hudSafeAreaView == null || overlayView == null) return;
-            int width = overlayView.getWidth();
-            int height = overlayView.getHeight();
-            if (width <= 0 || height <= 0) return;
-            OverlaySafeArea.Rect safe = OverlaySafeArea.forView(overlayView, width, height);
-            int gridPx = Math.round(OverlaySafeArea.DEFAULT_GRID_DP
-                    * activity.getResources().getDisplayMetrics().density);
-            hudSafeAreaView.setGeometry(safe, OverlaySafeArea.cutoutBounds(overlayView), gridPx);
-        });
-    }
-
-    private void enterHudEditorMode(View modMenuContainer, View hudEditorTools) {
-        updateNavigationItems(false, false, true, false, false, false, false);
-
-        if (modMenuContainer != null) {
-            modMenuContainer.setVisibility(View.GONE);
-        }
-        if (hudEditorTools != null) {
-            hudEditorTools.setVisibility(View.VISIBLE);
-            hudEditorTools.setAlpha(1f);
-            hudEditorTools.setTranslationX(0f);
-        }
-        showHudSafeArea(true);
-        if (overlayView != null) {
-            overlayView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            overlayView.setClickable(false);
-        }
-        if (wmParams != null && windowManager != null) {
-            wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            wmParams.gravity = Gravity.TOP | Gravity.LEFT;
-            wmParams.x = 0;
-            wmParams.y = 0;
-            windowManager.updateViewLayout(overlayView, wmParams);
-        } else if (overlayView != null && overlayView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) overlayView.getLayoutParams();
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.gravity = Gravity.TOP | Gravity.LEFT;
-            params.leftMargin = 0;
-            params.topMargin = 0;
-            overlayView.setLayoutParams(params);
-        }
-        // Wait for the compact tool window to be measured before centering it.
-        final View editorRoot = overlayView;
-        if (editorRoot != null) editorRoot.post(() -> {
-            if (overlayView != editorRoot || hudEditorTools == null || hudEditorTools.getVisibility() != View.VISIBLE) return;
-            OverlayBounds.Position rightEdge = OverlayBounds.clampPosition(
-                    activity, editorRoot, Integer.MAX_VALUE, 0);
-            moveHudEditorTools(rightEdge.x / 2, 0);
-        });
-        InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
-        if (overlayManager != null) {
-            overlayManager.setHudEditorSelectionListener(this::onHudEditorSelectionChanged);
-            overlayManager.setHudEditorMode(true);
-        }
-    }
-
-    private void exitHudEditorMode(View modMenuContainer, View hudEditorTools) {
-        if (hudEditorTools != null) {
-            hudEditorTools.setVisibility(View.GONE);
-        }
-        showHudSafeArea(false);
-        if (overlayView != null) {
-            overlayView.setClickable(true);
-        }
-        if (wmParams != null && windowManager != null) {
-            wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            wmParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-            wmParams.gravity = Gravity.CENTER;
-            wmParams.x = 0;
-            wmParams.y = 0;
-            windowManager.updateViewLayout(overlayView, wmParams);
-        } else if (overlayView != null && overlayView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) overlayView.getLayoutParams();
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.gravity = Gravity.CENTER;
-            params.leftMargin = 0;
-            params.topMargin = 0;
-            overlayView.setLayoutParams(params);
-        }
-        if (modMenuContainer != null) {
-            modMenuContainer.setVisibility(View.VISIBLE);
-            animateMenuEnter(modMenuContainer);
-        }
-        InbuiltOverlayManager overlayManager = InbuiltOverlayManager.getInstance();
-        if (overlayManager != null) {
-            overlayManager.setHudEditorMode(false);
-            overlayManager.setHudEditorSelectionListener(null);
-        }
-        showModulesSection();
-    }
-
-    private void onHudEditorSelectionChanged(int sizeDp, int opacity) {
-        updateHudEditorSizeControls(sizeDp);
-        updateHudEditorOpacityControls(opacity);
-    }
-
-    private void updateHudEditorSizeControls(int sizeDp) {
-        if (hudButtonSizeSeekBar == null) return;
-        boolean hasSelection = sizeDp > 0;
-        hudButtonSizeSeekBar.setEnabled(hasSelection);
-        if (hudButtonOpacitySeekBar != null) {
-            hudButtonOpacitySeekBar.setEnabled(hasSelection);
-        }
-        if (!hasSelection) {
-            updateHudButtonSizeText(0);
-            updateHudButtonOpacityText(0);
-            return;
-        }
-        updatingHudButtonSize = true;
-        hudButtonSizeSeekBar.setProgress(sizeDp);
-        updatingHudButtonSize = false;
-        updateHudButtonSizeText(sizeDp);
-    }
-
-    private void updateHudEditorOpacityControls(int opacity) {
-        if (hudButtonOpacitySeekBar == null) return;
-        boolean hasSelection = opacity > 0;
-        if (!hasSelection) {
-            updateHudButtonOpacityText(0);
-            return;
-        }
-        updatingHudButtonOpacity = true;
-        hudButtonOpacitySeekBar.setProgress(opacity);
-        updatingHudButtonOpacity = false;
-        updateHudButtonOpacityText(opacity);
-    }
-
-    private void updateHudButtonOpacityText(int opacity) {
-        if (hudButtonOpacityText == null) return;
-        if (opacity <= 0) {
-            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity));
-        } else {
-            hudButtonOpacityText.setText(activity.getString(R.string.overlay_button_opacity_value, opacity));
-        }
-    }
-
-    private void updateHudButtonSizeText(int size) {
-        if (hudButtonSizeText == null) return;
-        if (size <= 0) {
-            hudButtonSizeText.setText(activity.getString(R.string.overlay_button_size));
-        } else {
-            hudButtonSizeText.setText(activity.getString(R.string.overlay_button_size_value, size));
-        }
-    }
 
     private void setupCompactFilter() {
         if (compactFilterSelector == null) return;
@@ -2861,8 +2584,8 @@ public class ModMenuOverlay {
     /** Enters HUD-editor mode from the rail (the top bar no longer carries that destination). */
     private void showHudEditorSection() {
         if (overlayView == null) return;
-        if (menuContainer != null && hudEditorToolsView != null) {
-            enterHudEditorMode(menuContainer, hudEditorToolsView);
+        if (menuContainer != null && hudEditor != null && hudEditor.toolsView() != null) {
+            hudEditor.enter(menuContainer);
         }
     }
 
