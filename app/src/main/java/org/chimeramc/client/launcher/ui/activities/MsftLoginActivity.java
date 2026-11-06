@@ -213,9 +213,10 @@ public class MsftLoginActivity extends BaseActivity {
      * Initialize MSAL and start sign-in automatically if EXTRA_USE_MSAL is set
      */
     private void initializeMsalAndSignIn() {
-        // Use a placeholder client ID - users must replace this with their own Azure AD app registration
-        String clientId = "YOUR_CLIENT_ID_HERE";
-        String redirectUri = "msauth://" + getPackageName() + "/" + org.chimeramc.client.util.Api28Compat.urlEncode("com.microsoft.identity.client.SignActivity");
+        // The Bedrock Android title id, the same one the device-code and WebView flows use.
+        // This used to be the literal "YOUR_CLIENT_ID_HERE", so MSAL could never sign in.
+        String clientId = MsftAuthManager.bedrockClientId();
+        String redirectUri = MsftAuthManager.msalRedirectUri(this);
         
         oauthManager = new MicrosoftOAuthManager(this);
         oauthManager.initialize(clientId, redirectUri);
@@ -240,10 +241,10 @@ public class MsftLoginActivity extends BaseActivity {
         progressOverlay.setVisibility(View.GONE);
         msalStatusText.setText(R.string.ms_oauth_initializing);
         
-        // Initialize MSAL if not already done
+        // Initialize MSAL if not already done.
         if (oauthManager == null) {
-            String clientId = "YOUR_CLIENT_ID_HERE";
-            String redirectUri = "msauth://" + getPackageName() + "/" + org.chimeramc.client.util.Api28Compat.urlEncode("com.microsoft.identity.client.SignActivity");
+        String clientId = MsftAuthManager.bedrockClientId();
+        String redirectUri = MsftAuthManager.msalRedirectUri(this);
             oauthManager = new MicrosoftOAuthManager(this);
             oauthManager.initialize(clientId, redirectUri);
         }
@@ -268,7 +269,7 @@ public class MsftLoginActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     if (result != null && result.getAccount() != null) {
                         msalStatusText.setText(getString(R.string.ms_oauth_signed_in_as, result.getAccount().getUsername()));
-                        completeMsalLogin(result.getAccount().getUsername());
+                        completeMsalLogin(result);
                     } else {
                         msalStatusText.setText(R.string.ms_oauth_no_account_found);
                         msalSignInButton.setEnabled(true);
@@ -311,7 +312,7 @@ public class MsftLoginActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     if (result != null && result.getAccount() != null) {
                         msalStatusText.setText(getString(R.string.ms_oauth_success));
-                        completeMsalLogin(result.getAccount().getUsername());
+                        completeMsalLogin(result);
                     }
                 });
             }
@@ -337,22 +338,52 @@ public class MsftLoginActivity extends BaseActivity {
     /**
      * Complete MSAL login and save account
      */
-    private void completeMsalLogin(String username) {
-        long generation = loginGeneration.get();
+    /**
+     * Completes the MSAL sign-in by running the rest of the Bedrock chain.
+     *
+     * <p>MSAL returns only an MSA token and a username. The game needs the full chain — Xbox Live,
+     * XSTS, the Minecraft certificate — which {@code loginWithMsaToken} builds and which the
+     * device-code path already runs. This method used to hand the username straight back to the
+     * caller, so MSAL "succeeded" while the game launched signed out.
+     */
+    private void completeMsalLogin(IAuthenticationResult result) {
+        final long generation = loginGeneration.get();
         if (!isCurrentLogin(generation)) {
             return;
         }
-        
-        runOnUiThread(() -> {
-            if (!isCurrentLogin(generation) || !completed.compareAndSet(false, true)) {
-                return;
+
+        final String accessToken = result != null ? result.getAccessToken() : null;
+        final long expiresAtMs = result != null && result.getExpiresOn() != null
+                ? result.getExpiresOn().getTime()
+                : System.currentTimeMillis() + 3600_000L;
+
+        showProgress(R.string.ms_login_fetch_minecraft_identity);
+        cancelled.set(false);
+        loginTask = executor.submit(() -> {
+            try {
+                BedrockAuthManager authManager = MsftAuthManager.loginWithMsaToken(
+                        accessToken, expiresAtMs, null);
+                if (!isCurrentLogin(generation)) {
+                    return;
+                }
+                MsftAccountStore.MsftAccount account = MsftAuthManager.saveAccountAndActivateWithRetry(
+                        this,
+                        authManager,
+                        cancellationFor(generation),
+                        () -> runOnUiThread(() -> {
+                            if (isCurrentLogin(generation)) {
+                                showProgress(R.string.ms_login_retrying);
+                            }
+                        })
+                );
+                completeLogin(account, generation);
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                if (isCurrentLogin(generation)) {
+                    showFailure(e, generation);
+                }
             }
-            mainHandler.removeCallbacks(expiryRunnable);
-            Intent result = new Intent();
-            result.putExtra(EXTRA_LOGIN_COMPLETED, true);
-            result.putExtra(EXTRA_LOGIN_NAME, username != null ? username : getString(R.string.not_signed_in));
-            setResult(RESULT_OK, result);
-            finish();
         });
     }
 
