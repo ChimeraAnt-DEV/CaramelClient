@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.util.AppLog;
 
 import java.util.Random;
 
@@ -41,6 +42,8 @@ public final class SplashBackgroundRegistry {
             R.drawable.splash_bg_8,
     };
 
+    private static final String TAG = "SplashBackgroundRegistry";
+
     private static final String PREFS = "splash_prefs";
     private static final String KEY_LAST_INDEX = "splash_last_bg_index";
 
@@ -65,8 +68,10 @@ public final class SplashBackgroundRegistry {
             prefs = context.getApplicationContext()
                     .getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             previous = prefs.getInt(KEY_LAST_INDEX, -1);
-        } catch (Throwable ignored) {
-            // Fall through with previous = -1.
+        } catch (Throwable t) {
+            // Fall through with previous = -1: the worst case is that the same background shows
+            // twice, which is cosmetic. Logged so a persistent prefs failure is visible.
+            AppLog.warnOnce(TAG, "splash-bg-read", "Could not read the last splash background", t);
         }
 
         final int index = SplashBackgrounds.pick(BACKGROUNDS.length, previous, new Random());
@@ -74,8 +79,9 @@ public final class SplashBackgroundRegistry {
         if (prefs != null && index >= 0) {
             try {
                 prefs.edit().putInt(KEY_LAST_INDEX, index).apply();
-            } catch (Throwable ignored) {
-                // Cosmetic only.
+            } catch (Throwable t) {
+                AppLog.warnOnce(TAG, "splash-bg-write",
+                        "Could not remember the splash background", t);
             }
         }
         return index;

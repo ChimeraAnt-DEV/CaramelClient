@@ -21,6 +21,15 @@
     <color name="error">#D93025</color>
     <color name="on_error">#FFFFFF</color>
 
+    <!-- Sign-in method guidance: the positive label names a success colour, the warning label the
+         danger colour, so neither layout nor drawable carries a hex literal. -->
+    <color name="method_ok_text">#1B7A44</color>
+    <color name="method_ok_fill">#2626A65A</color>
+    <color name="method_ok_stroke">#6626A65A</color>
+    <color name="method_warn_text">#B3261E</color>
+    <color name="method_warn_fill">#26D64545</color>
+    <color name="method_warn_stroke">#66D64545</color>
+
     <color name="background">#F7F5FF</color>
     <color name="surface">#FFFFFF</color>
     <color name="surface_variant">#EFEBFF</color>

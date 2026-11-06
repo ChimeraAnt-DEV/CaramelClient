@@ -12,6 +12,12 @@
     <color name="on_tertiary">#2A1600</color>
 
     <color name="error">#FF6B6B</color>
+    <color name="method_ok_text">#7FE0A0</color>
+    <color name="method_ok_fill">#2626A65A</color>
+    <color name="method_ok_stroke">#6626A65A</color>
+    <color name="method_warn_text">#FF8A8A</color>
+    <color name="method_warn_fill">#26D64545</color>
+    <color name="method_warn_stroke">#66D64545</color>
     <color name="on_error">#000000</color>
 
     <color name="background">#0B0A14</color>
