@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Splash screen: a horizontal logo + wordmark lockup centred as one group, over the ore-and-pickaxe
-  loader in the bottom-right. The orbit ring/dot are gone; the loader is the progress indicator
-  now, so two competing spinners would say the same thing twice.
+  Splash screen: a random Minecraft key-art background, the logo + wordmark lockup centred, and a
+  smooth rotating circle in the bottom-right.
+
+  The 3D scene (floating island, ore block, pickaxe swing, block-break, wordmark shatter) is gone.
+  It drew a particle system, a terrain mesh and several animated sprites every frame on the
+  cold-start path, for a screen that is visible for a couple of seconds. A still image plus one
+  rotating arc is one decode and one draw call.
+
+  The disclaimer at the bottom is the attribution the Minecraft Usage Guidelines require on
+  materials that use Mojang's assets.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,12 +20,22 @@
     android:background="@color/background"
     tools:context=".launcher.ui.activities.SplashActivity">
 
-    <!-- Live backdrop: deep gradient, drifting accent glows and rising embers. It paints the
-         whole background itself, so the root above is only a fallback for the first frame. -->
-    <org.chimeramc.client.launcher.ui.splash.SplashSceneView
-        android:id="@+id/splash_scene"
+    <!-- The randomised background. centerCrop so a 1110x624 wallpaper fills a tall phone screen
+         without letterboxing or distortion. -->
+    <ImageView
+        android:id="@+id/splash_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/splash_background_desc"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash_bg_1" />
+
+    <!-- A scrim so the wordmark stays legible over any background. -->
+    <View
+        android:id="@+id/splash_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/splash_scrim" />
 
     <LinearLayout
         android:id="@+id/splash_lockup"
@@ -79,20 +96,29 @@
         </LinearLayout>
     </LinearLayout>
 
-    <org.chimeramc.client.launcher.ui.splash.OreBlockLoaderView
-        android:id="@+id/oreLoader"
-        android:layout_width="148dp"
-        android:layout_height="72dp"
+    <!-- The loader: a smooth circle rotating in the bottom-right. -->
+    <org.chimeramc.client.launcher.ui.splash.SplashSpinner
+        android:id="@+id/splash_spinner"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/space_8"
-        android:layout_marginBottom="@dimen/space_6" />
+        android:layout_marginBottom="@dimen/space_8" />
 
-    <!-- Above the lockup so shatter debris is never clipped; not clickable so it never eats taps. -->
-    <FrameLayout
-        android:id="@+id/splash_shatter_layer"
+    <!-- The attribution the Minecraft Usage Guidelines require. -->
+    <TextView
+        android:id="@+id/splash_disclaimer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:alpha="0.55"
+        android:gravity="center"
+        android:letterSpacing="0.04"
+        android:paddingStart="@dimen/space_8"
+        android:paddingEnd="@dimen/space_8"
+        android:paddingBottom="@dimen/space_4"
+        android:text="@string/minecraft_disclaimer"
+        android:textColor="@color/on_background"
+        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
 
 </FrameLayout>

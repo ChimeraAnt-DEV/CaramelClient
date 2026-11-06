@@ -17,31 +17,31 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout;
 
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.databinding.ActivitySplashBinding;
+import org.chimeramc.client.launcher.ui.splash.SplashBackgroundRegistry;
 import org.chimeramc.client.launcher.ui.splash.SplashInit;
 import org.chimeramc.client.launcher.ui.splash.SplashTimeline;
-import org.chimeramc.client.launcher.ui.splash.WordmarkShatter;
 import org.chimeramc.client.util.PersonalizationManager;
 
 import java.util.Locale;
 
 /**
- * The splash sequence: an ore block is cracked open by a pickaxe as the launcher warms up, then
- * the pickaxe flies to the wordmark and shatters it into a white wipe into {@link MainActivity}.
+ * The splash sequence: a random Minecraft key-art background, the logo lockup, and a smooth circle
+ * rotating in the bottom-right while the launcher warms up.
  *
- * <p>The sequence is <b>time-budgeted, not time-fixed</b>. Progress comes from real milestones
+ * <p>This replaces the 3D scene (floating island, ore block, pickaxe swing, block-break, wordmark
+ * shatter). That sequence drew a particle system, a terrain mesh and several animated sprites every
+ * frame on the cold-start path, for a screen visible for a couple of seconds. A still image plus one
+ * rotating arc is one decode and one draw call.
+ *
+ * <p>The warm-up is still <b>time-budgeted, not time-fixed</b>. Progress comes from real milestones
  * ({@link SplashInit}) and the display is {@code min(real, paced)} ({@link SplashTimeline}), so a
- * fast start still gets a watchable beat and a slow one holds at its current crack stage with the
- * pickaxe idling instead of looping or looking stuck. App usability is never blocked behind a
- * fixed-length animation: the completion step runs the moment real work is done <em>and</em> the
- * paced display has caught up.
+ * fast start still gets a watchable beat and a slow one holds at its current progress instead of
+ * looping or looking stuck. App usability is never blocked behind a fixed-length animation.
  *
  * <p>The screen is also honest about failure: every warm-up step is best-effort, so a storage or
  * network error still lands the user in the launcher.
@@ -58,7 +58,6 @@ public class SplashActivity extends BaseActivity {
     private boolean revealed;
     private long sequenceStart;
 
-    private ValueAnimator spinAnimator;
     private ValueAnimator breatheAnimator;
     private Runnable tick;
     private Runnable holdIdle;
@@ -80,6 +79,11 @@ public class SplashActivity extends BaseActivity {
 
         applySplashTheme();
 
+        // The background is chosen once per launch and never repeats the previous one.
+        binding.splashBackground.setImageResource(
+                SplashBackgroundRegistry.drawableFor(
+                        SplashBackgroundRegistry.pickForThisLaunch(this)));
+
         binding.imgLeaf.setAlpha(0f);
         binding.imgLeaf.setScaleX(0.8f);
         binding.imgLeaf.setScaleY(0.8f);
@@ -89,7 +93,6 @@ public class SplashActivity extends BaseActivity {
         binding.tvAppName.setAlpha(0f);
         binding.tvAppName.setTranslationX(60f);
         binding.tvPreparing.setAlpha(0f);
-        binding.oreLoader.setAlpha(0f);
 
         binding.getRoot().post(this::startSplashSequence);
     }
@@ -101,7 +104,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void cancelAnimators() {
-        if (spinAnimator != null) spinAnimator.cancel();
         if (breatheAnimator != null) breatheAnimator.cancel();
         if (tick != null) binding.getRoot().removeCallbacks(tick);
         if (holdIdle != null) binding.getRoot().removeCallbacks(holdIdle);
@@ -113,8 +115,6 @@ public class SplashActivity extends BaseActivity {
         sequenceStart = SystemClock.uptimeMillis();
         boolean animate = new PersonalizationManager(this).isShowAnimations();
 
-        binding.splashScene.setAnimationsEnabled(animate);
-
         if (!animate) {
             // Reduced motion: no loader theatre, just warm up and go.
             binding.logoGlow.setAlpha(1f);
@@ -122,7 +122,6 @@ public class SplashActivity extends BaseActivity {
             binding.tvAppName.setAlpha(1f);
             binding.tvAppName.setTranslationX(0f);
             binding.tvPreparing.setAlpha(0.7f);
-            binding.oreLoader.setAlpha(1f);
         } else {
             // Logo first, then the wordmark slides in 100ms later, overlapping the logo's tail so
             // the pair reads as one gesture rather than two separate beats.
@@ -151,13 +150,6 @@ public class SplashActivity extends BaseActivity {
                     .setDuration(200)
                     .start();
 
-            binding.oreLoader.animate()
-                    .alpha(1f)
-                    .setStartDelay(260)
-                    .setDuration(300)
-                    .start();
-
-            startBlockSpin();
             startLogoBreathe();
         }
 
@@ -186,17 +178,6 @@ public class SplashActivity extends BaseActivity {
             binding.logoGlow.setAlpha(0.9f + 0.1f * t);
         });
         breatheAnimator.start();
-    }
-
-    /** A slow, continuous 2D spin; cheap because the view rotates one sprite as a matrix. */
-    private void startBlockSpin() {
-        spinAnimator = ValueAnimator.ofFloat(0f, 360f);
-        spinAnimator.setDuration(9000);
-        spinAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        spinAnimator.setInterpolator(new LinearInterpolator());
-        spinAnimator.addUpdateListener(a ->
-                binding.oreLoader.setBlockRotation((float) a.getAnimatedValue()));
-        spinAnimator.start();
     }
 
     // ---------------------------------------------------- Part 1.2/1.3: real progress + hold state
@@ -249,15 +230,9 @@ public class SplashActivity extends BaseActivity {
                 if (navigated) return;
                 long elapsed = SystemClock.uptimeMillis() - sequenceStart;
                 float real = realProgress;
-                float shown = SplashTimeline.displayed(real, elapsed);
-                binding.oreLoader.setProgress(shown);
 
-                int stage = SplashTimeline.crackStage(real, elapsed);
-                if (stage != binding.oreLoader.getCrackStage()) {
-                    binding.oreLoader.setCrackStage(stage);
-                    swingPickaxe();
-                }
-
+                // The spinner turns continuously, so there is no per-tick progress to paint; the
+                // timeline only decides when the warm-up is done.
                 if (SplashTimeline.isLoadComplete(real, elapsed)) {
                     finishSequence();
                     return;
@@ -282,7 +257,6 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 holdIdle = null;
                 if (navigated) return;
-                swingPickaxe();
                 long elapsed = SystemClock.uptimeMillis() - sequenceStart;
                 float real = realProgress;
                 if (SplashTimeline.isLoadComplete(real, elapsed)) {
@@ -297,24 +271,16 @@ public class SplashActivity extends BaseActivity {
         binding.getRoot().postDelayed(holdIdle, SplashTimeline.HOLD_IDLE_MS);
     }
 
+    // ------------------------------------------------------------------ completion sequence
+
     /**
-     * One pickaxe swing: back, through, and a dead-stop release.
+     * The warm-up is done: fade out and hand over to the launcher.
      *
-     * <p>Played whenever a crack stage appears, so the swing is visibly what advanced the fracture
-     * rather than a decorative loop.
+     * <p>There is no wind-up, pickaxe travel or wordmark shatter any more — those existed to make
+     * the old loader's completion readable. A short fade is the whole completion now, and it cannot
+     * leave the user staring at a frozen frame if an animator misbehaves, because the navigation is
+     * also scheduled on a plain handler as a backstop.
      */
-    private void swingPickaxe() {
-        ValueAnimator animator = ValueAnimator.ofFloat(0f, -26f, 14f, 0f);
-        animator.setDuration(150);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.addUpdateListener(a ->
-                binding.oreLoader.setPickaxeRotation((float) a.getAnimatedValue()));
-        animator.start();
-    }
-
-    // ------------------------------------------------------- Part 1.4/1.5/1.6: completion sequence
-
-    /** Wind-up, then the pickaxe flies to the wordmark and shatters it into the white wipe. */
     private void finishSequence() {
         if (navigated || completing) return;
         completing = true;
@@ -327,115 +293,18 @@ public class SplashActivity extends BaseActivity {
             binding.getRoot().removeCallbacks(tick);
             tick = null;
         }
-        if (spinAnimator != null) {
-            spinAnimator.cancel();
-        }
 
-        // Wind-up: 2-3 quick shakes, small enough to read as "about to do something", not an alarm.
-        ValueAnimator shakes = ValueAnimator.ofFloat(0f, -5f, 5f, -3f, 4f, 0f);
-        shakes.setDuration(320);
-        shakes.setInterpolator(new LinearInterpolator());
-        shakes.addUpdateListener(a ->
-                binding.oreLoader.setPickaxeRotation((float) a.getAnimatedValue()));
-        shakes.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                travelPickaxeToWordmark();
-            }
-        });
-        shakes.start();
-    }
+        binding.getRoot().animate()
+                .alpha(0f)
+                .setDuration(220L)
+                .withEndAction(this::navigateToMain)
+                .start();
 
-    /**
-     * The pickaxe travels to the wordmark on an arc rather than a straight line.
-     *
-     * <p>The arc is a vertical lift applied on top of a linear horizontal run, which reads as a
-     * tool thrown through the air; a straight translation looks like a UI element sliding. The
-     * travel is expressed in {@code [0,1]} view fractions because the loader's offset setter takes
-     * fractions, so a rotation of the device mid-flight cannot strand it off-screen.
-     */
-    private void travelPickaxeToWordmark() {
-        int[] loaderLoc = new int[2];
-        int[] wordmarkLoc = new int[2];
-        binding.oreLoader.getLocationInWindow(loaderLoc);
-        binding.tvAppName.getLocationInWindow(wordmarkLoc);
-
-        View root = binding.getRoot();
-        int rootWidth = Math.max(1, root.getWidth());
-        int rootHeight = Math.max(1, root.getHeight());
-        float travelX = (wordmarkLoc[0] - loaderLoc[0]
-                + binding.tvAppName.getWidth() / 2f
-                - binding.oreLoader.getWidth() / 2f) / rootWidth;
-        float travelY = (wordmarkLoc[1] - loaderLoc[1]
-                + binding.tvAppName.getHeight() / 2f
-                - binding.oreLoader.getHeight() / 2f) / rootHeight;
-
-        ValueAnimator travel = ValueAnimator.ofFloat(0f, 1f);
-        travel.setDuration(340);
-        travel.setInterpolator(new AccelerateDecelerateInterpolator());
-        travel.addUpdateListener(a -> {
-            float t = (float) a.getAnimatedValue();
-            float lift = (float) Math.sin(t * Math.PI) * 0.12f;
-            binding.oreLoader.setPickaxeOffset(travelX * t, travelY * t - lift);
-            binding.oreLoader.setPickaxeRotation(-90f * t);
-        });
-        travel.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                shatterWordmark();
-            }
-        });
-        travel.start();
-    }
-
-    /** Rasterises the wordmark, flies it into shards, and wipes to white as it comes apart. */
-    private void shatterWordmark() {
-        binding.tvPreparing.setVisibility(View.INVISIBLE);
-        binding.oreLoader.setVisibility(View.INVISIBLE);
-
-        // The wipe is started on a short delay so it overlaps the shatter rather than replacing it.
-        WordmarkShatter.play(binding.tvAppName, binding.splashShatterLayer, 340, null);
-        binding.getRoot().postDelayed(this::whiteWipe, 120L);
-    }
-
-    /**
-     * A white circular reveal centred on the wordmark, expanding to cover the screen.
-     *
-     * <p>Eased with {@code AccelerateInterpolator(2f)} -- gentle at the start, fast at the end --
-     * so the wipe is not a flat linear push. {@code ViewAnimationUtils} is API 21+, well under this
-     * app's minSdk, so no version guard is needed.
-     */
-    private void whiteWipe() {
-        if (revealed || navigated) return;
-        revealed = true;
-
-        View reveal = new View(this);
-        reveal.setBackgroundColor(Color.WHITE);
-        binding.splashShatterLayer.addView(reveal, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-
-        int[] wordmarkLoc = new int[2];
-        binding.tvAppName.getLocationInWindow(wordmarkLoc);
-        int[] rootLoc = new int[2];
-        binding.getRoot().getLocationInWindow(rootLoc);
-        int cx = wordmarkLoc[0] - rootLoc[0] + binding.tvAppName.getWidth() / 2;
-        int cy = wordmarkLoc[1] - rootLoc[1] + binding.tvAppName.getHeight() / 2;
-
-        float maxRadius = (float) Math.hypot(
-                Math.max(cx, binding.getRoot().getWidth() - cx),
-                Math.max(cy, binding.getRoot().getHeight() - cy));
-
-        Animator revealAnim = android.view.ViewAnimationUtils.createCircularReveal(
-                reveal, cx, cy, 0f, maxRadius);
-        revealAnim.setDuration(380);
-        revealAnim.setInterpolator(new AccelerateInterpolator(2f));
-        revealAnim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                navigateToMain();
-            }
-        });
-        revealAnim.start();
+        // Backstop: if the animator never ends (a detached window, a dropped frame storm), still
+        // navigate rather than stranding the user on the splash.
+        binding.getRoot().postDelayed(() -> {
+            if (!navigated) navigateToMain();
+        }, 700L);
     }
 
     // ------------------------------------------------------------------------------- navigation
@@ -481,8 +350,7 @@ public class SplashActivity extends BaseActivity {
                 accent,
                 dark ? 0.24f : 0.18f
         ));
-        binding.oreLoader.setColors(accent, dark);
-        binding.splashScene.setPalette(accent, dark);
+        binding.splashSpinner.setAccentColor(accent);
     }
 
     private int resolveAccentColor() {

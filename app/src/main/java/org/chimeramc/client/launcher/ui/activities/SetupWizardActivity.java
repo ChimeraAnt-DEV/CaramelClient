@@ -52,7 +52,6 @@ public class SetupWizardActivity extends BaseActivity {
     private Button changelog;
     private Button discord;
     private LinearLayout rail;
-    private LinearLayout compatRows;
 
     private ApkImportManager apkImportManager;
     private ActivityResultLauncher<Intent> importLauncher;
@@ -69,11 +68,6 @@ public class SetupWizardActivity extends BaseActivity {
     private TextView instanceLimit;
     /** Whether the launcher-managed Microsoft sign-in is available; the sign-in step needs it. */
     private boolean signInAvailable;
-
-    /** A single thread for the compatibility gather; a newer render supersedes an older result. */
-    private final java.util.concurrent.ExecutorService compatExecutor =
-            java.util.concurrent.Executors.newSingleThreadExecutor();
-    private int compatGeneration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +89,6 @@ public class SetupWizardActivity extends BaseActivity {
         changelog = binding.setupChangelog;
         discord = binding.setupDiscord;
         rail = binding.setupRail;
-        compatRows = binding.setupCompatRows;
         instanceList = binding.setupInstanceList;
         instanceSection = binding.setupInstanceSection;
         instanceEmpty = binding.setupInstanceEmpty;
@@ -180,7 +173,6 @@ public class SetupWizardActivity extends BaseActivity {
 
         renderRail();
         renderStepContent();
-        renderCompat();
     }
 
     private void renderStepContent() {
@@ -318,161 +310,6 @@ public class SetupWizardActivity extends BaseActivity {
         }
     }
 
-    /**
-     * Renders the device compatibility pass, which only means something once an instance exists, so
-     * it is shown from the sign-in step onward and hidden before that. Gathering reads the disk and
-     * opens the APK, so it runs off the UI thread; a generation counter drops a stale result.
-     */
-    private void renderCompat() {
-        if (compatRows == null) return;
-        View card = binding.setupCompat;
-        if (card == null) return;
-
-        boolean relevant = SetupWizard.visibleIndex(step, signInAvailable)
-                >= SetupWizard.visibleIndex(SetupWizard.Step.INSTALL_INSTANCE, signInAvailable);
-        if (!relevant || !hasInstalledVersion()) {
-            card.setVisibility(View.GONE);
-            return;
-        }
-        card.setVisibility(View.VISIBLE);
-
-        final int generation = ++compatGeneration;
-        final org.chimeramc.client.core.versions.GameVersion selected =
-                org.chimeramc.client.core.versions.VersionManager.get(this).getSelectedVersion();
-        compatExecutor.execute(() -> {
-            final org.chimeramc.client.core.setup.CompatibilityCheck.Facts checkFacts =
-                    org.chimeramc.client.launcher.core.setup.CompatibilityProbe.gather(
-                            SetupWizardActivity.this, selected);
-            final java.util.List<org.chimeramc.client.core.setup.CompatibilityCheck.Result> results =
-                    org.chimeramc.client.core.setup.CompatibilityCheck.evaluate(checkFacts);
-            runOnUiThread(() -> {
-                if (isFinishing() || isDestroyed()) return;
-                if (generation != compatGeneration || compatRows == null) return;
-                compatRows.removeAllViews();
-                for (org.chimeramc.client.core.setup.CompatibilityCheck.Result result : results) {
-                    addCompatRow(result, checkFacts);
-                }
-            });
-        });
-    }
-
-    /** One compatibility row: a status line and, when there is something to do, a Fix button. */
-    private void addCompatRow(org.chimeramc.client.core.setup.CompatibilityCheck.Result result,
-                              org.chimeramc.client.core.setup.CompatibilityCheck.Facts checkFacts) {
-        LinearLayout row = new LinearLayout(this);
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        row.setPadding(0, (int) (6 * getResources().getDisplayMetrics().density),
-                0, (int) (6 * getResources().getDisplayMetrics().density));
-
-        TextView text = new TextView(this);
-        text.setText(compatLabel(result, checkFacts));
-        text.setTextSize(12);
-        text.setTextColor(compatColor(result));
-        text.setLayoutParams(new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-        row.addView(text);
-
-        if (result.fix != org.chimeramc.client.core.setup.CompatibilityCheck.Fix.NONE) {
-            Button fix = new Button(this);
-            fix.setText(R.string.setup_compat_fix);
-            fix.setMinHeight(0);
-            fix.setMinimumHeight(0);
-            fix.setPadding((int) (12 * getResources().getDisplayMetrics().density), 0,
-                    (int) (12 * getResources().getDisplayMetrics().density), 0);
-            fix.setOnClickListener(v -> onCompatFix(result.fix));
-            DynamicAnim.applyPressScale(fix);
-            row.addView(fix);
-        }
-        compatRows.addView(row);
-    }
-
-    private CharSequence compatLabel(
-            org.chimeramc.client.core.setup.CompatibilityCheck.Result result,
-            org.chimeramc.client.core.setup.CompatibilityCheck.Facts checkFacts) {
-        switch (result.id) {
-            case FREE_STORAGE: {
-                String size = org.chimeramc.client.core.setup.CompatibilityCheck
-                        .formatBytes(checkFacts.freeBytes);
-                if (result.severity == org.chimeramc.client.core.setup.CompatibilityCheck.Severity.OK) {
-                    return getString(R.string.setup_compat_free_space_ok, size);
-                }
-                if (result.severity
-                        == org.chimeramc.client.core.setup.CompatibilityCheck.Severity.WARNING) {
-                    return getString(R.string.setup_compat_free_space_low, size);
-                }
-                String needed = org.chimeramc.client.core.setup.CompatibilityCheck.formatBytes(
-                        org.chimeramc.client.core.setup.CompatibilityCheck.MIN_FREE_BYTES);
-                return getString(R.string.setup_compat_free_space_blocking, size, needed);
-            }
-            case ABI:
-                return getString(result.severity
-                        == org.chimeramc.client.core.setup.CompatibilityCheck.Severity.OK
-                        ? R.string.setup_compat_abi_ok : R.string.setup_compat_abi_blocking);
-            case PLAY_STORE_INSTALL:
-                return getString(result.severity
-                        == org.chimeramc.client.core.setup.CompatibilityCheck.Severity.OK
-                        ? R.string.setup_compat_play_store_ok : R.string.setup_compat_play_store_warn);
-            case STORAGE_PERMISSION:
-                return getString(result.severity
-                        == org.chimeramc.client.core.setup.CompatibilityCheck.Severity.OK
-                        ? R.string.setup_compat_perm_ok : R.string.setup_compat_perm_blocking);
-            default:
-                return "";
-        }
-    }
-
-    private int compatColor(org.chimeramc.client.core.setup.CompatibilityCheck.Result result) {
-        switch (result.severity) {
-            case OK:
-                return getColor(R.color.ui_text_secondary);
-            case WARNING:
-                return getColor(R.color.ui_warning);
-            case BLOCKING:
-            default:
-                return getColor(R.color.ui_danger);
-        }
-    }
-
-    /** Runs the fix a compatibility row offers. */
-    private void onCompatFix(org.chimeramc.client.core.setup.CompatibilityCheck.Fix fix) {
-        switch (fix) {
-            case OPEN_STORAGE:
-                openStorageSettings();
-                break;
-            case OPEN_PERMISSIONS:
-                openAppSettings();
-                break;
-            case IMPORT_GAME:
-                startImportPicker();
-                break;
-            case REPAIR:
-            case NONE:
-            default:
-                break;
-        }
-    }
-
-    private void openStorageSettings() {
-        try {
-            startActivity(new Intent(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS));
-        } catch (Throwable t) {
-            // Not every OEM exposes the internal-storage screen; fall back to the app's own settings.
-            openAppSettings();
-        }
-    }
-
-    private void openAppSettings() {
-        try {
-            startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + getPackageName())));
-        } catch (Throwable t) {
-            if (status != null) {
-                status.setText(R.string.setup_compat_perm_blocking);
-                status.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 
     // ---------------------------------------------------------------------------- actions
 
@@ -598,7 +435,6 @@ public class SetupWizardActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        compatExecutor.shutdownNow();
         if (apkImportManager != null) {
             apkImportManager.release();
             apkImportManager = null;
