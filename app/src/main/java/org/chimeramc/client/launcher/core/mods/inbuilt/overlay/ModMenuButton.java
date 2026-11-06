@@ -333,8 +333,7 @@ public class ModMenuButton {
                 @Override
                 public void openMods() {
                     openMenuFiltered(
-                            org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuOverlay
-                                    .ModuleFilter.ALL);
+                            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter.ALL);
                 }
 
                 @Override
@@ -342,8 +341,7 @@ public class ModMenuButton {
                     // The HUD sector is a filter over the one module list, so it lands on the same
                     // rows the HUD chip shows rather than a second, hand-built list.
                     openMenuFiltered(
-                            org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuOverlay
-                                    .ModuleFilter.HUD);
+                            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter.HUD);
                 }
 
                 @Override
@@ -388,7 +386,7 @@ public class ModMenuButton {
      * frame, so a cold open and an already-open menu behave identically.
      */
     private void openMenuFiltered(
-            org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuOverlay.ModuleFilter filter) {
+            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter filter) {
         if (menuOverlay == null) {
             menuOverlay = new ModMenuOverlay(activity);
             menuOverlay.setCallback(new ModMenuCallback());

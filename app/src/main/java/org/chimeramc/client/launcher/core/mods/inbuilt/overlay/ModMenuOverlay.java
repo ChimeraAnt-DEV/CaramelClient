@@ -232,16 +232,13 @@ public class ModMenuOverlay {
     private final Set<String> favoriteKeys = new HashSet<>();
 
     /**
-     * The Compose menu host, when the Compose presentation is in use.
+     * The Compose presentation, or null until it is attached (and after a failure to attach).
      *
-     * <p>The rebuild is opt-in through {@link #useComposeMenu}: it is on for this build, and the
-     * flag lets the View path stay reachable as a fallback if Compose fails to initialise on a
-     * device, rather than removing a working screen and having nothing to fall back to.
+     * <p>Kept as a collaborator rather than inline so this class stays inside its size budget, and
+     * so the Compose layer can be dropped entirely on a device where it fails to initialise: the
+     * View menu underneath keeps working either way.
      */
-    private androidx.compose.ui.platform.ComposeView composeMenuView;
-    private androidx.compose.runtime.MutableState<
-            org.chimeramc.client.ui.compose.modmenu.ModMenuState> composeMenuState;
-    private static final boolean useComposeMenu = true;
+    private ModMenuScreen composeScreen;
     private ModuleFilter activeFilter = ModuleFilter.ALL;
     /**
      * How many one-shot action rows the current section shows (M3).
@@ -373,24 +370,6 @@ public class ModMenuOverlay {
         setModuleFilter(target);
     }
 
-    /** The section filters a caller outside this class may ask for. */
-    public enum ModuleFilter {
-        ALL,
-        FAVORITES,
-        ENABLED,
-        INBUILT,
-        EXTERNAL,
-        PVP,
-        // The category split the VIP window used to own. With one menu (U4) they are filters of
-        // this menu, and their predicates come from the tested ModCategory rather than a second
-        // implementation.
-        VISUALS,
-        MISC,
-        // The HUD section. Its predicate is ModIds.isHudModule, so the radial wheel's HUD sector
-        // and this filter name the same set and cannot drift apart.
-        HUD
-    }
-
     private void showInternal() {
         if (isShowing || activity.isFinishing() || activity.isDestroyed()) return;
 
@@ -425,7 +404,12 @@ public class ModMenuOverlay {
 
             setupViews();
             loadMods();
-            attachComposeMenu();
+            if (composeScreen == null) {
+                composeScreen = new ModMenuScreen(
+                        activity, overlayView, allMods, favoriteKeys,
+                        this::applyComposeModuleToggle, this::hide);
+            }
+            composeScreen.attach();
             disableFocusHighlight(overlayView);
 
             wmParams = new WindowManager.LayoutParams(
@@ -477,69 +461,15 @@ public class ModMenuOverlay {
         }
     }
 
+
     /**
-     * Builds the Compose menu and adds it over the View menu's container.
+     * Persists a module toggle that came from the Compose menu.
      *
-     * <p>The Compose tree is the presentation; the View tree underneath stays inflated so the
-     * backdrop capture, the bind dialog and the panels that are still Views keep working, and so a
-     * Compose failure leaves a working menu rather than a blank window.
+     * <p>The Compose screen does not touch storage: it reports the intent and this method applies it
+     * through the same manager calls the View menu uses, so the two presentations cannot diverge
+     * about what "enabled" means or where it is stored.
      */
-    private void attachComposeMenu() {
-        if (!useComposeMenu || overlayView == null) return;
-        try {
-            composeMenuState = org.chimeramc.client.ui.compose.modmenu.ModMenuHost.state(
-                    org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder.build(
-                            allMods,
-                            favoriteKeys,
-                            org.chimeramc.client.ui.compose.modmenu.ModMenuDestination.MODULES));
-
-            composeMenuView = new androidx.compose.ui.platform.ComposeView(activity);
-            composeMenuView.setLayoutParams(new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT));
-
-            org.chimeramc.client.ui.compose.modmenu.ModMenuHost.setContent(
-                    composeMenuView,
-                    composeMenuState,
-                    destination -> {
-                        if (composeMenuState == null) return;
-                        composeMenuState.setValue(
-                                composeMenuState.getValue().withDestination(destination));
-                    },
-                    query -> {
-                        if (composeMenuState == null) return;
-                        composeMenuState.setValue(
-                                composeMenuState.getValue().withSearch(query));
-                    },
-                    (stableKey, enabled) -> onComposeModuleToggle(stableKey, enabled),
-                    stableKey -> onComposeFavoriteToggle(stableKey),
-                    () -> {
-                        if (composeMenuState == null) return;
-                        composeMenuState.setValue(composeMenuState.getValue()
-                                .withFavoritesOnly(!composeMenuState.getValue()
-                                        .getFavoritesOnly()));
-                    },
-                    (key, enabled) -> onComposeSettingToggle(key, enabled),
-                    this::hide);
-
-            FrameLayout host = overlayView.findViewById(R.id.mod_menu_container);
-            if (host != null) {
-                host.addView(composeMenuView);
-            } else {
-                ((android.view.ViewGroup) overlayView).addView(composeMenuView);
-            }
-        } catch (Throwable e) {
-            // Compose failing must never take the menu down: the View menu is already inflated
-            // underneath, so dropping the Compose layer leaves a working screen.
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:compose",
-                    "The Compose Mod Menu could not start; using the View menu", e);
-            composeMenuView = null;
-            composeMenuState = null;
-        }
-    }
-
-    /** Persists a module toggle from the Compose menu and refreshes the rows. */
-    private void onComposeModuleToggle(String stableKey, boolean enabled) {
+    void applyComposeModuleToggle(String stableKey, boolean enabled) {
         for (UnifiedMod mod : allMods) {
             if (!org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder
                     .matchesKey(mod, stableKey)) {
@@ -555,36 +485,6 @@ public class ModMenuOverlay {
             }
             break;
         }
-        refreshComposeMenu();
-    }
-
-    /** Persists a favorite toggle from the Compose menu. */
-    private void onComposeFavoriteToggle(String stableKey) {
-        boolean nowFavorite = !favoriteKeys.contains(stableKey);
-        if (nowFavorite) {
-            favoriteKeys.add(stableKey);
-        } else {
-            favoriteKeys.remove(stableKey);
-        }
-        InbuiltModManager.getInstance(activity).setModFavorite(stableKey, nowFavorite);
-        refreshComposeMenu();
-    }
-
-    /** Applies a settings toggle from the Compose menu's Settings destination. */
-    private void onComposeSettingToggle(String key, boolean enabled) {
-        InbuiltModManager.getInstance(activity).setModConfigBool(key, enabled);
-        refreshComposeMenu();
-    }
-
-    /** Rebuilds the Compose state from the mod list, preserving the destination and the filters. */
-    private void refreshComposeMenu() {
-        if (composeMenuState == null) return;
-        var current = composeMenuState.getValue();
-        var rebuilt = org.chimeramc.client.ui.compose.modmenu.ModMenuStateBuilder.build(
-                allMods, favoriteKeys, current.getDestination());
-        composeMenuState.setValue(rebuilt
-                .withSearch(current.getSearch())
-                .withFavoritesOnly(current.getFavoritesOnly()));
     }
 
     private void showFallback() {
@@ -3497,27 +3397,4 @@ public class ModMenuOverlay {
         return isShowing;
     }
 
-    private static class GroupedMods {
-        private final List<UnifiedMod> favorites = new ArrayList<>();
-        private final List<UnifiedMod> others = new ArrayList<>();
-
-        void add(UnifiedMod mod, boolean favorite) {
-            if (favorite) {
-                favorites.add(mod);
-            } else {
-                others.add(mod);
-            }
-        }
-
-        void appendTo(List<UnifiedMod> target) {
-            sort(favorites);
-            sort(others);
-            target.addAll(favorites);
-            target.addAll(others);
-        }
-
-        private void sort(List<UnifiedMod> mods) {
-            mods.sort((left, right) -> left.getName().compareToIgnoreCase(right.getName()));
-        }
-    }
 }
