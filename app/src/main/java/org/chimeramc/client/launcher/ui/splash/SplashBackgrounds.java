@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Picks the splash screen's background.
+ * Picks the splash screen's background, as a pure rule.
  *
  * <p>The splash used to be a 3D scene — a floating island, a pickaxe swinging at an ore block and a
  * block-break animation. That is a lot of per-frame drawing on the cold-start path, for a screen the
  * user looks at for a couple of seconds. The replacement is a random still background per launch plus
  * a small rotating loader, so the splash costs one decode and one rotating drawable.
  *
- * <p>The selection rule is pure, so "a launch picks one of the backgrounds, and two launches in a row
- * are not guaranteed to repeat" is unit-tested without a device.
+ * <p>This class is only the selection rule, so "a launch picks one of the backgrounds and does not
+ * repeat the previous one" is unit-tested without a device. The candidate list and the remembered
+ * choice live in {@link SplashBackgroundRegistry}.
  */
 public final class SplashBackgrounds {
 
