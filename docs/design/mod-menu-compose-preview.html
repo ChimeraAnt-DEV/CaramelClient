@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mod Menu — Compose rebuild design</title>
+<style>
+  :root{
+    --snow:#7FB2E5; --text:#EAF1F8; --text2:#9FB2C6; --text3:#6C7F94;
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#05080f; color:var(--text); min-height:100vh;
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:28px;
+  }
+  .wrap{width:100%;max-width:960px}
+  .label{color:var(--text2);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+  .stage{
+    position:relative;border-radius:24px;overflow:hidden;height:560px;
+    background:radial-gradient(120% 90% at 20% 10%, #2d4a2a 0%, #1b2f1a 45%, #0d1a0c 100%);
+  }
+  .stage::after{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size:38px 38px;
+    transform:perspective(600px) rotateX(58deg) translateY(28%);
+    transform-origin:center top;
+  }
+  .hint{position:absolute;left:18px;bottom:14px;color:#7d9179;font-size:11px;z-index:1}
+  .menu{
+    position:absolute;inset:16px;z-index:2;display:flex;
+    border-radius:var(--radius);
+    background:rgba(19,28,43,.25);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  .menu::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 45%);
+  }
+  .side{
+    width:196px;flex:0 0 196px;padding:16px 8px;display:flex;flex-direction:column;gap:6px;
+    border-right:1px solid rgba(255,255,255,.10);
+  }
+  .item{
+    display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;
+    color:var(--text2);font-size:13px;
+  }
+  .item.on{background:rgba(127,178,229,.16);color:var(--text);font-weight:600}
+  .item svg{width:22px;height:22px;flex:0 0 22px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .item.on svg{stroke:var(--snow)}
+  .spacer{flex:1}
+  .content{flex:1;display:flex;flex-direction:column;min-width:0}
+  .top{padding:16px}
+  .toprow{display:flex;align-items:center;gap:12px}
+  .title{font-size:17px;font-weight:700;flex:1}
+  .count{font-size:11px;color:var(--text2)}
+  .x{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+     color:var(--text2);border:1px solid rgba(255,255,255,.12)}
+  .searchrow{display:flex;gap:8px;margin-top:12px}
+  .search{
+    flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+    color:var(--text3);font-size:13px;
+  }
+  .search svg{width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2}
+  .star{width:38px;border-radius:12px;display:grid;place-items:center;
+        background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+  .star svg{width:19px;height:19px;stroke:var(--text3);fill:none;stroke-width:1.7}
+  .list{flex:1;overflow:hidden;padding:0 16px 16px;display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:16px;
+       background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09)}
+  .row .box{width:20px;height:20px;flex:0 0 20px;stroke:var(--text3);fill:none;stroke-width:1.8}
+  .row.on .box{stroke:var(--snow)}
+  .meta{flex:1;min-width:0}
+  .name{font-size:13px;font-weight:600;color:var(--text)}
+  .desc{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .desc.warn{color:#E0B15A}
+  .fstar{width:20px;height:20px;stroke:var(--text3);fill:none;stroke-width:1.7}
+  .fstar.on{stroke:var(--snow);fill:var(--snow)}
+  .sw{width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,.12);position:relative;flex:0 0 46px}
+  .sw i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--text3)}
+  .sw.on{background:var(--snow)}
+  .sw.on i{left:23px;background:#fff}
+  .row.off{opacity:.55}
+  .legend{margin-top:14px;color:var(--text3);font-size:11px;line-height:1.7}
+  .legend b{color:var(--text2);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="label">Mod Menu — Compose rebuild · Modules destination · 25% glass</div>
+  <div class="stage">
+    <div class="menu">
+      <nav class="side">
+        <div class="item on">
+          <svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg>
+          Modules
+        </div>
+        <div class="item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c.7-3.9 3.8-6 7.5-6s6.8 2.1 7.5 6"/></svg>
+          Cosmetics
+        </div>
+        <div class="item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18M8 14h4"/></svg>
+          Save
+        </div>
+        <div class="spacer"></div>
+        <div class="item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 8.9 19a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 5 8.9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9.5a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          Settings
+        </div>
+      </nav>
+
+      <section class="content">
+        <div class="top">
+          <div class="toprow">
+            <span class="title">Mod Menu</span>
+            <span class="count">6 active</span>
+            <span class="x">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </span>
+          </div>
+          <div class="searchrow">
+            <div class="search">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              Search mods…
+            </div>
+            <div class="star">
+              <svg viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="list">
+          <div class="row on">
+            <svg class="box" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m8 12.4 2.7 2.7L16.3 9"/></svg>
+            <div class="meta">
+              <div class="name">Hit Registration</div>
+              <div class="desc">Shapes the look input the device sends so aim tracks smoothly.</div>
+            </div>
+            <svg class="fstar on" viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>
+            <div class="sw on"><i></i></div>
+          </div>
+
+          <div class="row on">
+            <svg class="box" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m8 12.4 2.7 2.7L16.3 9"/></svg>
+            <div class="meta">
+              <div class="name">Zoom</div>
+              <div class="desc">Hold to zoom the view; scroll adjusts the level.</div>
+            </div>
+            <svg class="fstar" viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>
+            <div class="sw on"><i></i></div>
+          </div>
+
+          <div class="row off">
+            <svg class="box" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m8 12.4 2.7 2.7L16.3 9"/></svg>
+            <div class="meta">
+              <div class="name">Hitboxes</div>
+              <div class="desc warn">Mob and item boxes need a native entity feed this build cannot read.</div>
+            </div>
+            <svg class="fstar" viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>
+            <div class="sw"><i></i></div>
+          </div>
+
+          <div class="row">
+            <svg class="box" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/></svg>
+            <div class="meta">
+              <div class="name">Fullbright</div>
+              <div class="desc">Brightens the world without changing the server's lighting.</div>
+            </div>
+            <svg class="fstar" viewBox="0 0 24 24"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>
+            <div class="sw"><i></i></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="hint">game render behind the overlay — the panel is 25% translucent glass</div>
+  </div>
+
+  <p class="legend">
+    <b>Sidebar:</b> Modules · Cosmetics · Save, with <b>Settings pinned to the bottom</b> (it configures the
+    menu, not the game). <b>Icons:</b> Material outlined set at 22&nbsp;dp. <b>Glass:</b> 25% fill, a rim that
+    catches light from the top, a sheen falling off by 45%, 20&nbsp;dp corners. <b>Badges:</b> a module that
+    cannot run is dimmed, labelled with the reason, and its switch is disabled — it never silently no-ops.
+  </p>
+</div>
+</body>
+</html>
