@@ -31,6 +31,7 @@ app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/Trajec
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VirtualCursorMod.java 1
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VoiceChatOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VoiceNametagOverlay.java 2
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/AccountSwitchPopup.java 6
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 24
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentDetailsActivity.java 9
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentListActivity.java 15
@@ -41,7 +42,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivit
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 43
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 38
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModDetailActivity.java 23
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModHubActivity.java 17

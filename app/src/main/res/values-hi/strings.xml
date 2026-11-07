@@ -1322,4 +1322,17 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="about_lead_badge">मुख्य डेव</string>
     <string name="about_lead_role">GlowberryClient के मुख्य डेवलपर</string>
     <string name="about_github">GitHub</string>
+    <string name="changelog_card_title">%1$s में नया</string>
+    <string name="changelog_card_subtitle">क्या जोड़ा, बदला और ठीक किया गया, इसकी पूरी सूची देखने के लिए टैप करें।</string>
+    <string name="changelog_card_action">और पढ़ें</string>
+    <string name="changelog_popup_added">जोड़ा गया</string>
+    <string name="changelog_popup_changed">बदला गया</string>
+    <string name="changelog_popup_fixed">ठीक किया गया</string>
+    <string name="changelog_popup_more">इस रिलीज़ में यह भी</string>
+    <string name="changelog_popup_empty">इस बिल्ड में दिखाने के लिए कोई रिलीज़ नोट नहीं है।</string>
+    <string name="changelog_popup_close">बंद करें</string>
+    <string name="changelog_popup_minimize">छोटा करें</string>
+    <string name="changelog_view_wiki">विकी देखें</string>
+    <string name="changelog_upcoming_soon">जल्द आ रहा है!</string>
+    <string name="changelog_upcoming_soon_body">विकी लिखी जा रही है। लाइव होते ही यह यहाँ खुलेगी।</string>
 </resources>

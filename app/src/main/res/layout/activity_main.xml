@@ -143,6 +143,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <!-- The release notes card for the build the player is on. Compose, so it can
+                     float and pop its own dialog; hidden when the build has no release notes. -->
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/launch_changelog_compose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <include
                     layout="@layout/include_section_header"
                     android:id="@+id/section_quick"

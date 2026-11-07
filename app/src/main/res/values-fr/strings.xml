@@ -1294,4 +1294,17 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="about_lead_badge">Dev principal</string>
     <string name="about_lead_role">Développeur principal de GlowberryClient</string>
     <string name="about_github">GitHub</string>
+    <string name="changelog_card_title">Nouveautés de %1$s</string>
+    <string name="changelog_card_subtitle">Touchez pour voir la liste complète des ajouts, des changements et des corrections.</string>
+    <string name="changelog_card_action">En savoir plus</string>
+    <string name="changelog_popup_added">Ajouté</string>
+    <string name="changelog_popup_changed">Modifié</string>
+    <string name="changelog_popup_fixed">Corrigé</string>
+    <string name="changelog_popup_more">Aussi dans cette version</string>
+    <string name="changelog_popup_empty">Cette version n\'a aucune note de version à afficher.</string>
+    <string name="changelog_popup_close">Fermer</string>
+    <string name="changelog_popup_minimize">Réduire</string>
+    <string name="changelog_view_wiki">Voir le wiki</string>
+    <string name="changelog_upcoming_soon">Bientôt disponible !</string>
+    <string name="changelog_upcoming_soon_body">Le wiki est en cours de rédaction. Il s\'ouvrira ici dès qu\'il sera en ligne.</string>
 </resources>

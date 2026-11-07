@@ -1324,4 +1324,17 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="about_lead_badge">Dev chính</string>
     <string name="about_lead_role">Nhà phát triển chính của GlowberryClient</string>
     <string name="about_github">GitHub</string>
+    <string name="changelog_card_title">Có gì mới trong %1$s</string>
+    <string name="changelog_card_subtitle">Chạm để xem danh sách đầy đủ những gì đã thêm, thay đổi và sửa.</string>
+    <string name="changelog_card_action">Đọc thêm</string>
+    <string name="changelog_popup_added">Đã thêm</string>
+    <string name="changelog_popup_changed">Đã thay đổi</string>
+    <string name="changelog_popup_fixed">Đã sửa</string>
+    <string name="changelog_popup_more">Cũng trong bản này</string>
+    <string name="changelog_popup_empty">Bản dựng này không có ghi chú phát hành để hiển thị.</string>
+    <string name="changelog_popup_close">Đóng</string>
+    <string name="changelog_popup_minimize">Thu nhỏ</string>
+    <string name="changelog_view_wiki">Xem Wiki</string>
+    <string name="changelog_upcoming_soon">Sắp ra mắt!</string>
+    <string name="changelog_upcoming_soon_body">Wiki đang được viết. Nó sẽ mở ở đây ngay khi hoạt động.</string>
 </resources>
