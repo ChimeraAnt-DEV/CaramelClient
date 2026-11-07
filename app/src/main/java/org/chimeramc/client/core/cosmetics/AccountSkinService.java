@@ -261,8 +261,16 @@ public final class AccountSkinService {
         }
     }
 
-    private static final java.util.concurrent.atomic.AtomicBoolean refreshRunning =
-            new java.util.concurrent.atomic.AtomicBoolean(false);
+    /**
+     * One fetch per account at a time, keyed by the account.
+     *
+     * <p>This replaced a single boolean. The boolean was correct for one account and wrong the
+     * moment the account changed: a fetch for the previous account still in flight caused the fetch
+     * for the account that had just signed in to be dropped, so the cache stayed stamped with the
+     * old account's key and the preview resolved to Steve. That is the "I signed in and got a
+     * random default skin" report.
+     */
+    private static final SkinFetchGuard refreshGuard = new SkinFetchGuard();
 
     /**
      * Fetches the skin on a background thread and stores it in the cache.
@@ -274,7 +282,10 @@ public final class AccountSkinService {
      */
     public static void refreshInBackground(android.content.Context context, String xuid) {
         if (context == null || xuid == null || xuid.isEmpty()) return;
-        if (!refreshRunning.compareAndSet(false, true)) return;
+        // Keyed, so a fetch for the account that just signed in is not dropped by one still running
+        // for the previous account. A request for the same account is still refused, so a hot loop
+        // of resolves cannot start a request storm.
+        if (!refreshGuard.tryStart(xuid)) return;
         final android.content.Context appContext = context.getApplicationContext();
         AppExecutors.run(AppExecutors.Kind.NETWORK, "account-skin-fetch", () -> {
             try {
@@ -282,7 +293,7 @@ public final class AccountSkinService {
             } catch (Throwable error) {
                 AppLog.warn("AccountSkinService", "Account skin fetch failed", error);
             } finally {
-                refreshRunning.set(false);
+                refreshGuard.finish(xuid);
                 // In the finally: a caller that registered to hear the outcome must be woken whether
                 // the fetch succeeded or failed, or it waits forever for a skin that is not coming.
                 notifyListeners();
