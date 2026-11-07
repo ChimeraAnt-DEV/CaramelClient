@@ -1,0 +1,82 @@
+{
+  "es": {
+    "about_people_title": "Quién hace GlowberryClient",
+    "about_owner_badge": "Propietario",
+    "about_owner_role": "Propietario de GlowberryClient",
+    "about_lead_badge": "Dev principal",
+    "about_lead_role": "Desarrollador principal de GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "fr": {
+    "about_people_title": "Qui fait GlowberryClient",
+    "about_owner_badge": "Propriétaire",
+    "about_owner_role": "Propriétaire de GlowberryClient",
+    "about_lead_badge": "Dev principal",
+    "about_lead_role": "Développeur principal de GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "hi": {
+    "about_people_title": "GlowberryClient कौन बनाता है",
+    "about_owner_badge": "मालिक",
+    "about_owner_role": "GlowberryClient के मालिक",
+    "about_lead_badge": "मुख्य डेव",
+    "about_lead_role": "GlowberryClient के मुख्य डेवलपर",
+    "about_github": "GitHub"
+  },
+  "id": {
+    "about_people_title": "Siapa yang membuat GlowberryClient",
+    "about_owner_badge": "Pemilik",
+    "about_owner_role": "Pemilik GlowberryClient",
+    "about_lead_badge": "Dev utama",
+    "about_lead_role": "Pengembang utama GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "ja": {
+    "about_people_title": "GlowberryClient を作る人々",
+    "about_owner_badge": "オーナー",
+    "about_owner_role": "GlowberryClient のオーナー",
+    "about_lead_badge": "リード開発",
+    "about_lead_role": "GlowberryClient のリード開発者",
+    "about_github": "GitHub"
+  },
+  "pt": {
+    "about_people_title": "Quem faz o GlowberryClient",
+    "about_owner_badge": "Proprietário",
+    "about_owner_role": "Proprietário do GlowberryClient",
+    "about_lead_badge": "Dev principal",
+    "about_lead_role": "Desenvolvedor principal do GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "ru": {
+    "about_people_title": "Кто делает GlowberryClient",
+    "about_owner_badge": "Владелец",
+    "about_owner_role": "Владелец GlowberryClient",
+    "about_lead_badge": "Гл. разработчик",
+    "about_lead_role": "Главный разработчик GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "tr": {
+    "about_people_title": "GlowberryClient'ı kim yapıyor",
+    "about_owner_badge": "Sahip",
+    "about_owner_role": "GlowberryClient sahibi",
+    "about_lead_badge": "Baş geliştirici",
+    "about_lead_role": "GlowberryClient baş geliştiricisi",
+    "about_github": "GitHub"
+  },
+  "vi": {
+    "about_people_title": "Ai làm nên GlowberryClient",
+    "about_owner_badge": "Chủ sở hữu",
+    "about_owner_role": "Chủ sở hữu GlowberryClient",
+    "about_lead_badge": "Dev chính",
+    "about_lead_role": "Nhà phát triển chính của GlowberryClient",
+    "about_github": "GitHub"
+  },
+  "zh-rCN": {
+    "about_people_title": "GlowberryClient 的制作者",
+    "about_owner_badge": "所有者",
+    "about_owner_role": "GlowberryClient 所有者",
+    "about_lead_badge": "主开发者",
+    "about_lead_role": "GlowberryClient 主开发者",
+    "about_github": "GitHub"
+  }
+}

@@ -1316,6 +1316,12 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="replay_save_native_done">%1$s सहेजा गया</string>
     <string name="replay_save_native_empty">सहेजने के लिए अभी कोई गेम रीप्ले नहीं है। पहले एक रिकॉर्ड करें।</string>
     <string name="settings_run_setup">सेटअप दोबारा चलाएँ</string>
+    <string name="about_people_title">GlowberryClient कौन बनाता है</string>
+    <string name="about_owner_badge">मालिक</string>
+    <string name="about_owner_role">GlowberryClient के मालिक</string>
+    <string name="about_lead_badge">मुख्य डेव</string>
+    <string name="about_lead_role">GlowberryClient के मुख्य डेवलपर</string>
+    <string name="about_github">GitHub</string>
     <string name="changelog_card_title">%1$s में नया</string>
     <string name="changelog_card_subtitle">क्या जोड़ा, बदला और ठीक किया गया, इसकी पूरी सूची देखने के लिए टैप करें।</string>
     <string name="changelog_card_action">और पढ़ें</string>

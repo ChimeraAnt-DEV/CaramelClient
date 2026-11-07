@@ -50,13 +50,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/about_authors_title"
+                    android:text="@string/about_people_title"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
                     android:textAppearance="@style/TextAppearance.Glowberry.Title"
                     android:textStyle="bold"
-    android:accessibilityHeading="true" />
+                    android:accessibilityHeading="true" />
 
+                <!-- The owner. Tapping the avatar or the name opens the GitHub profile; the chips
+                     below are the explicit routes. -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,17 +67,17 @@
                     android:orientation="horizontal">
 
                     <com.microsoft.xbox.idp.toolkit.CircleImageView
-                        android:id="@+id/author_avatar"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:id="@+id/owner_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/ic_qa_account"
-                        android:scaleType="centerCrop" 
-                        android:importantForAccessibility="no"
-                        />
+                        android:scaleType="centerCrop"
+                        android:importantForAccessibility="no" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_marginStart="@dimen/space_3"
                         android:orientation="vertical">
 
@@ -86,24 +88,27 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/owner_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/about_author_name"
+                                android:text="@string/about_owner_name"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
                                 android:textStyle="bold"
-    android:accessibilityHeading="true" />
+                                android:accessibilityHeading="true"
+                                android:clickable="true"
+                                android:focusable="true" />
 
                             <TextView
-                                android:id="@+id/author_badge"
+                                android:id="@+id/owner_badge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:minHeight="18dp"
                                 android:layout_marginStart="@dimen/space_2"
                                 android:paddingHorizontal="@dimen/space_2"
                                 android:gravity="center"
-                                android:text="@string/about_author_badge"
+                                android:text="@string/about_owner_badge"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_primary"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Micro"
@@ -112,58 +117,58 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/owner_role"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_hairline"
-                            android:text="@string/about_author_role"
+                            android:text="@string/about_owner_role"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
                             android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_2"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/btn_owner_github"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="28dp"
+                                android:paddingHorizontal="@dimen/space_4"
+                                android:gravity="center"
+                                android:text="@string/about_github"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/on_surface"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:background="@drawable/bg_link_chip_blue"
+                                android:drawableStart="@drawable/ic_github"
+                                android:drawablePadding="@dimen/space_2"
+                                android:clickable="true"
+                                android:focusable="true" />
+
+                            <TextView
+                                android:id="@+id/btn_owner_youtube"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="28dp"
+                                android:layout_marginStart="@dimen/space_2"
+                                android:paddingHorizontal="@dimen/space_4"
+                                android:gravity="center"
+                                android:text="@string/youtube"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/error"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_link_chip_pink"
+                                android:drawableStart="@drawable/ic_youtube"
+                                android:drawablePadding="@dimen/space_2"
+                                android:clickable="true"
+                                android:focusable="true" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/btn_patreon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="28dp"
-                        android:paddingHorizontal="@dimen/space_4"
-                        android:gravity="center"
-                        android:text="@string/about_patreon"
-                        android:fontFamily="@font/misans"
-                        android:textColor="@color/status_warning"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_link_chip_orange"
-                        android:drawableStart="@drawable/ic_patreon"
-                        android:drawablePadding="@dimen/space_2"
-                        android:clickable="true"
-                        android:focusable="true" />
-
-                    <TextView
-                        android:id="@+id/btn_afdian"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="28dp"
-                        android:layout_marginStart="@dimen/space_2"
-                        android:paddingHorizontal="@dimen/space_4"
-                        android:gravity="center"
-                        android:text="@string/about_afdian"
-                        android:fontFamily="@font/misans"
-                        android:textColor="@color/status_accent_pink"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_link_chip_pink"
-                        android:drawableStart="@drawable/ic_afdian"
-                        android:drawablePadding="@dimen/space_2"
-                        android:clickable="true"
-                        android:focusable="true" />
                 </LinearLayout>
 
                 <View
@@ -173,6 +178,7 @@
                     android:layout_marginBottom="@dimen/space_hairline"
                     android:background="@color/wash_black_10" />
 
+                <!-- The lead developer. -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -181,17 +187,17 @@
                     android:orientation="horizontal">
 
                     <com.microsoft.xbox.idp.toolkit.CircleImageView
-                        android:id="@+id/maintainer_avatar"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:id="@+id/lead_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/ic_qa_account"
-                        android:scaleType="centerCrop" 
-                        android:importantForAccessibility="no"
-                        />
+                        android:scaleType="centerCrop"
+                        android:importantForAccessibility="no" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_marginStart="@dimen/space_3"
                         android:orientation="vertical">
 
@@ -202,24 +208,27 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/lead_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/about_maintainer_name"
+                                android:text="@string/about_lead_name"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Title"
                                 android:textStyle="bold"
-    android:accessibilityHeading="true" />
+                                android:accessibilityHeading="true"
+                                android:clickable="true"
+                                android:focusable="true" />
 
                             <TextView
-                                android:id="@+id/maintainer_badge"
+                                android:id="@+id/lead_badge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:minHeight="18dp"
                                 android:layout_marginStart="@dimen/space_2"
                                 android:paddingHorizontal="@dimen/space_2"
                                 android:gravity="center"
-                                android:text="@string/maintainer"
+                                android:text="@string/about_lead_badge"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_primary"
                                 android:textAppearance="@style/TextAppearance.Glowberry.Micro"
@@ -228,39 +237,39 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/lead_role"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_hairline"
-                            android:text="@string/maintainer"
+                            android:text="@string/about_lead_role"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
                             android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_2"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/btn_lead_github"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minHeight="28dp"
+                                android:paddingHorizontal="@dimen/space_4"
+                                android:gravity="center"
+                                android:text="@string/about_github"
+                                android:fontFamily="@font/misans"
+                                android:textColor="@color/on_surface"
+                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:background="@drawable/bg_link_chip_blue"
+                                android:drawableStart="@drawable/ic_github"
+                                android:drawablePadding="@dimen/space_2"
+                                android:clickable="true"
+                                android:focusable="true" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/btn_youtube_maintainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="28dp"
-                        android:paddingHorizontal="@dimen/space_4"
-                        android:gravity="center"
-                        android:text="@string/youtube"
-                        android:fontFamily="@font/misans"
-                        android:textColor="@color/error"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-                        android:textStyle="bold"
-                        android:background="@drawable/bg_link_chip_pink"
-                        android:drawableStart="@drawable/ic_youtube"
-                        android:drawablePadding="@dimen/space_2"
-                        android:clickable="true"
-                        android:focusable="true" />
                 </LinearLayout>
             </LinearLayout>
 
