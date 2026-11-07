@@ -103,7 +103,7 @@ public class RadialMenuView extends View {
     private final Paint iconPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path sectorPath = new Path();
     private final Path headClip = new Path();
-    private final Rect srcHead = new Rect();
+    private final RadialHeadSkin headSkin = new RadialHeadSkin();
     private final RectF dstHead = new RectF();
 
     private final List<Chip> quickChips = new ArrayList<>();
@@ -141,12 +141,9 @@ public class RadialMenuView extends View {
     /** The screen-reader virtual-view bridge for the wheel's slots. */
     private RadialWheelAccessibilityHelper a11yHelper;
 
-    private Bitmap skinHead;
 
     // The 3D head hub: a small software-rendered turntable of the player's real skin head.
     private final PreviewRaster headRaster = new PreviewRaster();
-    private PreviewScene headScene;
-    private int[] headAtlas;
     private Bitmap headBitmap;
     private float headYawDeg;
     private float headPitchDeg;
@@ -469,31 +466,8 @@ public class RadialMenuView extends View {
     }
 
     private void resolveSkinHead() {
-        try {
-            PlayerSkinProvider.SkinBitmap skin = PlayerSkinProvider.resolve(getContext());
-            if (skin != null && skin.bitmap != null) {
-                srcHead.set(8, 8, 16, 16);
-                skinHead = skin.bitmap;
-                if (skin.bitmap.getWidth() == SkinModel.ATLAS_SIZE
-                        && skin.bitmap.getHeight() == SkinModel.ATLAS_SIZE) {
-                    headAtlas = new int[SkinModel.ATLAS_SIZE * SkinModel.ATLAS_SIZE];
-                    skin.bitmap.getPixels(headAtlas, 0, SkinModel.ATLAS_SIZE, 0, 0,
-                            SkinModel.ATLAS_SIZE, SkinModel.ATLAS_SIZE);
-                    headScene = new PreviewScene();
-                    // HEAD ONLY: the hub is the player's head, not a full-body bust. The whole
-                    // character belongs in the Closet preview; the wheel's hub is a small disc, so
-                    // a body would be a tiny unreadable figure and would also make the "the head
-                    // never moves" complaint impossible to judge. "head" is the box id
-                    // PreviewCharacterScene keys on, so passing it selects just the head box (and
-                    // its overlay) from the same authored skin.
-                    PreviewCharacterScene.addCharacter(headScene, headAtlas, SkinModel.ATLAS_SIZE,
-                            0f, 0f, "head");
-                }
-            }
-        } catch (Throwable ignored) {
-            skinHead = null;
-            headScene = null;
-        }
+        // The head atlas, the crop rectangle and the head-only scene all live in RadialHeadSkin.
+        headSkin.resolve(getContext());
     }
 
     // --- Open/close animation -----------------------------------------------------------------
@@ -541,9 +515,20 @@ public class RadialMenuView extends View {
         if (hoverAnimator != null) hoverAnimator.cancel();
     }
 
+    /**
+     * Woken when a background account-skin fetch finishes.
+     *
+     * <p>The first resolve after a sign-in schedules the fetch and shows the fallback, so without
+     * this the player's real skin only appeared the next time the wheel was created. Registered
+     * while attached and removed on detach, so a discarded view is never woken.
+     */
+    private final org.chimeramc.client.core.cosmetics.AccountSkinService.Listener skinListener =
+            () -> post(this::refreshSkin);
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        org.chimeramc.client.core.cosmetics.AccountSkinService.addListener(skinListener);
         // Re-resolve the skin so a change made since the wheel was last shown (a new import, an
         // applied pack, or the game's own skin once a provider is installed) appears immediately.
         refreshSkin();
@@ -575,6 +560,7 @@ public class RadialMenuView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        org.chimeramc.client.core.cosmetics.AccountSkinService.removeListener(skinListener);
         cancelAnimators();
         stopFlickTracker();
     }
@@ -1077,10 +1063,10 @@ public class RadialMenuView extends View {
     }
 
     private void drawHead(Canvas canvas, float cx, float cy, float radius) {
-        if (headScene != null && headAtlas != null) {
+        if (headSkin.hasScene()) {
             if (drawHead3D(canvas, cx, cy, radius)) return;
         }
-        if (skinHead == null || skinHead.isRecycled()) {
+        if (!headSkin.hasFlatHead()) {
             // No skin available: draw a neutral accent disc rather than a glyph or emoji.
             hubPaint.setColor(UiTokens.ACCENT_900);
             canvas.drawCircle(cx, cy, radius * 0.8f, hubPaint);
@@ -1093,7 +1079,7 @@ public class RadialMenuView extends View {
         int save = canvas.save();
         canvas.clipPath(headClip);
         headPaint.setFilterBitmap(false);
-        canvas.drawBitmap(skinHead, srcHead, dstHead, headPaint);
+        headSkin.drawFlat(canvas, dstHead, headPaint);
         canvas.restoreToCount(save);
     }
 
@@ -1109,14 +1095,13 @@ public class RadialMenuView extends View {
             }
         }
         headRaster.prepare(size, size, 0x00000000);
-        // The scene holds ONLY the head box (see resolveSkinHead), so the camera targets the head's
+        // The scene holds ONLY the head box (see RadialHeadSkin), so the camera targets the head's
         // own centre (model y = 28 for the 8x8x8 head whose bottom sits at 24) rather than the chest
         // of a bust. A tight margin then fills the disc with the face instead of leaving the head
         // adrift in a large empty circle.
         SkinModel.Camera cam = new SkinModel.Camera(headYawDeg, headPitchDeg,
                 SkinModel.CAMERA_DISTANCE, 0f, 28f, 0f);
-        PreviewScene.Fit fit = headScene.fit(cam, size, size, 0.06f);
-        headScene.render(headRaster, cam, fit);
+        PreviewScene.Fit fit = headSkin.render(cam, headRaster, size);
         headBitmap.setPixels(headRaster.pixels(), 0, size, 0, 0, size, size);
         headClip.reset();
         headClip.addCircle(cx, cy, radius * 0.94f, Path.Direction.CW);
