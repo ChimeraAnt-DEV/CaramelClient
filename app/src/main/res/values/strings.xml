@@ -1688,6 +1688,14 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_extraction_stale">Stale — will re-extract on next launch</string>
     <string name="diagnostics_repair_error">Repair failed: %1$s</string>
     <string name="about_authors_title">Authors &amp; Maintainers</string>
+    <string name="about_people_title">Who makes GlowberryClient</string>
+    <string name="about_owner_name" translatable="false">ChimeraAnt-DEV</string>
+    <string name="about_owner_badge">Owner</string>
+    <string name="about_owner_role">Owner of GlowberryClient</string>
+    <string name="about_lead_name" translatable="false">Lynxifyy</string>
+    <string name="about_lead_badge">Lead dev</string>
+    <string name="about_lead_role">Lead developer of GlowberryClient</string>
+    <string name="about_github">GitHub</string>
     <string name="about_author_name" translatable="false">DreamGuXiang</string>
     <string name="about_author_badge">Author</string>
     <string name="about_author_role">GlowberryClient Authors</string>

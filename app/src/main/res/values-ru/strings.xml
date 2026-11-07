@@ -1327,4 +1327,10 @@
     <string name="replay_save_native_done">Сохранено %1$s</string>
     <string name="replay_save_native_empty">Пока нет повтора игры для сохранения. Сначала запишите.</string>
     <string name="settings_run_setup">Запустить настройку снова</string>
+    <string name="about_people_title">Кто делает GlowberryClient</string>
+    <string name="about_owner_badge">Владелец</string>
+    <string name="about_owner_role">Владелец GlowberryClient</string>
+    <string name="about_lead_badge">Гл. разработчик</string>
+    <string name="about_lead_role">Главный разработчик GlowberryClient</string>
+    <string name="about_github">GitHub</string>
 </resources>

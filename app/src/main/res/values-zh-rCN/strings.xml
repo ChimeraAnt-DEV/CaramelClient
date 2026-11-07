@@ -1309,4 +1309,10 @@
     <string name="replay_save_native_done">已保存 %1$s</string>
     <string name="replay_save_native_empty">还没有可保存的游戏回放。请先录制一个。</string>
     <string name="settings_run_setup">重新运行设置</string>
+    <string name="about_people_title">GlowberryClient 的制作者</string>
+    <string name="about_owner_badge">所有者</string>
+    <string name="about_owner_role">GlowberryClient 所有者</string>
+    <string name="about_lead_badge">主开发者</string>
+    <string name="about_lead_role">GlowberryClient 主开发者</string>
+    <string name="about_github">GitHub</string>
 </resources>

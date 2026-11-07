@@ -27,14 +27,9 @@ public class AboutActivity extends BaseActivity {
 
     private static final String TAG = "AboutActivity";
 
-    private static final String AVATAR_URL = "https://avatars.githubusercontent.com/u/62042544?v=4";
-    private static final String URL_AFDIAN = "https://afdian.com/a/DreamGuXiang";
-    private static final String URL_PATREON = "https://www.patreon.com/c/DreamGuXiang";
     private static final String URL_REPO = "https://github.com/ChimeraAnt-DEV/GlowberryClient";
     private static final String URL_ORG = "https://github.com/ChimeraAnt-DEV";
     private static final String URL_ISSUES = "https://github.com/ChimeraAnt-DEV/GlowberryClient/issues";
-    private static final String MAINTAINER_AVATAR_URL = "https://yt3.googleusercontent.com/ft4khqXZ_fQn-DbSLg91kQy3_JUQ_73rbg18nOcmMtunX5bq25jzrThWQAk9YsFkTKFesUL7sg8=s160-c-k-c0x00ffffff-no-rj";
-    private static final String URL_YOUTUBE = "https://www.youtube.com/c/mrpokeg";
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -78,8 +73,8 @@ public class AboutActivity extends BaseActivity {
     }
 
     private void styleBadges() {
-        TextView authorBadge = binding.authorBadge;
-        TextView maintainerBadge = binding.maintainerBadge;
+        TextView ownerBadge = binding.ownerBadge;
+        TextView leadBadge = binding.leadBadge;
 
         org.chimeramc.client.util.PersonalizationManager pm = new org.chimeramc.client.util.PersonalizationManager(this);
         int accent = pm.getAccentColor();
@@ -88,13 +83,13 @@ public class AboutActivity extends BaseActivity {
             gd.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
             gd.setColor(accent);
             gd.setCornerRadius(4 * getResources().getDisplayMetrics().density);
-            if (authorBadge != null) {
-                authorBadge.setBackground(gd);
-                authorBadge.setTextColor(android.graphics.Color.WHITE);
+            if (ownerBadge != null) {
+                ownerBadge.setBackground(gd);
+                ownerBadge.setTextColor(android.graphics.Color.WHITE);
             }
-            if (maintainerBadge != null) {
-                maintainerBadge.setBackground(gd);
-                maintainerBadge.setTextColor(android.graphics.Color.WHITE);
+            if (leadBadge != null) {
+                leadBadge.setBackground(gd);
+                leadBadge.setTextColor(android.graphics.Color.WHITE);
             }
         }
     }
@@ -146,61 +141,80 @@ public class AboutActivity extends BaseActivity {
         setActiveNavTab(R.id.nav_tab_settings);
     }
 
+    /**
+     * Fetches the two credited people's avatars.
+     *
+     * <p>The roster owns the handles, so the avatar URL is the profile's own
+     * ({@code github.com/<handle>.png}) rather than a hardcoded numeric id that a rename would break.
+     * The fetch is decorative, so a failure leaves the placeholder in place.
+     */
     private void loadAvatars() {
-        com.microsoft.xbox.idp.toolkit.CircleImageView avatar = binding.authorAvatar;
-        com.microsoft.xbox.idp.toolkit.CircleImageView maintainerAvatar = binding.maintainerAvatar;
-
+        org.chimeramc.client.launcher.core.about.AboutPeople.Person owner =
+                org.chimeramc.client.launcher.core.about.AboutPeople.of(
+                        org.chimeramc.client.launcher.core.about.AboutPeople.Role.OWNER);
+        org.chimeramc.client.launcher.core.about.AboutPeople.Person lead =
+                org.chimeramc.client.launcher.core.about.AboutPeople.of(
+                        org.chimeramc.client.launcher.core.about.AboutPeople.Role.LEAD_DEVELOPER);
         runOnExecutor(() -> {
-            // try-with-resources on Response, not a bare execute(): an OkHttp response holds a
-            // connection until its body is closed, and a swallowed exception left it checked out of
-            // the pool. The avatar is decorative, so a failure is not surfaced - but the body must
-            // still be released or the pool leaks one connection per visit.
-            try {
-                if (avatar != null) {
-                    try (Response resp = client.newCall(
-                            new Request.Builder().url(AVATAR_URL).build()).execute()) {
-                        if (resp.isSuccessful() && resp.body() != null) {
-                            Bitmap bmp = BitmapFactory.decodeStream(resp.body().byteStream());
-                            runOnUiThread(() -> {
-                                if (bmp != null) avatar.setImageBitmap(bmp);
-                            });
-                        }
-                    }
-                }
-            } catch (Exception ignored) {
-                AppLog.warnOnce(TAG, "about-fetch", "Fetching the contributor list failed", ignored);
-            }
-
-            try {
-                if (maintainerAvatar != null) {
-                    try (Response resp = client.newCall(
-                            new Request.Builder().url(MAINTAINER_AVATAR_URL).build()).execute()) {
-                        if (resp.isSuccessful() && resp.body() != null) {
-                            Bitmap bmp = BitmapFactory.decodeStream(resp.body().byteStream());
-                            runOnUiThread(() -> {
-                                if (bmp != null) maintainerAvatar.setImageBitmap(bmp);
-                            });
-                        }
-                    }
-                }
-            } catch (Exception ignored) {
-                AppLog.warnOnce(TAG, "about-fetch2", "Fetching the contributor list failed", ignored);
-            }
+            loadAvatar(binding.ownerAvatar, owner == null ? null : owner.avatarUrl, "about-owner-avatar");
+            loadAvatar(binding.leadAvatar, lead == null ? null : lead.avatarUrl, "about-lead-avatar");
         });
     }
 
+    /**
+     * Loads one avatar into {@code target}.
+     *
+     * <p>try-with-resources on the response, not a bare execute(): an OkHttp response holds a
+     * connection until its body is closed, and a swallowed exception left it checked out of the pool.
+     */
+    private void loadAvatar(com.microsoft.xbox.idp.toolkit.CircleImageView target, String url, String key) {
+        if (target == null || url == null || url.isEmpty()) return;
+        try (Response resp = client.newCall(new Request.Builder().url(url).build()).execute()) {
+            if (resp.isSuccessful() && resp.body() != null) {
+                Bitmap bmp = BitmapFactory.decodeStream(resp.body().byteStream());
+                runOnUiThread(() -> {
+                    if (bmp != null) target.setImageBitmap(bmp);
+                });
+            }
+        } catch (Exception ignored) {
+            AppLog.warnOnce(TAG, key, "Fetching a contributor avatar failed", ignored);
+        }
+    }
+
+    /**
+     * Wires every link, including the name and avatar taps, to the roster's own URLs.
+     *
+     * <p>The name and the avatar open GitHub as well as the explicit chip, because a profile picture
+     * is the thing a finger aims at.
+     */
     private void setupLinks() {
-        setupLinkButton(binding.btnAfdian, URL_AFDIAN);
-        setupLinkButton(binding.btnPatreon, URL_PATREON);
+        org.chimeramc.client.launcher.core.about.AboutPeople.Person owner =
+                org.chimeramc.client.launcher.core.about.AboutPeople.of(
+                        org.chimeramc.client.launcher.core.about.AboutPeople.Role.OWNER);
+        org.chimeramc.client.launcher.core.about.AboutPeople.Person lead =
+                org.chimeramc.client.launcher.core.about.AboutPeople.of(
+                        org.chimeramc.client.launcher.core.about.AboutPeople.Role.LEAD_DEVELOPER);
+
+        if (owner != null) {
+            setupLinkButton(binding.btnOwnerGithub, owner.githubUrl);
+            setupLinkButton(binding.btnOwnerYoutube, owner.youtubeUrl);
+            setupLinkButton(binding.ownerName, owner.githubUrl);
+            setupLinkButton(binding.ownerAvatar, owner.githubUrl);
+        }
+        if (lead != null) {
+            setupLinkButton(binding.btnLeadGithub, lead.githubUrl);
+            setupLinkButton(binding.leadName, lead.githubUrl);
+            setupLinkButton(binding.leadAvatar, lead.githubUrl);
+        }
+
         setupLinkButton(binding.btnGithubRepo, URL_REPO);
         setupLinkButton(binding.btnGithubOrg, URL_ORG);
         setupLinkButton(binding.btnIssues, URL_ISSUES);
         setupLinkButton(binding.btnStarFork, URL_REPO);
-        setupLinkButton(binding.btnYoutubeMaintainer, URL_YOUTUBE);
     }
 
-    private void setupLinkButton(TextView btn, String url) {
-        if (btn == null) return;
+    private void setupLinkButton(android.view.View btn, String url) {
+        if (btn == null || url == null || url.isEmpty()) return;
         btn.setOnClickListener(v -> {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));

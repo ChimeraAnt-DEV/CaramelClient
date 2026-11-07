@@ -1318,4 +1318,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="replay_save_native_done">Đã lưu %1$s</string>
     <string name="replay_save_native_empty">Chưa có bản phát lại trò chơi để lưu. Hãy ghi một bản trước.</string>
     <string name="settings_run_setup">Chạy lại thiết lập</string>
+    <string name="about_people_title">Ai làm nên GlowberryClient</string>
+    <string name="about_owner_badge">Chủ sở hữu</string>
+    <string name="about_owner_role">Chủ sở hữu GlowberryClient</string>
+    <string name="about_lead_badge">Dev chính</string>
+    <string name="about_lead_role">Nhà phát triển chính của GlowberryClient</string>
+    <string name="about_github">GitHub</string>
 </resources>

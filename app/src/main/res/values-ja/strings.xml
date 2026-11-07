@@ -1285,4 +1285,10 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="replay_save_native_done">%1$s を保存しました</string>
     <string name="replay_save_native_empty">保存できるゲームのリプレイがまだありません。まず録画してください。</string>
     <string name="settings_run_setup">セットアップを再実行</string>
+    <string name="about_people_title">GlowberryClient を作る人々</string>
+    <string name="about_owner_badge">オーナー</string>
+    <string name="about_owner_role">GlowberryClient のオーナー</string>
+    <string name="about_lead_badge">リード開発</string>
+    <string name="about_lead_role">GlowberryClient のリード開発者</string>
+    <string name="about_github">GitHub</string>
 </resources>

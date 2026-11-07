@@ -1315,4 +1315,10 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="replay_save_native_done">%1$s kaydedildi</string>
     <string name="replay_save_native_empty">Kaydedilecek bir oyun tekrarı yok. Önce bir tane kaydedin.</string>
     <string name="settings_run_setup">Kurulumu yeniden çalıştır</string>
+    <string name="about_people_title">GlowberryClient\'ı kim yapıyor</string>
+    <string name="about_owner_badge">Sahip</string>
+    <string name="about_owner_role">GlowberryClient sahibi</string>
+    <string name="about_lead_badge">Baş geliştirici</string>
+    <string name="about_lead_role">GlowberryClient baş geliştiricisi</string>
+    <string name="about_github">GitHub</string>
 </resources>
