@@ -374,6 +374,46 @@ public final class MsftAuthManager {
         }
     }
 
+    /**
+     * Mints the Minecraft Services bearer for a stored account.
+     *
+     * <p>The official profile endpoint ({@code api.minecraftservices.com/minecraft/profile}) needs a
+     * Minecraft token, not the Bedrock one: Bedrock's XSTS is authorised for
+     * {@code multiplayer.minecraft.net}, so it is rejected there. The Minecraft token comes from a
+     * separate XSTS exchange against {@code rp://api.minecraftservices.com/}, which the auth library
+     * exposes as {@link net.raphimc.minecraftauth.java.JavaAuthManager}.
+     *
+     * <p>The Bedrock snapshot and the Java snapshot share the same base keys
+     * ({@code msaApplicationConfig}, {@code deviceType}, {@code deviceKeyPair}, {@code deviceId},
+     * {@code msaToken}, {@code xblDeviceToken}, {@code xblUserToken}), and both carry
+     * {@code xboxLiveXstsToken}. So a Bedrock snapshot can be read as a Java one, and the Java chain
+     * mints its own token from the shared MSA token rather than needing a second sign-in.
+     *
+     * <p>Blocking (two network exchanges on a cold token), so the caller must run it off the UI
+     * thread. Returns null when no token can be minted, so the caller falls back rather than failing.
+     *
+     * @return a ready {@code Bearer <token>} header value, or null
+     */
+    public static String minecraftServicesBearer(MsftAccountStore.MsftAccount account) {
+        if (account == null || !hasUsableAuthMaterial(account.serializedAuthManager)) return null;
+        try {
+            HttpClient httpClient = createHttpClient();
+            JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
+            net.raphimc.minecraftauth.java.JavaAuthManager javaAuth =
+                    net.raphimc.minecraftauth.java.JavaAuthManager.fromJson(httpClient, json);
+            net.raphimc.minecraftauth.java.model.MinecraftToken token =
+                    javaAuth.getMinecraftToken().getUpToDate();
+            if (token == null) return null;
+            String header = token.getAuthorizationHeader();
+            return TextUtils.isEmpty(header) ? null : header;
+        } catch (Throwable t) {
+            // A profile-less account, a network failure or a shape change: report "no token" so the
+            // caller uses the legacy lookup rather than losing the skin.
+            Log.w(TAG, "Could not mint the Minecraft Services bearer", t);
+            return null;
+        }
+    }
+
     public static String[] xboxLiveXsts(MsftAccountStore.MsftAccount account) {
         if (account == null || TextUtils.isEmpty(account.serializedAuthManager)) return null;
         try {
