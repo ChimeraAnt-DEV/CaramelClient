@@ -109,11 +109,49 @@ public final class AccountSkinService {
     }
 
     /**
-     * Fetches the account's skin texture id and returns the texture URL, or null.
+     * Resolves the account's skin texture URL.
      *
-     * <p>Separated from the download so the URL parsing is unit-testable without a network.
+     * <p><b>Primary: the official Minecraft Services profile.</b> The player's own account always
+     * knows their skin, so this has no "unknown player" case. The legacy GeyserMC lookup below is a
+     * third-party service keyed by XUID that returns nothing for a XUID it has never seen, which is
+     * why a brand-new account used to fall back to Steve.
+     *
+     * <p>The order is deliberate and the fallback is real: a player with no Java profile (or a
+     * transient failure minting the bearer) still gets their skin from the legacy lookup, so this
+     * change can only add skins, never remove one.
+     *
+     * @param xuid the account's XUID, used by the legacy fallback
+     * @param bearer the Minecraft Services bearer, or null when none could be minted
      */
-    public static String resolveTextureUrl(String xuid) {
+    public static String resolveTextureUrl(String xuid, String bearer) {
+        String official = resolveTextureUrlOfficial(bearer);
+        if (official != null) return official;
+        return resolveTextureUrlLegacy(xuid);
+    }
+
+    /**
+     * The texture URL from the official profile endpoint, or null.
+     *
+     * <p>Fetches the profile, parses the active skin, and verifies the profile is the account we
+     * asked about before trusting it.
+     */
+    public static String resolveTextureUrlOfficial(String bearer) {
+        try {
+            String body = MinecraftSkinFetcher.fetchProfileJson(bearer);
+            if (body == null) return null;
+            return MinecraftSkinFetcher.activeSkinUrl(body);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /**
+     * The texture URL from the legacy GeyserMC lookup, or null.
+     *
+     * <p>Kept for players the official lookup cannot serve, and because it is the only source that
+     * works for an account with no Java profile at all.
+     */
+    public static String resolveTextureUrlLegacy(String xuid) {
         String body = httpGetText(DEFAULT_ENDPOINT + urlEncode(xuid));
         String textureId = parseTextureId(body);
         return textureId == null ? null : TEXTURE_HOST + textureId;
@@ -220,7 +258,7 @@ public final class AccountSkinService {
      */
     public static Bitmap fetchAndCache(android.content.Context context, String xuid) {
         try {
-            String url = resolveTextureUrl(xuid);
+            String url = resolveTextureUrl(xuid, bearerForActiveAccount(context));
             if (url == null) return null;
             byte[] png = downloadSkinBytes(url);
             if (png == null || png.length == 0) return null;
@@ -231,6 +269,46 @@ public final class AccountSkinService {
                             System.currentTimeMillis()));
             return PlayerSkinProvider.normalise(atlas);
         } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    /**
+     * Mints the Minecraft Services bearer for the active account, or null.
+     *
+     * <p>Delegates to the auth manager, which owns the token chain: the Bedrock snapshot the launcher
+     * stores carries the shared MSA token, and the Java chain mints its own Minecraft token from it
+     * without a second sign-in. Null is a normal outcome (no account, no token) and means "use the
+     * legacy lookup", not "failed".
+     */
+    public static String bearerForActiveAccount(android.content.Context context) {
+        if (context == null) return null;
+        try {
+            java.util.List<org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount> accounts =
+                    org.chimeramc.client.core.auth.MsftAccountStore.list(context);
+            if (accounts == null || accounts.isEmpty()) return null;
+            org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount chosen = null;
+            for (org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount account : accounts) {
+                if (account != null && account.active) {
+                    chosen = account;
+                    break;
+                }
+            }
+            if (chosen == null) {
+                for (org.chimeramc.client.core.auth.MsftAccountStore.MsftAccount account
+                        : accounts) {
+                    if (account != null) {
+                        chosen = account;
+                        break;
+                    }
+                }
+            }
+            if (chosen == null) return null;
+            return org.chimeramc.client.core.auth.MsftAuthManager
+                    .minecraftServicesBearer(chosen);
+        } catch (Throwable t) {
+            AppLog.warnOnce("AccountSkinService", "bearer",
+                    "Could not mint a Minecraft Services bearer", t);
             return null;
         }
     }
