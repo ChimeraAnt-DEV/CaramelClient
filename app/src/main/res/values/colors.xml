@@ -216,6 +216,12 @@
     <color name="overlay_text_muted">#AAAAAA</color>
     <color name="overlay_text_hint">#80FFFFFF</color>
     <color name="overlay_scrim">#CC000000</color>
+    <!-- The HUD readout panel's fill: translucent navy, a touch stronger than the launcher glass
+         because a HUD sits over a bright, moving scene and the number must stay legible. -->
+    <color name="overlay_hud_fill">#B30B1118</color>
+    <!-- The accent bar beside a HUD readout: the level colour at low alpha, so the cue reads as a
+         tint rather than a second number. -->
+    <color name="overlay_hud_accent_track">#33FFFFFF</color>
     <color name="overlay_scrim_soft">#66070A0F</color>
     <color name="overlay_panel">#1E1E1E</color>
     <color name="overlay_panel_border">#2D2D2D</color>

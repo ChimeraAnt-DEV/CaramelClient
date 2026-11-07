@@ -771,8 +771,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="mod_menu_pause_menu_only_desc">Tampilkan menu mod hanya di layar jeda</string>
     <string name="mod_menu_default_percent" formatted="false">100%</string>
     <string name="mod_menu_percent_value">%1$d%%</string>
-    <string name="mod_overlay_fps_unknown">FPS: --</string>
-    <string name="mod_overlay_fps_value">FPS: %1$d</string>
     <string name="mod_overlay_cps_value">CPS: %1$d</string>
     <string name="mod_config_overlay_button_size_dp">Ukuran Tombol Overlay (dp)</string>
     <string name="mod_config_overlay_opacity_percent" formatted="false">Opasitas Overlay (%)</string>

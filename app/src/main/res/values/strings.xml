@@ -1239,7 +1239,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_unavailable_reason_server">Not shipped: the server decides this outcome, or automating it would be a ban risk.</string>
     <string name="mod_unavailable_reason_backend">Needs a backend feature no runtime provides yet. It is disabled until one does.</string>
     <string name="mod_notification_enabled">%s enabled</string>
-    <string name="mod_overlay_fps_unknown">FPS: --</string>
     <string name="mod_overlay_data_unavailable">Waiting for game data…</string>
     <string name="catalog_macro_not_configured">Set the text for this macro first</string>
     <string name="catalog_options_no_instance">Select an instance before applying this</string>
@@ -1258,7 +1257,6 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="catalog_screenshot_failed">Could not save the screenshot</string>
     <string name="mod_overlay_no_peers">No players nearby</string>
     <string name="mod_overlay_players_title">Players (%1$d)</string>
-    <string name="mod_overlay_fps_value">FPS: %1$d</string>
     <string name="mod_overlay_cps_value">CPS: %1$d</string>
     <string name="mod_config_overlay_button_size_dp">Overlay Button Size (dp)</string>
     <string name="mod_config_overlay_opacity_percent" formatted="false">Overlay Opacity (%)</string>
@@ -1266,6 +1264,8 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_config_fps_frame_graph" formatted="false">Frame-Time Graph</string>
     <string name="mod_config_fps_stats" formatted="false">Show Average and 1% Low</string>
     <string name="mod_config_fps_stats_window" formatted="false">Stats Window (frames)</string>
+    <string name="mod_overlay_fps_no_reading" translatable="false">--</string>
+    <string name="mod_overlay_fps_unit" translatable="false">FPS</string>
     <string name="mod_overlay_fps_stats" formatted="false">%1$d avg / %2$d low</string>
     <string name="mod_config_cursor_sensitivity_percent" formatted="false">Cursor Sensitivity (%)</string>
     <string name="mod_config_zoom_level_percent" formatted="false">Zoom Level (%)</string>

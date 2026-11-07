@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The FPS HUD readout.
+
+    The old readout was one monospace line ("FPS: 60") on a black rectangle, which the client's own
+    users called the worst-looking surface in the app. A readout is a number you glance at, so the
+    number is now the largest thing in the panel, the unit is a quiet label beside it, and the
+    level is carried by a coloured accent bar rather than by colouring the number (which made the
+    number hard to read and said nothing to a colour-blind player).
+
+    The ids are the overlay's contract: `stats_text` is the value, `frame_time_graph` the optional
+    polyline. `hud_accent`, `hud_unit` and `hud_stats` are the extra pieces.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/overlay_hud_panel"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_2"
+    android:paddingEnd="@dimen/space_3"
+    android:paddingTop="@dimen/space_2"
+    android:paddingBottom="@dimen/space_2">
+
+    <!-- The level accent: a rounded bar whose colour is the reading's level. A shape carries the
+         level for a colour-blind player, and it keeps the number itself high-contrast. -->
+    <View
+        android:id="@+id/hud_accent"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/space_3"
+        android:background="@color/overlay_hud_accent_track" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/stats_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:includeFontPadding="false"
+                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textColor="@color/overlay_text_primary"
+                android:textStyle="bold"
+                tools:text="60" />
+
+            <TextView
+                android:id="@+id/hud_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_1"
+                android:layout_marginBottom="@dimen/space_hairline"
+                android:letterSpacing="0.08"
+                android:text="@string/mod_overlay_fps_unit"
+                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textColor="@color/overlay_text_muted" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/hud_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_divider"
+            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textColor="@color/overlay_text_muted"
+            tools:text="\u25B2 58 avg / 41 low" />
+
+        <org.chimeramc.client.launcher.core.mods.inbuilt.overlay.FrameTimeGraphView
+            android:id="@+id/frame_time_graph"
+            android:layout_width="120dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="@dimen/space_1"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

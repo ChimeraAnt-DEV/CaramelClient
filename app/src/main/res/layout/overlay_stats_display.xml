@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    The shared text readout used by the client-side overlays (CPS, List Players, Debug Menu).
+
+    A HUD readout is text on a surface, so it uses the same glass panel the FPS readout does rather
+    than a flat black rectangle; the corners are rounded and the padding is on the spacing scale, so
+    a readout sits on the screen as a panel instead of a sticker. The id stays `stats_text` because
+    the overlays find their TextView by it.
+-->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stats_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/overlay_scrim"
-    android:paddingStart="@dimen/space_2"
-    android:paddingEnd="@dimen/space_2"
-    android:paddingTop="@dimen/space_1"
-    android:paddingBottom="@dimen/space_1"
+    android:background="@drawable/overlay_hud_panel"
+    android:paddingStart="@dimen/space_3"
+    android:paddingEnd="@dimen/space_3"
+    android:paddingTop="@dimen/space_2"
+    android:paddingBottom="@dimen/space_2"
+    android:textAppearance="@style/TextAppearance.Glowberry.Label"
     android:textColor="@color/overlay_text_primary"
-    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-    android:fontFamily="monospace"
-    tools:text="0" />
+    android:textStyle="bold"
+    tools:text="CPS: 0" />

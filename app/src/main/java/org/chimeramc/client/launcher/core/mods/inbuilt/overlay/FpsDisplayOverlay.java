@@ -34,6 +34,8 @@ public class FpsDisplayOverlay {
 
     private View overlayView;
     private TextView statsText;
+    private TextView hudStats;
+    private View hudAccent;
     private FrameTimeGraphView graphView;
     private boolean statsEnabled;
     private WindowManager.LayoutParams wmParams;
@@ -94,17 +96,31 @@ public class FpsDisplayOverlay {
      * the user enabled it. Both layouts expose the same {@code stats_text} id, so the
      * rest of the overlay is unchanged; the graph is only present in the graph layout.
      */
+    /**
+     * Inflates the HUD readout: the number, the unit label, the level accent bar and, when the
+     * user enabled it, the frame-time graph.
+     *
+     * <p>One layout rather than two. The old pair (a plain readout and a graph variant) had to be
+     * kept in step by hand and the readout was a monospace line on a black rectangle; the panel is
+     * the shared glass surface now and the graph is a child that is hidden unless it is wanted.
+     */
     private void inflateOverlay() {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         statsEnabled = manager.isFpsStatsEnabled(ModIds.FPS_DISPLAY);
         boolean graph = manager.isFrameTimeGraphEnabled(ModIds.FPS_DISPLAY);
-        int layout = graph ? R.layout.overlay_stats_display_graph : R.layout.overlay_stats_display;
-        overlayView = LayoutInflater.from(activity).inflate(layout, null);
+        overlayView = LayoutInflater.from(activity).inflate(R.layout.overlay_hud_readout, null);
         statsText = overlayView.findViewById(R.id.stats_text);
-        graphView = graph ? overlayView.findViewById(R.id.frame_time_graph) : null;
+        hudStats = overlayView.findViewById(R.id.hud_stats);
+        hudAccent = overlayView.findViewById(R.id.hud_accent);
+        graphView = overlayView.findViewById(R.id.frame_time_graph);
         if (graphView != null) {
-            graphView.setHistory(fallbackMeter.history());
-            graphView.setLineColor(activity.getColor(R.color.overlay_text_primary));
+            graphView.setVisibility(graph ? View.VISIBLE : View.GONE);
+            if (graph) {
+                graphView.setHistory(fallbackMeter.history());
+                graphView.setLineColor(activity.getColor(R.color.overlay_text_primary));
+            } else {
+                graphView = null;
+            }
         }
     }
 
@@ -118,7 +134,7 @@ public class FpsDisplayOverlay {
 
         try {
             inflateOverlay();
-            statsText.setText(activity.getString(R.string.mod_overlay_fps_unknown));
+            statsText.setText(activity.getString(R.string.mod_overlay_fps_no_reading));
             refreshGate.reset();
 
             wmParams = new WindowManager.LayoutParams(
@@ -158,7 +174,7 @@ public class FpsDisplayOverlay {
         if (rootView == null) return;
 
         inflateOverlay();
-        statsText.setText(activity.getString(R.string.mod_overlay_fps_unknown));
+        statsText.setText(activity.getString(R.string.mod_overlay_fps_no_reading));
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -191,31 +207,34 @@ public class FpsDisplayOverlay {
     }
 
     private void updateDisplay() {
-        if (statsText != null) {
-            int fps = nativeFps();
-            if (fps <= 0 && fallbackMeter.isRunning() && fallbackFps > 0) {
-                // The native hook did not resolve on this build; show the host's own present rate
-                // rather than a permanent "FPS: --", which read as a broken module.
-                fps = fallbackFps;
+        if (statsText == null) return;
+        int fps = nativeFps();
+        if (fps <= 0 && fallbackMeter.isRunning() && fallbackFps > 0) {
+            // The native hook did not resolve on this build; show the host's own present rate
+            // rather than a permanent "--", which read as a broken module.
+            fps = fallbackFps;
+        }
+        // The timer runs four times a second but the readout changes far less often, so the
+        // text is built and set only when the number actually differs.
+        if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
+            HudThreshold.Level level = HudThreshold.levelForFps(fps);
+            statsText.setText(fps > 0
+                    ? Integer.toString(fps)
+                    : activity.getString(R.string.mod_overlay_fps_no_reading));
+            // The level is carried by the accent bar's colour and by the shape cue on the stats
+            // line, never by colouring the number: a coloured number is hard to read on a bright
+            // scene and says nothing at all to a colour-blind player.
+            if (hudAccent != null) {
+                hudAccent.setBackgroundColor(HudThreshold.colourFor(level));
             }
-            // The timer runs four times a second but the readout changes far less often, so the
-            // text is built and set only when the number actually differs.
-            if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
-                // The level is carried by a shape as well as a colour: a green/red pair
-                // is unreadable to a colour-blind user and, in daylight, to everyone. The cue is
-                // the same one the Mod Menu's stats strip would show, from one rule.
-                HudThreshold.Level level = HudThreshold.levelForFps(fps);
-                String value = fps > 0
-                        ? activity.getString(R.string.mod_overlay_fps_value, fps)
-                        : activity.getString(R.string.mod_overlay_fps_unknown);
+            if (hudStats != null) {
+                String stats = statsEnabled ? fpsStatsText() : null;
                 String cue = HudThreshold.cue(level);
-                String text = cue.isEmpty() ? value : cue + " " + value;
-                if (statsEnabled) {
-                    String stats = fpsStatsText();
-                    if (stats != null) text = text + "  " + stats;
-                }
-                statsText.setText(text);
-                statsText.setTextColor(HudThreshold.colourFor(level));
+                String line = stats == null ? "" : stats;
+                if (!cue.isEmpty() && !line.isEmpty()) line = cue + " " + line;
+                else if (!cue.isEmpty()) line = cue;
+                hudStats.setText(line);
+                hudStats.setVisibility(line.isEmpty() ? View.GONE : View.VISIBLE);
             }
             if (graphView != null) {
                 graphView.refresh();
@@ -443,6 +462,8 @@ public class FpsDisplayOverlay {
         }
         overlayView = null;
         statsText = null;
+        hudStats = null;
+        hudAccent = null;
         graphView = null;
         statsEnabled = false;
     }
