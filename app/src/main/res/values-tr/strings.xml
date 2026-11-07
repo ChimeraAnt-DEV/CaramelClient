@@ -1315,4 +1315,17 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="replay_save_native_done">%1$s kaydedildi</string>
     <string name="replay_save_native_empty">Kaydedilecek bir oyun tekrarı yok. Önce bir tane kaydedin.</string>
     <string name="settings_run_setup">Kurulumu yeniden çalıştır</string>
+    <string name="changelog_card_title">%1$s yenilikleri</string>
+    <string name="changelog_card_subtitle">Eklenen, değişen ve düzeltilen her şeyin tam listesi için dokunun.</string>
+    <string name="changelog_card_action">Daha fazla oku</string>
+    <string name="changelog_popup_added">Eklendi</string>
+    <string name="changelog_popup_changed">Değiştirildi</string>
+    <string name="changelog_popup_fixed">Düzeltildi</string>
+    <string name="changelog_popup_more">Bu sürümde ayrıca</string>
+    <string name="changelog_popup_empty">Bu yapıda gösterilecek sürüm notu yok.</string>
+    <string name="changelog_popup_close">Kapat</string>
+    <string name="changelog_popup_minimize">Küçült</string>
+    <string name="changelog_view_wiki">Wiki\'yi gör</string>
+    <string name="changelog_upcoming_soon">Çok yakında!</string>
+    <string name="changelog_upcoming_soon_body">Wiki yazılıyor. Yayına girdiğinde burada açılacak.</string>
 </resources>

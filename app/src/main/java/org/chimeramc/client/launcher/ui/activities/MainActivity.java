@@ -229,6 +229,10 @@ import okhttp3.OkHttpClient;
     private String heroPlaytime = "0m";
     private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>> toggleState;
     private androidx.compose.ui.platform.ComposeView toggleCompose;
+    /** The Compose release-notes card and its popup, and the state they render. */
+    private androidx.compose.ui.platform.ComposeView changelogCompose;
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> changelogState;
+    private androidx.compose.runtime.MutableState<Boolean> changelogOpen;
     private String antEggStatusText = "";
     private String voiceStatusText = "";
     private String replayStatusText = "";
@@ -593,212 +597,45 @@ import okhttp3.OkHttpClient;
         });
     }
 
+    /**
+     * Shows the account switcher popup.
+     *
+     * <p>The popup itself lives in {@link AccountSwitchPopup}; this method only builds it with the
+     * Activity's own side effects (the account executor, the shared loading dialog and the header
+     * refresh), so the Launch tab keeps its headroom under the file-size budget.
+     */
     private void showAccountSwitchPopup(View anchor) {
-        java.util.List<MsftAccountStore.MsftAccount> list = MsftAccountStore.list(this);
-
-        View content = LayoutInflater.from(this).inflate(R.layout.popup_account_switch, null);
-        androidx.recyclerview.widget.RecyclerView recyclerAccounts = content.findViewById(R.id.recycler_accounts);
-        TextView manageAction = content.findViewById(R.id.manage_action);
-        com.microsoft.xbox.idp.toolkit.CircleImageView headerAvatar = content.findViewById(R.id.header_avatar);
-        View headerContainer = content.findViewById(R.id.header_container);
-        TextView headerName = content.findViewById(R.id.header_name);
-
-        TypedValue outValue = new TypedValue();
-        getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        int selectableRes = outValue.resourceId;
-
-        int paddingH = (int) (16 * getResources().getDisplayMetrics().density);
-        int paddingV = (int) (12 * getResources().getDisplayMetrics().density);
-        int paddingR = (int) (12 * getResources().getDisplayMetrics().density);
-
-        MsftAccountStore.MsftAccount active = getActiveAccount();
-        headerName.setText(AccountTextUtils.displayNameOrNotSigned(this, active));
-        if (accountAvatar != null && accountAvatar.getDrawable() != null) {
-            headerAvatar.setImageDrawable(accountAvatar.getDrawable());
-        } else if (active != null) {
-            final String url = AccountTextUtils.sanitizeUrl(active.xboxAvatarUrl);
-            if (url != null) {
-                runOnAccountExecutor(() -> {
-                    try {
-                        okhttp3.OkHttpClient.Builder clientBuilder = new okhttp3.OkHttpClient.Builder();
-                        org.chimeramc.client.settings.LowLatencyNetworkManager.configure(clientBuilder);
-                        okhttp3.OkHttpClient client = clientBuilder.build();
-                        // The response body must be closed even on the failure path, or the
-                        // connection stays checked out of the pool for the life of the process.
-                        final android.graphics.Bitmap bmp;
-                        try (okhttp3.Response imgResp = client.newCall(
-                                new okhttp3.Request.Builder().url(url).build()).execute()) {
-                            bmp = (imgResp.isSuccessful() && imgResp.body() != null)
-                                    ? android.graphics.BitmapFactory.decodeStream(imgResp.body().byteStream())
-                                    : null;
-                        }
-                        runOnUiThread(() -> { if (bmp != null) headerAvatar.setImageBitmap(bmp); });
-                    } catch (Throwable ignored) {
-                        AppLog.warnOnce("GlowberryClient", "MainActivity:619", "Ignored a failure at MainActivity:619", ignored);
-                    }
-                });
-            }
-        }
-
-        final PopupWindow popup = new PopupWindow(content, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        content.setAlpha(0f);
-        content.setTranslationY(24f);
-        float dens = getResources().getDisplayMetrics().density;
-        if (headerContainer != null) {
-            headerContainer.setAlpha(0f);
-            headerContainer.setTranslationY(8f * dens);
-        }
-        if (headerAvatar != null) {
-            headerAvatar.setAlpha(0f);
-            headerAvatar.setScaleX(0.94f);
-            headerAvatar.setScaleY(0.94f);
-        }
-        if (headerName != null) {
-            headerName.setAlpha(0f);
-            headerName.setTranslationY(6f * dens);
-        }
-        if (manageAction != null) {
-            manageAction.setAlpha(0f);
-            manageAction.setTranslationX(6f * dens);
-        }
-        popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        popup.setOutsideTouchable(true);
-        if (ApiLevels.atLeast(21)) popup.setElevation(8f);
-
-        final ViewGroup root = findViewById(android.R.id.content);
-        final View scrim = new View(this);
-        scrim.setBackgroundColor(ContextCompat.getColor(this, R.color.scrim));
-        scrim.setClickable(true);
-        scrim.setOnClickListener(v -> popup.dismiss());
-        root.addView(scrim, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        scrim.setAlpha(0f);
-        scrim.animate().alpha(1f).setDuration(120).start();
-
-         final java.util.List<MsftAccountStore.MsftAccount> displayList = new java.util.ArrayList<>();
-        for (MsftAccountStore.MsftAccount a : list) {
-            if (active == null || !android.text.TextUtils.equals(a.id, active.id)) displayList.add(a);
-        }
-
-         class AccountRowViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
-             TextView tv;
-             AccountRowViewHolder(TextView t) { super(t); this.tv = t; }
-         }
-
-         recyclerAccounts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
-         recyclerAccounts.setAdapter(new androidx.recyclerview.widget.RecyclerView.Adapter<AccountRowViewHolder>() {
-             @Override
-             public AccountRowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                 TextView row = new TextView(parent.getContext());
-                 row.setLayoutParams(new androidx.recyclerview.widget.RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                 row.setTextColor(ContextCompat.getColor(parent.getContext(), R.color.on_surface));
-                 row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                 row.setPadding(paddingH, paddingV, paddingR, paddingV);
-                 row.setBackgroundResource(selectableRes);
-                 return new AccountRowViewHolder(row);
-             }
-
-             @Override
-             public void onBindViewHolder(AccountRowViewHolder holder, int position) {
-                 MsftAccountStore.MsftAccount account = displayList.get(position);
-                 holder.tv.setText(AccountTextUtils.titleOrUnknown(account));
-                 holder.tv.setOnClickListener(v -> {
-                     popup.dismiss();
-
-                     MsftAccountStore.setActive(MainActivity.this, account.id);
-                     boolean withinSevenDays = AccountTextUtils.isRecentlyUpdated(account, 7);
-
-                     if (withinSevenDays) {
-                         runOnUiThread(() -> {
-                             DialogUtils.dismissQuietly(accountLoadingDialog);
-                             String statusName = AccountTextUtils.displayNameOrNotSigned(MainActivity.this, account);
-                             Toast.makeText(MainActivity.this, getString(R.string.ms_login_success, statusName), Toast.LENGTH_SHORT).show();
-                             refreshAccountHeaderUI();
-                         });
-                         return;
-                     }
-
-                     accountLoadingDialog = DialogUtils.ensure(MainActivity.this, accountLoadingDialog);
-                     DialogUtils.showWithMessage(accountLoadingDialog, getString(R.string.ms_login_auth_xbox_device));
-
-                     runOnAccountExecutor(() -> {
-                         try {
-                             BedrockAuthManager authManager = MsftAuthManager.refreshAndAuth(account);
-                             MsftAuthManager.saveAccountOrThrow(MainActivity.this, authManager);
-                             MsftAccountStore.setActive(MainActivity.this, account.id);
-                             String minecraftUsername = authManager.getMinecraftCertificateChain().getUpToDate().getIdentityDisplayName();
-
-                             runOnUiThread(() -> {
-                                 DialogUtils.dismissQuietly(accountLoadingDialog);
-                                 String statusName = minecraftUsername != null ? minecraftUsername : getString(R.string.not_signed_in);
-                                 Toast.makeText(MainActivity.this, getString(R.string.ms_login_success, statusName), Toast.LENGTH_SHORT).show();
-                                 refreshAccountHeaderUI();
-                             });
-                         } catch (Throwable e) {
-                             // Throwable, not Exception: this handler is the only thing that dismisses
-                             // the "signing in" dialog, so an Error escaping it left that dialog up
-                             // forever with no sign-in and no message.
-                             runOnUiThread(() -> {
-                                 DialogUtils.dismissQuietly(accountLoadingDialog);
-                                 Toast.makeText(MainActivity.this, getString(R.string.ms_login_failed_detail, MsftAuthManager.describeError(e)), Toast.LENGTH_LONG).show();
-                                 refreshAccountHeaderUI();
-                             });
-                         }
-                     });
-                 });
-             }
-
-             @Override
-             public int getItemCount() { return displayList.size(); }
-         });
-
-         float density = getResources().getDisplayMetrics().density;
-         if (displayList.size() > 2) {
-             int limitHeight = (int) ((48 * 2 + 16) * density);
-             recyclerAccounts.getLayoutParams().height = limitHeight;
-         } else {
-             recyclerAccounts.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-         }
-
-        manageAction.setOnClickListener(v -> {
-            popup.dismiss();
-            startActivity(new Intent(this, AccountsActivity.class));
-        });
-        DynamicAnim.applyPressScale(manageAction);
-
-        popup.setOnDismissListener(() -> {
-            if (root != null && scrim != null) {
-                scrim.animate().alpha(0f).setDuration(120).withEndAction(() -> {
-                    try { root.removeView(scrim); } catch (Exception ignored) {
-                        AppLog.warnOnce("GlowberryClient", "MainActivity:754", "Ignored a failure at MainActivity:754", ignored);
-                    }
-                }).start();
-            }
-        });
-
-        int edgeMargin = (int) (4 * getResources().getDisplayMetrics().density);
-        popup.showAsDropDown(anchor, -edgeMargin, edgeMargin / 4, Gravity.END);
-
-        DynamicAnim.springAlphaTo(content, 1f).start();
-        DynamicAnim.springTranslationYTo(content, 0f).start();
-        recyclerAccounts.post(() -> DynamicAnim.staggerRecyclerChildren(recyclerAccounts));
-        if (headerContainer != null) {
-            DynamicAnim.springAlphaTo(headerContainer, 1f).start();
-            DynamicAnim.springTranslationYTo(headerContainer, 0f).start();
-        }
-        if (headerAvatar != null) {
-            DynamicAnim.springAlphaTo(headerAvatar, 1f).start();
-            DynamicAnim.springScaleXTo(headerAvatar, 1f).start();
-            DynamicAnim.springScaleYTo(headerAvatar, 1f).start();
-        }
-        if (headerName != null) {
-            DynamicAnim.springAlphaTo(headerName, 1f).start();
-            DynamicAnim.springTranslationYTo(headerName, 0f).start();
-        }
-        if (manageAction != null) {
-            DynamicAnim.springAlphaTo(manageAction, 1f).start();
-            DynamicAnim.springTranslationXTo(manageAction, 0f).start();
-        }
+        new AccountSwitchPopup(this, accountSwitchHost).show(anchor);
     }
+
+    /** The side effects {@link AccountSwitchPopup} cannot perform for itself. */
+    private final AccountSwitchPopup.Host accountSwitchHost = new AccountSwitchPopup.Host() {
+        @Override
+        public void runOnAccountExecutor(Runnable work) {
+            MainActivity.this.runOnAccountExecutor(work);
+        }
+
+        @Override
+        public LoadingDialog loadingDialog() {
+            return accountLoadingDialog;
+        }
+
+        @Override
+        public void setLoadingDialog(LoadingDialog dialog) {
+            accountLoadingDialog = dialog;
+        }
+
+        @Override
+        public void refreshHeader() {
+            refreshAccountHeaderUI();
+        }
+
+        @Override
+        public android.graphics.drawable.Drawable headerAvatarDrawable() {
+            return accountAvatar != null ? accountAvatar.getDrawable() : null;
+        }
+    };
+
 
     private void setupManagersAndHandlers() {
         languageManager = new LanguageManager(this);
@@ -1676,9 +1513,52 @@ import okhttp3.OkHttpClient;
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
         setupAnnouncementCard();
+        setupLaunchChangelog();
         // One mod-update notification a day, never a prompt per mod. The scheduler applies
         // the feature switch and the throttle, and does nothing at all when this build has no feed.
         org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
+    }
+
+    /**
+     * Sets up the release-notes card: parses the bundled changelog and pushes it into Compose.
+     *
+     * <p>The parse runs on the existing launch-stats executor rather than the UI thread, because the
+     * card is not needed for the first frame and the JSON is a couple of kilobytes. A build with no
+     * release notes leaves the card hidden rather than opening an empty screen.
+     */
+    private void setupLaunchChangelog() {
+        changelogCompose = findViewById(R.id.launch_changelog_compose);
+        if (changelogCompose == null) return;
+        changelogState = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.state(
+                org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
+                        org.chimeramc.client.core.changelog.LaunchChangelog.empty(),
+                        BuildConfig.VERSION_NAME));
+        changelogOpen = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.openState(false);
+        org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.setContent(
+                changelogCompose, changelogState, changelogOpen);
+        SafeExecutor.submit(launchStatsExecutor, () -> {
+            org.chimeramc.client.core.changelog.LaunchChangelog parsed =
+                    org.chimeramc.client.core.changelog.LaunchChangelog.parse(readBundledChangelog());
+            androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> state = changelogState;
+            if (state == null) return;
+            state.setValue(org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
+                    parsed, BuildConfig.VERSION_NAME));
+        });
+    }
+
+    /** Reads the bundled release-notes asset; a missing or unreadable file reads as empty. */
+    private String readBundledChangelog() {
+        try (java.io.InputStream in = getAssets().open("launcher/changelog.json")) {
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
+            return out.toString(java.nio.charset.StandardCharsets.UTF_8.name());
+        } catch (Throwable t) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:changelog",
+                    "Reading the bundled release notes failed", t);
+            return null;
+        }
     }
 
     /**

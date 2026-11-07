@@ -6,7 +6,26 @@
   "summary": "The module catalogue entries that were disabled, or enabled but doing nothing, purely because they were refused for lack of a live native game feed now work wherever this build actually has a route to their data. Every entry is classified by the route it needs, and only the entries that genuinely require a feed this build does not expose stay badged, with the reason they are badged.",
   "sections": [
     {
+      "title": "Bug fixes",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "Signing in no longer loses the token refresh, so a session is not silently dropped and the account stays signed in.",
+          "url": ""
+        },
+        {
+          "text": "The character preview no longer falls back to a random default skin while a fetch for the previous account is still running.",
+          "url": ""
+        },
+        {
+          "text": "The sign-in screen no longer offers a method that cannot complete, and names which method skin sync needs.",
+          "url": ""
+        }
+      ]
+    },
+    {
       "title": "Module Catalogue — Phase A: device input and launcher state (no game data needed)",
+      "kind": "added",
       "items": [
         {
           "text": "HUD readouts: clock, keystrokes, memory, watermark, combo, death counter, K/D tracker, streak tracker, kill counter.",
@@ -28,6 +47,7 @@
     },
     {
       "title": "Module Catalogue — Phase B: the game options file",
+      "kind": "added",
       "items": [
         {
           "text": "Bob off, fullbright (self and world), particle off, sprint particles, FOV boost. Each writes the instance's options file, applied on the next game load.",
@@ -37,6 +57,7 @@
     },
     {
       "title": "Module Catalogue — Phase C: the local-player feed",
+      "kind": "added",
       "items": [
         {
           "text": "Coordinates, direction, compass, chunk borders, speedometer, health display, position display, speed display, velocity display, fall damage warning, waypoints, death waypoint.",
@@ -46,6 +67,7 @@
     },
     {
       "title": "Module Catalogue — Phase D: the peer feed",
+      "kind": "added",
       "items": [
         {
           "text": "Reach circle, target HUD and target info, from the proximity-voice peer feed (needs no game hook).",
@@ -55,6 +77,7 @@
     },
     {
       "title": "Module Catalogue — Phases E and F: honestly badged, not faked",
+      "kind": "changed",
       "items": [
         {
           "text": "Engine/render hooks are not reachable on the shipped builds: the game exposes no entity, block, inventory or effect feed to a mod. These stay badged with the reason, instead of showing a fabricated reading.",
@@ -68,6 +91,7 @@
     },
     {
       "title": "Native route cleanup (this build)",
+      "kind": "changed",
       "items": [
         {
           "text": "Retired the raw OpenGL ES mesh rasteriser, which cannot draw on a Vulkan-only RenderDragon build, along with its draw self-test cube and mesh draw counter.",
@@ -89,6 +113,7 @@
     },
     {
       "title": "Also in this release (everything since OV.2)",
+      "kind": "changed",
       "items": [
         {
           "text": "Cosmetics: capes, pets and hats reach the game across versions; native render pipeline, authored Blockbench mesh support, per-piece textures and the in-app cosmetics diagnostics.",

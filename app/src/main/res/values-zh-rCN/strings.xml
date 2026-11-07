@@ -1309,4 +1309,17 @@
     <string name="replay_save_native_done">已保存 %1$s</string>
     <string name="replay_save_native_empty">还没有可保存的游戏回放。请先录制一个。</string>
     <string name="settings_run_setup">重新运行设置</string>
+    <string name="changelog_card_title">%1$s 新内容</string>
+    <string name="changelog_card_subtitle">点按查看新增、更改和修复的完整列表。</string>
+    <string name="changelog_card_action">了解更多</string>
+    <string name="changelog_popup_added">新增</string>
+    <string name="changelog_popup_changed">更改</string>
+    <string name="changelog_popup_fixed">修复</string>
+    <string name="changelog_popup_more">本次发布还包括</string>
+    <string name="changelog_popup_empty">此版本没有可显示的发行说明。</string>
+    <string name="changelog_popup_close">关闭</string>
+    <string name="changelog_popup_minimize">最小化</string>
+    <string name="changelog_view_wiki">查看 Wiki</string>
+    <string name="changelog_upcoming_soon">即将推出!</string>
+    <string name="changelog_upcoming_soon_body">Wiki 正在编写中。上线后会在此处打开。</string>
 </resources>

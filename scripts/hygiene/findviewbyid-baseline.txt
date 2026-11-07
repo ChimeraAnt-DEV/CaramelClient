@@ -10,13 +10,15 @@ app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/FpsDis
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/HitPredictionOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/HitTimingOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/HitboxOverlay.java 2
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/HudEditorController.java 11
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/HudOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/KillEffectsOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuAdapter.java 12
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuButton.java 4
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuControllerSection.java 6
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuKeyboardSection.java 3
-app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 112
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuOverlay.java 102
+app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModMenuScreen.java 1
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ModNotificationManager.java 4
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/MoreButtonsEditor.java 1
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/OverlayBounds.java 1
@@ -29,6 +31,7 @@ app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/Trajec
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VirtualCursorMod.java 1
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VoiceChatOverlay.java 2
 app/src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/VoiceNametagOverlay.java 2
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/AccountSwitchPopup.java 6
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/BaseActivity.java 24
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentDetailsActivity.java 9
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ContentListActivity.java 15
@@ -39,7 +42,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivit
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 43
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 38
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModDetailActivity.java 23
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModHubActivity.java 17
