@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The HUD readout panel shared by the FPS, CPS and text overlays.
+
+    The old readout was a flat `#CC000000` rectangle with a hairline of padding, which read as a
+    debug sticker rather than a HUD. This is the same three-layer glass the launcher cards use — a
+    rim that is brighter at the top, a sheen that falls off downward, and a translucent fill — so a
+    module readout matches the rest of the client. The fill is a little stronger than the launcher's
+    glass because a HUD sits over a bright, moving scene and the number has to stay legible.
+
+    Layer order (first drawn is at the back):
+      1. the rim, a 1dp stroke whose colour is the top highlight
+      2. the sheen, a vertical gradient from a light tint to transparent
+      3. the fill, the base panel colour
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 1. The rim: brightest at the top, so the panel catches light from above. -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_card" />
+            <gradient
+                android:startColor="@color/glass_rim_top"
+                android:endColor="@color/glass_rim_bottom"
+                android:angle="270" />
+        </shape>
+    </item>
+    <!-- 2. The sheen, inset by the rim's width so it sits inside it. -->
+    <item android:top="1dp" android:bottom="1dp" android:left="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_card" />
+            <gradient
+                android:startColor="@color/glass_sheen"
+                android:endColor="@color/glass_sheen_end"
+                android:angle="270" />
+        </shape>
+    </item>
+    <!-- 3. The fill, inset by the rim so the stroke shows. -->
+    <item android:top="1dp" android:bottom="1dp" android:left="1dp" android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/radius_card" />
+            <solid android:color="@color/overlay_hud_fill" />
+        </shape>
+    </item>
+</layer-list>

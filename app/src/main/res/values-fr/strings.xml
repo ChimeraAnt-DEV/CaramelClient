@@ -747,8 +747,6 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="mod_menu_pause_menu_only_desc">Afficher le menu des mods uniquement dans le menu de pause</string>
     <string name="mod_menu_default_percent" formatted="false">100%</string>
     <string name="mod_menu_percent_value">%1$d%%</string>
-    <string name="mod_overlay_fps_unknown">FPS: --</string>
-    <string name="mod_overlay_fps_value">FPS: %1$d</string>
     <string name="mod_overlay_cps_value">CPS: %1$d</string>
     <string name="mod_config_overlay_button_size_dp">Taille du bouton de superposition (dp)</string>
     <string name="mod_config_overlay_opacity_percent" formatted="false">Opacité de la superposition (%)</string>

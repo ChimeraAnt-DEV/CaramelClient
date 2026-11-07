@@ -805,8 +805,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="mod_menu_pause_menu_only_desc">Mod menüsünü yalnızca duraklatma ekranında göster</string>
     <string name="mod_menu_default_percent" formatted="false">100%</string>
     <string name="mod_menu_percent_value">%1$d%%</string>
-    <string name="mod_overlay_fps_unknown">FPS: --</string>
-    <string name="mod_overlay_fps_value">FPS: %1$d</string>
     <string name="mod_overlay_cps_value">CPS: %1$d</string>
     <string name="mod_config_overlay_button_size_dp">Yer paylaşımı düğmesi boyutu (dp)</string>
     <string name="mod_config_overlay_opacity_percent" formatted="false">Yer paylaşımı opaklığı (%)</string>
