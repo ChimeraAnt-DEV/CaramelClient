@@ -1285,4 +1285,17 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="replay_save_native_done">%1$s を保存しました</string>
     <string name="replay_save_native_empty">保存できるゲームのリプレイがまだありません。まず録画してください。</string>
     <string name="settings_run_setup">セットアップを再実行</string>
+    <string name="changelog_card_title">%1$s の新機能</string>
+    <string name="changelog_card_subtitle">タップすると、追加・変更・修正された内容の全リストを表示します。</string>
+    <string name="changelog_card_action">もっと見る</string>
+    <string name="changelog_popup_added">追加</string>
+    <string name="changelog_popup_changed">変更</string>
+    <string name="changelog_popup_fixed">修正</string>
+    <string name="changelog_popup_more">このリリースのその他</string>
+    <string name="changelog_popup_empty">このビルドには表示できるリリースノートがありません。</string>
+    <string name="changelog_popup_close">閉じる</string>
+    <string name="changelog_popup_minimize">最小化</string>
+    <string name="changelog_view_wiki">Wiki を見る</string>
+    <string name="changelog_upcoming_soon">近日公開!</string>
+    <string name="changelog_upcoming_soon_body">Wiki は現在作成中です。公開され次第、ここで開きます。</string>
 </resources>

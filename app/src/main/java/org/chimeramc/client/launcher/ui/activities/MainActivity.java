@@ -229,6 +229,10 @@ import okhttp3.OkHttpClient;
     private String heroPlaytime = "0m";
     private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>> toggleState;
     private androidx.compose.ui.platform.ComposeView toggleCompose;
+    /** The Compose release-notes card and its popup, and the state they render. */
+    private androidx.compose.ui.platform.ComposeView changelogCompose;
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> changelogState;
+    private androidx.compose.runtime.MutableState<Boolean> changelogOpen;
     private String antEggStatusText = "";
     private String voiceStatusText = "";
     private String replayStatusText = "";
@@ -1509,9 +1513,52 @@ import okhttp3.OkHttpClient;
         FeatureSettings.init(getApplicationContext());
         showRandomTip();
         setupAnnouncementCard();
+        setupLaunchChangelog();
         // One mod-update notification a day, never a prompt per mod. The scheduler applies
         // the feature switch and the throttle, and does nothing at all when this build has no feed.
         org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
+    }
+
+    /**
+     * Sets up the release-notes card: parses the bundled changelog and pushes it into Compose.
+     *
+     * <p>The parse runs on the existing launch-stats executor rather than the UI thread, because the
+     * card is not needed for the first frame and the JSON is a couple of kilobytes. A build with no
+     * release notes leaves the card hidden rather than opening an empty screen.
+     */
+    private void setupLaunchChangelog() {
+        changelogCompose = findViewById(R.id.launch_changelog_compose);
+        if (changelogCompose == null) return;
+        changelogState = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.state(
+                org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
+                        org.chimeramc.client.core.changelog.LaunchChangelog.empty(),
+                        BuildConfig.VERSION_NAME));
+        changelogOpen = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.openState(false);
+        org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.setContent(
+                changelogCompose, changelogState, changelogOpen);
+        SafeExecutor.submit(launchStatsExecutor, () -> {
+            org.chimeramc.client.core.changelog.LaunchChangelog parsed =
+                    org.chimeramc.client.core.changelog.LaunchChangelog.parse(readBundledChangelog());
+            androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> state = changelogState;
+            if (state == null) return;
+            state.setValue(org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
+                    parsed, BuildConfig.VERSION_NAME));
+        });
+    }
+
+    /** Reads the bundled release-notes asset; a missing or unreadable file reads as empty. */
+    private String readBundledChangelog() {
+        try (java.io.InputStream in = getAssets().open("launcher/changelog.json")) {
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
+            return out.toString(java.nio.charset.StandardCharsets.UTF_8.name());
+        } catch (Throwable t) {
+            AppLog.warnOnce("GlowberryClient", "MainActivity:changelog",
+                    "Reading the bundled release notes failed", t);
+            return null;
+        }
     }
 
     /**

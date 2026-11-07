@@ -1312,4 +1312,17 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="replay_save_native_done">Tersimpan %1$s</string>
     <string name="replay_save_native_empty">Belum ada ulangan game untuk disimpan. Rekam dulu.</string>
     <string name="settings_run_setup">Jalankan penyiapan lagi</string>
+    <string name="changelog_card_title">Yang baru di %1$s</string>
+    <string name="changelog_card_subtitle">Ketuk untuk daftar lengkap apa yang ditambahkan, diubah, dan diperbaiki.</string>
+    <string name="changelog_card_action">Baca selengkapnya</string>
+    <string name="changelog_popup_added">Ditambahkan</string>
+    <string name="changelog_popup_changed">Diubah</string>
+    <string name="changelog_popup_fixed">Diperbaiki</string>
+    <string name="changelog_popup_more">Juga di rilis ini</string>
+    <string name="changelog_popup_empty">Build ini tidak memiliki catatan rilis untuk ditampilkan.</string>
+    <string name="changelog_popup_close">Tutup</string>
+    <string name="changelog_popup_minimize">Perkecil</string>
+    <string name="changelog_view_wiki">Lihat Wiki</string>
+    <string name="changelog_upcoming_soon">Segera hadir!</string>
+    <string name="changelog_upcoming_soon_body">Wiki sedang ditulis. Wiki akan terbuka di sini begitu tersedia.</string>
 </resources>

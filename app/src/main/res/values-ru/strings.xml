@@ -1327,4 +1327,17 @@
     <string name="replay_save_native_done">Сохранено %1$s</string>
     <string name="replay_save_native_empty">Пока нет повтора игры для сохранения. Сначала запишите.</string>
     <string name="settings_run_setup">Запустить настройку снова</string>
+    <string name="changelog_card_title">Что нового в %1$s</string>
+    <string name="changelog_card_subtitle">Нажмите, чтобы увидеть полный список добавленного, изменённого и исправленного.</string>
+    <string name="changelog_card_action">Подробнее</string>
+    <string name="changelog_popup_added">Добавлено</string>
+    <string name="changelog_popup_changed">Изменено</string>
+    <string name="changelog_popup_fixed">Исправлено</string>
+    <string name="changelog_popup_more">Также в этом выпуске</string>
+    <string name="changelog_popup_empty">В этой сборке нет заметок о выпуске.</string>
+    <string name="changelog_popup_close">Закрыть</string>
+    <string name="changelog_popup_minimize">Свернуть</string>
+    <string name="changelog_view_wiki">Открыть вики</string>
+    <string name="changelog_upcoming_soon">Скоро!</string>
+    <string name="changelog_upcoming_soon_body">Вики ещё пишется. Она откроется здесь, как только появится.</string>
 </resources>
