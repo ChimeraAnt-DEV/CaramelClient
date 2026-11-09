@@ -145,6 +145,13 @@ jobs:
         # nlohmann/json into a gitignored cache when needed.
         run: bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh
 
+      - name: Verify the bundled BerryAPI ABI
+        # The preloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A
+        # bundled binary built from an older BerryAPI is missing the world-seam / replay / governor
+        # surface, and every one of those reads then fails closed with no build-time warning. Fail
+        # here instead of shipping a build whose whole BerryAPI feature set is silently dark.
+        run: python3 scripts/verify_berryapi_abi.py
+
       # The three hygiene budgets. The existing debt is large and is recorded
       # in scripts/hygiene/*.txt; this fails only when a change makes it larger, which is the part a
       # single PR can actually hold the line on.
@@ -163,6 +170,7 @@ jobs:
           python3 scripts/tests/compute_checksums_test.py
           python3 scripts/tests/release_notes_test.py
           python3 scripts/tests/sign_preloader_rules_test.py
+          python3 scripts/tests/verify_berryapi_abi_test.py
 
       - name: Verify the shipped rule signature
         # The rule file decides which addresses the preloader patches, so a signature that does not
