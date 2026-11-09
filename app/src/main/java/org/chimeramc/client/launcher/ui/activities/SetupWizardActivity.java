@@ -38,6 +38,11 @@ public class SetupWizardActivity extends BaseActivity {
     /** Set once the user finishes or skips; the splash reads it to decide whether to show this. */
     public static final String KEY_WIZARD_DONE = "setup_wizard_done";
 
+    /** Instance-state keys, so a recreate (a live theme change) keeps the user on their page. */
+    private static final String KEY_STEP = "wizard_step";
+    private static final String KEY_LICENSE_ACCEPTED = "wizard_license_accepted";
+    private static final String KEY_IMPORTED = "wizard_imported";
+
     private ActivitySetupWizardBinding binding;
     private TextView stepLabel;
     private TextView title;
@@ -170,7 +175,42 @@ public class SetupWizardActivity extends BaseActivity {
                     }
                 });
 
+        restoreInstanceState(savedInstanceState);
         render();
+    }
+
+    /**
+     * Restores the step and the progress bits a recreate would otherwise drop.
+     *
+     * <p>The customise step's theme radios recreate this activity (a live theme change); without
+     * this the wizard snapped back to the licence page, which read as the last steps being broken.
+     * The accepted licence is re-applied to the checkbox so the Next button stays lit, and the
+     * per-run import count is restored so the limit is not silently reset.
+     */
+    private void restoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState == null) return;
+        String stored = savedInstanceState.getString(KEY_STEP);
+        if (stored != null) {
+            try {
+                step = SetupWizard.Step.valueOf(stored);
+            } catch (IllegalArgumentException ignored) {
+                step = SetupWizard.Step.LICENSE;
+            }
+        }
+        licenseAccepted = savedInstanceState.getBoolean(KEY_LICENSE_ACCEPTED, false);
+        importedThisRun = savedInstanceState.getInt(KEY_IMPORTED, 0);
+        if (licenseCheck instanceof com.google.android.material.checkbox.MaterialCheckBox) {
+            ((com.google.android.material.checkbox.MaterialCheckBox) licenseCheck)
+                    .setChecked(licenseAccepted);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_STEP, step != null ? step.name() : SetupWizard.Step.LICENSE.name());
+        outState.putBoolean(KEY_LICENSE_ACCEPTED, licenseAccepted);
+        outState.putInt(KEY_IMPORTED, importedThisRun);
     }
 
     @Override
