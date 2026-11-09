@@ -167,6 +167,10 @@ class LauncherApplication : Application() {
         org.chimeramc.client.core.minecraft.FpsOptimizationService.setLowMemory(critical)
         if (critical) {
             org.chimeramc.client.core.minecraft.FpsOptimizationService.apply()
+            // Bound the preloader's cached module handles: a hot-reloading or heavily-modded session
+            // grows that cache without bound, and trim-memory is exactly when to reclaim it. No-op
+            // when the library is absent.
+            org.chimeramc.client.preloader.PreloaderInput.closeUnusedModuleHandles()
         }
     }
 
