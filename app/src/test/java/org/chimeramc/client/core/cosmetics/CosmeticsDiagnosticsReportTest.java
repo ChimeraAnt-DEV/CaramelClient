@@ -44,6 +44,8 @@ public class CosmeticsDiagnosticsReportTest {
         in.rulesMergeConflicts = 1;
         in.rulesHaveRenderIndex = true;
         in.rulesLoadAttempted = true;
+        in.rulesConfigured = true;
+        in.rulesLoaded = true;
         in.preloaderModuleMappings = 1;
         in.hookInstallState = 2;
         in.hookInstallFrameTicks = 3;
@@ -94,6 +96,13 @@ public class CosmeticsDiagnosticsReportTest {
         CosmeticsDiagnosticsReport.Inputs notLoaded = fullInputs();
         notLoaded.rulesLoadAttempted = false;
         assertTrue(CosmeticsDiagnosticsReport.firstFailingStage(notLoaded).startsWith("2. rules load"));
+
+        // Delivered and read, but the file was missing or malformed: attempted is true, loaded is
+        // false, and the report must name the parse step rather than a later hook stage.
+        CosmeticsDiagnosticsReport.Inputs notParsed = fullInputs();
+        notParsed.rulesLoadAttempted = true;
+        notParsed.rulesLoaded = false;
+        assertTrue(CosmeticsDiagnosticsReport.firstFailingStage(notParsed).startsWith("2. rules parse"));
 
         CosmeticsDiagnosticsReport.Inputs noSlot = fullInputs();
         noSlot.rulesHaveRenderIndex = false;
@@ -209,6 +218,7 @@ public class CosmeticsDiagnosticsReportTest {
         String report = CosmeticsDiagnosticsReport.format(fullInputs());
         assertTrue(report.contains("Rules source: bundled (revision 6)"));
         assertTrue(report.contains("Rules delivered to native: yes"));
+        assertTrue(report.contains("Rules parsed into effect: yes"));
         assertTrue(report.contains("Effective rule: pauseMenuDtorSig,playerRenderVtableIndex=17"));
         assertTrue(report.contains("Rule has render slot: yes"));
         assertTrue(report.contains("Hook install state: resolved after 3 frame tick(s)"));

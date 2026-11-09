@@ -42,6 +42,25 @@ public class PreloaderInput {
     }
 
     private static native int nativeAbiVersion();
+
+    /**
+     * Bounds the preloader's cached module handles.
+     *
+     * <p>Resolution handles are cached so a repeated install does not reopen a module, but a session
+     * that hot-reloads mods (or resolves many distinct mod {@code .so}s) grows the cache without
+     * bound. The host calls this from {@code Application.onTrimMemory}. Returns the number of
+     * handles closed; the game module's handle is never closed. A build without the library returns
+     * 0.
+     */
+    public static int closeUnusedModuleHandles() {
+        try {
+            return nativeCloseUnusedModuleHandles();
+        } catch (UnsatisfiedLinkError e) {
+            return 0;
+        }
+    }
+
+    private static native int nativeCloseUnusedModuleHandles();
     // The mouse button state machine lives in PreloaderMouseState so its rules are unit-testable
     // without a native library; the native declarations have to stay on this class, because a JNI
     // symbol resolves from the declaring class.
