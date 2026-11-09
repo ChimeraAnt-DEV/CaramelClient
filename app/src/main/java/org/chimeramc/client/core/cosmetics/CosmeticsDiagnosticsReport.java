@@ -95,6 +95,10 @@ public final class CosmeticsDiagnosticsReport {
         public boolean rulesHaveRenderIndex;
         /** Whether the rules were delivered to the native library at all this session. */
         public boolean rulesLoadAttempted;
+        /** Whether a rules path was supplied to the native side. */
+        public boolean rulesConfigured;
+        /** Whether the rules file was read and parsed into a usable rule set. */
+        public boolean rulesLoaded;
         /** How many copies of libpreloader.so are mapped; >1 means a split, empty registry. */
         public int preloaderModuleMappings = -1;
         /** The deferred hook-install state: 0 not armed, 1 waiting, 2 resolved. */
@@ -194,6 +198,8 @@ public final class CosmeticsDiagnosticsReport {
                 in.rulesMergeConflicts = diag[12];
                 in.rulesHaveRenderIndex = diag[13] == 1;
                 in.rulesLoadAttempted = diag[14] == 1;
+                in.rulesConfigured = diag.length >= 21 && diag[19] == 1;
+                in.rulesLoaded = diag.length >= 21 && diag[20] == 1;
                 in.preloaderModuleMappings = diag[15];
             }
         }
@@ -391,6 +397,7 @@ public final class CosmeticsDiagnosticsReport {
         b.append("Rules source: ").append(v.rulesSource == null ? "bundled" : v.rulesSource)
                 .append(" (revision ").append(countText(v.rulesRevision)).append(")\n");
         b.append("Rules delivered to native: ").append(yesNo(v.rulesLoadAttempted)).append('\n');
+        b.append("Rules parsed into effect: ").append(yesNo(v.rulesLoaded)).append('\n');
         b.append("Effective rule: ").append(ruleSummaryText(v)).append('\n');
         b.append("Rules matching this version (extra): ").append(countText(v.rulesMergeConflicts))
                 .append('\n');
@@ -774,6 +781,11 @@ public final class CosmeticsDiagnosticsReport {
         if (!v.rulesLoadAttempted) {
             return "2. rules load — the hook install never ran, so the rules file was never read"
                     + " (the install is deferred to the game's frame tick; see the install state).";
+        }
+        if (!v.rulesLoaded) {
+            return "2. rules parse — the rules file was read but could not be parsed into a usable"
+                    + " rule set: the file is missing, malformed, or carries no rule for Minecraft "
+                    + v.minecraftVersion + ".";
         }
         if (!v.rulesHaveRenderIndex) {
             return "3. rule match — no matching rule for Minecraft " + v.minecraftVersion
