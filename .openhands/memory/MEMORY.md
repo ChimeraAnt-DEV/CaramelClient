@@ -134,3 +134,10 @@ installed from the repo root (`-e .`).
 - **Git author for this repo's commits**: `Lynxifyy <297587416+Lynxifyy@users.noreply.github.com>`,
   no co-authors, no AI mentions in PRs. Push with `$GithubLynxifyy` (has repo scope; `create_pr`
   tool's token is read-only here → use a `curl` POST to the API).
+- **Two Android CI gates that fail locally-silent changes** (both run in `android.yml` before the
+  Gradle build, so they fail fast): `python3 scripts/check_ui_hygiene.py` fails on *new*
+  `findViewById` calls beyond a per-file baseline — read the view from the generated ViewBinding
+  instead (or `--update` with a reason). `./gradlew :app:lintDebug` fails on a new
+  `MissingSuperCall` — do not override `onBackPressed()` without calling `super`; register an
+  `OnBackPressedCallback` on `getOnBackPressedDispatcher()` instead. Full unit suite is
+  **3844 tests, 0 failures, 1 skipped** (~25s warm).
