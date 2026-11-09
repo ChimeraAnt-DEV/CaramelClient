@@ -112,8 +112,16 @@ installed from the repo root (`-e .`).
   A change under `app/src/main/cpp/preloader/**` must be committed **inside the submodule**,
   pushed, then the parent repo must commit the bumped submodule pointer. `git add` of a
   submodule path in the parent stages the gitlink, not the file.
+  **Always check the pin is not behind the submodule's `main`** (`git -C <sub> merge-base
+  --is-ancestor origin/main HEAD`). A `feat/*` submodule branch can silently skip a large
+  `main` PR: the pin here was 13 commits behind main (frame-boundary clock, seqlock fixes,
+  Optifine device/thread fixes, atomic sig-cache write, snapshot channel + TSAN). Merge
+  `origin/main` into the working branch, resolve, run `tests/cosmetics/run_tests.sh`, push the
+  submodule, then bump the parent pin. Merging main can also add JNI exports with no Java
+  declaration → `JniBindingParityTest` fails with `stale-export`; add the Java `native` methods
+  (`app/src/main/java/.../launcher/preloader/BerryApi.java`).
 - **Build/test**: `JAVA_HOME=/workspace/tools/jdk-21.0.13+9 ANDROID_HOME=/workspace/android-sdk
-  ./gradlew :app:testDebugUnitTest` (~3843 tests, ~25s, all green). Targeted:
+  ./gradlew :app:testDebugUnitTest` (~3844 tests, ~25s, all green). Targeted:
   `--tests "org.chimeramc.client.<pkg>.*"`. Native host tests:
   `bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh` (needs g++ + zlib + nlohmann).
 - **BerryAPI ABI guard**: `python3 scripts/verify_berryapi_abi.py` (test:
