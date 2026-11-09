@@ -66,6 +66,24 @@ REQUIRED_SYMBOLS = {
 # (pl::berry::kHostSeamAbiVersion). BERRY_WorldSeamAbiVersion must return this.
 EXPECTED_SEAM_ABI = 8
 
+# The replay and governor surfaces, and the struct sizes the mirrors produce. The
+# library's BERRY_*AbiVersion / BERRY_*StructSize must equal these, or the preloader
+# refuses the surface at run time (the size/ABI check) and the feature stays dark.
+EXPECTED_REPLAY_ABI = 2
+EXPECTED_REPLAY_STRUCT_SIZE = 144
+EXPECTED_GOVERNOR_ABI = 1
+EXPECTED_GOVERNOR_STRUCT_SIZE = 48
+
+# (symbol, expected value, human description) checked by decoding the function's
+# returned immediate. These are the numbers the preloader compares against.
+ABI_CONSTANTS = [
+    ("BERRY_WorldSeamAbiVersion", EXPECTED_SEAM_ABI, "world-seam ABI (kHostSeamAbiVersion)"),
+    ("BERRY_ReplayAbiVersion", EXPECTED_REPLAY_ABI, "replay ABI (kHostReplayAbiVersion)"),
+    ("BERRY_ReplayStructSize", EXPECTED_REPLAY_STRUCT_SIZE, "replay struct size"),
+    ("BERRY_GovernorAbiVersion", EXPECTED_GOVERNOR_ABI, "governor ABI (kHostGovernorAbiVersion)"),
+    ("BERRY_GovernorStructSize", EXPECTED_GOVERNOR_STRUCT_SIZE, "governor struct size"),
+]
+
 # ELF section type for a symbol table (SHT_SYMTAB=2, SHT_DYNSYM=11).
 SHT_SYMTAB = 2
 SHT_DYNSYM = 11
@@ -262,23 +280,31 @@ def check(lib: Path) -> int:
         )
         return 1
 
-    # Pin the seam ABI number the library reports.
-    pinned = False
-    fn_off = _find_function(data, "BERRY_WorldSeamAbiVersion")
-    if fn_off is not None:
+    # Pin every ABI number the preloader compares against. A function whose
+    # prologue does not decode is left unpinned rather than failed, so a compiler
+    # that emits an unexpected constant-materialisation sequence does not produce a
+    # false alarm; the mismatch case is what matters and is detected whenever the
+    # immediate decodes.
+    pinned = 0
+    for symbol, expected, description in ABI_CONSTANTS:
+        fn_off = _find_function(data, symbol)
+        if fn_off is None:
+            continue
         immediate = _seam_abi_immediate(data, fn_off)
-        if immediate is not None:
-            pinned = True
-            if immediate != EXPECTED_SEAM_ABI:
-                print(
-                    f"verify_berryapi_abi: BERRY_WorldSeamAbiVersion returns {immediate} but the "
-                    f"preloader mirror targets {EXPECTED_SEAM_ABI}. Bump kHostSeamAbiVersion (and "
-                    f"the SeamMirror layout) together with the library.",
-                    file=sys.stderr,
-                )
-                return 1
+        if immediate is None:
+            continue
+        pinned += 1
+        if immediate != expected:
+            print(
+                f"verify_berryapi_abi: {symbol} returns {immediate} but the preloader targets "
+                f"{expected} ({description}). Update the preloader mirror (kHost*AbiVersion and the "
+                f"struct layout) together with the library.",
+                file=sys.stderr,
+            )
+            return 1
 
-    note = f"seam ABI {EXPECTED_SEAM_ABI}" if pinned else "seam ABI not pinned (prologue shape)"
+    note = (f"{pinned}/{len(ABI_CONSTANTS)} ABI constants pinned" if pinned
+            else "ABI constants not pinned (prologue shape)")
     print(f"verify_berryapi_abi: OK ({lib.name}, {len(defined)} defined dynamic symbols, "
           f"all {sum(len(v) for v in REQUIRED_SYMBOLS.values())} required present, {note})")
     return 0
