@@ -70,12 +70,45 @@ public final class MsftAuthManager {
     /**
      * The MSAL redirect URI for this package.
      *
-     * <p>Must match the {@code msauth://<package>/<signature-hash>} form the app registers, and the
-     * signature hash is the URL-encoded class name MSAL uses for a public client on Android.
+     * <p>{@code msauth://<package>/<signature-hash>}, built from the same two inputs the manifest
+     * filter uses, so the runtime value and the registered filter cannot drift apart. It used to
+     * hardcode the URL-encoded class name {@code SignActivity}, which no manifest registers, so
+     * Microsoft's reply had nowhere to land and the interactive flow appeared to hang.
      */
     public static String msalRedirectUri(Context context) {
-        return "msauth://" + context.getPackageName() + "/"
-                + android.net.Uri.encode("com.microsoft.identity.client.SignActivity");
+        return MsalRedirectRule.redirectUri(context.getPackageName(), msalSignatureHash(context));
+    }
+
+    /**
+     * The URL-encoded signing certificate SHA-1 hash, which is the {@code msauth} path.
+     *
+     * <p>Read from the running package's signature so it always matches the keystore the APK was
+     * actually signed with; falls back to the build-time value (the same one the manifest filter
+     * uses) when the signature cannot be read, and to an empty path in the worst case rather than a
+     * {@code null} literal that would never be delivered.
+     */
+    public static String msalSignatureHash(Context context) {
+        String fromBuild = BuildConfig.MSAL_SIGNATURE_HASH;
+        if (fromBuild != null && !fromBuild.isEmpty()) {
+            return fromBuild;
+        }
+        try {
+            android.content.pm.PackageInfo info = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), android.content.pm.PackageManager.GET_SIGNATURES);
+            if (info != null && info.signatures != null && info.signatures.length > 0) {
+                byte[] digest = java.security.MessageDigest.getInstance("SHA-1")
+                        .digest(info.signatures[0].toByteArray());
+                StringBuilder hex = new StringBuilder();
+                for (byte b : digest) {
+                    hex.append(Character.forDigit((b >> 4) & 0xF, 16));
+                    hex.append(Character.forDigit(b & 0xF, 16));
+                }
+                return android.net.Uri.encode(hex.toString());
+            }
+        } catch (Exception ignored) {
+            // A missing signature is not fatal here; the manifest placeholder is the fallback.
+        }
+        return "";
     }
 
     /**

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.microsoft.identity.client.AcquireTokenParameters;
 import com.microsoft.identity.client.IMultipleAccountPublicClientApplication;
@@ -30,11 +31,13 @@ import java.util.List;
 public class MicrosoftOAuthManager {
     private static final String TAG = "MicrosoftOAuth";
     
-    // Microsoft Azure App Registration Configuration
-    // Users must register their own app at https://portal.azure.com
-    private static final String DEFAULT_CLIENT_ID = "YOUR_CLIENT_ID_HERE";
-    private static final String[] DEFAULT_SCOPES = {"XboxLive.signIn", "offline_access"};
-    private static final String REDIRECT_URI_SCHEME = "msauth";
+    // The scopes MSAL is asked for. The three reserved OIDC scopes are mandatory — MSAL refuses to
+    // acquire a token without them — and `XboxLive.signin` is what the Bedrock title needs. The old
+    // list (`XboxLive.signIn` + `offline_access`) both misspelled the Xbox scope and omitted the
+    // reserved ones, so the interactive request was rejected before the browser ever opened.
+    private static final String[] DEFAULT_SCOPES = {
+            "openid", "profile", "offline_access", "XboxLive.signin"
+    };
     
     private IMultipleAccountPublicClientApplication multiAccountApp;
     private ISingleAccountPublicClientApplication singleAccountApp;
@@ -45,15 +48,40 @@ public class MicrosoftOAuthManager {
         this.context = context.getApplicationContext();
     }
     
+    /** Notified when the asynchronous public-client application is ready (or failed). */
+    public interface InitCallback {
+        void onReady();
+        void onError(MsalException exception);
+    }
+
+    /** The one pending init callback, or null. */
+    @Nullable
+    private InitCallback initCallback;
+
     /**
-     * Initialize MSAL Public Client Application
-     * Must be called before any authentication operations
+     * Initialize MSAL Public Client Application.
+     *
+     * <p>Must be called before any authentication operations. The application is created
+     * asynchronously, so {@code callback} (when given) fires once it is ready — the caller must not
+     * assume the app exists the moment this method returns, which is what a fixed-delay "wait and
+     * hope" did before and why an interactive sign-in could report "not initialized" on a slow
+     * device.
      */
     public void initialize(@NonNull String clientId, @NonNull String redirectUri) {
+        initialize(clientId, redirectUri, null);
+    }
+
+    /** Initialize with a completion callback. Idempotent: a second call after success is a no-op. */
+    public void initialize(@NonNull String clientId, @NonNull String redirectUri,
+                           @Nullable InitCallback callback) {
         if (isInitialized) {
             Log.w(TAG, "MSAL already initialized");
+            if (callback != null) {
+                callback.onReady();
+            }
             return;
         }
+        initCallback = callback;
         
         String configJson = createMsalConfig(clientId, redirectUri);
         
@@ -82,16 +110,26 @@ public class MicrosoftOAuthManager {
             );
         } catch (Exception e) {
             Log.e(TAG, "Error creating MSAL configuration", e);
+            InitCallback cb = initCallback;
+            initCallback = null;
+            if (cb != null) {
+                cb.onError(new MsalClientException("msal_config_write_failed"));
+            }
         }
     }
     
     /**
-     * Create MSAL configuration JSON programmatically
+     * Create MSAL configuration JSON programmatically.
+     *
+     * <p>One authority only. MSAL rejects a configuration whose authorities do not all share the
+     * same host and tenant family, so the previous three-authority list (`common`, `organizations`,
+     * `consumers`) made `createMultipleAccountPublicClientApplication` fail and left the app
+     * uninitialised — the interactive button then reported "OAuth not initialized". The Bedrock
+     * title is a personal-Microsoft-account app, so `consumers` is the correct single authority.
      */
     private String createMsalConfig(String clientId, String redirectUri) {
         return "{\n" +
                 "  \"authorization_user_agent\": \"DEFAULT\",\n" +
-                "  \"minimum_required_broker_protocol_version\": \"3.0\",\n" +
                 "  \"account_mode\": \"MULTIPLE\",\n" +
                 "  \"broker_redirect_uri_registered\": false,\n" +
                 "  \"environment\": \"Production\",\n" +
@@ -101,21 +139,7 @@ public class MicrosoftOAuthManager {
                 "    {\n" +
                 "      \"type\": \"AAD\",\n" +
                 "      \"audience\": {\n" +
-                "        \"type\": \"PersonalAzureAD\",\n" +
-                "        \"tenant_id\": \"common\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"type\": \"AAD\",\n" +
-                "      \"audience\": {\n" +
-                "        \"type\": \"PersonalAzureAD\",\n" +
-                "        \"tenant_id\": \"organizations\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"type\": \"AAD\",\n" +
-                "      \"audience\": {\n" +
-                "        \"type\": \"PersonalAzureAD\",\n" +
+                "        \"type\": \"PersonalMicrosoftAccount\",\n" +
                 "        \"tenant_id\": \"consumers\"\n" +
                 "      }\n" +
                 "    }\n" +
@@ -129,7 +153,7 @@ public class MicrosoftOAuthManager {
      * @param callback Callback for authentication result
      */
     public void signIn(@NonNull Activity activity, @NonNull MicrosoftAuthCallback callback) {
-        if (!isInitialized) {
+        if (multiAccountApp == null) {
             callback.onError(new MsalClientException("msal_not_initialized"));
             return;
         }
@@ -137,7 +161,9 @@ public class MicrosoftOAuthManager {
         AcquireTokenParameters parameters = new AcquireTokenParameters.Builder()
                 .startAuthorizationFromActivity(activity)
                 .withLoginHint("")
-                .withOtherScopesToAuthorize(Arrays.asList(DEFAULT_SCOPES))
+                // withScopes (not withOtherScopesToAuthorize): the reserved OIDC scopes are part of
+                // the list, and the "other scopes" API rejects them.
+                .withScopes(Arrays.asList(DEFAULT_SCOPES))
                 .withCallback(new AuthenticationCallback() {
                     @Override
                     public void onSuccess(com.microsoft.identity.client.IAuthenticationResult authenticationResult) {
@@ -167,7 +193,7 @@ public class MicrosoftOAuthManager {
      * @param callback Callback for authentication result
      */
     public void signInSilently(@NonNull MicrosoftAuthCallback callback) {
-        if (!isInitialized) {
+        if (multiAccountApp == null) {
             callback.onError(new MsalClientException("msal_not_initialized"));
             return;
         }
@@ -217,7 +243,7 @@ public class MicrosoftOAuthManager {
      * Sign out and remove account from MSAL
      */
     public void signOut(@NonNull MicrosoftAuthCallback callback) {
-        if (!isInitialized) {
+        if (multiAccountApp == null) {
             callback.onError(new MsalClientException("msal_not_initialized"));
             return;
         }
@@ -256,7 +282,7 @@ public class MicrosoftOAuthManager {
      * Get list of signed in accounts
      */
     public void getAccounts(@NonNull AccountsCallback callback) {
-        if (!isInitialized) {
+        if (multiAccountApp == null) {
             callback.onError(new MsalClientException("msal_not_initialized"));
             return;
         }
