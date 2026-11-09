@@ -57,6 +57,20 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <!--
+        The first-run wizard is a self-sizing popup over the launcher, so its window is translucent
+        and transparent: the launcher behind stays visible, and the wizard's own dim overlay in
+        activity_setup_wizard.xml is what darkens it. No window animation is used — the card animates
+        itself in (DynamicAnim.overshootScaleIn), so an activity transition would fight it.
+    -->
+    <style name="SetupWizardTheme" parent="Base.Theme.FullScreen">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowContentTransitions">false</item>
+    </style>
+
     <style name="LauncherRestartTheme" parent="Base.Theme.FullScreen">
         <item name="android:fontFamily">@font/misans</item>
         <item name="android:windowBackground">@color/background</item>

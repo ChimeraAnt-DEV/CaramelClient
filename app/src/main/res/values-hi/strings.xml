@@ -1333,4 +1333,5 @@ GlowberryClient जारी रखने से पहले माइग्र
     <string name="changelog_view_wiki">विकी देखें</string>
     <string name="changelog_upcoming_soon">जल्द आ रहा है!</string>
     <string name="changelog_upcoming_soon_body">विकी लिखी जा रही है। लाइव होते ही यह यहाँ खुलेगी।</string>
+    <string name="setup_finish_changelog_loading">नया क्या है लोड हो रहा है…</string>
 </resources>

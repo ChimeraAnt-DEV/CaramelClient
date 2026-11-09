@@ -45,6 +45,15 @@
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService" />
         </intent>
+        <!-- MSAL's interactive flow renders in a Custom Tab and, when installed, can hand off to
+             the Microsoft Authenticator broker; both are resolved through queries on API 30+. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="msauth" />
+        </intent>
+        <package android:name="com.azure.authenticator" />
+        <package android:name="com.microsoft.windowsintune.companyportal" />
     </queries>
 
     <application
@@ -85,7 +94,7 @@
             android:exported="false"
             android:label="@string/setup_step_import_title"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/MainActivityTheme" />
+            android:theme="@style/SetupWizardTheme" />
 
         <activity
             android:name="org.chimeramc.client.ui.activities.MainActivity"
@@ -276,6 +285,29 @@
             android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
             tools:ignore="DiscouragedApi"
             android:label="@string/accounts_title" />
+
+        <!-- MSAL returns the authorization code to this activity. Its intent-filter is what the
+             browser hands the msauth:// reply to; without it Microsoft's response has nowhere to
+             land and the interactive flow hangs.
+
+             The filter matches on scheme + host only, not on the signature-hash path. The runtime
+             redirect URI carries the hash of the certificate the APK was actually signed with, and
+             a build cannot always read that keystore at configure time (a fresh debug keystore is
+             generated during signing). Pinning the path would then deliver nothing; matching any
+             path under this app's own msauth host delivers the reply and lets MSAL validate it. -->
+        <activity
+            android:name="com.microsoft.identity.client.BrowserTabActivity"
+            android:exported="true"
+            tools:ignore="ExportedActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="msauth"
+                    android:host="org.chimeramc.client" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="org.chimeramc.client.ui.activities.MsftLoginActivity"

@@ -1326,4 +1326,5 @@
     <string name="changelog_view_wiki">查看 Wiki</string>
     <string name="changelog_upcoming_soon">即将推出!</string>
     <string name="changelog_upcoming_soon_body">Wiki 正在编写中。上线后会在此处打开。</string>
+    <string name="setup_finish_changelog_loading">正在加载新内容…</string>
 </resources>

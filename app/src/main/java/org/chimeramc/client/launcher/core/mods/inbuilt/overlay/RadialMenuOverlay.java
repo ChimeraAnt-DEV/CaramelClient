@@ -80,47 +80,44 @@ public class RadialMenuOverlay {
      */
     public static void showForActivity(Activity activity) {
         RadialMenuOverlay overlay = new RadialMenuOverlay(activity);
+        // One Mod Menu, reached through the same overlay the in-game wheel opens. The wheel is a
+        // second screen beside the Mod Menu, so a sector must land on that menu's own filtered list
+        // rather than a second, hand-built list (the Mods/ModsFullscreen screen, which lists
+        // installed packages, not modules).
+        final ModMenuOverlay[] menuRef = new ModMenuOverlay[1];
         overlay.setDestinations(new Destinations() {
+            private ModMenuOverlay menu() {
+                if (menuRef[0] == null) menuRef[0] = new ModMenuOverlay(activity);
+                return menuRef[0];
+            }
+
             @Override
             public void openMods() {
-                activity.startActivity(new android.content.Intent(
-                        activity, org.chimeramc.client.ui.activities.ModsFullscreenActivity.class));
+                menu().showModulesFiltered(ModuleFilter.ALL);
             }
 
             @Override
             public void openHud() {
-                // Over the launcher there is no game HUD, so the HUD section is the launcher's own
-                // HUD-related screen. It is reached through the same activity the Mods sector opens
-                // rather than silently doing nothing.
-                openMods();
+                // The HUD section is a filter over the one module list, so it lands on the same
+                // rows the HUD chip shows rather than silently opening the mods list.
+                menu().showModulesFiltered(ModuleFilter.HUD);
             }
 
             @Override
             public void openCustomize() {
-                // The same chooser the in-game wheel shows, so the two homes behave identically.
+                // The same chooser the in-game wheel shows, so the two homes behave identically:
+                // each choice opens the Mod Menu on the tab it names (settings / cosmetics).
                 new CustomizeChooser(activity,
-                        () -> activity.startActivity(new android.content.Intent(activity,
-                                org.chimeramc.client.ui.activities.SettingsActivity.class)),
-                        () -> openCosmetics(activity)).show();
+                        () -> menu().showPage(ModMenuPage.SETTINGS),
+                        () -> menu().showPage(ModMenuPage.COSMETICS)).show();
             }
 
             @Override
             public void openSettings() {
-                activity.startActivity(new android.content.Intent(
-                        activity, org.chimeramc.client.ui.activities.SettingsActivity.class));
+                menu().showPage(ModMenuPage.SETTINGS);
             }
         });
         overlay.show();
-    }
-
-    /** Opens the cosmetics wardrobe: the Customize host on its Skins tab. */
-    private static void openCosmetics(Activity activity) {
-        android.content.Intent intent = new android.content.Intent(
-                activity, org.chimeramc.client.ui.activities.CustomizeActivity.class);
-        intent.putExtra(
-                org.chimeramc.client.ui.activities.CustomizeActivity.EXTRA_INITIAL_TAB,
-                org.chimeramc.client.ui.activities.CustomizeActivity.TAB_SKINS);
-        activity.startActivity(intent);
     }
 
     public void setDestinations(Destinations destinations) {

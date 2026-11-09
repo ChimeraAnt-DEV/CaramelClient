@@ -80,4 +80,38 @@ public class PvpModuleScopesTest {
         assertTrue(ModuleScope.LOCAL_FEED.isReachable());
         assertTrue(ModuleScope.PEER_FEED.isReachable());
     }
+
+    /**
+     * The badge counts the audit note quotes, computed from the classification rather than a second
+     * hand-maintained list, so the note and the menu cannot drift apart.
+     *
+     * <p>A PvP list row is a catalogue {@code add()} entry (a {@code link()} entry is skipped — it is
+     * the shipped module shown elsewhere). It is badged when its scope is not reachable. The split is
+     * 50 reachable / 112 badged today (52 {@code ENGINE_HOOK} + 60 {@code SERVER_DECIDED}); the
+     * exact numbers are what the audit doc cites, so a change here is a change to that claim.
+     */
+    @Test
+    public void theBadgeCountsMatchTheAuditNote() {
+        int rows = 0;
+        int reachable = 0;
+        int engineHook = 0;
+        int serverDecided = 0;
+        for (PvpModuleCatalog.Module entry : PvpModuleCatalog.modules()) {
+            if (entry.linksToExisting()) continue;
+            rows++;
+            ModuleScope scope = PvpModuleScopes.scopeOf(entry.id);
+            if (scope.isReachable()) {
+                reachable++;
+            } else if (scope == ModuleScope.SERVER_DECIDED) {
+                serverDecided++;
+            } else {
+                engineHook++;
+            }
+        }
+        assertEquals("catalogue rows shown in the PvP group", 162, rows);
+        assertEquals("reachable (toggleable) rows", 50, reachable);
+        assertEquals("badged ENGINE_HOOK rows", 52, engineHook);
+        assertEquals("badged SERVER_DECIDED rows", 60, serverDecided);
+        assertEquals("badged rows are the rest", rows - reachable, engineHook + serverDecided);
+    }
 }

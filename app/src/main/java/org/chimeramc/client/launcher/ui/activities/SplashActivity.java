@@ -313,15 +313,17 @@ public class SplashActivity extends BaseActivity {
         if (navigated) return;
         navigated = true;
 
-        // A first launch with no installed instance goes to the wizard instead of the dashboard;
-        // SetupWizardActivity.shouldShow owns that decision so the two entry points cannot drift.
+        // A first run goes to the dashboard, where MainActivity opens the first-run wizard as a
+        // self-sizing popup over it. The wizard is no longer a splash destination of its own: it is
+        // an overlay, so the launcher is laid out behind it. SetupWizardActivity.shouldShow owns
+        // whether it is due, and MainActivity asks it once.
         //
         // Otherwise the launcher reopens on the destination the user was last on, so a
         // cold start does not always reset to Play. An absent or unknown stored name falls back to
         // Play, which is what BaseActivity.rememberedTab() returning null means.
         Class<?> destination;
         if (org.chimeramc.client.ui.activities.SetupWizardActivity.shouldShow(SplashActivity.this)) {
-            destination = org.chimeramc.client.ui.activities.SetupWizardActivity.class;
+            destination = MainActivity.class;
         } else {
             org.chimeramc.client.ui.navigation.LauncherTab remembered = BaseActivity.rememberedTab();
             destination = remembered != null ? remembered.activity() : MainActivity.class;

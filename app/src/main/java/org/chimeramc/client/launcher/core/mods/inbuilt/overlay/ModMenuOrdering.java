@@ -63,6 +63,46 @@ public final class ModMenuOrdering {
     }
 
     /**
+     * Sorts a section's keys alphabetically by their display name.
+     *
+     * <p>Modules used to appear in whatever order the catalogue registered them, so a feature was
+     * found by remembering where it sat rather than by its name. This is the shipped order's first
+     * pass: a stable, case-insensitive sort by the module's display name, with a module whose name
+     * cannot be resolved (or is missing) after every real one rather than dropped. Duplicates and
+     * nulls are removed, so a caller can feed the result straight into {@link #apply}.
+     *
+     * <p>It is the <em>base</em> order, not the final one: a user's saved arrangement is applied on
+     * top through {@link #apply}, so an alphabetical default and a deliberate custom order coexist.
+     *
+     * @param keys    the section's keys
+     * @param nameOf  resolves a key to its display name, or null when unknown
+     * @return the keys sorted by name; empty for a null or empty input
+     */
+    public static List<String> alphabetically(List<String> keys,
+                                              java.util.function.Function<String, String> nameOf) {
+        List<String> unique = new ArrayList<>();
+        if (keys == null || keys.isEmpty()) return unique;
+        Set<String> seen = new LinkedHashSet<>();
+        for (String key : keys) {
+            if (key == null || !seen.add(key)) continue;
+            unique.add(key);
+        }
+        // A missing name sorts after every real name, so an unnamed row never floats to the top.
+        unique.sort((a, b) -> {
+            String na = nameOf == null ? null : nameOf.apply(a);
+            String nb = nameOf == null ? null : nameOf.apply(b);
+            boolean ma = na == null || na.isEmpty();
+            boolean mb = nb == null || nb.isEmpty();
+            if (ma != mb) return ma ? 1 : -1;
+            if (ma) return 0;
+            int byName = na.compareToIgnoreCase(nb);
+            // A tie on the name falls back to the key, so the order is total and stable.
+            return byName != 0 ? byName : a.compareTo(b);
+        });
+        return unique;
+    }
+
+    /**
      * Moves one key within a list, returning the new order.
      *
      * <p>An out-of-range move returns the list unchanged, so a stale drag index cannot silently

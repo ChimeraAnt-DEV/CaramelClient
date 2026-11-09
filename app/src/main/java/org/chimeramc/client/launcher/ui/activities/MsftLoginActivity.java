@@ -210,48 +210,64 @@ public class MsftLoginActivity extends BaseActivity {
     }
 
     /**
-     * Initialize MSAL and start sign-in automatically if EXTRA_USE_MSAL is set
+     * Initialise MSAL and start sign-in automatically, because {@code EXTRA_USE_MSAL} was set.
+     *
+     * <p>Show the OAuth panel first (this path is entered straight from the launcher, not from the
+     * chooser), then sign in once the application is actually ready.
      */
     private void initializeMsalAndSignIn() {
-        // The Bedrock Android title id, the same one the device-code and WebView flows use.
-        // This used to be the literal "YOUR_CLIENT_ID_HERE", so MSAL could never sign in.
-        String clientId = MsftAuthManager.bedrockClientId();
-        String redirectUri = MsftAuthManager.msalRedirectUri(this);
-        
-        oauthManager = new MicrosoftOAuthManager(this);
-        oauthManager.initialize(clientId, redirectUri);
-        
-        // Wait a moment for initialization then attempt silent sign-in
-        mainHandler.postDelayed(() -> {
-            if (oauthManager != null) {
-                startMsalSilentSignIn();
-            }
-        }, 500);
+        showMsalPanel();
+        ensureMsal(this::startMsalSilentSignIn);
     }
 
-    /**
-     * Start MSAL login flow (called from button click)
-     */
-    private void startMsalLogin() {
-        cancelCurrentLogin();
+    /** Makes the OAuth panel the visible one. */
+    private void showMsalPanel() {
         methodPanel.setVisibility(View.GONE);
         devicePanel.setVisibility(View.GONE);
         webPanel.setVisibility(View.GONE);
-        msalPanel.setVisibility(View.VISIBLE);
         progressOverlay.setVisibility(View.GONE);
-        msalStatusText.setText(R.string.ms_oauth_initializing);
-        
-        // Initialize MSAL if not already done.
-        if (oauthManager == null) {
-        String clientId = MsftAuthManager.bedrockClientId();
-        String redirectUri = MsftAuthManager.msalRedirectUri(this);
-            oauthManager = new MicrosoftOAuthManager(this);
-            oauthManager.initialize(clientId, redirectUri);
-        }
-        
-        // Try silent sign-in first
-        startMsalSilentSignIn();
+        msalPanel.setVisibility(View.VISIBLE);
     }
+
+    /**
+     * Creates and initialises the MSAL application if needed, then runs {@code onReady}.
+     *
+     * <p>The application is built asynchronously, so the sign-in is started from the ready
+     * callback rather than after a fixed delay - the previous 500 ms guess ran silent sign-in
+     * against an application that might not exist yet and reported "not initialized". A failure is
+     * shown on the OAuth panel with the real reason.
+     */
+    private void ensureMsal(Runnable onReady) {
+        if (oauthManager == null) {
+            oauthManager = new MicrosoftOAuthManager(this);
+        }
+        oauthManager.initialize(MsftAuthManager.bedrockClientId(),
+                MsftAuthManager.msalRedirectUri(this),
+                new MicrosoftOAuthManager.InitCallback() {
+                    @Override
+                    public void onReady() {
+                        runOnUiThread(onReady);
+                    }
+
+                    @Override
+                    public void onError(com.microsoft.identity.client.exception.MsalException e) {
+                        runOnUiThread(() -> {
+                            msalStatusText.setText(UserFacingError.describe(
+                                    MsftLoginActivity.this, e));
+                            msalSignInButton.setEnabled(true);
+                        });
+                    }
+                });
+    }
+
+    /** Start MSAL login flow (called from the button click). */
+    private void startMsalLogin() {
+        cancelCurrentLogin();
+        showMsalPanel();
+        msalStatusText.setText(R.string.ms_oauth_initializing);
+        ensureMsal(this::startMsalSilentSignIn);
+    }
+        
 
     /**
      * Attempt silent sign-in with MSAL

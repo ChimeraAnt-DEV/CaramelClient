@@ -25,6 +25,7 @@ file is missing from the index.
 - [Low-latency networking (org.chimeramc.client.launcher.settings.LowLatencyNetworkManager)](docs/agents/low-latency-networking.md)
 - [Performance preset (org.chimeramc.client.launcher.settings.PerformancePresetManager)](docs/agents/performance-preset.md)
 - [32-bit vs 64-bit instances (single arm64 build; dual-ABI versions run on it)](docs/agents/32-bit-vs-64-bit-instances.md)
+- [BerryAPI integration (preloader bridge + runtime start)](docs/agents/berryapi-integration-preloader-bridge-runtime-start.md)
 - [Brand palette (res/values/colors.xml + values-night)](docs/agents/brand-palette.md)
 - [Shared card style (Widget.Chimera.Card + res/values/dimens.xml)](docs/agents/shared-card-style.md)
 - [Top-level navigation (org.chimeramc.client.ui.navigation.LauncherTab + BaseActivity)](docs/agents/top-level-navigation.md)

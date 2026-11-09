@@ -1305,4 +1305,5 @@ A migração deve ser concluída antes que o GlowberryClient continue.</string>
     <string name="changelog_view_wiki">Ver a wiki</string>
     <string name="changelog_upcoming_soon">Em breve!</string>
     <string name="changelog_upcoming_soon_body">A wiki está sendo escrita. Ela abrirá aqui assim que estiver no ar.</string>
+    <string name="setup_finish_changelog_loading">Carregando novidades…</string>
 </resources>

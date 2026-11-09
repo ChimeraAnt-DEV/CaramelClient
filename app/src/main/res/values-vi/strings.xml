@@ -1335,4 +1335,5 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="changelog_view_wiki">Xem Wiki</string>
     <string name="changelog_upcoming_soon">Sắp ra mắt!</string>
     <string name="changelog_upcoming_soon_body">Wiki đang được viết. Nó sẽ mở ở đây ngay khi hoạt động.</string>
+    <string name="setup_finish_changelog_loading">Đang tải thông tin mới…</string>
 </resources>

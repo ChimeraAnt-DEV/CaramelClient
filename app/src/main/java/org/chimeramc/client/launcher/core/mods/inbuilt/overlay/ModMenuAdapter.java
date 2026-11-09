@@ -194,14 +194,16 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     /**
-     * Reorders the module list to the saved order, keeping group headers correct (M9).
+     * Reorders the module list: alphabetical by default, then the saved order on top (M9, Phase 10).
      *
-     * <p>A key that is no longer present is dropped, and a module the saved order does not mention
-     * keeps its shipped position at the end of its group. That is what makes a saved order survive
-     * a module being added or removed by an update.
+     * <p>The shipped order is now alphabetical by the module's display name, so a feature is found
+     * by its name rather than by where the catalogue happened to register it. A saved order is then
+     * applied on top, so a deliberate arrangement survives: a key that is no longer present is
+     * dropped, and a module the saved order does not mention keeps its alphabetical place. That is
+     * what makes a saved order survive a module being added or removed by an update.
      */
     public void applySavedOrder(List<String> savedOrder) {
-        if (savedOrder == null || savedOrder.isEmpty() || items.isEmpty()) return;
+        if (items.isEmpty()) return;
         // Group the modules by their group id, preserving the shipped group order, and sort each
         // group by the saved order through ModMenuOrdering. A module the saved order does not
         // mention keeps its shipped place at the end of its own group, so an update that adds a
@@ -249,12 +251,18 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // the resulting key order to the row objects.
             List<String> shippedKeys = new ArrayList<>();
             Map<String, MenuItem> byKey = new HashMap<>();
+            Map<String, String> nameByKey = new HashMap<>();
             for (MenuItem item : group) {
-                shippedKeys.add(item.mod.getStableKey());
-                byKey.put(item.mod.getStableKey(), item);
+                String key = item.mod.getStableKey();
+                shippedKeys.add(key);
+                byKey.put(key, item);
+                nameByKey.put(key, item.mod.getName());
             }
+            // Phase 10: the shipped base order is alphabetical by display name; a saved order is
+            // applied on top, so a deliberate arrangement still wins.
             List<MenuItem> orderedGroup = new ArrayList<>();
-            for (String key : ModMenuOrdering.apply(shippedKeys, savedOrder)) {
+            for (String key : ModMenuOrdering.apply(
+                    ModMenuOrdering.alphabetically(shippedKeys, nameByKey::get), savedOrder)) {
                 MenuItem item = byKey.get(key);
                 if (item != null) orderedGroup.add(item);
             }

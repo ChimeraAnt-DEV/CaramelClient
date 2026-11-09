@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.chimeramc.client.core.versions.GameVersion;
 import org.chimeramc.client.core.mods.config.ModConfigManager;
+import org.chimeramc.client.preloader.BerryApi;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +48,9 @@ public class ModManager {
     private static volatile ModManager instance;
     private static volatile boolean preloaderLoadAttempted;
     private static volatile boolean preloaderLoaded;
+    /** One-shot gates for the bundled BerryAPI runtime, pumped from the game's frame tick. */
+    private static volatile boolean berryAttachAttempted;
+    private static volatile boolean berrySeamAttempted;
     private File modsDir;
     private File configFile;
     private final Map<String, Boolean> enabledMap = new LinkedHashMap<>();
@@ -212,6 +216,51 @@ public class ModManager {
             return nativePumpGameHookInstall();
         } catch (UnsatisfiedLinkError e) {
             return false;
+        }
+    }
+
+    /**
+     * Starts the bundled BerryAPI runtime from the game's frame tick, at most once per process.
+     *
+     * <p>BerryAPI (`libBerryAPI.so`) owns the render seam, the replay surface and the performance
+     * governor; every BerryAPI-backed feature is dark until it is attached and its world seam is
+     * bound. Both steps were implemented and tested but never called, so a build could ship with the
+     * runtime never started and nothing said so. This is that call site.
+     *
+     * <p>It runs from {@code MinecraftActivity.tick()} rather than {@code onCreate} for the same
+     * reason the native hooks do: attaching in {@code onCreate} sees a partially mapped
+     * {@code libminecraftpe.so}, so the attach or the seam bind bails. By the frame tick the module
+     * is complete. Fail-closed: a missing library, a failed attach or an unbound seam simply leaves
+     * the capabilities off, which Diagnostics reports; nothing here is fatal. A single boolean check
+     * once both steps have been attempted, so the steady-state cost is negligible.
+     */
+    public static void pumpBerryRuntime() {
+        if (!ensurePreloaderLoaded()) return;
+        if (!berryAttachAttempted) {
+            berryAttachAttempted = true;
+            try {
+                BerryApi.ensureAttached();
+            } catch (Throwable t) {
+                AppLog.warnOnce(TAG, "berry:attach", "BerryAPI attach failed", t);
+            }
+        }
+        if (!berrySeamAttempted) {
+            // Only worth binding once the runtime reports a live hook backend; a seam bound before
+            // attach would be refused and the attempt would never be retried.
+            boolean attached;
+            try {
+                attached = BerryApi.isAttached();
+            } catch (Throwable t) {
+                return;
+            }
+            if (attached) {
+                berrySeamAttempted = true;
+                try {
+                    BerryApi.bindWorldSeam();
+                } catch (Throwable t) {
+                    AppLog.warnOnce(TAG, "berry:seam", "BerryAPI world seam bind failed", t);
+                }
+            }
         }
     }
 

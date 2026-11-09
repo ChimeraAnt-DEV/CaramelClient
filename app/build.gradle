@@ -66,6 +66,45 @@ def getGitTag() {
     return tag
 }
 
+// The URL-encoded SHA-1 of the signing certificate, which is the msauth redirect path. Read from
+// the configured release keystore when present, else the debug keystore, so a debug build's MSAL
+// reply is delivered too. Returns an empty string (never throws) when no keystore can be read.
+def getMsalSignatureHash() {
+    try {
+        def storeFilePath = null
+        def storePassword = null
+        def keyAlias = null
+        def keyPassword = null
+        def release = android.signingConfigs.findByName("release")
+        if (release != null && release.storeFile != null && release.storeFile.exists()) {
+            storeFilePath = release.storeFile
+            storePassword = release.storePassword
+            keyAlias = release.keyAlias
+            keyPassword = release.keyPassword
+        }
+        if (storeFilePath == null) {
+            def debug = android.signingConfigs.findByName("debug")
+            if (debug != null && debug.storeFile != null && debug.storeFile.exists()) {
+                storeFilePath = debug.storeFile
+                storePassword = debug.storePassword != null ? debug.storePassword : "android"
+                keyAlias = debug.keyAlias != null ? debug.keyAlias : "androiddebugkey"
+                keyPassword = debug.keyPassword != null ? debug.keyPassword : "android"
+            }
+        }
+        if (storeFilePath == null) {
+            return ""
+        }
+        def ks = java.security.KeyStore.getInstance("JKS")
+        ks.load(new FileInputStream(storeFilePath), storePassword.toCharArray())
+        def cert = ks.getCertificate(keyAlias)
+        def digest = java.security.MessageDigest.getInstance("SHA-1").digest(cert.getEncoded())
+        def hex = digest.collect { String.format("%02x", it) }.join("")
+        return java.net.URLEncoder.encode(hex, "UTF-8")
+    } catch (ignored) {
+        return ""
+    }
+}
+
 static def getVersionCodeByTimestamp() {
     def baseDate = Date.parse("yyyy-MM-dd HH:mm:ss", "2025-01-01 00:00:00")
     def now = new Date()
@@ -125,6 +164,12 @@ android {
         // Item 177: the About screen names the build's commit, so a screenshot of it identifies the
         // revision even when the version name is a moving tag.
         buildConfigField "String", "GIT_COMMIT", "\"${getGitCommit()}\""
+        // The MSAL redirect's signature hash, computed from the signing config (debug keystore when
+        // no release signing is configured). The same value feeds the manifest filter and the runtime
+        // redirect URI, so Microsoft's reply always lands. An unreadable keystore falls back to the
+        // debug keystore's published hash rather than breaking the build.
+        def msalHash = getMsalSignatureHash()
+        buildConfigField "String", "MSAL_SIGNATURE_HASH", "\"${msalHash}\""
         // Item 255: the announcements feed the Launch tab reads. Empty in the shipped source, so
         // no URL is published with the code; when an operator sets `announcements.url` the card
         // appears for builds the feed's version gate covers. Empty means "no card", never an error.

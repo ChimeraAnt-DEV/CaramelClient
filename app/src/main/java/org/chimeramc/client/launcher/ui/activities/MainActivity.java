@@ -173,6 +173,26 @@ import okhttp3.OkHttpClient;
     private boolean migrationPromptCheckInFlight;
     private boolean postMigrationInitialized;
     private boolean postEulaFlowRunning;
+
+    /**
+     * Whether the first-run wizard overlay has already been opened this process.
+     *
+     * <p>Static on purpose: the wizard is a translucent overlay on top of this activity, so it
+     * must be opened once per app run and never relaunched when this activity is recreated (a theme
+     * change recreates it) or resumed (returning from the wizard or the file picker resumes it). A
+     * per-instance flag would re-open the wizard after every recreation and could trap the user.
+     */
+    private static boolean sWizardOverlayLaunched;
+
+    /** Marks the first-run wizard overlay as opened, so it is not opened again this process. */
+    static void markSetupWizardLaunched() {
+        sWizardOverlayLaunched = true;
+    }
+
+    /** Clears the once-per-process guard, used only when the popup was the process's last task. */
+    static void resetSetupWizardLaunched() {
+        sWizardOverlayLaunched = false;
+    }
     private StorageMigrationService storageMigrationService;
     private boolean storageMigrationBound;
     private LibsRepairDialog storageMigrationDialog;
@@ -293,6 +313,7 @@ import okhttp3.OkHttpClient;
         // a genuinely dead/revoked token routes to the sign-in screen (with the reason pre-shown).
         autoRefreshActiveAccount();
         binding.getRoot().post(this::showPostEulaFlow);
+        binding.getRoot().post(this::showSetupWizardIfNeeded);
         binding.getRoot().post(this::playArrivalAnimations);
     }
 
@@ -951,6 +972,24 @@ import okhttp3.OkHttpClient;
             postEulaFlowRunning = false;
             showStorageMigrationPromptIfNeeded();
         });
+    }
+
+    /**
+     * Opens the first-run wizard as a self-sizing popup over the launcher.
+     *
+     * <p>The wizard used to be a full-screen destination the splash routed to, so it covered the
+     * whole app with its own chrome. Presenting it over the launcher instead makes it read as a
+     * popup, and it is opened here (once per process) rather than by the splash so the launcher is
+     * already laid out behind it. {@link org.chimeramc.client.ui.activities.SetupWizardActivity#shouldShow}
+     * still owns whether it is due.
+     */
+    private void showSetupWizardIfNeeded() {
+        if (sWizardOverlayLaunched) return;
+        if (isFinishing() || isDestroyed()) return;
+        if (isInstanceShortcutIntent()) return;
+        if (!org.chimeramc.client.ui.activities.SetupWizardActivity.shouldShow(this)) return;
+        sWizardOverlayLaunched = true;
+        startActivity(new Intent(this, org.chimeramc.client.ui.activities.SetupWizardActivity.class));
     }
 
     private boolean isInstanceShortcutIntent() {
