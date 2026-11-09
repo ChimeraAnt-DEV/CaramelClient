@@ -63,6 +63,19 @@ public class SetupWizardLastTabsTest {
                         && layout.contains("android:layout_height=\"wrap_content\""));
     }
 
+    @Test
+    public void backIsHandledThroughTheDispatcher() throws IOException {
+        // An onBackPressed override that does not call super trips the lint gate (MissingSuperCall).
+        // Back is handled through the dispatcher instead, so the wizard keeps its own back behaviour
+        // without overriding the deprecated method.
+        String activity = read("app/src/main/java/org/chimeramc/client/launcher/ui/activities/"
+                + "SetupWizardActivity.java");
+        assertTrue("the wizard must register an OnBackPressedCallback",
+                activity.contains("getOnBackPressedDispatcher().addCallback(this"));
+        assertFalse("the wizard must not override onBackPressed",
+                activity.contains("public void onBackPressed()"));
+    }
+
     private static String read(String relativePath) throws IOException {
         return new String(Files.readAllBytes(root().resolve(relativePath)), StandardCharsets.UTF_8);
     }

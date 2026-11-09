@@ -142,6 +142,16 @@ public class SetupWizardActivity extends BaseActivity {
         primary.setOnClickListener(v -> onNext());
         back.setOnClickListener(v -> onBack());
         skip.setOnClickListener(v -> onSkip());
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (step != SetupWizard.Step.LICENSE) {
+                    onBack();
+                    return;
+                }
+                finishWizard();
+            }
+        });
         wireThemeRadios();
         if (instanceImport != null) {
             // Import straight from the step, rather than only as a side effect of Next. The old
@@ -649,21 +659,6 @@ public class SetupWizardActivity extends BaseActivity {
     protected boolean shouldHandleNavKeys() {
         return false;
     }
-
-    /**
-     * The system back gesture backs out of the wizard: it steps back one page, and on the first page
-     * it closes the popup (marking the wizard done) so the user is not trapped. It never exits the
-     * app, because the launcher is behind it.
-     */
-    @Override
-    public void onBackPressed() {
-        if (step != SetupWizard.Step.LICENSE) {
-            onBack();
-            return;
-        }
-        finishWizard();
-    }
-
 
     @Override
     protected void onDestroy() {
