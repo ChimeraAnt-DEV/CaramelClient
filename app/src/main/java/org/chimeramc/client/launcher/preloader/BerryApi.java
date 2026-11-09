@@ -206,6 +206,86 @@ public final class BerryApi {
 
     private static native byte[] nativeReplaySave();
 
+    // --- Replay capture (recorder) surface --------------------------------------------------
+    //
+    // The other half of the replay system: BerryAPI records the session's packet stream, and the
+    // launcher drives that here. A Bedrock session's entity spawns, movement, block updates and
+    // inventory all arrive as packets, so the stream is the world data. Every call answers the
+    // fail-closed default when the library or its capture ABI is absent, so a screen shows
+    // "record unavailable" rather than driving a null.
+
+    /** The ABI status a call reports when the surface (or a pointer) is absent. */
+    private static final int REPLAY_STATUS_NOT_ATTACHED = 1;
+
+    /** The ABI status a call reports when an argument is rejected. */
+    private static final int REPLAY_STATUS_BAD_ARGUMENT = 3;
+
+    /** True when BerryAPI's capture (recorder) surface resolved and passed its ABI check. */
+    public static boolean replayCaptureAvailable() {
+        try {
+            return nativeReplayCaptureAvailable();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /** Begins a capture session. Returns 0 on success, or a fail-closed status when unavailable. */
+    public static int replayCaptureStart() {
+        try {
+            return nativeReplayCaptureStart();
+        } catch (UnsatisfiedLinkError e) {
+            return REPLAY_STATUS_NOT_ATTACHED;
+        }
+    }
+
+    /** Ends a capture session, keeping the captured replay for {@link #replaySave()}. */
+    public static int replayCaptureStop() {
+        try {
+            return nativeReplayCaptureStop();
+        } catch (UnsatisfiedLinkError e) {
+            return REPLAY_STATUS_NOT_ATTACHED;
+        }
+    }
+
+    /**
+     * The capture state, or -1 when unavailable.
+     *
+     * <p>0 idle, 1 recording, 2 throttled, 3 stopped.
+     */
+    public static int replayCaptureState() {
+        try {
+            return nativeReplayCaptureState();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /**
+     * Records one packet. {@code dir} is 0 inbound, 1 outbound; {@code payload} is the body verbatim.
+     *
+     * @return 0 when stored, or a fail-closed status when unavailable or the payload is empty
+     */
+    public static int replayCapturePacket(int dir, int id, byte[] payload, long tick) {
+        if (payload == null || payload.length == 0) {
+            return REPLAY_STATUS_BAD_ARGUMENT;
+        }
+        try {
+            return nativeReplayCapturePacket(dir, id, payload, tick);
+        } catch (UnsatisfiedLinkError e) {
+            return REPLAY_STATUS_NOT_ATTACHED;
+        }
+    }
+
+    private static native boolean nativeReplayCaptureAvailable();
+
+    private static native int nativeReplayCaptureStart();
+
+    private static native int nativeReplayCaptureStop();
+
+    private static native int nativeReplayCaptureState();
+
+    private static native int nativeReplayCapturePacket(int dir, int id, byte[] payload, long tick);
+
     // --- Governor surface -------------------------------------------------------------------
     //
     // BerryAPI's adaptive quality governor. The launcher reads it for its FPS diagnostics and can
