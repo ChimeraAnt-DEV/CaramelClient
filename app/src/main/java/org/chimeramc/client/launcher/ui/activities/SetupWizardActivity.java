@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.databinding.ActivitySetupWizardBinding;
@@ -69,6 +72,8 @@ public class SetupWizardActivity extends BaseActivity {
     private boolean suppressThemeRadioCallback;
     /** The step the pop-up entrance last played for, so a re-render does not replay it. */
     private SetupWizard.Step lastAnimatedStep;
+    /** The step the card's size transition last ran for, so a re-render does not replay it. */
+    private SetupWizard.Step lastSizedStep;
 
     private ApkImportManager apkImportManager;
     private ActivityResultLauncher<Intent> importLauncher;
@@ -238,6 +243,29 @@ public class SetupWizardActivity extends BaseActivity {
         renderRail();
         renderStepContent();
         animateStepInIfChanged();
+        animateCardSize();
+    }
+
+    /**
+     * Eases the card to the new step's height instead of snapping.
+     *
+     * <p>The card wraps its content, so each step is a different size. {@code TransitionManager}
+     * animates that re-layout, so the popup grows and shrinks smoothly and the launcher behind it
+     * never jumps. Only a real step change animates — the first render (and a plain re-render such as
+     * returning from the file picker) is applied directly, so nothing animates on open. Reduced
+     * motion skips the transition, because the accessibility switch exists to remove this motion.
+     */
+    private void animateCardSize() {
+        if (step == lastSizedStep) return;
+        lastSizedStep = step;
+        View card = findViewById(R.id.setup_card);
+        if (card != null && DynamicAnim.areAnimationsEnabled()) {
+            ViewGroup parent = card.getParent() instanceof ViewGroup ? (ViewGroup) card.getParent() : null;
+            if (parent != null) {
+                TransitionManager.beginDelayedTransition(parent,
+                        new AutoTransition().setDuration(DynamicAnim.motionDurationMs(220)));
+            }
+        }
     }
 
     private void renderStepContent() {
