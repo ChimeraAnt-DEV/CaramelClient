@@ -865,6 +865,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         // the install has run, so the steady-state cost is negligible. It runs before super.tick()
         // so the hook exists before the frame it will observe renders.
         ModManager.pumpGameHookInstall()
+        // Start the bundled BerryAPI runtime (attach + world seam) at the same deferred point, once
+        // the engine is up; fail-closed, so an absent library leaves the capabilities off.
+        ModManager.pumpBerryRuntime()
         // One shaped look call per frame, from this frame's accumulated travel. Before
         // super.tick() so the game's own tick reads this frame's aim rather than the previous one's.
         flushLookDelta()
