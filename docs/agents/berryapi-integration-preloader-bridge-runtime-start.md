@@ -24,6 +24,12 @@ The Java surface is `org.chimeramc.client.preloader.BerryApi` (file under
 
 A mismatch is refused by a number (`MirrorMatches`), so a layout drift can never be bound through.
 
+**The core entry points return `int`, not C++ `bool`.** BerryAPI's header says so explicitly: a
+1-byte `bool` return leaves the upper result-register bytes undefined, so a caller that declared
+`bool (*)()` can read a live `BERRY_IsAttached()` as false. The bridge resolves `BERRY_Inject` and
+`BERRY_IsAttached` as `int (*)()` and compares `!= 0`, and `verify_berryapi_abi` fails the build if
+the typedefs drift back to `bool`.
+
 **The runtime must be started, or every BerryAPI feature is silently dark.** `BerryApi.ensureAttached()`
 and `BerryApi.bindWorldSeam()` are called from `ModManager.pumpBerryRuntime()`, which
 `MinecraftActivity.tick()` pumps once per process — the same deferred point the native hooks install

@@ -54,6 +54,16 @@ def run_tests() -> int:
         path.write_bytes(b"not an elf at all")
         assert v.check(path) == 2, "a non-ELF file must be reported as unreadable"
 
+    # 5. The core entry points return `int`, not C++ `bool`. BerryAPI's header documents this: a
+    #    1-byte bool return leaves the upper result-register bytes undefined, so a caller that
+    #    declared `bool (*)()` could read a true as false and report "not attached" on a live
+    #    runtime. The preloader must resolve them as int-returning pointers.
+    bridge = (v.ROOT / "app/src/main/cpp/preloader/src/pl/runtime/BerryApiBridge.cpp").read_text()
+    assert "using InjectFn = int (*)();" in bridge, \
+        "BERRY_Inject returns int; the preloader must not resolve it as bool"
+    assert "using IsAttachedFn = int (*)();" in bridge, \
+        "BERRY_IsAttached returns int; the preloader must not resolve it as bool"
+
     print("verify_berryapi_abi_test: OK")
     return 0
 
