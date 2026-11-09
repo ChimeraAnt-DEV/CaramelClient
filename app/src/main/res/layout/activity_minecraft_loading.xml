@@ -135,7 +135,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="@dimen/space_6"
+        android:fontFamily="@font/misans"
         android:minHeight="44dp"
+        android:text="@string/back"
         android:visibility="gone"
         tools:visibility="visible" />
 

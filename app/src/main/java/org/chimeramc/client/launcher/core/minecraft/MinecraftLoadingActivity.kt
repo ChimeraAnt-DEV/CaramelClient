@@ -29,6 +29,7 @@ import org.chimeramc.client.R
 import org.chimeramc.client.core.minecraft.LaunchLogBuffer
 import org.chimeramc.client.launcher.core.minecraft.LastLaunchFailure
 import org.chimeramc.client.launcher.core.minecraft.LaunchErrorDiagnosis
+import org.chimeramc.client.ui.animation.DynamicAnim
 import org.chimeramc.client.ui.activities.BaseActivity
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog
 import org.chimeramc.client.util.PersonalizationManager
@@ -439,7 +440,23 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // A launch that died here never reached a session, so it is a failed launch in the local
         // statistics.
         org.chimeramc.client.core.stats.LaunchStatsRecorder.recordCrash(this)
+        showReturnButton()
+    }
+
+    /**
+     * Reveals the "Back" button with a pop-up entrance.
+     *
+     * <p>The button carries no text in the layout and was shown with a bare VISIBLE, so on a failed
+     * launch the user saw an empty pill with no way back. It now takes its label from the shared
+     * {@code back} string and scales in, so it reads as a control arriving rather than a control
+     * that was always there. {@code overshootScaleIn} honours reduced motion, so the pop-up is
+     * skipped when animations are off.
+     */
+    private fun showReturnButton() {
+        if (isFinishing || isDestroyed) return
+        returnButton.setText(R.string.back)
         returnButton.visibility = View.VISIBLE
+        DynamicAnim.overshootScaleIn(returnButton, 0L)
     }
 
     private fun animateProgressTo(targetProgress: Int) {
