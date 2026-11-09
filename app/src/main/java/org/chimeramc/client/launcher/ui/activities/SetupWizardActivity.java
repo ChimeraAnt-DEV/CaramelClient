@@ -258,7 +258,7 @@ public class SetupWizardActivity extends BaseActivity {
     private void animateCardSize() {
         if (step == lastSizedStep) return;
         lastSizedStep = step;
-        View card = findViewById(R.id.setup_card);
+        View card = binding.setupCard;
         if (card != null && DynamicAnim.areAnimationsEnabled()) {
             ViewGroup parent = card.getParent() instanceof ViewGroup ? (ViewGroup) card.getParent() : null;
             if (parent != null) {
@@ -337,7 +337,7 @@ public class SetupWizardActivity extends BaseActivity {
     private void animateStepInIfChanged() {
         if (step == lastAnimatedStep) return;
         lastAnimatedStep = step;
-        View card = findViewById(R.id.setup_card);
+        View card = binding.setupCard;
         if (card != null) {
             DynamicAnim.overshootScaleIn(card, 0L);
         }
