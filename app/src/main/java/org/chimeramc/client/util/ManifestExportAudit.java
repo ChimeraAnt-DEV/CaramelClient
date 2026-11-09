@@ -53,6 +53,11 @@ public final class ManifestExportAudit {
         out.add(new Exported("com.microsoft.xal.browser.IntentHandler",
                 "Xbox sign-in redirect (ms-xal-...://auth). Third-party SDK component: the scheme is "
                         + "the app's own XAL redirect, so only the sign-in flow can reach it."));
+        out.add(new Exported("com.microsoft.identity.client.BrowserTabActivity",
+                "MSAL interactive sign-in redirect. MSAL's own exported activity receives the "
+                        + "msauth://<package> reply from the browser; the filter is scoped to this "
+                        + "app's package host, and MSAL validates the redirect URI and its state "
+                        + "before it is acted on."));
         return Collections.unmodifiableSet(out);
     }
 

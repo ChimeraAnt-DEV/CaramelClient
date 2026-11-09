@@ -31,6 +31,7 @@ import net.raphimc.minecraftauth.xbl.exception.XblRequestException;
 import net.raphimc.minecraftauth.xbl.model.XblUserProfile;
 
 import org.chimeramc.client.BuildConfig;
+import org.chimeramc.client.util.AppLog;
 
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
@@ -105,8 +106,12 @@ public final class MsftAuthManager {
                 }
                 return android.net.Uri.encode(hex.toString());
             }
-        } catch (Exception ignored) {
-            // A missing signature is not fatal here; the manifest placeholder is the fallback.
+        } catch (Exception e) {
+            // Not fatal: the build-time hash is the normal value and the manifest filter matches on
+            // scheme+host, so an unreadable signature only means "use the empty fallback". Reported
+            // rather than swallowed so the reason is visible in the log viewer.
+            AppLog.warnOnce("MsftAuthManager", "msal:signature",
+                    "could not read the signing certificate; using the empty MSAL path", e);
         }
         return "";
     }
