@@ -91,4 +91,38 @@ public class ModMenuOrderingTest {
         List<String> once = ModMenuOrdering.move(SHIPPED, 0, 3);
         assertEquals(once, ModMenuOrdering.apply(once, once));
     }
+
+    @Test
+    public void modulesAreAlphabeticalByDisplayName() {
+        assertEquals(Arrays.asList("Apple", "Banana", "cherry"),
+                ModMenuOrdering.alphabetically(Arrays.asList("cherry", "Banana", "Apple"), s -> s));
+    }
+
+    @Test
+    public void alphabeticalIgnoresCase() {
+        assertEquals(Arrays.asList("alpha", "Beta", "gamma"),
+                ModMenuOrdering.alphabetically(Arrays.asList("gamma", "Beta", "alpha"), s -> s));
+    }
+
+    @Test
+    public void aNameThatIsMissingSortsAfterARealOneRatherThanThrowing() {
+        java.util.List<String> result =
+                ModMenuOrdering.alphabetically(Arrays.asList("b", "a"), s -> s.equals("a") ? null : s);
+        assertEquals(Arrays.asList("b", "a"), result);
+    }
+
+    @Test
+    public void alphabeticalDropsDuplicatesAndNulls() {
+        assertEquals(Arrays.asList("a", "b"),
+                ModMenuOrdering.alphabetically(Arrays.asList("b", null, "a", "b"), s -> s));
+    }
+
+    @Test
+    public void aSavedOrderStillWinsOverAlphabetical() {
+        java.util.List<String> alpha = ModMenuOrdering.alphabetically(SHIPPED, s -> s);
+        assertEquals(SHIPPED, alpha);
+        // A saved order (here the reverse) rearranges the alphabetical base.
+        assertEquals(Arrays.asList("d", "c", "b", "a"),
+                ModMenuOrdering.apply(alpha, Arrays.asList("d", "c", "b", "a")));
+    }
 }
