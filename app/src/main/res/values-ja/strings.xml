@@ -1302,4 +1302,5 @@ GlowberryClient を続行するには移行を完了する必要があります�
     <string name="changelog_view_wiki">Wiki を見る</string>
     <string name="changelog_upcoming_soon">近日公開!</string>
     <string name="changelog_upcoming_soon_body">Wiki は現在作成中です。公開され次第、ここで開きます。</string>
+    <string name="setup_finish_changelog_loading">新着情報を読み込んでいます…</string>
 </resources>

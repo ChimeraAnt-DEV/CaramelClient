@@ -1,230 +1,327 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The five-step setup wizard. One step is shown at a time: a progress line, a title, an explanation,
-    the step's own content (the licence terms and its checkbox on step 1), and a Back / Next pair with
-    a Skip. The progress line is populated in code from SetupWizard.STEPS.
+    The first-run wizard, presented as a self-sizing popup over the launcher.
+
+    The root is a translucent, touch-blocking overlay; the card in the middle grows and shrinks
+    with whatever the current step renders, so the popup is exactly as tall as the page it is on and
+    never taller. The terms scroll is the only part with a fixed height, because the licence is long
+    and it is the one page whose size must not depend on the screen.
+
+    Only the licence step's controls (the terms scroll and the checkbox), the theme radios, the
+    changelog block, the instance block and the finish actions are per-step; the progress line,
+    title, body and the Back / Skip / Next row are always present and are filled in code.
 -->
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/setup_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ui_bg_window"
-    android:fillViewport="true">
+    android:background="@color/overlay_scrim"
+    android:clickable="true"
+    android:focusable="true">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/space_8">
-
-        <TextView
-            android:id="@+id/setup_step_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/misans"
-            android:textColor="@color/ui_text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:fillViewport="false"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/setup_rail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_3"
-            android:gravity="center"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:id="@+id/setup_title"
+            android:id="@+id/setup_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_6"
-            android:fontFamily="@font/misans"
-            android:gravity="center"
-            android:text="@string/setup_license_title"
-            android:textColor="@color/ui_text_primary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Display" />
-
-        <TextView
-            android:id="@+id/setup_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_3"
-            android:fontFamily="@font/misans"
-            android:gravity="center"
-            android:text="@string/setup_license_body"
-            android:textColor="@color/ui_text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body" />
-
-        <TextView
-            android:id="@+id/setup_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_3"
-            android:fontFamily="@font/misans"
-            android:gravity="center"
-            android:textColor="@color/ui_danger"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
-            android:visibility="gone" />
-
-        <!-- Step 1 only: the full terms in a scroll, then the acceptance checkbox. -->
-        <ScrollView
-            android:id="@+id/setup_terms_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="@dimen/space_4"
-            android:background="@drawable/bg_minecraft_loading_terminal"
-            android:fadeScrollbars="false"
-            android:padding="@dimen/space_4"
-            android:scrollbars="vertical"
-            android:visibility="gone">
+            android:background="@drawable/bg_modal_card"
+            android:orientation="vertical"
+            android:padding="@dimen/space_6">
 
             <TextView
-                android:id="@+id/setup_terms"
+                android:id="@+id/setup_step_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/misans"
-                android:lineSpacingExtra="3dp"
+                android:gravity="center"
                 android:textColor="@color/ui_text_secondary"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
-        </ScrollView>
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/setup_license_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_4"
-            android:minHeight="@dimen/min_touch_target"
-            android:fontFamily="@font/misans"
-            android:text="@string/setup_license_agree"
-            android:textColor="@color/ui_text_primary"
-            android:visibility="gone" />
-
-        <!-- Step 5 only: the changelog and Discord actions. -->
-        <LinearLayout
-            android:id="@+id/setup_finish_actions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_4"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/setup_changelog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/min_touch_target"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_finish_changelog" />
-
-            <Button
-                android:id="@+id/setup_discord"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2"
-                android:minHeight="@dimen/min_touch_target"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_finish_discord" />
-        </LinearLayout>
-
-        <!--
-            Step 2 only: the installed instances, then the import button. The list is what the step
-            was missing — the user could import but never saw what they had, so "Install an instance"
-            gave no feedback that anything had happened. The import button is gated by the wizard's
-            own limit (SetupWizard.IMPORT_LIMIT).
-        -->
-        <LinearLayout
-            android:id="@+id/setup_instance_section"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_4"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_instance_list_title"
-                android:textColor="@color/ui_text_primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
-                android:accessibilityHeading="true" />
 
             <LinearLayout
-                android:id="@+id/setup_instance_list"
-                android:layout_width="match_parent"
+                android:id="@+id/setup_rail"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2"
-                android:orientation="vertical" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_3"
+                android:gravity="center"
+                android:orientation="horizontal" />
 
             <TextView
-                android:id="@+id/setup_instance_empty"
+                android:id="@+id/setup_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2"
+                android:layout_marginTop="@dimen/space_6"
                 android:fontFamily="@font/misans"
-                android:text="@string/setup_instance_list_empty"
-                android:textColor="@color/ui_text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:text="@string/setup_license_title"
+                android:textColor="@color/ui_text_primary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Display" />
 
-            <Button
-                android:id="@+id/setup_instance_import"
+            <TextView
+                android:id="@+id/setup_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_3"
-                android:minHeight="@dimen/min_touch_target"
                 android:fontFamily="@font/misans"
-                android:text="@string/setup_instance_action" />
+                android:gravity="center"
+                android:text="@string/setup_license_body"
+                android:textColor="@color/ui_text_secondary"
+                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
 
             <TextView
-                android:id="@+id/setup_instance_limit"
+                android:id="@+id/setup_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2"
+                android:layout_marginTop="@dimen/space_3"
                 android:fontFamily="@font/misans"
-                android:textColor="@color/ui_text_secondary"
+                android:gravity="center"
+                android:textColor="@color/ui_danger"
                 android:textAppearance="@style/TextAppearance.Glowberry.Caption"
                 android:visibility="gone" />
+
+            <!-- Step 1 only: the full terms in a scroll, then the acceptance checkbox. -->
+            <ScrollView
+                android:id="@+id/setup_terms_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="@dimen/space_4"
+                android:background="@drawable/bg_minecraft_loading_terminal"
+                android:fadeScrollbars="false"
+                android:padding="@dimen/space_4"
+                android:scrollbars="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/setup_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/misans"
+                    android:lineSpacingExtra="3dp"
+                    android:textColor="@color/ui_text_secondary"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            </ScrollView>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/setup_license_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:minHeight="@dimen/min_touch_target"
+                android:fontFamily="@font/misans"
+                android:text="@string/setup_license_agree"
+                android:textColor="@color/ui_text_primary"
+                android:visibility="gone" />
+
+            <!-- Step "Customise" only: the theme mode, applied live so the popup itself changes. -->
+            <LinearLayout
+                android:id="@+id/setup_theme_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:accessibilityHeading="true"
+                    android:fontFamily="@font/misans"
+                    android:text="@string/theme_title"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textColor="@color/ui_text_primary" />
+
+                <RadioGroup
+                    android:id="@+id/setup_theme_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/setup_theme_system"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/misans"
+                        android:minHeight="@dimen/min_touch_target"
+                        android:text="@string/theme_follow_system"
+                        android:textColor="@color/ui_text_primary" />
+
+                    <RadioButton
+                        android:id="@+id/setup_theme_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/misans"
+                        android:minHeight="@dimen/min_touch_target"
+                        android:text="@string/theme_light"
+                        android:textColor="@color/ui_text_primary" />
+
+                    <RadioButton
+                        android:id="@+id/setup_theme_dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/misans"
+                        android:minHeight="@dimen/min_touch_target"
+                        android:text="@string/theme_dark"
+                        android:textColor="@color/ui_text_primary" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Step 5 only: the newest changelog inline, then the full-list and Discord actions. -->
+            <LinearLayout
+                android:id="@+id/setup_changelog_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/setup_changelog_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_minecraft_loading_terminal"
+                    android:fontFamily="@font/misans"
+                    android:lineSpacingExtra="3dp"
+                    android:padding="@dimen/space_4"
+                    android:textColor="@color/ui_text_secondary"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setup_finish_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/setup_changelog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_finish_changelog" />
+
+                <Button
+                    android:id="@+id/setup_discord"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_2"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_finish_discord" />
+            </LinearLayout>
+
+            <!--
+                Step 2 only: the installed instances, then the import button. The list is what the
+                step was missing — the user could import but never saw what they had, so "Install an
+                instance" gave no feedback that anything had happened. The import button is gated by
+                the wizard's own limit (SetupWizard.IMPORT_LIMIT).
+            -->
+            <LinearLayout
+                android:id="@+id/setup_instance_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:accessibilityHeading="true"
+                    android:fontFamily="@font/misans"
+                    android:text="@string/setup_instance_list_title"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textColor="@color/ui_text_primary" />
+
+                <LinearLayout
+                    android:id="@+id/setup_instance_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/setup_instance_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:fontFamily="@font/misans"
+                    android:text="@string/setup_instance_list_empty"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                    android:textColor="@color/ui_text_secondary"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/setup_instance_import"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_instance_action" />
+
+                <TextView
+                    android:id="@+id/setup_instance_limit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:fontFamily="@font/misans"
+                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textColor="@color/ui_text_secondary"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_6"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/setup_back"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_back"
+                    android:textColor="@color/ui_text_secondary" />
+
+                <Button
+                    android:id="@+id/setup_skip"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_skip"
+                    android:textColor="@color/ui_text_secondary" />
+
+                <Button
+                    android:id="@+id/setup_primary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/misans"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/setup_next" />
+            </LinearLayout>
         </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_6"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/setup_back"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/min_touch_target"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_back"
-                android:textColor="@color/ui_text_secondary" />
-
-            <Button
-                android:id="@+id/setup_skip"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/min_touch_target"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_skip"
-                android:textColor="@color/ui_text_secondary" />
-
-            <Button
-                android:id="@+id/setup_primary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/min_touch_target"
-                android:fontFamily="@font/misans"
-                android:text="@string/setup_next" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</FrameLayout>

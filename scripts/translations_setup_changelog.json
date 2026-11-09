@@ -7,7 +7,8 @@
     "setup_instance_limit_remaining": "Puedes añadir %1$d más aquí, o instancias ilimitadas después desde la Biblioteca.",
     "changelog_section_newest": "Novedades",
     "changelog_section_upcoming": "Próximamente",
-    "changelog_section_sneak_peeks": "Avances"
+    "changelog_section_sneak_peeks": "Avances",
+    "setup_finish_changelog_loading": "Cargando novedades…"
   },
   "fr": {
     "setup_instance_list_title": "Vos instances",
@@ -17,7 +18,8 @@
     "setup_instance_limit_remaining": "Vous pouvez en ajouter %1$d ici, ou autant que vous voulez plus tard depuis la Bibliothèque.",
     "changelog_section_newest": "Nouveautés",
     "changelog_section_upcoming": "À venir",
-    "changelog_section_sneak_peeks": "Aperçus"
+    "changelog_section_sneak_peeks": "Aperçus",
+    "setup_finish_changelog_loading": "Chargement des nouveautés…"
   },
   "hi": {
     "setup_instance_list_title": "आपके इंस्टेंस",
@@ -27,7 +29,8 @@
     "setup_instance_limit_remaining": "यहाँ %1$d और जोड़ सकते हैं, या बाद में लाइब्रेरी से असीमित जोड़ सकते हैं।",
     "changelog_section_newest": "नवीनतम",
     "changelog_section_upcoming": "आने वाला",
-    "changelog_section_sneak_peeks": "झलकियाँ"
+    "changelog_section_sneak_peeks": "झलकियाँ",
+    "setup_finish_changelog_loading": "नया क्या है लोड हो रहा है…"
   },
   "id": {
     "setup_instance_list_title": "Instans Anda",
@@ -37,7 +40,8 @@
     "setup_instance_limit_remaining": "Anda dapat menambah %1$d lagi di sini, atau tanpa batas nanti dari Pustaka.",
     "changelog_section_newest": "Terbaru",
     "changelog_section_upcoming": "Akan datang",
-    "changelog_section_sneak_peeks": "Intip"
+    "changelog_section_sneak_peeks": "Intip",
+    "setup_finish_changelog_loading": "Memuat yang baru…"
   },
   "ja": {
     "setup_instance_list_title": "インスタンス",
@@ -47,7 +51,8 @@
     "setup_instance_limit_remaining": "ここであと %1$d 個追加できます。後でライブラリから無制限に追加できます。",
     "changelog_section_newest": "最新",
     "changelog_section_upcoming": "今後",
-    "changelog_section_sneak_peeks": "スニークピーク"
+    "changelog_section_sneak_peeks": "スニークピーク",
+    "setup_finish_changelog_loading": "新着情報を読み込んでいます…"
   },
   "pt": {
     "setup_instance_list_title": "Suas instâncias",
@@ -57,7 +62,8 @@
     "setup_instance_limit_remaining": "Você pode adicionar mais %1$d aqui, ou ilimitadas depois na Biblioteca.",
     "changelog_section_newest": "Novidades",
     "changelog_section_upcoming": "Em breve",
-    "changelog_section_sneak_peeks": "Prévias"
+    "changelog_section_sneak_peeks": "Prévias",
+    "setup_finish_changelog_loading": "Carregando novidades…"
   },
   "ru": {
     "setup_instance_list_title": "Ваши экземпляры",
@@ -67,7 +73,8 @@
     "setup_instance_limit_remaining": "Здесь можно добавить ещё %1$d, или без ограничений позже в Библиотеке.",
     "changelog_section_newest": "Новое",
     "changelog_section_upcoming": "Скоро",
-    "changelog_section_sneak_peeks": "Превью"
+    "changelog_section_sneak_peeks": "Превью",
+    "setup_finish_changelog_loading": "Загрузка новостей…"
   },
   "tr": {
     "setup_instance_list_title": "Örnekleriniz",
@@ -77,7 +84,8 @@
     "setup_instance_limit_remaining": "Burada %1$d tane daha ekleyebilirsiniz, veya sonra Kitaplıktan sınırsız ekleyebilirsiniz.",
     "changelog_section_newest": "En yeni",
     "changelog_section_upcoming": "Yakında",
-    "changelog_section_sneak_peeks": "Ön izlemeler"
+    "changelog_section_sneak_peeks": "Ön izlemeler",
+    "setup_finish_changelog_loading": "Yenilikler yükleniyor…"
   },
   "vi": {
     "setup_instance_list_title": "Các bản cài của bạn",
@@ -87,7 +95,8 @@
     "setup_instance_limit_remaining": "Bạn có thể thêm %1$d bản nữa ở đây, hoặc không giới hạn sau đó từ Thư viện.",
     "changelog_section_newest": "Mới nhất",
     "changelog_section_upcoming": "Sắp ra mắt",
-    "changelog_section_sneak_peeks": "Xem trước"
+    "changelog_section_sneak_peeks": "Xem trước",
+    "setup_finish_changelog_loading": "Đang tải thông tin mới…"
   },
   "zh-rCN": {
     "setup_instance_list_title": "你的实例",
@@ -97,6 +106,7 @@
     "setup_instance_limit_remaining": "你还可以在这里添加 %1$d 个，或之后从库中添加无限个。",
     "changelog_section_newest": "最新",
     "changelog_section_upcoming": "即将推出",
-    "changelog_section_sneak_peeks": "抢先看"
+    "changelog_section_sneak_peeks": "抢先看",
+    "setup_finish_changelog_loading": "正在加载新内容…"
   }
 }

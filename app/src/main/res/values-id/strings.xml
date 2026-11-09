@@ -1329,4 +1329,5 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="changelog_view_wiki">Lihat Wiki</string>
     <string name="changelog_upcoming_soon">Segera hadir!</string>
     <string name="changelog_upcoming_soon_body">Wiki sedang ditulis. Wiki akan terbuka di sini begitu tersedia.</string>
+    <string name="setup_finish_changelog_loading">Memuat yang baru…</string>
 </resources>

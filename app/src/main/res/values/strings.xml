@@ -2678,6 +2678,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_customize_action">Open Customize</string>
     <string name="setup_finish_title">What\'s new and where to find us</string>
     <string name="setup_finish_body">See what changed in this release, and join the community on Discord for support and updates.</string>
+    <string name="setup_finish_changelog_loading">Loading what&#8217;s new…</string>
     <string name="setup_finish_changelog">View changelog</string>
     <string name="setup_finish_discord">Join our Discord</string>
     <string name="setup_next">Next</string>

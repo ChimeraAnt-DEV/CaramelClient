@@ -1332,4 +1332,5 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="changelog_view_wiki">Wiki\'yi gör</string>
     <string name="changelog_upcoming_soon">Çok yakında!</string>
     <string name="changelog_upcoming_soon_body">Wiki yazılıyor. Yayına girdiğinde burada açılacak.</string>
+    <string name="setup_finish_changelog_loading">Yenilikler yükleniyor…</string>
 </resources>
