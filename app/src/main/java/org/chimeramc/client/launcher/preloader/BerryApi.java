@@ -493,4 +493,322 @@ public final class BerryApi {
     private static native boolean nativeBindWorldSeam();
 
     private static native boolean nativeWorldSeamBound();
+
+    // --- Cosmetics surface -------------------------------------------------------------------
+    //
+    // BerryAPI owns the cosmetics service: the catalog, the local player's loadout, the wardrobe
+    // presets, the remote-render gate and the service counters. The launcher's cosmetics screen
+    // drives it through these. Every call answers the fail-closed default when the library or its
+    // cosmetic ABI is absent, so the screen shows "not available" rather than crashing. The
+    // player-model hook is installed by the preloader itself once the game's player-render target
+    // resolves; Java only reads its state here.
+
+    /** The cosmetic slot values, mirroring {@code BerryCosmeticSlotC}. The values are the ABI. */
+    public static final int SLOT_NONE = 0;
+    public static final int SLOT_HEAD = 1;
+    public static final int SLOT_BACK = 2;
+    public static final int SLOT_SHOULDERS = 3;
+    public static final int SLOT_BODY = 4;
+    public static final int SLOT_TRAIL = 5;
+    public static final int SLOT_EFFECT = 6;
+    public static final int SLOT_EMOTE = 7;
+
+    /** Cosmetic status codes, mirroring {@code BerryCosmeticStatus}. 0 is success. */
+    public static final int COSMETIC_OK = 0;
+    public static final int COSMETIC_NOT_ATTACHED = 1;
+    public static final int COSMETIC_BAD_ARGUMENT = 2;
+    public static final int COSMETIC_UNKNOWN_ASSET = 3;
+    public static final int COSMETIC_NOT_OWNED = 4;
+    public static final int COSMETIC_BAD_SLOT = 5;
+    public static final int COSMETIC_BAD_FORMAT = 6;
+    public static final int COSMETIC_UNKNOWN_PRESET = 7;
+    public static final int COSMETIC_BUFFER_TOO_SMALL = 8;
+    public static final int COSMETIC_NO_HOOK_BACKEND = 9;
+    public static final int COSMETIC_HOOK_REFUSED = 10;
+    public static final int COSMETIC_ALREADY_HOOKED = 11;
+    public static final int COSMETIC_BAD_READER = 12;
+
+    /** One catalog asset, decoded from the {@code String[20]} the native catalog returns. */
+    public static final class CosmeticRecord {
+        public final String id;
+        public final int slot;
+        public final int bone;
+        public final long geometry;
+        public final long texture;
+        public final float offsetX;
+        public final float offsetY;
+        public final float offsetZ;
+        public final float pitch;
+        public final float yaw;
+        public final float roll;
+        public final float scale;
+        public final float tintR;
+        public final float tintG;
+        public final float tintB;
+        public final float trail;
+        public final String animation;
+        public final float animationSpeed;
+        public final String pack;
+        public final String author;
+
+        CosmeticRecord(String[] f) {
+            this.id = f[0];
+            this.slot = intOf(f[1]);
+            this.bone = intOf(f[2]);
+            this.geometry = longOf(f[3]);
+            this.texture = longOf(f[4]);
+            this.offsetX = floatOf(f[5]);
+            this.offsetY = floatOf(f[6]);
+            this.offsetZ = floatOf(f[7]);
+            this.pitch = floatOf(f[8]);
+            this.yaw = floatOf(f[9]);
+            this.roll = floatOf(f[10]);
+            this.scale = floatOf(f[11]);
+            this.tintR = floatOf(f[12]);
+            this.tintG = floatOf(f[13]);
+            this.tintB = floatOf(f[14]);
+            this.trail = floatOf(f[15]);
+            this.animation = f[16];
+            this.animationSpeed = floatOf(f[17]);
+            this.pack = f[18];
+            this.author = f[19];
+        }
+
+        private static int intOf(String v) {
+            try {
+                return (int) Float.parseFloat(v);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+
+        private static long longOf(String v) {
+            try {
+                return (long) Double.parseDouble(v);
+            } catch (NumberFormatException e) {
+                return 0L;
+            }
+        }
+
+        private static float floatOf(String v) {
+            try {
+                return Float.parseFloat(v);
+            } catch (NumberFormatException e) {
+                return 0f;
+            }
+        }
+    }
+
+    /** The cosmetic counters, decoded from the {@code long[8]} the native stats call returns. */
+    public static final class CosmeticCounters {
+        public final long frames;
+        public final long submitted;
+        public final long skippedNoBone;
+        public final long skippedNotOwned;
+        public final long cacheHits;
+        public final long cacheMisses;
+        public final long registryCount;
+        public final long presetCount;
+
+        CosmeticCounters(long[] v) {
+            this.frames = v[0];
+            this.submitted = v[1];
+            this.skippedNoBone = v[2];
+            this.skippedNotOwned = v[3];
+            this.cacheHits = v[4];
+            this.cacheMisses = v[5];
+            this.registryCount = v[6];
+            this.presetCount = v[7];
+        }
+    }
+
+    /** True when BerryAPI's cosmetics surface resolved and passed its ABI check. */
+    public static boolean cosmeticAvailable() {
+        try {
+            return nativeCosmeticAvailable();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
+     * Reloads the catalog from a pack directory and an asset directory.
+     *
+     * <p>Returns the number of assets registered, or 0 when the surface is absent or the load was
+     * refused. A null argument asks the library to use its own configured default.
+     */
+    public static int cosmeticReload(String packDir, String assetDir) {
+        try {
+            return nativeCosmeticReload(packDir, assetDir);
+        } catch (UnsatisfiedLinkError e) {
+            return 0;
+        }
+    }
+
+    /** The number of registered cosmetic assets, or 0 when unavailable. */
+    public static int cosmeticRegistryCount() {
+        try {
+            return nativeCosmeticRegistryCount();
+        } catch (UnsatisfiedLinkError e) {
+            return 0;
+        }
+    }
+
+    /** The catalog, decoded; empty when unavailable. */
+    public static java.util.List<CosmeticRecord> cosmeticCatalog() {
+        java.util.List<CosmeticRecord> out = new java.util.ArrayList<>();
+        try {
+            String[][] rows = nativeCosmeticCatalog();
+            if (rows == null) return out;
+            for (String[] row : rows) {
+                if (row != null && row.length >= 20) out.add(new CosmeticRecord(row));
+            }
+        } catch (UnsatisfiedLinkError e) {
+            // best-effort: fail closed to an empty catalog when the library is absent.
+        }
+        return out;
+    }
+
+    /** Equips an asset on the local player. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticEquip(String assetId) {
+        try {
+            return nativeCosmeticEquip(assetId);
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** Removes whatever is in {@code slot}. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticUnequip(int slot) {
+        try {
+            return nativeCosmeticUnequip(slot);
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** The asset id equipped in {@code slot}; "" when empty or unavailable. */
+    public static String cosmeticEquipped(int slot) {
+        try {
+            String id = nativeCosmeticEquipped(slot);
+            return id != null ? id : "";
+        } catch (UnsatisfiedLinkError e) {
+            return "";
+        }
+    }
+
+    /** Empties the local loadout. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticClearLoadout() {
+        try {
+            return nativeCosmeticClearLoadout();
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** Saves the current loadout as {@code name}. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticSavePreset(String name) {
+        try {
+            return nativeCosmeticSavePreset(name);
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** Replaces the loadout with preset {@code name}. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticApplyPreset(String name) {
+        try {
+            return nativeCosmeticApplyPreset(name);
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** 1 when preset {@code name} exists, 0 when not, -1 when unavailable. */
+    public static int cosmeticHasPreset(String name) {
+        try {
+            return nativeCosmeticHasPreset(name);
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /** The wardrobe preset names; empty when unavailable. */
+    public static String[] cosmeticPresetNames() {
+        try {
+            String[] names = nativeCosmeticPresetNames();
+            return names != null ? names : new String[0];
+        } catch (UnsatisfiedLinkError e) {
+            return new String[0];
+        }
+    }
+
+    /** Sets the remote-render gate. Returns a {@code COSMETIC_*} status. */
+    public static int cosmeticSetLocalOnly(boolean localOnly) {
+        try {
+            return nativeCosmeticSetLocalOnly(localOnly);
+        } catch (UnsatisfiedLinkError e) {
+            return COSMETIC_NOT_ATTACHED;
+        }
+    }
+
+    /** The local-only render gate: 1 on, 0 off, -1 when unavailable. */
+    public static int cosmeticLocalOnly() {
+        try {
+            return nativeCosmeticLocalOnly();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    /** The service counters, or null when unavailable. */
+    public static CosmeticCounters cosmeticStats() {
+        try {
+            long[] v = nativeCosmeticStats();
+            return v != null && v.length == 8 ? new CosmeticCounters(v) : null;
+        } catch (UnsatisfiedLinkError e) {
+            return null;
+        }
+    }
+
+    /** 1 when a player-model hook is installed, 0 when not, -1 when unavailable. */
+    public static int cosmeticHasPlayerModelHook() {
+        try {
+            return nativeCosmeticHasPlayerModelHook();
+        } catch (UnsatisfiedLinkError e) {
+            return -1;
+        }
+    }
+
+    private static native boolean nativeCosmeticAvailable();
+
+    private static native int nativeCosmeticReload(String packDir, String assetDir);
+
+    private static native int nativeCosmeticRegistryCount();
+
+    private static native String[][] nativeCosmeticCatalog();
+
+    private static native int nativeCosmeticEquip(String assetId);
+
+    private static native int nativeCosmeticUnequip(int slot);
+
+    private static native String nativeCosmeticEquipped(int slot);
+
+    private static native int nativeCosmeticClearLoadout();
+
+    private static native int nativeCosmeticSavePreset(String name);
+
+    private static native int nativeCosmeticApplyPreset(String name);
+
+    private static native int nativeCosmeticHasPreset(String name);
+
+    private static native String[] nativeCosmeticPresetNames();
+
+    private static native int nativeCosmeticSetLocalOnly(boolean localOnly);
+
+    private static native int nativeCosmeticLocalOnly();
+
+    private static native long[] nativeCosmeticStats();
+
+    private static native int nativeCosmeticHasPlayerModelHook();
 }
