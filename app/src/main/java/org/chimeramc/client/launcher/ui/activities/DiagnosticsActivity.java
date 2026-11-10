@@ -543,6 +543,10 @@ public class DiagnosticsActivity extends BaseActivity {
         // screen reports what the preloader actually found rather than assuming it is present. A
         // missing backend is then visible here before a launch, not only when a feature does nothing.
         addRow(rows, R.string.diagnostics_field_berry_api, BerryApi.summary());
+        // The cosmetics surface is a distinct sub-ABI of the same library: the backend can be
+        // present while the cosmetic struct is absent or refused, so it is reported on its own row.
+        addRow(rows, R.string.diagnostics_field_berry_cosmetics,
+                org.chimeramc.client.core.cosmetics.BerryCosmetics.summary());
         // The input backend is a separate seam from the runtime: the library can be present while
         // nothing is registered to inject input through it, which is a distinct failure state.
         addRow(rows, R.string.diagnostics_field_input_backend, GameBridge.statusLine());

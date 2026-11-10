@@ -89,6 +89,9 @@ public final class NativeCosmeticsRuntime {
             // until the engine has loaded the local cape once; syncCapeTexture is retried on the
             // frame tick once the capture arrives.
             NativeCosmeticsBridge.publishCapeTexture(cape);
+            // BerryAPI owns its own cosmetics service; push the same selection across so its
+            // loadout tracks the launcher's. Fail-closed: without the library this is a no-op.
+            BerryCosmetics.syncEquipped(s);
         } catch (Throwable ignored) {
             AppLog.warnOnce("GlowberryClient", "NativeCosmeticsRuntime:93", "Ignored a failure at NativeCosmeticsRuntime:93", ignored);
         }

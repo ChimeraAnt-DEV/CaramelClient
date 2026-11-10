@@ -1056,6 +1056,7 @@ La migration doit être terminée avant de continuer avec GlowberryClient.</stri
     <string name="wheel_manager_add_entry">Ajouter une entrée</string>
     <string name="wheel_manager_pick_action">Choisir une action</string>
     <string name="diagnostics_field_berry_api">Backend BerryAPI</string>
+    <string name="diagnostics_field_berry_cosmetics">Cosmétiques BerryAPI</string>
     <string name="about_backend_status">Backend : %1$s</string>
     <string name="diagnostics_field_preloader_abi">ABI du preloader</string>
     <string name="diagnostics_preloader_abi_ok">v%1$d (correspond au client)</string>
