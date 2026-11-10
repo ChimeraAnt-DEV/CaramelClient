@@ -108,3 +108,4 @@ file is missing from the index.
 - [Update-list audit (GlowberryClient) — what is shipped, what is honest, what cannot be built](docs/agents/update-list-audit-what-is-shipped-what-is-honest-what-cannot-be-built.md)
 - [World reconstruction — RE groundwork and the remaining wall](docs/agents/world-reconstruction-re-groundwork.md)
 - [MB shader loader version support (mtbinloader2 / libmtbinloader2.so)](docs/agents/mb-shader-loader-version-support.md)
+- [BerryAPI cosmetic C ABI (preloader mirror + launcher surface)](docs/agents/berryapi-cosmetic-c-abi.md)
