@@ -121,7 +121,7 @@ installed from the repo root (`-e .`).
   declaration → `JniBindingParityTest` fails with `stale-export`; add the Java `native` methods
   (`app/src/main/java/.../launcher/preloader/BerryApi.java`).
 - **Build/test**: `JAVA_HOME=/workspace/tools/jdk-21.0.13+9 ANDROID_HOME=/workspace/android-sdk
-  ./gradlew :app:testDebugUnitTest` (~3844 tests, ~25s, all green). Targeted:
+  ./gradlew :app:testDebugUnitTest` (~3843 tests, ~25s, all green). Targeted:
   `--tests "org.chimeramc.client.<pkg>.*"`. Native host tests:
   `bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh` (needs g++ + zlib + nlohmann).
 - **BerryAPI ABI guard**: `python3 scripts/verify_berryapi_abi.py` (test:
@@ -142,6 +142,13 @@ installed from the repo root (`-e .`).
 - **Git author for this repo's commits**: `Lynxifyy <297587416+Lynxifyy@users.noreply.github.com>`,
   no co-authors, no AI mentions in PRs. Push with `$GithubLynxifyy` (has repo scope; `create_pr`
   tool's token is read-only here → use a `curl` POST to the API).
+- **BerryAPI cosmetic C ABI (bound, PR #176 + preloader PR #33)**: BerryAPI owns the cosmetics
+  service; the preloader mirrors `berry/cosmetic_c.h` (`BerryCosmeticMirror.hpp`) and checks
+  `size`/`abi_version` before a pointer; `BerryCosmetics` (core.cosmetics) pushes the launcher's
+  equipped set into BerryAPI's loadout. **The bone half is not done** — `set_player_model_hook`
+  needs the preloader to resolve the per-build player-render target itself, so nothing renders yet;
+  the JNI entries only report the hook state. `NoSilentCatchTest` allows an empty catch only when
+  the body contains the exact substring `best-effort`.
 - **Two Android CI gates that fail locally-silent changes** (both run in `android.yml` before the
   Gradle build, so they fail fast): `python3 scripts/check_ui_hygiene.py` fails on *new*
   `findViewById` calls beyond a per-file baseline — read the view from the generated ViewBinding
