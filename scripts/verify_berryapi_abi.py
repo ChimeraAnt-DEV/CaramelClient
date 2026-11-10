@@ -60,6 +60,12 @@ REQUIRED_SYMBOLS = {
         "BERRY_GovernorStructSize",
         "BERRY_GovernorAbiVersion",
     ],
+    "cosmetic": [
+        "BERRY_GetCosmeticApi",
+        "BERRY_CosmeticStructSize",
+        "BERRY_CosmeticAbiVersion",
+        "BERRY_CosmeticBoneReaderStructSize",
+    ],
 }
 
 # The seam ABI version the preloader mirror is compiled against
@@ -74,6 +80,14 @@ EXPECTED_REPLAY_STRUCT_SIZE = 144
 EXPECTED_GOVERNOR_ABI = 1
 EXPECTED_GOVERNOR_STRUCT_SIZE = 48
 
+# The cosmetic surface. `BERRY_GetCosmeticApi` returns a BerryCosmeticApi the preloader mirrors
+# (pl::berry::CosmeticApiMirror); the struct size, the surface ABI and the bone-reader struct size
+# are the numbers the preloader compares before it reads a single function pointer, so a drift here
+# leaves the launcher's cosmetics screen silently dark.
+EXPECTED_COSMETIC_ABI = 1
+EXPECTED_COSMETIC_STRUCT_SIZE = 160
+EXPECTED_COSMETIC_BONE_READER_STRUCT_SIZE = 32
+
 # (symbol, expected value, human description) checked by decoding the function's
 # returned immediate. These are the numbers the preloader compares against.
 ABI_CONSTANTS = [
@@ -82,6 +96,10 @@ ABI_CONSTANTS = [
     ("BERRY_ReplayStructSize", EXPECTED_REPLAY_STRUCT_SIZE, "replay struct size"),
     ("BERRY_GovernorAbiVersion", EXPECTED_GOVERNOR_ABI, "governor ABI (kHostGovernorAbiVersion)"),
     ("BERRY_GovernorStructSize", EXPECTED_GOVERNOR_STRUCT_SIZE, "governor struct size"),
+    ("BERRY_CosmeticAbiVersion", EXPECTED_COSMETIC_ABI, "cosmetic ABI (kHostCosmeticAbiVersion)"),
+    ("BERRY_CosmeticStructSize", EXPECTED_COSMETIC_STRUCT_SIZE, "cosmetic API struct size"),
+    ("BERRY_CosmeticBoneReaderStructSize", EXPECTED_COSMETIC_BONE_READER_STRUCT_SIZE,
+     "cosmetic bone-reader struct size"),
 ]
 
 # ELF section type for a symbol table (SHT_SYMTAB=2, SHT_DYNSYM=11).
