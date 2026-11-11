@@ -63,3 +63,8 @@ only the features that need it.
 - The player-render hook resolves its vtable slot by RTTI name at runtime, so it survives a version
   bump that a byte pattern would not, but the detour only draws once a mesh is published; a slot
   that resolves to a non-executable address is refused.
+- The player-render seam resolves through the `resolveVtableFunction(type, 17)` index fallback on
+  every build from 1.26.44 to 1.26.62, because `playerRenderVtableIndex` is 17 across the range.
+  The self-locating string scan (`resolveVtableSlotReferencingString`) had walked the typeinfo
+  (`_ZTI`) as if it were the vtable (`_ZTV`) and so resolved nothing; that walk base is fixed, and
+  the index remains the fallback. See `docs/binary-analysis-26.44-26.62.md`.
