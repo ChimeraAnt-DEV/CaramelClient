@@ -78,7 +78,7 @@ and the cape swap must stay fail-closed there. Re-deriving it on 26.60+ needs a 
 (a `mce::Image`-returning method reachable by another string, or a disassembly pass), which is
 outside this analysis.
 
-## Finding: the string scan of `resolveVtableSlotReferencingString` resolves nothing
+## Finding: the string scan of `resolveVtableSlotReferencingString` resolved nothing (fixed)
 
 `resolveVtableSlotReferencingString` finds the RTTI name, calls `findTypeInfo` for a base address,
 then walks `base + 8 + slot*8` as if `base` were the vtable. But `findTypeInfo` returns the
@@ -110,13 +110,17 @@ slot that references the needle, while a walk based at `_ZTV + 8` finds **slot 1
 | 26.60.28 | none | slot 17 |
 | 26.62 | none | slot 17 |
 
-The consequence is contained, not fatal: when the string scan returns 0 the player-render feed falls
+The consequence was contained, not fatal: when the string scan returned 0 the player-render feed fell
 back to `resolveVtableFunction(type, 17)` (the index path), which uses `findPrimaryVtableSlot` and is
 **correct** — it locates the slot whose value is the typeinfo with offset-to-top 0, and resolves slot
-17 on every build. So the render seam works today *only* through the fallback, and the string scan is
-dead weight. Fixing the walk base in `findTypeInfo`/`resolveVtableSlotReferencingString` would make
-the self-locating path actually self-locate, which is the property that keeps the hook alive on a
-build whose index moves.
+17 on every build. So the render seam worked *only* through the fallback and the string scan was dead
+weight.
+
+**Fixed** in the preloader: `resolveVtableSlotReferencingString` now locates the vtable's
+typeinfo-pointer slot (`findPrimaryVtableOffset`, a word equal to the typeinfo preceded by
+offset-to-top 0) and walks from there. `tests/cosmetics/VtableResolveTest.cpp` pins it with a fixture
+that builds the real object graph; it resolves slot 26 against the old code and slot 17 against the
+fix. The index fallback stays in place for a build whose slot moves.
 
 ## Method
 
