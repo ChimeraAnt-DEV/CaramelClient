@@ -271,7 +271,7 @@ CaramelClient is an independent project that stands on the shoulders of the open
 <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/issues/new"><img src="https://img.shields.io/badge/REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
 <img src="https://raw.githubusercontent.com/Lynxifyy/CaramelClient-APP-ICON-BANNER-/main/caramel_apple_icon_512.png" alt="CaramelClient" width="72">
 [![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg)](https://hub.xerj.org/contributors/ChimeraAnt-DEV)
-  
+
 
 **Made by the Chimera Team Community**
 
