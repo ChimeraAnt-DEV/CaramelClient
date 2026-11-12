@@ -1,44 +1,44 @@
 <p align="center">
-  <img src="docs/assets/banner.png" alt="GlowberryClient — Android launcher for Minecraft: Bedrock Edition" width="100%">
+  <img src="https://raw.githubusercontent.com/Lynxifyy/CaramelClient-APP-ICON-BANNER-/main/caramelclient_banner.png" alt="CaramelClient — Android launcher for Minecraft: Bedrock Edition" width="100%">
 </p>
 
 <p align="center"><b>An Android launcher for Minecraft: Bedrock Edition with multi-version management and an extensible native modding system.</b></p>
 
 <p align="center">
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest">
-    <img src="https://img.shields.io/github/v/release/ChimeraAnt-DEV/GlowberryClient?style=for-the-badge&logo=github&logoColor=white&label=RELEASE&color=7E32AA" alt="Latest release"></a>
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/releases">
-    <img src="https://img.shields.io/github/downloads/ChimeraAnt-DEV/GlowberryClient/total?style=for-the-badge&logo=githubactions&logoColor=white&label=DOWNLOADS&color=0F5BE4" alt="Downloads"></a>
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/stargazers">
-    <img src="https://img.shields.io/github/stars/ChimeraAnt-DEV/GlowberryClient?style=for-the-badge&logo=github&logoColor=white&label=STARS&color=FFC94D" alt="Stars"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/releases/latest">
+    <img src="https://img.shields.io/github/v/release/ChimeraAnt-DEV/CaramelClient?style=for-the-badge&logo=github&logoColor=white&label=RELEASE&color=7E32AA" alt="Latest release"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/releases">
+    <img src="https://img.shields.io/github/downloads/ChimeraAnt-DEV/CaramelClient/total?style=for-the-badge&logo=githubactions&logoColor=white&label=DOWNLOADS&color=0F5BE4" alt="Downloads"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/stargazers">
+    <img src="https://img.shields.io/github/stars/ChimeraAnt-DEV/CaramelClient?style=for-the-badge&logo=github&logoColor=white&label=STARS&color=FFC94D" alt="Stars"></a>
 </p>
 <p align="center">
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/blob/main/LICENSE">
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/LICENSE-Apache--2.0-2FA85A?style=for-the-badge&logo=apache&logoColor=white" alt="License: Apache 2.0"></a>
   <img src="https://img.shields.io/badge/ANDROID-9.0%2B%20(API%2028)-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Android 9.0+">
   <img src="https://img.shields.io/badge/ABI-arm64--v8a-6D4AFF?style=for-the-badge&logo=arm&logoColor=white" alt="arm64-v8a">
   <img src="https://img.shields.io/badge/BUILT%20WITH-Kotlin%20%2B%20C%2B%2B-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin + C++">
 </p>
 <p align="center">
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/actions/workflows/build.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/ChimeraAnt-DEV/GlowberryClient/build.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=BUILD&color=0F5BE4" alt="Build status"></a>
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/issues">
-    <img src="https://img.shields.io/github/issues/ChimeraAnt-DEV/GlowberryClient?style=for-the-badge&logo=github&logoColor=white&label=ISSUES&color=FF5C5C" alt="Issues"></a>
-  <a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/commits/main">
-    <img src="https://img.shields.io/github/last-commit/ChimeraAnt-DEV/GlowberryClient?style=for-the-badge&logo=git&logoColor=white&label=LAST%20COMMIT&color=9AA0A6" alt="Last commit"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/actions/workflows/build.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/ChimeraAnt-DEV/CaramelClient/build.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=BUILD&color=0F5BE4" alt="Build status"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/issues">
+    <img src="https://img.shields.io/github/issues/ChimeraAnt-DEV/CaramelClient?style=for-the-badge&logo=github&logoColor=white&label=ISSUES&color=FF5C5C" alt="Issues"></a>
+  <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/commits/main">
+    <img src="https://img.shields.io/github/last-commit/ChimeraAnt-DEV/CaramelClient?style=for-the-badge&logo=git&logoColor=white&label=LAST%20COMMIT&color=9AA0A6" alt="Last commit"></a>
   <a href="docs/guide/getting-started.md">
     <img src="https://img.shields.io/badge/DOCS-English%20%2B%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-71ACEF?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"></a>
 </p>
 
 ---
 
-## What is GlowberryClient?
+## What is CaramelClient?
 
-GlowberryClient is an open-source Android launcher for **Minecraft: Bedrock Edition**. It lets you **import your official Minecraft APK and launch it without a system install**, keep **multiple isolated game versions** side by side, and **extend the game with native modules** through a Preloader runtime.
+CaramelClient is an open-source Android launcher for **Minecraft: Bedrock Edition**. It lets you **import your official Minecraft APK and launch it without a system install**, keep **multiple isolated game versions** side by side, and **extend the game with native modules** through a Preloader runtime.
 
 It is built for legitimate players: it runs the copy of Minecraft you already own, it does not ship the game, and it does not bypass licensing.
 
-> **Independent project:** GlowberryClient has its own architecture, branding, feature set, and maintenance. It is not a fork of any other launcher — no code in this repository is copied from another launcher. Its native-modding layer does build on conventions and one live data dependency from the wider open-source Bedrock modding ecosystem: the **LeviLamina / Levilamina-Android** mod-template conventions, and the **LeviLaunchroid** signature-rules source its own signed rule file derives from. Both are credited under [Acknowledgements](#acknowledgements). Every component here is developed and maintained as part of GlowberryClient.
+> **Independent project:** CaramelClient has its own architecture, branding, feature set, and maintenance. It is not a fork of any other launcher — no code in this repository is copied from another launcher. Its native-modding layer does build on conventions and one live data dependency from the wider open-source Bedrock modding ecosystem: the **LeviLamina / Levilamina-Android** mod-template conventions, and the **LeviLaunchroid** signature-rules source its own signed rule file derives from. Both are credited under [Acknowledgements](#acknowledgements). Every component here is developed and maintained as part of CaramelClient.
 
 **Jump to:** [Screenshots](#screenshots) · [Quick start](#quick-start-players) · [Features](#key-features) · [Status](#project-status--compatibility) · [Developers](#for-developers) · [Docs](#documentation)
 
@@ -53,15 +53,15 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 <table>
   <tr>
     <td width="50%" align="center"><b>Mod Menu</b><br><sub>Two columns, top nav bar, search, switches and action rows</sub><br>
-      <img src="docs/assets/mockups/mod_menu.png" alt="GlowberryClient Mod Menu"></td>
+      <img src="docs/assets/mockups/mod_menu.png" alt="CaramelClient Mod Menu"></td>
     <td width="50%" align="center"><b>Radial wheel</b><br><sub>Opened by an in-game bind, head hub + quick chips</sub><br>
-      <img src="docs/assets/mockups/radial_wheel.png" alt="GlowberryClient radial wheel"></td>
+      <img src="docs/assets/mockups/radial_wheel.png" alt="CaramelClient radial wheel"></td>
   </tr>
   <tr>
     <td width="50%" align="center"><b>Closet (cosmetics)</b><br><sub>Category rail, card grid, live 3D preview</sub><br>
-      <img src="docs/assets/mockups/closet.png" alt="GlowberryClient Closet"></td>
+      <img src="docs/assets/mockups/closet.png" alt="CaramelClient Closet"></td>
     <td width="50%" align="center"><b>Launch tab</b><br><sub>Hero preview, info cards, docked launch bar</sub><br>
-      <img src="docs/assets/mockups/launch_tab.png" alt="GlowberryClient Launch tab"></td>
+      <img src="docs/assets/mockups/launch_tab.png" alt="CaramelClient Launch tab"></td>
   </tr>
   <tr>
     <td colspan="2" align="center"><b>.AntEgg mod workflow</b><br><sub>Drop a package, validated + sandboxed + atomic install</sub><br>
@@ -81,21 +81,21 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 | **Architecture** | 64-bit (`arm64-v8a`). Most versions ship both 64- and 32-bit libs and run fine; a version whose APK ships 32-bit **only** is refused |
 | **RAM** | 1 GB minimum, **3 GB+ recommended** |
 | **Storage** | 2 GB minimum, **5 GB+ recommended** |
-| **Minecraft** | You need a **Minecraft: Bedrock Edition APK** (1.21.80 or newer) to import — your own licensed copy. GlowberryClient reads the native libraries out of that APK; it never ships or redistributes the game. A Google Play install cannot be launched, because the game keeps its library inside the installed app; import an APK instead. See the [compatibility guide](docs/guide/compatibility.md) for the one-page statement. |
+| **Minecraft** | You need a **Minecraft: Bedrock Edition APK** (1.21.80 or newer) to import — your own licensed copy. CaramelClient reads the native libraries out of that APK; it never ships or redistributes the game. A Google Play install cannot be launched, because the game keeps its library inside the installed app; import an APK instead. See the [compatibility guide](docs/guide/compatibility.md) for the one-page statement. |
 
 ### Install in 4 steps
 
-1. **Get the latest build** → [**Releases**](https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest) (download the APK/ZIP and extract it).
+1. **Get the latest build** → [**Releases**](https://github.com/ChimeraAnt-DEV/CaramelClient/releases/latest) (download the APK/ZIP and extract it).
 2. On your device, allow installs from unknown sources (**Settings → Security / Applications**).
 3. Open the downloaded APK and install it.
-4. Launch **GlowberryClient**, then point it at your Minecraft APK when asked.
+4. Launch **CaramelClient**, then point it at your Minecraft APK when asked.
 
-> **Licensing:** GlowberryClient requires a legitimate, licensed copy of Minecraft Bedrock Edition. Do not use it with pirated or unauthorized versions, and keep your license linked to your Microsoft account.
+> **Licensing:** CaramelClient requires a legitimate, licensed copy of Minecraft Bedrock Edition. Do not use it with pirated or unauthorized versions, and keep your license linked to your Microsoft account.
 
 <details>
 <summary><b>Upgrading from a previous name</b></summary>
 
-- **From “Chimera Client”:** GlowberryClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
+- **From “GlowberryClient”:** CaramelClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
 - **From the older “Chimera Launcher”:** that rename changed the package id, so Android will not offer an in-place update and the old app's private settings are not reachable. Export them from the old app (**Settings → Backup & Restore → Export**) and import them here. Account credentials and API keys are never included in the export.
 
 </details>
@@ -141,11 +141,11 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 
 ## Project status & compatibility
 
-GlowberryClient is **actively developed**. The table below describes what is reachable on the shipped build; anything that needs a per-build native hook fails closed and says so in-app rather than guessing.
+CaramelClient is **actively developed**. The table below describes what is reachable on the shipped build; anything that needs a per-build native hook fails closed and says so in-app rather than guessing.
 
 | Area | Status |
 |---|---|
-| **App build** | Debug and release APKs from [`main`](https://github.com/ChimeraAnt-DEV/GlowberryClient/commits/main); CI builds a debug APK on every push |
+| **App build** | Debug and release APKs from [`main`](https://github.com/ChimeraAnt-DEV/CaramelClient/commits/main); CI builds a debug APK on every push |
 | **Android** | 9.0 (API 28) → 15; `arm64-v8a` only |
 | **Bedrock versions** | Multi-version instances; a version is refused only when its APK ships no `arm64-v8a` libraries |
 | **Native modding** | Preloader pipeline + `.AntEgg` (native + Lua) |
@@ -154,13 +154,13 @@ GlowberryClient is **actively developed**. The table below describes what is rea
 | **Voice** | LAN multicast by default; optional internet relay |
 | **Java Edition** | **Not supported** — no Java Edition runtime; JavaBridge ports mods instead |
 
-**Where to get updates:** [Releases](https://github.com/ChimeraAnt-DEV/GlowberryClient/releases) for builds (each release carries its SHA-256 checksum), [Actions](https://github.com/ChimeraAnt-DEV/GlowberryClient/actions) for CI artifacts, and the in-app "What's new" dialog for release notes. A more detailed compatibility matrix lives in [`docs/guide/compatibility.md`](docs/guide/compatibility.md).
+**Where to get updates:** [Releases](https://github.com/ChimeraAnt-DEV/CaramelClient/releases) for builds (each release carries its SHA-256 checksum), [Actions](https://github.com/ChimeraAnt-DEV/CaramelClient/actions) for CI artifacts, and the in-app "What's new" dialog for release notes. A more detailed compatibility matrix lives in [`docs/guide/compatibility.md`](docs/guide/compatibility.md).
 
 ---
 
 ## For developers
 
-> Everything below is for building GlowberryClient from source or writing mods against it. If you only want to play, see [Quick start](#quick-start-players).
+> Everything below is for building CaramelClient from source or writing mods against it. If you only want to play, see [Quick start](#quick-start-players).
 
 ### Build from source
 
@@ -168,14 +168,14 @@ GlowberryClient is **actively developed**. The table below describes what is rea
 
 ```bash
 # The native Preloader and LibHttpClient code are git submodules the native build needs.
-git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/GlowberryClient.git
+git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/CaramelClient.git
 # Already cloned without them?
 git submodule update --init --recursive
 ```
 
 Then open the project in Android Studio, let Gradle sync, connect a device (API 28+), and Run.
 
-```bash
+```
 ./gradlew :app:compileDebugJavaWithJavac   # fast Java-only check
 ./gradlew :app:testDebugUnitTest           # JVM unit tests
 ./gradlew :app:assembleDebug               # full APK (native build included)
@@ -183,20 +183,20 @@ Then open the project in Android Studio, let Gradle sync, connect a device (API 
 
 ### Write a mod
 
-- **Preloader API reference** → [`docs/api`](docs/api) (mod, hook, patch, input, memory-hook macros, signature, config, mod-menu)
-- **Full C++ mod example** → [`examples/full-cpp-mod`](examples/full-cpp-mod)
-- **`.AntEgg` template** → [`examples/antegg-template`](examples/antegg-template)
-- **Developer guide** → [`docs/guide/developer.md`](docs/guide/developer.md)
+- **Preloader API reference** → [`docs/api`](https://docs/api) (mod, hook, patch, input, memory-hook macros, signature, config, mod-menu)
+- **Full C++ mod example** → [`examples/full-cpp-mod`](https://examples/full-cpp-mod)
+- **`.AntEgg` template** → [`examples/antegg-template`](https://examples/antegg-template)
+- **Developer guide** → [`docs/guide/developer.md`](https://docs/guide/developer.md)
 
 ### Continuous integration
 
-Every push to `main` and every pull request triggers [`.github/workflows/build.yml`](.github/workflows/build.yml), which checks out **with submodules**, builds a debug APK (JDK 21, Gradle 8.13 via the wrapper), **fails the run if the build breaks**, and uploads the APK as a workflow artifact. Grab it from the latest green **Build Debug APK** run under the **Actions** tab.
+Every push to `main` and every pull request triggers [`.github/workflows/build.yml`](https://.github/workflows/build.yml), which checks out **with submodules**, builds a debug APK (JDK 21, Gradle 8.13 via the wrapper), **fails the run if the build breaks**, and uploads the APK as a workflow artifact. Grab it from the latest green **Build Debug APK** run under the **Actions** tab.
 
 ### Documentation
 
-Full user guide (English and 简体中文), developer docs, and the Preloader API reference live under [`docs/`](docs/) — start at [`docs/index.md`](docs/index.md).
+Full user guide (English and 简体中文), developer docs, and the Preloader API reference live under [`docs/`](https://docs/) — start at [`docs/index.md`](https://docs/index.md).
 
-Project pages: [Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Device compatibility](docs/COMPATIBILITY.md) · [Accessibility](docs/ACCESSIBILITY.md).
+Project pages: [Architecture](https://docs/ARCHITECTURE.md) · [Contributing](https://contributing.md/) · [Security](https://security.md/) · [Device compatibility](https://docs/COMPATIBILITY.md) · [Accessibility](https://docs/ACCESSIBILITY.md).
 
 ---
 
@@ -205,21 +205,27 @@ Project pages: [Architecture](docs/ARCHITECTURE.md) · [Contributing](CONTRIBUTI
 We welcome contributions from the community. To keep the codebase high-quality and collaboration smooth:
 
 ### Code Quality
+
 Write clean, modular code with descriptive names and consistent formatting, following the Kotlin and Java style guidelines established in the project.
 
 ### Commit Structure
+
 Use small, focused commits with clear messages; each should address a single feature or fix. Example: `Fixed memory leak in version manager`.
 
 ### Documentation
+
 Comment complex logic and update relevant docs. If you add a feature, update the README and any related documentation.
 
 ### Performance
+
 Keep additions low-latency. The controller input path and in-game overlays run on the input-to-photon critical path, so keep them allocation-free.
 
 ### Testing
+
 Test on multiple devices and Android versions. Where logic can be isolated from Android and game APIs, add a pure unit test — many subsystems (controller response math, voice protocol, cosmetics, hit projection, mod packaging) are covered this way.
 
 ### Pull Requests
+
 Submit PRs with a detailed description, reference related issues, and include screenshots or video for UI changes.
 
 **Before submitting:** run a full build and test on at least one device. We review contributions promptly.
@@ -229,60 +235,57 @@ Submit PRs with a detailed description, reference related issues, and include sc
 ## Usage Guidelines
 
 ### Permitted Uses
-- Modify GlowberryClient for personal gameplay and to test new features.
+
+- Modify CaramelClient for personal gameplay and to test new features.
 - Create educational content (videos, tutorials, blog posts).
 - Create derivative projects and share them, provided you comply with the Apache License 2.0.
 
 ### Prohibited Uses
-- Do not claim GlowberryClient as your own without crediting the Chimera Team and its contributors.
-- Do not use GlowberryClient to violate Mojang or Microsoft's user agreements.
+
+- Do not claim CaramelClient as your own without crediting the Chimera Team and its contributors.
+- Do not use CaramelClient to violate Mojang or Microsoft's user agreements.
 
 > **Disclaimer:** The authors and contributors are not responsible for bans, damages, or issues arising from the use of this software. Use it at your own risk and in accordance with Minecraft's terms of service.
 
-Full legal details: see the [LICENSE](LICENSE).
+Full legal details: see the LICENSE.
 
 ---
 
 ## Acknowledgements
 
-GlowberryClient is an independent project that stands on the shoulders of the open-source Android and Minecraft modding ecosystems.
+CaramelClient is an independent project that stands on the shoulders of the open-source Android and Minecraft modding ecosystems.
 
-- **Chimera Team** – For designing, building, and maintaining GlowberryClient and providing infrastructure support.
-- **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the GlowberryClient native-modding layer builds upon and adapts as `.AntEgg`.
-- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that GlowberryClient's bundled snapshot is derived from. The rules are a data dependency, not code: `PreloaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](docs/preloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
+- **Chimera Team** – For designing, building, and maintaining CaramelClient and providing infrastructure support.
+- **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the CaramelClient native-modding layer builds upon and adapts as `.AntEgg`.
+- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that CaramelClient's bundled snapshot is derived from. The rules are a data dependency, not code: `PreloaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](https://docs/preloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
 - **Open-Source Bedrock Modding Community** – For the shared knowledge, tooling conventions, and ecosystem research that inform how native modules are packaged, loaded, and kept safe.
 - **Android Community** – For the documentation, libraries, and tools that made this launcher possible.
 - **Open Source Community** – For the libraries, frameworks, and tools that power this project.
-- **Contributors** – Thank you to everyone on the [contributors graph](https://github.com/ChimeraAnt-DEV/GlowberryClient/graphs/contributors).
+- **Contributors** – Thank you to everyone on the [contributors graph](https://github.com/ChimeraAnt-DEV/CaramelClient/graphs/contributors).
 
 ---
 
 ## Contact & Support
 
-| | |
+| ↕▾ | ↕▾ |
 |---|---|
-| **Author / Team** | Chimera Team |
-| **Repository** | [github.com/ChimeraAnt-DEV/GlowberryClient](https://github.com/ChimeraAnt-DEV/GlowberryClient) |
-| **Report an issue** | [GitHub Issues](https://github.com/ChimeraAnt-DEV/GlowberryClient/issues) — templates for bugs, mod questions, and feature requests |
-| **Community support** | [Discord](https://discord.gg/chimeramc) — setup help, crash triage, and modding questions |
-| **Security** | Report privately via [Security Advisories](https://github.com/ChimeraAnt-DEV/GlowberryClient/security/advisories/new) |
+| −**Author / Team** | Chimera Team |
+| −**Repository** | [github.com/ChimeraAnt-DEV/CaramelClient](https://github.com/ChimeraAnt-DEV/CaramelClient) |
+| −**Report an issue** | [GitHub Issues](https://github.com/ChimeraAnt-DEV/CaramelClient/issues) — templates for bugs, mod questions, and feature requests |
+| −**Community support** | [Discord](https://discord.gg/chimeramc) — setup help, crash triage, and modding questions |
+| −**Security** | Report privately via [Security Advisories](https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new) |
+⚙
 
 ---
-
 <div align="center">
-
-<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest"><img src="https://img.shields.io/badge/DOWNLOAD-LATEST%20RELEASE-7E32AA?style=for-the-badge&logo=github&logoColor=white" alt="Download"></a>
+<a href="https://github.com/ChimeraAnt-DEV/CaramelClient/releases/latest"><img src="https://img.shields.io/badge/DOWNLOAD-LATEST%20RELEASE-7E32AA?style=for-the-badge&logo=github&logoColor=white" alt="Download"></a>
 <a href="docs/guide/getting-started.md"><img src="https://img.shields.io/badge/READ-THE%20DOCS-0F5BE4?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"></a>
-<a href="https://github.com/ChimeraAnt-DEV/GlowberryClient/issues/new"><img src="https://img.shields.io/badge/REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
-
-<img src="docs/assets/glowberry_mark.png" alt="GlowberryClient" width="72">
-
-[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg)](https://hub.xerj.org/contributors/ChimeraAnt-DEV)
+<a href="https://github.com/ChimeraAnt-DEV/CaramelClient/issues/new"><img src="https://img.shields.io/badge/REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
+<img src="https://raw.githubusercontent.com/Lynxifyy/CaramelClient-APP-ICON-BANNER-/main/caramel_apple_icon_512.png" alt="CaramelClient" width="72">
+[https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg](https://hub.xerj.org/contributors/ChimeraAnt-DEV)
 
 **Made by the Chimera Team Community**
 
 <sub>Licensed under the Apache License 2.0.</sub>
 <sub>This account is shared among the 20 members of the Official ChimeraTeam.</sub>
-
 </div>
-
