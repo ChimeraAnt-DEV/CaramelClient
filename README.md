@@ -260,7 +260,7 @@ CaramelClient is an independent project that stands on the shoulders of the open
 | −**Author / Team** | Chimera Team |
 | −**Repository** | [github.com/ChimeraAnt-DEV/CaramelClient](https://github.com/ChimeraAnt-DEV/CaramelClient) |
 | −**Report an issue** | [GitHub Issues](https://github.com/ChimeraAnt-DEV/CaramelClient/issues) — templates for bugs, mod questions, and feature requests |
-| −**Community support** | [Discord](https://discord.gg/chimeramc) — setup help, crash triage, and modding questions |
+| −**Community support** | [Discord](https://discord.gg/qAKpyKM3GP) — setup help, crash triage, and modding questions |
 | −**Security** | Report privately via [Security Advisories](https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new) |
 ⚙
 
