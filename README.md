@@ -266,15 +266,17 @@ CaramelClient is an independent project that stands on the shoulders of the open
 
 ---
 <div align="center">
+<img src="https://raw.githubusercontent.com/Lynxifyy/CaramelClient-APP-ICON-BANNER-/main/caramel_apple_icon_512.png" alt="CaramelClient" width="72">
+<br><br>
 <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/releases/latest"><img src="https://img.shields.io/badge/DOWNLOAD-LATEST%20RELEASE-7E32AA?style=for-the-badge&logo=github&logoColor=white" alt="Download"></a>
 <a href="docs/guide/getting-started.md"><img src="https://img.shields.io/badge/READ-THE%20DOCS-0F5BE4?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Docs"></a>
 <a href="https://github.com/ChimeraAnt-DEV/CaramelClient/issues/new"><img src="https://img.shields.io/badge/REPORT-A%20BUG-FF5C5C?style=for-the-badge&logo=github&logoColor=white" alt="Report a bug"></a>
-<img src="https://raw.githubusercontent.com/Lynxifyy/CaramelClient-APP-ICON-BANNER-/main/caramel_apple_icon_512.png" alt="CaramelClient" width="72">
-[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg)](https://hub.xerj.org/contributors/ChimeraAnt-DEV)
-
-
-**Made by the Chimera Team Community**
-
+<br><br>
+<a href="https://hub.xerj.org/contributors/ChimeraAnt-DEV"><img src="https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg" alt="XERJ Corpus Hub contributor"></a>
+<br><br>
+<b>Made by the Chimera Team Community</b>
+<br>
 <sub>Licensed under the Apache License 2.0.</sub>
+<br>
 <sub>This account is shared among the 20 members of the Official ChimeraTeam.</sub>
 </div>
