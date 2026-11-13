@@ -79,6 +79,8 @@ class ConnectionManager(
     private val netherNet: NetherNetTransport,
     private val rakNet: RakNetJoiner,
     private val joinTimeoutMs: Long = 45_000L,
+    /** Where the join records what it did, for the diagnostics screen. */
+    private val diagnostics: ConnectionDiagnostics = ConnectionDiagnostics(),
 ) {
 
     private val inFlight = Mutex()
@@ -106,8 +108,10 @@ class ConnectionManager(
         }
         if (!started) {
             AppLog.warn(TAG, "a join was requested while one was in flight; refusing")
+            diagnostics.record("connecting", "a join was requested while one was in flight", failure = true)
             return JoinOutcome.AlreadyInFlight
         }
+        diagnostics.record("connecting", "join requested: ${target::class.simpleName}")
 
         return try {
             withTimeout(joinTimeoutMs) {
@@ -117,10 +121,12 @@ class ConnectionManager(
             // The overall budget elapsed even though every step had its own; report it as the step
             // that was in flight rather than as a bare timeout, so the copy is actionable.
             val error = NetherNetError.Timeout(machine.state.value.name)
+            diagnostics.record(error)
             failQuietly(error)
             JoinOutcome.Failed(error)
         } catch (e: Exception) {
             val error = NetherNetError.Unknown("connecting", e::class.java.simpleName)
+            diagnostics.record(error)
             failQuietly(error)
             JoinOutcome.Failed(error)
         } finally {
@@ -132,6 +138,7 @@ class ConnectionManager(
         return when (target) {
             is JoinTarget.NetherNet -> {
                 if (!netherNet.isAvailable) {
+                    diagnostics.record("connecting", "the native transport is not present", failure = true)
                     // No native transport in this build. That is not a failure of the join: fall
                     // back to the direct path when there is one, and report honestly when not.
                     val error = NetherNetError.netherNetUnavailable()
@@ -139,6 +146,7 @@ class ConnectionManager(
                     return JoinOutcome.Failed(error)
                 }
                 val started = netherNet.connect(target.signalingUrl, target.networkId)
+                diagnostics.record("connecting", "native connect returned $started")
                 if (!started) {
                     val error = NetherNetError.Network("connecting", "the transport refused")
                     failQuietly(error)
@@ -150,6 +158,7 @@ class ConnectionManager(
             }
 
             is JoinTarget.Direct -> {
+                diagnostics.record("resolving the server", "opening the direct path")
                 val ok = rakNet.open(target.host, target.port)
                 if (!ok) {
                     // Nothing opened, so there is nothing to close; closing anyway would be a lie the
@@ -174,6 +183,7 @@ class ConnectionManager(
                     failQuietly(error)
                     return JoinOutcome.Failed(error)
                 }
+                diagnostics.record("connecting", "the direct path is open")
                 JoinOutcome.Opened(Transport.RAKNET)
             }
         }
@@ -212,7 +222,10 @@ class ConnectionManager(
      * once is normal when a join is being torn down, and the first reason is the one worth keeping.
      */
     private suspend fun failQuietly(error: NetherNetError) {
-        if (machine.state.value.isTerminal) return
+        if (machine.state.value.isTerminal) {
+            diagnostics.record("connecting", "a second failure was dropped: ${error.step}", failure = true)
+            return
+        }
         runCatching { machine.fail(error) }.onFailure {
             AppLog.warn(TAG, "the connection state refused the failure report", it)
         }
@@ -250,6 +263,7 @@ class ConnectionManager(
         activeJob = null
         runCatching { netherNet.disconnect() }
         runCatching { rakNet.close() }
+        diagnostics.record("connecting", "cancel requested")
         runCatching {
             val current = machine.state.value
             when {

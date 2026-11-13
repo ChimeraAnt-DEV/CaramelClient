@@ -67,11 +67,32 @@ class ConnectionManagerTest {
         native: FakeTransport = FakeTransport(),
         rakNet: FakeRakNet = FakeRakNet(),
         timeoutMs: Long = 5_000L,
+        diagnostics: ConnectionDiagnostics = ConnectionDiagnostics(),
     ): Triple<ConnectionManager, ConnectionStateMachine, Pair<FakeTransport, FakeRakNet>> {
         val machine = ConnectionStateMachine(scope)
         val transport = NetherNetTransport(machine, scope, native = native, pollIntervalMs = 1L)
-        val manager = ConnectionManager(machine, scope, transport, rakNet, joinTimeoutMs = timeoutMs)
+        val manager = ConnectionManager(
+            machine,
+            scope,
+            transport,
+            rakNet,
+            joinTimeoutMs = timeoutMs,
+            diagnostics = diagnostics,
+        )
         return Triple(manager, machine, native to rakNet)
+    }
+
+    @Test
+    fun `the join records what it did, and a signalling url never lands in the buffer`() = runTest {
+        val diagnostics = ConnectionDiagnostics()
+        val (manager, machine, _) = manager(backgroundScope, diagnostics = diagnostics)
+        machine.armAuthComplete()
+        // A URL that carries a token in its query, which is exactly the shape that must not be kept.
+        manager.join(JoinTarget.NetherNet("wss://signal.example/ws?token=eyJhbGciOiJIUzI1NiJ9.secret", "1"))
+        val text = diagnostics.asText()
+        assertTrue("the join must record something", text.isNotEmpty())
+        assertFalse("a token from the url reached the buffer", text.contains("eyJhbGciOiJIUzI1NiJ9"))
+        assertFalse("the url reached the buffer", text.contains("signal.example"))
     }
 
     /**
