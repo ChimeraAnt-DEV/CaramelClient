@@ -418,7 +418,8 @@ tasks.matching { it.name == 'preBuild' }.configureEach {
 def rustWorkspaceDir = layout.projectDirectory.dir('src/main/cpp/sweetloader/rust')
 def rustJniLibsDir = layout.projectDirectory.dir('src/main/jniLibs/arm64-v8a')
 def rustPackages = [['universe-jni', 'libcaramel_universe.so'],
-                    ['singularity-jni', 'libcaramel_singularity.so']]
+                    ['singularity-jni', 'libcaramel_singularity.so'],
+                    ['nethernet-jni', 'libsweetloader_nethernet.so']]
 
 def buildRustEngine = tasks.register('buildRustEngine') {
     description = 'Cross-compiles the .universe/.singularity Rust cdylibs for arm64-v8a.'

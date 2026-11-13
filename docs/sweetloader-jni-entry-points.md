@@ -23,16 +23,19 @@ Column meanings:
 | `org.chimeramc.client.preloader.PreloaderInput` | `src/pl/SweetLoader.cpp` | 2 |
 | `org.chimeramc.client.universe.UniverseLoader` | `rust/universe-jni/src/lib.rs` | 8 |
 | `org.chimeramc.client.singularity.SingularityEngine` | `rust/singularity-jni/src/lib.rs` | 6 |
+| `org.chimeramc.client.core.nethernet.NativeNetherNet` | `rust/nethernet-jni/src/lib.rs` | 14 |
 |  | `src/pl/cosmetics/animation/AnimationJni.cpp` | 1 |
 |  | `src/pl/cosmetics/network/CosmeticSyncJni.cpp` | 3 |
 |  | `src/pl/runtime/GameCosmeticsJni.cpp` | 48 |
 |  | `src/pl/runtime/InputJni.cpp` | 19 |
 |  | `src/pl/runtime/OptifineJni.cpp` | 8 |
 
-Total: **133 exports** across **8 owner classes**.
+Total: **147 exports** across **9 owner classes**.
 
-The two `rust/…-jni` rows are the `.universe` / `.singularity` loader cdylibs. Their exports are
-Rust (`#[no_mangle] … fn Java_org_chimeramc_client_…`), not C++; `scanCppExports` walks `.rs` files
+The `rust/…-jni` rows are the native cdylibs: the `.universe` loader (`libcaramel_universe.so`), the
+`.singularity` engine (`libcaramel_singularity.so`) and the NetherNet transport
+(`libsweetloader_nethernet.so`). Their exports are Rust
+(`#[no_mangle] … fn Java_org_chimeramc_client_…`), not C++; `scanCppExports` walks `.rs` files
 alongside `.cpp`/`.h` so the parity check covers both halves of the JNI surface.
 
 ## Thread rules

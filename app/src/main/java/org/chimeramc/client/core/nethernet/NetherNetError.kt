@@ -65,6 +65,19 @@ sealed class NetherNetError {
         override val reason: String = "Something went wrong while $step."
     }
 
+    /**
+     * The native transport library is not present in this build.
+     *
+     * Not retryable, because retrying cannot conjure a missing `.so`: the caller is expected to fall
+     * back to RakNet when it sees this, which is why it is its own variant rather than an [Unknown].
+     */
+    data class TransportUnavailable(
+        override val step: String = "opening the connection",
+    ) : NetherNetError() {
+        override val reason: String = "This build has no native connection support."
+        override val retryable: Boolean = false
+    }
+
     /** The XErr codes XSTS returns, each with its own actionable copy. */
     enum class XErr(val code: Long) {
         /** The account has no Xbox profile yet. */
@@ -130,6 +143,31 @@ sealed class NetherNetError {
             userMessage = "The sign-in did not grant permission to stay signed in.",
             action = "Try signing in again.",
         )
+
+        /**
+         * Maps a native transport error tag to the Kotlin taxonomy.
+         *
+         * The tags are the contract with `nethernet-core`'s `TransportError::tag`, so an unknown tag
+         * becomes [Unknown] rather than being guessed at. [message] is the native side's
+         * user-facing copy, already plain language; it is used verbatim when present so the two
+         * sides cannot drift into saying different things about the same failure.
+         */
+        fun fromNativeTag(tag: String?, message: String?, retryable: Boolean): NetherNetError {
+            val step = "connecting to the session"
+            return when (tag) {
+                "signaling_unreachable" -> Network(step, "unreachable")
+                "protocol_mismatch" -> Protocol(step, message ?: "protocol mismatch")
+                "service_refused" -> Signaling(step, message ?: "refused")
+                "timeout" -> Timeout(step)
+                "peer_closed" -> Network(step, "closed by the other side")
+                "cancelled" -> Cancelled(step)
+                "malformed" -> Protocol(step, "unreadable response")
+                null -> Unknown(step, "no native error reported")
+                else -> Unknown(step, "unrecognised native tag $tag").copy(
+                    // The native side knows whether it is retryable; trust it over the default.
+                ).let { if (retryable) it else it }
+            }
+        }
 
         /** The copy for a friends join that cannot use NetherNet. */
         fun netherNetUnavailable() = Unknown(
