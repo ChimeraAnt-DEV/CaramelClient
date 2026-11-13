@@ -66,7 +66,7 @@ class ConnectionDiagnostics(
     }
 
     /** A snapshot of the buffer, oldest first. */
-    fun snapshot(): List<Entry> = synchronized(lock) { entries.toList() }
+    fun snapshot(): List<Entry> = synchronized(lock) { ArrayList(entries) }
 
     /** The entries as newline-separated text, for a diagnostics report. */
     fun asText(): String = snapshot().joinToString("\n") { entry ->
