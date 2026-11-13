@@ -11,6 +11,7 @@ and one run.
       +-- drawable-<density>/ic_launcher_mono.png         the themed-icon silhouette
       +-- mipmap-<density>/ic_launcher.png                the legacy square icon
       +-- drawable/ic_launcher_background.xml             the background gradient
+      +-- docs/public/appicon.png                         the docs site favicon and nav logo
 
 Two things about the adaptive layers are deliberate:
 
@@ -38,6 +39,11 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RES = ROOT / "app/src/main/res"
 DEFAULT_SOURCE = ROOT / "resources/branding/app_icon_512.png"
+# The docs site favicon and nav logo. It is the same brand mark as the launcher icon, so it is
+# generated here too: left alone it kept a previous mark and the docs site wore a different logo
+# from the app.
+DOCS_ICON = ROOT / "docs/public/appicon.png"
+DOCS_ICON_SIZE = 512
 
 # density folder -> scale factor. `mdpi` is 1x; the icon is 48dp square and the adaptive canvas is
 # 108dp, per the platform spec.
@@ -222,6 +228,17 @@ def main() -> int:
     else:
         xml_path.write_text(xml, encoding="utf-8")
         written.append(str(xml_path.relative_to(ROOT)))
+
+    docs_icon = legacy_icon(art, DOCS_ICON_SIZE)
+    if args.check:
+        if not DOCS_ICON.is_file():
+            problems.append(f"{DOCS_ICON.relative_to(ROOT)} is missing")
+        elif Image.open(DOCS_ICON).convert("RGBA").tobytes() != docs_icon.tobytes():
+            problems.append(f"{DOCS_ICON.relative_to(ROOT)} is stale; regenerate")
+    else:
+        DOCS_ICON.parent.mkdir(parents=True, exist_ok=True)
+        docs_icon.save(DOCS_ICON, optimize=True)
+        written.append(str(DOCS_ICON.relative_to(ROOT)))
 
     if problems:
         print("launcher icon set is not sound:")

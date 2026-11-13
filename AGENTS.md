@@ -91,6 +91,7 @@ file is missing from the index.
 - [Default Optifine cape (`CosmeticCatalog` + `CosmeticStore`)](docs/agents/default-optifine-cape.md)
 - [Gyro and Offhand modules](docs/agents/gyro-and-offhand-modules.md)
 - [Launcher UI (nav indicator, hero pulse)](docs/agents/launcher-ui.md)
+- [UI pack review (Lynxifyy/CaramelClient-UI-pack; Compose Desktop, reference only)](docs/agents/ui-pack-review.md)
 - [Firework touch effect](docs/agents/firework-touch-effect.md)
 - [Native cosmetics seams тАФ verified offsets (1.26.60.28 arm64-v8a)](docs/agents/native-cosmetics-seams-verified-offsets.md)
 - [Native cosmetics pipeline (sweetloader `pl::cosmetics` + `pl::hooks`)](docs/agents/native-cosmetics-pipeline.md)
