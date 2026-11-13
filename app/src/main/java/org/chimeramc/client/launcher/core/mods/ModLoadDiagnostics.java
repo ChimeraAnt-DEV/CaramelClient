@@ -28,7 +28,7 @@ import java.util.Locale;
 public final class ModLoadDiagnostics {
 
     private static final String TAG = "ModLoadDiagnostics";
-    private static final String RESOURCE_DIR = "resources/preloader";
+    private static final String RESOURCE_DIR = "resources/sweetloader";
     private static final String FILE_NAME = "mod_load_diagnostics.txt";
     private static final int MAX_RECORDS = 25;
     private static final char SEPARATOR = '\t';

@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * The preloader-hook availability table.
+ * The sweetloader-hook availability table.
  *
  * <p>A hook that did not resolve must read as not live, never as "unknown-but-try-it": a feature
  * that calls into a missing hook draws nothing, which is the exact ambiguity this table removes. The
@@ -29,7 +29,7 @@ public class HookAvailabilityTest {
         for (HookAvailability.Hook hook : HookAvailability.Hook.values()) {
             assertFalse(hook.id(), HookAvailability.isLive(hook));
         }
-        assertTrue(HookAvailability.summary(), HookAvailability.summary().contains("no preloader hook"));
+        assertTrue(HookAvailability.summary(), HookAvailability.summary().contains("no sweetloader hook"));
     }
 
     @Test

@@ -113,18 +113,18 @@ bool FullCppMod::load() {
 ## SDK 依赖
 
 独立 Android native mod 工程使用 `FetchContent` 引入 `preloader-android`，
-并把自己的 mod library 链接到 `preloader` target：
+并把自己的 mod library 链接到 `sweetloader` target：
 
 ```cmake
 include(FetchContent)
 
 FetchContent_Declare(
-    preloader_android
+    sweetloader_android
     GIT_REPOSITORY https://github.com/ChimeraAnt-DEV/preloader-android.git
     GIT_TAG 0.2.2)
-FetchContent_MakeAvailable(preloader_android)
+FetchContent_MakeAvailable(sweetloader_android)
 
-target_link_libraries(my_mod PRIVATE preloader)
+target_link_libraries(my_mod PRIVATE sweetloader)
 ```
 
 实际项目应把 `GIT_TAG` 固定到 release tag，避免构建结果漂移。
@@ -241,7 +241,7 @@ void submitLogoOverlay() {
 ## 检查清单
 
 - native mod 目标 ABI 为 `arm64-v8a`。
-- 链接 `preloader` target，并只使用 `include/pl` 下的公开 SDK 头文件。
+- 链接 `sweetloader` target，并只使用 `include/pl` 下的公开 SDK 头文件。
 - 使用 `PL_REGISTER_MOD` 注册一个长期存活对象。
 - 从 `ll::mod::NativeMod::current()` 保存 `ll::mod::NativeMod &mSelf`。
 - 注册运行期 UI 前先加载配置。

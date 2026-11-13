@@ -10,7 +10,7 @@ import android.view.MotionEvent;
  * {@code PreloaderInput} — a JNI symbol is resolved from the declaring class, so moving a
  * {@code native} method would break the binding.
  *
- * <p>Why the state machine exists at all: the preloader may claim a mouse button, and once it has,
+ * <p>Why the state machine exists at all: the sweetloader may claim a mouse button, and once it has,
  * the launcher must keep treating that button's release and the pointer stream that follows as
  * consumed, even though the native call no longer reports consumption. Otherwise a click the game
  * handled would also be delivered as a UI tap. The rules are:

@@ -25,8 +25,8 @@ import org.junit.Test;
  * the debug build never shows it.
  *
  * <p>This is not hypothetical: {@code app/proguard-rules.pro} kept
- * {@code org.chimeramc.client.launcher.preloader.**}, but the preloader bridge's package declaration
- * is {@code org.chimeramc.client.preloader} (the files sit in a {@code launcher/preloader/}
+ * {@code org.chimeramc.client.launcher.sweetloader.**}, but the sweetloader bridge's package declaration
+ * is {@code org.chimeramc.client.preloader} (the files sit in a {@code launcher/sweetloader/}
  * directory, but the directory segment is not part of the name). The rule matched nothing.
  *
  * <p>The scan reads the real {@code proguard-rules.pro} and the real source tree, so a package that
@@ -44,8 +44,7 @@ public class ProguardKeepRulesTest {
     private static final List<String> REQUIRED_KEEPS = List.of(
             "org.chimeramc.client.preloader",
             "org.chimeramc.client.core.jni",
-            "io.bambosan.mbloader.launcherUtils",
-            "org.chimeramc.client.core.antegg");
+            "io.bambosan.mbloader.launcherUtils");
 
     private static final Pattern KEEP_CLASS =
             Pattern.compile("^\\s*-keep\\s+class\\s+([\\w.$*]+)", Pattern.MULTILINE);

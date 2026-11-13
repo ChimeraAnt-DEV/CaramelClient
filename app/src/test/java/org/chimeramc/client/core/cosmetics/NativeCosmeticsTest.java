@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * The native cosmetics bridge's pure parts: the key rule, the channel/geometry pairing, and the
  * fail-closed behaviour when the native library is absent (the JVM test classpath has no
- * libpreloader, so every call must degrade rather than throw).
+ * libsweetloader, so every call must degrade rather than throw).
  */
 public class NativeCosmeticsTest {
 

@@ -111,23 +111,6 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/misans" />
 
-            <Button
-                android:id="@+id/javabridge_fullscreen_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:minWidth="0dp"
-                android:backgroundTint="@color/secondary"
-                android:text="@string/javabridge_title"
-                android:textColor="@color/on_secondary"
-                android:paddingHorizontal="@dimen/space_4"
-                android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Caramel.Label"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:gravity="center"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/misans" />
 
             <Button
                 android:id="@+id/mod_hub_fullscreen_button"
@@ -147,23 +130,6 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/misans" />
 
-            <Button
-                android:id="@+id/script_manager_fullscreen_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:minWidth="0dp"
-                android:backgroundTint="@color/secondary"
-                android:text="@string/script_manager_open"
-                android:textColor="@color/on_secondary"
-                android:paddingHorizontal="@dimen/space_4"
-                android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Caramel.Label"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:gravity="center"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/misans" />
 
             <Button
                 android:id="@+id/add_mod_fullscreen_button"

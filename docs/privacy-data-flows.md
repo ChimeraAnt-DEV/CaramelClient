@@ -27,13 +27,13 @@ action you take or is a check you can turn off.
 - **Where.** `api.github.com/repos/ChimeraAnt-DEV/CaramelClient/releases/latest`.
 - **Turn off.** Disable the update check in Settings; the app then never calls the API.
 
-## Preloader signature rules
+## SweetLoader signature rules
 
 - **When.** On launcher start, to keep the native hook rules current.
 - **Sends.** A plain `GET` for the rules file.
 - **Receives.** A signed JSON rule set. The signature is verified before the rules are used, so a
   tampered file is rejected and the bundled offline snapshot is kept instead.
-- **Where.** `raw.githubusercontent.com/ChimeraAnt-DEV/CaramelClient/main/resources/preloader/`.
+- **Where.** `raw.githubusercontent.com/ChimeraAnt-DEV/CaramelClient/main/resources/sweetloader/`.
 
 ## Package mirror (Installations tab)
 

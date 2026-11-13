@@ -34,7 +34,7 @@ features:
   - title: 快速启动
     details: 使用 URI 操作直接打开指定游戏页面、连接服务器或加载本地世界。
   - title: Native Mod 支持
-    details: 开发者可以通过 Preloader API 加载 native SO 模块、接收输入回调、安装 hook 并应用 patch。
+    details: 开发者可以通过 SweetLoader API 加载 native SO 模块、接收输入回调、安装 hook 并应用 patch。
 ---
 
 ::: tip Need English documentation?
@@ -45,7 +45,7 @@ Use the language selector or open [English](/).
 
 CaramelClient 是一个开源 Android Minecraft 基岩版启动器。本文档优先讲清楚启动器本身：如何安装、准备官方 Minecraft、管理版本、启动游戏、整理玩家内容，以及如何处理兼容性问题。
 
-Preloader API 仍然保留在本站，但它属于“开发者”分类，不再是文档的主入口。
+SweetLoader API 仍然保留在本站，但它属于“开发者”分类，不再是文档的主入口。
 
 ## 推荐阅读顺序
 
@@ -53,4 +53,4 @@ Preloader API 仍然保留在本站，但它属于“开发者”分类，不再
 2. [功能概览](/zh-CN/guide/features)
 3. [兼容性与常见问题](/zh-CN/guide/compatibility)
 4. [Native Mod 快速开始](/zh-CN/guide/developer)
-5. [Preloader API 参考](/zh-CN/api/mod)
+5. [SweetLoader API 参考](/zh-CN/api/mod)

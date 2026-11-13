@@ -33,7 +33,7 @@ import java.util.List;
  * drawn board, the rebindable actions and the pointer settings are reachable from the launcher's
  * Mods screen too. The bind capture goes through {@link MenuBindRelay}, the one sink the game
  * activity feeds at the top of {@code dispatchKeyEvent}, so a captured press is never swallowed by
- * the preloader first.
+ * the sweetloader first.
  */
 final class ModMenuKeyboardSection {
 

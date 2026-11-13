@@ -12,7 +12,7 @@ import org.chimeramc.client.preloader.PreloaderInput;
  * The engine-backed provider for {@link GameSkinSource}: reads the player's real Minecraft skin from
  * the running game and hands it to the preview.
  *
- * <p>The native side captures the skin at the engine's image-loader seam (see the preloader's
+ * <p>The native side captures the skin at the engine's image-loader seam (see the sweetloader's
  * {@code mce_image_hook}), where the game hands over the source bytes of every image it builds,
  * including the player's base skin. {@link PreloaderInput#nativeReadCapturedSkin()} returns those
  * bytes with a small header; this class decodes them (a PNG, or raw RGBA8) and normalises to the

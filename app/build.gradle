@@ -112,13 +112,13 @@ static def getVersionCodeByTimestamp() {
     return diff.toInteger()
 }
 
-// G6: stale-stub trap guard. The native build compiles the preloader and libHttpClient git
+// G6: stale-stub trap guard. The native build compiles the sweetloader and libHttpClient git
 // submodules. If they were never checked out (a shallow clone / a zip download), the extracted
 // directory is empty or holds a leftover stub, and CMake either fails with a confusing error or
 // silently builds against a stale native output. Fail fast here with the fix instead of letting a
 // broken assembly reach the APK.
 def requiredSubmoduleCmake = [
-        new File("${projectDir}/src/main/cpp/preloader/CMakeLists.txt"),
+        new File("${projectDir}/src/main/cpp/sweetloader/CMakeLists.txt"),
         new File("${projectDir}/src/main/cpp/libHttpClient/Build/libHttpClient.Android/CMakeLists.txt"),
 ]
 
@@ -234,13 +234,13 @@ android {
             buildConfigField "boolean", "IS_BETA", "false"
             externalNativeBuild {
                 cmake {
-                    // Item 388: the preloader times each post-render callback and names one that
-                    // overruns, but only when this define is present. It is a preloader-specific
+                    // Item 388: the sweetloader times each post-render callback and names one that
+                    // overruns, but only when this define is present. It is a sweetloader-specific
                     // define rather than NDEBUG because the NDK toolchain defines NDEBUG for this
                     // build type too (AGP configures CMake as RelWithDebInfo), so NDEBUG cannot
                     // express "a debug build". Release and beta omit it, so the shipped detour
                     // carries neither the clock read nor the branch.
-                    arguments "-DANDROID_STL=c++_shared", "-DPRELOADER_HOOK_TIMING=1"
+                    arguments "-DANDROID_STL=c++_shared", "-DSWEETLOADER_HOOK_TIMING=1"
                 }
             }
         }
@@ -256,7 +256,7 @@ android {
     }
     packagingOptions {
         // Item 9: legacy packaging extracts the .so files to the app's lib dir on install, which
-        // the launcher's own extractor and the preloader's file-based hooks rely on. Re-check
+        // the launcher's own extractor and the sweetloader's file-based hooks rely on. Re-check
         // before turning this off.
         jniLibs.useLegacyPackaging = true
         resources.excludes += [

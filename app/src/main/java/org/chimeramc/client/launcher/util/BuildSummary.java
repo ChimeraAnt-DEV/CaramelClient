@@ -40,7 +40,7 @@ public final class BuildSummary {
     }
 
     /**
-     * The native-library status line: the preloader ABI the client expects and the one it found.
+     * The native-library status line: the sweetloader ABI the client expects and the one it found.
      *
      * <p>Reports the actual numbers rather than only "ok"/"not ok", because "which ABI did it load"
      * is the question a report needs answered, and a bare "mismatch" cannot distinguish a missing

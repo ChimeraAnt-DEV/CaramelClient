@@ -31,7 +31,7 @@ import org.chimeramc.client.ui.compose.theme.GlowDimens
 import org.chimeramc.client.ui.compose.theme.glowColors
 
 /**
- * The Launch tab's quick-toggle row: AntEgg, Voice and Replays, as navy cards with a filled icon, a
+ * The Launch tab's quick-toggle row: Mods and Voice, as navy cards with a filled icon, a
  * label and a live status line.
  *
  * <p>The cards and their statuses come from [LaunchToggleState], so the row is a pure function of the
@@ -97,7 +97,7 @@ private fun ToggleCard(
 
 /** A filled icon per card: a plugin for packs, a mic for voice, a camera for replays. */
 private fun iconFor(kind: LaunchToggleState.Kind): ImageVector = when (kind) {
-    LaunchToggleState.Kind.ANTEGG -> Icons.Filled.Extension
+    LaunchToggleState.Kind.MODS -> Icons.Filled.Extension
     LaunchToggleState.Kind.VOICE -> Icons.Filled.Mic
     LaunchToggleState.Kind.REPLAY -> Icons.Filled.Videocam
 }
@@ -107,7 +107,7 @@ private fun iconFor(kind: LaunchToggleState.Kind): ImageVector = when (kind) {
 private fun tintFor(kind: LaunchToggleState.Kind): Color {
     val colors = glowColors
     return when (kind) {
-        LaunchToggleState.Kind.ANTEGG -> colors.snowBlueDeep
+        LaunchToggleState.Kind.MODS -> colors.snowBlueDeep
         LaunchToggleState.Kind.VOICE -> colors.snowBlue
         LaunchToggleState.Kind.REPLAY -> colors.success
     }

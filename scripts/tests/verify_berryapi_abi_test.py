@@ -25,7 +25,7 @@ def run_tests() -> int:
     data = lib.read_bytes()
 
     # 2. Every required symbol resolves, and the seam ABI immediate decodes to the
-    #    value the preloader mirror targets.
+    #    value the sweetloader mirror targets.
     defined = {name for name, value in v._dynamic_symbols(data) if value != 0}
     for names in v.REQUIRED_SYMBOLS.values():
         for name in names:
@@ -33,7 +33,7 @@ def run_tests() -> int:
     fn_off = v._find_function(data, "BERRY_WorldSeamAbiVersion")
     assert fn_off is not None, "BERRY_WorldSeamAbiVersion code not found"
     assert v._seam_abi_immediate(data, fn_off) == v.EXPECTED_SEAM_ABI, \
-        "the bundled library's seam ABI must equal the preloader mirror's"
+        "the bundled library's seam ABI must equal the sweetloader mirror's"
 
     # 3. Renaming a required symbol in the string table makes the check fail, which
     #    is the regression this verifier exists to catch.
@@ -57,12 +57,12 @@ def run_tests() -> int:
     # 5. The core entry points return `int`, not C++ `bool`. BerryAPI's header documents this: a
     #    1-byte bool return leaves the upper result-register bytes undefined, so a caller that
     #    declared `bool (*)()` could read a true as false and report "not attached" on a live
-    #    runtime. The preloader must resolve them as int-returning pointers.
-    bridge = (v.ROOT / "app/src/main/cpp/preloader/src/pl/runtime/BerryApiBridge.cpp").read_text()
+    #    runtime. The sweetloader must resolve them as int-returning pointers.
+    bridge = (v.ROOT / "app/src/main/cpp/sweetloader/src/pl/runtime/BerryApiBridge.cpp").read_text()
     assert "using InjectFn = int (*)();" in bridge, \
-        "BERRY_Inject returns int; the preloader must not resolve it as bool"
+        "BERRY_Inject returns int; the sweetloader must not resolve it as bool"
     assert "using IsAttachedFn = int (*)();" in bridge, \
-        "BERRY_IsAttached returns int; the preloader must not resolve it as bool"
+        "BERRY_IsAttached returns int; the sweetloader must not resolve it as bool"
 
     print("verify_berryapi_abi_test: OK")
     return 0

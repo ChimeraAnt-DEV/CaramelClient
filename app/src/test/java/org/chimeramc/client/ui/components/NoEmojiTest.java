@@ -174,10 +174,10 @@ public class NoEmojiTest {
                         .forEach(out::add);
             }
         }
-        // The preloader's own docs ship with the submodule and are read by contributors.
-        Path preloaderDocs = resolve("app/src/main/cpp/preloader/docs");
-        if (Files.exists(preloaderDocs)) {
-            try (Stream<Path> walk = Files.walk(preloaderDocs)) {
+        // The sweetloader's own docs ship with the submodule and are read by contributors.
+        Path sweetloaderDocs = resolve("app/src/main/cpp/sweetloader/docs");
+        if (Files.exists(sweetloaderDocs)) {
+            try (Stream<Path> walk = Files.walk(sweetloaderDocs)) {
                 walk.filter(Files::isRegularFile)
                         .filter(p -> p.toString().endsWith(".md"))
                         .forEach(out::add);

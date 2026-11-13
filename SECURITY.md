@@ -32,7 +32,7 @@ issue is already public.
 ## Supported versions
 
 Security fixes are made on the current release and shipped in the next one. We do not back-port to
-older releases; the app's own update check will offer the fixed build. The preloader runtime is
+older releases; the app's own update check will offer the fixed build. The sweetloader runtime is
 versioned with the app, so a fix there reaches users through the same update.
 
 ## Scope
@@ -40,7 +40,7 @@ versioned with the app, so a fix there reaches users through the same update.
 In scope:
 
 - The launcher app (`org.chimeramc.client`).
-- The preloader runtime (`app/src/main/cpp/preloader`).
+- The sweetloader runtime (`app/src/main/cpp/sweetloader`).
 - The bundled BerryAPI runtime and the voice/cosmetics relay protocol.
 - The relay server (`server/voice-relay`) and its token format.
 

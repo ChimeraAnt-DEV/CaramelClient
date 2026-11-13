@@ -12,7 +12,7 @@ import java.util.TreeSet;
  *
  * <p>This exists because both directions have silently broken this project before: a Java method with
  * no export throws {@link UnsatisfiedLinkError} at the call site, and a C++ export whose mangled name
- * no longer matches its Java class (the {@code launcher_preloader} rename) resolves nothing while the
+ * no longer matches its Java class (the {@code launcher_sweetloader} rename) resolves nothing while the
  * error is swallowed by a fail-closed wrapper — so the feature is dead with no crash to point at it.
  *
  * <p>The comparison is deliberately <b>pure</b>: it takes the two sets of names as strings, so a unit
@@ -24,10 +24,10 @@ import java.util.TreeSet;
  * <p>The Java allowlist is for methods whose native implementation lives in a <em>prebuilt</em>
  * library with no source in this repository (the {@code libmtbinloader2.so} bindings). Those cannot
  * be checked here and are excluded from the Java-side check; the C++-side check still covers every
- * export in the preloader source.
+ * export in the sweetloader source.
  *
- * <p>The C++ allowlist is for the reverse case: an export in the preloader that no longer has a Java
- * declaration because the declaring class was removed, where the preloader lives in a separate
+ * <p>The C++ allowlist is for the reverse case: an export in the sweetloader that no longer has a Java
+ * declaration because the declaring class was removed, where the sweetloader lives in a separate
  * repository and its removal ships on its own schedule. An entry here is a promise that the export
  * is dead, not a way to silence a real mismatch.
  */
@@ -115,7 +115,7 @@ public final class JniBindingParity {
         for (String java : javaBases) {
             if (!cppBases.contains(java)) {
                 problems.add(new Problem("missing-export", java,
-                        "declared native but no JNI export in the preloader source"));
+                        "declared native but no JNI export in the sweetloader source"));
             }
         }
         for (String cpp : cppBases) {

@@ -7,7 +7,7 @@ import android.content.Context;
  * running game, rather than an imported file or the built-in Steve.
  *
  * <p>The intended native route is an engine hook on the local player: the client already latches the
- * live {@code LocalPlayer} (see the preloader's {@code GameLocalPlayer}); the skin would be read from
+ * live {@code LocalPlayer} (see the sweetloader's {@code GameLocalPlayer}); the skin would be read from
  * the player's {@code SerializedSkinRef} base-skin {@code mce::Image} at the recovered {@code +0x78}
  * offset. That is the same {@code mce::Image} the cape work documents: the struct's internal pixel
  * pointer is <em>not</em> recoverable from the stripped binary, so a pixel read is not reachable from

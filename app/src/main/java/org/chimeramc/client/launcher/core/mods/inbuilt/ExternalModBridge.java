@@ -24,7 +24,7 @@ public class ExternalModBridge {
     public static native Object[] nativeGetRegisteredImage(String imageId);
 
     public static int getExternalModCount() {
-        if (!ModManager.ensurePreloaderLoaded()) return 0;
+        if (!ModManager.ensureSweetLoaderLoaded()) return 0;
         try {
             return nativeGetExternalModCount();
         } catch (UnsatisfiedLinkError e) {
@@ -34,7 +34,7 @@ public class ExternalModBridge {
     }
 
     public static String getExternalModInfo(int index) {
-        if (!ModManager.ensurePreloaderLoaded()) return "{}";
+        if (!ModManager.ensureSweetLoaderLoaded()) return "{}";
         try {
             return nativeGetExternalModInfo(index);
         } catch (UnsatisfiedLinkError e) {
@@ -44,7 +44,7 @@ public class ExternalModBridge {
     }
 
     public static String getExternalModsInfo() {
-        if (!ModManager.ensurePreloaderLoaded()) return null;
+        if (!ModManager.ensureSweetLoaderLoaded()) return null;
         try {
             return nativeGetExternalModsInfo();
         } catch (UnsatisfiedLinkError e) {
@@ -53,7 +53,7 @@ public class ExternalModBridge {
     }
 
     public static String getExternalModConfigSchema(String moduleId) {
-        if (!ModManager.ensurePreloaderLoaded()) return null;
+        if (!ModManager.ensureSweetLoaderLoaded()) return null;
         try {
             return nativeGetExternalModConfigSchema(moduleId);
         } catch (UnsatisfiedLinkError e) {
@@ -62,7 +62,7 @@ public class ExternalModBridge {
     }
 
     public static long getExternalModConfigSchemaRevision(String moduleId) {
-        if (!ModManager.ensurePreloaderLoaded()) return 0L;
+        if (!ModManager.ensureSweetLoaderLoaded()) return 0L;
         try {
             return nativeGetExternalModConfigSchemaRevision(moduleId);
         } catch (UnsatisfiedLinkError e) {
@@ -71,7 +71,7 @@ public class ExternalModBridge {
     }
 
     public static void toggleExternalMod(String moduleId, boolean enabled) {
-        if (!ModManager.ensurePreloaderLoaded()) return;
+        if (!ModManager.ensureSweetLoaderLoaded()) return;
         try {
             nativeToggleExternalMod(moduleId, enabled);
         } catch (UnsatisfiedLinkError e) {
@@ -80,7 +80,7 @@ public class ExternalModBridge {
     }
 
     public static void setExternalModConfig(String moduleId, String key, String value) {
-        if (!ModManager.ensurePreloaderLoaded()) return;
+        if (!ModManager.ensureSweetLoaderLoaded()) return;
         try {
             nativeSetExternalModConfig(moduleId, key, value);
         } catch (UnsatisfiedLinkError e) {
@@ -89,7 +89,7 @@ public class ExternalModBridge {
     }
 
     public static int getExternalButtonCount() {
-        if (!ModManager.ensurePreloaderLoaded()) return 0;
+        if (!ModManager.ensureSweetLoaderLoaded()) return 0;
         try {
             return nativeGetExternalButtonCount();
         } catch (UnsatisfiedLinkError e) {
@@ -99,7 +99,7 @@ public class ExternalModBridge {
     }
 
     public static String getExternalButtonInfo(int index) {
-        if (!ModManager.ensurePreloaderLoaded()) return "{}";
+        if (!ModManager.ensureSweetLoaderLoaded()) return "{}";
         try {
             return nativeGetExternalButtonInfo(index);
         } catch (UnsatisfiedLinkError e) {
@@ -109,7 +109,7 @@ public class ExternalModBridge {
     }
 
     public static void dispatchExternalButtonEvent(String buttonId, int event, float value) {
-        if (!ModManager.ensurePreloaderLoaded()) return;
+        if (!ModManager.ensureSweetLoaderLoaded()) return;
         try {
             nativeDispatchExternalButtonEvent(buttonId, event, value);
         } catch (UnsatisfiedLinkError e) {
@@ -118,7 +118,7 @@ public class ExternalModBridge {
     }
 
     public static byte[] getExternalButtonIconBytes(String buttonId, int width, int height, boolean active) {
-        if (!ModManager.ensurePreloaderLoaded()) return null;
+        if (!ModManager.ensureSweetLoaderLoaded()) return null;
         try {
             return nativeGetExternalButtonIconBytes(buttonId, width, height, active);
         } catch (UnsatisfiedLinkError e) {
@@ -259,7 +259,7 @@ public class ExternalModBridge {
     }
 
     public static HudEditorElement[] getHudEditorElements() {
-        if (!ModManager.ensurePreloaderLoaded()) return new HudEditorElement[0];
+        if (!ModManager.ensureSweetLoaderLoaded()) return new HudEditorElement[0];
         try {
             String json = nativeGetHudEditorElementsInfo();
             if (json == null || json.isEmpty()) return new HudEditorElement[0];
@@ -292,7 +292,7 @@ public class ExternalModBridge {
     }
 
     public static void setHudSurfaceSize(float width, float height) {
-        if (!ModManager.ensurePreloaderLoaded()) return;
+        if (!ModManager.ensureSweetLoaderLoaded()) return;
         try {
             nativeSetHudSurfaceSize(width, height);
         } catch (UnsatisfiedLinkError ignored) {
@@ -301,7 +301,7 @@ public class ExternalModBridge {
     }
 
     public static long getDrawCommandsRevision() {
-        if (!ModManager.ensurePreloaderLoaded()) return -1L;
+        if (!ModManager.ensureSweetLoaderLoaded()) return -1L;
         try {
             return nativeGetDrawCommandsRevision();
         } catch (UnsatisfiedLinkError e) {
@@ -310,7 +310,7 @@ public class ExternalModBridge {
     }
 
     public static DrawCommand[] getDrawCommands() {
-        if (!ModManager.ensurePreloaderLoaded()) return new DrawCommand[0];
+        if (!ModManager.ensureSweetLoaderLoaded()) return new DrawCommand[0];
         try {
             Object[] arrays = nativeGetDrawCommands();
             if (arrays == null || arrays.length < 8) return new DrawCommand[0];

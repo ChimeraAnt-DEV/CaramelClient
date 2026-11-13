@@ -170,7 +170,7 @@ should say a screen "works in game" until this list passes.
   player's skin, but not proven to be. Whether the game routes the player's skin through this seam at
   all is **unverified (needs device)**; if it does not, the preview falls back to the imported /
   applied / Steve skin.
-- **Cosmetics in game** depend on the preloader's player-render hook, which resolves to "no hook" on
+- **Cosmetics in game** depend on the sweetloader's player-render hook, which resolves to "no hook" on
   the shipped builds (see `AGENTS.md`); the preview is the verified surface.
 
 ---

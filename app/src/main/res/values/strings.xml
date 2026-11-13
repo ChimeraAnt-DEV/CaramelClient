@@ -167,14 +167,14 @@
     <string name="check_update">Check for updates</string>
     <string name="version_prefix">Version: </string>
     <string name="unknown_error">Unknown error</string>
-    <string name="preloader_sigs_title">Runtime Data</string>
-    <string name="preloader_sigs_last_update">Last update: %1$s</string>
-    <string name="preloader_sigs_never_updated">Never</string>
-    <string name="preloader_sigs_update">Update runtime data</string>
-    <string name="preloader_sigs_updating">Updating…</string>
-    <string name="preloader_sigs_update_success">Runtime data updated</string>
-    <string name="preloader_sigs_update_failed">Failed to update runtime data: %1$s</string>
-    <string name="preloader_sigs_no_remote_url">Runtime data update URL is not configured</string>
+    <string name="sweetloader_sigs_title">Runtime Data</string>
+    <string name="sweetloader_sigs_last_update">Last update: %1$s</string>
+    <string name="sweetloader_sigs_never_updated">Never</string>
+    <string name="sweetloader_sigs_update">Update runtime data</string>
+    <string name="sweetloader_sigs_updating">Updating…</string>
+    <string name="sweetloader_sigs_update_success">Runtime data updated</string>
+    <string name="sweetloader_sigs_update_failed">Failed to update runtime data: %1$s</string>
+    <string name="sweetloader_sigs_no_remote_url">Runtime data update URL is not configured</string>
 
     <string name="dialog_title_no_version">No Version Selected</string>
     <string name="dialog_message_no_version">Please select a game version before launching.</string>
@@ -291,17 +291,17 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="mod_import_chooser_message">Import a package file from this device, or paste a link someone shared with you. Both go through the same validation.</string>
     <string name="mod_import_from_file">Choose a file</string>
     <string name="mod_import_from_link">Use a link</string>
-    <string name="mod_import_link_message">Paste the link to an .antegg package. If you copied a whole message, the link inside it is found for you.</string>
-    <string name="mod_import_link_hint" translatable="false">https://example.com/mod.antegg</string>
+    <string name="mod_import_link_message">Paste the link to a mod package. If you copied a whole message, the link inside it is found for you.</string>
+    <string name="mod_import_link_hint" translatable="false">https://example.com/mod.zip</string>
     <string name="mod_import_link_go">Import</string>
-    <string name="mod_import_link_invalid">That text does not contain a link to an .antegg package.</string>
+    <string name="mod_import_link_invalid">That text does not contain a link to a mod package.</string>
     <string name="mod_import_link_downloading">Downloading the package…</string>
     <string name="mod_import_link_done">Imported %1$s.</string>
     <string name="mod_import_link_failed">Could not import from that link: %1$s</string>
     <string name="mod_import_link_confirm_title">Import this package?</string>
     <string name="mod_import_link_confirm_go">Download and import</string>
     <string name="mod_import_link_done_digest">Imported %1$s.\n%2$s</string>
-    <string name="invalid_mod_file_reason">Only .antegg packages, .so files or .zip mod packages are accepted. The selected file is not a valid native mod import package.</string>
+    <string name="invalid_mod_file_reason">Only .so files or .zip mod packages are accepted. The selected file is not a valid native mod import package.</string>
     <string name="invalid_zip_mod_package_title">Invalid ZIP Mod Package</string>
     <string name="invalid_zip_mod_package_message">The ZIP mod package must contain manifest.json and a .so file.</string>
     <string name="error_versions">Error Versions</string>
@@ -746,7 +746,7 @@ CaramelClient must complete the migration before continuing.</string>
 
     <string name="optifine_mode_title">Game Performance Mode</string>
     <string name="optifine_badge_text" translatable="false">FPS+</string>
-    <string name="optifine_mode_desc">Applies host-level performance changes to the game process through the preloader: a faster allocator, a real-time render thread, performance-core pinning and the panel\'s top refresh rate. Every item is listed below with what it actually did, and can be turned off on its own if your device does not like it. It never claims a frame rate.</string>
+    <string name="optifine_mode_desc">Applies host-level performance changes to the game process through the sweetloader: a faster allocator, a real-time render thread, performance-core pinning and the panel\'s top refresh rate. Every item is listed below with what it actually did, and can be turned off on its own if your device does not like it. It never claims a frame rate.</string>
     <string name="optifine_tier1_header">Host optimizations (safe)</string>
     <string name="optifine_tier2_header">Game hooks (advanced)</string>
     <string name="optifine_status_off">Off</string>
@@ -754,7 +754,7 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="optifine_status_skipped">Skipped</string>
     <string name="optifine_status_failed">Failed</string>
     <string name="optifine_summary_master_off">Master switch is off. Turn it on to apply the optimizations below.</string>
-    <string name="optifine_summary_unavailable">The preloader is not loaded, so the game-side optimizations cannot be applied. Enable a mod, or check that the preloader native library is present.</string>
+    <string name="optifine_summary_unavailable">The sweetloader is not loaded, so the game-side optimizations cannot be applied. Enable a mod, or check that the sweetloader native library is present.</string>
     <string name="optifine_summary_applies_next_launch">Changes apply on the next game launch.</string>
     <string name="optifine_summary_counts">%1$d of %2$d items active.</string>
     <string name="optifine_advanced_warning">Game hooks are resolved by RTTI name at runtime and fall back to "skipped" when a build does not expose a verified slot. They are off by default because a wrong hook can change how the game renders.</string>
@@ -1586,9 +1586,9 @@ CaramelClient must complete the migration before continuing.</string>
     <!-- Settings > Diagnostics (U16): in-app diagnostics report + G2 "Repair installation". -->
     <string name="settings_diagnostics_open">Diagnostics</string>
     <string name="settings_diagnostics">Diagnostics</string>
-    <string name="settings_diagnostics_desc">App, preloader and library state, mod load errors and a repair action for the native library cache.</string>
+    <string name="settings_diagnostics_desc">App, sweetloader and library state, mod load errors and a repair action for the native library cache.</string>
     <string name="diagnostics_title">Diagnostics</string>
-    <string name="diagnostics_subtitle">App, preloader and native library state</string>
+    <string name="diagnostics_subtitle">App, sweetloader and native library state</string>
     <string name="diagnostics_refresh">Refresh</string>
     <string name="diagnostics_copy">Copy report</string>
     <string name="diagnostics_copied">Diagnostics report copied.</string>
@@ -1659,14 +1659,14 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="diagnostics_field_berry_api">BerryAPI backend</string>
     <string name="diagnostics_field_berry_cosmetics">BerryAPI cosmetics</string>
     <string name="diagnostics_field_input_backend">Input backend</string>
-    <string name="diagnostics_field_hooks">Preloader hooks</string>
-    <!-- The preloader's own per-feature report, distinct from the hook table above. -->
+    <string name="diagnostics_field_hooks">SweetLoader hooks</string>
+    <!-- The sweetloader's own per-feature report, distinct from the hook table above. -->
     <string name="diagnostics_field_feature_availability">Feature availability</string>
     <!-- The hook install/remove round-trip result, distinct from the row above. -->
     <string name="diagnostics_field_hook_self_test">Hook self-test</string>
-    <string name="diagnostics_field_preloader_abi">Preloader ABI</string>
-    <string name="diagnostics_preloader_abi_ok">v%1$d (matches client)</string>
-    <string name="diagnostics_preloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
+    <string name="diagnostics_field_sweetloader_abi">SweetLoader ABI</string>
+    <string name="diagnostics_sweetloader_abi_ok">v%1$d (matches client)</string>
+    <string name="diagnostics_sweetloader_abi_mismatch">v%1$d (client expects v%2$d)</string>
     <string name="diagnostics_no_mod_errors">No mod load errors on record.</string>
     <!-- Local launch/crash statistics. Local data only; nothing is uploaded. -->
     <string name="diagnostics_section_stats">Launch statistics</string>
@@ -2523,68 +2523,19 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="replay_capture_started">Recording started</string>
     <string name="replay_capture_failed">Recording could not start</string>
     <string name="replay_clip_saved">Clip saved</string>
-    <!-- JavaBridge: Java mod auto-porter -->
-    <string name="javabridge_title" translatable="false">JavaBridge</string>
-    <string name="javabridge_subtitle">Import a Java Edition .jar and generate a Bedrock .AntEgg mod from it.</string>
-    <string name="javabridge_reimplementation_warning">This is a reimplementation, not the original mod. The generated mod is written from scratch and may behave differently.</string>
-    <string name="javabridge_import_jar">Import .jar mod</string>
-    <string name="javabridge_setup">LLM setup</string>
-    <string name="javabridge_scope_note">JavaBridge does not run Java Edition mods. It rewrites them: the mod\'s classes are decompiled and an equivalent Bedrock mod is generated. Nothing is uploaded until you press Port.</string>
-    <string name="javabridge_score_label">Portability: %1$s</string>
-    <string name="javabridge_what_ported">What will be ported</string>
-    <string name="javabridge_what_partial">What will be partial</string>
-    <string name="javabridge_what_dropped">What will be dropped</string>
-    <string name="javabridge_mapped_apis">Known API mappings</string>
-    <string name="javabridge_port_button">Port this mod</string>
-    <string name="javabridge_cancel">Cancel</string>
-    <string name="javabridge_close">Close</string>
-    <string name="javabridge_refused_title">Mod refused</string>
-    <string name="javabridge_refused_message">This mod matches a known cheat pattern (%1$s). JavaBridge will not port cheat mods.</string>
-    <string name="javabridge_no_jar_selected">No mod was selected.</string>
-    <string name="javabridge_not_a_jar">That file is not a Java Edition .jar mod.</string>
-    <string name="javabridge_inspecting">Reading the mod\u2026</string>
-    <string name="javabridge_consent_title">Send mod source to the LLM?</string>
-    <string name="javabridge_porting">Porting\u2026 this can take a minute</string>
-    <string name="javabridge_port_failed">Port failed: %1$s</string>
-    <string name="javabridge_port_success">Ported. Review the generated mod before enabling it.</string>
-    <string name="javabridge_review_title">Review generated mod</string>
-    <string name="javabridge_review_note">This code was generated by an AI. Read it before enabling. It is not enabled automatically.</string>
-    <string name="javabridge_verified_pin">SHA-256 %1$s</string>
-    <string name="javabridge_no_pin">No checksum pin recorded</string>
-    <string name="javabridge_review_enable">Enable now</string>
-    <string name="javabridge_review_later">Review later</string>
-    <string name="javabridge_review_disabled_note">The ported mod was saved but left disabled. Enable it from the Mods tab after you have read it.</string>
-    <string name="javabridge_setup_title">LLM setup</string>
-    <string name="javabridge_setup_endpoint">Endpoint</string>
-    <string name="javabridge_setup_api_key">API key</string>
-    <string name="javabridge_setup_model">Model</string>
-    <string name="javabridge_setup_save">Save</string>
-    <string name="javabridge_setup_clear">Clear consent and key</string>
-    <string name="javabridge_setup_consent_given">Consent recorded. Porting will send decompiled source to this endpoint.</string>
-    <string name="javabridge_setup_no_consent">No consent recorded. Porting will ask before sending anything.</string>
-    <string name="javabridge_no_llm_configured">No LLM is configured. Open LLM setup first.</string>
-    <string name="javabridge_ai_ported_badge">AI-ported</string>
-    <string name="javabridge_ai_ported_badge_desc">AI-ported from %1$s</string>
-    <string name="javabridge_empty_title">No mod loaded</string>
-    <string name="javabridge_empty_body">Import a Java Edition .jar to see how it scores for porting to Bedrock, and what would be kept, adapted or dropped.</string>
-    <string name="javabridge_dropped_none">Nothing is dropped.</string>
-    <string name="javabridge_partial_none">Nothing is partial.</string>
-    <string name="javabridge_kept_none">Nothing is kept.</string>
-    <string name="javabridge_load_failed">The ported mod was saved but could not be loaded. See the Mods tab for the reason.</string>
 
     <!-- Launch tab dock + quick toggles -->
     <string name="dock_profile_default">Default Profile</string>
     <string name="launch_quickdock_wheel">Radial Menu</string>
     <string name="launch_quickdock_wheel_unavailable">The radial menu is not available here</string>
-    <string name="launch_toggle_antegg">AntEgg Mod Packs</string>
+    <string name="launch_toggle_mods">Mods</string>
     <string name="launch_toggle_voice">Voice Chat</string>
     <string name="launch_toggle_replay">Replays</string>
-    <plurals name="launch_antegg_status_ready">
+    <plurals name="launch_mods_status_ready">
         <item quantity="one">%1$d mod pack installed</item>
         <item quantity="other">%1$d mod packs installed</item>
     </plurals>
-    <string name="launch_antegg_status_none">No mod packs installed</string>
-    <string name="launch_antegg_status_loading">Preparing\u2026</string>
+    <string name="launch_mods_status_none">No mods installed</string>
     <string name="launch_voice_status_on">On \u00b7 %1$s</string>
     <string name="launch_voice_status_off">Off</string>
     <plurals name="launch_replay_status_count">
@@ -2806,26 +2757,6 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="quick_settings_no_instance">No instance selected</string>
     <string name="quick_settings_write_failed">Could not write the option</string>
     <string name="quick_settings_cap_unsupported">This display has no mode at that rate</string>
-    <string name="script_manager_title">Script manager</string>
-    <string name="script_manager_subtitle">Installed packages and the order they load in.</string>
-    <string name="script_manager_empty">No packages installed. Import an .AntEgg package from the Mods screen.</string>
-    <string name="script_manager_reload">Reload scripts</string>
-    <string name="script_manager_reload_none">No enabled scripts to run</string>
-    <string name="script_manager_reload_done">Reloaded %1$d of %2$d scripts</string>
-    <string name="script_manager_run">Run</string>
-    <string name="script_manager_remove">Remove</string>
-    <string name="script_manager_remove_confirm">Remove "%1$s" from the sandbox?</string>
-    <string name="script_manager_remove_failed">Could not remove the package</string>
-    <string name="script_manager_run_ok">Ran %1$s</string>
-    <string name="script_manager_run_failed">Could not run the script</string>
-    <string name="script_manager_run_failed_reason">Script error: %1$s</string>
-    <string name="script_manager_unreadable">Manifest could not be read</string>
-    <string name="script_manager_type_script">Script</string>
-    <string name="script_manager_type_native">Native</string>
-    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
-    <string name="script_manager_load_order">Load order %1$d</string>
-    <string name="script_manager_toggle_desc">Enable or disable this package</string>
-    <string name="script_manager_open">Script manager</string>
     <string name="pause_menu_no_layouts">No saved overlay layouts</string>
     <string name="pause_menu_layout_switched">Layout: %1$s</string>
     <string name="mod_update_notification_title">Mod updates available</string>

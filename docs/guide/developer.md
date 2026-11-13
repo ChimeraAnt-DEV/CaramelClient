@@ -119,18 +119,18 @@ bool FullCppMod::load() {
 ## SDK Dependency
 
 In a standalone Android native mod project, import `preloader-android` with
-`FetchContent` and link your mod library to the `preloader` target:
+`FetchContent` and link your mod library to the `sweetloader` target:
 
 ```cmake
 include(FetchContent)
 
 FetchContent_Declare(
-    preloader_android
+    sweetloader_android
     GIT_REPOSITORY https://github.com/ChimeraAnt-DEV/preloader-android.git
     GIT_TAG 0.2.2)
-FetchContent_MakeAvailable(preloader_android)
+FetchContent_MakeAvailable(sweetloader_android)
 
-target_link_libraries(my_mod PRIVATE preloader)
+target_link_libraries(my_mod PRIVATE sweetloader)
 ```
 
 Pin `GIT_TAG` to a release tag for reproducible builds.
@@ -248,7 +248,7 @@ If `-Ndk` is omitted, the script resolves it from `ANDROID_NDK_HOME`,
 ## Checklist
 
 - Build native mods for `arm64-v8a`.
-- Link the `preloader` target and use public SDK headers from `include/pl`.
+- Link the `sweetloader` target and use public SDK headers from `include/pl`.
 - Register one long-lived object with `PL_REGISTER_MOD`.
 - Keep `ll::mod::NativeMod &mSelf` from `ll::mod::NativeMod::current()`.
 - Load config before registering runtime UI.

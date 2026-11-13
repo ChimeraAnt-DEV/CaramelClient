@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Pins the preloader feature-availability report parsing.
+ * Pins the sweetloader feature-availability report parsing.
  *
  * The report is what the Diagnostics screen prints and what a bug report quotes, so its shape, its
  * fail-closed behaviour on a bad blob and its summary wording are all fixed here. The class is
@@ -74,8 +74,8 @@ public class FeatureAvailabilityReportTest {
     }
 
     @Test
-    public void anEmptyReportSaysThePreloaderDidNotAnswer() {
-        assertEquals("no report from the preloader", FeatureAvailabilityReport.empty().summary());
+    public void anEmptyReportSaysTheSweetLoaderDidNotAnswer() {
+        assertEquals("no report from the sweetloader", FeatureAvailabilityReport.empty().summary());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class FeatureAvailabilityReportTest {
 
     @Test
     public void describeAllOnAnEmptyReportSaysSo() {
-        assertEquals("  (no report from the preloader)",
+        assertEquals("  (no report from the sweetloader)",
                 FeatureAvailabilityReport.empty().describeAll());
     }
 }

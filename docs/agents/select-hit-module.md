@@ -15,7 +15,7 @@ only, like the other overlays.
 - Attack input is recorded from the paths that actually send an attack: `pojavSendMouseButton`
   (primary) and the `dispatchKeyEvent` mouse-button path (controller). Both call
   `InbuiltOverlayManager.notifyAttack()` тЖТ `HitTimingMod.onAttack(uptimeMillis())`.
-  `dispatchKeyEvent` records **before** the preloader may consume the press тАФ the player pressed
+  `dispatchKeyEvent` records **before** the sweetloader may consume the press тАФ the player pressed
   attack either way, and the timing must be the real input timing.
 - Honest scope: it reads your own attack input and never clicks for you; the server still decides
   whether a hit lands. `hit_timing_scope_note` says so in the dialog.
@@ -23,6 +23,6 @@ only, like the other overlays.
   `decision.combo` is the player's own landed-in-window attacks, counted by `HitTimingSolver`;
   it is not a read of the game's server-side combo counter. Reading that needs a per-frame
   `libminecraftpe.so` feed, and the mask-scan anchors used for the local-player position do not
-  expose a combo field in the shipped builds (no `combo` symbol exists in the preloader). The
+  expose a combo field in the shipped builds (no `combo` symbol exists in the sweetloader). The
   local counter is the honest deliverable; `hit_timing_scope_note` states the distinction in the
   dialog so the readout cannot be mistaken for the server value.

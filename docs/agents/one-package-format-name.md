@@ -1,3 +1,9 @@
-## One package format name (`.antegg`)
-- **`.chimerapack` and `.levipack` are gone from the code, not just the docs.** B5 changed the docs but left `FileHandler.isZipModPackageFile` accepting `.chimerapack`, the manifest's intent filters listing it, and the `invalid_mod_file_reason` string naming it in every locale — so a file the docs no longer describe was still accepted, and the error message advertised a name that does not exist. Now the only named package format is `.antegg`; a bare `.zip` stays because it is the unpacked-layout import, not a package format. `grep -rn chimerapack app/src/main` must return only the explanatory comment in `FileHandler`.
-- Adding a format back means touching `FileHandler`, the manifest filters, and every locale's string. Do not re-add a name to one place only.
+## One package format name (no `.AntEgg`, `.chimerapack` or `.levipack`)
+- **`.AntEgg` is removed, along with `.chimerapack` and `.levipack`.** The launcher no longer
+  accepts a named mod archive: an import is either a native `.so`, a bare `.zip` (the
+  unpacked-layout import), or a `.universe` / `.singularity` package handled by the SweetLoader
+  Rust engine. `FileHandler` accepts only those, the manifest lists only those filters, and
+  `invalid_mod_file_reason` names only those in every locale.
+- `grep -rn -i antegg app/src` must return nothing.
+- Adding a format back means touching `FileHandler`, the manifest intent filters, every locale's
+  string, and the JNI parity table. Do not re-add a name to one place only.

@@ -1,2 +1,0 @@
-## Preloader signature rules (preloader.PreloaderSignatureRulesManager)
-- Rule sources resolve in a fixed order: the host's **own** copy is authoritative, Levi's upstream repo is the fallback, and the bundled asset (`resources/preloader/preloader_signature_rules_source.json`) is the last resort for offline launches. Keep the bundled snapshot refreshed тАФ it must contain every rule the live source has (e.g. the 1.26.50 rule), or an offline launch will reject a version the online source would accept.

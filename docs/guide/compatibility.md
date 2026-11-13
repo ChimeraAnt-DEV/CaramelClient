@@ -81,5 +81,5 @@ cannot read the game library out of an app it does not own.
 instance settings, or re-import a supported APK via Diagnostics.
 
 **Where do developer API questions go?** — The [Developer](/guide/developer)
-section. The Preloader API reference is intentionally grouped there instead of
+section. The SweetLoader API reference is intentionally grouped there instead of
 the main user guide.

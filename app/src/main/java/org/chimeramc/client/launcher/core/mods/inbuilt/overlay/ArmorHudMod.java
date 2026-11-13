@@ -7,7 +7,7 @@ import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
  *
  * <p>The HUD itself is pure rendering: it draws whatever {@link Snapshot} the current
  * {@link DataSource} publishes. Reading armor durability out of the running game is a native
- * concern (the preloader's pattern-scanned game hooks) and is deliberately not assumed here —
+ * concern (the sweetloader's pattern-scanned game hooks) and is deliberately not assumed here —
  * until a provider is installed, {@link #read()} reports "no data" and the overlay draws an
  * explicit placeholder rather than a fabricated or stale durability value.
  */

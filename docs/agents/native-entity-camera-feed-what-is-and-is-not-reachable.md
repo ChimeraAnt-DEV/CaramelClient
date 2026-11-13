@@ -75,18 +75,18 @@ Do not re-run this RE from scratch; these are the conclusions.
   Voice nametag icon needs only the listener's own view, and the local player is reachable without
   any signature: `ClientInstance`'s vtable **slot 31** returns the local player, and that slot is
   resolved **by RTTI name** through `resolveVtableFunction("14ClientInstance", 31, ...)` -- no
-  per-build code address. The preloader hooks that slot and snapshots position (`Actor+0x230`) and
+  per-build code address. The sweetloader hooks that slot and snapshots position (`Actor+0x230`) and
   view rotation (`Actor+0x238`); both field offsets are shared by 1.26.33.1 / 1.26.50.4 / 1.26.51.1
   (confirmed against the 1.26.50.4 and 1.26.60.28 binaries). Live pointer dereference happens **only
   inside the hook** (game thread, right after the game returned the pointer); Java reads a
   seqlock-protected copy with a staleness window, so a session ending cannot leave the UI thread
-  reading freed memory. See `GameLocalPlayer.cpp` in the preloader. This does **not** unblock the
+  reading freed memory. See `GameLocalPlayer.cpp` in the sweetloader. This does **not** unblock the
   combat modules -- they need *other* entities' positions, which is the unreachable problem above.
 - **The game's Java layer is no help.** The dex contains 59 `com/mojang/minecraftpe/*` classes in
   1.26.60.28 (down from 68), all Android host plumbing (MainActivity, PlayIntegrity, FilePicker,
   Braze, WorldRecovery) plus PairIP-obfuscated stubs. There is no player/entity/position/camera API
   and no `native` method declaring one -- all game state lives in `libminecraftpe.so`.
-- **The preloader exposes no ergonomic player/level accessor.** Its `PL_EXPORT` surface is memory
+- **The sweetloader exposes no ergonomic player/level accessor.** Its `PL_EXPORT` surface is memory
   primitives (`resolveSignature`/`resolveVtableFunction`/`hook`/`writeBytes`), input callbacks, and
   Mod Menu/HUD submission -- nothing that returns a world position. So even a native mod has to
   build the feed from the same signatures.

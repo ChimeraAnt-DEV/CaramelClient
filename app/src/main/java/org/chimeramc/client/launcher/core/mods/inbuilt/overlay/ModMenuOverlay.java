@@ -1638,7 +1638,7 @@ public class ModMenuOverlay {
         dialog.setOnDismissListener(d ->
                 org.chimeramc.client.core.mods.inbuilt.vip.MenuBindRelay.clear());
         // The dialog's own key listener covers the launcher-side receiver; the static capture
-        // covers the in-game path where the preloader dispatches keys first.
+        // covers the in-game path where the sweetloader dispatches keys first.
         dialog.setOnKeyListener((d, keyCode, event) -> {
             if (event.getAction() != android.view.KeyEvent.ACTION_DOWN) return false;
             if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
@@ -1694,7 +1694,7 @@ public class ModMenuOverlay {
         });
 
         // The in-game activity offers every raw key here first, so a controller press is captured
-        // even when the preloader would otherwise consume it.
+        // even when the sweetloader would otherwise consume it.
         org.chimeramc.client.core.mods.inbuilt.vip.MenuBindRelay.set(keyCode -> {
             illustration.handleKeyEvent(keyCode, true);
             String region = illustration.regionIdForKey(keyCode);
@@ -2991,7 +2991,7 @@ public class ModMenuOverlay {
      * Routes one controller key press into the open menu: a d-pad/left-stick direction moves the
      * selection, a face/shoulder button toggles the selected module.
      *
-     * <p>Called from the game activity before the preloader sees the key, because the overlay root
+     * <p>Called from the game activity before the sweetloader sees the key, because the overlay root
      * is unfocusable on purpose (see {@link #disableFocusHighlight}) — so the framework cannot move
      * focus for us and the direction has to be applied to the list directly.
      *

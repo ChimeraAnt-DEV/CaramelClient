@@ -289,7 +289,7 @@ public class ModMenuButton {
     /**
      * The open menu, or null.
      *
-     * <p>Exists so the game activity can hand controller input to the menu before the preloader may
+     * <p>Exists so the game activity can hand controller input to the menu before the sweetloader may
      * swallow it — the overlay root is unfocusable, so the framework never routes a key or a stick
      * movement to it on its own.
      */

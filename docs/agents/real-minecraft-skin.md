@@ -7,7 +7,7 @@
   a throwing provider) it returns null and `PlayerSkinProvider.resolve` falls through (imported →
   applied pack → Steve → placeholder). `SkinResolution` is the pure order, pinned by
   `GameSkinSourceTest`; the header parse is pinned by `GameSkinFeedTest`.
-- **The native capture is at the engine image-loader seam** (`preloader`, `mce_image_hook.cpp`): the
+- **The native capture is at the engine image-loader seam** (`sweetloader`, `mce_image_hook.cpp`): the
   loader detour sees the source bytes of every image the engine builds, recognises a base-skin-shaped
   payload (a square PNG whose IHDR edge is 64/128/256/512, or a square RGBA8 buffer of one of those
   sizes), and copies it into a bounded single slot. JNI: `nativeReadCapturedSkin` /

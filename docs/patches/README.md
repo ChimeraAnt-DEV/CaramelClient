@@ -7,7 +7,7 @@ so a host that `dlopen`s `libBerryAPI.so` can load a replay and drive playback w
 linking BerryAPI's C++ surface.
 
 **Applied upstream.** Merged into `Lynxifyy/BerryAPI` as PR #16 (merge commit `b44f8fb4`),
-so the file is kept here only as a historical record of the change; the preloader bridge and
+so the file is kept here only as a historical record of the change; the sweetloader bridge and
 the client mirror in this repository are built against the merged `berry/replay_c.h`.
 
 To apply:

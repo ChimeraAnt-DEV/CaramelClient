@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The preloader's hook self-test report, parsed for the Diagnostics screen.
+ * The sweetloader's hook self-test report, parsed for the Diagnostics screen.
  *
  * <p>The self-test installs and removes every hook site once, so its report answers "can these hooks
  * install on this build at all" — a different question from the per-feature availability report,
@@ -63,11 +63,11 @@ public final class HookSelfTestReport {
     public final boolean backendOk;
     /** The sites, sorted by name. Never null. */
     public final List<Site> sites;
-    /** The number of sites the preloader reported passing. */
+    /** The number of sites the sweetloader reported passing. */
     public final int reportedPassed;
-    /** The number of sites the preloader reported in total. */
+    /** The number of sites the sweetloader reported in total. */
     public final int reportedTotal;
-    /** The raw blob, for a report that wants to print exactly what the preloader said. */
+    /** The raw blob, for a report that wants to print exactly what the sweetloader said. */
     public final String raw;
 
     private HookSelfTestReport(boolean backendOk, List<Site> sites, int reportedPassed,
@@ -79,13 +79,13 @@ public final class HookSelfTestReport {
         this.raw = raw == null ? "" : raw;
     }
 
-    /** An empty report: no preloader, or an unreadable blob. */
+    /** An empty report: no sweetloader, or an unreadable blob. */
     public static HookSelfTestReport empty() {
         return new HookSelfTestReport(false, new ArrayList<>(), 0, 0, "");
     }
 
     /**
-     * Parses the preloader's self-test blob.
+     * Parses the sweetloader's self-test blob.
      *
      * <p>Shape: {@code {"backend_ok":<bool>,"passed":N,"total":M,"sites":[{"name":"...",
      * "state":"...","detail":"..."}]}}. Anything else is treated as an empty report rather than an
@@ -112,7 +112,7 @@ public final class HookSelfTestReport {
                     sites.add(new Site(name, state, detail));
                 }
             }
-            // The preloader renders sites in resolution order; sort by name for a stable display,
+            // The sweetloader renders sites in resolution order; sort by name for a stable display,
             // matching the availability report's rule so the two rows do not shuffle between runs.
             Collections.sort(sites, (a, b) -> a.name.compareTo(b.name));
             return new HookSelfTestReport(backendOk, sites, passed, total, blob);
@@ -143,7 +143,7 @@ public final class HookSelfTestReport {
      */
     public String summary() {
         if (isEmpty()) {
-            return "no self-test from the preloader";
+            return "no self-test from the sweetloader";
         }
         if (!backendOk) {
             return "hook backend self-test FAILED; no hook can install on this build";
@@ -166,7 +166,7 @@ public final class HookSelfTestReport {
     /** Every site, one per line, for the copied report. */
     public String describeAll() {
         if (isEmpty()) {
-            return "  (no self-test from the preloader)";
+            return "  (no self-test from the sweetloader)";
         }
         StringBuilder builder = new StringBuilder();
         builder.append("  backend: ").append(backendOk ? "ok" : "FAILED").append('\n');

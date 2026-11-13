@@ -24,4 +24,4 @@ CaramelClient 可以在启动器内管理多个 Xbox 账号。启动 Minecraft �
 
 启动器支持安装 native SO 模块，供明确需要扩展能力的用户和开发者使用。Native 模块会运行本机代码，只安装你信任的包。
 
-开发者文档位于 [开发者](/zh-CN/guide/developer)，Preloader API 参考也从该分类进入。
+开发者文档位于 [开发者](/zh-CN/guide/developer)，SweetLoader API 参考也从该分类进入。

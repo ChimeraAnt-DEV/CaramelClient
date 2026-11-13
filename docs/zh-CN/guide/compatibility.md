@@ -38,5 +38,5 @@ Native 模块会在游戏进程中运行原生代码。只安装可信来源的�
 
 ### 开发者 API 问题去哪里看？
 
-请阅读 [开发者](/zh-CN/guide/developer) 分类。Preloader API 参考刻意放在该分类下，
+请阅读 [开发者](/zh-CN/guide/developer) 分类。SweetLoader API 参考刻意放在该分类下，
 而不是普通用户指南里。

@@ -99,8 +99,8 @@ public final class CosmeticsDiagnosticsReport {
         public boolean rulesConfigured;
         /** Whether the rules file was read and parsed into a usable rule set. */
         public boolean rulesLoaded;
-        /** How many copies of libpreloader.so are mapped; >1 means a split, empty registry. */
-        public int preloaderModuleMappings = -1;
+        /** How many copies of libsweetloader.so are mapped; >1 means a split, empty registry. */
+        public int sweetloaderModuleMappings = -1;
         /** The deferred hook-install state: 0 not armed, 1 waiting, 2 resolved. */
         public int hookInstallState;
         /** Frame ticks the install gate observed before deciding. */
@@ -200,7 +200,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.rulesLoadAttempted = diag[14] == 1;
                 in.rulesConfigured = diag.length >= 21 && diag[19] == 1;
                 in.rulesLoaded = diag.length >= 21 && diag[20] == 1;
-                in.preloaderModuleMappings = diag[15];
+                in.sweetloaderModuleMappings = diag[15];
             }
         }
         in.cameraAnchorSource = PreloaderInput.cameraAnchorSource();
@@ -262,7 +262,7 @@ public final class CosmeticsDiagnosticsReport {
             AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:256", "Ignored a failure at CosmeticsDiagnosticsReport:256", ignored);
         }
         try {
-            in.rulesSource = org.chimeramc.client.preloader.PreloaderSignatureRulesManager
+            in.rulesSource = org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager
                     .getRulesSource(context);
         } catch (Throwable ignored) {
             AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:262", "Ignored a failure at CosmeticsDiagnosticsReport:262", ignored);
@@ -403,7 +403,7 @@ public final class CosmeticsDiagnosticsReport {
                 .append('\n');
         b.append("Rule has render slot: ").append(yesNo(v.rulesHaveRenderIndex)).append('\n');
         b.append("Hook install state: ").append(installStateText(v)).append('\n');
-        b.append("libpreloader.so copies mapped: ").append(mappingText(v.preloaderModuleMappings))
+        b.append("libsweetloader.so copies mapped: ").append(mappingText(v.sweetloaderModuleMappings))
                 .append('\n');
         b.append("Player-render slot: ").append(slotText(v)).append('\n');
         b.append("Hook installed: ").append(hookText(v)).append('\n');
@@ -481,7 +481,7 @@ public final class CosmeticsDiagnosticsReport {
         try {
             String model = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
             // The ABI is one of the gates that can refuse a feature, so the report names the
-            // process ABI next to the device. The preloader is arm64-only, so a report from a device
+            // process ABI next to the device. The sweetloader is arm64-only, so a report from a device
             // where the native library did not load needs the ABI to be diagnosable.
             String abi = android.os.Build.SUPPORTED_ABIS.length > 0
                     ? android.os.Build.SUPPORTED_ABIS[0] : "unknown";
@@ -766,13 +766,13 @@ public final class CosmeticsDiagnosticsReport {
      * <p>A bare "Status" line says the end result but not which link broke; with the install
      * deferred to the game's frame tick, "not installed" could mean the library never loaded, the
      * rules never arrived, no rule matched the version, or the runtime never came up. This walks the
-     * same order the preloader does and stops at the first failure, so a device report points at one
+     * same order the sweetloader does and stops at the first failure, so a device report points at one
      * step instead of leaving the reader to guess. Every stage is a real reading; nothing is
      * inferred.
      */
     static String firstFailingStage(Inputs v) {
         if (!v.nativeLoaded) {
-            return "0. native library — libpreloader.so is not loaded, so nothing below ran.";
+            return "0. native library — libsweetloader.so is not loaded, so nothing below ran.";
         }
         if (v.rulesRevision <= 0) {
             return "1. rules file — the delivered rules declared revision 0 (or none was delivered);"

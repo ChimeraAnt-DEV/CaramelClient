@@ -16,7 +16,7 @@ import java.util.Locale;
  * <ul>
  *   <li><b>A failure is stated in one line and never guessed.</b> The reason comes from the recorded
  *       diagnostic; when there is no record, the row says nothing rather than "unknown error".</li>
- *   <li><b>The kind is read from the entry point, not the file name.</b> An {@code .AntEgg} archive
+ *   <li><b>The kind is read from the entry point, not the file name.</b> A mod package
  *       can hold either runtime, so the extension of the entry path is the authority.</li>
  * </ul>
  */
@@ -52,7 +52,7 @@ public final class ModRowPresentation {
      * The runtime kind of a mod, from its entry point.
      *
      * <p>{@code .so} is the native runtime, {@code .lua} the script runtime — the two the
-     * {@code .AntEgg} manifest declares. A mod with no entry point (a plain library dropped in)
+     * manifest declares. A mod with no entry point (a plain library dropped in)
      * reads as {@link Kind#UNKNOWN} rather than being assumed native.
      */
     public static Kind kindOf(Mod mod) {

@@ -22,7 +22,7 @@ import org.junit.Test;
  * misaligned segment") while every older device silently accepts it. The failure therefore only
  * appears on the newest hardware, which is exactly the device a developer is least likely to test on.
  *
- * <p>The preloader is built with {@code -Wl,-z,max-page-size=16384} (see its CMakeLists.txt), but the
+ * <p>The sweetloader is built with {@code -Wl,-z,max-page-size=16384} (see its CMakeLists.txt), but the
  * prebuilt libraries dropped into {@code jniLibs/} are produced elsewhere, so this reads each one's
  * program headers and asserts the alignment. Reading the real bytes is the only way to catch a
  * prebuilt that was rebuilt without the flag.

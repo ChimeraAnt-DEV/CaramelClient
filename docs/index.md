@@ -34,7 +34,7 @@ features:
   - title: Quick Launch
     details: Use URI actions to open specific Minecraft screens, connect to servers, or load a world faster.
   - title: Native mod support
-    details: Developers can use Preloader APIs to load native SO modules, receive input callbacks, install hooks, and apply patches.
+    details: Developers can use SweetLoader APIs to load native SO modules, receive input callbacks, install hooks, and apply patches.
 ---
 
 ::: tip Looking for Chinese documentation?
@@ -45,7 +45,7 @@ Use the language selector or open [简体中文](/zh-CN/).
 
 CaramelClient is an open-source Android launcher for Minecraft Bedrock Edition. It focuses on practical launcher workflows first: installing the launcher, preparing an official Minecraft copy, managing versions, starting the game, and keeping player content organized.
 
-Developer-facing Preloader APIs are still documented here, but they are part of the Developer section instead of the main entry point.
+Developer-facing SweetLoader APIs are still documented here, but they are part of the Developer section instead of the main entry point.
 
 ## Recommended reading order
 
@@ -53,4 +53,4 @@ Developer-facing Preloader APIs are still documented here, but they are part of 
 2. [Features](/guide/features)
 3. [Compatibility](/guide/compatibility)
 4. [Native Mod Quick Start](/guide/developer)
-5. [Preloader API Reference](/api/mod)
+5. [SweetLoader API Reference](/api/mod)

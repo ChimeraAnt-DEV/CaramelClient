@@ -52,7 +52,7 @@ import org.chimeramc.client.launcher.core.minecraft.AndroidLaunchProbe;
 import org.chimeramc.client.launcher.core.minecraft.LaunchErrorDiagnosis;
 import org.chimeramc.client.launcher.core.minecraft.LaunchProbe;
 import org.chimeramc.client.launcher.core.minecraft.LaunchReadiness;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.core.minecraft.LaunchTrace;
 import org.chimeramc.client.core.minecraft.MinecraftLauncher;
 import org.chimeramc.client.core.minecraft.PlaytimeManager;
@@ -213,7 +213,7 @@ import okhttp3.OkHttpClient;
     private final ExecutorService resourcepackExecutor = Executors.newSingleThreadExecutor();
 
     /**
-     * Gathers the Launch tab's disk-backed status counts (AntEgg packs, replay clips).
+     * Gathers the Launch tab's disk-backed status counts (installed mods, replay clips).
      *
      * <p>Separate from the other pools because it runs on every {@code onResume} and its work is
      * only a couple of directory reads: it must never queue behind a migration or a launch probe,
@@ -253,7 +253,7 @@ import okhttp3.OkHttpClient;
     private androidx.compose.ui.platform.ComposeView changelogCompose;
     private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> changelogState;
     private androidx.compose.runtime.MutableState<Boolean> changelogOpen;
-    private String antEggStatusText = "";
+    private String modsStatusText = "";
     private String voiceStatusText = "";
     private String replayStatusText = "";
     /** True while a launch is in flight, so the hero card and Play button cannot double-fire. */
@@ -1537,7 +1537,7 @@ import okhttp3.OkHttpClient;
         // Setup Quick Actions Grid
         setupQuickActions();
 
-        // Setup Launch-tab quick toggles (AntEgg / Voice / Replays)
+        // Setup Launch-tab quick toggles (Mods / Voice)
         setupLaunchToggles();
 
         // Setup the docked launch controls' shimmer feedback
@@ -1658,7 +1658,7 @@ import okhttp3.OkHttpClient;
         // version selection now lives on the dock's Select Version button.
 
         // Quick Mods Card and Quick Content Card were removed with the old quick-action grid:
-        // the Launch tab now uses purpose-built quick toggles (AntEgg packs, Voice, Replays)
+        // the Launch tab now uses purpose-built quick toggles (Mods, Voice)
         // and the content rows below.
     }
 
@@ -1686,7 +1686,7 @@ import okhttp3.OkHttpClient;
                 toggleState,
                 kind -> {
                     switch (kind) {
-                        case ANTEGG:
+                        case MODS:
                             openModsFullscreen();
                             break;
                         case VOICE:
@@ -1702,13 +1702,13 @@ import okhttp3.OkHttpClient;
                 });
     }
 
-    /** The row's data: guest mode hides Mods and Voice, and Replays always stays. */
+    /** The row's data: guest mode hides the Mods and Voice cards. */
     private java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>
             buildToggleRow() {
         boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
         return org.chimeramc.client.ui.compose.launch.LaunchToggleState.visible(
                 guest,
-                getString(R.string.launch_toggle_antegg), antEggStatusText,
+                getString(R.string.launch_toggle_mods), modsStatusText,
                 getString(R.string.launch_toggle_voice), voiceStatusText,
                 getString(R.string.launch_toggle_replay), replayStatusText);
     }
@@ -1779,9 +1779,9 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * Refreshes the quick-toggle status lines from each feature's own state: the AntEgg sandbox
-     * folder for installed packs, the voice module's running state and route, and the replay
-     * library's clip count. Nothing here is a second source of truth.
+     * Refreshes the quick-toggle status lines from each feature's own state: the selected version's
+     * mods directory for installed mods, and the voice module's running state and route. Nothing
+     * here is a second source of truth.
      */
     private void refreshLaunchToggles() {
         // Voice is in-memory state, so it is refreshed straight away.
@@ -1793,10 +1793,10 @@ import okhttp3.OkHttpClient;
                 : getString(R.string.launch_voice_status_off);
         refreshToggleRow();
 
-        // The other two read the disk: the AntEgg count lists a directory and the Replay count
-        // scans the replays folder and asks MediaMetadataRetriever for every clip's duration. On
-        // the UI thread that ran on every onResume, so returning from any screen blocked the frame
-        // while the video metadata was parsed. Gather both on a worker and paint when they arrive.
+        // The other two read the disk: the mods count lists a directory and the Replay count scans
+        // the replays folder and asks MediaMetadataRetriever for every clip's duration. On the UI
+        // thread that ran on every onResume, so returning from any screen blocked the frame while
+        // the video metadata was parsed. Gather both on a worker and paint when they arrive.
         if (toggleState == null) return;
         // onResume can run against an executor that onDestroy has already shut down, and an
         // escaping RejectedExecutionException would take the Launch tab down with it. The statuses
@@ -1804,13 +1804,13 @@ import okhttp3.OkHttpClient;
         // decorative line.
         try {
             launchStatsExecutor.execute(() -> {
-                final int antEggCount = countAntEggPacks();
+                final int modCount = countInstalledMods();
                 final int replayCount = countReplayClips();
                 uiHandler.post(() -> {
                     if (isFinishing() || isDestroyed()) return;
-                    antEggStatusText = antEggCount > 0
-                            ? getResources().getQuantityString(R.plurals.launch_antegg_status_ready, antEggCount, antEggCount)
-                            : getString(R.string.launch_antegg_status_none);
+                    modsStatusText = modCount > 0
+                            ? getResources().getQuantityString(R.plurals.launch_mods_status_ready, modCount, modCount)
+                            : getString(R.string.launch_mods_status_none);
                     replayStatusText = replayCount > 0
                             ? getResources().getQuantityString(R.plurals.launch_replay_status_count, replayCount, replayCount)
                             : getString(R.string.launch_replay_status_none);
@@ -1843,13 +1843,12 @@ import okhttp3.OkHttpClient;
         }
     }
 
-    private int countAntEggPacks() {
+    private int countInstalledMods() {
         try {
-            java.io.File root = getExternalFilesDir(null);
-            if (root == null) return 0;
-            java.io.File sandbox = new java.io.File(root,
-                    org.chimeramc.client.core.antegg.AntEggLoader.SANDBOX_DIR_NAME);
-            java.io.File[] children = sandbox.listFiles();
+            GameVersion version = versionManager != null ? versionManager.getSelectedVersion() : null;
+            java.io.File modsDir = version != null ? version.modsDir : null;
+            if (modsDir == null) return 0;
+            java.io.File[] children = modsDir.listFiles();
             return children == null ? 0 : children.length;
         } catch (Throwable t) {
             return 0;
@@ -2292,7 +2291,7 @@ import okhttp3.OkHttpClient;
     private void showNewerGameWarning(GameVersion version, LaunchTrace trace) {
         String covered = "";
         try {
-            covered = PreloaderSignatureRulesManager.highestCoveredVersion(this);
+            covered = SweetLoaderSignatureRulesManager.highestCoveredVersion(this);
         } catch (Throwable ignored) {
             AppLog.warnOnce("CaramelClient", "MainActivity:2399", "Ignored a failure at MainActivity:2399", ignored);
         }
@@ -2752,12 +2751,8 @@ import okhttp3.OkHttpClient;
         fileHandler.processIncomingFilesWithConfirmation(intent, new IncomingCallback(), false);
     }
 
-    /**
-     * Handles the normal Bedrock import and, when the picked file is a Java Edition .jar, opens the
-     * JavaBridge screen instead of reporting it as an unsupported package.
-     */
-    private final class IncomingCallback implements FileHandler.FileOperationCallback,
-            FileHandler.JavaBridgeHandoff {
+    /** Handles the normal Bedrock mod import and reports the outcome. */
+    private final class IncomingCallback implements FileHandler.FileOperationCallback {
         @Override
         public void onSuccess(int processedFiles) {
             hideProgressLoader();
@@ -2776,13 +2771,6 @@ import okhttp3.OkHttpClient;
         @Override
         public void onProgressUpdate(int progress) {
             if (binding != null) animateProgressTo(progress);
-        }
-
-        @Override
-        public void onJavaJarSelected(Uri jarUri) {
-            Intent bridge = new Intent(MainActivity.this, JavaBridgeActivity.class);
-            bridge.putExtra(JavaBridgeActivity.EXTRA_JAR_URI, jarUri.toString());
-            startActivity(bridge);
         }
     }
 

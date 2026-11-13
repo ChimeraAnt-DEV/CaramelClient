@@ -16,7 +16,7 @@ import org.chimeramc.client.util.MainThread;
  * Relaunches the running Minecraft instance so a change that needs a fresh load takes effect.
  *
  * <p>The in-game pack changer can write the pack lists, but this build has no verified native
- * in-place refresh (the preloader's {@code nativeReloadResourcePacks} resolves to no hook on the
+ * in-place refresh (the sweetloader's {@code nativeReloadResourcePacks} resolves to no hook on the
  * shipped builds and returns false), so the
  * loaded world keeps its cached pack stack. The supported way to apply it is to relaunch the same
  * instance — which is exactly what the launcher's Play button does — without the player having to

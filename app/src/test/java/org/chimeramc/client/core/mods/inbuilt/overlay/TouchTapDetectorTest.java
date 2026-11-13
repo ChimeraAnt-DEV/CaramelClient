@@ -87,7 +87,7 @@ public class TouchTapDetectorTest {
      * A pointer that never reports its UP must not swallow the next tap.
      *
      * <p>This is the regression that made Select Hit under-count on the touch path. The activity
-     * classified gestures <em>after</em> the preloader, so an event the preloader consumed
+     * classified gestures <em>after</em> the sweetloader, so an event the sweetloader consumed
      * returned early and {@code onUp} was never delivered for that pointer. The following DOWN
      * then re-armed tracking, its UP paired against the <em>new</em> down time — so a tap made
      * right after a consumed gesture was timed from the wrong start and read as a hold. Feeding

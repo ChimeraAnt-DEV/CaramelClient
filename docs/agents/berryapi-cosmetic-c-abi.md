@@ -1,13 +1,13 @@
-# BerryAPI cosmetic C ABI (preloader mirror + launcher surface)
+# BerryAPI cosmetic C ABI (sweetloader mirror + launcher surface)
 
-BerryAPI owns the cosmetics service. The preloader does not reimplement it; it mirrors the C surface
+BerryAPI owns the cosmetics service. The sweetloader does not reimplement it; it mirrors the C surface
 and drives it from Java, the same way the replay and governor surfaces are bound.
 
 ## The ABI
 
 `berry/cosmetic_c.h` exports `BERRY_GetCosmeticApi()` (a process-lifetime `BerryCosmeticApi` of
 function pointers) plus `BERRY_CosmeticStructSize()` / `BERRY_CosmeticAbiVersion()` /
-`BERRY_CosmeticBoneReaderStructSize()`. The preloader `dlopen`s the library, so it cannot include the
+`BERRY_CosmeticBoneReaderStructSize()`. The sweetloader `dlopen`s the library, so it cannot include the
 header; it mirrors the struct in `include/pl/runtime/BerryCosmeticMirror.hpp` and checks the reported
 `size`/`abi_version` **before** touching a pointer. The mirror pins `sizeof` for every struct
 (`BerryCosmeticAssetC` 520, stats 56, bone transform 44, bone reader 32, `BerryCosmeticApi` 160) and
@@ -40,18 +40,18 @@ or if any of the 8 pinned ABI constants drift. The cosmetic group
 ## The player-model hook (the bone half)
 
 The surface draws **nothing** without bones. `set_player_model_hook(target, reader)` installs a
-detour on the game's player-render target; the preloader owns the per-build target (a signature-scan
-result), so the preloader installs the hook itself and the JNI entries only report its state
+detour on the game's player-render target; the sweetloader owns the per-build target (a signature-scan
+result), so the sweetloader installs the hook itself and the JNI entries only report its state
 (`nativeCosmeticHasPlayerModelHook`) — Java never holds a raw game pointer. Until that hook installs,
 the catalog, loadout and presets are live but nothing renders.
 
 ## Tests
 
 - Native host: `tests/cosmetics/BerryCosmeticMirrorTest.cpp` (mirror, ABI check, marshalling) via
-  `bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh`.
+  `bash app/src/main/cpp/sweetloader/tests/cosmetics/run_tests.sh`.
 - Launcher: `BerryCosmeticApiTest` (enum values, fail-closed defaults, record/counter decoding) and
   `BerryCosmeticsTest` (the equip-id filter and the no-op sync).
 - `JniBindingParityTest` proves every Java `nativeCosmetic*` declaration has a matching export.
 
-Do not add a parallel cosmetics surface in the preloader: the engine-level render hook is the
-preloader's, everything script- or data-facing is BerryAPI's.
+Do not add a parallel cosmetics surface in the sweetloader: the engine-level render hook is the
+sweetloader's, everything script- or data-facing is BerryAPI's.

@@ -50,7 +50,7 @@
 - **A named geometry that does not resolve can fail the whole client entity.** `AccessoryGeometry`
   and `PetGeometry` always emit a resolving-but-empty mesh for "none equipped", so the player
   entity's geometry references resolve and the cape is not dragged down with them.
-- **In-place pack reload is not implemented in this build.** The preloader now has a real
+- **In-place pack reload is not implemented in this build.** The sweetloader now has a real
   fail-safe `nativeReloadResourcePacks` body, but it resolves to "no hook" on the shipped builds
   (verified against the binary тАФ see `preloader-android/docs/resource-pack-reload.md`), so a
   running world keeps its cached pack stack and the supported apply path relaunches the instance

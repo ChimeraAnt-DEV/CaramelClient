@@ -31,7 +31,7 @@ public class InstanceDiskUsageTest {
         File runtime = temp.newFolder("runtime");
         File cache = temp.newFolder("cache");
         write(new File(data, "world"), 1000);
-        write(new File(mods, "mod.antegg"), 200);
+        write(new File(mods, "mod.zip"), 200);
         write(new File(runtime, "libminecraftpe.so"), 300);
         write(new File(cache, "scratch"), 40);
 

@@ -138,15 +138,15 @@ jobs:
       - name: Grant Execute Permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Run preloader host tests
+      - name: Run sweetloader host tests
         # The pure C++ logic (geometry parser, animation
         # solver, socket protocol, hook-install gate, version compare, ...) is device-free and
         # must break the build on every commit, not only on a device. The runner self-fetches
         # nlohmann/json into a gitignored cache when needed.
-        run: bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh
+        run: bash app/src/main/cpp/sweetloader/tests/cosmetics/run_tests.sh
 
       - name: Verify the bundled BerryAPI ABI
-        # The preloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A
+        # The sweetloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A
         # bundled binary built from an older BerryAPI is missing the world-seam / replay / governor
         # surface, and every one of those reads then fails closed with no build-time warning. Fail
         # here instead of shipping a build whose whole BerryAPI feature set is silently dark.
@@ -169,14 +169,14 @@ jobs:
           python3 tools/tests/verify_binary_test.py
           python3 scripts/tests/compute_checksums_test.py
           python3 scripts/tests/release_notes_test.py
-          python3 scripts/tests/sign_preloader_rules_test.py
+          python3 scripts/tests/sign_sweetloader_rules_test.py
           python3 scripts/tests/verify_berryapi_abi_test.py
 
       - name: Verify the shipped rule signature
-        # The rule file decides which addresses the preloader patches, so a signature that does not
+        # The rule file decides which addresses the sweetloader patches, so a signature that does not
         # match the file would silently disable every remote rule set. This checks the
         # pair the app actually bundles, with the public key the app ships.
-        run: python3 scripts/sign_preloader_rules.py --verify
+        run: python3 scripts/sign_sweetloader_rules.py --verify
 
       - name: Inject API Keys
         env:

@@ -24,4 +24,4 @@ Quick Launch uses Minecraft URI actions to jump directly into common flows. Depe
 
 Native SO modules are supported for users who intentionally install them and for developers building extensions. These modules run native code, so only install packages you trust.
 
-Developer documentation lives under [Developer](/guide/developer), with the Preloader API reference available from that section.
+Developer documentation lives under [Developer](/guide/developer), with the SweetLoader API reference available from that section.

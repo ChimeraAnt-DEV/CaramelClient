@@ -79,7 +79,7 @@ public class InbuiltOverlayManager {
     private static final int START_X = 50;
     private long lastVisibilityStateHash = Long.MIN_VALUE;
     /**
-     * Latches the first time the preloader reports the game HUD screen is up.
+     * Latches the first time the sweetloader reports the game HUD screen is up.
      *
      * Until that happens the native hook may simply not be installed (its signature rules did
      * not resolve), and an unproven "false" must not be read as "no game". See
@@ -1307,7 +1307,7 @@ public class InbuiltOverlayManager {
      * Hands one controller key to the open Mod Menu, if there is one.
      *
      * <p>Public because the game activity calls it at the very top of {@code dispatchKeyEvent},
-     * before the preloader can swallow the press: a pad button the menu wants to use for navigation
+     * before the sweetloader can swallow the press: a pad button the menu wants to use for navigation
      * would otherwise be consumed by the game first.
      */
     public boolean handleMenuControllerKey(int rawKeyCode, int action) {
@@ -1933,7 +1933,7 @@ public class InbuiltOverlayManager {
         if (isHudScreenOpen) {
             gameWorldSeen = true;
         }
-        // A resumed game session is the fallback signal when the preloader's HUD hook never
+        // A resumed game session is the fallback signal when the sweetloader's HUD hook never
         // installs; without it the native "false" hid every HUD overlay once the Mod Menu
         // closed. See OverlayVisibility for the full reasoning.
         boolean sessionActive = org.chimeramc.client.core.minecraft.MinecraftActivityState.isRunning()

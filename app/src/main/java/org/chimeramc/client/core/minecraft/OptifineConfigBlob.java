@@ -3,12 +3,12 @@ package org.chimeramc.client.core.minecraft;
 import java.util.List;
 
 /**
- * Builds the flat {@code key=value} configuration blob the preloader's Optifine mode parses.
+ * Builds the flat {@code key=value} configuration blob the sweetloader's Optifine mode parses.
  *
  * <p>Pure and Android-free so the blob grammar is unit-testable: the two sides cannot drift
  * field-by-field because the format is pinned here and in {@code OptifineConfig.cpp}. An unknown
- * item id is still written (a newer launcher may send an id an older preloader ignores), but the
- * preloader treats unknown keys as no-ops.
+ * item id is still written (a newer launcher may send an id an older sweetloader ignores), but the
+ * sweetloader treats unknown keys as no-ops.
  */
 public final class OptifineConfigBlob {
 
@@ -48,7 +48,7 @@ public final class OptifineConfigBlob {
      * Builds the blob with every item toggle forced off.
      *
      * <p>Used when the master switch is turned off but the sub-toggles must be preserved for the
-     * next time it is on: the preloader sees a fully-off configuration, so nothing keeps running.
+     * next time it is on: the sweetloader sees a fully-off configuration, so nothing keeps running.
      */
     public static String buildDisabled(List<String> itemIds) {
         StringBuilder builder = new StringBuilder(256);

@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Which preloader hooks the running build actually installed, as one queryable table.
+ * Which sweetloader hooks the running build actually installed, as one queryable table.
  *
  * <p>A hook that did not resolve is not an error — the game classes export no symbols, so a hook
  * exists only when its per-build signature was found. The problem is that a feature built on a
@@ -15,14 +15,14 @@ import java.util.Map;
  *
  * <p><b>Fail-closed.</b> With no {@link Source} installed, every hook reads as not live, so a
  * caller that consults this before drawing or acting does nothing rather than guessing. The
- * launcher installs the real source once the preloader library is loaded.
+ * launcher installs the real source once the sweetloader library is loaded.
  *
  * <p>Android-free on purpose: the mapping and the summary are pinned by
  * {@link org.chimeramc.client.core.backend.HookAvailabilityTest} with no device.
  */
 public final class HookAvailability {
 
-    /** A preloader hook the launcher knows how to ask about. The set is closed so a feature cannot
+    /** A sweetloader hook the launcher knows how to ask about. The set is closed so a feature cannot
      * spell the same hook two ways. */
     public enum Hook {
         /** The game's player-render entry, which the cosmetics renderer and the FPS tick need. */
@@ -52,7 +52,7 @@ public final class HookAvailability {
     }
 
     /** Where the live/absent reading comes from. Replaced in tests, and in production by the
-     * preloader probe. */
+     * sweetloader probe. */
     public interface Source {
         boolean isLive(Hook hook);
     }
@@ -135,7 +135,7 @@ public final class HookAvailability {
             builder.append(entry.getKey().id()).append('=').append(entry.getValue() ? "on" : "off");
         }
         if (live == 0) {
-            builder.append(" (no preloader hook is live on this build)");
+            builder.append(" (no sweetloader hook is live on this build)");
         }
         return builder.toString();
     }

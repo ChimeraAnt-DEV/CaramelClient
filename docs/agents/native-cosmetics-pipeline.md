@@ -1,7 +1,7 @@
-## Native cosmetics pipeline (preloader `pl::cosmetics` + `pl::hooks`)
+## Native cosmetics pipeline (sweetloader `pl::cosmetics` + `pl::hooks`)
 
 The cosmetic system moves beyond the resource-pack fallback toward a direct native runtime pipeline
-inside the preloader (`app/src/main/cpp/preloader`), delivered in four Tasks.
+inside the sweetloader (`app/src/main/cpp/sweetloader`), delivered in four Tasks.
 
 ### Task 1 тАФ native `.geo.json` parser + mesh builder (`pl::cosmetics::geometry`)
 - `include/pl/cosmetics/geometry/BedrockGeometry.hpp` + `src/pl/cosmetics/geometry/BedrockModelParser.cpp`.

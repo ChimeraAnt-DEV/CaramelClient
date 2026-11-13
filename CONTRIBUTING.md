@@ -14,7 +14,7 @@ cd CaramelClient
 git submodule update --init --recursive
 ```
 
-The native build needs `app/src/main/cpp/preloader` and `app/src/main/cpp/libHttpClient`. If a
+The native build needs `app/src/main/cpp/sweetloader` and `app/src/main/cpp/libHttpClient`. If a
 build fails with a missing native source, run `git submodule sync && git submodule update --init
 --recursive` and then `./gradlew clean` — a stale native build output can otherwise persist.
 

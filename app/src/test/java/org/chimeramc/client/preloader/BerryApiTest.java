@@ -10,7 +10,7 @@ import org.junit.Test;
  * The pure half of the BerryAPI bridge: the capability-bit rule and the constants the launcher
  * greys features on.
  *
- * <p>The JNI half cannot run off-device (there is no preloader), so it is not exercised here; what
+ * <p>The JNI half cannot run off-device (there is no sweetloader), so it is not exercised here; what
  * this pins is the decision logic a caller relies on, so a bit test cannot silently pass on an
  * unrelated flag.
  */

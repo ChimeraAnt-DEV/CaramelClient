@@ -18,13 +18,13 @@ import java.util.Map;
 /**
  * Renders and wires the Game Performance Mode section of the Settings screen.
  *
- * <p>One row per item, built from {@link OptifineItemIds#ALL} so the list and the preloader's
+ * <p>One row per item, built from {@link OptifineItemIds#ALL} so the list and the sweetloader's
  * item table cannot drift. Each row carries its own toggle (so a device-specific misbehaviour can
- * be isolated) and a live status line read back from the preloader.
+ * be isolated) and a live status line read back from the sweetloader.
  *
  * <p>The section is honest by construction: a status of "skipped" always comes with the
- * preloader's own reason, and there is deliberately no frame-rate claim anywhere here. The
- * controller never reports an item as active when the preloader did not.
+ * sweetloader's own reason, and there is deliberately no frame-rate claim anywhere here. The
+ * controller never reports an item as active when the sweetloader did not.
  */
 public final class OptifineSettingsController {
 
@@ -97,7 +97,7 @@ public final class OptifineSettingsController {
     }
 
     /**
-     * Re-reads the preloader's per-item report and updates the status lines and the summary.
+     * Re-reads the sweetloader's per-item report and updates the status lines and the summary.
      *
      * <p>Safe to call when the native library is absent: the report is empty and every row shows
      * "Off", which is accurate — nothing was applied.
@@ -124,7 +124,7 @@ public final class OptifineSettingsController {
             String label = context.getString(OptifineStatus.labelRes(status));
             String detail = state == null ? "" : state.detail;
             String line = detail == null || detail.isEmpty() ? label : label + " — " + detail;
-            // Say *why* an item is off. The preloader reports "auto-disabled" only when a
+            // Say *why* an item is off. The sweetloader reports "auto-disabled" only when a
             // launch reached it; when the item is already off, the crash guard is the reason and the
             // row would otherwise read like a user choice.
             String quarantine = OptifineQuarantine.describe(OptifineQuarantine.classify(

@@ -17,7 +17,7 @@ import java.util.Set;
  * not an {@link Exception}: a {@code catch (Exception)} around the call does <em>not</em> contain
  * it, so it unwinds the whole caller. That is exactly how {@code InputStream.readAllBytes()} in the
  * signature-rules reader killed the launch on Android 12 with "Launch failed" the instant the
- * preloader started loading.
+ * sweetloader started loading.
  *
  * <p>Everything here is written against API 1-26 APIs only, and {@link #isBlank(String)} matches
  * {@link String#isBlank()} exactly (whitespace is defined by {@link Character#isWhitespace}, not by

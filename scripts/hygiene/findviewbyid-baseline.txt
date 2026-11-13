@@ -40,7 +40,6 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomFlatWorldAct
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/JavaBridgeActivity.java 22
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 38
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7

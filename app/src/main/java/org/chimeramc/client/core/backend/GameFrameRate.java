@@ -1,9 +1,9 @@
 package org.chimeramc.client.core.backend;
 
 /**
- * Derives the game's real frame rate from the preloader's render-hook frame counter.
+ * Derives the game's real frame rate from the sweetloader's render-hook frame counter.
  *
- * <p>The game strips its symbols, so there is no frame-rate API to call. The preloader does,
+ * <p>The game strips its symbols, so there is no frame-rate API to call. The sweetloader does,
  * however, own a hook on the game's own player renderer ({@code GamePlayerRender}), and that hook
  * increments a monotonic tick once per frame it draws. Counting how many of those ticks elapse in a
  * wall-clock window is the game's own frame rate — a reading of frames the game actually presented,
@@ -41,7 +41,7 @@ public final class GameFrameRate {
     /**
      * Feeds one sample and returns the current rate.
      *
-     * @param renderTick the preloader's monotonic per-frame tick, or a negative value when the
+     * @param renderTick the sweetloader's monotonic per-frame tick, or a negative value when the
      *     render hook has not run this session
      * @param nowMs a monotonic wall clock, in milliseconds
      * @return the frame rate, or {@link #UNKNOWN} when no rate can be derived yet

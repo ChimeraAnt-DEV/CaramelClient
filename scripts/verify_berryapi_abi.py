@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Verify the bundled BerryAPI shared library exposes the C ABI the preloader binds.
+"""Verify the bundled BerryAPI shared library exposes the C ABI the sweetloader binds.
 
-The preloader never links BerryAPI: it ``dlopen``s ``libBerryAPI.so`` and resolves a
+The sweetloader never links BerryAPI: it ``dlopen``s ``libBerryAPI.so`` and resolves a
 fixed set of ``BERRY_*`` symbols through ``dlsym`` (see
-``app/src/main/cpp/preloader/src/pl/runtime/BerryApiBridge.cpp``). If the bundled
+``app/src/main/cpp/sweetloader/src/pl/runtime/BerryApiBridge.cpp``). If the bundled
 library was built from an older BerryAPI that predates the world-seam / replay /
 governor C surface, every one of those ``dlsym`` calls returns null and the whole
 feature set stays silently dark -- the launcher reports "world feed unavailable"
@@ -11,11 +11,11 @@ and the dependent modules are greyed out with no build-time warning.
 
 This check reads the library's ``.dynsym``/``.dynstr`` directly, so it needs no
 Android toolchain and no third-party module, and fails when any required symbol is
-missing. It is the guard that keeps the bundled binary and the preloader's
+missing. It is the guard that keeps the bundled binary and the sweetloader's
 expectations from drifting apart.
 
 It also pins the layout constant BerryAPI validates at bind time: the ABI version
-that ``BERRY_WorldSeamAbiVersion`` reports must equal the preloader mirror's
+that ``BERRY_WorldSeamAbiVersion`` reports must equal the sweetloader mirror's
 ``kHostSeamAbiVersion``. The numeric value is read from the library's bytes (the
 function returns it as an ``mov w0, #imm`` immediate), so a BerryAPI ABI bump is
 caught here rather than by a misread function pointer on the device.
@@ -35,7 +35,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_LIB = ROOT / "app/src/main/jniLibs/arm64-v8a/libBerryAPI.so"
 
-# Every symbol the preloader resolves with dlsym. Grouped so a failure names the
+# Every symbol the sweetloader resolves with dlsym. Grouped so a failure names the
 # feature it disables.
 REQUIRED_SYMBOLS = {
     "core": [
@@ -68,28 +68,28 @@ REQUIRED_SYMBOLS = {
     ],
 }
 
-# The seam ABI version the preloader mirror is compiled against
+# The seam ABI version the sweetloader mirror is compiled against
 # (pl::berry::kHostSeamAbiVersion). BERRY_WorldSeamAbiVersion must return this.
 EXPECTED_SEAM_ABI = 8
 
 # The replay and governor surfaces, and the struct sizes the mirrors produce. The
-# library's BERRY_*AbiVersion / BERRY_*StructSize must equal these, or the preloader
+# library's BERRY_*AbiVersion / BERRY_*StructSize must equal these, or the sweetloader
 # refuses the surface at run time (the size/ABI check) and the feature stays dark.
 EXPECTED_REPLAY_ABI = 2
 EXPECTED_REPLAY_STRUCT_SIZE = 144
 EXPECTED_GOVERNOR_ABI = 1
 EXPECTED_GOVERNOR_STRUCT_SIZE = 48
 
-# The cosmetic surface. `BERRY_GetCosmeticApi` returns a BerryCosmeticApi the preloader mirrors
+# The cosmetic surface. `BERRY_GetCosmeticApi` returns a BerryCosmeticApi the sweetloader mirrors
 # (pl::berry::CosmeticApiMirror); the struct size, the surface ABI and the bone-reader struct size
-# are the numbers the preloader compares before it reads a single function pointer, so a drift here
+# are the numbers the sweetloader compares before it reads a single function pointer, so a drift here
 # leaves the launcher's cosmetics screen silently dark.
 EXPECTED_COSMETIC_ABI = 1
 EXPECTED_COSMETIC_STRUCT_SIZE = 160
 EXPECTED_COSMETIC_BONE_READER_STRUCT_SIZE = 32
 
 # (symbol, expected value, human description) checked by decoding the function's
-# returned immediate. These are the numbers the preloader compares against.
+# returned immediate. These are the numbers the sweetloader compares against.
 ABI_CONSTANTS = [
     ("BERRY_WorldSeamAbiVersion", EXPECTED_SEAM_ABI, "world-seam ABI (kHostSeamAbiVersion)"),
     ("BERRY_ReplayAbiVersion", EXPECTED_REPLAY_ABI, "replay ABI (kHostReplayAbiVersion)"),
@@ -291,14 +291,14 @@ def check(lib: Path) -> int:
 
     if missing:
         print(
-            "\nThe bundled libBerryAPI.so predates the C surface the preloader binds.\n"
+            "\nThe bundled libBerryAPI.so predates the C surface the sweetloader binds.\n"
             "Rebuild it from Lynxifyy/BerryAPI with tools/build-android.sh (ABI 8) and\n"
             "replace app/src/main/jniLibs/arm64-v8a/libBerryAPI.so.",
             file=sys.stderr,
         )
         return 1
 
-    # Pin every ABI number the preloader compares against. A function whose
+    # Pin every ABI number the sweetloader compares against. A function whose
     # prologue does not decode is left unpinned rather than failed, so a compiler
     # that emits an unexpected constant-materialisation sequence does not produce a
     # false alarm; the mismatch case is what matters and is detected whenever the
@@ -314,8 +314,8 @@ def check(lib: Path) -> int:
         pinned += 1
         if immediate != expected:
             print(
-                f"verify_berryapi_abi: {symbol} returns {immediate} but the preloader targets "
-                f"{expected} ({description}). Update the preloader mirror (kHost*AbiVersion and the "
+                f"verify_berryapi_abi: {symbol} returns {immediate} but the sweetloader targets "
+                f"{expected} ({description}). Update the sweetloader mirror (kHost*AbiVersion and the "
                 f"struct layout) together with the library.",
                 file=sys.stderr,
             )

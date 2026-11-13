@@ -8,7 +8,7 @@ import android.os.Looper;
 
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.versions.VersionManager;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.util.LauncherStorage;
 import org.chimeramc.client.util.AppExecutors;
 import org.chimeramc.client.util.MainThread;
@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * <ol>
  *   <li>Ensure the app storage root is usable.</li>
- *   <li>Refresh the preloader signature rules (the slowest step; network, but it degrades to the
+ *   <li>Refresh the sweetloader signature rules (the slowest step; network, but it degrades to the
  *       bundled snapshot).</li>
  *   <li>Load the installed/custom version index the home screen reads.</li>
  *   <li>Open the inbuilt-mod preferences the home screen reads for its stat.</li>
@@ -69,7 +69,7 @@ public final class SplashInit {
 
         Thread worker = AppExecutors.thread("splash-init", () -> {
             step(() -> LauncherStorage.ensureNoMedia(appContext), main, done, listener);
-            step(() -> PreloaderSignatureRulesManager.refreshOnLauncherStart(appContext),
+            step(() -> SweetLoaderSignatureRulesManager.refreshOnLauncherStart(appContext),
                     main, done, listener);
             step(() -> VersionManager.get(appContext).loadAllVersions(), main, done, listener);
             step(() -> InbuiltModManager.getInstance(appContext), main, done, listener);

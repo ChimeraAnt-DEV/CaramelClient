@@ -38,8 +38,8 @@ public class NoItemNumberCommentsTest {
         List<String> offenders = new ArrayList<>();
         for (String root : new String[]{
                 "app/src/main", "app/src/test", "docs", "scripts", ".github",
-                "app/src/main/cpp/preloader/src", "app/src/main/cpp/preloader/include",
-                "app/src/main/cpp/preloader/tests", "app/src/main/cpp/preloader/docs"}) {
+                "app/src/main/cpp/sweetloader/src", "app/src/main/cpp/sweetloader/include",
+                "app/src/main/cpp/sweetloader/tests", "app/src/main/cpp/sweetloader/docs"}) {
             Path dir = projectRoot().resolve(root);
             if (!Files.exists(dir)) continue;
             try (Stream<Path> s = Files.walk(dir)) {

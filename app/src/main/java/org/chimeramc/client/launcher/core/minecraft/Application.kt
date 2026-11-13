@@ -27,7 +27,7 @@ class LauncherApplication : Application() {
         FeatureSettings.init(applicationContext)
         CrashReporter.init(this)
         // One table a script or a module can ask before it draws, so a feature whose
-        // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
+        // sweetloader hook did not resolve is skipped rather than looking like a broken feature. Each
         // probe is a cached native read, so this is cheap enough to leave installed for the process.
         org.chimeramc.client.core.backend.HookAvailability.install { hook ->
             when (hook) {
@@ -167,7 +167,7 @@ class LauncherApplication : Application() {
         org.chimeramc.client.core.minecraft.FpsOptimizationService.setLowMemory(critical)
         if (critical) {
             org.chimeramc.client.core.minecraft.FpsOptimizationService.apply()
-            // Bound the preloader's cached module handles: a hot-reloading or heavily-modded session
+            // Bound the sweetloader's cached module handles: a hot-reloading or heavily-modded session
             // grows that cache without bound, and trim-memory is exactly when to reclaim it. No-op
             // when the library is absent.
             org.chimeramc.client.preloader.PreloaderInput.closeUnusedModuleHandles()

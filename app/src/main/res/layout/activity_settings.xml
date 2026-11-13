@@ -2025,7 +2025,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/preloader_sigs_title"
+                            android:text="@string/sweetloader_sigs_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
                             android:textAppearance="@style/TextAppearance.Caramel.Title"
@@ -2033,7 +2033,7 @@
     android:accessibilityHeading="true" />
 
                         <TextView
-                            android:id="@+id/preloader_sigs_last_update"
+                            android:id="@+id/sweetloader_sigs_last_update"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_1"
@@ -2042,12 +2042,12 @@
                             android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
-                            android:id="@+id/btn_update_preloader_sigs"
+                            android:id="@+id/btn_update_sweetloader_sigs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minHeight="40dp"
                             android:layout_marginTop="@dimen/space_3"
-                            android:text="@string/preloader_sigs_update"
+                            android:text="@string/sweetloader_sigs_update"
                             android:fontFamily="@font/misans"
                             android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"

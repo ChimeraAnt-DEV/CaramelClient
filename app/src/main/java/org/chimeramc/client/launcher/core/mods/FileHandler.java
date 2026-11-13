@@ -91,16 +91,6 @@ public class FileHandler {
         void onProgressUpdate(int progress);
     }
 
-    /**
-     * Implemented by callers that can route a Java Edition {@code .jar} to the JavaBridge screen.
-     *
-     * <p>JavaBridge is an Activity, so the hand-off is expressed as a callback rather than a
-     * {@code startActivity} from this class — FileHandler stays free of navigation.
-     */
-    public interface JavaBridgeHandoff {
-        void onJavaJarSelected(Uri jarUri);
-    }
-
     public FileHandler(Context context, MainViewModel modManager, VersionManager version) {
         this.context = context;
         this.modManager = modManager;
@@ -114,19 +104,7 @@ public class FileHandler {
     }
 
     public void processIncomingFilesWithConfirmation(Intent intent, FileOperationCallback callback, boolean isButtonClick) {
-        // A share sheet hands over text, not a document: the package link is inside the message.
-        // This runs before the URI path because an ACTION_SEND with a link has no data URI at all,
-        // and an ACTION_SEND with both a link and an attachment should import both.
-        String sharedLink = sharedPackageLink(intent);
-
         List<Uri> fileUris = extractFileUris(intent);
-
-        // A Java Edition .jar is not a Bedrock mod package, so it is never imported by this
-        // pipeline. JavaBridge rewrites it into a Bedrock .AntEgg instead, and it owns that flow
-        // from the picker onward — hence the hand-off here rather than an "unsupported file" error.
-        if (callback instanceof JavaBridgeHandoff && handOffJar(fileUris, (JavaBridgeHandoff) callback)) {
-            return;
-        }
 
         List<Uri> supportedUris = new ArrayList<>();
         for (Uri uri : fileUris) {
@@ -137,10 +115,6 @@ public class FileHandler {
         }
 
         if (supportedUris.isEmpty()) {
-            if (sharedLink != null) {
-                importSharedLink(sharedLink, callback);
-                return;
-            }
             if (isButtonClick) {
                 new CustomAlertDialog(context)
                         .setTitleText(context.getString(R.string.invalid_mod_file))
@@ -153,22 +127,12 @@ public class FileHandler {
             return;
         }
 
-        if (sharedLink != null) {
-            importSharedLink(sharedLink, callback);
-        }
-
         AppExecutors.run(AppExecutors.Kind.DISK, "mod-import-scan", () -> {
             List<Uri> packagedUris = new ArrayList<>();
             List<Uri> bareUris = new ArrayList<>();
-            List<Uri> antEggUris = new ArrayList<>();
             List<String> invalidZipNames = new ArrayList<>();
             for (Uri uri : supportedUris) {
                 String fileName = resolveImportFileName(uri);
-                if (org.chimeramc.client.core.antegg.AntEggPackage.looksLikeAntEgg(fileName)) {
-                    // .AntEgg has its own validated pipeline; it is not a "zip mod package".
-                    antEggUris.add(uri);
-                    continue;
-                }
                 if (isZipModPackageFile(uri, fileName) && !isValidZipModPackage(uri)) {
                     invalidZipNames.add(fileName);
                     continue;
@@ -182,9 +146,6 @@ public class FileHandler {
             }
 
             MainThread.post(() -> {
-                if (!antEggUris.isEmpty()) {
-                    importAntEggFiles(antEggUris, callback);
-                }
                 Runnable showImportDialogs = () -> {
                     if (!packagedUris.isEmpty()) {
                         new CustomAlertDialog(context)
@@ -213,71 +174,6 @@ public class FileHandler {
         });
     }
 
-    /**
-     * The package link inside an incoming share, or {@code null}.
-     *
-     * <p>Reads both extras a share can use: {@code EXTRA_TEXT} is the common one and
-     * {@code EXTRA_TITLE} is where some apps put the link. Only an {@code .AntEgg} link counts, so
-     * a share of unrelated text is not swallowed by this importer.
-     */
-    private String sharedPackageLink(Intent intent) {
-        if (intent == null) return null;
-        if (!Intent.ACTION_SEND.equals(intent.getAction())
-                && !Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
-            return null;
-        }
-        for (String extra : new String[] {Intent.EXTRA_TEXT, Intent.EXTRA_TITLE,
-                Intent.EXTRA_SUBJECT}) {
-            String value = intent.getStringExtra(extra);
-            String link = org.chimeramc.client.core.antegg.AntEggLink.firstImportableUrl(value);
-            if (link != null) return link;
-        }
-        return null;
-    }
-
-    /**
-     * Downloads a shared {@code .AntEgg} link and runs it through the ordinary validated loader.
-     *
-     * <p>The download only stages a file; {@link #importAntEggFiles} does the import, so a link
-     * import gets exactly the same validation, sandbox resolution and atomic install as a picked
-     * file. The staged copy is deleted once the loader has it.
-     */
-    private void importSharedLink(String url, FileOperationCallback callback) {
-        new org.chimeramc.client.core.antegg.AntEggLinkDownloader().download(
-                context, url, null, new org.chimeramc.client.core.antegg
-                        .AntEggLinkDownloader.Callback() {
-                    @Override
-                    public void onSuccess(File staged, String fileName) {
-                        AppExecutors.run(AppExecutors.Kind.MOD, "antegg-load", () -> {
-                            // The digest of the staged package is logged so a link import
-                            // can be checked against the publisher's value.
-                            String digest = org.chimeramc.client.core.antegg.ModHash.sha256(staged);
-                            Log.i(TAG, "Linked package " + fileName + " sha256=" + digest);
-                            org.chimeramc.client.core.antegg.AntEggLoader.LoadResult result =
-                                    org.chimeramc.client.core.antegg.AntEggLoader.loadMod(context, staged);
-                            //noinspection ResultOfMethodCallIgnored
-                            staged.delete();
-                            if (!result.success) {
-                                org.chimeramc.client.core.antegg.AntEggLoader.recordFailure(
-                                        context, fileName, result.error);
-                            }
-                            MainThread.post(() -> {
-                                if (result.success) {
-                                    if (callback != null) callback.onSuccess(1);
-                                } else if (callback != null) {
-                                    callback.onError(result.error);
-                                }
-                            });
-                        });
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        if (callback != null) callback.onError(message);
-                    }
-                });
-    }
-
     private boolean needsMetadataInput(String fileName) {
         String lowerName = fileName.toLowerCase(Locale.ROOT);
         if (lowerName.endsWith(".so")) {
@@ -292,8 +188,7 @@ public class FileHandler {
         }
 
         String lowerName = fileName.toLowerCase(Locale.ROOT);
-        // One package format name only: `.antegg`. A bare `.zip` is not a named package format, it
-        // is the unpacked-layout import, so it stays. `.chimerapack` and `.levipack` were earlier
+        // A bare `.zip` is the unpacked-layout import. `.chimerapack` and `.levipack` were earlier
         // names for the same thing and are gone; importing one of those now reports the file as
         // unsupported rather than silently accepting a name the docs no longer describe.
         return lowerName.endsWith(".zip");
@@ -1368,62 +1263,13 @@ public class FileHandler {
         MainThread.post(() -> callback.onError(message));
     }
 
-    private void importAntEggFiles(List<Uri> uris, FileOperationCallback callback) {
-        AppExecutors.run(AppExecutors.Kind.MOD, "antegg-import-batch", () -> {
-            // Item G4: the batch is staged and read before anything loads, so a package whose
-            // dependency is in the same selection is ordered after it instead of being refused
-            // for arriving first. See AntEggImport.importUriBatch.
-            org.chimeramc.client.core.antegg.AntEggImport.BatchResult batch =
-                    org.chimeramc.client.core.antegg.AntEggImport.importUriBatch(context, uris);
-            final int successCount = batch.successCount;
-            final String finalError = batch.error;
-            MainThread.post(() -> {
-                if (successCount > 0 && callback != null) {
-                    callback.onSuccess(successCount);
-                } else if (callback != null && finalError != null) {
-                    callback.onError(finalError);
-                }
-            });
-        });
-    }
-
     private boolean isSupportedImportFile(Uri uri, String fileName) {
         if (fileName == null) {
             return false;
         }
 
         String lowerName = fileName.toLowerCase(Locale.ROOT);
-        return lowerName.endsWith(".so")
-                || org.chimeramc.client.core.antegg.AntEggPackage.looksLikeAntEgg(lowerName)
-                || isZipModPackageFile(uri, fileName);
-    }
-
-    /**
-     * True when the picked document is a Java Edition {@code .jar} rather than a Bedrock package.
-     *
-     * <p>Deliberately narrow: only a {@code .jar} name qualifies, and a plain {@code .zip} that a
-     * picker happens to report with a zip MIME type is still handled by the existing zip path. A
-     * jar has the same magic bytes as a zip, so the name is the only reliable discriminator.
-     */
-    private static boolean looksLikeJavaJar(String fileName) {
-        return fileName != null && fileName.toLowerCase(Locale.ROOT).endsWith(".jar");
-    }
-
-    /**
-     * Routes a Java jar to the JavaBridge screen, if one was picked.
-     *
-     * <p>Returns true when the hand-off happened and this pipeline must stop; false lets the normal
-     * import continue. The callback is invoked on the main thread because the caller starts an
-     * Activity from it.
-     */
-    private boolean handOffJar(List<Uri> fileUris, JavaBridgeHandoff handoff) {
-        for (Uri uri : fileUris) {
-            if (looksLikeJavaJar(resolveImportFileName(uri))) {
-                MainThread.post(() -> handoff.onJavaJarSelected(uri));
-                return true;
-            }
-        }
-        return false;
+        return lowerName.endsWith(".so") || isZipModPackageFile(uri, fileName);
     }
 
     private String getStringProperty(JsonObject object, String key) {

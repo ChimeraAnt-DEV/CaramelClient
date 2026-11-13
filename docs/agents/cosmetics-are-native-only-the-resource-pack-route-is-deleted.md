@@ -2,7 +2,7 @@
 - **The legacy cosmetic resource pack is gone, not hidden.** `CapeResourcePackBuilder`,
   `CapeInGameInstaller`, `CosmeticsDiagnostics`, `CosmeticsStatusActivity`,
   `activity_cosmetics_status.xml` and their tests were deleted. The only route a cosmetic reaches
-  the game is the native registry + the preloader's player-render hook. Do not reintroduce a pack
+  the game is the native registry + the sweetloader's player-render hook. Do not reintroduce a pack
   builder or an "Apply in game" button. (Skin packs are a **separate** feature тАФ `SkinPackActivator`
   / `SkinPackBuilder` / `SkinsSettingsFragment` stay.)
 - **`NativeCosmeticsRuntime` is the single initialisation point.** `LauncherApplication.onCreate`

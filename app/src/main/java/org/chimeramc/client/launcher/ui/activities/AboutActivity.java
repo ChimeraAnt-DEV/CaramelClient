@@ -103,7 +103,7 @@ public class AboutActivity extends BaseActivity {
      */
     private void showBackendStatus() {
         // Name the exact build (version, commit, type) and the native library status, so a
-        // screenshot of this screen identifies the revision and says whether the preloader loaded.
+        // screenshot of this screen identifies the revision and says whether the sweetloader loaded.
         TextView buildInfo = binding.aboutBuildInfo;
         if (buildInfo != null) {
             buildInfo.setText(getString(R.string.about_build_info,

@@ -26,7 +26,7 @@ public class HookSelfTestReportTest {
         assertEquals(1, report.reportedPassed);
         assertEquals(2, report.reportedTotal);
         assertEquals(2, report.sites.size());
-        // Sorted by name, because the preloader's render order is not something the client should
+        // Sorted by name, because the sweetloader's render order is not something the client should
         // depend on for a stable display.
         assertEquals("a", report.sites.get(0).name);
         assertTrue(report.sites.get(0).isOk());
@@ -94,8 +94,8 @@ public class HookSelfTestReportTest {
     }
 
     @Test
-    public void anEmptyReportSaysThePreloaderDidNotAnswer() {
-        assertEquals("no self-test from the preloader", HookSelfTestReport.empty().summary());
+    public void anEmptyReportSaysTheSweetLoaderDidNotAnswer() {
+        assertEquals("no self-test from the sweetloader", HookSelfTestReport.empty().summary());
     }
 
     @Test

@@ -7,8 +7,8 @@ a regression.
 ### Implemented and verified (logic + tests, device unverified unless noted)
 - **B2** in-app copyright is Apache-2.0 across all 11 locales. **B10** "Bedrock Optifine Mode" is
   `optifine_mode_title` = "Game Performance Mode"; no Java-brand wording remains. **B5** the only
-  package format is `.antegg` (`.chimerapack`/`.levipack` have zero hits). **C3** the `.antegg`
-  manifest carries a `permissions` list (`AntEggManifest`, parsed and emitted by the template).
+  package format is `.zip` (`.AntEgg`, `.chimerapack` and `.levipack` have zero hits). **C3** the
+  manifest carries a `permissions` list (parsed and emitted by the mod template).
 - **U1** the four destinations are Play/Library/Mods/Settings. **U5** `NavLayoutMode` (bottom nav →
   nav rail → expanded rail) with `nav_bar.xml` + `nav_rail.xml`. **U13** `SetupWizardActivity`.
   **U14** `LaunchFailurePresenter` maps `LaunchReadiness.State` to named copy. **U16**
@@ -26,8 +26,8 @@ a regression.
 - **G1** `ExtractionCachePolicy` (native extraction version → wipe stale libs). **G2** "Repair
   installation" in Diagnostics. **G3** `libc++_shared.so` provided by the launcher, `ElfHeaderValidator`
   (ABI gate) + `ElfLibraryReader`/`NativeLibraryLoadOrder` (multi-`.so` load order) wired into
-  `ModNativeLoader` and `AntEggLoader.loadNative`.
-  **G4** `.antegg` dependency check (`AntEggLoader`). **G5** signature DB with fail-closed refusal.
+  `ModNativeLoader` and the SweetLoader engine's native load.
+  **G4** dependency check in the SweetLoader engine. **G5** signature DB with fail-closed refusal.
   **G6** submodule-init check. **G8** `ModCrashAttribution` auto-disable after N crashes. **G9**
   `CosmeticsDiagnosticsReport` + dialog. **G10** upstream known-issues note (`cosmetics_known_issues_note`,
   MCPE-238211/243527/241755/242499/229837). **G13** scheduled world backups. **G14** server list.
@@ -59,12 +59,12 @@ The 52 are one of two shapes, and each needs a different thing.
    (BerryAPI `seam.h`, ABI 8, `sizeof` 112) already exposes the full surface — `get_entity`,
    `all_entities`, `entities_in_radius`, `entities_in_aabb`, `raycast_entity`, `raycast_block`,
    `get_block`, `get_time`, `get_biome`, `get_light`, `get_chunk_state`, `get_local_player`. The
-   preloader's `BindWorldSeam()` fills **only `get_local_player`** (from the `ClientInstance`
+   sweetloader's `BindWorldSeam()` fills **only `get_local_player`** (from the `ClientInstance`
    vtable slot the render feed already reads); every other slot is left null, which BerryAPI reads
    as its fail-closed "no data" default. So the binding is done — **what is missing is the host
    side of those callbacks.** Answering `all_entities`/`get_block`/`raycast_*` needs an anchor into
    the game's entity list and level object that the stripped `libminecraftpe.so` does not currently
-   give the preloader (the same wall the native entity/camera feed note documents). Until that
+   give the sweetloader (the same wall the native entity/camera feed note documents). Until that
    anchor exists, filling those slots would be inventing a reading, so they stay null and the
    dependent modules stay badged.
 2. **Local-player and input reads.** Already reachable (`LOCAL_FEED`/`DEVICE_INPUT`), which is why
@@ -74,13 +74,13 @@ So BerryAPI needs, in order:
 - **The game-version signature pack for the build the user runs.** BerryAPI's OTA packs
   (`sigpack.h`) resolve hooks and struct layouts by build fingerprint; without a pack for the active
   `libminecraftpe.so` build, the hooks do not arm and the world/entity callbacks have nothing to
-  read through. The launcher ships the pack side (`resources/preloader/preloader_signature_rules_source.json`,
+  read through. The launcher ships the pack side (`resources/sweetloader/sweetloader_signature_rules_source.json`,
   revision 7, 1.26.33.x … 1.26.50.x); a build outside those ranges arms nothing.
 - **`BERRY_InjectWithConfig` with `enable_client = 1` and the local player id.** `BERRY_Inject()`
   uses `DefaultConfigC()`, which already sets `enable_client`/`enable_render`/`auto_attach_modules`
   to 1, so the bundled client is built; `local_player_id` stays 0 (unknown) until a seam resolves
   the local player, which only affects the voice proximity check, not the world reads.
-- **An entity/level anchor in the preloader** (the item above) to actually answer the non-null seam
+- **An entity/level anchor in the sweetloader** (the item above) to actually answer the non-null seam
   slots. This is the single largest blocker for the entity-dependent part of the 52.
 - **BerryAPI cosmetics (`Berry::Render`) stay a separate path**: they need the `PlayerModelHook`
   (a player-render detour) bound through BerryAPI's own hook backend, which is BerryAPI's job once
@@ -89,7 +89,7 @@ So BerryAPI needs, in order:
 
 ### Cannot be built as written (do not "fix" these)
 - **G7 — crash isolation via a separate `:modhost` process.** A native mod's whole purpose is to hook
-  the *game's* address space; `System.loadLibrary("preloader")` maps the preloader into the game
+  the *game's* address space; `System.loadLibrary("sweetloader")` maps the sweetloader into the game
   process, and the mod-menu/HUD/render hooks are in-process calls. A `:modhost` process could not
   install a hook in `libminecraftpe.so`, so it would isolate the crash by removing the feature. The
   honest response is per-mod crash attribution (G8) plus the `:crash` process the manifest already
@@ -105,7 +105,7 @@ paths) finds ~218 `strings.xml` entries with no consumer. They are **not** a uni
 - The families the update list *removed* (accent, compact-mode, glass-card, firework, blur-intensity,
   animations-enabled, glow-effects, `vip_*`) have **zero** orphan hits — the removals were clean.
 - The remainder are deliberate: strings for features whose UI lives elsewhere (the account-skin
-  diagnostics rows read by `CosmeticsPanel`), `.antegg`/manifest authoring text, and a handful of
+  diagnostics rows read by `CosmeticsPanel`), mod-manifest authoring text, and a handful of
   historical labels. `mod_config_badge_with_count`, `mod_config_restart_hint`,
   `mod_config_offhand_swap_key` and `mod_config_category_prediction` are leftovers of that kind.
 - **Do not bulk-delete by scan.** `GamePackageManager.getGameStringResource` and

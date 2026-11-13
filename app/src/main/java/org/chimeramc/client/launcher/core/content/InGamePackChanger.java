@@ -84,7 +84,7 @@ public final class InGamePackChanger {
     /**
      * A hook a running session installs so a pack change can be applied by relaunching the game.
      *
-     * <p>Some builds cannot refresh their pack stack in place — the preloader exposes no
+     * <p>Some builds cannot refresh their pack stack in place — the sweetloader exposes no
      * implementation of the reload call yet, so {@link #requestReload()} returns false. Without a
      * restart the player would have to leave the world and launch it again by hand, which is the
      * exact friction the in-game changer exists to remove. This hook lets the session relaunch
@@ -378,7 +378,7 @@ public final class InGamePackChanger {
     /**
      * Asks the running session to pick up a pack change immediately.
      *
-     * <p>The shipped Bedrock builds have no verified in-place refresh: the preloader export
+     * <p>The shipped Bedrock builds have no verified in-place refresh: the sweetloader export
      * resolves to "no hook" and returns false, so the caller relaunches. The native side detects
      * support at runtime — it marks the running build supported only after a refresh it confirmed,
      * and never retries a failed call in the same session — so there is no version list here to
