@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -95,7 +96,10 @@ fun LaunchChangelogCard(
         modifier = modifier
             .fillMaxWidth()
             .scale(pressScale)
-            .padding(top = float.dp)
+            // The idle float drifts between -3dp and +3dp, so it is an offset, not padding:
+            // padding rejects a negative value and this value is negative on the first frame,
+            // which threw IllegalArgumentException and killed the process during composition.
+            .offset(y = float.dp)
             .clickable(
                 interactionSource = interaction,
                 indication = null,

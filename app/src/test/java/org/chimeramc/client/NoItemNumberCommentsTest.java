@@ -45,7 +45,7 @@ public class NoItemNumberCommentsTest {
             try (Stream<Path> s = Files.walk(dir)) {
                 for (Path p : (Iterable<Path>) s::iterator) {
                     if (!Files.isRegularFile(p) || !isScanned(p)) continue;
-                    if (p.toString().contains("libHttpClient")) continue;
+                    if (isThirdParty(p)) continue;
                     String text = new String(Files.readAllBytes(p), StandardCharsets.UTF_8);
                     Matcher m = ITEM_REFERENCE.matcher(text);
                     while (m.find()) {
@@ -58,6 +58,19 @@ public class NoItemNumberCommentsTest {
         assertTrue("a comment must explain what the code does and why, in words; a numbered item "
                         + "from an external list is not an explanation. Offenders: " + offenders,
                 offenders.isEmpty());
+    }
+
+    /**
+     * Whether a file is third-party source rather than ours.
+     *
+     * <p>The pattern is coincidental English in code we do not own, so a hit is not a citation. The
+     * vendored submodules are excluded, and so is the fetched host-test header cache
+     * ({@code app/src/main/cpp/.host-tools}, populated by {@code tests/cosmetics/run_tests.sh}),
+     * where fmt's own sources contain the phrase.
+     */
+    private static boolean isThirdParty(Path p) {
+        String path = p.toString().replace('\\', '/');
+        return path.contains("libHttpClient") || path.contains(".host-tools");
     }
 
     private static boolean isScanned(Path p) {

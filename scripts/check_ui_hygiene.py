@@ -11,6 +11,14 @@ or removing 892 findViewById calls is not a single change, but nothing may make 
   * `layout-literals-baseline.txt` — hardcoded `android:text` and colour literals in layouts. A new one must come from `@string` / the theme tokens.
   * `findviewbyid-baseline.txt` — one line per file and count. The total may only fall.
 
+A fourth rule has no baseline, because it is not debt: a `padding(...)` argument may not be a
+runtime value. Padding rejects a negative value with an `IllegalArgumentException` thrown during
+composition, so a value that is negative on the first frame crashes the process on launch rather
+than at the point of use. The Launch tab's floating changelog card did exactly that: its idle
+float drifts between -3dp and +3dp and `.padding(top = float.dp)` threw before the card was ever
+drawn. The correct modifier for a signed value is `offset`, which is what it now uses. Every
+`padding` argument must be a numeric literal or a `GlowDimens` token.
+
 `--update` rewrites all three baselines, so the intended workflow is: make the change, run with
 `--update`, and commit the baseline diff alongside it. That makes the diff reviewable rather than
 hiding a new offender behind a silently raised number.
@@ -45,6 +53,13 @@ TEXT_LITERAL_RE = re.compile(r'android:text="(?!@|\{)')
 # A literal colour anywhere in a layout: `#RGB`, `#RRGGBB`, `#AARRGGBB`.
 COLOR_LITERAL_RE = re.compile(r'"(#[0-9a-fA-F]{3,8})"')
 FINDVIEWBYID_RE = re.compile(r"\bfindViewById\s*\(")
+
+# A `padding(...)` argument that is a runtime value: an identifier chain ending in `.dp` that is
+# not a token holder. Padding must not be able to go negative, because it throws otherwise.
+PADDING_RE = re.compile(r"\bpadding\s*\(")
+DP_EXPR_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_.]*)\.dp")
+# Identifiers holding a fixed, non-negative token. These are safe in padding by construction.
+TOKEN_HOLDERS = ("GlowDimens", "UiTokens", "CaramelDimens")
 
 
 def read_strings(path: pathlib.Path) -> dict[str, bool]:
@@ -94,6 +109,43 @@ def findviewbyid_counts() -> list[str]:
         if count:
             out.append(f"{path.relative_to(ROOT)} {count}")
     return out
+
+
+def _balanced_args(src: str, open_index: int) -> str:
+    """The text between the `(` at open_index and its matching `)`, nesting-aware."""
+    depth = 0
+    for i in range(open_index, len(src)):
+        char = src[i]
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                return src[open_index + 1:i]
+    return src[open_index + 1:]
+
+
+def dynamic_padding_offenders() -> list[str]:
+    """A `padding(...)` argument that is not a numeric literal or a token constant.
+
+    Padding rejects a negative value with an IllegalArgumentException thrown from the composition
+    itself, so a negative there is a launch-time crash rather than a layout glitch. Only `padding`
+    is checked: `size`/`width`/`height` legitimately take a computed value (a component's own
+    `height` parameter, a measured width), and flagging those would be a false positive.
+    """
+    offenders: list[str] = []
+    for path in sorted(JAVA.rglob("*.kt")):
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for match in PADDING_RE.finditer(text):
+            args = _balanced_args(text, match.end() - 1)
+            line = text[:match.start()].count("\n") + 1
+            for name in DP_EXPR_RE.findall(args):
+                if any(name.split(".")[0] == holder for holder in TOKEN_HOLDERS):
+                    continue
+                offenders.append(
+                    f"{path.relative_to(ROOT)}:{line}:padding({name}.dp) is a runtime value"
+                )
+    return offenders
 
 
 def load_baseline(name: str) -> list[str]:
@@ -153,6 +205,7 @@ def main() -> int:
     translations = translation_offenders()
     literals = layout_literals()
     findviewbyid = findviewbyid_counts()
+    dynamic_padding = dynamic_padding_offenders()
 
     if args.update:
         write_baseline("translation-baseline.txt", translations,
@@ -190,6 +243,15 @@ def main() -> int:
         print(f"\nfindViewById: {len(new_findviewbyid)} file(s) rose above their baseline:")
         for entry in new_findviewbyid[:40]:
             print(f"  {entry}")
+
+    if dynamic_padding:
+        failed = True
+        print(f"\ndynamic padding: {len(dynamic_padding)} offender(s):")
+        for entry in dynamic_padding:
+            print(f"  {entry}")
+        print("\nA padding argument must be a literal or a token: a runtime value can be "
+              "negative, and padding throws on a negative value during composition. Use "
+              "`offset` for a signed value.")
 
     if failed:
         print("\nA new offender must be fixed, marked translatable=\"false\", or added to the "
