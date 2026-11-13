@@ -120,51 +120,49 @@ litellm #2 deepseek-v4 streaming metadata. Detail: `.openhands/memory/2026-11-06
   `OnBackPressedCallback` on `getOnBackPressedDispatcher()` instead. Full unit suite is
   **3844 tests, 0 failures, 1 skipped** (~25s warm).
 
-## CaramelClient — Rust .universe/.singularity engine (PR #178, branch `feat/caramel-rebrand-and-ui`)
-- The sweetloader submodule already carried the Rust workspace `app/src/main/cpp/sweetloader/rust/`
-  (`universe-core/-jni`, `singularity-core/-jni`, `caramel-cli`) but **nothing built or shipped it**.
-  Now `:app:buildRustEngine` (in `app/build.gradle`) cross-compiles for arm64-v8a and copies
-  `libcaramel_universe.so` / `libcaramel_singularity.so` into `jniLibs`; it **skips with a warning**
-  when cargo/NDK is absent, so a Java-only build still works. `*.so` is gitignored → CI MUST
-  install the Rust toolchain (`rustup target add aarch64-linux-android`), which `android.yml` and
-  `build.yml` now do; `android.yml` also runs `cargo test --workspace`.
-- JNI owners: `org.chimeramc.client.universe.UniverseLoader`, `.singularity.SingularityEngine`;
-  both fail-closed (return an "unavailable" answer on a host JVM instead of
-  `UnsatisfiedLinkError`), proguard-kept, and covered by `UniverseLoaderTest` /
-  `SingularityEngineTest`. `JniBindingParityTest` now scans the Rust `.rs` sources too.
-- Counts as of this branch: `cargo test --workspace` 164, Android suite **3663/0/0/1 skipped**,
-  lint green, `validate_release_content.py` green. Dedicated log: `.openhands/memory/2026-11-13.md`.
-- **Only the loader/plumbing exists.** The listed engine features (render hooks, ragdoll, shader
-  translation, custom blocks/dimensions, `.singularity` noise/mesher/fluid pipeline) and the
-  perf targets (500 ms launch, FPS, 60 FPS, <200 MB) are NOT implemented or measurable without a
-  device. The UI-pack replacement is blocked: no pack was provided.
-
-## CaramelClient (ChimeraAnt-DEV/CaramelClient) — NetherNet transport & MSA recovery
-- **Token scopes (2026-11)**: `$GITHUB_TOKEN` on this repo has **full repo scope** — it
-  works for `git push`, the REST API, **GraphQL** (`markPullRequestReadyForReview`) and
-  the async merge endpoint. `$GithubLynxifyy` is **no longer injected** (401 Bad
-  credentials) — do not reference it. `$OH_GIT_CREDENTIAL_ACCESS_TOKEN_GITHUB` is
-  git-credential-helper only (401 on GraphQL).
-- **A PR opened by the `create_pr` tool starts as a DRAFT**, and the merge API refuses a
-  draft ("Pull request is in draft"). REST `PATCH /pulls/{n}` with `{"draft":false}` does
-  NOT clear it (silently returns `draft:true`). The only way is the GraphQL mutation
-  `markPullRequestReadyForReview` with the PR's `node_id`. Sequence: create_pr → GraphQL
-  ready → `PUT /pulls/{n}/merge-async {"merge_method":"squash","sha":"<head>"}` → poll
-  `.../merge-async/{uuid}` until `status` is `merged`.
-- **Two build workflows, both required**: `Android CI` (android.yml, runs
-  `check_ui_hygiene.py` then Gradle) and `Build Debug APK` (build.yml). Both were green on
-  PR #180 (`5c4ecfa`); merge commit `b551591`.
-- **API-28 gate is real and catches idiomatic Kotlin**: `Api28CompatTest` fails on
-  `Stream.toList` (API 34). `ArrayDeque.toList()` compiles to `Stream.toList` on this
-  Kotlin/JDK combo — use `ArrayList(deque)` instead.
-- **Rust engines already exist** under `app/src/main/cpp/sweetloader/rust/`:
-  `universe-core` (manifest/archive/signature/loadorder/permission/config/report/runtime/
-  fault/version + **patterns** = new wildcard BMH scanner), `singularity-core`
-  (noise/biome/chunk/mesher/fluid/physics/structure), plus `*-jni` cdylibs and
-  `caramel-cli`. `cargo test --workspace` = **249 tests**. Rust host tests need no device;
-  arm64 cross-compile via `rust/build-android.sh`.
-- **`.AntEgg` is gone** and `.universe`/`.singularity` are the formats (PR #178/#179).
-- **Device-only phases are not runnable here**: no Android device/emulator, so FPS,
-  launch-time, memory, APK-version checks from mcpe-planet and any hook/scanner
-  verification against a real `libminecraftpe.so` cannot be executed. Say so rather than
-  claiming a measurement.
+## CaramelClient (ChimeraAnt-DEV/CaramelClient) — launcher + SweetLoader
+- **The native engine is a git submodule at `app/src/main/cpp/sweetloader`, and the submodule repo
+  was renamed to `ChimeraAnt-DEV/SweetLoader`** (the old `ChimeraAnt-DEV/preloader-android` name
+  301-redirects, so old remotes still work). The parent must pin a commit that is on the
+  submodule's `main`: a `feat/*` tip can be unmerged and unreachable, and then a clean checkout
+  depends on that branch still existing. `scripts/check_submodules.sh` gates this in CI.
+- **`.universe` and `.singularity` are the only mod formats** (`.AntEgg`/`.chimerapack`/`.levipack`
+  are gone). Rust workspace `sweetloader/rust/`: `universe-core/-jni` (manifest/archive/signature/
+  loadorder/permission/config/report/runtime/fault/version/patterns), `singularity-core/-jni`
+  (noise/biome/chunk/mesher/fluid/physics/structure), `nethernet-core/-jni`, `caramel-cli`.
+  `:app:buildRustEngine` cross-compiles for arm64-v8a and **skips with a warning** when cargo is
+  absent, so CI MUST install the toolchain (`rustup target add aarch64-linux-android`); `android.yml`
+  also runs `cargo test --workspace`. **There is no cargo/rustc in the dev container**, so the Rust
+  suite can only be verified in CI.
+- JNI owners: `org.chimeramc.client.universe.UniverseLoader`, `.singularity.SingularityEngine`,
+  both fail-closed on a host JVM instead of throwing. `JniBindingParityTest` also scans the `.rs`
+  sources, so a new Rust export needs a matching Java `native` method.
+- **The signature scan refuses an ambiguous pattern** (`src/pl/memory/Signature.cpp`): it used to
+  take the first hit, but `pauseMenuDtorSig` is a bare prologue that matches **183 times** in
+  1.26.62. An ambiguous signature now resolves to 0 with a warning. **The rules file is signed and
+  the private key is NOT in the repo** (`scripts/sign_sweetloader_rules.py --key <pem>`, and
+  `android.yml` runs `--verify`), so it must not be hand-edited — new build rules come from the
+  release environment. Shipped rules top out at 1.26.50.99.
+- **UI**: the UI pack is a Compose **Desktop** project and is ported to Android Compose under
+  `app/src/main/java/org/chimeramc/client/ui/compose/caramel/` (theme, glass via Haze blur,
+  buttons, controls, labels, loader icons, dropdowns). Not a drop-in: classpath fonts and hover
+  states need adapting, and the pack's dropdown used a constant trigger height.
+- **Git auth (2026-11)**: `$GITHUB_TOKEN` has **full repo scope** here — `git push`, REST,
+  GraphQL and the async merge all work. `$GithubLynxifyy` is **no longer injected** (401); do not
+  reference it. `$OH_GIT_CREDENTIAL_ACCESS_TOKEN_GITHUB` is git-credential-helper only.
+  **The submodule remote has no credential helper** — push it with
+  `git -c credential.helper='!f() { echo username=x-access-token; echo password=$GITHUB_TOKEN; }; f' push`.
+- **PR flow**: `create_pr` opens a **draft** and the merge API refuses drafts; REST `PATCH
+  {"draft":false}` does NOT clear it — use the GraphQL `markPullRequestReadyForReview` with the
+  `node_id`. Then `PUT /pulls/{n}/merge-async {"merge_method":"squash","sha":"<40-char head>"}`
+  (a short sha is rejected) and poll `.../merge-async/{uuid}`. Conventional PR titles only.
+- **Verify locally**: `JAVA_HOME=/workspace/tools/jdk-21.0.13+9 ANDROID_HOME=/workspace/android-sdk
+  ./gradlew :app:testDebugUnitTest` (**3761 tests, 0 failures, 1 skipped**). `:app:assembleDebug`
+  is the only thing that compiles the NDK C++ (`Signature.cpp` is not host-compiled). Also
+  `bash sweetloader/tests/cosmetics/run_tests.sh`, `scripts/check_ui_hygiene.py`,
+  `scripts/verify_berryapi_abi.py`, `scripts/check_submodules.sh`, `scripts/validate_release_content.py`.
+- **Device-only work cannot be measured here**: no Android device/emulator, so FPS, launch-time,
+  memory, APK-version checks and any hook/scanner behaviour against a real `libminecraftpe.so`
+  cannot be executed. Say so rather than claiming a measurement. Most of the remaining
+  "engine hook" features need a game-side anchor (entity list / level object) the stripped
+  `libminecraftpe.so` does not expose — `docs/agents/update-list-audit-*.md` records this per module.
