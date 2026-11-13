@@ -138,3 +138,33 @@ litellm #2 deepseek-v4 streaming metadata. Detail: `.openhands/memory/2026-11-06
   translation, custom blocks/dimensions, `.singularity` noise/mesher/fluid pipeline) and the
   perf targets (500 ms launch, FPS, 60 FPS, <200 MB) are NOT implemented or measurable without a
   device. The UI-pack replacement is blocked: no pack was provided.
+
+## CaramelClient (ChimeraAnt-DEV/CaramelClient) — NetherNet transport & MSA recovery
+- **Token scopes (2026-11)**: `$GITHUB_TOKEN` on this repo has **full repo scope** — it
+  works for `git push`, the REST API, **GraphQL** (`markPullRequestReadyForReview`) and
+  the async merge endpoint. `$GithubLynxifyy` is **no longer injected** (401 Bad
+  credentials) — do not reference it. `$OH_GIT_CREDENTIAL_ACCESS_TOKEN_GITHUB` is
+  git-credential-helper only (401 on GraphQL).
+- **A PR opened by the `create_pr` tool starts as a DRAFT**, and the merge API refuses a
+  draft ("Pull request is in draft"). REST `PATCH /pulls/{n}` with `{"draft":false}` does
+  NOT clear it (silently returns `draft:true`). The only way is the GraphQL mutation
+  `markPullRequestReadyForReview` with the PR's `node_id`. Sequence: create_pr → GraphQL
+  ready → `PUT /pulls/{n}/merge-async {"merge_method":"squash","sha":"<head>"}` → poll
+  `.../merge-async/{uuid}` until `status` is `merged`.
+- **Two build workflows, both required**: `Android CI` (android.yml, runs
+  `check_ui_hygiene.py` then Gradle) and `Build Debug APK` (build.yml). Both were green on
+  PR #180 (`5c4ecfa`); merge commit `b551591`.
+- **API-28 gate is real and catches idiomatic Kotlin**: `Api28CompatTest` fails on
+  `Stream.toList` (API 34). `ArrayDeque.toList()` compiles to `Stream.toList` on this
+  Kotlin/JDK combo — use `ArrayList(deque)` instead.
+- **Rust engines already exist** under `app/src/main/cpp/sweetloader/rust/`:
+  `universe-core` (manifest/archive/signature/loadorder/permission/config/report/runtime/
+  fault/version + **patterns** = new wildcard BMH scanner), `singularity-core`
+  (noise/biome/chunk/mesher/fluid/physics/structure), plus `*-jni` cdylibs and
+  `caramel-cli`. `cargo test --workspace` = **249 tests**. Rust host tests need no device;
+  arm64 cross-compile via `rust/build-android.sh`.
+- **`.AntEgg` is gone** and `.universe`/`.singularity` are the formats (PR #178/#179).
+- **Device-only phases are not runnable here**: no Android device/emulator, so FPS,
+  launch-time, memory, APK-version checks from mcpe-planet and any hook/scanner
+  verification against a real `libminecraftpe.so` cannot be executed. Say so rather than
+  claiming a measurement.
