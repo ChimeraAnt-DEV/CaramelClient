@@ -127,6 +127,9 @@ cfr = { module = "org.benf:cfr", version.ref = "cfr" }
 # kotlinx-coroutines-test gives the connection state machine a deterministic
 # virtual-time scheduler, so a 30s Joining timeout is asserted in microseconds.
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.10.2" }
+# MockWebServer runs a real HTTP server on localhost, so the auth clients are exercised
+# through their real OkHttp path against scripted responses rather than through a mocked client.
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

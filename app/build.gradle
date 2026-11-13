@@ -355,6 +355,7 @@ dependencies {
     // rule stays unit-testable without an instrumented test.
     testImplementation 'org.json:json:20240303'
     testImplementation libs.coroutines.test
+    testImplementation libs.mockwebserver
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
