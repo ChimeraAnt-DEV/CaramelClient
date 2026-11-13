@@ -127,7 +127,7 @@ fix. The index fallback stays in place for a build whose slot moves.
 1. Resolve each version to its arm64 APK URL (the `mcpedl.org` download form; the arm64 file is a
    distinct `-arm64-v8a` asset).
 2. Download the APK, extract `lib/arm64-v8a/libminecraftpe.so`, analyze with `tools/verify-binary
-   <lib> --version 1.26.<v>`.
+   &lt;lib&gt; --version 1.26.&lt;v&gt;`.
 3. For the string-scan finding, re-implement `findTypeInfo` / `resolveVtableSlotReferencingString` /
    `FunctionReferencesAddress` in Python over the `.rela.dyn` `R_AARCH64_RELATIVE` map (vtable slots
    are relocated, so raw section bytes are wrong) and compare the shipped walk base against the
