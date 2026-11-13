@@ -19,57 +19,20 @@ forked agent-server SDK (`Lynxifyy/software-agent-sdk-2.0`).
   prefixes, and `translation.json` (union of both branches' keys — merge it
   programmatically by parsing each side as JSON, never by hand).
 
-## Agent-tools workstream (the "phases" from the Chat-recovery- HTML chat)
-The original plan lived in `Lynxifyy/Chat-recovery-`
-(`conversation-14eef971253347218f1067053099cc7f.html`). Phases are done **two per
-PR**, then merged, then stop for the user's confirmation. Progress:
-- **PR #6** (merged `2d2b51f`): Phase 1 live task list + **green** done tick
-  (`text-success`, in both `task-tracking/task-item.tsx` files) and Phase 2
-  in-app settings (no browser escape from the packaged app).
-- **PR #7** (merged `6bf357c`): Phase 3 model-aware thinking status
-  (`thinkingModelLabel` in `src/utils/format-model-name.ts`, `ACTION_MESSAGE$MODEL_THINKING`)
-  and Phase 4 Oli presence (`src/utils/oli-activity.ts` derives `deriveOliStatus`
-  from an unresolved `TaskAction` whose `subagent_type` is `oli`;
-  `OliRobotHead` in `src/components/features/chat/oli-robot-head.tsx`, blue
-  `bg-logo`, `oli-think`/`oli-code`/`oli-antenna` keyframes in `tailwind.css`).
-  Also fixed a stale `task-tracking-item-status.test.tsx` assertion left on main.
-- **Phases 5+6 → FreeHands PR #8** (open, branch `feat/discord-recommended-and-bot-token` @ `3c971c9`):
-  Discord now appears in Recommended automations through a host catalog entry
-  `DISCORD_RECOMMENDED_AUTOMATION` in `src/constants/discord.ts`
-  (+ `getHostAutomationCatalog()` in `src/utils/recommended-automation-rail.ts`,
-  used by both the rail and the section) and a bundled `src/icons/discord.svg`
-  registered in `McpLogoBadge.LOCAL_LOGO_ICONS`. The launcher routes the Discord
-  card to the guided setup. Bot-token entry lives in the DiscordConnectModal;
-  the token is saved as `DISCORD_BOT_TOKEN` via `SecretsService` and never posted
-  to chat (`src/services/discord-connect.ts`).
-- **Phase 7 → FreeHands PR #9** (open, branch `feat/keep-sandboxes-alive-setting` @ `a412552`):
-  new app preference `always_keep_sandbox_alive` (App Settings toggle
-  `SETTINGS$ALWAYS_KEEP_SANDBOX_ALIVE`); `pauseConversation` honors
-  `{ keepSandboxAlive }` so cloud mode skips pausing the sandbox and the stop
-  hooks keep the runtime URL.
-- **Phases 8+9 → SDK PR #3** (open, branch `feat/cloud-terminal-tool` @ `6d94a0f`,
-  two commits `419b22b` + `6d94a0f`):
-  - `openhands.tools.cloud_terminal`: one-shot command via workspace
-    `execute_command` (works local + remote/cloud); default exec tool.
-  - `openhands.tools.file_builder`: writes text/md, PNG (base64), ZIP, DOCX;
-    default exec tool, paths confined to working dir.
-  - builtin subagent `oli` (`preset/subagents/oli.md`): coding agent with
-    terminal/file_editor/task_tracker/file_builder/cloud_terminal/verify.
-  - All wired into `DEFAULT_EXEC_TOOL_NAMES` + `preset/default.py`; test lists
-    updated (`test_settings.py`, `cross/test_default_tool_names.py`,
-    `persisted_settings_baselines/v2/agent_profile_tool_switches.json`,
-    `test_builtin_agents.py`).
-- **Phase 10 → litellm PR #2** (open, branch `feat/deepseek-v4stream-metadata` @
-  `997dd4fc`): add `supports_streaming`+`supports_parallel_function_calling` to
-  deepseek-v4-pro/flash/v4.1-flash/v4.1-flash-vision-exp and `supports_vision` to
-  vision-exp; test `tests/litellm/llms/deepseek/test_deepseek_v4_models.py`.
-
-SDK/litellm test envs are created ad hoc with `uv venv /tmp/sdkvenv` +
-`uv pip install --python <venv> -e <pkg> pytest [pytest-asyncio]`. litellm is
-installed from the repo root (`-e .`).
+## FreeHands agent-tools workstream (different repo: `Lynxifyy/FreeHands` + `Lynxifyy/software-agent-sdk-2.0` + litellm)
+Phases done two per PR then merged. #6 live task list + in-app settings; #7 model-aware thinking
+status + Oli presence; #8 Discord in Recommended automations + bot-token modal; #9
+`always_keep_sandbox_alive`; SDK #3 cloud_terminal + file_builder + builtin `oli` subagent;
+litellm #2 deepseek-v4 streaming metadata. Detail: `.openhands/memory/2026-11-06.md`,
+`2026-11-09.md`, `2026-11-10.md`. SDK/litellm venvs are ad hoc (`uv venv /tmp/sdkvenv` +
+`uv pip install -e <pkg> pytest`).
 
 ## Git auth (important)
-- `$GITHUB_TOKEN` / `$Github` are read-only for git push on Lynxifyy repos (403).
+- `$GITHUB_TOKEN` / `$Github` are read-only for git push on Lynxifyy repos (403),
+  **but on `ChimeraAnt-DEV` it is `Lynxifyy` with push rights** — the `origin` remote already
+  embeds it, so a plain `git push` works.
+- Set `git -c user.name=Lynxifyy -c user.email=297587416+Lynxifyy@users.noreply.github.com`
+  for CaramelClient commits (no co-authors, no AI mentions in PRs).
 - `$GithubLynxifyy` has full `repo` scope: use it for `git push` and for the
   GitHub API (`create_pr` tool uses the read-only token and 403s — create PRs
   with a `curl` POST to the API instead).
@@ -156,3 +119,22 @@ installed from the repo root (`-e .`).
   `MissingSuperCall` — do not override `onBackPressed()` without calling `super`; register an
   `OnBackPressedCallback` on `getOnBackPressedDispatcher()` instead. Full unit suite is
   **3844 tests, 0 failures, 1 skipped** (~25s warm).
+
+## CaramelClient — Rust .universe/.singularity engine (PR #178, branch `feat/caramel-rebrand-and-ui`)
+- The sweetloader submodule already carried the Rust workspace `app/src/main/cpp/sweetloader/rust/`
+  (`universe-core/-jni`, `singularity-core/-jni`, `caramel-cli`) but **nothing built or shipped it**.
+  Now `:app:buildRustEngine` (in `app/build.gradle`) cross-compiles for arm64-v8a and copies
+  `libcaramel_universe.so` / `libcaramel_singularity.so` into `jniLibs`; it **skips with a warning**
+  when cargo/NDK is absent, so a Java-only build still works. `*.so` is gitignored → CI MUST
+  install the Rust toolchain (`rustup target add aarch64-linux-android`), which `android.yml` and
+  `build.yml` now do; `android.yml` also runs `cargo test --workspace`.
+- JNI owners: `org.chimeramc.client.universe.UniverseLoader`, `.singularity.SingularityEngine`;
+  both fail-closed (return an "unavailable" answer on a host JVM instead of
+  `UnsatisfiedLinkError`), proguard-kept, and covered by `UniverseLoaderTest` /
+  `SingularityEngineTest`. `JniBindingParityTest` now scans the Rust `.rs` sources too.
+- Counts as of this branch: `cargo test --workspace` 164, Android suite **3663/0/0/1 skipped**,
+  lint green, `validate_release_content.py` green. Dedicated log: `.openhands/memory/2026-11-13.md`.
+- **Only the loader/plumbing exists.** The listed engine features (render hooks, ragdoll, shader
+  translation, custom blocks/dimensions, `.singularity` noise/mesher/fluid pipeline) and the
+  perf targets (500 ms launch, FPS, 60 FPS, <200 MB) are NOT implemented or measurable without a
+  device. The UI-pack replacement is blocked: no pack was provided.

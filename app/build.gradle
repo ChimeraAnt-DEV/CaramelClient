@@ -354,6 +354,8 @@ dependencies {
     // throw "not mocked". org.json:json is the same API as a plain jar, so a JSON-parsing
     // rule stays unit-testable without an instrumented test.
     testImplementation 'org.json:json:20240303'
+    testImplementation libs.coroutines.test
+    testImplementation libs.mockwebserver
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
@@ -416,7 +418,8 @@ tasks.matching { it.name == 'preBuild' }.configureEach {
 def rustWorkspaceDir = layout.projectDirectory.dir('src/main/cpp/sweetloader/rust')
 def rustJniLibsDir = layout.projectDirectory.dir('src/main/jniLibs/arm64-v8a')
 def rustPackages = [['universe-jni', 'libcaramel_universe.so'],
-                    ['singularity-jni', 'libcaramel_singularity.so']]
+                    ['singularity-jni', 'libcaramel_singularity.so'],
+                    ['nethernet-jni', 'libsweetloader_nethernet.so']]
 
 def buildRustEngine = tasks.register('buildRustEngine') {
     description = 'Cross-compiles the .universe/.singularity Rust cdylibs for arm64-v8a.'
