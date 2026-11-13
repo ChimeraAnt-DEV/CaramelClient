@@ -166,3 +166,10 @@ litellm #2 deepseek-v4 streaming metadata. Detail: `.openhands/memory/2026-11-06
   cannot be executed. Say so rather than claiming a measurement. Most of the remaining
   "engine hook" features need a game-side anchor (entity list / level object) the stripped
   `libminecraftpe.so` does not expose — `docs/agents/update-list-audit-*.md` records this per module.
+- **SweetLoader submodule CI (2026-11-13)**: `.github/workflows/ci.yml` has 4 gates
+  (host-tests, rust, native-build, repo-integrity); `python3 scripts/check_sources_listed.py` +
+  `scripts/check_pinned_deps.py` + `tools/tests/gen_rules_test.py` run locally too. **The submodule
+  remote is now `ChimeraAnt-DEV/SweetLoader`** (was `preloader-android`). `gh` CLI works here.
+  Two traps: a CI run with 0 jobs + no annotation = the workflow FILE was rejected (diagnose with
+  `actionlint`, not the API), and `set -o pipefail` + `cmd | grep -q` exits 74 (SIGPIPE) even on a
+  match — dump to a file and grep the file. Rust tree is now rustfmt-normalized; keep it so.

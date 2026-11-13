@@ -53,3 +53,6 @@ Thumbs.db
 
 # Docs build output (Vitepress)
 docs/.vitepress/dist/
+
+# Host-test dependency cache (downloaded by the preloader test runner)
+app/src/main/cpp/.host-tools/
