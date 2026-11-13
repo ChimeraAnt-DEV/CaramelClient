@@ -78,7 +78,7 @@ final class ReplayMetadataOverlay {
         root.addView(metadataText);
 
         watermark = new TextView(activity);
-        watermark.setText("GlowberryClient");
+        watermark.setText("CaramelClient");
         watermark.setTextColor(Color.argb(150, 255, 255, 255));
         watermark.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         watermark.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
@@ -117,7 +117,7 @@ final class ReplayMetadataOverlay {
             try {
                 windowManager.removeView(root);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:120", "Ignored a failure at ReplayMetadataOverlay:120", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:120", "Ignored a failure at ReplayMetadataOverlay:120", ignored);
             }
         }
         root = null;
@@ -131,13 +131,13 @@ final class ReplayMetadataOverlay {
                 fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:134", "Ignored a failure at ReplayMetadataOverlay:134", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:134", "Ignored a failure at ReplayMetadataOverlay:134", ignored);
         }
         int combo = 0;
         try {
             if (HitTimingMod.isActive()) combo = HitTimingMod.getCombo();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ReplayMetadataOverlay:140", "Ignored a failure at ReplayMetadataOverlay:140", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:140", "Ignored a failure at ReplayMetadataOverlay:140", ignored);
         }
         long elapsed = Math.max(0L, System.currentTimeMillis() - startedAtMs);
         String line = ReplayMetadata.line(ReplayMetadata.defaultFields(), fps, 0, elapsed, -1, combo);

@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * The PNG → engine image → swap pipeline, and its fail-closed behaviour.
  *
- * <p>The JVM test classpath has no {@code libpreloader}, so every native call must degrade to a
+ * <p>The JVM test classpath has no {@code libsweetloader}, so every native call must degrade to a
  * safe no-op: no loader address, no image built, no swap. That is exactly the path a build whose
  * image-loader signature does not match takes, so this pins the graceful fallback rather than only
  * the happy path.

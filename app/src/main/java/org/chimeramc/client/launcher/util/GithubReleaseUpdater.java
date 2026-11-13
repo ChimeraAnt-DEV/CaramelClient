@@ -39,12 +39,12 @@ public class GithubReleaseUpdater {
      * The canonical repository this client publishes to.
      *
      * <p>Single-sourced so the update check cannot point at a stale slug. It previously named
-     * {@code ChimeraLauncher} while every other link (About, Settings, the signature-rules source)
-     * named {@code GlowberryClient}; the old slug only survives as a redirect, and a redirect is not
+     * {@code CaramelClient} while every other link (About, Settings, the signature-rules source)
+     * named {@code CaramelClient}; the old slug only survives as a redirect, and a redirect is not
      * something a release check should depend on.
      */
     public static final String REPO_OWNER = "ChimeraAnt-DEV";
-    public static final String REPO_NAME = "GlowberryClient";
+    public static final String REPO_NAME = "CaramelClient";
     private static final String PREF_IGNORED_VERSION = "update_ignored_version";
     /**
      * The prefs file and key recording that an update was seen.

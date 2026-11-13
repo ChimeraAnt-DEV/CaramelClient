@@ -8,7 +8,7 @@
   2. **Relay** - when the player has configured the same Go relay Proximity Voice Chat uses, the
      manifest rides as a `VoiceProtocol.TYPE_COSMETIC_MANIFEST` (v4) frame the relay fans out with
      the audio rule (same channel, or the open `world` channel either way), so a cape is visible to
-     a Chimera user **not on the same Wi-Fi**. The relay never decodes the payload.
+     a Caramel user **not on the same Wi-Fi**. The relay never decodes the payload.
   3. **Manual peer** - the fallback when no relay is configured: a pasted `host:port`
      (`InbuiltModManager.getCosmeticManualPeer`) the manifest is unicast straight to. A direct peer
      cannot be discovered automatically, hence manual.

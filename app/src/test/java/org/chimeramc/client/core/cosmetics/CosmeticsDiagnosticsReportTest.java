@@ -46,7 +46,7 @@ public class CosmeticsDiagnosticsReportTest {
         in.rulesLoadAttempted = true;
         in.rulesConfigured = true;
         in.rulesLoaded = true;
-        in.preloaderModuleMappings = 1;
+        in.sweetloaderModuleMappings = 1;
         in.hookInstallState = 2;
         in.hookInstallFrameTicks = 3;
         in.cameraAnchorSource = 1;
@@ -222,15 +222,15 @@ public class CosmeticsDiagnosticsReportTest {
         assertTrue(report.contains("Effective rule: pauseMenuDtorSig,playerRenderVtableIndex=17"));
         assertTrue(report.contains("Rule has render slot: yes"));
         assertTrue(report.contains("Hook install state: resolved after 3 frame tick(s)"));
-        assertTrue(report.contains("libpreloader.so copies mapped: 1"));
+        assertTrue(report.contains("libsweetloader.so copies mapped: 1"));
         assertTrue(report.contains("Local player feed: live x=10.50 y=64.00 z=-3.25"));
         assertTrue(report.contains("Camera anchor source: engine view-projection"));
     }
 
     @Test
-    public void aSplitPreloaderMappingIsCalledOut() {
+    public void aSplitSweetLoaderMappingIsCalledOut() {
         CosmeticsDiagnosticsReport.Inputs in = fullInputs();
-        in.preloaderModuleMappings = 2;
+        in.sweetloaderModuleMappings = 2;
         assertTrue(CosmeticsDiagnosticsReport.format(in).contains("SPLIT"));
     }
 
@@ -340,7 +340,7 @@ public class CosmeticsDiagnosticsReportTest {
 
     @Test
     public void clearingTheLocalSetDoesNotThrowWithoutTheNativeLibrary() {
-        // A JVM test has no libpreloader, so this must be a safe no-op rather than a crash.
+        // A JVM test has no libsweetloader, so this must be a safe no-op rather than a crash.
         NativeCosmeticsBridge.clearLocal();
     }
 

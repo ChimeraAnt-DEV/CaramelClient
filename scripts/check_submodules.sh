@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# Verifies the preloader (and every other) submodule is pinned to a commit, not a branch
+# Verifies the sweetloader (and every other) submodule is pinned to a commit, not a branch
 #.
 #
 # A gitlink is always a commit SHA, so the way a submodule silently floats is a `branch =` entry
 # in .gitmodules: it lets `git submodule update --remote` move the checkout to whatever that branch
 # now points at, which turns a reproducible build into a moving target and makes the "bump the
-# preloader in a dedicated commit" rule unenforceable.
+# sweetloader in a dedicated commit" rule unenforceable.
 #
 # Checks, in order:
 #   1. .gitmodules declares no `branch` for any submodule.

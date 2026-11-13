@@ -22,9 +22,9 @@ accessor-name strings are stripped).
 
 | Module id | What it does | Hook/API it depends on | Hook exists for 1.26.33.1? | Status |
 |---|---|---|---|---|
-| `quick_drop` | Drops the held stack | Preloader key injection (`PreloaderInput.onKeyEvent`) | yes (preloader input, no game symbol) | working (tested) |
-| `camera_perspective` | Cycles first/third person | Preloader key injection | yes | working (tested) |
-| `toggle_hud` | Hides the HUD | Preloader key injection | yes | working (tested) |
+| `quick_drop` | Drops the held stack | SweetLoader key injection (`PreloaderInput.onKeyEvent`) | yes (sweetloader input, no game symbol) | working (tested) |
+| `camera_perspective` | Cycles first/third person | SweetLoader key injection | yes | working (tested) |
+| `toggle_hud` | Hides the HUD | SweetLoader key injection | yes | working (tested) |
 | `auto_sprint` | Sprint without holding | `GameBackend.setAutoSprint` (the injected-input seam) | yes (backend seam, no prebuilt lib) | unverified (device) |
 | `chick_pet` | Spawns a client pet | Client pet render (`NativeCosmeticsBridge` / `PetGeometry`) | yes (client-side) | unverified (device) |
 | `zoom` | Hold-to-zoom | `GameBackend.setZoom` (the injected-input seam) | **no** until a backend advertises `Feature.ZOOM` | needs-hook (backend); badged and refused while no FOV provider is registered |
@@ -36,7 +36,7 @@ accessor-name strings are stripped).
 | `pojav_controls` | On-screen control editor | Pojav controls bridge | yes | unverified (device) |
 | `more_buttons` | Extra touch buttons | Pojav controls + SVG bridge | yes | unverified (device) |
 | `hotbar_slot` | Direct hotbar slot keys | `GameBackend.selectHotbarSlot` (the injected-input seam) | yes (backend seam) | unverified (device) |
-| `offhand` | Opens the inventory for the off-hand slot (no swap key exists in Bedrock) | Preloader key injection + `OffhandAction` (tested) | yes | working (tested); UI unverified (device) |
+| `offhand` | Opens the inventory for the off-hand slot (no swap key exists in Bedrock) | SweetLoader key injection + `OffhandAction` (tested) | yes | working (tested); UI unverified (device) |
 | `aim_settings` | Crosshair / smoothing / sensitivity | Client look shaping (`pojavSendLookDelta`) | yes | working (tested) |
 | `armor_hud` | Durability/enchant readout | `ArmorHudMod.DataSource` (native entity feed) | **no** on this build; never installed | needs-hook |
 | `crystal_optimizer` | Highlights a safe crystal spot | `CrystalOptimizerMod.WorldSource` | **no** | needs-hook (solver itself tested) |

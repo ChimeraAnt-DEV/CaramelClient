@@ -37,7 +37,7 @@ import androidx.transition.TransitionManager;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.crash.CrashReportUploader;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.core.mods.update.ModUpdateScheduler;
 import org.chimeramc.client.core.telemetry.UsageStatsReporter;
 import org.chimeramc.client.core.mods.update.ModUpdateStore;
@@ -111,8 +111,8 @@ public class SettingsActivity extends BaseActivity {
     private Button migrationCleanupButton;
     private SwitchMaterial switchSharedStorageLayout;
     private TextView sharedStorageLayoutStatus;
-    private TextView preloaderSigsLastUpdateText;
-    private Button preloaderSigsUpdateButton;
+    private TextView sweetloaderSigsLastUpdateText;
+    private Button sweetloaderSigsUpdateButton;
     
     // UI Customization fields
     private TextView animationSpeedValue;
@@ -715,7 +715,7 @@ public class SettingsActivity extends BaseActivity {
      *
      * <p>The master switch gates the whole section; the per-item rows are built by
      * {@code OptifineSettingsController} so the item list comes from one source. Applying pushes
-     * the configuration to the preloader straight away, but a game already in a world keeps the
+     * the configuration to the sweetloader straight away, but a game already in a world keeps the
      * settings it launched with -- the summary says so rather than implying a live change.
      */
     private void setupOptifineModeSection() {
@@ -1375,35 +1375,35 @@ public class SettingsActivity extends BaseActivity {
             });
         }
 
-        preloaderSigsLastUpdateText = findViewById(R.id.preloader_sigs_last_update);
-        preloaderSigsUpdateButton = findViewById(R.id.btn_update_preloader_sigs);
-        refreshPreloaderSigsLastUpdateUi();
-        if (preloaderSigsUpdateButton != null) {
-            preloaderSigsUpdateButton.setOnClickListener(v -> handlePreloaderSigsUpdateClick());
+        sweetloaderSigsLastUpdateText = findViewById(R.id.sweetloader_sigs_last_update);
+        sweetloaderSigsUpdateButton = findViewById(R.id.btn_update_sweetloader_sigs);
+        refreshSweetLoaderSigsLastUpdateUi();
+        if (sweetloaderSigsUpdateButton != null) {
+            sweetloaderSigsUpdateButton.setOnClickListener(v -> handleSweetLoaderSigsUpdateClick());
         }
     }
 
-    private void handlePreloaderSigsUpdateClick() {
-        if (preloaderSigsUpdateButton == null) {
+    private void handleSweetLoaderSigsUpdateClick() {
+        if (sweetloaderSigsUpdateButton == null) {
             return;
         }
-        if (!PreloaderSignatureRulesManager.hasRemoteRulesUrl()) {
-            Toast.makeText(this, R.string.preloader_sigs_no_remote_url, Toast.LENGTH_SHORT).show();
+        if (!SweetLoaderSignatureRulesManager.hasRemoteRulesUrl()) {
+            Toast.makeText(this, R.string.sweetloader_sigs_no_remote_url, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        preloaderSigsUpdateButton.setEnabled(false);
-        preloaderSigsUpdateButton.setText(R.string.preloader_sigs_updating);
-        PreloaderSignatureRulesManager.refreshNow(this, result -> {
+        sweetloaderSigsUpdateButton.setEnabled(false);
+        sweetloaderSigsUpdateButton.setText(R.string.sweetloader_sigs_updating);
+        SweetLoaderSignatureRulesManager.refreshNow(this, result -> {
             if (isFinishing()) {
                 return;
             }
-            preloaderSigsUpdateButton.setEnabled(true);
-            preloaderSigsUpdateButton.setText(R.string.preloader_sigs_update);
-            refreshPreloaderSigsLastUpdateUi();
+            sweetloaderSigsUpdateButton.setEnabled(true);
+            sweetloaderSigsUpdateButton.setText(R.string.sweetloader_sigs_update);
+            refreshSweetLoaderSigsLastUpdateUi();
 
             if (result.success) {
-                Toast.makeText(this, R.string.preloader_sigs_update_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.sweetloader_sigs_update_success, Toast.LENGTH_SHORT).show();
             } else {
                 // The manager's message is the raw exception text ("Unable to resolve host ...").
                 // Naming the cause turns it into something the user can act on; the raw text stays
@@ -1412,21 +1412,21 @@ public class SettingsActivity extends BaseActivity {
                         ? getString(R.string.error_reason_unknown)
                         : getString(UserFacingError.messageRes(
                                 UserFacingError.classifyText(result.message)));
-                Toast.makeText(this, getString(R.string.preloader_sigs_update_failed, detail), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.sweetloader_sigs_update_failed, detail), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void refreshPreloaderSigsLastUpdateUi() {
-        if (preloaderSigsLastUpdateText == null) {
+    private void refreshSweetLoaderSigsLastUpdateUi() {
+        if (sweetloaderSigsLastUpdateText == null) {
             return;
         }
 
-        long updateTime = PreloaderSignatureRulesManager.getLastSuccessfulUpdateTime(this);
+        long updateTime = SweetLoaderSignatureRulesManager.getLastSuccessfulUpdateTime(this);
         String updateText = updateTime > 0L
                 ? DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.getDefault()).format(new Date(updateTime))
-                : getString(R.string.preloader_sigs_never_updated);
-        preloaderSigsLastUpdateText.setText(getString(R.string.preloader_sigs_last_update, updateText));
+                : getString(R.string.sweetloader_sigs_never_updated);
+        sweetloaderSigsLastUpdateText.setText(getString(R.string.sweetloader_sigs_last_update, updateText));
     }
 
     private void setupMigrationSection() {
@@ -1707,7 +1707,7 @@ public class SettingsActivity extends BaseActivity {
         TouchTargetHelper.expand(findViewById(R.id.settings_btn_github));
         TouchTargetHelper.expand(findViewById(R.id.settings_btn_discord));
         findViewById(R.id.settings_btn_github).setOnClickListener(v ->
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraAnt-DEV/GlowberryClient"))));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraAnt-DEV/CaramelClient"))));
 
         findViewById(R.id.settings_btn_discord).setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/jsnzw4ueAt"))));

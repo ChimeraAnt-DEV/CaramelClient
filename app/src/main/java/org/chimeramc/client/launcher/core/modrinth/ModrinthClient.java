@@ -28,7 +28,7 @@ public class ModrinthClient {
     private static final String BASE_URL = "https://api.modrinth.com/v2";
 
     // Modrinth asks for a UA that identifies the app; omitting one risks being throttled.
-    private static final String USER_AGENT = "ChimeraClient/1.0 (ChimeraClient)";
+    private static final String USER_AGENT = "CaramelClient/1.0 (CaramelClient)";
 
     public static final String TYPE_MOD = "mod";
     public static final String TYPE_RESOURCEPACK = "resourcepack";

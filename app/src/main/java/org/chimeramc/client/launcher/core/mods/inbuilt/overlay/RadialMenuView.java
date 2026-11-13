@@ -1879,7 +1879,7 @@ public class RadialMenuView extends View {
         try {
             paint.setFontVariationSettings("'wght' " + weight);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "RadialMenuView:1897", "Ignored a failure at RadialMenuView:1897", ignored);
+            AppLog.warnOnce("CaramelClient", "RadialMenuView:1897", "Ignored a failure at RadialMenuView:1897", ignored);
         }
     }
 

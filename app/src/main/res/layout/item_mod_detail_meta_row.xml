@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/misans"
         android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
     <TextView
         android:id="@+id/meta_value"
@@ -21,6 +21,6 @@
         android:layout_marginTop="@dimen/space_1"
         android:fontFamily="@font/misans"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+        android:textAppearance="@style/TextAppearance.Caramel.Label"
         android:textStyle="bold" />
 </LinearLayout>

@@ -290,7 +290,7 @@ public class CustomFlatWorldActivity extends BaseActivity {
                                 int count = Integer.parseInt(s.toString());
                                 layers.get(adapterPos).count = Math.max(1, Math.min(count, 256));
                             } catch (NumberFormatException e) {
-                                AppLog.warnOnce("GlowberryClient", "CustomFlatWorldActivity:293", "Ignored a failure at CustomFlatWorldActivity:293", e);
+                                AppLog.warnOnce("CaramelClient", "CustomFlatWorldActivity:293", "Ignored a failure at CustomFlatWorldActivity:293", e);
                             }
                         }
                     }

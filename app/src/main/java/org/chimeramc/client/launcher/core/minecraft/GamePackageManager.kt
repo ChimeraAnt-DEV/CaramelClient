@@ -213,7 +213,7 @@ class GamePackageManager private constructor(
         if (declared.isNullOrBlank()) return null
         if (abiCompatibility(version) != AbiCompatibility.INCOMPATIBLE) return null
         return buildString {
-            append("This Minecraft version ships only $declared libraries, but GlowberryClient ")
+            append("This Minecraft version ships only $declared libraries, but CaramelClient ")
             append("runs as a 64-bit process, and a 64-bit process cannot load 32-bit native code.")
             append(" Use a 64-bit build of this version.")
         }
@@ -772,7 +772,7 @@ class GamePackageManager private constructor(
 
     /**
      * G3: multi-`.so` robustness. When a version's package does not ship `libc++_shared.so`, fall
-     * back to the launcher's own bundled copy (the preloader is linked against `c++_shared`), so
+     * back to the launcher's own bundled copy (the sweetloader is linked against `c++_shared`), so
      * the extracted cache always has the STL the game's libraries load against. Copied only when
      * the file is absent — the game's own copy, if present, is the correct version for that build.
      */

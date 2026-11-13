@@ -3336,7 +3336,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;id&quot; (Indonesian) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-id/strings.xml"
@@ -3347,7 +3347,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ru&quot; (Russian) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ru/strings.xml"
@@ -3358,7 +3358,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;tr&quot; (Turkish) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-tr/strings.xml"
@@ -3369,7 +3369,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;vi&quot; (Vietnamese) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-vi/strings.xml"
@@ -3380,7 +3380,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;zh&quot; (Chinese) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-zh-rCN/strings.xml"
@@ -3391,7 +3391,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;es&quot; (Spanish) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
@@ -3402,7 +3402,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;fr&quot; (French) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-fr/strings.xml"
@@ -3413,7 +3413,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;hi&quot; (Hindi) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-hi/strings.xml"
@@ -3424,7 +3424,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ja&quot; (Japanese) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ja/strings.xml"
@@ -3435,7 +3435,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;app_name&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pt&quot; (Portuguese) here"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
@@ -3556,7 +3556,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;id&quot; (Indonesian) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-id/strings.xml"
@@ -3567,7 +3567,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ru&quot; (Russian) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ru/strings.xml"
@@ -3578,7 +3578,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;tr&quot; (Turkish) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-tr/strings.xml"
@@ -3589,7 +3589,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;vi&quot; (Vietnamese) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-vi/strings.xml"
@@ -3600,7 +3600,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;es&quot; (Spanish) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
@@ -3611,7 +3611,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;fr&quot; (French) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub : https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub : https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-fr/strings.xml"
@@ -3622,7 +3622,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;hi&quot; (Hindi) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-hi/strings.xml"
@@ -3633,7 +3633,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ja&quot; (Japanese) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ja/strings.xml"
@@ -3644,7 +3644,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pt&quot; (Portuguese) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
@@ -3798,7 +3798,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_footer_github&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;zh&quot; (Chinese) here"
-        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_footer_github&quot;>GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-zh-rCN/strings.xml"
@@ -4315,7 +4315,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;es&quot; (Spanish) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-es/strings.xml"
@@ -4326,7 +4326,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;fr&quot; (French) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-fr/strings.xml"
@@ -4337,7 +4337,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ja&quot; (Japanese) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ja/strings.xml"
@@ -4348,7 +4348,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pt&quot; (Portuguese) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-pt/strings.xml"
@@ -4458,7 +4458,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;id&quot; (Indonesian) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-id/strings.xml"
@@ -4480,7 +4480,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;ru&quot; (Russian) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-ru/strings.xml"
@@ -4502,7 +4502,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;hi&quot; (Hindi) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-hi/strings.xml"
@@ -4645,7 +4645,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;vi&quot; (Vietnamese) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-vi/strings.xml"
@@ -4678,7 +4678,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;tr&quot; (Turkish) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-tr/strings.xml"
@@ -4920,7 +4920,7 @@
     <issue
         id="Untranslatable"
         message="The resource string &quot;about_github_repo&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;zh&quot; (Chinese) here"
-        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;about_github_repo&quot;>GitHub · CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values-zh-rCN/strings.xml"
@@ -6097,7 +6097,7 @@
     <issue
         id="PluralsCandidate"
         message="Formatting %d followed by words (&quot;files&quot;): This should probably be a plural rather than a string"
-        errorLine1="    &lt;string name=&quot;storage_migration_partial_message&quot;>%1$d of %2$d files could not be copied. Migration must complete before GlowberryClient can continue.&lt;/string>"
+        errorLine1="    &lt;string name=&quot;storage_migration_partial_message&quot;>%1$d of %2$d files could not be copied. Migration must complete before CaramelClient can continue.&lt;/string>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -6240,7 +6240,7 @@
     <issue
         id="PluralsCandidate"
         message="Formatting %d followed by words (&quot;other&quot;): This should probably be a plural rather than a string"
-        errorLine1="    &lt;string name=&quot;cosmetics_sync_seen&quot;>Cosmetic sync is on (%2$s) — %1$d other Chimera user(s) in this world can see your cosmetics.&lt;/string>"
+        errorLine1="    &lt;string name=&quot;cosmetics_sync_seen&quot;>Cosmetic sync is on (%2$s) — %1$d other Caramel user(s) in this world can see your cosmetics.&lt;/string>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -6647,7 +6647,7 @@
     <issue
         id="UnsafeImplicitIntentLaunch"
         message="The intent action `android.intent.action.VIEW (used to start an activity)` matches the intent filter of a non-exported component `com.microsoft.xal.browser.BrowserLaunchActivity` from a manifest. If you are trying to invoke this specific component via the action then you should make the intent explicit by calling `Intent.set{Component,Class,ClassName}`."
-        errorLine1="                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(&quot;https://github.com/ChimeraAnt-DEV/GlowberryClient&quot;))));"
+        errorLine1="                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(&quot;https://github.com/ChimeraAnt-DEV/CaramelClient&quot;))));"
         errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/chimeramc/client/launcher/ui/activities/SettingsActivity.java"
@@ -8788,7 +8788,7 @@
     <issue
         id="UnusedResources"
         message="The resource `R.string.home_app_title` appears to be unused"
-        errorLine1="    &lt;string name=&quot;home_app_title&quot; translatable=&quot;false&quot;>GlowberryClient&lt;/string>"
+        errorLine1="    &lt;string name=&quot;home_app_title&quot; translatable=&quot;false&quot;>CaramelClient&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -9866,7 +9866,7 @@
     <issue
         id="UnusedResources"
         message="The resource `R.string.cosmetics_scope_note` appears to be unused"
-        errorLine1="    &lt;string name=&quot;cosmetics_scope_note&quot;>Capes reach the game through the engine\&apos;s own texture loader, so a cape appears on your character with no resource pack and no reload. Accessories and pets reach the game through the client\&apos;s native player-render hook, which draws their geometry directly onto the game\&apos;s own player model. The preview shows your own skin wearing the equipped cape, accessory and pet, and pets animate their walk, run, crouch, fly and swim gaits here. A cape appears as soon as the engine has loaded your cape texture once; accessories and pets appear through the native hook when it is available on your build. Cosmetic sync shows them to other Glowberry users in the same world. Vanilla players do not see them — Bedrock gives an app no way to push a cosmetic onto someone else\&apos;s account — and the pet is drawn on your own player rather than spawned as an entity, so it needs no server command and cannot trip a server check.&lt;/string>"
+        errorLine1="    &lt;string name=&quot;cosmetics_scope_note&quot;>Capes reach the game through the engine\&apos;s own texture loader, so a cape appears on your character with no resource pack and no reload. Accessories and pets reach the game through the client\&apos;s native player-render hook, which draws their geometry directly onto the game\&apos;s own player model. The preview shows your own skin wearing the equipped cape, accessory and pet, and pets animate their walk, run, crouch, fly and swim gaits here. A cape appears as soon as the engine has loaded your cape texture once; accessories and pets appear through the native hook when it is available on your build. Cosmetic sync shows them to other Caramel users in the same world. Vanilla players do not see them — Bedrock gives an app no way to push a cosmetic onto someone else\&apos;s account — and the pet is drawn on your own player rather than spawned as an entity, so it needs no server command and cannot trip a server check.&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -11273,8 +11273,8 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.style.Widget_Chimera_CardView` appears to be unused"
-        errorLine1="    &lt;style name=&quot;Widget.Chimera.CardView&quot; parent=&quot;CardView&quot;>"
+        message="The resource `R.style.Widget_Caramel_CardView` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Caramel.CardView&quot; parent=&quot;CardView&quot;>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/styles.xml"
@@ -11284,8 +11284,8 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.style.Widget_Chimera_MaterialCardView` appears to be unused"
-        errorLine1="    &lt;style name=&quot;Widget.Chimera.MaterialCardView&quot; parent=&quot;Widget.MaterialComponents.CardView&quot;>"
+        message="The resource `R.style.Widget_Caramel_MaterialCardView` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Caramel.MaterialCardView&quot; parent=&quot;Widget.MaterialComponents.CardView&quot;>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/styles.xml"
@@ -11295,8 +11295,8 @@
 
     <issue
         id="UnusedResources"
-        message="The resource `R.style.Widget_Glowberry_QuickDock` appears to be unused"
-        errorLine1="    &lt;style name=&quot;Widget.Glowberry.QuickDock&quot; parent=&quot;&quot; />"
+        message="The resource `R.style.Widget_Caramel_QuickDock` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Widget.Caramel.QuickDock&quot; parent=&quot;&quot; />"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/styles.xml"
@@ -12023,7 +12023,7 @@
         id="ConvertToWebp"
         message="One or more images in this project can be converted to the WebP format which typically results in smaller file sizes, even for lossless conversion">
         <location
-            file="src/main/res/drawable-xxxhdpi/ic_glowberry_logo.png"/>
+            file="src/main/res/drawable-xxxhdpi/ic_caramel_logo.png"/>
     </issue>
 
     <issue
@@ -13129,7 +13129,7 @@
     <issue
         id="SetTextI18n"
         message="String literal in `setText` can not be translated. Use Android resources instead."
-        errorLine1="        watermark.setText(&quot;GlowberryClient&quot;);"
+        errorLine1="        watermark.setText(&quot;CaramelClient&quot;);"
         errorLine2="                          ~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/chimeramc/client/core/replay/ReplayMetadataOverlay.java"

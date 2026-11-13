@@ -17,7 +17,7 @@
     android:paddingEnd="@dimen/space_3"
     android:paddingTop="@dimen/space_2"
     android:paddingBottom="@dimen/space_2"
-    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+    android:textAppearance="@style/TextAppearance.Caramel.Label"
     android:textColor="@color/overlay_text_primary"
     android:textStyle="bold"
     tools:text="CPS: 0" />

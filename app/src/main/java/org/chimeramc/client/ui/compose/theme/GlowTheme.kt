@@ -21,7 +21,7 @@ import org.chimeramc.client.util.PersonalizationManager
 import org.chimeramc.client.ui.components.UiTokens
 
 /**
- * The Glowberry Compose theme: navy surfaces, snow-blue accents.
+ * The Caramel Compose theme: navy surfaces, snow-blue accents.
  *
  * <p>Every value comes from [GlowPalette] and [UiTokens] so the Compose screens and the remaining
  * View screens read one palette. The theme reads the user's personalization (accent, AMOLED,
@@ -162,11 +162,11 @@ fun GlowTheme(
     }
 }
 
-/** The Glowberry colours, read from any composable inside [GlowTheme]. */
+/** The Caramel colours, read from any composable inside [GlowTheme]. */
 val glowColors: GlowThemeColors
     @Composable @ReadOnlyComposable get() = LocalGlowColors.current
 
-/** The Glowberry motion, read from any composable inside [GlowTheme]. */
+/** The Caramel motion, read from any composable inside [GlowTheme]. */
 val glowMotion: GlowMotion
     @Composable @ReadOnlyComposable get() = LocalGlowMotion.current
 

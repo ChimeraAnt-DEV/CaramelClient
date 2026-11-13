@@ -28,7 +28,7 @@ public final class GameBridge {
         try {
             android.util.Log.w("GameBridge", message, cause);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameBridge:31", "Ignored a failure at GameBridge:31", ignored);
+            AppLog.warnOnce("CaramelClient", "GameBridge:31", "Ignored a failure at GameBridge:31", ignored);
         }
     };
 

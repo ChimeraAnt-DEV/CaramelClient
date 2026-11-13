@@ -3,7 +3,7 @@ package org.chimeramc.client.core.mods.inbuilt.vip;
 /**
  * Relay for a one-shot key capture running inside a menu.
  *
- * <p>The in-game activity dispatches keys through the preloader first, which can consume the very
+ * <p>The in-game activity dispatches keys through the sweetloader first, which can consume the very
  * press a bind picker is waiting for. The picker therefore registers here and the activity offers
  * each raw press before anything else may swallow it — the same mechanism the touch Mod Menu uses,
  * shared so the VIP screen and the touch screen cannot both hold a capture at once and silently

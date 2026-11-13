@@ -104,10 +104,9 @@
             android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
             tools:ignore="DiscouragedApi">
 
-            <!-- F1: a shared .AntEgg link. The scheme/host filter is intentionally broad and the
-                 payload is filtered in FileHandler by AntEggLink, because a share sheet usually
-                 sends a whole message rather than a bare URL. `text/plain` is required for a
-                 browser or chat app to offer this entry at all. -->
+            <!-- A shared mod link. The scheme/host filter is intentionally broad because a share
+                 sheet usually sends a whole message rather than a bare URL; `text/plain` is
+                 required for a browser or chat app to offer this entry at all. -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -128,7 +127,7 @@
         <service
             android:name="org.chimeramc.client.launcher.settings.PerformanceTileService"
             android:exported="true"
-            android:icon="@drawable/ic_glowberry_mono"
+            android:icon="@drawable/ic_caramel_mono"
             android:label="@string/performance_preset_title"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -368,22 +367,6 @@
             tools:ignore="DiscouragedApi" />
 
         <activity
-            android:name=".ui.activities.ScriptManagerActivity"
-            android:theme="@style/Base.Theme.FullScreen"
-            android:screenOrientation="sensorLandscape"
-            android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
-            android:exported="false"
-            tools:ignore="DiscouragedApi" />
-
-        <activity
-            android:name=".ui.activities.JavaBridgeActivity"
-            android:theme="@style/Base.Theme.FullScreen"
-            android:screenOrientation="sensorLandscape"
-            android:configChanges="fontScale|density|smallestScreenSize|screenSize|uiMode|screenLayout|orientation|navigation|keyboardHidden|keyboard|touchscreen|locale|mnc|mcc"
-            android:exported="false"
-            tools:ignore="DiscouragedApi" />
-
-        <activity
             android:name=".ui.activities.ModrinthDetailActivity"
             android:theme="@style/Base.Theme.FullScreen"
             android:screenOrientation="sensorLandscape"
@@ -411,7 +394,7 @@
             tools:ignore="DiscouragedApi">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="preloader" />
+                android:value="sweetloader" />
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -461,16 +444,6 @@
                 <data android:pathPattern="/.*\\..*\\..*\\.so" />
                 <data android:pathPattern="/.*\\..*\\..*\\..*\\.so" />
                 <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.so" />
-                <data android:pathPattern="/.*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.jar" />
                 <data android:pathPattern="/.*\\.mcworld" />
                 <data android:pathPattern="/.*\\..*\\.mcworld" />
                 <data android:pathPattern="/.*\\..*\\..*\\.mcworld" />
@@ -494,8 +467,6 @@
                 <data android:pathSuffix=".zip" />
                 <data android:pathSuffix=".chimerabackup" />
                 <data android:pathSuffix=".so" />
-                <data android:pathSuffix=".antegg" />
-                <data android:pathSuffix=".jar" />
                 <data android:pathSuffix=".mcworld" />
                 <data android:pathSuffix=".mcpack" />
                 <data android:pathSuffix=".mcaddon" />
@@ -526,16 +497,6 @@
                 <data android:pathPattern="/.*\\..*\\..*\\.so" />
                 <data android:pathPattern="/.*\\..*\\..*\\..*\\.so" />
                 <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.so" />
-                <data android:pathPattern="/.*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.antegg" />
-                <data android:pathPattern="/.*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\.jar" />
-                <data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.jar" />
                 <data android:pathPattern="/.*\\.mcworld" />
                 <data android:pathPattern="/.*\\..*\\.mcworld" />
                 <data android:pathPattern="/.*\\..*\\..*\\.mcworld" />
@@ -559,8 +520,6 @@
                 <data android:pathSuffix=".zip" />
                 <data android:pathSuffix=".chimerabackup" />
                 <data android:pathSuffix=".so" />
-                <data android:pathSuffix=".antegg" />
-                <data android:pathSuffix=".jar" />
                 <data android:pathSuffix=".mcworld" />
                 <data android:pathSuffix=".mcpack" />
                 <data android:pathSuffix=".mcaddon" />
@@ -611,7 +570,7 @@
             tools:ignore="DiscouragedApi">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="preloader" />
+                android:value="sweetloader" />
         </activity>
 
         <activity

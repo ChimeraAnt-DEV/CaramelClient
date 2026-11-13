@@ -2,17 +2,17 @@ param(
     [string]$Abi = "arm64-v8a",
     [string]$BuildType = "Release",
     [string]$Ndk = "",
-    [string]$PreloaderRoot = "",
+    [string]$SweetLoaderRoot = "",
     [switch]$Clean,
-    [switch]$NoLinkPreloader
+    [switch]$NoLinkSweetLoader
 )
 
 $ErrorActionPreference = "Stop"
 
 $SourceDir = $PSScriptRoot
 $RepoRoot = Resolve-Path (Join-Path $SourceDir "..\..")
-if ([string]::IsNullOrWhiteSpace($PreloaderRoot)) {
-    $PreloaderRoot = Join-Path $RepoRoot "app\src\main\cpp\preloader"
+if ([string]::IsNullOrWhiteSpace($SweetLoaderRoot)) {
+    $SweetLoaderRoot = Join-Path $RepoRoot "app\src\main\cpp\sweetloader"
 }
 
 function Get-FullPath {
@@ -72,7 +72,7 @@ if ($Clean -and (Test-Path $BuildDir)) {
     Remove-Item -LiteralPath $BuildDir -Recurse -Force
 }
 
-$LinkPreloader = if ($NoLinkPreloader) { "OFF" } else { "ON" }
+$LinkSweetLoader = if ($NoLinkSweetLoader) { "OFF" } else { "ON" }
 
 function Invoke-Checked {
     param(
@@ -96,8 +96,8 @@ Invoke-Checked cmake `
     "-DANDROID_ABI=$Abi" `
     "-DANDROID_PLATFORM=android-24" `
     "-DCMAKE_BUILD_TYPE=$BuildType" `
-    "-DPRELOADER_ANDROID_ROOT=$PreloaderRoot" `
-    "-DLL_MOD_MENU_EXAMPLES_LINK_PRELOADER=$LinkPreloader"
+    "-DSWEETLOADER_ANDROID_ROOT=$SweetLoaderRoot" `
+    "-DLL_MOD_MENU_EXAMPLES_LINK_PRELOADER=$LinkSweetLoader"
 
 Invoke-Checked cmake `
     --build $BuildDir `

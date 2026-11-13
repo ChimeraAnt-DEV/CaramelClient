@@ -1,7 +1,7 @@
 ## World reconstruction — RE groundwork and the remaining wall
 
 The goal is to fill BerryAPI's world seam (`AllEntities`, `GetBlock`, `GetTime`, …) from the
-preloader so its replay capture reconstructs the whole world, not just the local player. This is
+sweetloader so its replay capture reconstructs the whole world, not just the local player. This is
 the state of that work: what is proven, what is tooled, and the one thing still missing.
 
 ### The binary and the tooling (done, reproducible)
@@ -9,7 +9,7 @@ the state of that work: what is proven, what is tooled, and the one thing still 
 - The game binary used for this pass is `libminecraftpe.so` from
   `minecraft-26-60-28.apk` (mcpedl.org `file_id` 7572), 368,150,880 bytes. The APK is 382 MB; the
   `.so` is stored deflated, so extract with Python's `zipfile` (no `unzip` in this container).
-- The RTTI/vtable resolver the preloader uses (`resolveVtableFunction`) is **validated** against
+- The RTTI/vtable resolver the sweetloader uses (`resolveVtableFunction`) is **validated** against
   this binary: emulating the `Vtable.cpp` algorithm over `.rela.dyn` (`R_AARCH64_RELATIVE`
   addends) reproduces the doc's known values exactly — `18LivePlayerRenderer` vtable
   `0x15144a78` slot 17 → `0xaeaefb4`, and `20ClientNetworkHandler` vtable `0x1520ef98` slot 40 →
@@ -30,7 +30,7 @@ the state of that work: what is proven, what is tooled, and the one thing still 
 ### The local-player seam (already shipped, re-confirmed)
 
 `ClientInstance` slot 31 (`0xb013810`) is the local-player accessor: it takes `x0 = self`,
-materialises `self + 0x240` into `x1` and calls a helper. The preloader hooks this slot and reads
+materialises `self + 0x240` into `x1` and calls a helper. The sweetloader hooks this slot and reads
 `Actor+0x230` (position) and `Actor+0x238` (view rotation). That is the *only* slot this build fills.
 
 ### The remaining wall: `AllEntities`
@@ -168,7 +168,7 @@ offset at all**. This is exactly what the original task described: *"Hook into t
 stream. Instead of just recording chunk packets, record everything."*
 
 **What already exists for it:**
-- The preloader already hooks the packet seam: `ClientNetworkHandler` vtable slot 40 (verified,
+- The sweetloader already hooks the packet seam: `ClientNetworkHandler` vtable slot 40 (verified,
   `0x1520ef98` + slot 40 → `0xb80f518`), installed as a passthrough veneer that preserves the full
   register set. It currently only counts.
 - BerryAPI's `ReplayCapture::CapturePacket` is the consumer, and the loopback `ReplayServer` plays
@@ -177,7 +177,7 @@ stream. Instead of just recording chunk packets, record everything."*
 **What is missing (the next concrete work, and it is small):**
 1. A C ABI entry for the packet capture, mirroring how `save` was added to `berry/replay_c.h` — e.g.
    `capture_packet(dir, id, payload, len, tick)` on the same `BerryReplayApi` struct (an ABI bump).
-2. The preloader's packet hook, which already sees the arguments, forwards the payload to that call
+2. The sweetloader's packet hook, which already sees the arguments, forwards the payload to that call
    instead of only counting. The register set is already preserved, so the payload bytes are in hand.
 3. Then the recorder's sections carry the world, and `ReplayWorld`/`ReplayServer` reconstruct it —
    no entity-list offset required.

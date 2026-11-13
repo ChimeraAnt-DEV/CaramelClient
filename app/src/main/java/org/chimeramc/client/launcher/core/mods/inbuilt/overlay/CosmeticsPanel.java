@@ -597,7 +597,7 @@ public final class CosmeticsPanel {
             out.geoTexH = geometry.models.isEmpty()
                     ? atlasHeight : geometry.models.get(0).description.textureHeight;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:600", "Ignored a failure at CosmeticsPanel:600", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsPanel:600", "Ignored a failure at CosmeticsPanel:600", ignored);
         }
         return out;
     }
@@ -634,7 +634,7 @@ public final class CosmeticsPanel {
             out.geoTexH = geometry.models.isEmpty()
                     ? atlasHeight : geometry.models.get(0).description.textureHeight;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:637", "Ignored a failure at CosmeticsPanel:637", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsPanel:637", "Ignored a failure at CosmeticsPanel:637", ignored);
         }
         return out;
     }
@@ -780,7 +780,7 @@ public final class CosmeticsPanel {
                     store.getEquippedPet());
             NativeCosmeticsRuntime.setFrameGait(preview.getPetLocomotion());
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:783", "Ignored a failure at CosmeticsPanel:783", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsPanel:783", "Ignored a failure at CosmeticsPanel:783", ignored);
         }
         CosmeticSyncModule.requestAnnounce();
         refreshGameStatus();
@@ -864,7 +864,7 @@ public final class CosmeticsPanel {
         try {
             preview.refreshSkin();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsPanel:867", "Ignored a failure at CosmeticsPanel:867", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsPanel:867", "Ignored a failure at CosmeticsPanel:867", ignored);
         }
     }
 
@@ -890,7 +890,7 @@ public final class CosmeticsPanel {
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setPadding(0, dp(3), 0, dp(3));
-        row.addView(GlowberryBadge.create(activity, compact));
+        row.addView(CaramelBadge.create(activity, compact));
         LinearLayout labels = new LinearLayout(activity);
         labels.setOrientation(LinearLayout.VERTICAL);
         TextView name = new TextView(activity);

@@ -4,7 +4,7 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
  * Decides whether the in-game overlays — the mods whose UI lives on the game HUD, such as the
  * FPS/CPS readouts, the armor HUD, the hit-timing pill and the hitboxes — should be on screen.
  *
- * The normal signal comes from the preloader's game-state hooks: the HUD screen is up and no
+ * The normal signal comes from the sweetloader's game-state hooks: the HUD screen is up and no
  * menu is open. Those hooks are address-based and only install when the shipped signature rules
  * resolve; when they do not, the flags stay {@code false} for the whole session. Treating
  * {@code false} as "not in game" hid every overlay permanently, so a mod's UI only appeared

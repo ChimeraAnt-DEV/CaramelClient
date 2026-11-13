@@ -4,7 +4,7 @@ package org.chimeramc.client.preloader;
  * Bridge to the bundled BerryAPI native runtime ({@code libBerryAPI.so}).
  *
  * <p>BerryAPI is a separate Bedrock client runtime with its own version, so the launcher never links
- * it directly; the preloader {@code dlopen}s it and reports what it found over this small surface.
+ * it directly; the sweetloader {@code dlopen}s it and reports what it found over this small surface.
  * Every call is a thin read of a cached native answer, so they are cheap enough for the Diagnostics
  * screen and the launch preflight.
  *
@@ -472,7 +472,7 @@ public final class BerryApi {
             String s = nativeSummary();
             return s != null && !s.isEmpty() ? s : "BerryAPI: not available";
         } catch (UnsatisfiedLinkError e) {
-            return "BerryAPI: not available (preloader not loaded)";
+            return "BerryAPI: not available (sweetloader not loaded)";
         }
     }
 
@@ -500,7 +500,7 @@ public final class BerryApi {
     // presets, the remote-render gate and the service counters. The launcher's cosmetics screen
     // drives it through these. Every call answers the fail-closed default when the library or its
     // cosmetic ABI is absent, so the screen shows "not available" rather than crashing. The
-    // player-model hook is installed by the preloader itself once the game's player-render target
+    // player-model hook is installed by the sweetloader itself once the game's player-render target
     // resolves; Java only reads its state here.
 
     /** The cosmetic slot values, mirroring {@code BerryCosmeticSlotC}. The values are the ABI. */

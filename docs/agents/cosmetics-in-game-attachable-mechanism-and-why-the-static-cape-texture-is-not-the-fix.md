@@ -16,7 +16,7 @@
   drives the vanilla `cape` bone on a player wearing a vanilla or Persona cape. Pointing that key at
   `animation.chimera_cape` (the first implementation) replaced vanilla's own
   `math.lerp(0.0, -126.0, query.cape_flap_amount) - 6.0` swing globally, so a plain vanilla cape тАФ
-  with no Chimera cosmetic at all тАФ froze. The pack must leave `"cape": "animation.player.cape"`
+  with no Caramel cosmetic at all тАФ froze. The pack must leave `"cape": "animation.player.cape"`
   alone and instead play `animation.chimera_cape` from the entity's own `animate` list. That is what
   scopes it: the animation only writes the `cape_1..N` bones, which exist only in this pack's
   geometry, so vanilla's `cape` bone and animation are never touched. `CapeResourcePackBuilderTest`
@@ -42,7 +42,7 @@
   player wears that exact skin and requires a Dressing Room re-entry. The render-controller route
   adds a cape the player did not have, on top of whatever skin they wear.
 - **`cosmetics_scope_note` describes the honest model**: all three cosmetics are drawn on the
-  player's own client entity by the generated pack, so only Chimera users (via cosmetic sync) see
+  player's own client entity by the generated pack, so only Caramel users (via cosmetic sync) see
   them - vanilla players cannot, because Bedrock offers no app API to push a cosmetic onto another
   account. Keep it in step with the feature or the UI over-claims.
 - Pets and hats are drawn **on your own player**, never spawned: `/summon` is a server-side command
@@ -50,7 +50,7 @@
 - **A named geometry that does not resolve can fail the whole client entity.** `AccessoryGeometry`
   and `PetGeometry` always emit a resolving-but-empty mesh for "none equipped", so the player
   entity's geometry references resolve and the cape is not dragged down with them.
-- **In-place pack reload is not implemented in this build.** The preloader now has a real
+- **In-place pack reload is not implemented in this build.** The sweetloader now has a real
   fail-safe `nativeReloadResourcePacks` body, but it resolves to "no hook" on the shipped builds
   (verified against the binary тАФ see `preloader-android/docs/resource-pack-reload.md`), so a
   running world keeps its cached pack stack and the supported apply path relaunches the instance

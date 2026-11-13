@@ -12,7 +12,7 @@
   and draws an accent ring on the selected card via `setForeground`, because the platform's own
   highlight is exactly the wash that was removed. Selection is skipped for unavailable modules,
   matching the touch path.
-- **The game activity offers raw keys and stick motion to the open menu before the preloader.**
+- **The game activity offers raw keys and stick motion to the open menu before the sweetloader.**
   `MinecraftActivity.dispatchKeyEvent` -> `InbuiltOverlayManager.handleMenuControllerKey` and
   `dispatchGenericMotionEvent` -> `handleMenuControllerMotion`. Without the early offer a pad button
   the menu wants for navigation would be swallowed by the game first. Stick navigation has a

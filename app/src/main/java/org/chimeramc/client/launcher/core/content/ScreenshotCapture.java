@@ -93,11 +93,11 @@ public final class ScreenshotCapture {
     }
 
     private static void writeAsync(Bitmap bitmap, File dir, Callback callback) {
-        AppExecutors.run(AppExecutors.Kind.DISK, "glowberry-screenshot", () -> {
+        AppExecutors.run(AppExecutors.Kind.DISK, "caramel-screenshot", () -> {
             File file = null;
             try {
                 if (!dir.exists()) dir.mkdirs();
-                file = new File(dir, "glowberry_" + System.currentTimeMillis() + ".png");
+                file = new File(dir, "caramel_" + System.currentTimeMillis() + ".png");
                 try (OutputStream out = new FileOutputStream(file)) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 }

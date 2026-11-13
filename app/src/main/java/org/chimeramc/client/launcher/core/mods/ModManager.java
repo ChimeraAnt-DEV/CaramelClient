@@ -46,8 +46,8 @@ public class ModManager {
     private static final int COPY_BUFFER_SIZE = 8192;
 
     private static volatile ModManager instance;
-    private static volatile boolean preloaderLoadAttempted;
-    private static volatile boolean preloaderLoaded;
+    private static volatile boolean sweetloaderLoadAttempted;
+    private static volatile boolean sweetloaderLoaded;
     /** One-shot gates for the bundled BerryAPI runtime, pumped from the game's frame tick. */
     private static volatile boolean berryAttachAttempted;
     private static volatile boolean berrySeamAttempted;
@@ -118,7 +118,7 @@ public class ModManager {
     /** The effective hook rule's resolved fields (which rule and slots the running build used). */
     private static native String nativeGameHookRulesSummary();
     /**
-     * Per-feature hook availability, as one JSON object. "The preloader loaded" and "this
+     * Per-feature hook availability, as one JSON object. "The sweetloader loaded" and "this
      * feature works" are different questions; this answers the second one so a single missing
      * signature does not read as "nothing works".
      */
@@ -143,22 +143,22 @@ public class ModManager {
         return result;
     }
 
-    public static boolean ensurePreloaderLoaded() {
-        if (preloaderLoaded) return true;
-        if (preloaderLoadAttempted) return false;
+    public static boolean ensureSweetLoaderLoaded() {
+        if (sweetloaderLoaded) return true;
+        if (sweetloaderLoadAttempted) return false;
 
         synchronized (ModManager.class) {
-            if (preloaderLoaded) return true;
-            if (preloaderLoadAttempted) return false;
+            if (sweetloaderLoaded) return true;
+            if (sweetloaderLoadAttempted) return false;
 
-            preloaderLoadAttempted = true;
+            sweetloaderLoadAttempted = true;
             try {
-                System.loadLibrary("preloader");
-                preloaderLoaded = true;
+                System.loadLibrary("sweetloader");
+                sweetloaderLoaded = true;
             } catch (UnsatisfiedLinkError e) {
-                Log.e(TAG, "Failed to load preloader in launcher process", e);
+                Log.e(TAG, "Failed to load sweetloader in launcher process", e);
             }
-            return preloaderLoaded;
+            return sweetloaderLoaded;
         }
     }
 
@@ -167,7 +167,7 @@ public class ModManager {
     }
 
     public static boolean initializeLoadedMod(String libPath, String modRootPath, Mod mod) {
-        if (!ensurePreloaderLoaded()) {
+        if (!ensureSweetLoaderLoaded()) {
             return false;
         }
 
@@ -183,11 +183,11 @@ public class ModManager {
         ModManager instance = getInstance();
         boolean hasEnabledMods = instance.getMods().stream().anyMatch(Mod::isEnabled);
         if (!hasEnabledMods) {
-            Log.i(TAG, "No enabled mods, skipping preloader init");
+            Log.i(TAG, "No enabled mods, skipping sweetloader init");
             return;
         }
 
-        if (!ensurePreloaderLoaded()) {
+        if (!ensureSweetLoaderLoaded()) {
             return;
         }
 
@@ -211,7 +211,7 @@ public class ModManager {
      * @return true once the install has run (installed or given up)
      */
     public static boolean pumpGameHookInstall() {
-        if (!ensurePreloaderLoaded()) return false;
+        if (!ensureSweetLoaderLoaded()) return false;
         try {
             return nativePumpGameHookInstall();
         } catch (UnsatisfiedLinkError e) {
@@ -235,7 +235,7 @@ public class ModManager {
      * once both steps have been attempted, so the steady-state cost is negligible.
      */
     public static void pumpBerryRuntime() {
-        if (!ensurePreloaderLoaded()) return;
+        if (!ensureSweetLoaderLoaded()) return;
         if (!berryAttachAttempted) {
             berryAttachAttempted = true;
             try {
@@ -266,7 +266,7 @@ public class ModManager {
 
     /** True while the deferred hook install is still waiting for the runtime (diagnostics). */
     public static boolean isGameHookInstallPending() {
-        if (!ensurePreloaderLoaded()) return false;
+        if (!ensureSweetLoaderLoaded()) return false;
         try {
             return nativeIsGameHookInstallPending();
         } catch (UnsatisfiedLinkError e) {
@@ -276,7 +276,7 @@ public class ModManager {
 
     /** The deferred-install state for diagnostics: 0 not armed, 1 waiting, 2 resolved. */
     public static int gameHookInstallState() {
-        if (!ensurePreloaderLoaded()) return 0;
+        if (!ensureSweetLoaderLoaded()) return 0;
         try {
             int[] value = nativeGameHookInstallState();
             return value != null && value.length >= 1 ? value[0] : 0;
@@ -287,7 +287,7 @@ public class ModManager {
 
     /** The frame ticks the install gate observed before deciding, or 0 when unavailable. */
     public static int gameHookInstallFrameTicks() {
-        if (!ensurePreloaderLoaded()) return 0;
+        if (!ensureSweetLoaderLoaded()) return 0;
         try {
             int[] value = nativeGameHookInstallState();
             return value != null && value.length >= 2 ? value[1] : 0;
@@ -298,7 +298,7 @@ public class ModManager {
 
     /** The effective hook rule's resolved fields, or "" when unavailable. */
     public static String gameHookRulesSummary() {
-        if (!ensurePreloaderLoaded()) return "";
+        if (!ensureSweetLoaderLoaded()) return "";
         try {
             String value = nativeGameHookRulesSummary();
             return value == null ? "" : value;
@@ -309,11 +309,11 @@ public class ModManager {
 
     /**
      * The per-feature hook availability report, as a JSON object, or "" when the
-     * preloader is not loaded. The Diagnostics screen prints this verbatim, so a bug report names
+     * sweetloader is not loaded. The Diagnostics screen prints this verbatim, so a bug report names
      * exactly which feature failed and why.
      */
     public static String featureAvailability() {
-        if (!ensurePreloaderLoaded()) return "";
+        if (!ensureSweetLoaderLoaded()) return "";
         try {
             String value = nativeFeatureAvailability();
             return value == null ? "" : value;
@@ -323,11 +323,11 @@ public class ModManager {
     }
 
     /**
-     * The hook self-test report, as a JSON object, or "" when the preloader is not
-     * loaded. The round-trip is cached in the preloader, so calling this more than once is cheap.
+     * The hook self-test report, as a JSON object, or "" when the sweetloader is not
+     * loaded. The round-trip is cached in the sweetloader, so calling this more than once is cheap.
      */
     public static String hookSelfTest() {
-        if (!ensurePreloaderLoaded()) return "";
+        if (!ensureSweetLoaderLoaded()) return "";
         try {
             String value = nativeHookSelfTest();
             return value == null ? "" : value;
@@ -337,7 +337,7 @@ public class ModManager {
     }
 
     public static void disableAndUnloadLoadedMods() {
-        if (!ensurePreloaderLoaded()) {
+        if (!ensureSweetLoaderLoaded()) {
             return;
         }
 
@@ -750,8 +750,8 @@ public class ModManager {
             // verifier can refuse to load a file that does not match what the author shipped.
             String declaredSha256 = parseOptionalString(manifest, "sha256", "");
             boolean verified = false;
-            if (!declaredSha256.isEmpty() && org.chimeramc.client.core.antegg.ModHash.isValidDigest(declaredSha256)) {
-                verified = org.chimeramc.client.core.antegg.ModHash.matches(entryFile, declaredSha256);
+            if (!declaredSha256.isEmpty() && org.chimeramc.client.core.mods.ModHash.isValidDigest(declaredSha256)) {
+                verified = org.chimeramc.client.core.mods.ModHash.matches(entryFile, declaredSha256);
             }
 
             return new ModDescriptor(

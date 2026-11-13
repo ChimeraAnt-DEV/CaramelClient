@@ -9,7 +9,7 @@ import org.chimeramc.client.preloader.PreloaderInput;
  * game only through a hook on the game's own player renderer, and that hook has several failure
  * modes (an unresolved render slot, a build whose renderer never ran, a Vulkan-only surface), so the
  * UI has to say which state is actually in effect rather than implying the path always works. This
- * class is that one probe: it reads the preloader's render feed and classifies the result.
+ * class is that one probe: it reads the sweetloader's render feed and classifies the result.
  *
  * <p><b>Fail-closed.</b> A missing native library, an unresolved render slot, or a build whose
  * renderer never ran all read as {@link Mode#UNAVAILABLE}. The launcher never claims a native path it

@@ -13,7 +13,7 @@ import org.junit.Test;
 public class ModRowPresentationTest {
 
     private static Mod mod(String entry, boolean enabled) {
-        return new Mod("id", "mod.antegg", entry, "Example", enabled, 0);
+        return new Mod("id", "mod.zip", entry, "Example", enabled, 0);
     }
 
     @Test

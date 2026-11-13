@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/space_2"
     android:layout_marginVertical="@dimen/space_2"
-    style="@style/Widget.Chimera.Card"
+    style="@style/Widget.Caramel.Card"
     android:elevation="4dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -34,7 +34,7 @@
             android:fontFamily="@font/misans"
             android:maxLines="1"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:textStyle="bold"
             tools:text="FurnitureAddon.mcaddon" />
 
@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/space_hairline"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             tools:text="Add-on • 2.4 MB" />
     </LinearLayout>
 
@@ -64,6 +64,6 @@
         android:text="@string/downloads_import"
         android:textAllCaps="false"
         android:textColor="@color/on_primary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:textStyle="bold" />
 </LinearLayout>

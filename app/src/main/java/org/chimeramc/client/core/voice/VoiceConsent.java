@@ -10,7 +10,7 @@ package org.chimeramc.client.core.voice;
  * asks for consent once; bumping {@link #CONSENT_VERSION} invalidates every previously recorded
  * decision so a change to what the feature does re-asks.
  *
- * <p>This mirrors {@code core.javabridge.LlmConsent} on purpose: the rule for "may this feature
+ * <p>The rule for "may this feature: the rule for "may this feature
  * touch the network / a microphone at all?" lives in one pure, tested class rather than being
  * re-derived at each call site.
  *

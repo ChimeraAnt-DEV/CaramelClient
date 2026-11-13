@@ -143,7 +143,7 @@ abstract class TextOverlay {
             isShowing = true;
             handler.post(refreshRunnable);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "TextOverlay:146", "Ignored a failure at TextOverlay:146", ignored);
+            AppLog.warnOnce("CaramelClient", "TextOverlay:146", "Ignored a failure at TextOverlay:146", ignored);
         }
     }
 
@@ -183,7 +183,7 @@ abstract class TextOverlay {
         try {
             if (view.getParent() != null) windowManager.removeViewImmediate(view);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "TextOverlay:186", "Ignored a failure at TextOverlay:186", ignored);
+            AppLog.warnOnce("CaramelClient", "TextOverlay:186", "Ignored a failure at TextOverlay:186", ignored);
         }
     }
 
@@ -227,7 +227,7 @@ abstract class TextOverlay {
                     try {
                         windowManager.updateViewLayout(overlayView, wmParams);
                     } catch (Throwable ignored) {
-                        AppLog.warnOnce("GlowberryClient", "TextOverlay:230", "Ignored a failure at TextOverlay:230", ignored);
+                        AppLog.warnOnce("CaramelClient", "TextOverlay:230", "Ignored a failure at TextOverlay:230", ignored);
                     }
                 }
                 return true;

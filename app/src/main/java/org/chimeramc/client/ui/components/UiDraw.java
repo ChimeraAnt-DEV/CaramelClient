@@ -8,7 +8,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 
 /**
- * Static canvas primitives shared by every GlowberryClient surface. The overlays draw themselves in
+ * Static canvas primitives shared by every CaramelClient surface. The overlays draw themselves in
  * code (they cannot inflate a themed layout over the game), so the card, pill, hairline, gradient and
  * shadow geometry lives here rather than being re-derived per screen.
  *

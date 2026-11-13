@@ -593,7 +593,7 @@ public final class MoreButtonsEditor {
             try {
                 int flags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
                 try { activity.getContentResolver().takePersistableUriPermission(uri, flags); } catch (Exception ignored) {
-                    AppLog.warnOnce("GlowberryClient", "MoreButtonsEditor:596", "Ignored a failure at MoreButtonsEditor:596", ignored);
+                    AppLog.warnOnce("CaramelClient", "MoreButtonsEditor:596", "Ignored a failure at MoreButtonsEditor:596", ignored);
                 }
                 byte[] bytes = readLimited(activity, uri, MoreButtonsManager.MAX_SVG_BYTES);
                 String svg = new String(bytes, StandardCharsets.UTF_8);
@@ -846,7 +846,7 @@ public final class MoreButtonsEditor {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "MoreButtonsEditor:849", "Ignored a failure at MoreButtonsEditor:849", ignored);
+            AppLog.warnOnce("CaramelClient", "MoreButtonsEditor:849", "Ignored a failure at MoreButtonsEditor:849", ignored);
         }
         String last = uri.getLastPathSegment();
         return last == null ? "icon.svg" : last;

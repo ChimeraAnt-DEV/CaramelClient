@@ -59,7 +59,7 @@ import java.util.List;
  * rather than as hard pixel blocks.
  *
  * <p>The cape is a {@link CapeSimulator} cloth mesh, drawn behind the body, with the animated
- * Chimera mark crawling across it. The frame callback only runs while there is motion to show,
+ * Caramel mark crawling across it. The frame callback only runs while there is motion to show,
  * so a static cape under reduced motion costs nothing per frame.
  *
  * <p>Scope note carried by the UI: this previews how the cosmetics <em>look</em>. Bedrock does
@@ -1084,7 +1084,7 @@ public class CapePreviewView extends View {
     /** Farthest-first insertion sort; small fixed quad count, allocation-free. */
 
     /**
-     * The Chimera mark crawling across the cloth.
+     * The Caramel mark crawling across the cloth.
      *
      * The mark walks along the mesh's parameter space so it follows the cloth's curve instead of
      * sliding over a flat quad, and it is clipped to the cloth so it reads as printed on the

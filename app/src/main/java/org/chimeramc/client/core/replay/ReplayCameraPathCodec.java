@@ -71,7 +71,7 @@ public final class ReplayCameraPathCodec {
                         Float.parseFloat(fields[5].trim()),
                         fov));
             } catch (NumberFormatException ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayCameraPathCodec:53", "Ignored a failure at ReplayCameraPathCodec:53", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayCameraPathCodec:53", "Ignored a failure at ReplayCameraPathCodec:53", ignored);
             }
         }
         path.setPreset(preset);
@@ -88,14 +88,14 @@ public final class ReplayCameraPathCodec {
                 path.setEasing(ReplayCameraPath.Easing.valueOf(value));
             } catch (IllegalArgumentException e) {
                 // An unknown easing name leaves the default rather than blanking the path.
-                AppLog.warnOnce("GlowberryClient", "ReplayCameraPathCodec:easing",
+                AppLog.warnOnce("CaramelClient", "ReplayCameraPathCodec:easing",
                         "Ignored an unknown easing name", e);
             }
         } else if ("s".equals(key)) {
             try {
                 path.setSmoothing(Float.parseFloat(value));
             } catch (NumberFormatException e) {
-                AppLog.warnOnce("GlowberryClient", "ReplayCameraPathCodec:smoothing",
+                AppLog.warnOnce("CaramelClient", "ReplayCameraPathCodec:smoothing",
                         "Ignored a non-numeric smoothing value", e);
             }
         }

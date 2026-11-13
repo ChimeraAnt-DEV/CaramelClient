@@ -99,8 +99,8 @@ public final class CosmeticsDiagnosticsReport {
         public boolean rulesConfigured;
         /** Whether the rules file was read and parsed into a usable rule set. */
         public boolean rulesLoaded;
-        /** How many copies of libpreloader.so are mapped; >1 means a split, empty registry. */
-        public int preloaderModuleMappings = -1;
+        /** How many copies of libsweetloader.so are mapped; >1 means a split, empty registry. */
+        public int sweetloaderModuleMappings = -1;
         /** The deferred hook-install state: 0 not armed, 1 waiting, 2 resolved. */
         public int hookInstallState;
         /** Frame ticks the install gate observed before deciding. */
@@ -200,7 +200,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.rulesLoadAttempted = diag[14] == 1;
                 in.rulesConfigured = diag.length >= 21 && diag[19] == 1;
                 in.rulesLoaded = diag.length >= 21 && diag[20] == 1;
-                in.preloaderModuleMappings = diag[15];
+                in.sweetloaderModuleMappings = diag[15];
             }
         }
         in.cameraAnchorSource = PreloaderInput.cameraAnchorSource();
@@ -216,7 +216,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingVsyncLocked = (pacing[3] & 2) != 0;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:213", "Ignored a failure at CosmeticsDiagnosticsReport:213", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:213", "Ignored a failure at CosmeticsDiagnosticsReport:213", ignored);
         }
 
         // The percentile + hitch reading. Separate from the per-frame one because it
@@ -230,7 +230,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingHitchesPerMinute = percentiles[4];
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:227", "Ignored a failure at CosmeticsDiagnosticsReport:227", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:227", "Ignored a failure at CosmeticsDiagnosticsReport:227", ignored);
         }
 
         // The process footprint, so a session that grows is visible in the report.
@@ -241,7 +241,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.processProportionalKb = memory[2];
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:238", "Ignored a failure at CosmeticsDiagnosticsReport:238", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:238", "Ignored a failure at CosmeticsDiagnosticsReport:238", ignored);
         }
 
         // The local-player feed, decoded from its raw float bits. Only present when live.
@@ -259,13 +259,13 @@ public final class CosmeticsDiagnosticsReport {
                     org.chimeramc.client.core.mods.ModManager.gameHookInstallFrameTicks();
             in.rulesSummary = org.chimeramc.client.core.mods.ModManager.gameHookRulesSummary();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:256", "Ignored a failure at CosmeticsDiagnosticsReport:256", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:256", "Ignored a failure at CosmeticsDiagnosticsReport:256", ignored);
         }
         try {
-            in.rulesSource = org.chimeramc.client.preloader.PreloaderSignatureRulesManager
+            in.rulesSource = org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager
                     .getRulesSource(context);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:262", "Ignored a failure at CosmeticsDiagnosticsReport:262", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:262", "Ignored a failure at CosmeticsDiagnosticsReport:262", ignored);
         }
         in.capeEngineRouteLive = NativeCosmeticsFeed.isCapeEngineRouteLive();
         in.imagePipelineLive = NativeCosmeticsBridge.isImagePipelineLive();
@@ -273,18 +273,18 @@ public final class CosmeticsDiagnosticsReport {
             in.hookInstallPending =
                     org.chimeramc.client.core.mods.ModManager.isGameHookInstallPending();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:270", "Ignored a failure at CosmeticsDiagnosticsReport:270", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:270", "Ignored a failure at CosmeticsDiagnosticsReport:270", ignored);
         }
         try {
             in.sessionActive =
                     org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:276", "Ignored a failure at CosmeticsDiagnosticsReport:276", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:276", "Ignored a failure at CosmeticsDiagnosticsReport:276", ignored);
         }
         try {
             in.hudScreenOpen = PreloaderInput.isHudScreenOpen();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:281", "Ignored a failure at CosmeticsDiagnosticsReport:281", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:281", "Ignored a failure at CosmeticsDiagnosticsReport:281", ignored);
         }
         // "In a world" is the HUD hook having reported a world at least once and no HUD screen being
         // open right now. Before the hook fires there is no reading at all, so the report says so
@@ -293,7 +293,7 @@ public final class CosmeticsDiagnosticsReport {
         try {
             in.skinCaptured = PreloaderInput.nativeHasCapturedSkin();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:290", "Ignored a failure at CosmeticsDiagnosticsReport:290", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:290", "Ignored a failure at CosmeticsDiagnosticsReport:290", ignored);
         }
         in.skinFeedInstalled = GameSkinSource.hasProvider();
         // Which stage the skin path reached, so a "skin not visible" report can be routed
@@ -307,7 +307,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.skinSeamNote = PreloaderInput.describeSkinSeam(seam[0]);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:304", "Ignored a failure at CosmeticsDiagnosticsReport:304", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:304", "Ignored a failure at CosmeticsDiagnosticsReport:304", ignored);
         }
 
         // The most recent crash report, so a device crash trace can be copied/shared from inside the
@@ -320,7 +320,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.lastCrashTruncated = report.truncated;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:317", "Ignored a failure at CosmeticsDiagnosticsReport:317", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:317", "Ignored a failure at CosmeticsDiagnosticsReport:317", ignored);
         }
         // Mod-menu build failures the containment guard caught.
         in.menuGuardFailures = org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuGuard.format();
@@ -333,7 +333,7 @@ public final class CosmeticsDiagnosticsReport {
                         path -> context.getAssets().open(path));
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CosmeticsDiagnosticsReport:330", "Ignored a failure at CosmeticsDiagnosticsReport:330", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:330", "Ignored a failure at CosmeticsDiagnosticsReport:330", ignored);
         }
         // Faces the scene refused to build, with the reason.
         java.util.List<PreviewSceneDiagnostics.Entry> skipped = PreviewSceneDiagnostics.snapshot();
@@ -381,7 +381,7 @@ public final class CosmeticsDiagnosticsReport {
     public static String format(Inputs in) {
         Inputs v = in == null ? new Inputs() : in;
         StringBuilder b = new StringBuilder(1024);
-        b.append("GlowberryClient — Cosmetics diagnostics\n");
+        b.append("CaramelClient — Cosmetics diagnostics\n");
         b.append("Generated: ").append(timestamp(v.timestampMs)).append('\n');
         b.append("Generated inside a world: ").append(yesNo(v.inWorld)).append('\n');
         b.append("App version: ").append(v.appVersion).append('\n');
@@ -403,7 +403,7 @@ public final class CosmeticsDiagnosticsReport {
                 .append('\n');
         b.append("Rule has render slot: ").append(yesNo(v.rulesHaveRenderIndex)).append('\n');
         b.append("Hook install state: ").append(installStateText(v)).append('\n');
-        b.append("libpreloader.so copies mapped: ").append(mappingText(v.preloaderModuleMappings))
+        b.append("libsweetloader.so copies mapped: ").append(mappingText(v.sweetloaderModuleMappings))
                 .append('\n');
         b.append("Player-render slot: ").append(slotText(v)).append('\n');
         b.append("Hook installed: ").append(hookText(v)).append('\n');
@@ -481,7 +481,7 @@ public final class CosmeticsDiagnosticsReport {
         try {
             String model = android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL;
             // The ABI is one of the gates that can refuse a feature, so the report names the
-            // process ABI next to the device. The preloader is arm64-only, so a report from a device
+            // process ABI next to the device. The sweetloader is arm64-only, so a report from a device
             // where the native library did not load needs the ABI to be diagnosable.
             String abi = android.os.Build.SUPPORTED_ABIS.length > 0
                     ? android.os.Build.SUPPORTED_ABIS[0] : "unknown";
@@ -766,13 +766,13 @@ public final class CosmeticsDiagnosticsReport {
      * <p>A bare "Status" line says the end result but not which link broke; with the install
      * deferred to the game's frame tick, "not installed" could mean the library never loaded, the
      * rules never arrived, no rule matched the version, or the runtime never came up. This walks the
-     * same order the preloader does and stops at the first failure, so a device report points at one
+     * same order the sweetloader does and stops at the first failure, so a device report points at one
      * step instead of leaving the reader to guess. Every stage is a real reading; nothing is
      * inferred.
      */
     static String firstFailingStage(Inputs v) {
         if (!v.nativeLoaded) {
-            return "0. native library — libpreloader.so is not loaded, so nothing below ran.";
+            return "0. native library — libsweetloader.so is not loaded, so nothing below ran.";
         }
         if (v.rulesRevision <= 0) {
             return "1. rules file — the delivered rules declared revision 0 (or none was delivered);"

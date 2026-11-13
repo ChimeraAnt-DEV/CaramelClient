@@ -171,7 +171,7 @@ public final class SkinCacheStore {
             // itself, so the order survives a process restart without a sidecar file.
             dir.setLastModified(nowMs > 0L ? nowMs : System.currentTimeMillis());
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "SkinCacheStore:174", "Ignored a failure at SkinCacheStore:174", ignored);
+            AppLog.warnOnce("CaramelClient", "SkinCacheStore:174", "Ignored a failure at SkinCacheStore:174", ignored);
         }
     }
 

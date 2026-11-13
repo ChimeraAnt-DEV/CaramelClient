@@ -60,7 +60,7 @@ public class PreloaderRulesTest {
         assertTrue(PreloaderRules.coversVersion(shippedShape(), "1.26.33.1"));
         assertTrue(PreloaderRules.coversVersion(shippedShape(), "26.50.24"));
         // The shipped shape's lowest floor is 1.21.132; anything below it is uncovered even by
-        // merge, so the launcher must refuse to hand rules to the preloader for it.
+        // merge, so the launcher must refuse to hand rules to the sweetloader for it.
         assertFalse(PreloaderRules.coversVersion(shippedShape(), "1.21.130"));
         assertFalse(PreloaderRules.coversVersion(shippedShape(), "1.20.0.0"));
         assertFalse(PreloaderRules.coversVersion(null, "1.26.50.24"));
@@ -245,10 +245,10 @@ public class PreloaderRulesTest {
         assertTrue("source rules must declare a revision >= 7", sourceRevision >= 7);
 
         java.nio.file.Path merged = java.nio.file.Paths.get(
-                "build/intermediates/assets/debug/mergeDebugAssets/preloader/preloader_signature_rules_source.json");
+                "build/intermediates/assets/debug/mergeDebugAssets/sweetloader/sweetloader_signature_rules_source.json");
         if (!java.nio.file.Files.exists(merged)) {
             merged = java.nio.file.Paths.get(
-                    "../build/intermediates/assets/debug/mergeDebugAssets/preloader/preloader_signature_rules_source.json");
+                    "../build/intermediates/assets/debug/mergeDebugAssets/sweetloader/sweetloader_signature_rules_source.json");
         }
         org.junit.Assume.assumeTrue("no merged asset yet (clean tree)", java.nio.file.Files.exists(merged));
         String packaged = new String(java.nio.file.Files.readAllBytes(merged),
@@ -319,10 +319,10 @@ public class PreloaderRulesTest {
 
     private static java.nio.file.Path realRulesPath() {
         // Gradle runs unit tests with the module dir as the working directory, so the file is at
-        // ../resources/preloader/...; fall back to a repo-relative path for other runners.
+        // ../resources/sweetloader/...; fall back to a repo-relative path for other runners.
         String[] candidates = {
-                "../resources/preloader/preloader_signature_rules_source.json",
-                "resources/preloader/preloader_signature_rules_source.json",
+                "../resources/sweetloader/sweetloader_signature_rules_source.json",
+                "resources/sweetloader/sweetloader_signature_rules_source.json",
         };
         for (String candidate : candidates) {
             java.nio.file.Path p = java.nio.file.Paths.get(candidate).toAbsolutePath().normalize();

@@ -30,7 +30,7 @@ FEED = ROOT / "resources" / "launcher" / "changelog_feed.json"
 IMAGES = ROOT / "docs" / "assets" / "sneakpeeks"
 API = "https://discord.com/api/v10"
 # A desktop UA: Discord rejects some default library agents with a 403.
-UA = "GlowberryClient/1.0 (+https://github.com/ChimeraAnt-DEV/GlowberryClient)"
+UA = "CaramelClient/1.0 (+https://github.com/ChimeraAnt-DEV/CaramelClient)"
 DEFAULT_CHANNEL = "1553866091670012005"
 # Only the maintainer's posts are peeks; a random member's screenshot is not.
 AUTHOR = "chimera.ant.king"

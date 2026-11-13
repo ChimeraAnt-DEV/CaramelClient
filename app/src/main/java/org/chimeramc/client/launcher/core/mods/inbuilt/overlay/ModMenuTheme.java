@@ -70,7 +70,7 @@ final class ModMenuTheme {
             glow = new org.chimeramc.client.util.PersonalizationManager(context)
                     .isEnableGlowEffects();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuTheme:73", "Ignored a failure at ModMenuTheme:73", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuTheme:73", "Ignored a failure at ModMenuTheme:73", ignored);
         }
         this.glowEnabled = glow;
 

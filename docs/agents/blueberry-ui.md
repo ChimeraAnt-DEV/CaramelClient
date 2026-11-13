@@ -37,7 +37,7 @@ spacing scale" and "one radius scale" described an intention rather than the app
 token set, a migration, and a test that reads the real resource files. **Adding a numeric
 `textSize`, `margin`, `padding` or `radius` to a layout fails the build.**
 
-- **U8 type roles.** `TextAppearance.Glowberry.{Display,Title,Body,Label,Caption}` in `styles.xml`,
+- **U8 type roles.** `TextAppearance.Caramel.{Display,Title,Body,Label,Caption}` in `styles.xml`,
   plus two named exceptions: `Wordmark` (the 34sp brand title) and `Micro` (the 9sp sub-caption).
   Every layout's `textSize` was a literal across 17 distinct sizes; all 759 now reference a role.
   `UiType` is the code-side equivalent. `TypeRoleTest` pins the role sizes to the `UiTokens.TEXT_*`

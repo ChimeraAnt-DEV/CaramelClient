@@ -1,6 +1,6 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
 
-const repo = "https://github.com/ChimeraAnt-DEV/GlowberryClient";
+const repo = "https://github.com/ChimeraAnt-DEV/CaramelClient";
 const releases = `${repo}/releases`;
 const base = process.env.VITEPRESS_BASE ?? "/";
 
@@ -27,7 +27,7 @@ function buildEnglishSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
-        { text: "Rule File Signing", link: `${localePrefix}preloader-rule-signing` },
+        { text: "Rule File Signing", link: `${localePrefix}sweetloader-rule-signing` },
         {
           text: "Memory Hook Macros",
           link: `${localePrefix}api/memory-hook-macros`,
@@ -60,7 +60,7 @@ function buildChineseSidebar(localePrefix: string): DefaultTheme.SidebarItem[] {
         { text: "Hook API", link: `${localePrefix}api/hook` },
         { text: "Signature API", link: `${localePrefix}api/signature` },
         { text: "Patch API", link: `${localePrefix}api/patch` },
-        { text: "规则文件签名", link: `${localePrefix}preloader-rule-signing` },
+        { text: "规则文件签名", link: `${localePrefix}sweetloader-rule-signing` },
         { text: "Memory Hook 宏", link: `${localePrefix}api/memory-hook-macros` },
         { text: "Types 与宏", link: `${localePrefix}api/types-and-macros` },
       ],
@@ -108,8 +108,8 @@ function buildChineseNav(): DefaultTheme.NavItem[] {
 }
 
 export default defineConfig({
-  title: "GlowberryClient",
-  description: "Documentation for the GlowberryClient Android Minecraft Bedrock launcher.",
+  title: "CaramelClient",
+  description: "Documentation for the CaramelClient Android Minecraft Bedrock launcher.",
   lang: "en-US",
   base,
   cleanUrls: true,
@@ -125,7 +125,7 @@ export default defineConfig({
     },
     socialLinks: [{ icon: "github", link: repo }],
     footer: {
-      copyright: "Copyright © 2024-2026 ChimeraMC",
+      copyright: "Copyright © 2024-2026 CaramelClient",
     },
   },
   locales: {

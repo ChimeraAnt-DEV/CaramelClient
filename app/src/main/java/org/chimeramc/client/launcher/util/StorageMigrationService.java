@@ -482,7 +482,7 @@ public class StorageMigrationService extends Service {
 
     private Notification buildProgressNotification(MigrationState state) {
         Notification.Builder builder = newNotificationBuilder()
-                .setSmallIcon(R.drawable.ic_glowberry_mono)
+                .setSmallIcon(R.drawable.ic_caramel_mono)
                 .setContentTitle(getString(R.string.storage_migration_progress_title))
                 .setContentText(getNotificationText(state))
                 .setStyle(new Notification.BigTextStyle().bigText(getNotificationText(state)))
@@ -523,7 +523,7 @@ public class StorageMigrationService extends Service {
         }
 
         return newNotificationBuilder()
-                .setSmallIcon(R.drawable.ic_glowberry_mono)
+                .setSmallIcon(R.drawable.ic_caramel_mono)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setStyle(new Notification.BigTextStyle().bigText(text))
@@ -641,7 +641,7 @@ public class StorageMigrationService extends Service {
             wakeLock.setReferenceCounted(false);
             wakeLock.acquire();
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "StorageMigrationService:644", "Ignored a failure at StorageMigrationService:644", ignored);
+            AppLog.warnOnce("CaramelClient", "StorageMigrationService:644", "Ignored a failure at StorageMigrationService:644", ignored);
         }
     }
 
@@ -651,7 +651,7 @@ public class StorageMigrationService extends Service {
                 wakeLock.release();
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "StorageMigrationService:654", "Ignored a failure at StorageMigrationService:654", ignored);
+            AppLog.warnOnce("CaramelClient", "StorageMigrationService:654", "Ignored a failure at StorageMigrationService:654", ignored);
         } finally {
             wakeLock = null;
         }

@@ -147,7 +147,7 @@ public class InstallProgressDialog extends Dialog {
             binding.progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 42)));
             binding.progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "InstallProgressDialog:150", "Ignored a failure at InstallProgressDialog:150", ignored);
+            AppLog.warnOnce("CaramelClient", "InstallProgressDialog:150", "Ignored a failure at InstallProgressDialog:150", ignored);
         }
     }
 

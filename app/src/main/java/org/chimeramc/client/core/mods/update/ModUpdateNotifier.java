@@ -51,7 +51,7 @@ public final class ModUpdateNotifier {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(app, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_glowberry_mono)
+                .setSmallIcon(R.drawable.ic_caramel_mono)
                 .setContentTitle(app.getString(R.string.mod_update_notification_title))
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
@@ -62,7 +62,7 @@ public final class ModUpdateNotifier {
         try {
             manager.notify(NOTIFICATION_ID, notification);
         } catch (RuntimeException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModUpdateNotifier:65", "Ignored a failure at ModUpdateNotifier:65", ignored);
+            AppLog.warnOnce("CaramelClient", "ModUpdateNotifier:65", "Ignored a failure at ModUpdateNotifier:65", ignored);
         }
     }
 

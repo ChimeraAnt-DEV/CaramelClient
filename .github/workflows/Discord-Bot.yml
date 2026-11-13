@@ -8,7 +8,7 @@ on:
       title:
         description: 'Update Title'
         required: true
-        default: 'New ChimeraClient Update!'
+        default: 'New CaramelClient Update!'
       message:
         description: 'Update Message'
         required: true

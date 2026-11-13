@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement or a new capability for GlowberryClient.
+description: Suggest an improvement or a new capability for CaramelClient.
 labels: ["enhancement"]
 body:
   - type: markdown
@@ -25,7 +25,7 @@ body:
       options:
         - label: Launcher UI
         - label: Mod menu / in-game overlay
-        - label: .AntEgg / Preloader SDK
+        - label: SweetLoader SDK
         - label: Installations / import pipeline
         - label: Cosmetics / voice / replay
         - label: Documentation

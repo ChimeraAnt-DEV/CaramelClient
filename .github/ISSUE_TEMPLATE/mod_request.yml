@@ -1,18 +1,18 @@
 name: Mod / packaging question
-description: Ask about the .AntEgg format, the Preloader API, mod loading, or packaging.
+description: Ask about the SweetLoader API, mod loading, or packaging.
 labels: ["modding"]
 body:
   - type: markdown
     attributes:
       value: |
-        For mod authoring questions, the [developer guide](https://github.com/ChimeraAnt-DEV/GlowberryClient/blob/main/docs/guide/developer.md)
-        and the [.AntEgg template](https://github.com/ChimeraAnt-DEV/GlowberryClient/tree/main/examples/antegg-template)
+        For mod authoring questions, the [developer guide](https://github.com/ChimeraAnt-DEV/CaramelClient/blob/main/docs/guide/developer.md)
+        and the [C++ mod example](https://github.com/ChimeraAnt-DEV/CaramelClient/tree/main/examples/full-cpp-mod)
         cover most of the surface. Search the existing issues before opening a new one.
   - type: textarea
     id: question
     attributes:
       label: Your question
-      description: Be specific. Include the manifest (egg.json) if your package fails to load.
+      description: Be specific. Include the manifest if your package fails to load.
     validations:
       required: true
   - type: input

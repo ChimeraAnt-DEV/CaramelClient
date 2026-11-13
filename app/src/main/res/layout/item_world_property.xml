@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/space_1"
-    style="@style/Widget.Chimera.Card"
+    style="@style/Widget.Caramel.Card"
     android:orientation="horizontal"
     android:padding="@dimen/space_3"
     android:gravity="center_vertical">
@@ -21,7 +21,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/property_name_placeholder"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:textStyle="bold" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/property_type_int"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:alpha="0.7" />
 
     </LinearLayout>
@@ -50,7 +50,7 @@
         android:padding="@dimen/space_2"
         android:textColor="@color/on_surface"
         android:textColorHint="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+        android:textAppearance="@style/TextAppearance.Caramel.Label"
         android:imeOptions="actionDone"
         android:focusable="true"
         android:focusableInTouchMode="true"

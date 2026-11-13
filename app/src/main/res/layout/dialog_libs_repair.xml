@@ -43,7 +43,7 @@
                 android:maxLines="2"
                 android:text="@string/repair_libs_dialog_title"
                 android:textColor="?attr/colorPrimary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -55,7 +55,7 @@
                 android:maxLines="2"
                 android:text="@string/repair_libs_dialog_subtitle"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                android:textAppearance="@style/TextAppearance.Caramel.Label" />
         </LinearLayout>
     </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:maxLines="2"
                 android:text="@string/repair_preparing"
                 android:textColor="?attr/colorOnSurface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -95,7 +95,7 @@
                 android:minWidth="54dp"
                 tools:text="0%"
                 android:textColor="?attr/colorPrimary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold"
     android:accessibilityHeading="true" />
         </LinearLayout>
@@ -107,7 +107,7 @@
             android:layout_marginTop="@dimen/space_2"
             android:maxLines="2"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:visibility="gone" />
 
         <ProgressBar
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_3"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:visibility="gone" />
 
         <Button

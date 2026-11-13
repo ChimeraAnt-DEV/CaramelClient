@@ -13,7 +13,7 @@ public final class MoreButtonsSvgBridge {
     private static native byte[] nativeRenderSvgToPng(byte[] svgData, int width, int height);
 
     public static byte[] renderSvg(String svg, int width, int height) {
-        if (svg == null || svg.isEmpty() || !ModManager.ensurePreloaderLoaded()) return null;
+        if (svg == null || svg.isEmpty() || !ModManager.ensureSweetLoaderLoaded()) return null;
         try {
             return nativeRenderSvgToPng(svg.getBytes(StandardCharsets.UTF_8), width, height);
         } catch (UnsatisfiedLinkError e) {

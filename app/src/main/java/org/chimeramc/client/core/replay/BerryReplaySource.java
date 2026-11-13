@@ -5,7 +5,7 @@ package org.chimeramc.client.core.replay;
  *
  * <p>The launcher's own recorder produces its clip format, played by {@code ReplayPlayerView}. BerryAPI
  * owns a second, richer replay system: it decodes a replay container, reconstructs a tick and draws a
- * review. That system is reached through the replay C ABI the preloader bridges
+ * review. That system is reached through the replay C ABI the sweetloader bridges
  * ({@code BerryApi.replay*}). This class is the one place the panel talks to it, so the panel does not
  * depend on the native surface directly and the routing is testable through {@link Backend}.
  *
@@ -52,7 +52,7 @@ public final class BerryReplaySource {
         byte[] save();
     }
 
-    /** The default backend: the preloader bridge onto BerryAPI. */
+    /** The default backend: the sweetloader bridge onto BerryAPI. */
     public static final class NativeBackend implements Backend {
         @Override public boolean available() {
             return org.chimeramc.client.preloader.BerryApi.replayAvailable();

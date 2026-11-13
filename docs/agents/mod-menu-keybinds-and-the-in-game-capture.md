@@ -6,8 +6,8 @@
   matches, the sides do not cross-match, and a key matches on either its remapped or its **raw**
   code so a profile that remaps the bound button still opens the menu. `ModMenuBindMatchTest` pins
   all of it.
-- **The in-game picker must see the press before the preloader can consume it.** The preloader
-  dispatches keys first, so a captured button the preloader claims would never reach the picker.
+- **The in-game picker must see the press before the sweetloader can consume it.** The sweetloader
+  dispatches keys first, so a captured button the sweetloader claims would never reach the picker.
   `ModMenuOverlay.deliverBindKey(keyCode)` is a static sink the picker registers into
   (`sBindCapture`), and `MinecraftActivity.dispatchKeyEvent` offers every raw ACTION_DOWN there
   before anything else may swallow it. The dialog's own key listener still covers launcher-side

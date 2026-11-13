@@ -12,14 +12,14 @@ import java.util.List;
 
 /**
  * Coordinates Game Performance Mode between the Settings screen, the persisted feature settings
- * and the preloader.
+ * and the sweetloader.
  *
  * <p>Responsibilities:
  * <ul>
  *   <li>Build and push the configuration blob before a game launch.</li>
  *   <li>Track which items were active when a launch started, so a launch that dies before a
  *       world loads can be attributed and a repeatedly-failing item auto-disabled.</li>
- *   <li>Read the preloader's per-item report for the Settings screen.</li>
+ *   <li>Read the sweetloader's per-item report for the Settings screen.</li>
  * </ul>
  *
  * <p>The crash-loop guard is the important part. A Tier-2 hook that resolves to the wrong address
@@ -44,7 +44,7 @@ public final class OptifineModeManager {
     private OptifineModeManager() {
     }
 
-    /** One item's reported state, parsed from the preloader's flat string array. */
+    /** One item's reported state, parsed from the sweetloader's flat string array. */
     public static final class ItemState {
         public final String id;
         public final boolean enabled;
@@ -66,16 +66,16 @@ public final class OptifineModeManager {
     }
 
     /**
-     * Pushes the current settings to the preloader and records the active set for crash
+     * Pushes the current settings to the sweetloader and records the active set for crash
      * attribution.
      *
      * <p>Safe to call repeatedly. When the master switch is off, a fully-disabled blob is sent so
-     * nothing the preloader installed keeps running, while the per-item toggles are preserved in
+     * nothing the sweetloader installed keeps running, while the per-item toggles are preserved in
      * settings for the next time it is on.
      */
     public static void apply(Context context) {
         FeatureSettings settings = FeatureSettings.getInstance();
-        boolean preloaderLoaded = org.chimeramc.client.core.mods.ModManager.ensurePreloaderLoaded();
+        boolean sweetloaderLoaded = org.chimeramc.client.core.mods.ModManager.ensureSweetLoaderLoaded();
 
         List<String> ids = OptifineItemIds.ALL;
         String blob;
@@ -91,7 +91,7 @@ public final class OptifineModeManager {
             blob = OptifineConfigBlob.build(true, ids, enabled, crashes);
         }
 
-        if (preloaderLoaded) {
+        if (sweetloaderLoaded) {
             PreloaderInput.configureOptifineMode(blob);
             int targetHz = OptifineRefreshRateRule.resolveTargetHz(context);
             PreloaderInput.setOptifineRefreshTarget(targetHz);
@@ -105,7 +105,7 @@ public final class OptifineModeManager {
                     RenderDistanceDefaults.STEP_SIZE,
                     RenderDistanceDefaults.MIN_DWELL_MS);
         } else {
-            Log.i(TAG, "Preloader unavailable; optifine configuration not pushed");
+            Log.i(TAG, "SweetLoader unavailable; optifine configuration not pushed");
         }
 
         // Record which items were enabled at this launch so a crash can be attributed to them.
@@ -205,7 +205,7 @@ public final class OptifineModeManager {
         prefs.edit().remove(KEY_PENDING).apply();
     }
 
-    /** The preloader's per-item report, or an empty list when the native library is absent. */
+    /** The sweetloader's per-item report, or an empty list when the native library is absent. */
     public static List<ItemState> readState() {
         String[] flat = PreloaderInput.readOptifineState();
         List<ItemState> result = new ArrayList<>();
@@ -228,7 +228,7 @@ public final class OptifineModeManager {
         return result;
     }
 
-    /** True when the preloader is loaded and the master switch is on with an active item. */
+    /** True when the sweetloader is loaded and the master switch is on with an active item. */
     public static boolean isActive() {
         return PreloaderInput.isOptifineModeActive();
     }

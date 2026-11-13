@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/overlay_text_muted"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+        android:textAppearance="@style/TextAppearance.Caramel.Body"
         android:layout_marginBottom="@dimen/space_3" />
 
     <androidx.recyclerview.widget.RecyclerView

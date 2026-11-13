@@ -4,7 +4,7 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
  * The one rule that decides a row's control type (M2, M3).
  *
  * <p>The menu used to render every entry as a tap target, so a <em>stateful module</em> looked like
- * a <em>one-shot button</em> and a tap never showed whether it was on. The preloader API already
+ * a <em>one-shot button</em> and a tap never showed whether it was on. The sweetloader API already
  * distinguishes the two — {@code ModuleBuilder(...).registerModule()} has an enable state,
  * {@code ButtonBuilder(...).registerButton()} fires an action — and this class is that distinction
  * expressed once, so the UI cannot drift from the API.

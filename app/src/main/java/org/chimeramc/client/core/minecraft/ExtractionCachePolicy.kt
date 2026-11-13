@@ -67,7 +67,7 @@ object ExtractionCachePolicy {
     /**
      * Libraries the launcher supplies from its own native directory when a package ships none.
      *
-     * <p>`libc++_shared.so` is the one case: the preloader is linked against it, some packages omit
+     * <p>`libc++_shared.so` is the one case: the sweetloader is linked against it, some packages omit
      * it, and the launcher always has a copy. Because it is also in the required list, the
      * launcher's fallback must run <em>before</em> the completeness check — otherwise a perfectly
      * launchable version is refused for a library the launcher was about to provide.

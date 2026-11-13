@@ -15,7 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.chimeramc.client.preloader.PreloaderRules;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.util.Api28Compat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,7 +81,7 @@ public class Api28RuntimeSmokeTest {
     public void readingTheSignatureRulesFileFromDiskDoesNotThrowOnThisDevice() throws Exception {
         // The launch crash was a readAllBytes() in this reader on the "Loading game loader" path.
         // Write a real file into the location the manager reads, then drive the real read path.
-        File rules = PreloaderSignatureRulesManager.getRulesFile(context());
+        File rules = SweetLoaderSignatureRulesManager.getRulesFile(context());
         assertNotNull("the rules file path must resolve", rules);
         File parent = rules.getParentFile();
         if (parent != null && !parent.exists()) {
@@ -94,13 +94,13 @@ public class Api28RuntimeSmokeTest {
         // coversInstalledVersion goes through readRulesFile. On the crashing build this threw
         // NoSuchMethodError (an Error, so the catch(Exception) inside did not contain it).
         assertTrue("a covered build must read back as covered",
-                PreloaderSignatureRulesManager.coversInstalledVersion(context(), "1.21.132"));
+                SweetLoaderSignatureRulesManager.coversInstalledVersion(context(), "1.21.132"));
         assertFalse("an uncovered build must read back as uncovered",
-                PreloaderSignatureRulesManager.coversInstalledVersion(context(), "1.26.60.28"));
+                SweetLoaderSignatureRulesManager.coversInstalledVersion(context(), "1.26.60.28"));
 
         // A build with no covering rule yields the diagnostics message, not a throw.
         assertNotNull("an uncovered build must produce a coverage-failure message",
-                PreloaderSignatureRulesManager.describeCoverageFailure(context(), "1.26.60.28"));
+                SweetLoaderSignatureRulesManager.describeCoverageFailure(context(), "1.26.60.28"));
     }
 
     @Test

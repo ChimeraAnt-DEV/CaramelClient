@@ -15,7 +15,7 @@ import org.chimeramc.client.preloader.PreloaderInput;
  * on a manual record. This feed connects the signals the client already has:
  *
  * <ul>
- *   <li><b>Death</b> — the local player's health, read through the preloader's local-player feed.
+ *   <li><b>Death</b> — the local player's health, read through the sweetloader's local-player feed.
  *       The reading is version-configured and fail-closed: with no offset, or an implausible
  *       value, no death is ever reported.</li>
  *   <li><b>Combo</b> — the same landed-hit signal {@link HitTimingMod} uses for Select Hit. A

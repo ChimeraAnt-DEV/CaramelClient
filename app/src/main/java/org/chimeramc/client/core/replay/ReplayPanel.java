@@ -1100,7 +1100,7 @@ public final class ReplayPanel {
             try {
                 bytes = java.nio.file.Files.readAllBytes(file.toPath());
             } catch (Throwable t) {
-                org.chimeramc.client.util.AppLog.warnOnce("GlowberryClient", "replay:read",
+                org.chimeramc.client.util.AppLog.warnOnce("CaramelClient", "replay:read",
                         "Could not read the BerryAPI replay file", t);
                 activity.runOnUiThread(() -> Toast.makeText(activity,
                         R.string.replay_berry_read_failed, Toast.LENGTH_SHORT).show());

@@ -27,7 +27,7 @@
                 android:text="@string/diagnostics_title"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,14 +37,14 @@
                 android:text="@string/diagnostics_subtitle"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
             <!-- Repair installation (G2) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_6"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -54,7 +54,7 @@
                     android:text="@string/diagnostics_repair"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -65,7 +65,7 @@
                     android:text="@string/diagnostics_repair_desc"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <Button
                     android:id="@+id/diagnostics_repair_button"
@@ -76,7 +76,7 @@
                     android:minHeight="44dp"
                     android:fontFamily="@font/misans"
                     android:text="@string/diagnostics_repair"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
             </LinearLayout>
@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -96,7 +96,7 @@
                     android:text="@string/diagnostics_section_app"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -123,7 +123,7 @@
                     android:text="@string/diagnostics_section_readiness"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -150,7 +150,7 @@
                     android:text="@string/diagnostics_section_libs"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -167,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -177,7 +177,7 @@
                     android:text="@string/diagnostics_section_rules"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -194,7 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -204,7 +204,7 @@
                     android:text="@string/diagnostics_section_native"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -221,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -231,7 +231,7 @@
                     android:text="@string/diagnostics_section_account"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -248,7 +248,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -258,7 +258,7 @@
                     android:text="@string/diagnostics_section_mods"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -275,7 +275,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -285,7 +285,7 @@
                     android:text="@string/diagnostics_section_stats"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -296,7 +296,7 @@
                     android:text="@string/diagnostics_stats_desc"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <LinearLayout
                     android:id="@+id/diagnostics_stats_rows"
@@ -322,7 +322,7 @@
                     android:minHeight="44dp"
                     android:fontFamily="@font/misans"
                     android:text="@string/diagnostics_copy"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
 
@@ -336,7 +336,7 @@
                     android:minHeight="44dp"
                     android:fontFamily="@font/misans"
                     android:text="@string/diagnostics_share"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
             </LinearLayout>
@@ -357,7 +357,7 @@
                     android:minHeight="44dp"
                     android:fontFamily="@font/misans"
                     android:text="@string/diagnostics_copy_debug_info"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
 
@@ -371,7 +371,7 @@
                     android:minHeight="44dp"
                     android:fontFamily="@font/misans"
                     android:text="@string/diagnostics_report_bug"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textAllCaps="false"
                     android:textColor="@color/primary" />
             </LinearLayout>
@@ -385,7 +385,7 @@
                 android:minHeight="44dp"
                 android:fontFamily="@font/misans"
                 android:text="@string/diagnostics_refresh"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textAllCaps="false"
                 android:textColor="@color/primary" />
         </LinearLayout>

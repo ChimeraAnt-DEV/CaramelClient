@@ -45,9 +45,6 @@ import java.util.Map;
 
 public class ModsFullscreenActivity extends BaseActivity {
     private ActivityModsFullscreenBinding binding;
-    // Owned so an in-flight .antegg link import is torn down with the screen.
-    private final java.util.concurrent.ExecutorService worker =
-            java.util.concurrent.Executors.newSingleThreadExecutor();
 
     private RecyclerView modsRecycler;
     private ModsAdapter modsAdapter;
@@ -96,13 +93,7 @@ public class ModsFullscreenActivity extends BaseActivity {
         );
     }
 
-    /**
-     * A Java Edition .jar cannot be imported as a Bedrock mod, so the picker hands it to the
-     * JavaBridge screen instead. The callback is attached to the existing FileOperationCallback
-     * object, which keeps the two flows from having to be told apart at the call site.
-     */
-    private final class ImportCallback implements FileHandler.FileOperationCallback,
-            FileHandler.JavaBridgeHandoff {
+    private final class ImportCallback implements FileHandler.FileOperationCallback {
         @Override
         public void onSuccess(int processedFiles) {
             Toast.makeText(ModsFullscreenActivity.this, getResources().getQuantityString(R.plurals.files_processed, processedFiles, processedFiles), Toast.LENGTH_SHORT).show();
@@ -116,13 +107,6 @@ public class ModsFullscreenActivity extends BaseActivity {
         @Override
         public void onProgressUpdate(int progress) {
         }
-
-        @Override
-        public void onJavaJarSelected(Uri jarUri) {
-            Intent intent = new Intent(ModsFullscreenActivity.this, JavaBridgeActivity.class);
-            intent.putExtra(JavaBridgeActivity.EXTRA_JAR_URI, jarUri.toString());
-            startActivity(intent);
-        }
     }
 
     private void setupViews() {
@@ -134,16 +118,6 @@ public class ModsFullscreenActivity extends BaseActivity {
         Button modHubButton = binding.modHubFullscreenButton;
         modHubButton.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
         DynamicAnim.applyPressScale(modHubButton);
-
-        Button scriptManagerButton = binding.scriptManagerFullscreenButton;
-        scriptManagerButton.setOnClickListener(v ->
-                startActivity(new Intent(this, ScriptManagerActivity.class)));
-        DynamicAnim.applyPressScale(scriptManagerButton);
-
-        Button javaBridgeButton = binding.javabridgeFullscreenButton;
-        javaBridgeButton.setOnClickListener(v ->
-                startActivity(new Intent(this, JavaBridgeActivity.class)));
-        DynamicAnim.applyPressScale(javaBridgeButton);
 
         Button modMenuButton = binding.modMenuButton;
         boolean isMenuEnabled = inbuiltModManager.isModMenuEnabled();
@@ -310,134 +284,8 @@ public class ModsFullscreenActivity extends BaseActivity {
                 .format(new java.util.Date(timestampMs));
     }
 
-    /**
-     * "Add Mod" asks how, rather than assuming a file picker (F1).
-     *
-     * <p>A {@code .AntEgg} now arrives two ways: as a file, or as a link someone shared. A chooser
-     * keeps the common path one tap away and makes the link path discoverable without adding a
-     * fourth button to a header that is already full. Both paths end in the same validated loader,
-     * so neither is a shortcut around it.
-     */
     private void showImportChooser() {
-        // The chooser is the only entry point; a plain file picker is one of its two answers.
-        new CustomAlertDialog(this)
-                .setTitleText(getString(R.string.mod_import_chooser_title))
-                .setMessage(getString(R.string.mod_import_chooser_message))
-                .setPositiveButton(getString(R.string.mod_import_from_file), d -> startFilePicker())
-                .setNegativeButton(getString(R.string.mod_import_from_link), d -> promptForLink())
-                .setNeutralButton(getString(R.string.cancel), d -> { })
-                .show();
-    }
-
-    /** Prompts for a shared or pasted package link and imports it through the validated loader. */
-    private void promptForLink() {
-        android.widget.EditText input = new android.widget.EditText(this);
-        input.setSingleLine(true);
-        input.setHint(R.string.mod_import_link_hint);
-        CustomAlertDialog dialog = new CustomAlertDialog(this)
-                .setTitleText(getString(R.string.mod_import_from_link))
-                .setMessage(getString(R.string.mod_import_link_message))
-                .setCustomView(input)
-                .setPositiveButton(getString(R.string.mod_import_link_go), v -> {
-                    String link = org.chimeramc.client.core.antegg.AntEggLink
-                            .firstImportableUrl(input.getText().toString());
-                    if (link == null) {
-                        Toast.makeText(this, R.string.mod_import_link_invalid,
-                                Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    importFromLink(link);
-                })
-                .setNegativeButton(getString(R.string.cancel), v -> { });
-        dialog.show();
-    }
-
-    /**
-     * Downloads and imports a link, reporting both stages.
-     *
-     * <p>The progress toast is deliberately coarse (a single "downloading" notice) because the
-     * import itself is what the user is waiting for, and a percentage that only updates for
-     * servers that send a length is not worth a second widget.
-     */
-    private void importFromLink(String url) {
-        // The source and the size are shown before anything is fetched, so a link import
-        // is a deliberate choice rather than a surprise download from a pasted string.
-        new CustomAlertDialog(this)
-                .setTitleText(getString(R.string.mod_import_link_confirm_title))
-                .setMessage(org.chimeramc.client.core.antegg.AntEggLinkPreview.describe(url, -1L))
-                .setPositiveButton(getString(R.string.mod_import_link_confirm_go),
-                        v -> startLinkDownload(url))
-                .setNegativeButton(getString(R.string.cancel), v -> { })
-                .show();
-    }
-
-    private void startLinkDownload(String url) {
-        Toast.makeText(this, R.string.mod_import_link_downloading, Toast.LENGTH_SHORT).show();
-        new org.chimeramc.client.core.antegg.AntEggLinkDownloader().download(
-                this, url, null, new org.chimeramc.client.core.antegg
-                        .AntEggLinkDownloader.Callback() {
-                    @Override
-                    public void onSuccess(java.io.File staged, String fileName) {
-                        runOnWorker(() -> {
-                            org.chimeramc.client.core.antegg.AntEggLoader.LoadResult result =
-                                    org.chimeramc.client.core.antegg.AntEggLoader
-                                            .loadMod(ModsFullscreenActivity.this, staged);
-                            //noinspection ResultOfMethodCallIgnored
-                            staged.delete();
-                            if (!result.success) {
-                                org.chimeramc.client.core.antegg.AntEggLoader.recordFailure(
-                                        ModsFullscreenActivity.this, fileName, result.error);
-                            }
-                            runOnUiThread(() -> {
-                                if (isFinishing() || isDestroyed()) return;
-                                if (result.success) {
-                                    // Show the digest of what actually arrived so it can
-                                    // be compared with the publisher's own value.
-                                    String digest = org.chimeramc.client.core.antegg.AntEggLinkPreview
-                                            .describeDigest(org.chimeramc.client.core.antegg.ModHash
-                                                    .sha256(staged));
-                                    Toast.makeText(ModsFullscreenActivity.this,
-                                            getString(R.string.mod_import_link_done_digest, fileName,
-                                                    digest),
-                                            Toast.LENGTH_LONG).show();
-                                    viewModel.reloadMods();
-                                } else {
-                                    Toast.makeText(ModsFullscreenActivity.this,
-                                            getString(R.string.mod_import_link_failed, result.error),
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        });
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        runOnUiThread(() -> Toast.makeText(ModsFullscreenActivity.this,
-                                getString(R.string.mod_import_link_failed, message),
-                                Toast.LENGTH_LONG).show());
-                    }
-                });
-    }
-
-    /**
-     * Runs a .antegg import off the UI thread, on a worker this screen owns.
-     *
-     * <p>The bare Thread this replaced outlived the screen, so a link import that finished on the
-     * way out posted its toast to a destroyed Activity.
-     */
-    private void runOnWorker(Runnable task) {
-        if (worker.isShutdown()) return;
-        try {
-            worker.execute(task);
-        } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModsFullscreenActivity:433", "Ignored a failure at ModsFullscreenActivity:433", ignored);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        worker.shutdownNow();
-        super.onDestroy();
+        startFilePicker();
     }
 
     private void startFilePicker() {

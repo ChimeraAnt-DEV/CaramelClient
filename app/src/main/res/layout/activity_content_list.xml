@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Chimera.Card"
+            style="@style/Widget.Caramel.Card"
             android:layout_margin="@dimen/space_2"
             android:elevation="4dp"
             android:padding="@dimen/space_4"
@@ -36,7 +36,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/worlds_title"
                     android:textColor="@color/primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                    android:textAppearance="@style/TextAppearance.Caramel.Display"
                     android:textStyle="bold" />
 
                 <Button
@@ -47,7 +47,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/custom_flat_world"
                     android:textColor="@color/on_primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -66,7 +66,7 @@
                 android:drawablePadding="@dimen/space_3"
                 android:textColor="@color/on_surface"
                 android:textColorHint="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                android:textAppearance="@style/TextAppearance.Caramel.Body" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -112,7 +112,7 @@
                     android:layout_marginTop="@dimen/space_3"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -125,7 +125,7 @@
                     android:gravity="center"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
             </LinearLayout>
         </FrameLayout>
 

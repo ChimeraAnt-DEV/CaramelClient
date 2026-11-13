@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Pure, Android-free parsing and selection for the preloader signature-rules JSON.
+ * Pure, Android-free parsing and selection for the sweetloader signature-rules JSON.
  *
  * <p>This exists because two runtime decisions used to be wrong and were untestable inline in
- * {@link PreloaderSignatureRulesManager} (which touches {@code SharedPreferences}, files and the
+ * {@link SweetLoaderSignatureRulesManager} (which touches {@code SharedPreferences}, files and the
  * network):
  *
  * <ul>
@@ -227,7 +227,7 @@ public final class PreloaderRules {
      *
      * <p>Each field is taken from the <em>first</em> matching rule (in file order) that declares
      * it, so a specific rule's signatures win while a field only a broader rule carries is still
-     * inherited. This mirrors {@code LoadConfiguredGameHookSignatures} in the native preloader; the
+     * inherited. This mirrors {@code LoadConfiguredGameHookSignatures} in the native sweetloader; the
      * two must stay in step or the diagnostics report will describe a rule the hook did not use.
      *
      * @return the merged rule, or null when no rule matches the version.
@@ -290,7 +290,7 @@ public final class PreloaderRules {
      * True when [content]'s rule DB contains at least one rule covering [version].
      *
      * <p>This is the fail-closed coverage test (item G5): if the DB has no entry for the running
-     * Bedrock build, the preloader's byte-pattern hook discovery cannot succeed, so the launcher
+     * Bedrock build, the sweetloader's byte-pattern hook discovery cannot succeed, so the launcher
      * refuses to hand the rules over instead of logging scan-and-hope misses at runtime. It uses
      * the same rule-selection path the native merge uses, so the Java refusal and the native
      * install agree on which builds are covered.

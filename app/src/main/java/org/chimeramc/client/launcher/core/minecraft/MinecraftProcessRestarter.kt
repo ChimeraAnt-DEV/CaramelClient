@@ -83,7 +83,7 @@ object MinecraftProcessRestarter {
             alarmManager.cancel(pendingIntent)
             pendingIntent.cancel()
         } catch (t: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftProcessRestarter:86", "Ignored a failure at MinecraftProcessRestarter:86", t)
+            AppLog.warnOnce("CaramelClient", "MinecraftProcessRestarter:86", "Ignored a failure at MinecraftProcessRestarter:86", t)
         }
     }
 

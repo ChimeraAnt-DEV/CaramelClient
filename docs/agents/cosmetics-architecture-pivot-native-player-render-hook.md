@@ -13,7 +13,7 @@
   hooking, `isExecutableAddress()` refuses a resolved address that is not in an executable mapping,
   so a stale index that lands in data fails closed instead of faulting the render thread. The slot
   is therefore a **floor**-gated attempt (min 1.21.132, no upper bound), not a version allowlist.
-  The preloader module is `pl::runtime::GamePlayerRender`; full method in
+  The sweetloader module is `pl::runtime::GamePlayerRender`; full method in
   `preloader-android/docs/player-render-hook.md`.
 - **One hook on the slot, many consumers.** `GamePlayerRender` owns the single detour and exposes
   `RegisterPostRenderCallback`; the cosmetics renderer registers its draw callback into it rather

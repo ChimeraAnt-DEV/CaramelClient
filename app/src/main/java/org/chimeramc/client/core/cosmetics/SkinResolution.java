@@ -55,7 +55,7 @@ public final class SkinResolution {
             case ACCOUNT: return "Your Minecraft account skin";
             case APPLIED_PACK: return "Applied skin pack";
             case STEVE: return "Steve";
-            default: return "Chimera default";
+            default: return "Caramel default";
         }
     }
 }

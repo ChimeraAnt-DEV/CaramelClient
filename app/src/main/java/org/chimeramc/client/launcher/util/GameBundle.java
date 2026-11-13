@@ -65,7 +65,7 @@ public final class GameBundle {
                 if (name.startsWith(LIB_PREFIX) && name.endsWith(LIB_SUFFIX)) return true;
             }
         } catch (IOException ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameBundle:68", "Ignored a failure at GameBundle:68", ignored);
+            AppLog.warnOnce("CaramelClient", "GameBundle:68", "Ignored a failure at GameBundle:68", ignored);
         }
         return false;
     }

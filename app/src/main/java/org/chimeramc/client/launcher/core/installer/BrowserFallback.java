@@ -142,7 +142,7 @@ public class BrowserFallback {
             webView.stopLoading();
             webView.setWebViewClient(null);
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "BrowserFallback:145", "Ignored a failure at BrowserFallback:145", ignored);
+            AppLog.warnOnce("CaramelClient", "BrowserFallback:145", "Ignored a failure at BrowserFallback:145", ignored);
         }
     }
 

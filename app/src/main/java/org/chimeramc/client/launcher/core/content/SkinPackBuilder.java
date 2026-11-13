@@ -116,7 +116,7 @@ public final class SkinPackBuilder {
         skinsJson.append("{\n  \"skins\": [\n");
         StringBuilder lang = new StringBuilder();
         lang.append("pack.name=").append(safeName).append('\n');
-        lang.append("pack.description=Imported with GlowberryClient\n");
+        lang.append("pack.description=Imported with CaramelClient\n");
 
         for (int i = 0; i < entries.size(); i++) {
             SkinEntry entry = entries.get(i);

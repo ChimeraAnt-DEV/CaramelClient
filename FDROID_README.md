@@ -1,4 +1,4 @@
-# F-Droid Build Instructions for GlowberryClient
+# F-Droid Build Instructions for CaramelClient
 
 ## Prerequisites
 - Android SDK 35+

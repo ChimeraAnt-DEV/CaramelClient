@@ -135,18 +135,38 @@ jobs:
           ndk-version: r28c
           link-to-sdk: true
 
+      - name: Setup Rust toolchain
+        # The .universe/.singularity engine is a Rust Cargo workspace inside the sweetloader
+        # submodule (rust/). It is cross-compiled for arm64-v8a and packaged into the APK by the
+        # buildRustEngine Gradle task, which silently skips when cargo is absent — so without this
+        # step the APK would ship with no loader and every .universe/.singularity feature would be
+        # dark. The android target is added so `cargo build --target aarch64-linux-android` works.
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add aarch64-linux-android --toolchain stable
+          cargo --version
+
       - name: Grant Execute Permission to gradlew
         run: chmod +x ./gradlew
 
-      - name: Run preloader host tests
+      - name: Run sweetloader host tests
         # The pure C++ logic (geometry parser, animation
         # solver, socket protocol, hook-install gate, version compare, ...) is device-free and
         # must break the build on every commit, not only on a device. The runner self-fetches
         # nlohmann/json into a gitignored cache when needed.
-        run: bash app/src/main/cpp/preloader/tests/cosmetics/run_tests.sh
+        run: bash app/src/main/cpp/sweetloader/tests/cosmetics/run_tests.sh
+
+      - name: Run the Rust engine host tests
+        # The .universe/.singularity loaders' logic (manifest parsing, Ed25519 signature
+        # verification, Zip-Slip-safe extraction, load ordering, permissions, config) lives in the
+        # sweetloader's Rust cores and is device-free. A broken loader must fail here, not on a
+        # device; the JNI crates themselves are a thin shell and are exercised by the core tests.
+        run: |
+          cd app/src/main/cpp/sweetloader/rust
+          cargo test --workspace
 
       - name: Verify the bundled BerryAPI ABI
-        # The preloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A
+        # The sweetloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A
         # bundled binary built from an older BerryAPI is missing the world-seam / replay / governor
         # surface, and every one of those reads then fails closed with no build-time warning. Fail
         # here instead of shipping a build whose whole BerryAPI feature set is silently dark.
@@ -169,14 +189,14 @@ jobs:
           python3 tools/tests/verify_binary_test.py
           python3 scripts/tests/compute_checksums_test.py
           python3 scripts/tests/release_notes_test.py
-          python3 scripts/tests/sign_preloader_rules_test.py
+          python3 scripts/tests/sign_sweetloader_rules_test.py
           python3 scripts/tests/verify_berryapi_abi_test.py
 
       - name: Verify the shipped rule signature
-        # The rule file decides which addresses the preloader patches, so a signature that does not
+        # The rule file decides which addresses the sweetloader patches, so a signature that does not
         # match the file would silently disable every remote rule set. This checks the
         # pair the app actually bundles, with the public key the app ships.
-        run: python3 scripts/sign_preloader_rules.py --verify
+        run: python3 scripts/sign_sweetloader_rules.py --verify
 
       - name: Inject API Keys
         env:
@@ -209,7 +229,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-debug-apk
+          name: CaramelClient-debug-apk
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/debug/*.apk.sha256
@@ -218,7 +238,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-release-unsigned-apk
+          name: CaramelClient-release-unsigned-apk
           path: |
             app/build/outputs/apk/release/*-unsigned.apk
             app/build/outputs/apk/release/*-unsigned.apk.sha256
@@ -227,7 +247,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-beta-apk
+          name: CaramelClient-beta-apk
           path: |
             app/build/outputs/apk/beta/*.apk
             app/build/outputs/apk/beta/*.apk.sha256
@@ -251,7 +271,7 @@ jobs:
         run: |
           TAG=${GITHUB_REF_NAME}
           SIGNED_APK="${{ steps.sign_app.outputs.signedReleaseFile }}"
-          APK_DST="ChimeraClient-${TAG}-release.apk"
+          APK_DST="CaramelClient-${TAG}-release.apk"
           cp "$SIGNED_APK" "$APK_DST"
           echo "Signed APK renamed to $APK_DST"
           # B16: the published release carries a digest next to the signed APK.
@@ -262,10 +282,10 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-${{ github.ref_name }}-release.apk
+          name: CaramelClient-${{ github.ref_name }}-release.apk
           path: |
-            ChimeraClient-${{ github.ref_name }}-release.apk
-            ChimeraClient-${{ github.ref_name }}-release.apk.sha256
+            CaramelClient-${{ github.ref_name }}-release.apk
+            CaramelClient-${{ github.ref_name }}-release.apk.sha256
 
       - name: Generate GitHub release notes
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
@@ -276,8 +296,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ChimeraClient-${{ github.ref_name }}-release.apk
-            ChimeraClient-${{ github.ref_name }}-release.apk.sha256
+            CaramelClient-${{ github.ref_name }}-release.apk
+            CaramelClient-${{ github.ref_name }}-release.apk.sha256
           body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -286,11 +306,11 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          APK_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ChimeraClient-${{ github.ref_name }}-release.apk"
+          APK_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/CaramelClient-${{ github.ref_name }}-release.apk"
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          EMBED_TITLE="ChimeraClient Update!"
-          EMBED_DESC="A new version of **ChimeraClient** is ready."
+          EMBED_TITLE="CaramelClient Update!"
+          EMBED_DESC="A new version of **CaramelClient** is ready."
           EMBED_COLOR=5814783
           THUMB_URL='https://avatars.githubusercontent.com/u/78095377?s=200&v=4'
 

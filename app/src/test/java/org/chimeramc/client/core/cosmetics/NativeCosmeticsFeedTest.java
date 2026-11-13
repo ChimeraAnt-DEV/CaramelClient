@@ -19,7 +19,7 @@ public class NativeCosmeticsFeedTest {
     public void absentNativeLibraryReadsAsPackFallback() {
         NativeCosmeticsFeed.Status status = NativeCosmeticsFeed.read();
         assertNotNull(status);
-        // No libpreloader in a unit test, so the honest reading is "native path unavailable".
+        // No libsweetloader in a unit test, so the honest reading is "native path unavailable".
         assertEquals(NativeCosmeticsFeed.Mode.UNAVAILABLE, status.mode);
         assertFalse(status.isNative());
         assertFalse(NativeCosmeticsFeed.isNativeRenderLive());
@@ -76,7 +76,7 @@ public class NativeCosmeticsFeedTest {
 
     @Test
     public void absentImagePipelineDescribesThePackRoute() {
-        // No libpreloader in a JVM test, so the verified-loader probe is false and the report must
+        // No libsweetloader in a JVM test, so the verified-loader probe is false and the report must
         // say the image pipeline is not installed rather than claiming a substitution.
         String text = NativeCosmeticsFeed.describeImagePipeline().toLowerCase();
         assertTrue(text.contains("not installed"));

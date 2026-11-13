@@ -1,5 +1,5 @@
-[submodule "app/src/main/cpp/preloader"]
-	path = app/src/main/cpp/preloader
+[submodule "app/src/main/cpp/sweetloader"]
+	path = app/src/main/cpp/sweetloader
 	url = https://github.com/ChimeraAnt-DEV/preloader-android
 [submodule "app/src/main/cpp/libHttpClient"]
 	path = app/src/main/cpp/libHttpClient

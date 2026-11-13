@@ -7,7 +7,7 @@ import org.chimeramc.client.core.minecraft.GamePackageManager;
 import org.chimeramc.client.core.minecraft.LaunchTrace;
 import org.chimeramc.client.core.minecraft.MinecraftLauncher;
 import org.chimeramc.client.core.versions.GameVersion;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.util.PlayStoreValidator;
 import org.chimeramc.client.core.auth.MsftAccountStore;
 
@@ -157,7 +157,7 @@ public final class AndroidLaunchProbe implements LaunchProbe.Source {
             return true;
         }
         try {
-            return PreloaderSignatureRulesManager.describeCoverageFailure(context, version.versionCode)
+            return SweetLoaderSignatureRulesManager.describeCoverageFailure(context, version.versionCode)
                     == null;
         } catch (Throwable ignored) {
             return true;
@@ -170,7 +170,7 @@ public final class AndroidLaunchProbe implements LaunchProbe.Source {
             return false;
         }
         try {
-            return PreloaderSignatureRulesManager.installedBuildNewerThanRules(
+            return SweetLoaderSignatureRulesManager.installedBuildNewerThanRules(
                     context, version.versionCode);
         } catch (Throwable ignored) {
             return false;

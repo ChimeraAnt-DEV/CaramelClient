@@ -419,7 +419,7 @@ public class VersionManager {
                     // phrase "ships 32-bit" is what routes this to the ABI cause (and its launch
                     // screen wording) instead of the generic "bad response" a bare IOException got.
                     callback.onRepairFailed(new IOException(
-                            "This build ships 32-bit native libraries only, and GlowberryClient "
+                            "This build ships 32-bit native libraries only, and CaramelClient "
                                     + "runs as a 64-bit app, so its libraries cannot be loaded."));
                 }
 

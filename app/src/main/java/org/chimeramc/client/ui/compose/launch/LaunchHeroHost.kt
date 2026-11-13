@@ -20,7 +20,7 @@ object LaunchHeroHost {
     @JvmStatic
     fun state(initial: LaunchHeroState): MutableState<LaunchHeroState> = mutableStateOf(initial)
 
-    /** Mounts the hero into [composeView], wrapping it in the Glowberry theme. */
+    /** Mounts the hero into [composeView], wrapping it in the Caramel theme. */
     @JvmStatic
     fun setContent(
         composeView: ComposeView,

@@ -40,9 +40,9 @@
   `external fun`, honouring `@JvmName`) has no C++ export, or vice versa. Classes whose native
   implementation is in a **prebuilt** library with no source here (`libmtbinloader2.so` and the
   mbloader `LibBindings` bridge) are excluded from the Java side; a test asserts they are *not* also
-  exported by the preloader, so the exclusion cannot hide a drift. This is the
-  check that would have caught the `launcher_preloader` symbol rename. The APK build compiles
-  `libpreloader.so` from the `app/src/main/cpp/preloader` submodule source and bundles no prebuilt
+  exported by the sweetloader, so the exclusion cannot hide a drift. This is the
+  check that would have caught the `launcher_sweetloader` symbol rename. The APK build compiles
+  `libsweetloader.so` from the `app/src/main/cpp/sweetloader` submodule source and bundles no prebuilt
   copy of it — verified by building `:app:assembleDebug` and finding
-  `lib/arm64-v8a/libpreloader.so` produced by CMake under `app/.cxx/.../obj/`.
+  `lib/arm64-v8a/libsweetloader.so` produced by CMake under `app/.cxx/.../obj/`.
 - Device procedure: `docs/DEVICE_CHECKLIST.md`.

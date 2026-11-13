@@ -149,7 +149,7 @@ public class CustomizeActivity extends BaseActivity {
                 }
             }
         } catch (Throwable t) {
-            AppLog.warnOnce("GlowberryClient", "CustomizeActivity:account",
+            AppLog.warnOnce("CaramelClient", "CustomizeActivity:account",
                     "Could not read the account for the account section", t);
         }
         return org.chimeramc.client.ui.compose.account.AccountSectionState.signedOut();

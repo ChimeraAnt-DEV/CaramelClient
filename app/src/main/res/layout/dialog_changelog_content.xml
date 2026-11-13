@@ -24,7 +24,7 @@
             android:gravity="center"
             android:paddingHorizontal="@dimen/space_3"
             android:textColor="@color/primary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_marginTop="@dimen/space_2"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary_light"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <TextView
             android:id="@+id/changelog_headline"
@@ -43,7 +43,7 @@
             android:layout_marginTop="@dimen/space_3"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -55,7 +55,7 @@
             android:fontFamily="@font/misans"
             android:lineSpacingMultiplier="1.08"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+            android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
         <LinearLayout
             android:id="@+id/changelog_sections"

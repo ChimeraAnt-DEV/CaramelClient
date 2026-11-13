@@ -7,7 +7,7 @@ committed — this page records the values so a rule can be derived without re-d
 
 ## Why this range
 
-`docs/preloader-compatibility.md` shows the shipped rules stopping at **1.26.50.99**. The builds
+`docs/sweetloader-compatibility.md` shows the shipped rules stopping at **1.26.50.99**. The builds
 after it (1.26.51+) have no rule, and the 1.26.50.26 byte signatures were confirmed below to stop
 matching at 1.26.60. This page is the raw material for those missing rules.
 
@@ -116,7 +116,7 @@ back to `resolveVtableFunction(type, 17)` (the index path), which uses `findPrim
 17 on every build. So the render seam worked *only* through the fallback and the string scan was dead
 weight.
 
-**Fixed** in the preloader: `resolveVtableSlotReferencingString` now locates the vtable's
+**Fixed** in the sweetloader: `resolveVtableSlotReferencingString` now locates the vtable's
 typeinfo-pointer slot (`findPrimaryVtableOffset`, a word equal to the typeinfo preceded by
 offset-to-top 0) and walks from there. `tests/cosmetics/VtableResolveTest.cpp` pins it with a fixture
 that builds the real object graph; it resolves slot 26 against the old code and slot 17 against the

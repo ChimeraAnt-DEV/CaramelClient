@@ -170,7 +170,7 @@ def mod_menu():
     # titlebar
     rrect(d, [x0, y0, x1, y0 + 56], 18, fill=BG_TITLEBAR)
     d.rectangle([x0, y0 + 40, x1, y0 + 56], fill=BG_TITLEBAR)
-    text(d, (x0 + 20, y0 + 28), "Glowberry", font(20, True), TEXT_PRIMARY, anchor="lm")
+    text(d, (x0 + 20, y0 + 28), "Caramel", font(20, True), TEXT_PRIMARY, anchor="lm")
     # search field
     sf = [x0 + 180, y0 + 12, x1 - 140, y0 + 46]
     rrect(d, sf, 17, fill=BG_SURFACE, outline=HAIRLINE, width=1)
@@ -217,13 +217,13 @@ def mod_menu():
     im.save(os.path.join(OUT, "mod_menu.png"))
 
 
-# --- 3. .AntEgg import workflow --------------------------------------------------------------
+# --- 3. mod import workflow --------------------------------------------------------------
 def ant_egg():
     im = Image.new("RGB", (W, H), BG_WINDOW)
     d = ImageDraw.Draw(im)
     d.rectangle([0, 0, W, H], fill=BG_WINDOW)
     text(d, (60, 56), "Mods", font(30, True), TEXT_PRIMARY)
-    text(d, (60, 100), "Import a .AntEgg package", font(16), TEXT_SECONDARY)
+    text(d, (60, 100), "Import a mod package", font(16), TEXT_SECONDARY)
 
     # drop target
     dz = [60, 150, W - 60, 300]
@@ -233,8 +233,8 @@ def ant_egg():
     d.ellipse([ex - 34, ey - 44, ex + 34, ey + 44], fill=(0x6B, 0x4A, 0x2E))
     d.ellipse([ex - 34, ey - 44, ex + 34, ey + 44], outline=GOLD, width=3)
     d.arc([ex - 20, ey - 30, ex + 20, ey + 10], 200, 340, fill=GOLD, width=3)
-    text(d, (dz[0] + 170, ey - 24), "Drop a .AntEgg file here", font(22, True), TEXT_PRIMARY)
-    text(d, (dz[0] + 170, ey + 8), "or tap to browse  ·  native (.so) or script (.lua)",
+    text(d, (dz[0] + 170, ey - 24), "Drop a mod file here", font(22, True), TEXT_PRIMARY)
+    text(d, (dz[0] + 170, ey + 8), "or tap to browse  ·  native (.so) or a .zip mod package",
          font(15), TEXT_SECONDARY)
     text(d, (dz[0] + 170, ey + 38), "Validated manifest · sandboxed extraction · atomic install",
          font(13), TEXT_DISABLED)
@@ -242,9 +242,9 @@ def ant_egg():
     # installed list
     text(d, (60, 340), "INSTALLED", font(13, True), TEXT_SECONDARY)
     rows = [
-        ("Chimera Tweaks", "native", "1.4.0", True),
-        ("Auto-Sort Chests", "script", "0.9.2", True),
-        ("Sky HUD Pack", "script", "2.0.1", False),
+        ("Caramel Tweaks", "native", "1.4.0", True),
+        ("Auto-Sort Chests", "zip", "0.9.2", True),
+        ("Sky HUD Pack", "zip", "2.0.1", False),
     ]
     for i, (name, kind, ver, on) in enumerate(rows):
         ry = 370 + i * 62
@@ -262,7 +262,7 @@ def ant_egg():
             text(d, (W - 165, ry + 26), "DISABLED", font(12, True), TEXT_SECONDARY, anchor="mm")
         toggle(d, W - 90, ry + 11, on)
 
-    im.save(os.path.join(OUT, "antegg_import.png"))
+    im.save(os.path.join(OUT, "mod_import.png"))
 
 
 # --- 4. Closet -------------------------------------------------------------------------------

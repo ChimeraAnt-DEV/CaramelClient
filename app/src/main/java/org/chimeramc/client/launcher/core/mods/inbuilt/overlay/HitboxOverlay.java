@@ -120,7 +120,7 @@ public final class HitboxOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "HitboxOverlay:123", "Ignored a failure at HitboxOverlay:123", ignored);
+            AppLog.warnOnce("CaramelClient", "HitboxOverlay:123", "Ignored a failure at HitboxOverlay:123", ignored);
         }
         overlayView = null;
         wmParams = null;

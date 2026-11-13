@@ -233,7 +233,7 @@ public abstract class BaseOverlayButton {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:236", "Ignored a failure at BaseOverlayButton:236", ignored);
+            AppLog.warnOnce("CaramelClient", "BaseOverlayButton:236", "Ignored a failure at BaseOverlayButton:236", ignored);
         }
         overlayView = null;
         isShowing = false;
@@ -293,7 +293,7 @@ public abstract class BaseOverlayButton {
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:296", "Ignored a failure at BaseOverlayButton:296", ignored);
+                AppLog.warnOnce("CaramelClient", "BaseOverlayButton:296", "Ignored a failure at BaseOverlayButton:296", ignored);
             }
             notifyOverlayGeometryChanged();
         } else if (overlayView != null && isShowing) {
@@ -599,7 +599,7 @@ public abstract class BaseOverlayButton {
             try {
                 windowManager.updateViewLayout(overlayView, wmParams);
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "BaseOverlayButton:602", "Ignored a failure at BaseOverlayButton:602", ignored);
+                AppLog.warnOnce("CaramelClient", "BaseOverlayButton:602", "Ignored a failure at BaseOverlayButton:602", ignored);
             }
             savePosition(wmParams.x, wmParams.y);
         } else {

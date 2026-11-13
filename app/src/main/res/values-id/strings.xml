@@ -1,6 +1,6 @@
 <resources>
     <!-- Common -->
-    <string name="app_name">GlowberryClient</string>
+    <string name="app_name">CaramelClient</string>
     <string name="minecraft">Minecraft</string>
     <string name="launch">Luncurkan</string>
     <string name="beta_badge">Beta</string>
@@ -19,9 +19,9 @@
 
     <!-- About -->
     <string name="about_title">Tentang</string>
-    <string name="copyright">©2024–2026 GlowberryClient. Berlisensi Apache 2.0.</string>
+    <string name="copyright">©2024–2026 CaramelClient. Berlisensi Apache 2.0.</string>
     <string name="font_license">Aplikasi ini menggunakan font Misans..</string>
-    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient</string>
+    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient</string>
     <string name="quick_actions_title">Tindakan Cepat</string>
     <string name="content_management_subtitle">Kelola Dunia, Paket Sumber Daya and Paket Perilaku</string>
     <string name="import_apk_subtitle">Install Minecraft Dari APK Atau APKS file</string>
@@ -52,7 +52,7 @@
 
     <!-- Permissions -->
     <string name="storage_permission_title">Izin Migrasi Penyimpanan</string>
-    <string name="storage_permission_message">Berikan izin penyimpanan agar GlowberryClient dapat menyalin data dari folder lama games/org.chimeramc. Izin ini hanya diperlukan untuk proses migrasi.</string>
+    <string name="storage_permission_message">Berikan izin penyimpanan agar CaramelClient dapat menyalin data dari folder lama games/org.chimeramc. Izin ini hanya diperlukan untuk proses migrasi.</string>
     <string name="grant_permission">Izinkan</string>
     <string name="cancel">Batal</string>
 
@@ -98,14 +98,14 @@
     <string name="check_update">Periksa pembaruan</string>
     <string name="version_prefix">Versi: </string>
     <string name="unknown_error">Kesalahan tidak diketahui</string>
-    <string name="preloader_sigs_title">Data runtime</string>
-    <string name="preloader_sigs_last_update">Pembaruan terakhir: %1$s</string>
-    <string name="preloader_sigs_never_updated">Belum pernah</string>
-    <string name="preloader_sigs_update">Perbarui data runtime</string>
-    <string name="preloader_sigs_updating">Memperbarui…</string>
-    <string name="preloader_sigs_update_success">Data runtime diperbarui</string>
-    <string name="preloader_sigs_update_failed">Gagal memperbarui data runtime: %1$s</string>
-    <string name="preloader_sigs_no_remote_url">URL pembaruan data runtime belum dikonfigurasi</string>
+    <string name="sweetloader_sigs_title">Data runtime</string>
+    <string name="sweetloader_sigs_last_update">Pembaruan terakhir: %1$s</string>
+    <string name="sweetloader_sigs_never_updated">Belum pernah</string>
+    <string name="sweetloader_sigs_update">Perbarui data runtime</string>
+    <string name="sweetloader_sigs_updating">Memperbarui…</string>
+    <string name="sweetloader_sigs_update_success">Data runtime diperbarui</string>
+    <string name="sweetloader_sigs_update_failed">Gagal memperbarui data runtime: %1$s</string>
+    <string name="sweetloader_sigs_no_remote_url">URL pembaruan data runtime belum dikonfigurasi</string>
 
     <string name="dialog_title_no_version">Tidak Ada Versi yang Dipilih</string>
     <string name="dialog_message_no_version">Silakan pilih versi game sebelum memulai.</string>
@@ -145,7 +145,7 @@
     <string name="repair_processing">Mengekstrak pustaka…</string>
     <string name="repair_finalizing">Menyelesaikan perbaikan…</string>
     <string name="storage_migration_title">Migrasi Penyimpanan Diperlukan</string>
-    <string name="storage_migration_message">GlowberryClient harus memigrasikan data dari games/org.chimeramc ke %1$s sebelum melanjutkan.
+    <string name="storage_migration_message">CaramelClient harus memigrasikan data dari games/org.chimeramc ke %1$s sebelum melanjutkan.
 
 Perubahan penyimpanan ini diperlukan untuk memenuhi persyaratan rilis di Google Play. Folder lama tetap dibiarkan, tetapi tidak akan digunakan lagi setelah migrasi.
 
@@ -167,11 +167,11 @@ Migrasi dapat memakan waktu. Anda bisa membiarkan aplikasi berjalan di latar bel
 
 Folder lama games/org.chimeramc tidak dihapus dan tidak lagi digunakan.</string>
     <string name="storage_migration_partial_title">Migrasi Belum Selesai</string>
-    <string name="storage_migration_partial_message">%1$d dari %2$d file tidak dapat disalin. Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
+    <string name="storage_migration_partial_message">%1$d dari %2$d file tidak dapat disalin. Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="storage_migration_failed_title">Migrasi Gagal</string>
     <string name="storage_migration_failed_message">Migrasi tidak dapat dilanjutkan: %1$s
 
-Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
+Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="migration_cleanup_title">Bersihkan Direktori Riwayat</string>
     <string name="migration_cleanup_desc">Hapus direktori lama games/org.chimeramc hanya setelah memastikan semua instans dapat diluncurkan normal dan world, resource pack, behavior pack, serta pengaturan tidak hilang. Data riwayat yang dihapus tidak dapat dipulihkan dari direktori ini.</string>
     <string name="migration_cleanup_button">Bersihkan Direktori Riwayat</string>
@@ -196,8 +196,8 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
 
     <string name="error_no_browser">Tidak ada peramban yang tersedia.</string>
 
-    <string name="eula_title">GlowberryClient License Agreement</string>
-    <string name="eula_message"><b>Selamat datang di GlowberryClient</b>\n\nBy using this software you agree to:\n\n• This is an <b>unofficial</b> Minecraft launcher\n• You must own a <b>licensed</b> copy of Minecraft\n• Any form of piracy or cheating is prohibited\n• Mods/resource packs are used at your own risk\n• Not affiliated with Mojang/Microsoft\n\nContinued use constitutes agreement</string>
+    <string name="eula_title">CaramelClient License Agreement</string>
+    <string name="eula_message"><b>Selamat datang di CaramelClient</b>\n\nBy using this software you agree to:\n\n• This is an <b>unofficial</b> Minecraft launcher\n• You must own a <b>licensed</b> copy of Minecraft\n• Any form of piracy or cheating is prohibited\n• Mods/resource packs are used at your own risk\n• Not affiliated with Mojang/Microsoft\n\nContinued use constitutes agreement</string>
     <string name="eula_agree">Terima</string>
     <string name="eula_exit">Tolak</string>
 
@@ -211,7 +211,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="toast_delete_failed">Penghapusan gagal: %1$s</string>
     <string name="error_delete_builtin_version">Tidak dapat menghapus versi bawaan</string>
     <string name="invalid_mod_file">Gagal</string>
-    <string name="invalid_mod_file_reason">Hanya file .so, paket mod .zip, atau paket mod .antegg yang diizinkan. File yang dipilih bukan paket impor mod native yang valid.</string>
+    <string name="invalid_mod_file_reason">Hanya file .so, paket mod .zip yang diizinkan. File yang dipilih bukan paket impor mod native yang valid.</string>
     <string name="invalid_zip_mod_package_title">Paket Mod ZIP Tidak Valid</string>
     <string name="invalid_zip_mod_package_message">Paket mod ZIP harus berisi manifest.json dan file .so.</string>
     <string name="error_versions">Versi Yang Rusak</string>
@@ -398,7 +398,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="ms_active_badge">Aktif</string>
     <string name="ms_account_subtitle_format">ID Pengguna: %1$s • Diperbarui: %2$s</string>
     <string name="xbox_avatar">Avatar Xbox</string>
-    <string name="launcher_managed_mc_login">Masuk ke Minecraft menggunakan GlowberryClient</string>
+    <string name="launcher_managed_mc_login">Masuk ke Minecraft menggunakan CaramelClient</string>
     <string name="dialog_title_login_required">Login diperlukan</string>
     <string name="dialog_message_login_required">Login yang dikelola oleh launcher diaktifkan, tetapi belum ada akun yang masuk. Buka Akun untuk masuk.</string>
     <string name="go_to_accounts">Akun</string>
@@ -674,24 +674,24 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="tag_custom">Kustom</string>
     <string name="vanilla_prefix">Vanilla %s</string>
     <string name="about_page_title">Tentang</string>
-    <string name="about_subtitle">GlowberryClient — Launcher Minecraft Bedrock Modern</string>
+    <string name="about_subtitle">CaramelClient — Launcher Minecraft Bedrock Modern</string>
     <string name="about_authors_title">Penulis &amp; Pemelihara</string>
     <string name="about_author_name">DreamGuXiang</string>
     <string name="about_author_badge">Penulis</string>
-    <string name="about_author_role">Penulis GlowberryClient</string>
+    <string name="about_author_role">Penulis CaramelClient</string>
     <string name="about_afdian">Afdian</string>
     <string name="about_patreon">Patreon</string>
     <string name="about_source_title">Kode Sumber &amp; Open Source</string>
-    <string name="about_github_repo">GitHub · GlowberryClient</string>
+    <string name="about_github_repo">GitHub · CaramelClient</string>
     <string name="about_github_org">ChimeraAnt-DEV</string>
     <string name="about_license_note">Lihat LICENSE di repositori untuk detail lisensi.</string>
     <string name="about_contribute_title">Berkontribusi</string>
-    <string name="about_contribute_desc">Kontribusi melalui Issues atau Pull Requests dipersilakan untuk meningkatkan GlowberryClient.</string>
+    <string name="about_contribute_desc">Kontribusi melalui Issues atau Pull Requests dipersilakan untuk meningkatkan CaramelClient.</string>
     <string name="about_issues">Issue</string>
     <string name="about_star_fork">Star / Fork</string>
     <string-array name="launcher_tips">
         <item>Pengaturan memungkinkan Anda menyesuaikan tema, warna, latar belakang, dan opsi tampilan lain agar sesuai dengan setup Anda.</item>
-        <item>GlowberryClient bersifat open source. Gunakan GitHub issues untuk melaporkan masalah launcher atau menyarankan perbaikan.</item>
+        <item>CaramelClient bersifat open source. Gunakan GitHub issues untuk melaporkan masalah launcher atau menyarankan perbaikan.</item>
         <item>Gunakan dropdown versi untuk mengganti instans saat ini dengan cepat.</item>
         <item>Apakah ada yang benar-benar membaca ini?</item>
         <item>Anda dapat menyeret mod untuk mengubah prioritas pemuatannya.</item>
@@ -795,7 +795,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="delete_account_title">Hapus Akun</string>
     <string name="delete_account_confirm">Yakin ingin menghapus akun ini?</string>
     <string name="instance_backup_title">Cadangkan Instans</string>
-    <string name="instance_backup_desc">Buat cadangan lengkap instans ini di Download/GlowberryClient/Backups.</string>
+    <string name="instance_backup_desc">Buat cadangan lengkap instans ini di Download/CaramelClient/Backups.</string>
     <string name="instance_backup_button">Cadangkan Instans</string>
     <string name="instance_backup_confirm_message">Buat cadangan lengkap instans ini sekarang? Tutup Minecraft terlebih dahulu jika sedang berjalan agar file tidak berubah selama pencadangan.</string>
     <string name="instance_backup_in_progress">Mencadangkan instans…</string>
@@ -834,9 +834,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="ms_device_code_login_desc">Buka sesi browser privat dengan kode perangkat yang sudah terisi.</string>
     <string name="ms_webview_login">Buka masuk tertanam</string>
     <string name="ms_webview_option_title">WebView Tertanam</string>
-    <string name="ms_webview_login_desc">Masuk tanpa meninggalkan GlowberryClient. Gunakan saat alur browser tidak tersedia.</string>
+    <string name="ms_webview_login_desc">Masuk tanpa meninggalkan CaramelClient. Gunakan saat alur browser tidak tersedia.</string>
     <string name="ms_device_code_title">Masuk dengan Kode Perangkat</string>
-    <string name="ms_device_code_instructions">Buka halaman masuk perangkat Microsoft, masukkan kode ini, lalu setujui akses. GlowberryClient akan menyelesaikannya secara otomatis.</string>
+    <string name="ms_device_code_instructions">Buka halaman masuk perangkat Microsoft, masukkan kode ini, lalu setujui akses. CaramelClient akan menyelesaikannya secara otomatis.</string>
     <string name="ms_device_code_label">Kode perangkat Microsoft</string>
     <string name="ms_device_code_requesting">Meminta kode aman…</string>
     <string name="ms_device_code_waiting_code">--------</string>
@@ -850,7 +850,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="ms_device_code_copied">Kode disalin</string>
     <string name="ms_device_code_open_browser">Buka masuk Microsoft</string>
     <string name="ms_device_code_step_title">Selesaikan proses masuk di browser Anda</string>
-    <string name="ms_device_code_browser_note">GlowberryClient membuka browser default Anda dalam sesi privat, mengisi kode secara otomatis, dan meminta proses masuk Microsoft yang baru.</string>
+    <string name="ms_device_code_browser_note">CaramelClient membuka browser default Anda dalam sesi privat, mengisi kode secara otomatis, dan meminta proses masuk Microsoft yang baru.</string>
     <string name="ms_choose_other_method">Metode lain</string>
     <string name="ms_no_browser">Tidak ada browser yang tersedia di perangkat ini.</string>
     <string name="ms_default_browser_no_private_mode">Browser default Anda tidak mendukung masuk secara privat. Perbarui browser atau gunakan login WebView.</string>
@@ -858,7 +858,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="ms_login_state_failed">Respons masuk Microsoft tidak dapat diverifikasi. Mulai proses masuk lagi.</string>
     <string name="ms_login_missing_code">Microsoft tidak mengembalikan kode masuk. Mulai proses masuk lagi atau gunakan login Kode Perangkat.</string>
     <string name="ms_feature_disabled_title">Fitur Dinonaktifkan</string>
-    <string name="ms_feature_disabled_desc">Aktifkan “Masuk ke Minecraft dengan GlowberryClient” di Pengaturan untuk mengelola akun Microsoft.</string>
+    <string name="ms_feature_disabled_desc">Aktifkan “Masuk ke Minecraft dengan CaramelClient” di Pengaturan untuk mengelola akun Microsoft.</string>
     <string name="ms_activated">Diaktifkan</string>
     <string name="inbuilt_mod_gyro">Giroskop</string>
     <string name="inbuilt_mod_gyro_desc">Gunakan giroskop perangkat untuk mengontrol rotasi kamera</string>
@@ -1009,7 +1009,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="home_no_mods">Belum ada mod yang dipasang</string>
     <string name="home_content_library">Pustaka konten</string>
     <string name="home_more">Lainnya</string>
-    <string name="setup_step_import_title">Selamat datang di GlowberryClient</string>
+    <string name="setup_step_import_title">Selamat datang di CaramelClient</string>
     <string name="setup_step_import_body">Impor file game Minecraft Anda untuk memulai. Pilih APK yang ingin Anda mainkan.</string>
     <string name="setup_step_import_action">Impor game</string>
     <string name="setup_step_version_title">Pilih versi Anda</string>
@@ -1052,7 +1052,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
 
     <string name="launch_failure_message_play_store">Ini adalah versi Minecraft dari Google Play, atau versi yang kehilangan file tertentu yang diperlukan untuk memulai game.\n\nPeluncur harus memuat pustaka native game secara langsung, dan versi Play Store menyimpannya di dalam aplikasi yang terpasang, tempat peluncur ini tidak dapat menjangkaunya.\n\nUntuk bermain, impor APK Minecraft dari Pustaka. Pemasangan dari Play Store boleh tetap ada di perangkat Anda — Anda tidak perlu menghapusnya.</string>
     <string name="launch_failure_message_game_files_missing">File game instans ini hilang atau tidak lengkap. Impor ulang versinya dari Pustaka, atau jalankan Perbaiki pemasangan di Pengaturan \u2192 Diagnostik.</string>
-    <string name="launch_failure_message_abi">Versi Minecraft ini hanya menyertakan pustaka native 32-bit, sedangkan GlowberryClient berjalan sebagai aplikasi 64-bit. Impor build 64-bit dari versi ini sebagai gantinya.</string>
+    <string name="launch_failure_message_abi">Versi Minecraft ini hanya menyertakan pustaka native 32-bit, sedangkan CaramelClient berjalan sebagai aplikasi 64-bit. Impor build 64-bit dari versi ini sebagai gantinya.</string>
     <string name="launch_failure_message_stale_libs">Pustaka native yang diekstrak berasal dari versi peluncur yang lebih lama. Pustaka itu akan diekstrak ulang secara otomatis pada peluncuran berikutnya. Jika game tetap gagal dimulai, jalankan Perbaiki pemasangan di Pengaturan \u2192 Diagnostik.</string>
     <string name="launch_failure_message_rules">Belum ada definisi hook untuk build Minecraft ini, jadi overlay dan kosmetik dalam game dinonaktifkan. Gamenya sendiri akan berjalan normal.</string>
     <string name="launch_failure_message_unexpected">Peluncur tidak dapat memulai game dan penyebabnya bukan salah satu yang dikenali. Tidak ada yang diubah di perangkat Anda. Buka kembali peluncur dan coba lagi; jika terus terjadi, jalankan Perbaiki pemasangan di Pengaturan \u2192 Diagnostik.</string>
@@ -1082,9 +1082,9 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="diagnostics_field_berry_api">Backend BerryAPI</string>
     <string name="diagnostics_field_berry_cosmetics">Kosmetik BerryAPI</string>
     <string name="about_backend_status">Backend: %1$s</string>
-    <string name="diagnostics_field_preloader_abi">ABI preloader</string>
-    <string name="diagnostics_preloader_abi_ok">v%1$d (cocok dengan klien)</string>
-    <string name="diagnostics_preloader_abi_mismatch">v%1$d (klien mengharapkan v%2$d)</string>
+    <string name="diagnostics_field_sweetloader_abi">ABI sweetloader</string>
+    <string name="diagnostics_sweetloader_abi_ok">v%1$d (cocok dengan klien)</string>
+    <string name="diagnostics_sweetloader_abi_mismatch">v%1$d (klien mengharapkan v%2$d)</string>
     <string name="about_input_backend_status">Backend masukan: %1$s</string>
     <string name="diagnostics_field_input_backend">Backend masukan</string>
     <string name="diagnostics_field_hooks">Hook pramuat</string>
@@ -1093,7 +1093,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="crash_disable_no_suspects">Tidak ada mod yang tercatat untuk crash ini.</string>
     <string name="crash_disable_done">%1$d mod dinonaktifkan. Luncurkan lagi untuk mencoba tanpa mod tersebut.</string>
     <string name="session_restart_loop_message">Berhenti memulai ulang: sesi ini memulai ulang %1$d kali berturut-turut. Luncurkan lagi dari layar utama, atau nonaktifkan mod yang baru Anda tambahkan.</string>
-    <string name="nav_logo_home">Beranda GlowberryClient</string>
+    <string name="nav_logo_home">Beranda CaramelClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Menyiapkan pratinjau…</string>
     <string name="mod_overlay_snaplook_on">Siap</string>
     <string name="mod_overlay_snaplook_off">Diam</string>
@@ -1156,26 +1156,6 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="quick_settings_no_instance">Tidak ada instans yang dipilih</string>
     <string name="quick_settings_write_failed">Tidak dapat menulis opsi</string>
     <string name="quick_settings_cap_unsupported">Layar ini tidak memiliki mode pada laju itu</string>
-    <string name="script_manager_title">Pengelola skrip</string>
-    <string name="script_manager_subtitle">Paket terpasang dan urutan pemuatannya.</string>
-    <string name="script_manager_empty">Tidak ada paket terpasang. Impor paket .AntEgg dari layar Mods.</string>
-    <string name="script_manager_reload">Muat ulang skrip</string>
-    <string name="script_manager_reload_none">Tidak ada skrip aktif untuk dijalankan</string>
-    <string name="script_manager_reload_done">%1$d dari %2$d skrip dimuat ulang</string>
-    <string name="script_manager_run">Jalankan</string>
-    <string name="script_manager_remove">Hapus</string>
-    <string name="script_manager_remove_confirm">Hapus "%1$s" dari sandbox?</string>
-    <string name="script_manager_remove_failed">Tidak dapat menghapus paket</string>
-    <string name="script_manager_run_ok">%1$s dijalankan</string>
-    <string name="script_manager_run_failed">Tidak dapat menjalankan skrip</string>
-    <string name="script_manager_run_failed_reason">Kesalahan skrip: %1$s</string>
-    <string name="script_manager_unreadable">Manifes tidak dapat dibaca</string>
-    <string name="script_manager_type_script">Skrip</string>
-    <string name="script_manager_type_native">Native</string>
-    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
-    <string name="script_manager_load_order">Urutan muat %1$d</string>
-    <string name="script_manager_toggle_desc">Aktifkan atau nonaktifkan paket ini</string>
-    <string name="script_manager_open">Pengelola skrip</string>
     <string name="launch_failure_title_newer_game">Versi Minecraft belum didukung</string>
     <string name="launch_failure_message_newer_game">Versi Minecraft Anda lebih baru daripada yang didukung peluncur ini. Overlay, kosmetik, dan kait pengontrol akan terbatas atau nonaktif sampai pembaruan menambahkan dukungan. Gamenya sendiri akan berjalan normal.</string>
     <string name="launch_failure_newer_game_covered">Versi Minecraft terbaru yang didukung versi ini adalah %1$s.</string>
@@ -1261,7 +1241,7 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="servers_favourites_first">Favorit ditampilkan lebih dulu</string>
     <string name="server_favourite_label">Favorit</string>
     <string name="cosmetics_sync_setting_title">Sinkronisasi kosmetik</string>
-    <string name="cosmetics_sync_setting_desc">Tampilkan cape, aksesori, dan peliharaan yang kamu pakai kepada pengguna Glowberry lain di dunia yang sama, dan lihat milik mereka. Hanya di sisi klien; mematikannya menghentikan pengiriman dan penerimaan.</string>
+    <string name="cosmetics_sync_setting_desc">Tampilkan cape, aksesori, dan peliharaan yang kamu pakai kepada pengguna Caramel lain di dunia yang sama, dan lihat milik mereka. Hanya di sisi klien; mematikannya menghentikan pengiriman dan penerimaan.</string>
     <string name="pack_changer_pack_size">%1$s · %2$s</string>
     <string name="pack_changer_move_up">Naikkan</string>
     <string name="pack_changer_move_down">Turunkan</string>
@@ -1311,11 +1291,11 @@ Migrasi harus selesai sebelum GlowberryClient dapat melanjutkan.</string>
     <string name="replay_save_native_done">Tersimpan %1$s</string>
     <string name="replay_save_native_empty">Belum ada ulangan game untuk disimpan. Rekam dulu.</string>
     <string name="settings_run_setup">Jalankan penyiapan lagi</string>
-    <string name="about_people_title">Siapa yang membuat GlowberryClient</string>
+    <string name="about_people_title">Siapa yang membuat CaramelClient</string>
     <string name="about_owner_badge">Pemilik</string>
-    <string name="about_owner_role">Pemilik GlowberryClient</string>
+    <string name="about_owner_role">Pemilik CaramelClient</string>
     <string name="about_lead_badge">Dev utama</string>
-    <string name="about_lead_role">Pengembang utama GlowberryClient</string>
+    <string name="about_lead_role">Pengembang utama CaramelClient</string>
     <string name="about_github">GitHub</string>
     <string name="changelog_card_title">Yang baru di %1$s</string>
     <string name="changelog_card_subtitle">Ketuk untuk daftar lengkap apa yang ditambahkan, diubah, dan diperbaiki.</string>

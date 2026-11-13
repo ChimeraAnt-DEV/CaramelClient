@@ -80,7 +80,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/ic_glowberry_logo"
+                        android:src="@drawable/ic_caramel_logo"
                         android:tint="@color/overlay_text_primary" />
                 </FrameLayout>
 
@@ -97,7 +97,7 @@
                         android:letterSpacing="0.02"
                         android:text="@string/mod_menu_general"
                         android:textColor="@color/mod_menu_text_primary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textStyle="bold" />
 
                     <TextView
@@ -107,7 +107,7 @@
                         android:letterSpacing="0.06"
                         android:text="@string/mod_menu_subtitle"
                         android:textColor="@color/mod_menu_text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                 </LinearLayout>
 
                 <Space
@@ -130,7 +130,7 @@
                     android:paddingBottom="@dimen/space_2"
                     android:text="@string/vip_mode_keyboard"
                     android:textColor="@color/mod_menu_text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:textStyle="bold" />
 
                 <ImageButton
@@ -207,7 +207,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/mod_menu_text_primary"
                                 android:textColorHint="@color/mod_menu_text_tertiary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <ImageButton
                                 android:id="@+id/btn_clear_search"
@@ -248,7 +248,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_2"
                                 android:textColor="@color/overlay_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                                android:textAppearance="@style/TextAppearance.Caramel.Body"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -276,7 +276,7 @@
                                 android:paddingEnd="@dimen/space_2"
                                 android:text="@string/mod_stats_fps_placeholder"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/mod_stats_ping"
@@ -290,7 +290,7 @@
                                 android:paddingEnd="@dimen/space_2"
                                 android:text="@string/mod_stats_ping_placeholder"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/mod_stats_battery"
@@ -305,7 +305,7 @@
                                 android:paddingEnd="@dimen/space_2"
                                 android:text="@string/mod_stats_battery_placeholder"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -340,7 +340,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/filter_all"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -357,7 +357,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_favorites"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_enabled"
@@ -373,7 +373,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_filter_enabled"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_inbuilt"
@@ -389,7 +389,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_filter_inbuilt"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_external"
@@ -405,7 +405,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_filter_external"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_pvp"
@@ -421,7 +421,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_filter_pvp"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_visuals"
@@ -437,7 +437,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/vip_category_visuals"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_misc"
@@ -453,7 +453,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/vip_category_misc"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/filter_hud"
@@ -469,7 +469,7 @@
                                 android:paddingEnd="@dimen/space_4"
                                 android:text="@string/mod_menu_filter_hud"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:id="@+id/module_count_text"
@@ -478,7 +478,7 @@
                                 android:minHeight="30dp"
                                 android:gravity="center"
                                 android:textColor="@color/mod_menu_text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         </LinearLayout>
                     </HorizontalScrollView>
@@ -511,7 +511,7 @@
                             android:paddingEnd="@dimen/space_3"
                             android:text="@string/filter_all"
                             android:textColor="@color/mod_menu_accent"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:textStyle="bold" />
 
                         <Space
@@ -526,7 +526,7 @@
                             android:minHeight="30dp"
                             android:gravity="center"
                             android:textColor="@color/mod_menu_text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     </LinearLayout>
 
@@ -574,7 +574,7 @@
                                 android:layout_marginTop="@dimen/space_2"
                                 android:text="@string/mod_menu_no_mods"
                                 android:textColor="@color/mod_menu_text_tertiary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         </LinearLayout>
 
@@ -652,7 +652,7 @@
                                 android:text="@string/mod_menu_general_settings"
                                 android:textAllCaps="true"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <!-- M6: the menu's own appearance settings. Presets plus four
@@ -668,7 +668,7 @@
                                 android:text="@string/mod_menu_settings_appearance"
                                 android:textAllCaps="true"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -678,7 +678,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_theme"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_theme"
@@ -694,7 +694,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_glass"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_glass"
@@ -710,7 +710,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_density"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_density"
@@ -726,7 +726,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_toggle_style"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_toggle_style"
@@ -742,7 +742,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_motion"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_motion"
@@ -757,7 +757,7 @@
                                 android:layout_marginBottom="@dimen/space_3"
                                 android:text="@string/mod_menu_setting_system_override"
                                 android:textColor="@color/mod_menu_text_tertiary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -772,7 +772,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/mod_menu_setting_radius"
                                     android:textColor="@color/mod_menu_text_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <SeekBar
                                     android:id="@+id/seekbar_mod_setting_radius"
@@ -791,7 +791,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:textColor="@color/mod_menu_text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             </LinearLayout>
 
@@ -808,7 +808,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/mod_menu_setting_blur_fps"
                                     android:textColor="@color/mod_menu_text_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <SeekBar
                                     android:id="@+id/seekbar_mod_setting_blur_fps"
@@ -826,7 +826,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:textColor="@color/mod_menu_text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             </LinearLayout>
 
@@ -843,7 +843,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/mod_menu_setting_hud_opacity"
                                     android:textColor="@color/mod_menu_text_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <SeekBar
                                     android:id="@+id/seekbar_mod_setting_hud_opacity"
@@ -861,7 +861,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:textColor="@color/mod_menu_text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             </LinearLayout>
 
@@ -878,7 +878,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/mod_menu_setting_wheel_dead_zone"
                                     android:textColor="@color/mod_menu_text_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <SeekBar
                                     android:id="@+id/seekbar_mod_setting_wheel_dead_zone"
@@ -897,7 +897,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:textColor="@color/mod_menu_text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             </LinearLayout>
 
@@ -908,7 +908,7 @@
                                 android:layout_marginBottom="@dimen/space_hairline"
                                 android:text="@string/mod_menu_setting_accent"
                                 android:textColor="@color/mod_menu_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <LinearLayout
                                 android:id="@+id/group_mod_setting_accent"
@@ -925,7 +925,7 @@
                                 android:text="@string/mod_menu_general_settings"
                                 android:textAllCaps="true"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <LinearLayout
@@ -957,7 +957,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_notifications"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -966,7 +966,7 @@
                                         android:layout_marginTop="@dimen/space_hairline"
                                         android:text="@string/mod_menu_notifications_desc"
                                         android:textColor="@color/mod_menu_text_tertiary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 </LinearLayout>
 
@@ -1009,7 +1009,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_pause_menu_only"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1018,7 +1018,7 @@
                                         android:layout_marginTop="@dimen/space_hairline"
                                         android:text="@string/mod_menu_pause_menu_only_desc"
                                         android:textColor="@color/mod_menu_text_tertiary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 </LinearLayout>
 
@@ -1046,7 +1046,7 @@
                                 android:text="@string/mod_menu_appearance"
                                 android:textAllCaps="true"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <LinearLayout
@@ -1079,7 +1079,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_compact"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1088,7 +1088,7 @@
                                         android:layout_marginTop="@dimen/space_hairline"
                                         android:text="@string/mod_menu_compact_desc"
                                         android:textColor="@color/mod_menu_text_tertiary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 </LinearLayout>
 
@@ -1130,7 +1130,7 @@
                                         android:layout_weight="1"
                                         android:text="@string/mod_menu_opacity"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1139,7 +1139,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_default_percent"
                                         android:textColor="@color/mod_menu_accent"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                         android:textStyle="bold" />
 
                                 </LinearLayout>
@@ -1188,7 +1188,7 @@
                                         android:layout_weight="1"
                                         android:text="@string/mod_menu_primary_opacity"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1197,7 +1197,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_default_percent"
                                         android:textColor="@color/mod_menu_accent"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                         android:textStyle="bold" />
 
                                 </LinearLayout>
@@ -1234,7 +1234,7 @@
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
                                         android:contentDescription="@string/app_name"
-                                        android:src="@drawable/ic_glowberry_mod" />
+                                        android:src="@drawable/ic_caramel_mod" />
 
                                     <TextView
                                         android:layout_width="0dp"
@@ -1243,7 +1243,7 @@
                                         android:layout_weight="1"
                                         android:text="@string/mod_menu_button_opacity"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1252,7 +1252,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_default_percent"
                                         android:textColor="@color/mod_menu_accent"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                         android:textStyle="bold" />
 
                                 </LinearLayout>
@@ -1285,7 +1285,7 @@
                                 android:text="@string/mod_menu_keybinds"
                                 android:textAllCaps="true"
                                 android:textColor="@color/mod_menu_accent"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1294,7 +1294,7 @@
                                 android:layout_marginBottom="@dimen/space_3"
                                 android:text="@string/mod_menu_keybinds_desc"
                                 android:textColor="@color/mod_menu_text_tertiary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <LinearLayout
                                 android:id="@+id/setting_keyboard_bind"
@@ -1324,7 +1324,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_keyboard_bind"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1334,7 +1334,7 @@
                                         android:layout_marginTop="@dimen/space_hairline"
                                         android:text="@string/mod_menu_bind_none"
                                         android:textColor="@color/mod_menu_text_tertiary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 </LinearLayout>
 
@@ -1369,7 +1369,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="@string/mod_menu_controller_bind"
                                         android:textColor="@color/overlay_text_primary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -1379,7 +1379,7 @@
                                         android:layout_marginTop="@dimen/space_hairline"
                                         android:text="@string/mod_menu_bind_none"
                                         android:textColor="@color/mod_menu_text_tertiary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 </LinearLayout>
 
@@ -1398,7 +1398,7 @@
                                 android:layout_marginBottom="@dimen/space_2"
                                 android:text="@string/mod_menu_loadouts"
                                 android:textColor="@color/overlay_text_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1407,7 +1407,7 @@
                                 android:layout_marginBottom="@dimen/space_3"
                                 android:text="@string/mod_menu_loadouts_desc"
                                 android:textColor="@color/mod_menu_text_tertiary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <LinearLayout
                                 android:id="@+id/loadout_chip_row"
@@ -1439,7 +1439,7 @@
                                     android:layout_weight="1"
                                     android:text="@string/mod_menu_loadout_save"
                                     android:textColor="@color/overlay_text_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                                     android:textStyle="bold" />
 
                             </LinearLayout>
@@ -1561,7 +1561,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/mod_menu_hud_editor"
                             android:textColor="@color/mod_menu_text_primary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textStyle="bold" />
 
                         <TextView
@@ -1570,7 +1570,7 @@
                             android:layout_marginTop="@dimen/space_hairline"
                             android:text="@string/hud_editor_drag_hint"
                             android:textColor="@color/mod_menu_accent"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -1622,7 +1622,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/overlay_button_size"
                     android:textColor="@color/mod_menu_accent"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:textStyle="bold" />
 
                 <SeekBar
@@ -1651,7 +1651,7 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/seekbar_hud_button_opacity"
                     android:text="@string/overlay_button_opacity"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:textColor="@color/mod_menu_accent"
                     android:textStyle="bold" />
 

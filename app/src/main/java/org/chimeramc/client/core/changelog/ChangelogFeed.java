@@ -123,7 +123,7 @@ public final class ChangelogFeed {
                     parseSection(root.getAsJsonObject("upcoming")),
                     parseSneakPeeks(root.getAsJsonArray("sneakPeeks")));
         } catch (Exception e) {
-            AppLog.warnOnce("GlowberryClient", "ChangelogFeed:parse",
+            AppLog.warnOnce("CaramelClient", "ChangelogFeed:parse",
                     "Ignored a malformed changelog feed", e);
             return empty();
         }

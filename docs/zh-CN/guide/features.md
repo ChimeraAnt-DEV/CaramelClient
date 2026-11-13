@@ -1,6 +1,6 @@
 # 功能概览
 
-GlowberryClient 的核心是日常 Minecraft 基岩版启动器工作流。Native mod API 是开发者扩展能力，不是普通用户的默认入口。
+CaramelClient 的核心是日常 Minecraft 基岩版启动器工作流。Native mod API 是开发者扩展能力，不是普通用户的默认入口。
 
 ## 版本与实例管理
 
@@ -14,7 +14,7 @@ GlowberryClient 的核心是日常 Minecraft 基岩版启动器工作流。Nativ
 
 ## Xbox 账号
 
-GlowberryClient 可以在启动器内管理多个 Xbox 账号。启动 Minecraft 前选择需要使用的账号，避免进游戏后才发现身份不对。
+CaramelClient 可以在启动器内管理多个 Xbox 账号。启动 Minecraft 前选择需要使用的账号，避免进游戏后才发现身份不对。
 
 ## 快速启动
 
@@ -24,4 +24,4 @@ GlowberryClient 可以在启动器内管理多个 Xbox 账号。启动 Minecraft
 
 启动器支持安装 native SO 模块，供明确需要扩展能力的用户和开发者使用。Native 模块会运行本机代码，只安装你信任的包。
 
-开发者文档位于 [开发者](/zh-CN/guide/developer)，Preloader API 参考也从该分类进入。
+开发者文档位于 [开发者](/zh-CN/guide/developer)，SweetLoader API 参考也从该分类进入。

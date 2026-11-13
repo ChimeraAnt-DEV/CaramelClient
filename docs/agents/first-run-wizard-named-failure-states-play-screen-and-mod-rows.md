@@ -30,7 +30,7 @@
   `renderReadinessRows` in `DiagnosticsActivity`: `LaunchReadiness` is evaluated once and the state
   key is printed verbatim, because that string is what a bug report should quote.
 - **A mod row's state, kind and failure line come from `ModRowPresentation`** (U17), not from the
-  adapter: `kindOf` reads the **entry point** (`.so` → native, `.lua` → script), because an `.AntEgg`
+  adapter: `kindOf` reads the **entry point** (`.so` → native), because a mod package
   can hold either runtime and the archive name does not say which. A recorded failure outranks the
   enabled flag, and a failed mod stays toggleable so the user is not trapped with a broken enabled
   mod. `ModRowPresentationTest` pins all of it.

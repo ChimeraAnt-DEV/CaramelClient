@@ -140,7 +140,7 @@ public final class QuickSettingsApplier {
                     LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
                     FeatureSettings.StorageType.INTERNAL.name()));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "QuickSettingsApplier:143", "Ignored a failure at QuickSettingsApplier:143", ignored);
+            AppLog.warnOnce("CaramelClient", "QuickSettingsApplier:143", "Ignored a failure at QuickSettingsApplier:143", ignored);
         }
         FeatureSettings.StorageType resolved = LauncherStorage.normalizeContentStorageType(
                 stored, version.versionIsolation);

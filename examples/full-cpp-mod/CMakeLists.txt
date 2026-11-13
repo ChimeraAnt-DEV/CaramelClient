@@ -7,14 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 get_filename_component(LL_REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
-set(PRELOADER_ANDROID_ROOT
-    "${LL_REPO_ROOT}/app/src/main/cpp/preloader"
+set(SWEETLOADER_ANDROID_ROOT
+    "${LL_REPO_ROOT}/app/src/main/cpp/sweetloader"
     CACHE PATH "Path to ChimeraAnt-DEV/preloader-android")
 
-if(NOT EXISTS "${PRELOADER_ANDROID_ROOT}/include/pl/Config.hpp")
+if(NOT EXISTS "${SWEETLOADER_ANDROID_ROOT}/include/pl/Config.hpp")
     message(FATAL_ERROR
-        "PRELOADER_ANDROID_ROOT must point to a preloader-android checkout. "
-        "Missing: ${PRELOADER_ANDROID_ROOT}/include/pl/Config.hpp")
+        "SWEETLOADER_ANDROID_ROOT must point to a preloader-android checkout. "
+        "Missing: ${SWEETLOADER_ANDROID_ROOT}/include/pl/Config.hpp")
 endif()
 
 include(FetchContent)
@@ -62,7 +62,7 @@ endif()
 function(configure_full_cpp_mod_common target_name)
     target_include_directories("${target_name}" PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/src"
-        "${PRELOADER_ANDROID_ROOT}/include")
+        "${SWEETLOADER_ANDROID_ROOT}/include")
     target_link_libraries("${target_name}" PRIVATE
         nlohmann_json::nlohmann_json
         Boost::pfr
@@ -82,12 +82,12 @@ endif()
 
 if(ANDROID)
     option(LL_FULL_CPP_MOD_LINK_PRELOADER
-           "Build and link the local preloader target for this example"
+           "Build and link the local sweetloader target for this example"
            ON)
 
-    if(LL_FULL_CPP_MOD_LINK_PRELOADER AND NOT TARGET preloader)
-        add_subdirectory("${PRELOADER_ANDROID_ROOT}"
-                         "${CMAKE_BINARY_DIR}/_preloader_android")
+    if(LL_FULL_CPP_MOD_LINK_PRELOADER AND NOT TARGET sweetloader)
+        add_subdirectory("${SWEETLOADER_ANDROID_ROOT}"
+                         "${CMAKE_BINARY_DIR}/_sweetloader_android")
     endif()
 
     if(ANDROID_ABI)
@@ -111,8 +111,8 @@ if(ANDROID)
         target_link_libraries(full_cpp_mod PRIVATE "${LL_LOG_LIB}")
     endif()
 
-    if(TARGET preloader)
-        target_link_libraries(full_cpp_mod PRIVATE preloader)
+    if(TARGET sweetloader)
+        target_link_libraries(full_cpp_mod PRIVATE sweetloader)
     else()
         target_link_options(full_cpp_mod PRIVATE
             -Wl,--unresolved-symbols=ignore-all)

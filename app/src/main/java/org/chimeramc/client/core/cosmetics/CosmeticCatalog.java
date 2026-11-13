@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The catalogue of GlowberryClient cosmetics: capes, accessories and pets.
+ * The catalogue of CaramelClient cosmetics: capes, accessories and pets.
  *
  * <p>This class is pure data plus pure selection logic, so "which cape is equipped", "how many
  * pet styles exist" and "does this species fly" are unit-testable without an Android context or a
@@ -135,7 +135,7 @@ public final class CosmeticCatalog {
         public final CapePattern pattern;
         /** Whether the brand mark crawls across the cape. */
         public final boolean animated;
-        /** Whether the cape carries the GlowberryClient brand mark at all. */
+        /** Whether the cape carries the CaramelClient brand mark at all. */
         public final boolean branded;
 
         public Cape(String id, String name, int color, int trimColor, int accentColor,
@@ -312,7 +312,7 @@ public final class CosmeticCatalog {
 
     /** One palette: a base, a trim and a pattern accent. */
     private static final int[][] PALETTES = {
-            {0xFF6236E8, 0xFFA88CFF, 0xFFFFD86B}, // Chimera violet
+            {0xFF6236E8, 0xFFA88CFF, 0xFFFFD86B}, // Caramel violet
             {0xFF141418, 0xFF3A3A44, 0xFF8F979F}, // Void
             {0xFFA82E9E, 0xFFE070C0, 0xFFFFE1F4}, // Magenta flux
             {0xFF1F7A4D, 0xFF63D69B, 0xFFE9FFF3}, // Verdant
@@ -327,7 +327,7 @@ public final class CosmeticCatalog {
     };
 
     private static final String[] PALETTE_NAMES = {
-            "Chimera", "Void", "Flux", "Verdant", "Ember", "Abyss",
+            "Caramel", "Void", "Flux", "Verdant", "Ember", "Abyss",
             "Gilded", "Graphite", "Rosewood", "Lagoon", "Amethyst", "Creeper"
     };
 
@@ -341,9 +341,9 @@ public final class CosmeticCatalog {
      */
     private static final String[][] CAPE_PATTERN_NAMES = {
             // SOLID              VERTICAL              HORIZONTAL            GRADIENT             SPLIT                 GRID                  CHECKER              CHEVRON              HORIZON               WAVE                  CAMO                  STAR
-            {"Chimera Cape", "Violet Banner", "Amethyst Ladder", "Twilight Fade", "Violet Sunder", "Arcane Weave", "Chequered Sigil", "Violet Arrowhead", "Eventide Line", "Violet Riptide", "Wilds of Chimera", "Celestial Chimera",
+            {"Caramel Cape", "Violet Banner", "Amethyst Ladder", "Twilight Fade", "Violet Sunder", "Arcane Weave", "Chequered Sigil", "Violet Arrowhead", "Eventide Line", "Violet Riptide", "Wilds of Caramel", "Celestial Caramel",
              // DIAGONAL              PLAID                  OMBRE                 SCALES                RUNES                 EMBLEM
-             "Violet Sash", "Chimera Tartan", "Violet Fadeout", "Violet Scalecoat", "Arcanist Runes", "Chimera Signet"},
+             "Violet Sash", "Caramel Tartan", "Violet Fadeout", "Violet Scalecoat", "Arcanist Runes", "Caramel Signet"},
             {"Umbral Sovereign", "Nightfall Banner", "Onyx Ladder", "Voidlight Fade", "Eclipse Sunder", "Obsidian Weave", "Shadow Chequer", "Nightfall Arrowhead", "Dusk Line", "Umbral Riptide", "Hollow Wilds", "Starless Celestial",
              "Umbral Sash", "Gravekeeper Tartan", "Void Ombre", "Onyx Scalecoat", "Occultist Runes", "Void Sigil"},
             {"Fluxweave Cape", "Magenta Banner", "Neon Ladder", "Pulse Fade", "Flux Sunder", "Circuit Weave", "Overload Chequer", "Neon Arrowhead", "Signal Line", "Magenta Riptide", "Charged Wilds", "Neon Celestial",
@@ -377,7 +377,7 @@ public final class CosmeticCatalog {
      */
     private static final String[][] ACCESSORY_NAMES = {
             //        CAP                 BEANIE              CROWN                GLASSES             MASK               SCARF               BACKPACK             HORNS              FLOWER              BOWTIE             EAR               TOPHAT              WIZARD_HAT          TIARA              BEARD              VEIL               MONOCLE            ANTLERS            PLUME              TRICORN            MORTARBOARD
-            {"Chimera Crest", "Chimera Knit", "Chimera Circlet", "Chimera Visor", "Chimera Veil", "Chimera Stole", "Chimera Satchel", "Chimera Horns", "Chimera Bloom", "Chimera Knot", "Chimera Ears", "Chimera Stovepipe", "Chimera Arcanist", "Chimera Diadem", "Chimera Mane", "Chimera Shroud", "Chimera Lens", "Chimera Antlers", "Chimera Plume", "Chimera Corsair", "Chimera Scholar"},
+            {"Caramel Crest", "Caramel Knit", "Caramel Circlet", "Caramel Visor", "Caramel Veil", "Caramel Stole", "Caramel Satchel", "Caramel Horns", "Caramel Bloom", "Caramel Knot", "Caramel Ears", "Caramel Stovepipe", "Caramel Arcanist", "Caramel Diadem", "Caramel Mane", "Caramel Shroud", "Caramel Lens", "Caramel Antlers", "Caramel Plume", "Caramel Corsair", "Caramel Scholar"},
             {"Gravekeeper Cap", "Ashen Watchcap", "Void Diadem", "Umbral Shades", "Shroud of Night", "Grave Wrap", "The Nightpack", "Voidgrasp Spikes", "Nightshade Bloom", "Gloom Cravat", "Vesper Bats", "Hollow Chimney", "Occultist's Hood", "Hollow Tiara", "Bramblebeard", "Sable Shroud", "Shadow Monocle", "Briar Antlers", "Raven Quill", "Dread Freebooter", "Dean of Shadows"},
             {"Static Beret", "Neon Beanie", "Pulse Circlet", "Overclock Goggles", "Glitch Mask", "Static Scarf", "Signal Rucksack", "Stormhorn Spikes", "Neon Blossom", "Flux Bow", "Fizz Ears", "Overload Top Hat", "Hexweaver Hat", "Flux Tiara", "Voltage Beard", "Screen Veil", "Circuit Lens", "Voltaic Antlers", "Ion Feather", "Pulse Captain", "Graduate of Flux"},
             {"Mossbank Cap", "Fern Beanie", "Thornwood Crown", "Leafcut Specs", "Verdant Mask", "Rootwork Scarf", "Forager's Pack", "Bramble Horns", "Daisy Crown", "Green Knot", "Faun Ears", "Great Tall Hat", "Druid's Crown", "Garland Tiara", "Mossbeard", "Petal Veil", "Oak Monocle", "Greenman Antlers", "Fern Frond", "Pathfinder's Tricorn", "Verdant Scholar"},
@@ -396,7 +396,7 @@ public final class CosmeticCatalog {
 
         // The flagship cape keeps its exact id and stays first, animated and branded, so the
         // section opens on the one piece of motion it is meant to show off.
-        capes.add(new Cape("chimera", "Chimera Prime", 0xFF6236E8, 0xFFA88CFF, 0xFFFFD86B,
+        capes.add(new Cape("chimera", "Caramel Prime", 0xFF6236E8, 0xFFA88CFF, 0xFFFFD86B,
                 CapePattern.SOLID, true, true));
 
         // The classic ids are preserved verbatim so existing selections keep resolving. Their
@@ -409,7 +409,7 @@ public final class CosmeticCatalog {
                 CapePattern.SOLID, false, false));
 
         // The built-in Optifine capes: black cloth, an "OF" monogram. The trim and accent are the
-        // monogram colours. They are never branded with the Chimera mark.
+        // monogram colours. They are never branded with the Caramel mark.
         capes.add(new Cape(OPTIFINE_RED_ID, "Optifine Cape (Red)", 0xFF0A0A0C, 0xFFD8202A, 0xFFD8202A,
                 CapePattern.OPTIFINE, false, false));
         capes.add(new Cape(OPTIFINE_BLUE_ID, "Optifine Cape (Blue)", 0xFF0A0A0C, 0xFF2A6FD8, 0xFF2A6FD8,
@@ -421,7 +421,7 @@ public final class CosmeticCatalog {
         addAuthoredCapes(capes);
 
         // Generated families: every palette crossed with every pattern. The brand mark rides on
-        // the "Chimera" palette's Split weave only, so the flagship stays special instead of every
+        // the "Caramel" palette's Split weave only, so the flagship stays special instead of every
         // cape being branded. Each palette has its own row of names (see CAPE_PATTERN_NAMES), so a
         // cape is a genuinely named piece rather than "<palette> <shared pattern word>".
         for (int p = 0; p < PALETTES.length; p++) {
@@ -432,7 +432,7 @@ public final class CosmeticCatalog {
                 if (pattern == CapePattern.OPTIFINE) continue;
                 String id = slug(stem) + "_" + pattern.name().toLowerCase();
                 if (isHandAuthored(id) || AuthoredCapeTextures.hasAuthoredTexture(id)) continue;
-                boolean branded = "Chimera".equals(stem) && pattern == CapePattern.SPLIT;
+                boolean branded = "Caramel".equals(stem) && pattern == CapePattern.SPLIT;
                 capes.add(new Cape(id, capePatternName(p, pattern),
                         pal[0], pal[1], pal[2], pattern, false, branded));
             }

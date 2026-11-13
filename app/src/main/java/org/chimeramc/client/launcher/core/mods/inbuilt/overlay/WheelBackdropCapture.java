@@ -106,7 +106,7 @@ public final class WheelBackdropCapture {
             width = window.getDecorView().getWidth();
             height = window.getDecorView().getHeight();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "WheelBackdropCapture:109", "Ignored a failure at WheelBackdropCapture:109", ignored);
+            AppLog.warnOnce("CaramelClient", "WheelBackdropCapture:109", "Ignored a failure at WheelBackdropCapture:109", ignored);
         }
         if (width <= 0 || height <= 0) return false;
 
@@ -160,7 +160,7 @@ public final class WheelBackdropCapture {
         try {
             bitmap.recycle();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "WheelBackdropCapture:163", "Ignored a failure at WheelBackdropCapture:163", ignored);
+            AppLog.warnOnce("CaramelClient", "WheelBackdropCapture:163", "Ignored a failure at WheelBackdropCapture:163", ignored);
         }
     }
 }

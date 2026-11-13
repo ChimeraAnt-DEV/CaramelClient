@@ -112,13 +112,13 @@ static def getVersionCodeByTimestamp() {
     return diff.toInteger()
 }
 
-// G6: stale-stub trap guard. The native build compiles the preloader and libHttpClient git
+// G6: stale-stub trap guard. The native build compiles the sweetloader and libHttpClient git
 // submodules. If they were never checked out (a shallow clone / a zip download), the extracted
 // directory is empty or holds a leftover stub, and CMake either fails with a confusing error or
 // silently builds against a stale native output. Fail fast here with the fix instead of letting a
 // broken assembly reach the APK.
 def requiredSubmoduleCmake = [
-        new File("${projectDir}/src/main/cpp/preloader/CMakeLists.txt"),
+        new File("${projectDir}/src/main/cpp/sweetloader/CMakeLists.txt"),
         new File("${projectDir}/src/main/cpp/libHttpClient/Build/libHttpClient.Android/CMakeLists.txt"),
 ]
 
@@ -234,13 +234,13 @@ android {
             buildConfigField "boolean", "IS_BETA", "false"
             externalNativeBuild {
                 cmake {
-                    // Item 388: the preloader times each post-render callback and names one that
-                    // overruns, but only when this define is present. It is a preloader-specific
+                    // Item 388: the sweetloader times each post-render callback and names one that
+                    // overruns, but only when this define is present. It is a sweetloader-specific
                     // define rather than NDEBUG because the NDK toolchain defines NDEBUG for this
                     // build type too (AGP configures CMake as RelWithDebInfo), so NDEBUG cannot
                     // express "a debug build". Release and beta omit it, so the shipped detour
                     // carries neither the clock read nor the branch.
-                    arguments "-DANDROID_STL=c++_shared", "-DPRELOADER_HOOK_TIMING=1"
+                    arguments "-DANDROID_STL=c++_shared", "-DSWEETLOADER_HOOK_TIMING=1"
                 }
             }
         }
@@ -248,7 +248,7 @@ android {
             initWith release
             // The beta channel is the release build under a different name, so it inherits R8 and
             // the symbol-table level from release rather than redeclaring them.
-            resValue "string", "app_name", "Glowberry Client Beta"
+            resValue "string", "app_name", "Caramel Client Beta"
             buildConfigField "boolean", "IS_BETA", "true"
             matchingFallbacks = ["release"]
         }
@@ -256,7 +256,7 @@ android {
     }
     packagingOptions {
         // Item 9: legacy packaging extracts the .so files to the app's lib dir on install, which
-        // the launcher's own extractor and the preloader's file-based hooks rely on. Re-check
+        // the launcher's own extractor and the sweetloader's file-based hooks rely on. Re-check
         // before turning this off.
         jniLibs.useLegacyPackaging = true
         resources.excludes += [
@@ -404,4 +404,84 @@ android.sourceSets.main.assets.srcDir(changelogAssetsDir)
 
 tasks.matching { it.name == 'preBuild' }.configureEach {
     dependsOn 'syncChangelogAsset'
+}
+
+// The .universe / .singularity engine is a Rust Cargo workspace inside the sweetloader submodule
+// (rust/). Like the C++ sweetloader, it must be cross-compiled for arm64-v8a and packaged into the
+// APK's lib/ directory; the JNI-bound Java classes load it with System.loadLibrary.
+//
+// The build is skipped with a warning when cargo or the NDK is absent, so a Java-only build
+// (./gradlew :app:compileDebugJavaWithJavac) still works — the loader then reports "unavailable"
+// rather than the assembler failing on a missing .so. A full APK build (assembleDebug) runs it.
+def rustWorkspaceDir = layout.projectDirectory.dir('src/main/cpp/sweetloader/rust')
+def rustJniLibsDir = layout.projectDirectory.dir('src/main/jniLibs/arm64-v8a')
+def rustPackages = [['universe-jni', 'libcaramel_universe.so'],
+                    ['singularity-jni', 'libcaramel_singularity.so']]
+
+def buildRustEngine = tasks.register('buildRustEngine') {
+    description = 'Cross-compiles the .universe/.singularity Rust cdylibs for arm64-v8a.'
+    group = 'build'
+    inputs.files(fileTree(rustWorkspaceDir) {
+        include '**/*.rs', '**/Cargo.toml', '**/Cargo.lock'
+    })
+    outputs.files(rustPackages.collect { rustJniLibsDir.file(it[1]) })
+    doLast {
+        def homeCargo = new File(System.getProperty('user.home'), '.cargo/bin/cargo')
+        def cargo = homeCargo.canExecute() ? homeCargo.absolutePath : 'cargo'
+        def cargoFound = homeCargo.canExecute() ||
+                ['sh', '-c', 'command -v cargo >/dev/null 2>&1'].execute().waitFor() == 0
+        if (!cargoFound) {
+            logger.warn("cargo was not found; skipping the Rust engine build " +
+                    "(the .universe/.singularity loader will report unavailable).")
+            return
+        }
+        def ndkHome = System.getenv('ANDROID_NDK_HOME') ?: System.getenv('ANDROID_NDK_ROOT')
+        if (ndkHome == null) {
+            def sdk = System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT')
+            def ndks = sdk == null ? [] : new File(sdk, 'ndk').listFiles()?.sort()
+            if (ndks) ndkHome = ndks.last().absolutePath
+        }
+        if (ndkHome == null) {
+            logger.warn("the Android NDK was not found; skipping the Rust engine build.")
+            return
+        }
+        def toolchain = new File(ndkHome, 'toolchains/llvm/prebuilt').listFiles()?.find {
+            it.isDirectory()
+        }
+        if (toolchain == null) {
+            throw new GradleException("no NDK LLVM toolchain under ${ndkHome}")
+        }
+        def api = 28 // matches minSdkVersion
+        def clang = new File(toolchain, "bin/aarch64-linux-android${api}-clang")
+        def project = rustWorkspaceDir.asFile
+        rustPackages.each { pkg, _ ->
+            exec {
+                workingDir project
+                environment 'ANDROID_NDK_HOME', ndkHome
+                environment "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER", clang.absolutePath
+                environment 'CC_aarch64_linux_android', clang.absolutePath
+                environment 'AR_aarch64_linux_android', new File(toolchain, 'bin/llvm-ar').absolutePath
+                commandLine cargo, 'build', '-p', pkg, '--target', 'aarch64-linux-android',
+                        '--release'
+            }
+        }
+        def outDir = new File(project, 'target/aarch64-linux-android/release')
+        rustPackages.each { pkg, soName ->
+            def built = new File(outDir, soName)
+            if (!built.isFile()) {
+                throw new GradleException("the Rust build did not produce ${built}")
+            }
+            copy {
+                from built
+                into rustJniLibsDir
+            }
+        }
+    }
+}
+
+// Only the APK assembly needs the packaged .so; a Java-only compile stays fast and device-free.
+tasks.matching { it.name in ['mergeDebugJniLibFolders', 'mergeReleaseJniLibFolders',
+        'mergeBetaJniLibFolders', 'mergeDebugNativeLibs', 'mergeReleaseNativeLibs',
+        'mergeBetaNativeLibs'] }.configureEach {
+    dependsOn buildRustEngine
 }

@@ -155,7 +155,7 @@ public final class ControllerConnectionMonitor {
             inputManager.registerInputDeviceListener(deviceListener, mainHandler);
             registered = true;
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:158", "Ignored a failure at ControllerConnectionMonitor:158", ignored);
+            AppLog.warnOnce("CaramelClient", "ControllerConnectionMonitor:158", "Ignored a failure at ControllerConnectionMonitor:158", ignored);
         }
     }
 
@@ -164,7 +164,7 @@ public final class ControllerConnectionMonitor {
         try {
             inputManager.unregisterInputDeviceListener(deviceListener);
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:167", "Ignored a failure at ControllerConnectionMonitor:167", ignored);
+            AppLog.warnOnce("CaramelClient", "ControllerConnectionMonitor:167", "Ignored a failure at ControllerConnectionMonitor:167", ignored);
         }
         registered = false;
     }
@@ -332,7 +332,7 @@ public final class ControllerConnectionMonitor {
                 return profile.getName();
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ControllerConnectionMonitor:335", "Ignored a failure at ControllerConnectionMonitor:335", ignored);
+            AppLog.warnOnce("CaramelClient", "ControllerConnectionMonitor:335", "Ignored a failure at ControllerConnectionMonitor:335", ignored);
         }
         return null;
     }

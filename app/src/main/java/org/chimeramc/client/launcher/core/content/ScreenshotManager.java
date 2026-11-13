@@ -36,7 +36,7 @@ public class ScreenshotManager {
                             captureTime = json.getLong("CaptureTime") * 1000L;
                         }
                     } catch (Exception e) {
-                        AppLog.warnOnce("GlowberryClient", "ScreenshotManager:39", "Ignored a failure at ScreenshotManager:39", e);
+                        AppLog.warnOnce("CaramelClient", "ScreenshotManager:39", "Ignored a failure at ScreenshotManager:39", e);
                     }
                 }
                 items.add(new ScreenshotItem(file.getName(), file, screenshotsDir.getName(), captureTime));
@@ -60,7 +60,7 @@ public class ScreenshotManager {
                                     captureTime = json.getLong("CaptureTime") * 1000L;
                                 }
                             } catch (Exception e) {
-                                AppLog.warnOnce("GlowberryClient", "ScreenshotManager:63", "Ignored a failure at ScreenshotManager:63", e);
+                                AppLog.warnOnce("CaramelClient", "ScreenshotManager:63", "Ignored a failure at ScreenshotManager:63", e);
                             }
                         }
 

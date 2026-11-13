@@ -16,7 +16,7 @@
         android:fontFamily="@font/misans"
         android:text="@string/changelog_screen_title"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title" />
+        android:textAppearance="@style/TextAppearance.Caramel.Title" />
 
     <TextView
         android:id="@+id/changelog_screen_version"
@@ -27,7 +27,7 @@
         android:paddingBottom="@dimen/space_3"
         android:fontFamily="@font/misans"
         android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
     <ScrollView
         android:layout_width="match_parent"

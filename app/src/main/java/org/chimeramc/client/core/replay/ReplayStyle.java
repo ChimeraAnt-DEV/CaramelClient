@@ -52,7 +52,7 @@ public final class ReplayStyle {
             resolved = pm.getAccentColor();
             glow = pm.isEnableGlowEffects();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ReplayStyle:55", "Ignored a failure at ReplayStyle:55", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayStyle:55", "Ignored a failure at ReplayStyle:55", ignored);
         }
         this.accent = resolved;
         this.accentSecondary = blend(resolved, ACCENT_SECONDARY, 0.5f);

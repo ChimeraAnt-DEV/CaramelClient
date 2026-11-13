@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * The launcher-side contract of BerryAPI's cosmetics surface.
  *
- * <p>The JNI half cannot run off-device (there is no preloader), so what this pins is the two
+ * <p>The JNI half cannot run off-device (there is no sweetloader), so what this pins is the two
  * things a caller relies on and that a silent regression would break: the enum values that must
  * match BerryAPI's C ABI, and the fail-closed answers every entry point gives when the library or
  * its cosmetic ABI is absent. It also exercises the record/counter decoding against the exact

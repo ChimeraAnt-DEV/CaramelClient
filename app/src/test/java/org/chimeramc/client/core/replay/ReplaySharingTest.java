@@ -44,7 +44,7 @@ public class ReplaySharingTest {
 
     @Test
     public void onlyRealFilesAreShareable() throws IOException {
-        File real = File.createTempFile("glowberry_share", ".mp4");
+        File real = File.createTempFile("caramel_share", ".mp4");
         try {
             assertTrue(ReplaySharing.isShareable(real));
             assertFalse(ReplaySharing.isShareable(new File("/definitely/not/here.mp4")));

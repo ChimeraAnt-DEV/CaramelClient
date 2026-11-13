@@ -167,7 +167,7 @@ public class WorldBackupService extends Service {
         android.app.PendingIntent contentIntent = android.app.PendingIntent.getActivity(this, 0, open,
                 android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE);
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_glowberry_mono)
+                .setSmallIcon(R.drawable.ic_caramel_mono)
                 .setContentTitle(getString(R.string.world_backup_notification_title))
                 .setContentText(text)
                 .setContentIntent(contentIntent);

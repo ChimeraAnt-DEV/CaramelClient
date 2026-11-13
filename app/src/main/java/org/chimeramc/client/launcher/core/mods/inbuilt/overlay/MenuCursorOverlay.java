@@ -113,7 +113,7 @@ public final class MenuCursorOverlay extends View {
             root.dispatchTouchEvent(down);
             root.dispatchTouchEvent(up);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MenuCursorOverlay:116", "Ignored a failure at MenuCursorOverlay:116", ignored);
+            AppLog.warnOnce("CaramelClient", "MenuCursorOverlay:116", "Ignored a failure at MenuCursorOverlay:116", ignored);
         }
         down.recycle();
         up.recycle();

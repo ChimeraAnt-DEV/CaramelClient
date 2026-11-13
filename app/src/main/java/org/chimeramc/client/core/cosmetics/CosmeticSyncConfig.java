@@ -12,7 +12,7 @@ package org.chimeramc.client.core.cosmetics;
  *       zero-configuration default.</li>
  *   <li><b>Relay</b> — when the player has configured the same Go relay Proximity Voice Chat uses,
  *       advertisements travel through it as {@code COSMETIC_MANIFEST} frames, so a cape is visible
- *       to a Chimera user who is <em>not</em> on the same Wi-Fi.</li>
+ *       to a Caramel user who is <em>not</em> on the same Wi-Fi.</li>
  *   <li><b>Manual peer</b> — the fallback when no relay is configured: the player pastes a
  *       {@code host:port} and advertisements are unicast straight to it. It is deliberately manual
  *       because a direct peer address cannot be discovered automatically.</li>

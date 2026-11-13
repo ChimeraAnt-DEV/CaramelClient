@@ -92,7 +92,7 @@ public final class ReplayStorage {
         try (OutputStream out = new FileOutputStream(sidecarFor(clip))) {
             out.write(contents.getBytes("UTF-8"));
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ReplayStorage:95", "Ignored a failure at ReplayStorage:95", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayStorage:95", "Ignored a failure at ReplayStorage:95", ignored);
         }
     }
 

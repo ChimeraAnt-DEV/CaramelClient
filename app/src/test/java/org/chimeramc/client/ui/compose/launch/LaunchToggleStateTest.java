@@ -10,22 +10,21 @@ import java.util.List;
 /**
  * The Launch tab's quick-toggle row, pinned without a device.
  *
- * <p>The visibility rule is the part that can silently regress: guest mode hides the Mods (AntEgg)
- * and Voice cards, and Replays always stays because it is a local capture rather than a social
- * surface.
+ * <p>The visibility rule is the part that can silently regress: guest mode hides the Mods and Voice
+ * cards, and Replays always stays because it is a local capture rather than a social surface.
  */
 public class LaunchToggleStateTest {
 
     private static List<LaunchToggleState.Toggle> toggles(boolean guest) {
         return LaunchToggleState.visible(guest,
-                "Mod packs", "3 packs", "Voice", "LAN", "Replays", "2 clips");
+                "Mods", "3 mods", "Voice", "LAN", "Replays", "2 clips");
     }
 
     @Test
     public void theDefaultRowShowsAllThreeInOrder() {
         List<LaunchToggleState.Toggle> row = toggles(false);
         assertEquals(3, row.size());
-        assertEquals(LaunchToggleState.Kind.ANTEGG, row.get(0).kind);
+        assertEquals(LaunchToggleState.Kind.MODS, row.get(0).kind);
         assertEquals(LaunchToggleState.Kind.VOICE, row.get(1).kind);
         assertEquals(LaunchToggleState.Kind.REPLAY, row.get(2).kind);
     }
@@ -37,16 +36,16 @@ public class LaunchToggleStateTest {
         assertEquals(LaunchToggleState.Kind.REPLAY, row.get(0).kind);
         for (LaunchToggleState.Toggle t : row) {
             assertFalse("guest mode must not show the Mods or Voice card",
-                    t.kind == LaunchToggleState.Kind.ANTEGG || t.kind == LaunchToggleState.Kind.VOICE);
+                    t.kind == LaunchToggleState.Kind.MODS || t.kind == LaunchToggleState.Kind.VOICE);
         }
     }
 
     @Test
     public void theStatusesAreCarriedThroughUnchanged() {
         List<LaunchToggleState.Toggle> row = toggles(false);
-        assertEquals("3 packs", row.get(0).status);
+        assertEquals("3 mods", row.get(0).status);
         assertEquals("LAN", row.get(1).status);
         assertEquals("2 clips", row.get(2).status);
-        assertEquals("Mod packs", row.get(0).label);
+        assertEquals("Mods", row.get(0).label);
     }
 }

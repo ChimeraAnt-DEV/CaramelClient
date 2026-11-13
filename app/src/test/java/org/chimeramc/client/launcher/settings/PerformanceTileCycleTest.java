@@ -55,7 +55,7 @@ public class PerformanceTileCycleTest {
         assertTrue("each preset needs its own label so the tile says which is active",
                 battery != balanced && balanced != performance && battery != performance);
         // The icon is deliberately the same monochrome mark for all three; the label carries state.
-        assertEquals(R.drawable.ic_glowberry_mono, PerformanceTileService.iconFor(Preset.BATTERY));
-        assertEquals(R.drawable.ic_glowberry_mono, PerformanceTileService.iconFor(Preset.PERFORMANCE));
+        assertEquals(R.drawable.ic_caramel_mono, PerformanceTileService.iconFor(Preset.BATTERY));
+        assertEquals(R.drawable.ic_caramel_mono, PerformanceTileService.iconFor(Preset.PERFORMANCE));
     }
 }

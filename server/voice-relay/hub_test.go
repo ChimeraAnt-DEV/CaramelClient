@@ -136,12 +136,12 @@ func TestTwoPrivateChannelsDoNotHearEachOther(t *testing.T) {
 	hub, conn := newTestHub(t, nil)
 	a := testAddr(1)
 	b := testAddr(2)
-	hello(t, hub, conn, a, "A", "GLOWBERRY-AAAA")
-	hello(t, hub, conn, b, "B", "GLOWBERRY-BBBB")
+	hello(t, hub, conn, a, "A", "CARAMEL-AAAA")
+	hello(t, hub, conn, b, "B", "CARAMEL-BBBB")
 
 	conn.reset()
 	hub.Handle(build(Packet{Type: TypeAudio, ClientID: 1, Name: "A",
-		Channel: "GLOWBERRY-AAAA", Payload: []byte{1}}), a)
+		Channel: "CARAMEL-AAAA", Payload: []byte{1}}), a)
 	if got := conn.to(b); len(got) != 0 {
 		t.Fatalf("B must not hear a different private channel, got %d datagrams", len(got))
 	}
@@ -202,19 +202,19 @@ func TestPerChannelCapRefusesAJoinButKeepsTheOldChannel(t *testing.T) {
 	b := testAddr(2)
 	// Two private channels, so the "kept its old channel" assertion is not masked by the open
 	// channel's reach-across rule.
-	hello(t, hub, conn, a, "A", "GLOWBERRY-AAAA")
-	hello(t, hub, conn, b, "B", "GLOWBERRY-BBBB")
+	hello(t, hub, conn, a, "A", "CARAMEL-AAAA")
+	hello(t, hub, conn, b, "B", "CARAMEL-BBBB")
 
 	conn.reset()
 	// B tries to move to the full AAAA channel.
-	hub.Handle(build(Packet{Type: TypeBeacon, Name: "B", Channel: "GLOWBERRY-AAAA"}), b)
+	hub.Handle(build(Packet{Type: TypeBeacon, Name: "B", Channel: "CARAMEL-AAAA"}), b)
 	p, _ := ParsePacket(conn.to(b)[0])
 	if p.Type != TypeNotice || p.Sequence != NoticeChannelFull {
 		t.Fatalf("expected CHANNEL_FULL, got %+v", p)
 	}
 	// B must still be on BBBB, so an A audio frame on AAAA does not reach B.
 	conn.reset()
-	hub.Handle(build(Packet{Type: TypeAudio, Name: "A", Channel: "GLOWBERRY-AAAA", Payload: []byte{1}}), a)
+	hub.Handle(build(Packet{Type: TypeAudio, Name: "A", Channel: "CARAMEL-AAAA", Payload: []byte{1}}), a)
 	if got := conn.to(b); len(got) != 0 {
 		t.Fatalf("a refused join must leave B off the full channel, got %d", len(got))
 	}

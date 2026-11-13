@@ -1,4 +1,4 @@
-// A minimal GlowberryClient native mod: one config value and one lifecycle object.
+// A minimal CaramelClient native mod: one config value and one lifecycle object.
 //
 // It is the on-ramp for a contributor. The whole API surface a first mod needs is
 // `PL_REGISTER_MOD`, a lifecycle object, and a typed config; everything else in the SDK is
@@ -57,7 +57,7 @@ template <> struct Schema<MinimalConfig> {
 
 } // namespace pl::config
 
-/// The mod's lifecycle object. The preloader materialises it once and calls the four hooks.
+/// The mod's lifecycle object. The sweetloader materialises it once and calls the four hooks.
 class MinimalMod {
 public:
   static MinimalMod &instance() {
@@ -104,5 +104,5 @@ private:
   std::optional<pl::config::ConfigFile<MinimalConfig>> mConfig;
 };
 
-// The one export the preloader looks for: the macro emits `PLGetModRegistration`.
+// The one export the sweetloader looks for: the macro emits `PLGetModRegistration`.
 PL_REGISTER_MOD(MinimalMod, MinimalMod::instance())

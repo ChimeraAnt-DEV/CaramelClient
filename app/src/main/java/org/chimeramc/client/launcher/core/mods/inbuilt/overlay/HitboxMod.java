@@ -10,7 +10,7 @@ import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
  * target for chaining combos. An entity turns blue while the crosshair is on it.
  *
  * <p>Honest scope: reading entity positions out of the running game is a native concern (the
- * preloader's pattern-scanned game hooks), and this module deliberately does not assume it.
+ * sweetloader's pattern-scanned game hooks), and this module deliberately does not assume it.
  * Until a provider is installed, {@link #readScene()} returns null and the overlay draws
  * nothing — never a fabricated or stale box, which would be worse than no box at all because
  * the player would aim at it.

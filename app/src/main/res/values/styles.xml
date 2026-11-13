@@ -24,10 +24,10 @@
     </style>
 
     <!--
-        Root of the Chimera widget style namespace. The dotted names below infer their
+        Root of the Caramel widget style namespace. The dotted names below infer their
         parents from it, so it must exist even though it carries no attributes itself.
     -->
-    <style name="Widget.Chimera" parent="" />
+    <style name="Widget.Caramel" parent="" />
 
     <!--
         One tab in the top navigation bar. A single TextView carrying its icon via
@@ -36,7 +36,7 @@
         icon-only tabs need generous padding to stay tappable, while a tablet with full labels
         wants them tighter so six entries fit without scrolling.
     -->
-    <style name="Widget.Chimera.NavTab" parent="">
+    <style name="Widget.Caramel.NavTab" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
@@ -65,7 +65,7 @@
         72dp start padding clips its icon and label off the right edge), so the icon sits on the
         same centre line as the logo above it, whether or not a label follows.
     -->
-    <style name="Widget.Chimera.NavRailTab" parent="">
+    <style name="Widget.Caramel.NavRailTab" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/nav_rail_tab_height</item>
         <item name="android:gravity">center_vertical</item>
@@ -73,7 +73,7 @@
         <item name="android:paddingEnd">@dimen/nav_rail_tab_padding_start</item>
         <item name="android:fontFamily">@font/misans</item>
         <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:textAppearance">@style/TextAppearance.Glowberry.Label</item>
+        <item name="android:textAppearance">@style/TextAppearance.Caramel.Label</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:drawablePadding">@dimen/nav_rail_tab_drawable_padding</item>
@@ -86,23 +86,23 @@
         The single card style. Every card surface uses one of these three variants so the
         radius, border and elevation cannot drift screen to screen.
 
-        Widget.Chimera.Card.<X> is the shared base; the concrete styles differ only in the
+        Widget.Caramel.Card.<X> is the shared base; the concrete styles differ only in the
         view they must attach to (CardView vs MaterialCardView vs a plain container).
         Use the varianted style that matches the view class, not a hand-rolled background.
     -->
-    <style name="Widget.Chimera.Card" parent="">
+    <style name="Widget.Caramel.Card" parent="">
         <item name="android:background">@drawable/chimera_card</item>
         <item name="android:elevation">@dimen/chimera_card_elevation</item>
         <item name="android:padding">@dimen/chimera_card_padding</item>
     </style>
 
-    <style name="Widget.Chimera.Card.Compact">
+    <style name="Widget.Caramel.Card.Compact">
         <item name="android:background">@drawable/chimera_card_small</item>
         <item name="android:padding">@dimen/chimera_card_padding_compact</item>
     </style>
 
     <!-- For androidx.cardview.widget.CardView callers: radius/fill/stroke live on the card. -->
-    <style name="Widget.Chimera.CardView" parent="CardView">
+    <style name="Widget.Caramel.CardView" parent="CardView">
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardCornerRadius">@dimen/chimera_card_radius</item>
         <item name="cardElevation">@dimen/chimera_card_elevation</item>
@@ -111,7 +111,7 @@
     </style>
 
     <!-- For MaterialCardView callers: same token set, Material attributes. -->
-    <style name="Widget.Chimera.MaterialCardView" parent="Widget.MaterialComponents.CardView">
+    <style name="Widget.Caramel.MaterialCardView" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardCornerRadius">@dimen/chimera_card_radius</item>
         <item name="cardElevation">@dimen/chimera_card_elevation</item>
@@ -126,9 +126,9 @@
         wheel). A vertical icon-over-label tile so the strip stays compact and every entry is the
         same size, with the shared press feedback applied in code.
     -->
-    <style name="Widget.Glowberry.QuickDock" parent="" />
+    <style name="Widget.Caramel.QuickDock" parent="" />
 
-    <style name="Widget.Glowberry.QuickDock.Item" parent="">
+    <style name="Widget.Caramel.QuickDock.Item" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
@@ -144,7 +144,7 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
-    <style name="Widget.Glowberry.QuickDock.Label" parent="">
+    <style name="Widget.Caramel.QuickDock.Label" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">4dp</item>
@@ -169,34 +169,34 @@
         {@code textStyle="bold"}; the continuous {@code wght} axis is available only through
         {@code UiType.applyWeight}, on a surface that has deliberately chosen a variable family.
     -->
-    <style name="TextAppearance.Glowberry" parent="">
+    <style name="TextAppearance.Caramel" parent="">
         <item name="android:fontFamily">@font/misans</item>
     </style>
 
     <!-- 22sp / 600 — a screen's own title. -->
-    <style name="TextAppearance.Glowberry.Display" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Display" parent="TextAppearance.Caramel">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- 16sp / 600 — a card or section title. -->
-    <style name="TextAppearance.Glowberry.Title" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Title" parent="TextAppearance.Caramel">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- 14sp / 400 — body copy and control labels. -->
-    <style name="TextAppearance.Glowberry.Body" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Body" parent="TextAppearance.Caramel">
         <item name="android:textSize">14sp</item>
     </style>
 
     <!-- 13sp / 500 — a row's own title. -->
-    <style name="TextAppearance.Glowberry.Label" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Label" parent="TextAppearance.Caramel">
         <item name="android:textSize">13sp</item>
     </style>
 
     <!-- 11sp / 400 — captions, metadata, secondary lines. -->
-    <style name="TextAppearance.Glowberry.Caption" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Caption" parent="TextAppearance.Caramel">
         <item name="android:textSize">11sp</item>
     </style>
 
@@ -209,12 +209,12 @@
         - Micro: a badge or chip that sits inside a 20-24dp pill. The 11sp caption does not fit the
           pill's height, and the badge is decoration around a one- or two-word value.
     -->
-    <style name="TextAppearance.Glowberry.Wordmark" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Wordmark" parent="TextAppearance.Caramel">
         <item name="android:textSize">34sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.Glowberry.Micro" parent="TextAppearance.Glowberry">
+    <style name="TextAppearance.Caramel.Micro" parent="TextAppearance.Caramel">
         <item name="android:textSize">9sp</item>
         <item name="android:textStyle">bold</item>
     </style>

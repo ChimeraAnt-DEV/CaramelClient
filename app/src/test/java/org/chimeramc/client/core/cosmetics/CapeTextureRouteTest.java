@@ -11,7 +11,7 @@ import org.junit.Test;
  *
  * <p>The route replaces the cape texture the engine uploads, keyed on the captured vanilla cape, so
  * it works even when GLES is unavailable (a Vulkan RenderDragon build). The JVM test classpath has
- * no {@code libpreloader}, so every native call must degrade to a safe no-op: no capture, no
+ * no {@code libsweetloader}, so every native call must degrade to a safe no-op: no capture, no
  * substitution, and no crash. That is exactly the path a build without the native library takes.
  */
 public class CapeTextureRouteTest {

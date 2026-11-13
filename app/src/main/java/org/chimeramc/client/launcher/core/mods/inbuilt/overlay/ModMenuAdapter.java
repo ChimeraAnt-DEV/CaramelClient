@@ -647,7 +647,7 @@ public class ModMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             modHolder.icon.setImageTintList(null);
             modHolder.icon.setColorFilter(null);
         } else {
-            modHolder.icon.setImageResource(R.drawable.ic_glowberry_mod);
+            modHolder.icon.setImageResource(R.drawable.ic_caramel_mod);
             modHolder.icon.setImageTintList(null);
             modHolder.icon.setColorFilter(null);
         }

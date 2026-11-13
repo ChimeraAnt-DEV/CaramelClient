@@ -148,7 +148,7 @@ public class LevelDBKey {
                     return keyStr.substring("structuretemplate_".length());
                 }
             } catch (Exception e) {
-                AppLog.warnOnce("GlowberryClient", "LevelDBKey:151", "Ignored a failure at LevelDBKey:151", e);
+                AppLog.warnOnce("CaramelClient", "LevelDBKey:151", "Ignored a failure at LevelDBKey:151", e);
             }
         }
         return null;

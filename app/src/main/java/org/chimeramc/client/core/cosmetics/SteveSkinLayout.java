@@ -32,7 +32,7 @@ public final class SteveSkinLayout {
     }
 
     // The palette is sampled from the project's own Steve model
-    // (GlowberryClientPets/steve-minecraft), so the default character in the preview is that
+    // (CaramelClientPets/steve-minecraft), so the default character in the preview is that
     // exact skin rather than a generic approximation: teal shirt, blue trousers, tan skin and
     // the model's near-black hair. All opaque — the preview never draws a translucent default.
     public static final int SKIN = 0xFFAB7D66;

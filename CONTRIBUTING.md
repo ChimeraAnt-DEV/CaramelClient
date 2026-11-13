@@ -7,14 +7,14 @@ can land.
 
 ```bash
 # 1. Clone with the two native submodules the build needs.
-git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/GlowberryClient.git
-cd GlowberryClient
+git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/CaramelClient.git
+cd CaramelClient
 
 # Already cloned without them?
 git submodule update --init --recursive
 ```
 
-The native build needs `app/src/main/cpp/preloader` and `app/src/main/cpp/libHttpClient`. If a
+The native build needs `app/src/main/cpp/sweetloader` and `app/src/main/cpp/libHttpClient`. If a
 build fails with a missing native source, run `git submodule sync && git submodule update --init
 --recursive` and then `./gradlew clean` — a stale native build output can otherwise persist.
 

@@ -4,7 +4,7 @@ Recovered from the real `lib/arm64-v8a/libminecraftpe.so` (368,150,880 bytes) ex
 Method: standalone typeinfo-name strings in `.rodata`, vtables resolved through the
 `R_AARCH64_RELATIVE` entries in `.rela.dyn`, function identified by the diagnostic strings its body
 references (the same method `Vtable.cpp` uses). These are pinned in
-`resources/preloader/preloader_signature_rules_source.json`.
+`resources/sweetloader/sweetloader_signature_rules_source.json`.
 
 - **`Skin` is not polymorphic.** The binary has **no `Skin` typeinfo name**, so there is no
   `Skin::getCapeImage` vtable to hook. The reachable 2D-cape seam is the renderer that holds the
@@ -69,7 +69,7 @@ bad PNG, or a null skin address leaves the vanilla cape alone, and an unmatched 
 resource pack.
 
 - **The loader call was previously declared with the WRONG ABI, and that was the crash/black-texture
-  cause. Fixed in `mce_image_hook.cpp` (preloader).** The real convention, read from the disassembly
+  cause. Fixed in `mce_image_hook.cpp` (sweetloader).** The real convention, read from the disassembly
   at `0x14df7ce4`, is: the return aggregate goes through **`x8`** (`mov x19, x8` in the prologue,
   payload byte written at `[x19, #0x10]`), and the arguments are **`x0 = out image`, `x1 =
   ImageFormat`, `x2 = data`, `x3 = size`, `x4 = bool`**. The old `using LoadImageFn =
@@ -90,7 +90,7 @@ resource pack.
   the incoming bytes (`SetContentSubstitution`) plus a one-shot `ArmNextImageOverride`, because the
   loader seam carries no player/texture id. The texture-cache flush is a caller-proven callback
   (`SetTextureCacheFlusher`), not fabricated тАФ `mce::TextureGroup`/`SkinRepository` are not
-  RTTI-resolvable. See `preloader/docs/mce-image-pipeline.md`.
+  RTTI-resolvable. See `sweetloader/docs/mce-image-pipeline.md`.
 
 - **The `SerializedSkinRef` accessor-name strings do NOT survive 1.26.60.30.** Only `getImageData`
   (1 hit) and `loadImageFromMemory` (1 hit) are still present in `.rodata`; `getCapeImageData`,

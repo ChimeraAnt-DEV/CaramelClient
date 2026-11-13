@@ -1,6 +1,6 @@
 <resources>
     <!-- Common -->
-    <string name="app_name">GlowberryClient</string>
+    <string name="app_name">CaramelClient</string>
     <string name="minecraft">Minecraft</string>
     <string name="launch">Başlat</string>
     <string name="beta_badge">Beta</string>
@@ -22,9 +22,9 @@
 
     <!-- About -->
     <string name="about_title">Hakkında</string>
-    <string name="copyright">©2024–2026 GlowberryClient. Apache 2.0 Lisansı ile lisanslanmıştır.</string>
+    <string name="copyright">©2024–2026 CaramelClient. Apache 2.0 Lisansı ile lisanslanmıştır.</string>
     <string name="font_license">Bu uygulama Misans yazı tipini kullanmaktadır.</string>
-    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient</string>
+    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient</string>
     <string name="quick_actions_title">Hızlı İşlemler</string>
     <string name="content_mgmt_section_title">İçerik Yönetimi</string>
     <string name="misc_section_title">Çeşitli</string>
@@ -63,7 +63,7 @@
 
     <!-- Permissions -->
     <string name="storage_permission_title">Depolama Taşıma İzni</string>
-    <string name="storage_permission_message">Lütfen depolama iznini verin; böylece GlowberryClient eski games/org.chimeramc dizinindeki verileri kopyalayabilsin. Bu izin yalnızca taşıma adımı için gereklidir.</string>
+    <string name="storage_permission_message">Lütfen depolama iznini verin; böylece CaramelClient eski games/org.chimeramc dizinindeki verileri kopyalayabilsin. Bu izin yalnızca taşıma adımı için gereklidir.</string>
     <string name="grant_permission">İzin Ver</string>
     <string name="cancel">İptal</string>
 
@@ -115,14 +115,14 @@
     <string name="check_update">Güncellemeleri Kontrol Et</string>
     <string name="version_prefix">Sürüm: </string>
     <string name="unknown_error">Bilinmeyen hata</string>
-    <string name="preloader_sigs_title">Çalışma zamanı verileri</string>
-    <string name="preloader_sigs_last_update">Son güncelleme: %1$s</string>
-    <string name="preloader_sigs_never_updated">Hiçbir zaman</string>
-    <string name="preloader_sigs_update">Çalışma zamanı verilerini güncelle</string>
-    <string name="preloader_sigs_updating">Güncelleniyor…</string>
-    <string name="preloader_sigs_update_success">Çalışma zamanı verileri güncellendi</string>
-    <string name="preloader_sigs_update_failed">Çalışma zamanı verileri güncellenemedi: %1$s</string>
-    <string name="preloader_sigs_no_remote_url">Çalışma zamanı verileri güncelleme URL adresi yapılandırılmamış</string>
+    <string name="sweetloader_sigs_title">Çalışma zamanı verileri</string>
+    <string name="sweetloader_sigs_last_update">Son güncelleme: %1$s</string>
+    <string name="sweetloader_sigs_never_updated">Hiçbir zaman</string>
+    <string name="sweetloader_sigs_update">Çalışma zamanı verilerini güncelle</string>
+    <string name="sweetloader_sigs_updating">Güncelleniyor…</string>
+    <string name="sweetloader_sigs_update_success">Çalışma zamanı verileri güncellendi</string>
+    <string name="sweetloader_sigs_update_failed">Çalışma zamanı verileri güncellenemedi: %1$s</string>
+    <string name="sweetloader_sigs_no_remote_url">Çalışma zamanı verileri güncelleme URL adresi yapılandırılmamış</string>
 
     <string name="dialog_title_no_version">Sürüm Seçilmedi</string>
     <string name="dialog_message_no_version">Lütfen başlatmadan önce bir oyun sürümü seçin.</string>
@@ -162,7 +162,7 @@
     <string name="repair_finalizing">Onarım tamamlanıyor…</string>
 
     <string name="storage_migration_title">Depolama Taşıması Gerekli</string>
-    <string name="storage_migration_message">GlowberryClient, devam etmeden önce verileri games/org.chimeramc konumundan %1$s konumuna taşımalıdır.
+    <string name="storage_migration_message">CaramelClient, devam etmeden önce verileri games/org.chimeramc konumundan %1$s konumuna taşımalıdır.
 
 Bu depolama değişikliği Google Play listeleme uyumluluğu için zorunludur. Eski dizin dokunulmadan kalacak ancak taşımanın ardından artık kullanılmayacaktır.
 
@@ -184,11 +184,11 @@ Taşıma biraz zaman alabilir. Uygulama arka planda çalışırken ayrılabilirs
 
 Eski games/org.chimeramc dizini silinmedi ve artık kullanılmıyor.</string>
     <string name="storage_migration_partial_title">Taşıma Tamamlanamadı</string>
-    <string name="storage_migration_partial_message">%1$d dosyadan %2$d tanesi kopyalanamadı. GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.</string>
+    <string name="storage_migration_partial_message">%1$d dosyadan %2$d tanesi kopyalanamadı. CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.</string>
     <string name="storage_migration_failed_title">Taşıma Başarısız</string>
     <string name="storage_migration_failed_message">Taşıma devam edemedi: %1$s
 
-GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.</string>
+CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.</string>
     <string name="migration_cleanup_title">Eski Dizini Temizle</string>
     <string name="migration_cleanup_desc">Eski games/org.chimeramc dizinini yalnızca tüm örneklerin normal başlatıldığını ve dünyaların, kaynak paketlerin, davranış paketlerinin ve ayarların eksiksiz olduğunu doğruladıktan sonra kaldırın. Silinen veriler bu dizinden geri yüklenemez.</string>
     <string name="migration_cleanup_button">Eski Dizini Temizle</string>
@@ -213,8 +213,8 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
 
     <string name="error_no_browser">Kullanılabilir tarayıcı yok</string>
 
-    <string name="eula_title">GlowberryClient Lisans Sözleşmesi</string>
-    <string name="eula_message"><b>GlowberryClient\'a Hoş Geldiniz</b>\n\nBu yazılımı kullanarak aşağıdakileri kabul etmiş olursunuz:\n\n• Bu <b>resmi olmayan</b> bir Minecraft başlatıcısıdır\n• <b>Lisanslı</b> bir Minecraft kopyasına sahip olmanız gerekir\n• Her türlü korsan kullanım veya hile yasaktır\n• Modlar/kaynak paketleri kendi sorumluluğunuzda kullanılır\n• Mojang/Microsoft ile bağlantılı değildir\n\nKullanmaya devam etmek kabul anlamına gelir</string>
+    <string name="eula_title">CaramelClient Lisans Sözleşmesi</string>
+    <string name="eula_message"><b>CaramelClient\'a Hoş Geldiniz</b>\n\nBu yazılımı kullanarak aşağıdakileri kabul etmiş olursunuz:\n\n• Bu <b>resmi olmayan</b> bir Minecraft başlatıcısıdır\n• <b>Lisanslı</b> bir Minecraft kopyasına sahip olmanız gerekir\n• Her türlü korsan kullanım veya hile yasaktır\n• Modlar/kaynak paketleri kendi sorumluluğunuzda kullanılır\n• Mojang/Microsoft ile bağlantılı değildir\n\nKullanmaya devam etmek kabul anlamına gelir</string>
     <string name="eula_agree">Kabul Et</string>
     <string name="eula_exit">Reddet</string>
 
@@ -228,7 +228,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="toast_delete_failed">Silme başarısız: %1$s</string>
     <string name="error_delete_builtin_version">Yerleşik sürüm silinemiyor</string>
     <string name="invalid_mod_file">Başarısız</string>
-    <string name="invalid_mod_file_reason">Yalnızca .so dosyalarına, .zip mod paketlerine veya .antegg mod paketlerine izin verilmektedir. Seçilen dosya geçerli bir yerel mod içe aktarma paketi değil.</string>
+    <string name="invalid_mod_file_reason">Yalnızca .so dosyalarına, .zip mod paketlerine izin verilmektedir. Seçilen dosya geçerli bir yerel mod içe aktarma paketi değil.</string>
     <string name="invalid_zip_mod_package_title">Geçersiz ZIP Mod Paketi</string>
     <string name="invalid_zip_mod_package_message">ZIP mod paketi manifest.json ve bir .so dosyası içermelidir.</string>
     <string name="error_versions">Hatalı Sürümler</string>
@@ -257,7 +257,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="instance_delete_confirm_title">Örneği Sil</string>
     <string name="instance_delete_confirm_msg">Bu örneği silmek istediğinizden emin misiniz? Dünyalar dahil tüm veriler kalıcı olarak kaldırılacak.</string>
     <string name="instance_backup_title">Örneği Yedekle</string>
-    <string name="instance_backup_desc">Bu örneğin tam yedeklemesini İndirilenler/GlowberryClient/Yedekler konumuna oluştur.</string>
+    <string name="instance_backup_desc">Bu örneğin tam yedeklemesini İndirilenler/CaramelClient/Yedekler konumuna oluştur.</string>
     <string name="instance_backup_button">Örneği Yedekle</string>
     <string name="instance_backup_confirm_message">Bu örneğin tam yedeği şimdi oluşturulsun mu? Yedekleme sırasında dosyaların değişmemesi için Minecraft çalışıyorsa önce çıkın.</string>
     <string name="instance_backup_in_progress">Örnek yedekleniyor…</string>
@@ -517,7 +517,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="ms_active_badge">Etkin</string>
     <string name="ms_account_subtitle_format">Kullanıcı Kimliği: %1$s • Güncelleme: %2$s</string>
     <string name="xbox_avatar">Xbox avatarı</string>
-    <string name="launcher_managed_mc_login">GlowberryClient ile Minecraft\'ta oturum aç</string>
+    <string name="launcher_managed_mc_login">CaramelClient ile Minecraft\'ta oturum aç</string>
     <string name="dialog_title_login_required">Oturum açma gerekli</string>
     <string name="dialog_message_login_required">Başlatıcı yönetimli giriş etkin, ancak oturum açılmamış. Oturum açmak için Hesaplar\'a gidin.</string>
     <string name="go_to_accounts">Hesaplar</string>
@@ -743,25 +743,25 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="vanilla_prefix">Vanilla %s</string>
 
     <string name="about_page_title">Hakkında</string>
-    <string name="about_subtitle">GlowberryClient — Modern Bir Minecraft Bedrock Başlatıcısı</string>
+    <string name="about_subtitle">CaramelClient — Modern Bir Minecraft Bedrock Başlatıcısı</string>
     <string name="about_authors_title">Yazarlar ve Bakımcılar</string>
     <string name="about_author_name">DreamGuXiang</string>
     <string name="about_author_badge">Yazar</string>
-    <string name="about_author_role">GlowberryClient Yazarları</string>
+    <string name="about_author_role">CaramelClient Yazarları</string>
     <string name="about_afdian">Afdian</string>
     <string name="about_patreon">Patreon</string>
     <string name="about_source_title">Kaynak Kodu ve Açık Kaynak</string>
-    <string name="about_github_repo">GitHub · GlowberryClient</string>
+    <string name="about_github_repo">GitHub · CaramelClient</string>
     <string name="about_github_org">ChimeraAnt-DEV</string>
     <string name="about_license_note">Lisans ayrıntıları için depo içindeki LICENSE dosyasına bakın.</string>
     <string name="about_contribute_title">Katkıda Bulun</string>
-    <string name="about_contribute_desc">GlowberryClient\'ı geliştirmek için Issue veya Pull Request aracılığıyla katkıda bulunabilirsiniz.</string>
+    <string name="about_contribute_desc">CaramelClient\'ı geliştirmek için Issue veya Pull Request aracılığıyla katkıda bulunabilirsiniz.</string>
     <string name="about_issues">Sorun Bildir</string>
     <string name="about_star_fork">Yıldızla / Çatalla</string>
 
     <string-array name="launcher_tips">
         <item>Ayarlar; tema, renk, arka plan ve diğer görünüm seçeneklerini isteğinize göre düzenlemenizi sağlar.</item>
-        <item>GlowberryClient açık kaynaklıdır. Başlatıcı sorunlarını bildirmek veya iyileştirme önermek için GitHub sorunlarını kullanın.</item>
+        <item>CaramelClient açık kaynaklıdır. Başlatıcı sorunlarını bildirmek veya iyileştirme önermek için GitHub sorunlarını kullanın.</item>
         <item>Mevcut örneği hızlıca değiştirmek için sürüm açılır menüsünü kullanın.</item>
         <item>İnsanlar gerçekten bunları okuyor mu?</item>
         <item>Modları yükleme önceliğini değiştirmek için sürükleyebilirsiniz.</item>
@@ -837,9 +837,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="ms_device_code_login_desc">Cihaz kodu önceden doldurulmuş özel bir tarayıcı oturumu açın.</string>
     <string name="ms_webview_login">Gömülü oturum açmayı aç</string>
     <string name="ms_webview_option_title">Gömülü WebView</string>
-    <string name="ms_webview_login_desc">GlowberryClient’dan çıkmadan oturum açın. Tarayıcı akışı kullanılamadığında bunu kullanın.</string>
+    <string name="ms_webview_login_desc">CaramelClient’dan çıkmadan oturum açın. Tarayıcı akışı kullanılamadığında bunu kullanın.</string>
     <string name="ms_device_code_title">Cihaz Koduyla Oturum Aç</string>
-    <string name="ms_device_code_instructions">Microsoft’un cihaz oturum açma sayfasını açın, bu kodu girin ve erişimi onaylayın. GlowberryClient otomatik olarak tamamlayacaktır.</string>
+    <string name="ms_device_code_instructions">Microsoft’un cihaz oturum açma sayfasını açın, bu kodu girin ve erişimi onaylayın. CaramelClient otomatik olarak tamamlayacaktır.</string>
     <string name="ms_device_code_label">Microsoft cihaz kodu</string>
     <string name="ms_device_code_requesting">Güvenli kod isteniyor…</string>
     <string name="ms_device_code_waiting_code">--------</string>
@@ -853,7 +853,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="ms_device_code_copied">Kod kopyalandı</string>
     <string name="ms_device_code_open_browser">Microsoft oturum açmayı aç</string>
     <string name="ms_device_code_step_title">Oturum açmayı tarayıcınızda tamamlayın</string>
-    <string name="ms_device_code_browser_note">GlowberryClient varsayılan tarayıcınızı özel bir oturumda açar, kodu otomatik doldurur ve yeni bir Microsoft oturum açması ister.</string>
+    <string name="ms_device_code_browser_note">CaramelClient varsayılan tarayıcınızı özel bir oturumda açar, kodu otomatik doldurur ve yeni bir Microsoft oturum açması ister.</string>
     <string name="ms_choose_other_method">Diğer yöntem</string>
     <string name="ms_no_browser">Bu cihazda kullanılabilir tarayıcı yok.</string>
     <string name="ms_default_browser_no_private_mode">Varsayılan tarayıcınız özel oturum açmayı desteklemiyor. Güncelleyin veya WebView oturum açmayı kullanın.</string>
@@ -861,7 +861,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="ms_login_state_failed">Microsoft oturum açma yanıtı doğrulanamadı. Oturum açmayı yeniden başlatın.</string>
     <string name="ms_login_missing_code">Microsoft bir oturum açma kodu döndürmedi. Oturum açmayı yeniden başlatın veya Cihaz Kodu ile oturum açmayı kullanın.</string>
     <string name="ms_feature_disabled_title">Özellik Devre Dışı</string>
-    <string name="ms_feature_disabled_desc">Microsoft hesaplarını yönetmek için Ayarlar’da “GlowberryClient ile Minecraft’ta oturum aç” seçeneğini etkinleştirin.</string>
+    <string name="ms_feature_disabled_desc">Microsoft hesaplarını yönetmek için Ayarlar’da “CaramelClient ile Minecraft’ta oturum aç” seçeneğini etkinleştirin.</string>
     <string name="ms_activated">Etkinleştirildi</string>
     <string name="inbuilt_mod_gyro">Jiroskop</string>
     <string name="inbuilt_mod_gyro_desc">Kamera dönüşünü kontrol etmek için cihaz jiroskobunu kullanın</string>
@@ -1012,7 +1012,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="home_no_mods">Henüz mod yüklenmedi</string>
     <string name="home_content_library">İçerik kitaplığı</string>
     <string name="home_more">Daha fazla</string>
-    <string name="setup_step_import_title">GlowberryClient’a hoş geldiniz</string>
+    <string name="setup_step_import_title">CaramelClient’a hoş geldiniz</string>
     <string name="setup_step_import_body">Başlamak için Minecraft oyun dosyalarınızı içe aktarın. Oynamak istediğiniz APK’yı seçin.</string>
     <string name="setup_step_import_action">Oyunu içe aktar</string>
     <string name="setup_step_version_title">Sürümünüzü seçin</string>
@@ -1055,7 +1055,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
 
     <string name="launch_failure_message_play_store">Bu ya Google Play sürümü bir Minecraft ya da oyunu başlatmak için gereken bir dosyası eksik bir sürüm.\n\nBaşlatıcı, oyunun yerel kitaplığını doğrudan yüklemek zorunda, ancak Play Store sürümü onu yüklü uygulamanın içinde tutar ve bu başlatıcı oraya erişemez.\n\nOynamak için Kitaplık’tan bir Minecraft APK’sı içe aktarın. Play Store kurulumu cihazınızda kalabilir — kaldırmanız gerekmez.</string>
     <string name="launch_failure_message_game_files_missing">Bu örneğin oyun dosyaları eksik veya tamamlanmamış. Sürümü Kitaplık’tan yeniden içe aktarın ya da Ayarlar \u2192 Tanılama içinde Kurulumu onar seçeneğini çalıştırın.</string>
-    <string name="launch_failure_message_abi">Bu Minecraft sürümü yalnızca 32 bit yerel kitaplıklar içeriyor ve GlowberryClient 64 bit uygulama olarak çalışıyor. Bunun yerine bu sürümün 64 bit derlemesini içe aktarın.</string>
+    <string name="launch_failure_message_abi">Bu Minecraft sürümü yalnızca 32 bit yerel kitaplıklar içeriyor ve CaramelClient 64 bit uygulama olarak çalışıyor. Bunun yerine bu sürümün 64 bit derlemesini içe aktarın.</string>
     <string name="launch_failure_message_stale_libs">Çıkarılan yerel kitaplıklar başlatıcının daha eski bir sürümüne ait. Bir sonraki başlatmada otomatik olarak yeniden çıkarılacaklar. Oyun yine başlamazsa Ayarlar \u2192 Tanılama içinde Kurulumu onar seçeneğini çalıştırın.</string>
     <string name="launch_failure_message_rules">Bu Minecraft derlemesi için henüz kanca tanımı yok, bu yüzden oyun içi katmanlar ve kozmetikler kapalı. Oyunun kendisi normal çalışacak.</string>
     <string name="launch_failure_message_unexpected">Başlatıcı oyunu başlatamadı ve neden, tanıdığı nedenlerden biri değil. Cihazınızda hiçbir şey değiştirilmedi. Başlatıcıyı yeniden açıp tekrar deneyin; sürerse Ayarlar \u2192 Tanılama içinde Kurulumu onar seçeneğini çalıştırın.</string>
@@ -1085,9 +1085,9 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="diagnostics_field_berry_api">BerryAPI arka ucu</string>
     <string name="diagnostics_field_berry_cosmetics">BerryAPI kozmetikleri</string>
     <string name="about_backend_status">Arka uç: %1$s</string>
-    <string name="diagnostics_field_preloader_abi">Ön yükleyici ABI</string>
-    <string name="diagnostics_preloader_abi_ok">v%1$d (istemciyle eşleşiyor)</string>
-    <string name="diagnostics_preloader_abi_mismatch">v%1$d (istemci v%2$d bekliyor)</string>
+    <string name="diagnostics_field_sweetloader_abi">Ön yükleyici ABI</string>
+    <string name="diagnostics_sweetloader_abi_ok">v%1$d (istemciyle eşleşiyor)</string>
+    <string name="diagnostics_sweetloader_abi_mismatch">v%1$d (istemci v%2$d bekliyor)</string>
     <string name="about_input_backend_status">Giriş arka ucu: %1$s</string>
     <string name="diagnostics_field_input_backend">Giriş arka ucu</string>
     <string name="diagnostics_field_hooks">Önyükleyici kancaları</string>
@@ -1096,7 +1096,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="crash_disable_no_suspects">Bu çökme için kayıtlı mod yok.</string>
     <string name="crash_disable_done">%1$d mod devre dışı bırakıldı. Onlar olmadan denemek için yeniden başlatın.</string>
     <string name="session_restart_loop_message">Yeniden başlatma durduruldu: bu oturum üst üste %1$d kez yeniden başladı. Ana ekrandan yeniden başlatın veya son eklediğiniz modları devre dışı bırakın.</string>
-    <string name="nav_logo_home">GlowberryClient ana sayfa</string>
+    <string name="nav_logo_home">CaramelClient ana sayfa</string>
     <string name="cosmetics_preview_preparing" formatted="false">Önizleme hazırlanıyor…</string>
     <string name="mod_overlay_snaplook_on">Hazır</string>
     <string name="mod_overlay_snaplook_off">Boşta</string>
@@ -1159,26 +1159,6 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="quick_settings_no_instance">Örnek seçilmedi</string>
     <string name="quick_settings_write_failed">Ayar yazılamadı</string>
     <string name="quick_settings_cap_unsupported">Bu ekranda bu hızda bir mod yok</string>
-    <string name="script_manager_title">Betik yöneticisi</string>
-    <string name="script_manager_subtitle">Yüklü paketler ve yüklenme sıraları.</string>
-    <string name="script_manager_empty">Yüklü paket yok. Mods ekranından bir .AntEgg paketi içe aktarın.</string>
-    <string name="script_manager_reload">Betikleri yenile</string>
-    <string name="script_manager_reload_none">Çalıştırılacak etkin betik yok</string>
-    <string name="script_manager_reload_done">%2$d betikten %1$d tanesi yenilendi</string>
-    <string name="script_manager_run">Çalıştır</string>
-    <string name="script_manager_remove">Kaldır</string>
-    <string name="script_manager_remove_confirm">"%1$s" sanal alandan kaldırılsın mı?</string>
-    <string name="script_manager_remove_failed">Paket kaldırılamadı</string>
-    <string name="script_manager_run_ok">%1$s çalıştırıldı</string>
-    <string name="script_manager_run_failed">Betik çalıştırılamadı</string>
-    <string name="script_manager_run_failed_reason">Betik hatası: %1$s</string>
-    <string name="script_manager_unreadable">Manifest okunamadı</string>
-    <string name="script_manager_type_script">Betik</string>
-    <string name="script_manager_type_native">Yerel</string>
-    <string name="script_manager_meta">%1$s \u00b7 v%2$s</string>
-    <string name="script_manager_load_order">Yükleme sırası %1$d</string>
-    <string name="script_manager_toggle_desc">Bu paketi etkinleştir veya devre dışı bırak</string>
-    <string name="script_manager_open">Betik yöneticisi</string>
     <string name="launch_failure_title_newer_game">Minecraft sürümü henüz desteklenmiyor</string>
     <string name="launch_failure_message_newer_game">Minecraft sürümünüz bu başlatıcının desteklediğinden daha yeni. Bir güncelleme destek ekleyene kadar yer paylaşımları, kozmetikler ve denetleyici kancaları sınırlı veya kapalı olacak. Oyunun kendisi normal çalışır.</string>
     <string name="launch_failure_newer_game_covered">Bu sürümün desteklediği en yeni Minecraft sürümü %1$s.</string>
@@ -1264,7 +1244,7 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="servers_favourites_first">Favoriler önce gösterilir</string>
     <string name="server_favourite_label">Favori</string>
     <string name="cosmetics_sync_setting_title">Kozmetik eşitleme</string>
-    <string name="cosmetics_sync_setting_desc">Kuşandığın pelerin, aksesuar ve evcil hayvanı aynı dünyadaki diğer Glowberry kullanıcılarına göster, onlarınkini gör. Yalnızca istemci tarafı; kapatınca hem gönderme hem alma durur.</string>
+    <string name="cosmetics_sync_setting_desc">Kuşandığın pelerin, aksesuar ve evcil hayvanı aynı dünyadaki diğer Caramel kullanıcılarına göster, onlarınkini gör. Yalnızca istemci tarafı; kapatınca hem gönderme hem alma durur.</string>
     <string name="pack_changer_pack_size">%1$s · %2$s</string>
     <string name="pack_changer_move_up">Yukarı taşı</string>
     <string name="pack_changer_move_down">Aşağı taşı</string>
@@ -1314,11 +1294,11 @@ GlowberryClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor
     <string name="replay_save_native_done">%1$s kaydedildi</string>
     <string name="replay_save_native_empty">Kaydedilecek bir oyun tekrarı yok. Önce bir tane kaydedin.</string>
     <string name="settings_run_setup">Kurulumu yeniden çalıştır</string>
-    <string name="about_people_title">GlowberryClient\'ı kim yapıyor</string>
+    <string name="about_people_title">CaramelClient\'ı kim yapıyor</string>
     <string name="about_owner_badge">Sahip</string>
-    <string name="about_owner_role">GlowberryClient sahibi</string>
+    <string name="about_owner_role">CaramelClient sahibi</string>
     <string name="about_lead_badge">Baş geliştirici</string>
-    <string name="about_lead_role">GlowberryClient baş geliştiricisi</string>
+    <string name="about_lead_role">CaramelClient baş geliştiricisi</string>
     <string name="about_github">GitHub</string>
     <string name="changelog_card_title">%1$s yenilikleri</string>
     <string name="changelog_card_subtitle">Eklenen, değişen ve düzeltilen her şeyin tam listesi için dokunun.</string>

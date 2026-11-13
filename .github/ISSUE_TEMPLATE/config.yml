@@ -7,5 +7,5 @@ contact_links:
     url: https://launch.chimeramc.org/
     about: The user guide, compatibility statement, and developer documentation.
   - name: Security report
-    url: https://github.com/ChimeraAnt-DEV/GlowberryClient/security/advisories/new
+    url: https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new
     about: Please report security issues privately so they can be fixed before disclosure.

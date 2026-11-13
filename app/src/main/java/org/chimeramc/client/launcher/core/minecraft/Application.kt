@@ -27,7 +27,7 @@ class LauncherApplication : Application() {
         FeatureSettings.init(applicationContext)
         CrashReporter.init(this)
         // One table a script or a module can ask before it draws, so a feature whose
-        // preloader hook did not resolve is skipped rather than looking like a broken feature. Each
+        // sweetloader hook did not resolve is skipped rather than looking like a broken feature. Each
         // probe is a cached native read, so this is cheap enough to leave installed for the process.
         org.chimeramc.client.core.backend.HookAvailability.install { hook ->
             when (hook) {
@@ -51,7 +51,7 @@ class LauncherApplication : Application() {
             try {
                 org.chimeramc.client.core.crash.CrashReportUploader.uploadPending(applicationContext)
             } catch (t: Throwable) {
-                AppLog.warnOnce("GlowberryClient", "Application:59", "Ignored a failure at Application:59", t)
+                AppLog.warnOnce("CaramelClient", "Application:59", "Ignored a failure at Application:59", t)
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
         // The opt-in anonymous usage counter. Same shape as the crash report above --
@@ -62,7 +62,7 @@ class LauncherApplication : Application() {
                 org.chimeramc.client.core.telemetry.UsageStatsReporter
                     .reportIfDue(applicationContext)
             } catch (t: Throwable) {
-                AppLog.warnOnce("GlowberryClient", "Application:70", "Ignored a failure at Application:70", t)
+                AppLog.warnOnce("CaramelClient", "Application:70", "Ignored a failure at Application:70", t)
             }
         }, "usage-stats").apply { isDaemon = true }.start()
         // Mirror the persisted haptics preference into the static feedback layer so the
@@ -167,7 +167,7 @@ class LauncherApplication : Application() {
         org.chimeramc.client.core.minecraft.FpsOptimizationService.setLowMemory(critical)
         if (critical) {
             org.chimeramc.client.core.minecraft.FpsOptimizationService.apply()
-            // Bound the preloader's cached module handles: a hot-reloading or heavily-modded session
+            // Bound the sweetloader's cached module handles: a hot-reloading or heavily-modded session
             // grows that cache without bound, and trim-memory is exactly when to reclaim it. No-op
             // when the library is absent.
             org.chimeramc.client.preloader.PreloaderInput.closeUnusedModuleHandles()

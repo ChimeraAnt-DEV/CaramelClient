@@ -181,7 +181,7 @@ public final class AccountSkinService {
                 return textureIdFromValue(value);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "AccountSkinService:107", "Ignored a failure at AccountSkinService:107", ignored);
+            AppLog.warnOnce("CaramelClient", "AccountSkinService:107", "Ignored a failure at AccountSkinService:107", ignored);
         }
         return null;
     }
@@ -399,7 +399,7 @@ public final class AccountSkinService {
                 }
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "AccountSkinService:249", "Ignored a failure at AccountSkinService:249", ignored);
+            AppLog.warnOnce("CaramelClient", "AccountSkinService:249", "Ignored a failure at AccountSkinService:249", ignored);
         }
         return null;
     }
@@ -443,7 +443,7 @@ public final class AccountSkinService {
                 try {
                     connection.disconnect();
                 } catch (Throwable ignored) {
-                    AppLog.warnOnce("GlowberryClient", "AccountSkinService:293", "Ignored a failure at AccountSkinService:293", ignored);
+                    AppLog.warnOnce("CaramelClient", "AccountSkinService:293", "Ignored a failure at AccountSkinService:293", ignored);
                 }
             }
         }

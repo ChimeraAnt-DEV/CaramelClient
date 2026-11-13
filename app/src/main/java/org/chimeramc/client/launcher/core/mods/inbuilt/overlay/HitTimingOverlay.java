@@ -131,7 +131,7 @@ public final class HitTimingOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "HitTimingOverlay:134", "Ignored a failure at HitTimingOverlay:134", ignored);
+            AppLog.warnOnce("CaramelClient", "HitTimingOverlay:134", "Ignored a failure at HitTimingOverlay:134", ignored);
         }
         overlayView = null;
         wmParams = null;

@@ -39,11 +39,11 @@ public final class ManifestExportAudit {
                 "Launcher entry point. Starts with MAIN/LAUNCHER and reads no extras before it "
                         + "routes; the wizard and the main screen are opened by the splash itself."));
         out.add(new Exported("org.chimeramc.client.ui.activities.MainActivity",
-                "Share target. Receives ACTION_SEND text/plain; the payload is filtered by "
-                        + "AntEggLink and every extra is validated in IntentHandler before use, so a "
-                        + "share of unrelated text is ignored rather than acted on."));
+                "Share target. Receives ACTION_SEND text/plain; the payload is validated in "
+                        + "IntentHandler before use, so a share of unrelated text is ignored rather "
+                        + "than acted on."));
         out.add(new Exported(".ui.activities.IntentHandler",
-                "Opens a game package or an .AntEgg from another app (ACTION_VIEW). Every extra is "
+                "Opens a game package from another app (ACTION_VIEW). Every extra is "
                         + "validated and size-limited by IntentHandler before it is used."));
         out.add(new Exported("org.chimeramc.client.launcher.settings.PerformanceTileService",
                 "Quick Settings tile. Started by the system Quick Settings panel with "

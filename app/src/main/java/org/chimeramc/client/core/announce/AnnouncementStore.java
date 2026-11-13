@@ -45,7 +45,7 @@ public final class AnnouncementStore {
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putString(KEY_FEED, json).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "AnnouncementStore:48", "Ignored a failure at AnnouncementStore:48", ignored);
+            AppLog.warnOnce("CaramelClient", "AnnouncementStore:48", "Ignored a failure at AnnouncementStore:48", ignored);
         }
     }
 
@@ -79,7 +79,7 @@ public final class AnnouncementStore {
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putStringSet(KEY_DISMISSED, current).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "AnnouncementStore:82", "Ignored a failure at AnnouncementStore:82", ignored);
+            AppLog.warnOnce("CaramelClient", "AnnouncementStore:82", "Ignored a failure at AnnouncementStore:82", ignored);
         }
     }
 

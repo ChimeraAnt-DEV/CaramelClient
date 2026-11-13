@@ -122,7 +122,7 @@ public class ModsAdapter extends RecyclerView.Adapter<ModsAdapter.ModViewHolder>
                 R.string.mod_version_chip,
                 fallbackText(mod.getVersion(), holder.itemView.getContext().getString(R.string.mod_unknown_version))));
 
-        // The runtime kind comes from the entry point, not the archive name (U17): an .AntEgg can
+        // The runtime kind comes from the entry point, not the archive name: a mod package can
         // hold either runtime, so only the entry path is authoritative.
         if (holder.kindBadge != null) {
             ModRowPresentation.Kind kind = ModRowPresentation.kindOf(mod);

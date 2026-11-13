@@ -24,7 +24,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_marginTop="@dimen/space_hairline"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <TextView
             android:id="@+id/node_meta"
@@ -43,7 +43,7 @@
             android:layout_marginTop="@dimen/space_1"
             android:fontFamily="@font/misans"
             android:textColor="@color/accent_text"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>

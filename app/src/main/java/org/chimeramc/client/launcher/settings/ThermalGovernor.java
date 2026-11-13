@@ -103,7 +103,7 @@ public final class ThermalGovernor {
                 powerManager.addThermalStatusListener(MAIN::post, LISTENER);
                 sRegistered = true;
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ThermalGovernor:106", "Ignored a failure at ThermalGovernor:106", ignored);
+                AppLog.warnOnce("CaramelClient", "ThermalGovernor:106", "Ignored a failure at ThermalGovernor:106", ignored);
             }
         }
 

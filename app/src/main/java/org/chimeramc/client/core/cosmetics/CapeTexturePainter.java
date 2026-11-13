@@ -48,7 +48,7 @@ public final class CapeTexturePainter {
      *
      * @param baseColor cloth colour, 0xAARRGGBB
      * @param trimColor colour of the border band and the brand mark
-     * @param branded   whether the Chimera mark is drawn on the cloth
+     * @param branded   whether the Caramel mark is drawn on the cloth
      */
     public static byte[] paint(int baseColor, int trimColor, boolean branded) {
         return paint(baseColor, trimColor, trimColor, CosmeticCatalog.CapePattern.SOLID, branded);
@@ -61,7 +61,7 @@ public final class CapeTexturePainter {
      * @param trimColor   colour of the border band and the brand mark
      * @param accentColor secondary colour the pattern weave uses
      * @param pattern     the weave; {@code null} is treated as solid
-     * @param branded     whether the Chimera mark is drawn on the cloth
+     * @param branded     whether the Caramel mark is drawn on the cloth
      */
     public static byte[] paint(int baseColor, int trimColor, int accentColor,
                                CosmeticCatalog.CapePattern pattern, boolean branded) {

@@ -312,7 +312,7 @@ public class ReplayCaptureService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_glowberry_mono)
+                .setSmallIcon(R.drawable.ic_caramel_mono)
                 .setContentTitle(getString(R.string.replay_capture_notification_title))
                 .setContentText(getString(R.string.replay_capture_notification_text))
                 .setContentIntent(contentIntent)

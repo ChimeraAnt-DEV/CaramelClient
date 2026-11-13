@@ -1,10 +1,10 @@
 # Cosmetics credits
 
-The cosmetics in this folder are third-party and original assets bundled with GlowberryClient.
+The cosmetics in this folder are third-party and original assets bundled with CaramelClient.
 This file records where each came from and under what licence, because some of it requires
 attribution when the app is distributed.
 
-## Original models — made for GlowberryClient
+## Original models — made for CaramelClient
 
 Made for this project; the same licence as the app (Apache-2.0).
 
@@ -21,7 +21,7 @@ Made for this project; the same licence as the app (Apache-2.0).
 
 ## Pets — converted from the project's supplied models
 
-Converted from the model files supplied for GlowberryClient (Bee, Copper Golem, Fire Dragon, Fox,
+Converted from the model files supplied for CaramelClient (Bee, Copper Golem, Fire Dragon, Fox,
 Shark, Chica, Seraphim, Steve, Owl / Legend of Zelda). The fire dragon, owl, seraphim, shark and
 copper golem are shipped.
 
@@ -37,7 +37,7 @@ Converted from the **Minecraft Hats Mini-pack 1–5** series by **VoxelBear** on
 (<https://sketchfab.com/VoxelBear/models>), made in Blockbench. Licensed under
 **Creative Commons Attribution (CC BY)**.
 
-**Attribution is required.** Any distribution of GlowberryClient that includes these files must
+**Attribution is required.** Any distribution of CaramelClient that includes these files must
 credit VoxelBear. The licence shown on the Mini-pack 3 page is CC BY; the other mini-packs are by
 the same author.
 
@@ -69,4 +69,4 @@ Textures are unchanged.
 
 ## Steve skin
 
-`steve.png` is the 64×64 skin atlas supplied for GlowberryClient, used by the 3D character preview.
+`steve.png` is the 64×64 skin atlas supplied for CaramelClient, used by the 3D character preview.

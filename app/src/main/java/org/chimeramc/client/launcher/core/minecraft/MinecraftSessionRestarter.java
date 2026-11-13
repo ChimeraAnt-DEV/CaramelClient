@@ -16,7 +16,7 @@ import org.chimeramc.client.util.MainThread;
  * Relaunches the running Minecraft instance so a change that needs a fresh load takes effect.
  *
  * <p>The in-game pack changer can write the pack lists, but this build has no verified native
- * in-place refresh (the preloader's {@code nativeReloadResourcePacks} resolves to no hook on the
+ * in-place refresh (the sweetloader's {@code nativeReloadResourcePacks} resolves to no hook on the
  * shipped builds and returns false), so the
  * loaded world keeps its cached pack stack. The supported way to apply it is to relaunch the same
  * instance — which is exactly what the launcher's Play button does — without the player having to
@@ -61,7 +61,7 @@ public final class MinecraftSessionRestarter {
         try {
             version = VersionManager.get(activity).getSelectedVersion();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:64", "Ignored a failure at MinecraftSessionRestarter:64", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:64", "Ignored a failure at MinecraftSessionRestarter:64", ignored);
         }
         if (version == null) return false;
 
@@ -123,7 +123,7 @@ public final class MinecraftSessionRestarter {
             context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY_PENDING, false).remove(KEY_PENDING_AT).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:126", "Ignored a failure at MinecraftSessionRestarter:126", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:126", "Ignored a failure at MinecraftSessionRestarter:126", ignored);
         }
     }
 
@@ -139,11 +139,11 @@ public final class MinecraftSessionRestarter {
                 try {
                     out.add(Long.parseLong(part.trim()));
                 } catch (NumberFormatException ignored) {
-                    AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:142", "Ignored a failure at MinecraftSessionRestarter:142", ignored);
+                    AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:142", "Ignored a failure at MinecraftSessionRestarter:142", ignored);
                 }
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:146", "Ignored a failure at MinecraftSessionRestarter:146", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:146", "Ignored a failure at MinecraftSessionRestarter:146", ignored);
         }
         return out;
     }
@@ -161,7 +161,7 @@ public final class MinecraftSessionRestarter {
             context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putString(KEY_RELAUNCH_HISTORY, joined.toString()).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:164", "Ignored a failure at MinecraftSessionRestarter:164", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:164", "Ignored a failure at MinecraftSessionRestarter:164", ignored);
         }
     }
 
@@ -175,7 +175,7 @@ public final class MinecraftSessionRestarter {
                     .putLong(KEY_PENDING_AT, System.currentTimeMillis())
                     .commit();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftSessionRestarter:178", "Ignored a failure at MinecraftSessionRestarter:178", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:178", "Ignored a failure at MinecraftSessionRestarter:178", ignored);
         }
     }
 

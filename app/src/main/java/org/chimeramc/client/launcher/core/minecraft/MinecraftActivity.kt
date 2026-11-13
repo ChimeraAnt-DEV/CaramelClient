@@ -62,7 +62,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
     private var normalExitPrepared = false
     private var normalExitRestartScheduled = false
     private var gameRuntimeStarted = false
-    private var preloaderTextInput: PreloaderTextInput? = null
+    private var sweetloaderTextInput: SweetLoaderTextInput? = null
     private var previousInputFocus: View? = null
     private val playtimeHeartbeat = object : Runnable {
         override fun run() {
@@ -72,7 +72,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
     }
     private val playtimeHeartbeatHandler by lazy { Handler(Looper.getMainLooper()) }
 
-    private class PreloaderTextInput(context: Context) : AppCompatEditText(context) {
+    private class SweetLoaderTextInput(context: Context) : AppCompatEditText(context) {
         override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
             val target = super.onCreateInputConnection(outAttrs) ?: return null
             return object : InputConnectionWrapper(target, true) {
@@ -182,9 +182,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         }
         
         try {
-            initializePreloaderTextInput()
+            initializeSweetLoaderTextInput()
             PreloaderInput.setActivity(this)
-            // The bundled BerryAPI runtime is only dlopen-ed by the preloader bridge; attach it
+            // The bundled BerryAPI runtime is only dlopen-ed by the sweetloader bridge; attach it
             // here, once the game process is up, so its subsystems are live for this session.
             // Fail-closed and never fatal: a missing library or no usable hook backend returns
             // false and the dependent features stay greyed rather than half-installed.
@@ -319,7 +319,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             )
             org.chimeramc.client.core.mods.ModLoadDiagnostics.record(this, merged)
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
         }
     }
 
@@ -353,7 +353,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PRELOADER_DOCUMENT_REQUEST) {
-            handlePreloaderDocumentResult(resultCode, data)
+            handleSweetLoaderDocumentResult(resultCode, data)
             return
         }
         if (org.chimeramc.client.core.mods.inbuilt.overlay.MoreButtonsEditor.onActivityResult(requestCode, resultCode, data)) return
@@ -362,7 +362,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun openPreloaderDocumentPicker(mimeType: String) {
+    fun openSweetLoaderDocumentPicker(mimeType: String) {
         runOnUiThread {
             try {
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -376,7 +376,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         }
     }
 
-    private fun handlePreloaderDocumentResult(resultCode: Int, data: Intent?) {
+    private fun handleSweetLoaderDocumentResult(resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK || data?.data == null) {
             PreloaderInput.onDocumentResult(false, "", "", "Import cancelled")
             return
@@ -392,7 +392,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
                 }
             }
             val safeName = displayName.replace(Regex("[^A-Za-z0-9._ -]"), "_").take(120).ifBlank { "selected_file" }
-            val directory = File(cacheDir, "preloader_documents").also { it.mkdirs() }
+            val directory = File(cacheDir, "sweetloader_documents").also { it.mkdirs() }
             val importedFile = File(directory, "${System.nanoTime()}_$safeName")
             temporaryFile = importedFile
             contentResolver.openInputStream(uri)?.use { input ->
@@ -506,7 +506,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        // A bind picker in the Mod Menu must see the raw press before the preloader can consume
+        // A bind picker in the Mod Menu must see the raw press before the sweetloader can consume
         // it, otherwise the button the player presses never reaches the picker.
         if (event.action == KeyEvent.ACTION_DOWN) {
             if (org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuOverlay
@@ -517,7 +517,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         // An open Mod Menu takes controller navigation next. Its overlay root is unfocusable so the
         // platform stops painting the white focus wash over the game, which also means the
         // framework will not route a d-pad or A press to it — so it is offered the raw key here,
-        // before the preloader can swallow the press for the game.
+        // before the sweetloader can swallow the press for the game.
         if (overlayManager?.handleMenuControllerKey(event.keyCode, event.action) == true) {
             return true
         }
@@ -527,7 +527,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             PreloaderInput.onMouse(mouseButton, event.action == KeyEvent.ACTION_DOWN)) {
             return true
         }
-        // Recorded regardless of whether the preloader consumed the press: the player pressed
+        // Recorded regardless of whether the sweetloader consumed the press: the player pressed
         // attack either way, and Select Hit needs the real input timing.
         if (mouseButton == MotionEvent.BUTTON_PRIMARY && event.action == KeyEvent.ACTION_DOWN) {
             overlayManager?.notifyAttack()
@@ -600,9 +600,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             return super.dispatchTouchEvent(event)
         }
 
-        // Classify the gesture BEFORE the preloader gets a chance to consume it. The game
+        // Classify the gesture BEFORE the sweetloader gets a chance to consume it. The game
         // consumes the raw event itself, so a vanilla tap attack has no other funnel to observe;
-        // but the preloader also consumes touches (it returns true above), and returning early
+        // but the sweetloader also consumes touches (it returns true above), and returning early
         // left the detector's state machine without its UP for that pointer. The next DOWN then
         // restarted tracking from scratch, so the following tap's UP arrived with `tracking`
         // already false and the attack was dropped — the metronome silently under-counted.
@@ -781,7 +781,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         GameBridge.register(
             LauncherGameBackend(
                 AndroidGameInputHost(this),
-                org.chimeramc.client.core.backend.PreloaderFrameTickSource(),
+                org.chimeramc.client.core.backend.SweetLoaderFrameTickSource(),
             ),
         )
     }
@@ -809,7 +809,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             prepareNormalExitCleanup()
         }
 
-        preloaderTextInput = null
+        sweetloaderTextInput = null
         previousInputFocus = null
         PreloaderInput.clearActivity()
         MinecraftActivityState.onDestroyed(this)
@@ -920,8 +920,8 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         return resolveStorageDir(MinecraftLauncher.EXTRA_STORAGE_CACHE_DIR, super.getCacheDir())
     }
 
-    private fun initializePreloaderTextInput() {
-        val input = PreloaderTextInput(this).apply {
+    private fun initializeSweetLoaderTextInput() {
+        val input = SweetLoaderTextInput(this).apply {
             isFocusable = true
             isFocusableInTouchMode = true
             isEmojiCompatEnabled = false
@@ -943,12 +943,12 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             input,
             ViewGroup.LayoutParams(1, 1)
         )
-        preloaderTextInput = input
+        sweetloaderTextInput = input
     }
 
     fun showSoftKeyboard() {
         runOnUiThread {
-            val input = preloaderTextInput ?: return@runOnUiThread
+            val input = sweetloaderTextInput ?: return@runOnUiThread
             previousInputFocus = currentFocus?.takeUnless { it === input }
             input.visibility = View.VISIBLE
             input.setText("")
@@ -970,7 +970,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
     fun hideSoftKeyboard() {
         runOnUiThread {
-            val input = preloaderTextInput ?: return@runOnUiThread
+            val input = sweetloaderTextInput ?: return@runOnUiThread
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(input.windowToken, 0)

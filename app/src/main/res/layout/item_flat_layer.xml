@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/space_1"
-    style="@style/Widget.Chimera.Card"
+    style="@style/Widget.Caramel.Card"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/space_2">
@@ -19,7 +19,7 @@
         android:gravity="center"
         tools:text="1"
         android:textColor="@color/on_primary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:textStyle="bold" />
 
     <EditText
@@ -36,7 +36,7 @@
         android:padding="@dimen/space_2"
         android:textColor="@color/on_surface"
         android:textColorHint="@color/outline"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+        android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
         android:fontFamily="@font/misans"
         tools:text="×"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+        android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
     <EditText
         android:id="@+id/count_edit"
@@ -60,6 +60,6 @@
         android:padding="@dimen/space_2"
         tools:text="1"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+        android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
 </LinearLayout>

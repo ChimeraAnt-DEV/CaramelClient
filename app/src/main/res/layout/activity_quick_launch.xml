@@ -13,7 +13,7 @@
         android:paddingHorizontal="@dimen/space_4"
         android:paddingTop="@dimen/space_4"
         android:text="@string/quick_launch_title"
-        android:textAppearance="@style/TextAppearance.Glowberry.Display"
+        android:textAppearance="@style/TextAppearance.Caramel.Display"
         android:textStyle="bold"
         android:textColor="@color/primary"
         android:fontFamily="@font/misans"
@@ -26,7 +26,7 @@
         android:paddingHorizontal="@dimen/space_4"
         android:paddingBottom="@dimen/space_2"
         android:text="@string/quick_launch_subtitle"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+        android:textAppearance="@style/TextAppearance.Caramel.Body"
         android:textColor="?android:textColorSecondary"
         app:layout_constraintTop_toBottomOf="@id/header" />
 

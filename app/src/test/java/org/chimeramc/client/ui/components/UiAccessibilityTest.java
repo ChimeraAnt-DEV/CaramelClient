@@ -52,7 +52,7 @@ public class UiAccessibilityTest {
             java.util.regex.Matcher m = title.matcher(xml);
             while (m.find()) {
                 String block = m.group();
-                boolean isTitle = block.contains("TextAppearance.Glowberry.Title")
+                boolean isTitle = block.contains("TextAppearance.Caramel.Title")
                         && block.contains("android:textStyle=\"bold\"");
                 if (isTitle && !block.contains("accessibilityHeading")) {
                     offenders.add(layout.getFileName() + ": " + firstLine(block));

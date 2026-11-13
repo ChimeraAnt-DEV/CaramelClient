@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * One frame of cosmetic transform data, packed into the byte layout the native preloader reads.
+ * One frame of cosmetic transform data, packed into the byte layout the native sweetloader reads.
  *
  * <p>This is the Java half of the native cosmetics render path. The launcher computes the cape
  * chain's per-segment lean/sway, the pet's per-bone rotations and the hat's head-look on the game's

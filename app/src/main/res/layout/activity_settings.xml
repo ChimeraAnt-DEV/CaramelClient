@@ -29,7 +29,7 @@
                 android:text="@string/settings_title"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:text="@string/settings_subtitle"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                         android:text="@string/settings_tab_basic"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_primary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:textStyle="bold"
                         android:background="@drawable/bg_tab_selected"
                         android:clickable="true"
@@ -81,7 +81,7 @@
                         android:text="@string/settings_tab_personalize"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -97,7 +97,7 @@
                         android:text="@string/settings_tab_updates"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -113,7 +113,7 @@
                         android:text="@string/settings_tab_about"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -129,7 +129,7 @@
                         android:text="@string/settings_tab_migration"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -156,7 +156,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -166,7 +166,7 @@
                             android:text="@string/performance_preset_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -177,7 +177,7 @@
                             android:layout_marginTop="@dimen/space_hairline"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <com.google.android.material.button.MaterialButtonToggleGroup
                             android:id="@+id/performance_preset_group"
@@ -195,7 +195,7 @@
                                 android:layout_weight="1"
                                 android:minHeight="40dp"
                                 android:text="@string/performance_preset_battery"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/performance_preset_balanced"
@@ -205,7 +205,7 @@
                                 android:layout_weight="1"
                                 android:minHeight="40dp"
                                 android:text="@string/performance_preset_balanced"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/performance_preset_performance"
@@ -215,7 +215,7 @@
                                 android:layout_weight="1"
                                 android:minHeight="40dp"
                                 android:text="@string/performance_preset_performance"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </com.google.android.material.button.MaterialButtonToggleGroup>
 
                         <TextView
@@ -225,7 +225,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/performance_preset_note"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <LinearLayout
                             android:id="@+id/performance_preset_thermal_warning"
@@ -245,7 +245,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/performance_preset_thermal_apply"
@@ -254,14 +254,14 @@
                                 android:layout_height="wrap_content"
                                 android:minHeight="40dp"
                                 android:text="@string/performance_preset_thermal_apply"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -283,7 +283,7 @@
                                     android:text="@string/language"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -294,7 +294,7 @@
                                     android:layout_marginTop="@dimen/space_hairline"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <Spinner
@@ -326,7 +326,7 @@
                                 android:text="@string/show_logcat_overlay"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -359,7 +359,7 @@
                                 android:text="@string/show_launch_log"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
                                 android:accessibilityHeading="true" />
 
@@ -392,7 +392,7 @@
                                 android:text="@string/crash_upload"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -412,7 +412,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/crash_upload_unavailable"
                             android:textColor="@color/mod_menu_text_tertiary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:visibility="gone" />
 
                         <!-- Show exactly what a crash report contains before it is sent. -->
@@ -446,7 +446,7 @@
                                 android:text="@string/launcher_managed_mc_login"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -484,7 +484,7 @@
                                     android:text="@string/guest_mode_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -495,7 +495,7 @@
                                     android:text="@string/guest_mode_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -532,7 +532,7 @@
                                     android:text="@string/streaming_safe_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -543,7 +543,7 @@
                                     android:text="@string/streaming_safe_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -580,7 +580,7 @@
                                     android:text="@string/cosmetics_sync_setting_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -591,7 +591,7 @@
                                     android:text="@string/cosmetics_sync_setting_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -638,7 +638,7 @@
                                         android:text="@string/backup_retention_title"
                                         android:fontFamily="@font/misans"
                                         android:textColor="@color/on_surface"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                                         android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -649,7 +649,7 @@
                                         android:text="@string/backup_retention_desc"
                                         android:fontFamily="@font/misans"
                                         android:textColor="@color/text_secondary_light"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                                 </LinearLayout>
 
                                 <TextView
@@ -660,7 +660,7 @@
                                     android:gravity="end"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
                                     tools:text="5"
     android:accessibilityHeading="true" />
@@ -701,7 +701,7 @@
                                     android:text="@string/low_input_delay_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -712,7 +712,7 @@
                                     android:text="@string/low_input_delay_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -749,7 +749,7 @@
                                     android:text="@string/reduce_network_latency_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -760,7 +760,7 @@
                                     android:text="@string/reduce_network_latency_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -797,7 +797,7 @@
                                     android:text="@string/fps_optimizer_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -808,7 +808,7 @@
                                     android:text="@string/fps_optimizer_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -845,7 +845,7 @@
                                     android:text="@string/curseforge_api_key_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -857,7 +857,7 @@
                                     android:text="@string/curseforge_api_key_hint"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.button.MaterialButton
@@ -874,7 +874,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:layout_marginTop="@dimen/space_3"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
@@ -903,7 +903,7 @@
                                         android:text="@string/optifine_mode_title"
                                         android:fontFamily="@font/misans"
                                         android:textColor="@color/on_surface"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                                         android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -918,7 +918,7 @@
                                         android:paddingVertical="@dimen/space_hairline"
                                         android:text="@string/optifine_badge_text"
                                         android:textColor="@color/on_header_gradient"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -929,7 +929,7 @@
                                     android:text="@string/optifine_mode_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -961,7 +961,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <LinearLayout
                                 android:id="@+id/optifine_items_container"
@@ -976,7 +976,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -986,7 +986,7 @@
                             android:text="@string/diagnostics_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -997,7 +997,7 @@
                             android:text="@string/settings_diagnostics_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/settings_open_diagnostics"
@@ -1008,7 +1008,7 @@
                             android:minHeight="44dp"
                             android:fontFamily="@font/misans"
                             android:text="@string/settings_diagnostics_open"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textAllCaps="false"
                             android:textColor="@color/primary" />
                     </LinearLayout>
@@ -1017,7 +1017,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1027,7 +1027,7 @@
                             android:text="@string/settings_voice_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1038,7 +1038,7 @@
                             android:text="@string/settings_voice_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/settings_open_voice"
@@ -1049,7 +1049,7 @@
                             android:minHeight="44dp"
                             android:fontFamily="@font/misans"
                             android:text="@string/settings_voice_open"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textAllCaps="false"
                             android:textColor="@color/primary" />
                     </LinearLayout>
@@ -1058,7 +1058,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1068,7 +1068,7 @@
                             android:text="@string/controller_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1079,7 +1079,7 @@
                             android:text="@string/settings_controller_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/settings_open_controller"
@@ -1090,7 +1090,7 @@
                             android:minHeight="44dp"
                             android:fontFamily="@font/misans"
                             android:text="@string/settings_controller_open"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textAllCaps="false"
                             android:textColor="@color/primary" />
                     </LinearLayout>
@@ -1107,7 +1107,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1117,7 +1117,7 @@
                             android:text="@string/theme_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1128,7 +1128,7 @@
                             android:text="@string/settings_theme_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <LinearLayout
                             android:id="@+id/theme_list"
@@ -1165,7 +1165,7 @@
                                     android:text="@string/theme_follow_system"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <View
@@ -1202,7 +1202,7 @@
                                     android:text="@string/theme_light"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <View
@@ -1239,7 +1239,7 @@
                                     android:text="@string/theme_dark"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -1249,7 +1249,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_3"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1259,7 +1259,7 @@
                             android:text="@string/bg_image_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1270,7 +1270,7 @@
                             android:text="@string/bg_image_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <ImageView
                             android:id="@+id/bg_image_preview"
@@ -1303,7 +1303,7 @@
                                     android:text="@string/bg_image_blur"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -1313,7 +1313,7 @@
                                     android:gravity="end"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <SeekBar
@@ -1340,7 +1340,7 @@
                                     android:text="@string/bg_image_brightness"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -1350,7 +1350,7 @@
                                     android:gravity="end"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <SeekBar
@@ -1380,7 +1380,7 @@
                                 android:text="@string/bg_image_none"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <Button
                                 android:id="@+id/btn_clear_bg_image"
@@ -1395,7 +1395,7 @@
                                 android:text="@string/clear"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textAllCaps="false"
                                 android:backgroundTint="@color/surface_variant"
                                 android:visibility="gone" />
@@ -1412,7 +1412,7 @@
                                 android:text="@string/select_image"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textAllCaps="false"
                                 android:backgroundTint="@color/primary" />
                         </LinearLayout>
@@ -1423,7 +1423,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_3"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1433,7 +1433,7 @@
                             android:text="@string/ui_customization_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1444,7 +1444,7 @@
                             android:text="@string/ui_customization_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <!-- Animation Speed Slider -->
                         <LinearLayout
@@ -1461,7 +1461,7 @@
                                 android:text="@string/animation_speed"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1471,7 +1471,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1499,7 +1499,7 @@
                                 android:text="@string/ui_transparency"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1509,7 +1509,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1537,7 +1537,7 @@
                                 android:text="@string/card_rounding"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1547,7 +1547,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1575,7 +1575,7 @@
                                 android:text="@string/icon_size"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1585,7 +1585,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1613,7 +1613,7 @@
                                 android:text="@string/font_scale"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1623,7 +1623,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1651,7 +1651,7 @@
                                 android:text="@string/font_family"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <Spinner
@@ -1671,7 +1671,7 @@
                             android:maxLines="1"
                             android:text="@string/font_preview"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Title" />
 
                         <!-- Blur Intensity Slider -->
                         <LinearLayout
@@ -1688,7 +1688,7 @@
                                 android:text="@string/blur_intensity"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -1698,7 +1698,7 @@
                                 android:gravity="end"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <SeekBar
@@ -1738,7 +1738,7 @@
                                     android:text="@string/reduce_motion"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1749,7 +1749,7 @@
                                     android:text="@string/reduce_motion_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -1788,7 +1788,7 @@
                                     android:text="@string/haptic_feedback"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1799,7 +1799,7 @@
                                     android:text="@string/haptic_feedback_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -1837,7 +1837,7 @@
                                     android:text="@string/dynamic_color"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1848,7 +1848,7 @@
                                     android:text="@string/dynamic_color_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary_light"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -1868,7 +1868,7 @@
                             android:layout_marginTop="@dimen/space_4"
                             android:text="@string/reset_to_defaults"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:textAllCaps="false"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/surface_variant" />
@@ -1885,7 +1885,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -1895,7 +1895,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1914,7 +1914,7 @@
                             android:minHeight="40dp"
                             android:text="@string/check_update"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/primary"
                             android:paddingHorizontal="@dimen/space_6"
@@ -1938,7 +1938,7 @@
                                 android:text="@string/mod_update_check_title"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -1957,7 +1957,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/mod_update_check_desc"
                             android:textColor="@color/mod_menu_text_tertiary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <View
                             android:layout_width="match_parent"
@@ -1984,7 +1984,7 @@
                                 android:text="@string/usage_stats_title"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2003,7 +2003,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/usage_stats_desc"
                             android:textColor="@color/mod_menu_text_tertiary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/button_usage_stats_preview"
@@ -2025,31 +2025,31 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/preloader_sigs_title"
+                            android:text="@string/sweetloader_sigs_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
                         <TextView
-                            android:id="@+id/preloader_sigs_last_update"
+                            android:id="@+id/sweetloader_sigs_last_update"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_1"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
-                            android:id="@+id/btn_update_preloader_sigs"
+                            android:id="@+id/btn_update_sweetloader_sigs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minHeight="40dp"
                             android:layout_marginTop="@dimen/space_3"
-                            android:text="@string/preloader_sigs_update"
+                            android:text="@string/sweetloader_sigs_update"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/primary"
                             android:paddingHorizontal="@dimen/space_6"
@@ -2067,7 +2067,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="@dimen/space_4">
@@ -2084,7 +2084,7 @@
                                 android:text="@string/about_title"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2095,7 +2095,7 @@
                                 android:text="@string/copyright"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -2103,7 +2103,7 @@
                                 android:text="@string/font_license"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
 
                         <ImageView
@@ -2132,7 +2132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_3"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -2142,7 +2142,7 @@
                             android:text="@string/settings_backup_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2153,7 +2153,7 @@
                             android:text="@string/settings_backup_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -2170,7 +2170,7 @@
                                 android:minHeight="44dp"
                                 android:fontFamily="@font/misans"
                                 android:text="@string/settings_backup_export"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textAllCaps="false"
                                 android:textColor="@color/primary" />
 
@@ -2184,7 +2184,7 @@
                                 android:minHeight="44dp"
                                 android:fontFamily="@font/misans"
                                 android:text="@string/settings_backup_import"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textAllCaps="false"
                                 android:textColor="@color/primary" />
                         </LinearLayout>
@@ -2196,7 +2196,7 @@
                             android:text="@string/settings_backup_note"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                     </LinearLayout>
 
                     <Button
@@ -2208,7 +2208,7 @@
                         android:minHeight="44dp"
                         android:fontFamily="@font/misans"
                         android:text="@string/settings_about_open"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
 
@@ -2224,7 +2224,7 @@
                         android:minHeight="44dp"
                         android:fontFamily="@font/misans"
                         android:text="@string/settings_run_setup"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
 
@@ -2237,7 +2237,7 @@
                         android:minHeight="44dp"
                         android:fontFamily="@font/misans"
                         android:text="@string/settings_open_changelog"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:textAllCaps="false"
                         android:textColor="@color/primary" />
                 </LinearLayout>
@@ -2252,7 +2252,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -2274,7 +2274,7 @@
                                     android:text="@string/shared_storage_layout_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2286,7 +2286,7 @@
                                     android:text="@string/shared_storage_layout_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -2307,14 +2307,14 @@
                             android:fontFamily="@font/misans"
                             android:padding="@dimen/space_3"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_3"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -2324,7 +2324,7 @@
                             android:text="@string/migration_cleanup_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2335,7 +2335,7 @@
                             android:text="@string/migration_cleanup_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <TextView
                             android:id="@+id/migration_cleanup_path"
@@ -2346,7 +2346,7 @@
                             android:fontFamily="@font/misans"
                             android:padding="@dimen/space_3"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <TextView
                             android:id="@+id/migration_cleanup_status"
@@ -2355,7 +2355,7 @@
                             android:layout_marginTop="@dimen/space_3"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/btn_cleanup_legacy_dir"
@@ -2365,7 +2365,7 @@
                             android:layout_marginTop="@dimen/space_4"
                             android:text="@string/migration_cleanup_button"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/primary"
                             android:paddingHorizontal="@dimen/space_6"
@@ -2376,7 +2376,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_3"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -2398,7 +2398,7 @@
                                     android:text="@string/settings_world_backup_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -2409,7 +2409,7 @@
                                     android:text="@string/settings_world_backup_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -2429,7 +2429,7 @@
                             android:text="@string/settings_world_backup_interval"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textStyle="bold" />
 
                         <Spinner
@@ -2446,7 +2446,7 @@
                             android:text="@string/settings_world_backup_destination"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textStyle="bold" />
 
                         <TextView
@@ -2456,7 +2456,7 @@
                             android:layout_marginTop="@dimen/space_2"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/btn_world_backup_pick_folder"
@@ -2467,7 +2467,7 @@
                             android:minHeight="40dp"
                             android:text="@string/settings_world_backup_destination_pick"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/primary"
                             android:textAllCaps="false" />
 
@@ -2478,7 +2478,7 @@
                             android:layout_marginTop="@dimen/space_3"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/btn_world_backup_now"
@@ -2489,7 +2489,7 @@
                             android:minHeight="40dp"
                             android:text="@string/settings_world_backup_back_up_now"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/primary"
                             android:textAllCaps="false" />
                     </LinearLayout>

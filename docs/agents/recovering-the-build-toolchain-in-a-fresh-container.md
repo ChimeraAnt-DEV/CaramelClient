@@ -18,7 +18,7 @@ nohup latest/bin/sdkmanager --sdk_root=/workspace/android-sdk \
   "build-tools;36.0.0" "build-tools;35.0.0" "ndk;28.2.13676358" "cmake;3.22.1" \
   > /tmp/sdk.log 2>&1 &
 
-printf 'sdk.dir=/workspace/android-sdk\n' > /workspace/project/ChimeraClient/local.properties
+printf 'sdk.dir=/workspace/android-sdk\n' > /workspace/project/CaramelClient/local.properties
 ```
 
 Notes: `unzip` is not installed тАФ extract with `python3 -c "import zipfile..."` instead. The zip contains a `cmdline-tools/` directory that must be renamed to `latest` or `sdkmanager` refuses to run. `sdkmanager` runs long; start it with `nohup ... &` and poll `/tmp/sdk.log` (a foreground command with a large timeout is rejected). Cmdline-tools land non-executable, hence the `chmod`. Budget ~3 GB for the SDK plus ~200 MB for the JDK.

@@ -195,7 +195,7 @@ public final class ReplayMarkers {
                 String detail = entry.substring(second + 1).trim();
                 out.markers.add(new Marker(tMs, kind, detail));
             } catch (IllegalArgumentException ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayMarkers:198", "Ignored a failure at ReplayMarkers:198", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayMarkers:198", "Ignored a failure at ReplayMarkers:198", ignored);
             }
         }
         Collections.sort(out.markers, (a, b) -> Long.compare(a.tMs, b.tMs));

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  *
  * <p>The second half is the CI check the spec asks for: it walks every Java/Kotlin source for a
  * {@code native} (Java) or {@code external fun} (Kotlin, honouring {@code @JvmName}) declaration and
- * every preloader C++ source for a {@code Java_...} export, mangles both sides, and fails if they
+ * every sweetloader C++ source for a {@code Java_...} export, mangles both sides, and fails if they
  * disagree in either direction. It has already caught real mismatches in this repository's history
  * (a class moved to a different package while its export kept the old one).
  *
@@ -84,14 +84,14 @@ public class JniBindingParityTest {
 
     /**
      * Classes whose {@code native} methods are implemented by a prebuilt library, not by the
-     * preloader source. Listed by FQN; excluded from the Java side of the comparison only.
+     * sweetloader source. Listed by FQN; excluded from the Java side of the comparison only.
      */
     private static final Set<String> PREBUILT_BOUND_CLASSES = new HashSet<>(Arrays.asList(
             "io.bambosan.mbloader.launcherUtils.LibBindings"));
 
     /**
-     * Preloader exports with no Java declaration. Empty: the last such export was removed from the
-     * preloader together with the Java class that declared it, so the parity check now runs with no
+     * SweetLoader exports with no Java declaration. Empty: the last such export was removed from the
+     * sweetloader together with the Java class that declared it, so the parity check now runs with no
      * C++ exemption at all.
      */
     private static final Set<String> PENDING_PRELOADER_REMOVALS = Collections.emptySet();
@@ -114,7 +114,7 @@ public class JniBindingParityTest {
     }
 
     /**
-     * The JNI entry-point table must list every owner class the preloader exports for.
+     * The JNI entry-point table must list every owner class the sweetloader exports for.
      *
      * <p>The table is prose, so nothing else keeps it in step with the code: a new {@code Java_…}
      * export whose owner class is missing from the table would leave the documentation wrong while
@@ -124,7 +124,7 @@ public class JniBindingParityTest {
     @Test
     public void theJniTableListsEveryExportOwner() throws IOException {
         Path repo = findRepoRoot();
-        Path table = repo.resolve("docs/preloader-jni-entry-points.md");
+        Path table = repo.resolve("docs/sweetloader-jni-entry-points.md");
         assertTrue("the JNI table is missing: " + table, Files.isRegularFile(table));
 
         Set<String> ownersInCode = new TreeSet<>();
@@ -174,13 +174,13 @@ public class JniBindingParityTest {
     }
 
     @Test
-    public void thePrebuiltBoundClassesAreNotAlsoExportedByThePreloader() throws IOException {
-        // A class is either prebuilt-bound or preloader-implemented, never both: if a prebuilt-bound
-        // class ever gained a preloader export, the scan exclusion would hide a real drift.
+    public void thePrebuiltBoundClassesAreNotAlsoExportedByTheSweetLoader() throws IOException {
+        // A class is either prebuilt-bound or sweetloader-implemented, never both: if a prebuilt-bound
+        // class ever gained a sweetloader export, the scan exclusion would hide a real drift.
         Set<String> cppSymbols = scanCppExports(findRepoRoot());
         for (String cls : PREBUILT_BOUND_CLASSES) {
             String prefix = "Java_" + cls.replace('.', '_') + "_";
-            assertFalse("prebuilt-bound class is exported by the preloader: " + cls,
+            assertFalse("prebuilt-bound class is exported by the sweetloader: " + cls,
                     cppSymbols.stream().anyMatch(s -> s.startsWith(prefix)));
         }
     }
@@ -250,11 +250,18 @@ public class JniBindingParityTest {
 
     private static Set<String> scanCppExports(Path repo) throws IOException {
         Set<String> symbols = new TreeSet<>();
-        Path cppRoot = repo.resolve("app/src/main/cpp/preloader");
+        Path cppRoot = repo.resolve("app/src/main/cpp/sweetloader");
         try (Stream<Path> stream = Files.walk(cppRoot)) {
             for (Path file : (Iterable<Path>) stream
-                    .filter(p -> p.toString().endsWith(".cpp") || p.toString().endsWith(".cc")
-                            || p.toString().endsWith(".h") || p.toString().endsWith(".hpp"))
+                    .filter(p -> {
+                        String s = p.toString();
+                        return s.endsWith(".cpp") || s.endsWith(".cc")
+                                || s.endsWith(".h") || s.endsWith(".hpp")
+                                // The .universe/.singularity loader is a Rust cdylib now; its JNI
+                                // exports (`#[no_mangle] … fn Java_…`) are part of the same surface
+                                // and must be compared against the Java declarations too.
+                                || s.endsWith(".rs");
+                    })
                     ::iterator) {
                 String text = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
                 Matcher m = CPP_EXPORT.matcher(text);
@@ -271,7 +278,7 @@ public class JniBindingParityTest {
         Path dir = Paths.get("").toAbsolutePath();
         for (int i = 0; i < 6 && dir != null; i++) {
             if (Files.exists(dir.resolve("settings.gradle"))
-                    && Files.isDirectory(dir.resolve("app/src/main/cpp/preloader"))) {
+                    && Files.isDirectory(dir.resolve("app/src/main/cpp/sweetloader"))) {
                 return dir;
             }
             dir = dir.getParent();

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Advertises the local player's equipped cosmetics to other Chimera users in the same world and
+ * Advertises the local player's equipped cosmetics to other Caramel users in the same world and
  * collects theirs.
  *
  * <p><b>Two discovery sources, one manifest.</b> The advertisement is the same {@link
@@ -33,12 +33,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * everyone on the same segment with no server, and is always on. When the player has configured
  * the same Go relay Proximity Voice Chat uses, the manifest is additionally carried as a {@link
  * VoiceProtocol#TYPE_COSMETIC_MANIFEST} frame the relay fans out to the peers in the sender's
- * session — so a cape is visible to a Chimera user who is <em>not</em> on the same Wi-Fi. When no
+ * session — so a cape is visible to a Caramel user who is <em>not</em> on the same Wi-Fi. When no
  * relay is configured, the player can paste a {@code host:port} and the manifest is unicast
  * straight to it. See {@link CosmeticSyncConfig} for the routing rule.
  *
  * <p><b>What this is.</b> It is not a game hook: it makes the equipped cape, accessory and pet
- * visible to <em>other Chimera users</em> who are in the same world, by telling them what to draw.
+ * visible to <em>other Caramel users</em> who are in the same world, by telling them what to draw.
  * Each client resolves the ids against the catalogue it already ships. It does not make vanilla
  * players see anything — Bedrock gives a client no way to push a cosmetic onto someone else's
  * account — and the in-app note says so.

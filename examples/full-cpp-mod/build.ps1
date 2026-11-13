@@ -1,17 +1,17 @@
 param(
     [string]$BuildType = "Release",
     [string]$Ndk = "",
-    [string]$PreloaderRoot = "",
+    [string]$SweetLoaderRoot = "",
     [switch]$Clean,
-    [switch]$NoLinkPreloader
+    [switch]$NoLinkSweetLoader
 )
 
 $ErrorActionPreference = "Stop"
 
 $SourceDir = $PSScriptRoot
 $RepoRoot = Resolve-Path (Join-Path $SourceDir "..\..")
-if ([string]::IsNullOrWhiteSpace($PreloaderRoot)) {
-    $PreloaderRoot = Join-Path $RepoRoot "app\src\main\cpp\preloader"
+if ([string]::IsNullOrWhiteSpace($SweetLoaderRoot)) {
+    $SweetLoaderRoot = Join-Path $RepoRoot "app\src\main\cpp\sweetloader"
 }
 
 $Abi = "arm64-v8a"
@@ -121,7 +121,7 @@ Invoke-Checked cmake `
     -B $HostBuildDir `
     -G Ninja `
     "-DCMAKE_BUILD_TYPE=$BuildType" `
-    "-DPRELOADER_ANDROID_ROOT=$PreloaderRoot"
+    "-DSWEETLOADER_ANDROID_ROOT=$SweetLoaderRoot"
 
 Invoke-Checked cmake `
     --build $HostBuildDir `
@@ -136,7 +136,7 @@ if (-not $Generator) {
     throw "Config generator was not produced in $HostBuildDir"
 }
 
-$LinkPreloader = if ($NoLinkPreloader) { "OFF" } else { "ON" }
+$LinkSweetLoader = if ($NoLinkSweetLoader) { "OFF" } else { "ON" }
 
 Invoke-Checked cmake `
     -S $SourceDir `
@@ -146,8 +146,8 @@ Invoke-Checked cmake `
     "-DANDROID_ABI=$Abi" `
     "-DANDROID_PLATFORM=android-24" `
     "-DCMAKE_BUILD_TYPE=$BuildType" `
-    "-DPRELOADER_ANDROID_ROOT=$PreloaderRoot" `
-    "-DLL_FULL_CPP_MOD_LINK_PRELOADER=$LinkPreloader"
+    "-DSWEETLOADER_ANDROID_ROOT=$SweetLoaderRoot" `
+    "-DLL_FULL_CPP_MOD_LINK_PRELOADER=$LinkSweetLoader"
 
 Invoke-Checked cmake `
     --build $AndroidBuildDir `
@@ -170,7 +170,7 @@ Copy-Item -LiteralPath $LibraryPath `
 
 Invoke-Checked $Generator $PackageDir
 
-$ArchivePath = Join-Path $DistDir "full-cpp-mod.antegg"
+$ArchivePath = Join-Path $DistDir "full-cpp-mod.zip"
 $TempZipPath = Join-Path $DistDir "full-cpp-mod.zip"
 if (Test-Path $ArchivePath) {
     Remove-Item -LiteralPath $ArchivePath -Force

@@ -1,7 +1,7 @@
 package org.chimeramc.client.core.minecraft;
 
 /**
- * The status codes the preloader reports for an optifine item, and the pure mapping from a code
+ * The status codes the sweetloader reports for an optifine item, and the pure mapping from a code
  * to a label and colour.
  *
  * <p>The codes are the wire contract with {@code OptifineItemState} on the native side; the
@@ -10,7 +10,7 @@ package org.chimeramc.client.core.minecraft;
  */
 public final class OptifineStatus {
 
-    /** The item was not attempted (master off, toggle off, or preloader absent). */
+    /** The item was not attempted (master off, toggle off, or sweetloader absent). */
     public static final int NOT_ATTEMPTED = 0;
     /** The item was applied and is running. */
     public static final int ACTIVE = 1;

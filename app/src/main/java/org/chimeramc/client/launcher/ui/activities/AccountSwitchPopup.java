@@ -161,7 +161,7 @@ final class AccountSwitchPopup {
                     try {
                         root.removeView(scrim);
                     } catch (Exception ignored) {
-                        AppLog.warnOnce("GlowberryClient", "AccountSwitchPopup:scrim",
+                        AppLog.warnOnce("CaramelClient", "AccountSwitchPopup:scrim",
                                 "Ignored a failure removing the scrim", ignored);
                     }
                 }).start();
@@ -233,7 +233,7 @@ final class AccountSwitchPopup {
                     if (bmp != null) headerAvatar.setImageBitmap(bmp);
                 });
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "AccountSwitchPopup:avatar",
+                AppLog.warnOnce("CaramelClient", "AccountSwitchPopup:avatar",
                         "Ignored a failure loading the popup avatar", ignored);
             }
         });

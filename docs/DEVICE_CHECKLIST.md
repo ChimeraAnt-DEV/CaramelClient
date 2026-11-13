@@ -28,7 +28,7 @@ Record the whole report. The lines that matter most:
 
 | Line | What it means | What we need |
 |---|---|---|
-| `Native library loaded` | Is `libpreloader.so` present and loadable? | If `no`, nothing else can work. |
+| `Native library loaded` | Is `libsweetloader.so` present and loadable? | If `no`, nothing else can work. |
 | `Player-render slot` | Which vtable slot the hook resolved, and whether by the render-diagnostic string scan or by the configured index. | This is the **slot 17 verification**. If it says a different number, or `unknown`, tell us. |
 | `Hook installed` | Did the detour install? | If `no`, the slot did not resolve to executable code. |
 | `Frames seen` | How many render ticks the hook has seen. | Should climb while you play. |
@@ -46,7 +46,7 @@ Record the whole report. The lines that matter most:
 | `Rules matching this version (extra)` | `> 0` means several rules covered this build — exactly where first-match selection used to drop fields. | The merge now inherits the missing field. |
 | `Rule has render slot` | `yes`. | The single most important post-fix line. |
 | `Hook install state` | `resolved after N frame tick(s)` vs `armed, waiting`. | Distinguishes a slow runtime from a failure. |
-| `libpreloader.so copies mapped` | Must be exactly `1`. | `> 1` = **SPLIT**: JNI and the hook are in different copies; nothing can ever draw. |
+| `libsweetloader.so copies mapped` | Must be exactly `1`. | `> 1` = **SPLIT**: JNI and the hook are in different copies; nothing can ever draw. |
 | `Local player feed` | `live x=… y=… z=… yaw=… pitch=…` with plausible values. | Cosmetics are scoped to a live local player. |
 | `Camera anchor source` | `engine view-projection` or `first-person fallback`. | A pass/fail test must not accept the fallback as the engine camera. |
 | `Status` | The route the client reports as live this session. | The honest summary line: which pieces reach the game and which are preview-only. |

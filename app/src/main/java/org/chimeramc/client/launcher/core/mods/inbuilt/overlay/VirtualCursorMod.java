@@ -145,7 +145,7 @@ public class VirtualCursorMod {
                 ((org.chimeramc.client.core.minecraft.MinecraftActivity) activity).dispatchTouchEventToGame(downEvent);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "VirtualCursorMod:148", "Ignored a failure at VirtualCursorMod:148", ignored);
+            AppLog.warnOnce("CaramelClient", "VirtualCursorMod:148", "Ignored a failure at VirtualCursorMod:148", ignored);
         }
         downEvent.recycle();
 
@@ -162,7 +162,7 @@ public class VirtualCursorMod {
                 ((org.chimeramc.client.core.minecraft.MinecraftActivity) activity).dispatchTouchEventToGame(upEvent);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "VirtualCursorMod:165", "Ignored a failure at VirtualCursorMod:165", ignored);
+            AppLog.warnOnce("CaramelClient", "VirtualCursorMod:165", "Ignored a failure at VirtualCursorMod:165", ignored);
         }
         upEvent.recycle();
     }

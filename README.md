@@ -34,7 +34,7 @@
 
 ## What is CaramelClient?
 
-CaramelClient is an open-source Android launcher for **Minecraft: Bedrock Edition**. It lets you **import your official Minecraft APK and launch it without a system install**, keep **multiple isolated game versions** side by side, and **extend the game with native modules** through a Preloader runtime.
+CaramelClient is an open-source Android launcher for **Minecraft: Bedrock Edition**. It lets you **import your official Minecraft APK and launch it without a system install**, keep **multiple isolated game versions** side by side, and **extend the game with native modules** through a SweetLoader runtime.
 
 It is built for legitimate players: it runs the copy of Minecraft you already own, it does not ship the game, and it does not bypass licensing.
 
@@ -83,8 +83,8 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 <details>
 <summary><b>Upgrading from a previous name</b></summary>
 
-- **From “GlowberryClient”:** CaramelClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
-- **From the older “Chimera Launcher”:** that rename changed the package id, so Android will not offer an in-place update and the old app's private settings are not reachable. Export them from the old app (**Settings → Backup & Restore → Export**) and import them here. Account credentials and API keys are never included in the export.
+- **From “CaramelClient”:** CaramelClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
+- **From the older “Caramel Launcher”:** that rename changed the package id, so Android will not offer an in-place update and the old app's private settings are not reachable. Export them from the old app (**Settings → Backup & Restore → Export**) and import them here. Account credentials and API keys are never included in the export.
 
 </details>
 
@@ -101,11 +101,9 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 - **Playtime Tracking** – Per-instance playtime, shown on the home hero card and the instance list.
 
 **Modding**
-- **Native Mod System (Preloader)** – Load external native `.so` modules packaged as `.AntEgg` (or a plain `.so`), with a Preloader input/output pipeline, hook installation, patches, and keyboard/gamepad input callbacks. See [`docs/api`](docs/api) and [`examples/full-cpp-mod`](examples/full-cpp-mod).
-- **`.AntEgg` Mod Packaging** – A ZIP-based format for shipping **native or Lua-script** mods, with a validated manifest, sandboxed extraction, and atomic install. Script mods run on an embedded Lua VM and report failures in the Mods tab instead of taking the launcher down. See [`examples/antegg-template`](examples/antegg-template).
+- **Native Mod System (SweetLoader)** – Load external native `.so` modules (or a plain `.so`), with a SweetLoader input/output pipeline, hook installation, patches, and keyboard/gamepad input callbacks. See [`docs/api`](docs/api) and [`examples/full-cpp-mod`](examples/full-cpp-mod).
 - **Mod Sourcing** – Import from **CurseForge** (user API key) and install `.mcpack`/`.mcaddon` files, or pick local files. A **Mod Hub** browses the **Modrinth** index and scans local Downloads; Modrinth hosts Java Edition content this launcher cannot install, so it is browse-only and says so.
 - **Mod Load Diagnostics & Safe Mode** – Failed mods are recorded with a user-readable reason and badged inline instead of crashing the process; a crash-loop safe mode offers to disable the mods loaded before a crash.
-- **JavaBridge (Java Edition Mod Auto-Porter)** – Point it at a Java Edition `.jar`; it assesses portability, then (with explicit consent and a configured LLM) decompiles and generates a Bedrock `.AntEgg` mod. It **rewrites** Java mods rather than running them, and says so — there is no Java Edition runtime.
 
 **In-game menu & overlays**
 - **Mod Menu (one screen)** – A single Mod Menu with a top navigation bar over **General**, **Voice**, **Packs**, **Cosmetics**, **HUD Editor**, **Replay**, **Settings**, **Controller** and **Keyboard**. The Controller and Keyboard pages carry a **Supporter** badge; they are ordinary pages of the same menu, not a second window. A module row is a **pill switch** and a one-shot action is a chevron, so a control always looks like what it does; a module that cannot run says why instead of looking like a plain off toggle. A **radial wheel** bound in-game offers the same destinations around the player's skin head.
@@ -123,7 +121,7 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 - **Controller Support & Input Mapping** – Up to 5 profiles per controller type (Xbox, DualShock 4, DualSense), with button remapping (including remap layers), stick dead-zone tuning, sensitivity, rumble strength, anti-stick-drift with hysteresis, explicit calibration, and a Low Input Delay mode — applied live to gameplay. Controller screens use **3D illustrations**.
 - **Content Management & Skin Packs** – Import, export, and back up worlds, resource packs, skin packs, and launcher data from one place.
 - **Performance & Personalization** – One-tap presets (Battery/Balanced/Performance), an **FPS Optimization** coordinator that quiets the launcher and sheds speculative work under thermal/battery/memory pressure while a session runs, and a **Reduce Network Latency** mode that tunes launcher-owned sockets and avoids polling during a session. One colour system follows the wallpaper's palette with a brand fallback, and there is a single **Reduce motion / Reduce transparency** switch rather than separate animation, glass-card and compact toggles — the system accessibility settings always win over the in-app choice.
-- **Updates & Crash Reporting** – In-app update check with a "What's new" dialog, a **Diagnostics** screen (app/Preloader/SDK versions, native-extraction version, signature-database status, cosmetics hook status, mod load errors, and a **Copy report** button), automated release-content tooling ([`docs/RELEASE_CONTENT.md`](docs/RELEASE_CONTENT.md)), and a Discord notification action for beta releases.
+- **Updates & Crash Reporting** – In-app update check with a "What's new" dialog, a **Diagnostics** screen (app/SweetLoader/SDK versions, native-extraction version, signature-database status, cosmetics hook status, mod load errors, and a **Copy report** button), automated release-content tooling ([`docs/RELEASE_CONTENT.md`](docs/RELEASE_CONTENT.md)), and a Discord notification action for beta releases.
 
 ---
 
@@ -136,11 +134,11 @@ CaramelClient is **actively developed**. The table below describes what is reach
 | **App build** | Debug and release APKs from [`main`](https://github.com/ChimeraAnt-DEV/CaramelClient/commits/main); CI builds a debug APK on every push |
 | **Android** | 9.0 (API 28) → 15; `arm64-v8a` only |
 | **Bedrock versions** | Multi-version instances; a version is refused only when its APK ships no `arm64-v8a` libraries |
-| **Native modding** | Preloader pipeline + `.AntEgg` (native + Lua) |
+| **Native modding** | SweetLoader pipeline (native `.so`) |
 | **In-game overlays** | Mod Menu, VIP menu, radial wheel, HUD editor |
 | **Cosmetics** | Preview + native render route; in-game appearance depends on the per-build render hook |
 | **Voice** | LAN multicast by default; optional internet relay |
-| **Java Edition** | **Not supported** — no Java Edition runtime; JavaBridge ports mods instead |
+| **Java Edition** | **Not supported** — no Java Edition runtime |
 
 **Where to get updates:** [Releases](https://github.com/ChimeraAnt-DEV/CaramelClient/releases) for builds (each release carries its SHA-256 checksum), [Actions](https://github.com/ChimeraAnt-DEV/CaramelClient/actions) for CI artifacts, and the in-app "What's new" dialog for release notes. A more detailed compatibility matrix lives in [`docs/guide/compatibility.md`](docs/guide/compatibility.md).
 
@@ -155,7 +153,7 @@ CaramelClient is **actively developed**. The table below describes what is reach
 **Prerequisites:** Git, Android Studio (latest), JDK 21+, Android SDK (API 28+), Android NDK r28.
 
 ```bash
-# The native Preloader and LibHttpClient code are git submodules the native build needs.
+# The native SweetLoader and LibHttpClient code are git submodules the native build needs.
 git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/CaramelClient.git
 # Already cloned without them?
 git submodule update --init --recursive
@@ -171,9 +169,8 @@ Then open the project in Android Studio, let Gradle sync, connect a device (API 
 
 ### Write a mod
 
-- **Preloader API reference** → [`docs/api`](https://docs/api) (mod, hook, patch, input, memory-hook macros, signature, config, mod-menu)
+- **SweetLoader API reference** → [`docs/api`](https://docs/api) (mod, hook, patch, input, memory-hook macros, signature, config, mod-menu)
 - **Full C++ mod example** → [`examples/full-cpp-mod`](https://examples/full-cpp-mod)
-- **`.AntEgg` template** → [`examples/antegg-template`](https://examples/antegg-template)
 - **Developer guide** → [`docs/guide/developer.md`](https://docs/guide/developer.md)
 
 ### Continuous integration
@@ -182,7 +179,7 @@ Every push to `main` and every pull request triggers [`.github/workflows/build.y
 
 ### Documentation
 
-Full user guide (English and 简体中文), developer docs, and the Preloader API reference live under [`docs/`](https://docs/) — start at [`docs/index.md`](https://docs/index.md).
+Full user guide (English and 简体中文), developer docs, and the SweetLoader API reference live under [`docs/`](https://docs/) — start at [`docs/index.md`](https://docs/index.md).
 
 Project pages: [Architecture](https://docs/ARCHITECTURE.md) · [Contributing](https://contributing.md/) · [Security](https://security.md/) · [Device compatibility](https://docs/COMPATIBILITY.md) · [Accessibility](https://docs/ACCESSIBILITY.md).
 
@@ -230,7 +227,7 @@ Submit PRs with a detailed description, reference related issues, and include sc
 
 ### Prohibited Uses
 
-- Do not claim CaramelClient as your own without crediting the Chimera Team and its contributors.
+- Do not claim CaramelClient as your own without crediting the Caramel Team and its contributors.
 - Do not use CaramelClient to violate Mojang or Microsoft's user agreements.
 
 > **Disclaimer:** The authors and contributors are not responsible for bans, damages, or issues arising from the use of this software. Use it at your own risk and in accordance with Minecraft's terms of service.
@@ -243,9 +240,9 @@ Full legal details: see the LICENSE.
 
 CaramelClient is an independent project that stands on the shoulders of the open-source Android and Minecraft modding ecosystems.
 
-- **Chimera Team** – For designing, building, and maintaining CaramelClient and providing infrastructure support.
-- **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the CaramelClient native-modding layer builds upon and adapts as `.AntEgg`.
-- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that CaramelClient's bundled snapshot is derived from. The rules are a data dependency, not code: `PreloaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](https://docs/preloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
+- **Caramel Team** – For designing, building, and maintaining CaramelClient and providing infrastructure support.
+- **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the CaramelClient native-modding layer builds upon and adapts.
+- **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the sweetloader signature-rules source that CaramelClient's bundled snapshot is derived from. The rules are a data dependency, not code: `SweetLoaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](https://docs/sweetloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
 - **Open-Source Bedrock Modding Community** – For the shared knowledge, tooling conventions, and ecosystem research that inform how native modules are packaged, loaded, and kept safe.
 - **Android Community** – For the documentation, libraries, and tools that made this launcher possible.
 - **Open Source Community** – For the libraries, frameworks, and tools that power this project.
@@ -257,12 +254,11 @@ CaramelClient is an independent project that stands on the shoulders of the open
 
 | ↕▾ | ↕▾ |
 |---|---|
-| −**Author / Team** | Chimera Team |
+| −**Author / Team** | Caramel Team |
 | −**Repository** | [github.com/ChimeraAnt-DEV/CaramelClient](https://github.com/ChimeraAnt-DEV/CaramelClient) |
 | −**Report an issue** | [GitHub Issues](https://github.com/ChimeraAnt-DEV/CaramelClient/issues) — templates for bugs, mod questions, and feature requests |
 | −**Community support** | [Discord](https://discord.gg/qAKpyKM3GP) — setup help, crash triage, and modding questions |
 | −**Security** | Report privately via [Security Advisories](https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new) |
-⚙
 
 ---
 <div align="center">
@@ -274,9 +270,9 @@ CaramelClient is an independent project that stands on the shoulders of the open
 <br><br>
 <a href="https://hub.xerj.org/contributors/ChimeraAnt-DEV"><img src="https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg" alt="XERJ Corpus Hub contributor"></a>
 <br><br>
-<b>Made by the Chimera Team Community</b>
+<b>Made by the Caramel Team Community</b>
 <br>
 <sub>Licensed under the Apache License 2.0.</sub>
 <br>
-<sub>This account is shared among the 20 members of the Official ChimeraTeam.</sub>
+<sub>This account is shared among the 20 members of the Official CaramelTeam.</sub>
 </div>

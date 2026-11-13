@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 /**
- * The GlowberryClient outline icon set: 24dp grid, 2dp stroke, round caps. Original artwork drawn as
+ * The CaramelClient outline icon set: 24dp grid, 2dp stroke, round caps. Original artwork drawn as
  * vector paths (no third-party assets). Used by the radial wheel sectors and the mod-menu rail.
  *
  * <p>Each icon is drawn centred on {@code (cx, cy)} with the given {@code size} (the 24dp box in px)

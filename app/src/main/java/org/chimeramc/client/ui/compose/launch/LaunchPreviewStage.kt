@@ -86,7 +86,7 @@ fun LaunchPreviewStage(
                     view.release()
                 } catch (t: Throwable) {
                     org.chimeramc.client.util.AppLog.warnOnce(
-                        "GlowberryClient", "LaunchPreviewStage:release",
+                        "CaramelClient", "LaunchPreviewStage:release",
                         "Ignored a failure releasing the character preview", t,
                     )
                 }

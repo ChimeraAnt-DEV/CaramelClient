@@ -9,15 +9,15 @@ import java.io.File;
 public class PreloaderInput {
 
     /**
-     * The C ABI version this client expects from the preloader.
+     * The C ABI version this client expects from the sweetloader.
      *
-     * <p>Bumped together with {@code pl_get_abi_version()} in the preloader; a mismatch means the
+     * <p>Bumped together with {@code pl_get_abi_version()} in the sweetloader; a mismatch means the
      * client and the native library were built from different ABI revisions, so the client refuses
      * the surface rather than calling into it with the wrong expectations.
      */
     public static final int EXPECTED_ABI_VERSION = 1;
 
-    /** The preloader's own C ABI version, or 0 when the library or the symbol is unavailable. */
+    /** The sweetloader's own C ABI version, or 0 when the library or the symbol is unavailable. */
     public static int abiVersion() {
         try {
             return nativeAbiVersion();
@@ -27,7 +27,7 @@ public class PreloaderInput {
     }
 
     /**
-     * Whether the loaded preloader matches this client's expected ABI version.
+     * Whether the loaded sweetloader matches this client's expected ABI version.
      *
      * <p>Pure comparison of two integers, so the rule is testable without a device: an unavailable
      * library reads as version 0 and therefore does not match.
@@ -36,7 +36,7 @@ public class PreloaderInput {
         return reported == EXPECTED_ABI_VERSION;
     }
 
-    /** Whether the loaded preloader's ABI matches this client's expectation. */
+    /** Whether the loaded sweetloader's ABI matches this client's expectation. */
     public static boolean isAbiCompatible() {
         return abiMatches(abiVersion());
     }
@@ -44,7 +44,7 @@ public class PreloaderInput {
     private static native int nativeAbiVersion();
 
     /**
-     * Bounds the preloader's cached module handles.
+     * Bounds the sweetloader's cached module handles.
      *
      * <p>Resolution handles are cached so a repeated install does not reopen a module, but a session
      * that hot-reloads mods (or resolves many distinct mod {@code .so}s) grows the cache without
@@ -113,7 +113,7 @@ public class PreloaderInput {
     public static native void nativeConfigureSignatureRules(String rulesPath, String minecraftVersion);
 
     /**
-     * Sets the directory the preloader caches a resolved signature scan in. The
+     * Sets the directory the sweetloader caches a resolved signature scan in. The
      * cache is keyed by the game library's ELF build id and stores offsets from its load base, so a
      * repeat launch of the same game build skips the byte-pattern scan and a game update cannot read
      * the previous build's offsets. An empty string disables the cache.
@@ -124,7 +124,7 @@ public class PreloaderInput {
 
     /**
      * Applies a flat {@code key=value} optifine configuration blob. The blob is built by
-     * {@code OptifineConfigBlob}; the preloader parses it so the two sides share one grammar.
+     * {@code OptifineConfigBlob}; the sweetloader parses it so the two sides share one grammar.
      */
     public static native void nativeConfigureOptifineMode(String blob);
 
@@ -290,7 +290,7 @@ public class PreloaderInput {
      *
      * <p>Layout: {renderSlot, resolvedBy, glBackend, eglContextCurrent, hookInstalled, framesSeen,
      * lastError, geometryBytes, pieceAtlasMask, lastDrawDecision, localPlayerLive, rulesRevision,
-     * rulesMergeConflicts, rulesHaveRenderIndex, rulesLoadAttempted, preloaderModuleMappings,
+     * rulesMergeConflicts, rulesHaveRenderIndex, rulesLoadAttempted, sweetloaderModuleMappings,
      * trianglesDrawn}. All entries are -1 when the native library is absent. Never fabricates a
      * reading: an unresolved slot or a missing GLES surface is reported as such. The last two
      * entries (lastDrawDecision, trianglesDrawn) belong to the retired GLES rasteriser and now
@@ -367,7 +367,7 @@ public class PreloaderInput {
         try {
             nativeConfigureOptifineMode(blob == null ? "" : blob);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:351", "Ignored a failure at PreloaderInput:351", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:351", "Ignored a failure at PreloaderInput:351", e);
         }
     }
 
@@ -391,7 +391,7 @@ public class PreloaderInput {
         try {
             nativeSetOptifineRefreshTarget(hz);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:375", "Ignored a failure at PreloaderInput:375", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:375", "Ignored a failure at PreloaderInput:375", e);
         }
     }
 
@@ -401,11 +401,11 @@ public class PreloaderInput {
             nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
                     minDwellMs);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:385", "Ignored a failure at PreloaderInput:385", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:385", "Ignored a failure at PreloaderInput:385", e);
         }
     }
 
-    /** The number of accepted render-distance changes, or 0 when the preloader is absent. */
+    /** The number of accepted render-distance changes, or 0 when the sweetloader is absent. */
     public static int renderDistanceChangeCount() {
         try {
             return nativeRenderDistanceChangeCount();
@@ -431,15 +431,15 @@ public class PreloaderInput {
     }
 
     /**
-     * Points the preloader's on-disk signature scan cache at a private directory. A null or empty
+     * Points the sweetloader's on-disk signature scan cache at a private directory. A null or empty
      * directory disables the cache, which is the safe fallback when no writable directory is known.
      */
     public static void setSignatureCacheDir(File directory) {
         try {
             nativeSetSignatureCacheDir(directory == null ? "" : directory.getAbsolutePath());
         } catch (UnsatisfiedLinkError e) {
-            android.util.Log.w("PreloaderSigs",
-                    "Signature scan cache not configured: libpreloader.so is not loaded");
+            android.util.Log.w("SweetLoaderSigs",
+                    "Signature scan cache not configured: libsweetloader.so is not loaded");
         }
     }
 
@@ -453,8 +453,8 @@ public class PreloaderInput {
             // Silently swallowing this is what made a "revision 0" report possible with no clue
             // why: the rules call never reached the library. Log it, with the path, so the
             // diagnostics report and logcat both name the failing step.
-            android.util.Log.w("PreloaderSigs",
-                    "Signature rules were not delivered: libpreloader.so is not loaded"
+            android.util.Log.w("SweetLoaderSigs",
+                    "Signature rules were not delivered: libsweetloader.so is not loaded"
                             + " (rules=" + (rulesFile == null ? "<none>" : rulesFile.getAbsolutePath())
                             + ", version=" + (minecraftVersion == null ? "<none>" : minecraftVersion) + ")");
         }
@@ -625,7 +625,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeOverride(playerKey, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:609", "Ignored a failure at PreloaderInput:609", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:609", "Ignored a failure at PreloaderInput:609", e);
         }
     }
 
@@ -633,7 +633,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeOverrides();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:617", "Ignored a failure at PreloaderInput:617", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:617", "Ignored a failure at PreloaderInput:617", e);
         }
     }
 
@@ -658,7 +658,7 @@ public class PreloaderInput {
         try {
             nativeSetTextureOverride(textureId, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:642", "Ignored a failure at PreloaderInput:642", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:642", "Ignored a failure at PreloaderInput:642", e);
         }
     }
 
@@ -666,7 +666,7 @@ public class PreloaderInput {
         try {
             nativeClearTextureOverrides();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:650", "Ignored a failure at PreloaderInput:650", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:650", "Ignored a failure at PreloaderInput:650", e);
         }
     }
 
@@ -691,7 +691,7 @@ public class PreloaderInput {
         try {
             nativeSetRenderGeometry(data);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:675", "Ignored a failure at PreloaderInput:675", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:675", "Ignored a failure at PreloaderInput:675", e);
         }
     }
 
@@ -700,7 +700,7 @@ public class PreloaderInput {
         try {
             nativePushCosmeticFrame(frame);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:684", "Ignored a failure at PreloaderInput:684", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:684", "Ignored a failure at PreloaderInput:684", e);
         }
     }
 
@@ -741,7 +741,7 @@ public class PreloaderInput {
         try {
             nativeSetPieceAtlas(piece, rgba, width, height);
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:725", "Ignored a failure at PreloaderInput:725", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:725", "Ignored a failure at PreloaderInput:725", ignored);
         }
     }
 
@@ -750,7 +750,7 @@ public class PreloaderInput {
         try {
             nativeClearPieceAtlases();
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:734", "Ignored a failure at PreloaderInput:734", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:734", "Ignored a failure at PreloaderInput:734", ignored);
         }
     }
 
@@ -823,7 +823,7 @@ public class PreloaderInput {
         try {
             nativeSetDisplayRefreshHz(hz);
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:807", "Ignored a failure at PreloaderInput:807", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:807", "Ignored a failure at PreloaderInput:807", ignored);
         }
     }
 
@@ -951,7 +951,7 @@ public class PreloaderInput {
         try {
             nativeSetContentSubstitution(sourceBytes, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:935", "Ignored a failure at PreloaderInput:935", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:935", "Ignored a failure at PreloaderInput:935", e);
         }
     }
 
@@ -959,7 +959,7 @@ public class PreloaderInput {
         try {
             nativeClearContentSubstitutions();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:943", "Ignored a failure at PreloaderInput:943", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:943", "Ignored a failure at PreloaderInput:943", e);
         }
     }
 
@@ -975,7 +975,7 @@ public class PreloaderInput {
         try {
             nativeArmNextImageOverride(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:959", "Ignored a failure at PreloaderInput:959", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:959", "Ignored a failure at PreloaderInput:959", e);
         }
     }
 
@@ -983,7 +983,7 @@ public class PreloaderInput {
         try {
             nativeClearNextImageOverride();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:967", "Ignored a failure at PreloaderInput:967", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:967", "Ignored a failure at PreloaderInput:967", e);
         }
     }
 
@@ -1008,7 +1008,7 @@ public class PreloaderInput {
         try {
             nativeClearCapturedCape();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:992", "Ignored a failure at PreloaderInput:992", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:992", "Ignored a failure at PreloaderInput:992", e);
         }
     }
 
@@ -1017,7 +1017,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeSubstitution(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1001", "Ignored a failure at PreloaderInput:1001", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:1001", "Ignored a failure at PreloaderInput:1001", e);
         }
     }
 
@@ -1025,7 +1025,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeSubstitution();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1009", "Ignored a failure at PreloaderInput:1009", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:1009", "Ignored a failure at PreloaderInput:1009", e);
         }
     }
 
@@ -1124,7 +1124,7 @@ public class PreloaderInput {
                     error == null ? "" : error
             );
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1108", "Ignored a failure at PreloaderInput:1108", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:1108", "Ignored a failure at PreloaderInput:1108", e);
         }
     }
 
@@ -1228,7 +1228,7 @@ public class PreloaderInput {
         try {
             nativeSetActivity(activity);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1212", "Ignored a failure at PreloaderInput:1212", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:1212", "Ignored a failure at PreloaderInput:1212", e);
         }
     }
 
@@ -1237,7 +1237,7 @@ public class PreloaderInput {
         try {
             nativeClearActivity();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("GlowberryClient", "PreloaderInput:1221", "Ignored a failure at PreloaderInput:1221", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:1221", "Ignored a failure at PreloaderInput:1221", e);
         }
     }
 }

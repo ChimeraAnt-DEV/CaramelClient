@@ -88,7 +88,7 @@ public final class VoiceCodec {
             try {
                 encoderClass.getMethod("setBitrate", int.class).invoke(encoder, BITRATE);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "VoiceCodec:91", "Ignored a failure at VoiceCodec:91", ignored);
+                AppLog.warnOnce("CaramelClient", "VoiceCodec:91", "Ignored a failure at VoiceCodec:91", ignored);
             }
 
             java.lang.reflect.Method encodeMethod = encoderClass.getMethod(

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Display"
+            android:textAppearance="@style/TextAppearance.Caramel.Display"
             android:textStyle="bold"
             tools:text="Fresh Animations" />
 
@@ -32,7 +32,7 @@
             android:layout_marginTop="@dimen/space_hairline"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             tools:text="by FreshLX • 47.3M downloads" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_marginTop="@dimen/space_2"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             tools:text="Make your game like the trailers!" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:padding="@dimen/space_3"
             android:text="@string/modrinth_java_warning"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <TextView
             android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/modrinth_versions_title"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
     android:accessibilityHeading="true" />
     </LinearLayout>
@@ -97,7 +97,7 @@
             android:padding="@dimen/space_8"
             android:text="@string/modrinth_no_versions"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

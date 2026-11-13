@@ -10,16 +10,22 @@
 # JNI-bound classes: keep the class name, the method names and the native methods.
 # ---------------------------------------------------------------------------
 
-# The preloader bridge (Java -> libpreloader.so). Every public method here is either a native
+# The sweetloader bridge (Java -> libsweetloader.so). Every public method here is either a native
 # method or called from a native callback by name.
 #
-# The package is org.chimeramc.client.preloader, NOT ...client.launcher.preloader: the files sit in
-# a `launcher/preloader/` directory, but the package declaration (and therefore the mangled JNI
-# symbol) is `preloader`. Keeping the wrong path left every native method reachable only through the
+# The package is org.chimeramc.client.preloader, NOT ...client.launcher.sweetloader: the files sit in
+# a `launcher/sweetloader/` directory, but the package declaration (and therefore the mangled JNI
+# symbol) is `sweetloader`. Keeping the wrong path left every native method reachable only through the
 # broad `native <methods>` rule below — which keeps the method but still lets R8 rename the class,
 # so `Java_org_chimeramc_client_preloader_PreloaderInput_*` would no longer resolve. The directory
 # segment is not part of the name; keep the package.
 -keep class org.chimeramc.client.preloader.** { *; }
+
+# The .universe / .singularity engine JNI surface (Java -> libcaramel_universe.so and
+# libcaramel_singularity.so). The JNI symbols encode the FQN and every method name, so both the
+# package and the class must survive R8 untouched.
+-keep class org.chimeramc.client.universe.** { *; }
+-keep class org.chimeramc.client.singularity.** { *; }
 
 # The JNI helpers under core.jni.
 -keep class org.chimeramc.client.core.jni.** { *; }
@@ -27,8 +33,6 @@
 # The mod loader's lib bindings (io.bambosan.mbloader.launcherUtils.LibBindings).
 -keep class io.bambosan.mbloader.launcherUtils.** { *; }
 
-# The AntEgg native bridge (Java -> libpreloader.so AntEggJni).
--keep class org.chimeramc.client.core.antegg.** { *; }
 
 # Keep every declared native method and its owning class, anywhere in the app, so a new binding
 # cannot be silently obfuscated.

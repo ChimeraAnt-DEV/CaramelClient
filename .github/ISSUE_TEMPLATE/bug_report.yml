@@ -10,7 +10,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: GlowberryClient version
+      label: CaramelClient version
       description: Shown in Settings → About, or on the release page you installed from.
       placeholder: e.g. BETA3
     validations:
@@ -51,7 +51,7 @@ body:
     id: diagnostics
     attributes:
       label: Diagnostics report
-      description: If possible, paste the report from Settings → Diagnostics → Copy report. This includes app/preloader versions, signature DB status, cosmetics hook status, extraction version, and any mod load errors.
+      description: If possible, paste the report from Settings → Diagnostics → Copy report. This includes app/sweetloader versions, signature DB status, cosmetics hook status, extraction version, and any mod load errors.
       render: text
   - type: checkboxes
     id: terms

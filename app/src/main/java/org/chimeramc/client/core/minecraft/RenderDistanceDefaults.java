@@ -3,8 +3,8 @@ package org.chimeramc.client.core.minecraft;
 /**
  * Defaults for the dynamic-render-distance governor.
  *
- * <p>These are the bounds the launcher pushes to the preloader; the hysteresis itself lives in the
- * preloader's {@code OptifineGovernor} so the step rule is unit-tested once.
+ * <p>These are the bounds the launcher pushes to the sweetloader; the hysteresis itself lives in the
+ * sweetloader's {@code OptifineGovernor} so the step rule is unit-tested once.
  */
 public final class RenderDistanceDefaults {
 

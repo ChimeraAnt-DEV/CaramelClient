@@ -32,7 +32,7 @@ public final class BedrockGeometry {
 
     /** The geometry header: identifier and the atlas the UVs are written against. */
     public static final class Description {
-        /** e.g. {@code "geometry.glowberry.wing"}. */
+        /** e.g. {@code "geometry.caramel.wing"}. */
         public String identifier;
         public int textureWidth;
         public int textureHeight;

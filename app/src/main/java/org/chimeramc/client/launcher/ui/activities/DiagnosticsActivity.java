@@ -36,7 +36,7 @@ import org.chimeramc.client.core.versions.VersionManager;
 import org.chimeramc.client.core.mods.ModLoadDiagnostics;
 import org.chimeramc.client.core.mods.ModManager;
 import org.chimeramc.client.preloader.PreloaderInput;
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager;
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager;
 import org.chimeramc.client.ui.activities.BaseActivity;
 import org.chimeramc.client.ui.animation.DynamicAnim;
 import org.chimeramc.client.ui.dialogs.CustomAlertDialog;
@@ -59,7 +59,7 @@ import org.chimeramc.client.preloader.BerryApi;
  * In-app diagnostics (U16) plus the "Repair installation" action (G2).
  *
  * <p>The launch pipeline is hard to debug from logcat (no adb on a consumer device), so this screen
- * reads the same live state the pipeline uses — app/preloader versions, extraction version, signature
+ * reads the same live state the pipeline uses — app/sweetloader versions, extraction version, signature
  * rule source+revision, native render hook, and the persisted mod-load failure store — and renders it
  * as shareable plain text. Every unknown reading renders as "unknown", never as a made-up number.
  *
@@ -114,15 +114,15 @@ public class DiagnosticsActivity extends BaseActivity {
         String highestCoveredVersion = "";
         boolean nativeLoaded;
         boolean skinSeam;
-        /** Whether the preloader's player-render hook is live (read once, off the UI thread). */
+        /** Whether the sweetloader's player-render hook is live (read once, off the UI thread). */
         boolean renderHookLive;
         /**
-         * The preloader's per-feature hook availability report. Never null; an
+         * The sweetloader's per-feature hook availability report. Never null; an
          * unreadable/absent blob reads as the empty report, which the row renders as "no report".
          */
         FeatureAvailabilityReport featureAvailability = FeatureAvailabilityReport.empty();
         /**
-         * The preloader's hook self-test report. Never null; an absent blob reads as the
+         * The sweetloader's hook self-test report. Never null; an absent blob reads as the
          * empty report, which the row renders as "no self-test".
          */
         HookSelfTestReport hookSelfTest = HookSelfTestReport.empty();
@@ -207,7 +207,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String bundle = buildDebugBundle();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient debug info", bundle));
             Toast.makeText(this, R.string.diagnostics_debug_info_copied, Toast.LENGTH_LONG).show();
         }
     }
@@ -222,7 +222,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String bundle = buildDebugBundle();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient debug info", bundle));
         }
         String url = getString(R.string.discord_join_url);
         try {
@@ -285,15 +285,15 @@ public class DiagnosticsActivity extends BaseActivity {
                 || GamePackageManager.isExtractionAttempted(this, out.version);
         // The same flag the launch path and Repair read, so this row can never disagree with them.
         out.libraryRepairNeeded = out.version != null && out.version.needsRepair;
-        out.rulesSource = PreloaderSignatureRulesManager.getRulesSource(this);
-        out.rulesRevision = PreloaderSignatureRulesManager.getRulesRevision(this);
+        out.rulesSource = SweetLoaderSignatureRulesManager.getRulesSource(this);
+        out.rulesRevision = SweetLoaderSignatureRulesManager.getRulesRevision(this);
         if (out.version != null && out.version.versionCode != null
                 && !out.version.versionCode.isEmpty()) {
-            out.coverageFailure = PreloaderSignatureRulesManager
+            out.coverageFailure = SweetLoaderSignatureRulesManager
                     .describeCoverageFailure(this, out.version.versionCode);
-            out.rulesNewerBuild = PreloaderSignatureRulesManager
+            out.rulesNewerBuild = SweetLoaderSignatureRulesManager
                     .installedBuildNewerThanRules(this, out.version.versionCode);
-            out.highestCoveredVersion = PreloaderSignatureRulesManager
+            out.highestCoveredVersion = SweetLoaderSignatureRulesManager
                     .highestCoveredVersion(this);
         }
         try {
@@ -489,7 +489,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String sourceLabel;
         if (data.rulesSource == null) {
             sourceLabel = getString(R.string.diagnostics_rules_unknown);
-        } else if (PreloaderSignatureRulesManager.SOURCE_REMOTE.equals(data.rulesSource)) {
+        } else if (SweetLoaderSignatureRulesManager.SOURCE_REMOTE.equals(data.rulesSource)) {
             sourceLabel = getString(R.string.diagnostics_rules_remote);
         } else {
             sourceLabel = getString(R.string.diagnostics_rules_bundled);
@@ -540,7 +540,7 @@ public class DiagnosticsActivity extends BaseActivity {
                 data.skinSeam ? getString(R.string.diagnostics_hook_live)
                               : getString(R.string.diagnostics_hook_inactive));
         // The script/runtime backend is a separate native library with its own version, so the
-        // screen reports what the preloader actually found rather than assuming it is present. A
+        // screen reports what the sweetloader actually found rather than assuming it is present. A
         // missing backend is then visible here before a launch, not only when a feature does nothing.
         addRow(rows, R.string.diagnostics_field_berry_api, BerryApi.summary());
         // The cosmetics surface is a distinct sub-ABI of the same library: the backend can be
@@ -550,12 +550,12 @@ public class DiagnosticsActivity extends BaseActivity {
         // The input backend is a separate seam from the runtime: the library can be present while
         // nothing is registered to inject input through it, which is a distinct failure state.
         addRow(rows, R.string.diagnostics_field_input_backend, GameBridge.statusLine());
-        // Which preloader hooks actually installed on this build. A feature built on a
+        // Which sweetloader hooks actually installed on this build. A feature built on a
         // missing hook is otherwise indistinguishable from a broken one, so the state is listed per
         // hook rather than left for the user to infer from an overlay that draws nothing.
         addRow(rows, R.string.diagnostics_field_hooks, HookAvailability.summary());
-        // The preloader's own per-feature report. The launcher cannot know the preloader's
-        // feature list, so this is the preloader's answer rendered verbatim: which seam resolved,
+        // The sweetloader's own per-feature report. The launcher cannot know the sweetloader's
+        // feature list, so this is the sweetloader's answer rendered verbatim: which seam resolved,
         // which did not, and why. It is distinct from the hook table above, which covers only the
         // hooks the launcher knows how to ask about.
         addRow(rows, R.string.diagnostics_field_feature_availability,
@@ -565,14 +565,14 @@ public class DiagnosticsActivity extends BaseActivity {
         // — so a build where the backend itself cannot patch code is distinguishable from one where
         // a single signature did not resolve.
         addRow(rows, R.string.diagnostics_field_hook_self_test, data.hookSelfTest.summary());
-        // The preloader is a separate library with its own C ABI version. Reporting it here makes a
+        // The sweetloader is a separate library with its own C ABI version. Reporting it here makes a
         // client/native mismatch visible before a launch, rather than as a feature that silently
         // does nothing because the two were built from different ABI revisions.
-        addRow(rows, R.string.diagnostics_field_preloader_abi,
+        addRow(rows, R.string.diagnostics_field_sweetloader_abi,
                 PreloaderInput.abiMatches(PreloaderInput.abiVersion())
-                        ? getString(R.string.diagnostics_preloader_abi_ok,
+                        ? getString(R.string.diagnostics_sweetloader_abi_ok,
                                 PreloaderInput.abiVersion())
-                        : getString(R.string.diagnostics_preloader_abi_mismatch,
+                        : getString(R.string.diagnostics_sweetloader_abi_mismatch,
                                 PreloaderInput.abiVersion(),
                                 PreloaderInput.EXPECTED_ABI_VERSION));
     }
@@ -770,7 +770,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String report = buildReport();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient diagnostics", report));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient diagnostics", report));
             Toast.makeText(this, R.string.diagnostics_copied, Toast.LENGTH_SHORT).show();
         }
     }
@@ -795,7 +795,7 @@ public class DiagnosticsActivity extends BaseActivity {
     private String buildReport() {
         Snapshot data = current();
         StringBuilder sb = new StringBuilder();
-        sb.append("GlowberryClient Diagnostics\n");
+        sb.append("CaramelClient Diagnostics\n");
         sb.append("===========================\n\n");
         sb.append("App version: ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n");
         sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(ApiLevels.sdkInt()).append(")\n");
@@ -876,14 +876,14 @@ public class DiagnosticsActivity extends BaseActivity {
             sb.append("Skin capture seam: ")
                     .append(data.skinSeam ? "live" : "inactive").append("\n");
         }
-        // The preloader's per-feature report, one line per feature, so a bug report names
+        // The sweetloader's per-feature report, one line per feature, so a bug report names
         // the missing seam instead of only that "cosmetics do not work".
-        sb.append("\nPreloader feature availability:\n");
+        sb.append("\nSweetLoader feature availability:\n");
         sb.append(data.featureAvailability.describeAll()).append("\n");
 
         // The hook self-test, so a report distinguishes a backend that cannot patch from a
         // signature that did not resolve.
-        sb.append("\nPreloader hook self-test:\n");
+        sb.append("\nSweetLoader hook self-test:\n");
         sb.append(data.hookSelfTest.describeAll()).append("\n");
 
         // The local counters, so a report carries them without the reporter having to

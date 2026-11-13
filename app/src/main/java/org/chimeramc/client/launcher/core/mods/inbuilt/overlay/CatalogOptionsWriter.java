@@ -74,7 +74,7 @@ final class CatalogOptionsWriter {
                     LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
                     FeatureSettings.StorageType.INTERNAL.name()));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "CatalogOptionsWriter:77", "Ignored a failure at CatalogOptionsWriter:77", ignored);
+            AppLog.warnOnce("CaramelClient", "CatalogOptionsWriter:77", "Ignored a failure at CatalogOptionsWriter:77", ignored);
         }
         FeatureSettings.StorageType resolved = LauncherStorage.normalizeContentStorageType(
                 stored, version.versionIsolation);

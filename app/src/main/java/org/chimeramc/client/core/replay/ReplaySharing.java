@@ -24,12 +24,12 @@ public final class ReplaySharing {
      *
      * <p>It is a JSON document, not a video, so declaring {@code video/mp4} would make a receiver
      * try to play it and fail. {@code application/json} is the honest type; the extension still
-     * tells a Glowberry install what it is.
+     * tells a Caramel install what it is.
      */
     public static final String REPLAY_MIME_TYPE = "application/json";
 
     /** Shown when the clip has no usable name, so the subject is never empty. */
-    public static final String FALLBACK_TITLE = "GlowberryClient clip";
+    public static final String FALLBACK_TITLE = "CaramelClient clip";
 
     private ReplaySharing() {
     }

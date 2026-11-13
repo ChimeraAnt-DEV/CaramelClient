@@ -7,7 +7,7 @@ import android.content.Context;
 import org.chimeramc.client.util.PersonalizationManager;
 
 /**
- * The single source of truth for the GlowberryClient UI's colours, shape and type.
+ * The single source of truth for the CaramelClient UI's colours, shape and type.
  *
  * <p>This replaces the retired violet/magenta brand palette and the two separate mod-menu themes
  * ({@code ModMenuTheme} and {@code VipTheme}). Every screen — the radial wheel, the one mod menu, the
@@ -102,7 +102,7 @@ public final class UiTokens {
 
     /**
      * The single spacing scale (U9): 4 / 8 / 12 / 16 / 24 / 32dp. Any margin or padding in a
-     * Glowberry surface is one of these, so vertical rhythm is consistent by construction.
+     * Caramel surface is one of these, so vertical rhythm is consistent by construction.
      */
     public static final int SPACE_1 = 4;
     public static final int SPACE_2 = 8;
@@ -257,7 +257,7 @@ public final class UiTokens {
             int accent = new PersonalizationManager(context).getAccentColor();
             if (accent != 0) return accent;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "UiTokens:260", "Ignored a failure at UiTokens:260", ignored);
+            AppLog.warnOnce("CaramelClient", "UiTokens:260", "Ignored a failure at UiTokens:260", ignored);
         }
         return ACCENT_500;
     }

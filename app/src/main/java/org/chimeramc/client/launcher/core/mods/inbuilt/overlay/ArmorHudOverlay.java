@@ -118,7 +118,7 @@ public final class ArmorHudOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ArmorHudOverlay:121", "Ignored a failure at ArmorHudOverlay:121", ignored);
+            AppLog.warnOnce("CaramelClient", "ArmorHudOverlay:121", "Ignored a failure at ArmorHudOverlay:121", ignored);
         }
         overlayView = null;
         wmParams = null;

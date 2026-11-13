@@ -79,7 +79,7 @@ public class InbuiltOverlayManager {
     private static final int START_X = 50;
     private long lastVisibilityStateHash = Long.MIN_VALUE;
     /**
-     * Latches the first time the preloader reports the game HUD screen is up.
+     * Latches the first time the sweetloader reports the game HUD screen is up.
      *
      * Until that happens the native hook may simply not be installed (its signature rules did
      * not resolve), and an unproven "false" must not be read as "no game". See
@@ -124,7 +124,7 @@ public class InbuiltOverlayManager {
         org.chimeramc.client.core.cosmetics.NativeCosmeticsRuntime.init(activity);
 
         // Cosmetic sync is independent of voice: it advertises the equipped cape/accessory/pet to
-        // other Chimera users in the world so they can see it, on its own socket and its own pref.
+        // other Caramel users in the world so they can see it, on its own socket and its own pref.
         startCosmeticSync(manager);
 
         if (hudOverlay == null) {
@@ -845,7 +845,7 @@ public class InbuiltOverlayManager {
                     enabledModules.add(moduleId);
                 }
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "InbuiltOverlayManager:848", "Ignored a failure at InbuiltOverlayManager:848", ignored);
+                AppLog.warnOnce("CaramelClient", "InbuiltOverlayManager:848", "Ignored a failure at InbuiltOverlayManager:848", ignored);
             }
         }
 
@@ -1115,7 +1115,7 @@ public class InbuiltOverlayManager {
      * Starts advertising and collecting equipped cosmetics over the LAN.
      *
      * <p>Independent of voice: a player can have voice off and still want their cape visible to
-     * other Chimera users, so this is its own module on its own socket, gated by its own pref. The
+     * other Caramel users, so this is its own module on its own socket, gated by its own pref. The
      * peer id is the same device id voice uses, so a peer is the same person across both features.
      */
     private void startCosmeticSync(InbuiltModManager manager) {
@@ -1197,9 +1197,9 @@ public class InbuiltOverlayManager {
     private String deviceName() {
         try {
             String name = android.os.Build.MODEL;
-            return name == null || name.trim().isEmpty() ? "Chimera" : name.trim();
+            return name == null || name.trim().isEmpty() ? "Caramel" : name.trim();
         } catch (Throwable t) {
-            return "Chimera";
+            return "Caramel";
         }
     }
 
@@ -1307,7 +1307,7 @@ public class InbuiltOverlayManager {
      * Hands one controller key to the open Mod Menu, if there is one.
      *
      * <p>Public because the game activity calls it at the very top of {@code dispatchKeyEvent},
-     * before the preloader can swallow the press: a pad button the menu wants to use for navigation
+     * before the sweetloader can swallow the press: a pad button the menu wants to use for navigation
      * would otherwise be consumed by the game first.
      */
     public boolean handleMenuControllerKey(int rawKeyCode, int action) {
@@ -1933,7 +1933,7 @@ public class InbuiltOverlayManager {
         if (isHudScreenOpen) {
             gameWorldSeen = true;
         }
-        // A resumed game session is the fallback signal when the preloader's HUD hook never
+        // A resumed game session is the fallback signal when the sweetloader's HUD hook never
         // installs; without it the native "false" hid every HUD overlay once the Mod Menu
         // closed. See OverlayVisibility for the full reasoning.
         boolean sessionActive = org.chimeramc.client.core.minecraft.MinecraftActivityState.isRunning()

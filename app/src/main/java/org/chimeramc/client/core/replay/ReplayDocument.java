@@ -28,7 +28,7 @@ import java.nio.file.Files;
  * capture) can be added as a base64 field without changing the envelope.
  *
  * <p><b>Self-describing.</b> The {@code format} tag and the {@code version} are on the wire, so a
- * reader handed an arbitrary file can tell whether it is a Glowberry replay and which revision it
+ * reader handed an arbitrary file can tell whether it is a Caramel replay and which revision it
  * was written by, rather than inferring it from the extension.
  *
  * <p><b>Fail-closed.</b> Any malformed, truncated or foreign file parses to an empty recording
@@ -198,13 +198,13 @@ public final class ReplayDocument {
             return new ReplayDocument(parsed.getAsJsonObject());
         } catch (Exception e) {
             // Gson throws on malformed JSON; a corrupt replay is "no replay", never a crash.
-            AppLog.warnOnce("GlowberryClient", "ReplayDocument:parse",
+            AppLog.warnOnce("CaramelClient", "ReplayDocument:parse",
                     "Ignored a malformed .glowreplay body", e);
             return new ReplayDocument(new JsonObject());
         }
     }
 
-    /** True when the body is a Glowberry replay container (the format tag matches). */
+    /** True when the body is a Caramel replay container (the format tag matches). */
     public static boolean looksLikeGlowReplay(String text) {
         if (text == null || text.trim().isEmpty()) return false;
         try {
@@ -230,7 +230,7 @@ public final class ReplayDocument {
             Files.write(target.toPath(), document.serialize().getBytes(StandardCharsets.UTF_8));
             return target;
         } catch (IOException e) {
-            AppLog.warnOnce("GlowberryClient", "ReplayDocument:write",
+            AppLog.warnOnce("CaramelClient", "ReplayDocument:write",
                     "Could not write the .glowreplay file", e);
             return null;
         }

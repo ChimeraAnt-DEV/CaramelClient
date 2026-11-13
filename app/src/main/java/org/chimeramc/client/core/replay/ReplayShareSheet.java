@@ -14,7 +14,7 @@ import java.io.File;
 /**
  * Opens the system share sheet for a clip.
  *
- * <p>The gallery export copies a clip into {@code Movies/GlowberryClient}, but getting it to
+ * <p>The gallery export copies a clip into {@code Movies/CaramelClient}, but getting it to
  * Discord or a chat app from there is several steps. This shares the clip file directly with
  * {@code ACTION_SEND} and a {@code FileProvider} content uri, which is what an app on API 24+
  * needs to hand a private file to another app.

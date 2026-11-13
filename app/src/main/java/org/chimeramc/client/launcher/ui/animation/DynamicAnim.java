@@ -373,7 +373,7 @@ public final class DynamicAnim {
                     .setInterpolator(getDefaultInterpolator())
                     .start();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "DynamicAnim:376", "Ignored a failure at DynamicAnim:376", ignored);
+            AppLog.warnOnce("CaramelClient", "DynamicAnim:376", "Ignored a failure at DynamicAnim:376", ignored);
         }
     }
 

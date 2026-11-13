@@ -1,6 +1,6 @@
 # Features
 
-GlowberryClient is centered on day-to-day Minecraft Bedrock launcher workflows. Native mod APIs exist, but they are an extension point for developers rather than the default user path.
+CaramelClient is centered on day-to-day Minecraft Bedrock launcher workflows. Native mod APIs exist, but they are an extension point for developers rather than the default user path.
 
 ## Version and Instance Management
 
@@ -14,7 +14,7 @@ Backups are intended for recovery and migration. Keep important backups outside 
 
 ## Xbox Accounts
 
-GlowberryClient can manage multiple Xbox accounts inside the launcher. Select the account you want before launching Minecraft so the game starts with the expected identity.
+CaramelClient can manage multiple Xbox accounts inside the launcher. Select the account you want before launching Minecraft so the game starts with the expected identity.
 
 ## Quick Launch
 
@@ -24,4 +24,4 @@ Quick Launch uses Minecraft URI actions to jump directly into common flows. Depe
 
 Native SO modules are supported for users who intentionally install them and for developers building extensions. These modules run native code, so only install packages you trust.
 
-Developer documentation lives under [Developer](/guide/developer), with the Preloader API reference available from that section.
+Developer documentation lives under [Developer](/guide/developer), with the SweetLoader API reference available from that section.

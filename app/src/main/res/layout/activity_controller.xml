@@ -28,7 +28,7 @@
                 android:text="@string/controller_title"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_status_none"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:gravity="end" />
 
         </LinearLayout>
@@ -65,7 +65,7 @@
                 android:layout_marginBottom="@dimen/space_2"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
             <org.chimeramc.client.launcher.ui.views.StickPreviewView
                 android:id="@+id/controller_stick_preview"
@@ -84,7 +84,7 @@
             android:text="@string/controller_profiles_title"
             android:fontFamily="@font/misans"
             android:textColor="@color/primary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_2"
-            style="@style/Widget.Chimera.Card"
+            style="@style/Widget.Caramel.Card"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:padding="@dimen/space_3"
@@ -133,7 +133,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/empty_controller_profiles_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <TextView
@@ -143,7 +143,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/empty_controller_profiles_message"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
             </LinearLayout>
         </LinearLayout>
 
@@ -164,7 +164,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_profile_create"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textStyle="bold"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
@@ -181,7 +181,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_profile_rename"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -197,7 +197,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_profile_duplicate"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -212,7 +212,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_profile_delete"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -236,7 +236,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_next"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
@@ -253,7 +253,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_edit"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
@@ -281,7 +281,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_export_profile"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -296,7 +296,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_import_profile"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -312,7 +312,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/controller_bind_hint"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <!-- Anti-drift lives on this screen rather than inside the editor dialog: calibration
              samples live motion events, and a modal dialog would cover the pad and block them. -->
@@ -335,7 +335,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/controller_antidrift_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <TextView
@@ -345,7 +345,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/controller_antidrift_summary"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
             </LinearLayout>
 
             <android.widget.Switch
@@ -365,7 +365,7 @@
             android:gravity="center"
             android:fontFamily="@font/misans"
             android:text="@string/controller_calibrate"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:textColor="@color/on_surface"
             android:background="@drawable/bg_filter_chip"
@@ -379,7 +379,7 @@
             android:layout_marginTop="@dimen/space_1"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -398,7 +398,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_bind_device"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -413,7 +413,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_bind_device_clear"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -438,7 +438,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_bind_instance"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"
@@ -453,7 +453,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/misans"
                 android:text="@string/controller_bind_clear"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/on_surface"
                 android:background="@drawable/bg_filter_chip"
                 android:clickable="true"

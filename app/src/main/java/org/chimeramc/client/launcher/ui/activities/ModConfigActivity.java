@@ -199,7 +199,7 @@ public class ModConfigActivity extends BaseActivity {
         try {
             worker.execute(task);
         } catch (RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModConfigActivity:202", "Ignored a failure at ModConfigActivity:202", ignored);
+            AppLog.warnOnce("CaramelClient", "ModConfigActivity:202", "Ignored a failure at ModConfigActivity:202", ignored);
         }
     }
 

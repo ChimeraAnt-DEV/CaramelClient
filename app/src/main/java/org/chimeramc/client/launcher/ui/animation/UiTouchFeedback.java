@@ -92,7 +92,7 @@ public final class UiTouchFeedback {
                     vibrator.vibrate(VibrationEffect.createPredefined(predefined));
                     return;
                 } catch (Throwable ignored) {
-                    AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:95", "Ignored a failure at UiTouchFeedback:95", ignored);
+                    AppLog.warnOnce("CaramelClient", "UiTouchFeedback:95", "Ignored a failure at UiTouchFeedback:95", ignored);
                 }
                 vibrator.vibrate(VibrationEffect.createOneShot(fallbackMs, VibrationEffect.DEFAULT_AMPLITUDE));
             } else if (ApiLevels.atLeastO()) {
@@ -101,7 +101,7 @@ public final class UiTouchFeedback {
                 vibrator.vibrate(fallbackMs);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:104", "Ignored a failure at UiTouchFeedback:104", ignored);
+            AppLog.warnOnce("CaramelClient", "UiTouchFeedback:104", "Ignored a failure at UiTouchFeedback:104", ignored);
         }
     }
 
@@ -111,7 +111,7 @@ public final class UiTouchFeedback {
         try {
             view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "UiTouchFeedback:114", "Ignored a failure at UiTouchFeedback:114", ignored);
+            AppLog.warnOnce("CaramelClient", "UiTouchFeedback:114", "Ignored a failure at UiTouchFeedback:114", ignored);
         }
     }
 }

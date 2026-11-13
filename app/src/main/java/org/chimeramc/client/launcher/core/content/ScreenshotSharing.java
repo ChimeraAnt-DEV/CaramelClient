@@ -21,7 +21,7 @@ public final class ScreenshotSharing {
     public static final String MIME_TYPE = "image/png";
 
     /** Shown when the screenshot has no usable name, so the subject is never empty. */
-    public static final String FALLBACK_TITLE = "GlowberryClient screenshot";
+    public static final String FALLBACK_TITLE = "CaramelClient screenshot";
 
     private ScreenshotSharing() {
     }

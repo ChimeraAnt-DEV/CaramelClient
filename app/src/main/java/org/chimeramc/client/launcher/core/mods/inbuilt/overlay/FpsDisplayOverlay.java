@@ -278,7 +278,7 @@ public class FpsDisplayOverlay {
                 return fps > 0 ? fps : 0;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:262", "Ignored a failure at FpsDisplayOverlay:262", ignored);
+            AppLog.warnOnce("CaramelClient", "FpsDisplayOverlay:262", "Ignored a failure at FpsDisplayOverlay:262", ignored);
         }
         return 0;
     }
@@ -307,7 +307,7 @@ public class FpsDisplayOverlay {
                 try {
                     clampCurrentPosition(true);
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:291", "Ignored a failure at FpsDisplayOverlay:291", ignored);
+                    AppLog.warnOnce("CaramelClient", "FpsDisplayOverlay:291", "Ignored a failure at FpsDisplayOverlay:291", ignored);
                 }
             }
         }
@@ -458,7 +458,7 @@ public class FpsDisplayOverlay {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "FpsDisplayOverlay:442", "Ignored a failure at FpsDisplayOverlay:442", ignored);
+            AppLog.warnOnce("CaramelClient", "FpsDisplayOverlay:442", "Ignored a failure at FpsDisplayOverlay:442", ignored);
         }
         overlayView = null;
         statsText = null;

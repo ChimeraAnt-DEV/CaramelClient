@@ -20,7 +20,7 @@ import org.chimeramc.client.core.auth.storage.XalExporter
 import org.chimeramc.client.core.versions.GameVersion
 import io.bambosan.mbloader.launcherUtils.LibBindings
 import org.chimeramc.client.preloader.PreloaderInput
-import org.chimeramc.client.preloader.PreloaderSignatureRulesManager
+import org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager
 import org.chimeramc.client.util.LauncherStorage
 import java.io.File
 
@@ -107,17 +107,17 @@ object MinecraftRuntimePreparer {
         fileListener.onLog("Loading game loader")
         trace.mark("Game loader load started")
         val hasEnabledMods = modManager.getMods().any { it.isEnabled }
-        // Optifine mode applies through the preloader even with no mods, so load it whenever
+        // Optifine mode applies through the sweetloader even with no mods, so load it whenever
         // either a mod or the master switch needs it.
         val optifineWanted = org.chimeramc.client.settings.FeatureSettings
             .getInstance().isOptifineModeEnabled
-        // The preloader must be loaded before *any* PreloaderInput call. configureSignatureRules
+        // The sweetloader must be loaded before *any* PreloaderInput call. configureSignatureRules
         // below goes through that same JNI surface, so when neither a mod nor Optifine Mode wanted
         // the loader the call used to arrive with no library loaded, be discarded by the caught
         // UnsatisfiedLinkError, and the hooks were then installed later (from MinecraftActivity)
         // with no signature rules -- which faulted on the render thread. Loading here is a no-op
         // when MinecraftActivity would have loaded it anyway, and it is what makes the rules land.
-        if (!ModManager.ensurePreloaderLoaded()) {
+        if (!ModManager.ensureSweetLoaderLoaded()) {
             fileListener.onLog(
                 if (hasEnabledMods) "Game loader unavailable; enabled mods will not load"
                 else "Game loader unavailable; the session will launch without mods"
@@ -133,17 +133,17 @@ object MinecraftRuntimePreparer {
             trace.mark("Optifine mode configured")
         }
         // Only configure the rules once the library handle is live. A failed load is surfaced by
-        // the preloader's own "rules not delivered" guard at hook-install time; delivering into
+        // the sweetloader's own "rules not delivered" guard at hook-install time; delivering into
         // the void here would leave the same silent state the crash came from.
-        if (ModManager.ensurePreloaderLoaded()) {
+        if (ModManager.ensureSweetLoaderLoaded()) {
             // G5: fail closed on a build the signature DB does not cover. A rule file with no
-            // matching entry would feed scan-and-hope byte patterns into the preloader; the
+            // matching entry would feed scan-and-hope byte patterns into the sweetloader; the
             // hooks silently never install. Refuse to hand the file over and record a reason
             // the diagnostics screen can show instead of pretending the build is supported.
-            val coverageFailure = PreloaderSignatureRulesManager
+            val coverageFailure = SweetLoaderSignatureRulesManager
                 .describeCoverageFailure(context.applicationContext, version.versionCode)
             if (coverageFailure == null) {
-                val signatureRulesFile = PreloaderSignatureRulesManager
+                val signatureRulesFile = SweetLoaderSignatureRulesManager
                     .getRulesFile(context.applicationContext)
                 // Point the scan cache at private storage before the rules are delivered: a
                 // repeat launch of the same game build then skips the byte-pattern scan (items
@@ -151,14 +151,14 @@ object MinecraftRuntimePreparer {
                 PreloaderInput.setSignatureCacheDir(
                     File(context.applicationContext.filesDir, "signature_cache"))
                 PreloaderInput.configureSignatureRules(signatureRulesFile, version.versionCode)
-                trace.mark("Preloader signature rules configured",
+                trace.mark("SweetLoader signature rules configured",
                     signatureRulesFile?.absolutePath ?: "<none>")
             } else {
                 fileListener.onLog("Signature rules skipped: $coverageFailure")
-                trace.mark("Preloader signature rules skipped (no coverage)", coverageFailure)
+                trace.mark("SweetLoader signature rules skipped (no coverage)", coverageFailure)
             }
         } else {
-            fileListener.onLog("Game loader unavailable; preloader signature rules not delivered")
+            fileListener.onLog("Game loader unavailable; sweetloader signature rules not delivered")
         }
 
         fileListener.onLog("Loading native libraries")
@@ -254,7 +254,7 @@ object MinecraftRuntimePreparer {
         }
 
         // Publish the equipped set into the native cosmetics registry before every launch, so the
-        // preloader's player-render hook has the cape/accessory/pet ready the moment the game
+        // sweetloader's player-render hook has the cape/accessory/pet ready the moment the game
         // starts. getEquippedCapeForDisplay applies the Optifine default, so an Optifine user with
         // no cape chosen is not left bare. There is no resource pack to write and nothing to reload.
         // A failure is logged, never fatal: a cosmetic must not block the launch.

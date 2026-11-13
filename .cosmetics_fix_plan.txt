@@ -1,5 +1,5 @@
-Bug fixes: GLOWBERRYCLIENT COSMETICS FIX PLAN
-Base: the newest GlowberryClient-main zip (rules revision 7). Work one phase at a time.
+Bug fixes: CARAMELCLIENT COSMETICS FIX PLAN
+Base: the newest CaramelClient-main zip (rules revision 7). Work one phase at a time.
 Run the unit tests after every step. Commit each step separately as Lynxifyy.
 Written from reading the code and a device diagnostics report. Nothing here was run on a device.
 
@@ -14,7 +14,7 @@ ALREADY DONE IN THE NEWEST ZIP (do not redo; verify only)
 - Account skin lookup now turns on after a Microsoft sign-in (AccountSkinPrefs).
 - Module catalogue sorted by the route each module needs (docs/MODULE_PHASES.md, ModuleScope);
   the "needs native feed" badge now reads that classification.
-- Preloader signature rules are at revision 7 with per-version signatures.
+- SweetLoader signature rules are at revision 7 with per-version signatures.
 - Changed but NOT yet reviewed: RadialHeadTurn, RadialWheelLayout, RadialMenuView, CosmeticsPanel.
   Check that the head follows the cursor and the active-module list sits next to the wheel.
 
@@ -27,8 +27,8 @@ Evidence: diagnostics said "Rules source: bundled (revision 0)", "Rules delivere
     match. Verify with a unit test using the string "1.26.33.1". If the 1.26.33.x signatures are
     unchanged, widen the range to 1.26.33.99; otherwise derive new ones with tools/verify-binary.
 0.2 Revision 0. The source file is revision 7 but the device reported 0. Confirm
-    preloader/preloader_signature_rules_source.json is actually inside the APK assets
-    (PreloaderSignatureRulesManager.ASSET_DEFAULT_RULES), log why loading is skipped, and add a test
+    sweetloader/sweetloader_signature_rules_source.json is actually inside the APK assets
+    (SweetLoaderSignatureRulesManager.ASSET_DEFAULT_RULES), log why loading is skipped, and add a test
     that fails if the packaged revision differs from the source revision.
 0.3 Diagnostics. CosmeticsDiagnosticsReport must print the FIRST failing stage and whether it was
     generated inside a world. Add the app version (it printed "unknown").
@@ -46,7 +46,7 @@ Acceptance: the radial wheel head and the cosmetics preview show the signed-in p
 PHASE 2 - CAPES (engine-native)
 Evidence: the diagnostics reported "GL backend: Vulkan (GLES unavailable)". The raw OpenGL ES
 renderer cannot draw on Vulkan, so capes must go through the engine's own texture.
-2.1 Route capes through the mce_image_hook cape texture swap (preloader). It must work on Vulkan.
+2.1 Route capes through the mce_image_hook cape texture swap (sweetloader). It must work on Vulkan.
 2.2 Replace the generated 10x16-pixel cloth (CapePatterns, CapeTexturePainter) with 20-30 authored
     cape images and hand-written names. Test whether the engine accepts sizes above 64x32.
 2.3 Replace the preview cloth simulation (CapeSimulator, PreviewCapeScene) with one rigid

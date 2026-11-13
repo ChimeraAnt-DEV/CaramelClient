@@ -55,7 +55,7 @@ for 1.26.33.1.**
 |---|---|---|
 | typeinfo | `0x14055630` | as above |
 | vtable address point | `0x140545a0` | |
-| slot 31 | `0x9d72118` | the slot the preloader hooks for the local-player feed |
+| slot 31 | `0x9d72118` | the slot the sweetloader hooks for the local-player feed |
 
 This matches the pinned `kGetLocalPlayerSlot = 31`, so the feed's design survives 1.26.33.1. The
 `Actor` field offsets the feed reads (`+0x230` position, `+0x238` rotation) are **not** derivable

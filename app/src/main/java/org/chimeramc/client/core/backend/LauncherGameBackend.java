@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link GameBackend#supports}). The rest are provided by injecting the same key/mouse events a
  * physical device would produce.
  *
- * <p>The frame rate is provided when a {@link FrameTickSource} is supplied: the preloader's render
+ * <p>The frame rate is provided when a {@link FrameTickSource} is supplied: the sweetloader's render
  * hook counts one tick per frame the game actually draws, and {@link GameFrameRate} turns that into
  * a rate. With no tick source (a build without the hook) the capability is not advertised and the
  * overlay keeps its host-side meter, so the number is never invented.
@@ -143,7 +143,7 @@ public final class LauncherGameBackend implements GameBackend {
     }
 
     /**
-     * The game's frame rate, derived from the preloader's render-hook frame counter.
+     * The game's frame rate, derived from the sweetloader's render-hook frame counter.
      *
      * <p>The render hook increments one tick per frame the game actually draws, so counting ticks
      * over a wall-clock window is the game's own frame rate — not the host's vsync rate and not a
@@ -238,7 +238,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectKey(key, false);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "LauncherGameBackend:241", "Ignored a failure at LauncherGameBackend:241", ignored);
+                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:241", "Ignored a failure at LauncherGameBackend:241", ignored);
             }
         }
 
@@ -248,7 +248,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectMouseButton(button, false);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "LauncherGameBackend:251", "Ignored a failure at LauncherGameBackend:251", ignored);
+                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:251", "Ignored a failure at LauncherGameBackend:251", ignored);
             }
         }
     }

@@ -213,7 +213,7 @@ private fun CharacterPreview(
                     // Releasing a preview must never be the reason a screen fails to leave, but a
                     // failure here is still worth one line in the log.
                     org.chimeramc.client.util.AppLog.warnOnce(
-                        "GlowberryClient", "LaunchHero:release",
+                        "CaramelClient", "LaunchHero:release",
                         "Ignored a failure releasing the character preview", t,
                     )
                 }

@@ -226,7 +226,7 @@ public final class PlayerSkinProvider {
                 if (decoded != null) cached = normalise(decoded);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "PlayerSkinProvider:223", "Ignored a failure at PlayerSkinProvider:223", ignored);
+            AppLog.warnOnce("CaramelClient", "PlayerSkinProvider:223", "Ignored a failure at PlayerSkinProvider:223", ignored);
         }
         // 2. Re-sync when the cache is missing, for another account, or older than the trust window.
         //    The cached skin is still returned now, so the preview does not flash the fallback while
@@ -274,7 +274,7 @@ public final class PlayerSkinProvider {
                 if (found != null) return found;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "PlayerSkinProvider:270", "Ignored a failure at PlayerSkinProvider:270", ignored);
+            AppLog.warnOnce("CaramelClient", "PlayerSkinProvider:270", "Ignored a failure at PlayerSkinProvider:270", ignored);
         }
         return null;
     }

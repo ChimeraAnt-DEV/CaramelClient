@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Resolves the refresh rate Game Performance Mode should request.
  *
- * <p>Mirrors the preloader's {@code SelectTargetRefreshRate}: the highest supported rate strictly
+ * <p>Mirrors the sweetloader's {@code SelectTargetRefreshRate}: the highest supported rate strictly
  * above the one in use, or 0 when there is nothing to unlock (a 60Hz-only panel, an unknown mode
  * list, or the game already at the top rate). The launcher owns the request because only it holds
- * the {@code Window}; the preloader reports the outcome.
+ * the {@code Window}; the sweetloader reports the outcome.
  *
  * <p>{@link #resolveTargetHz} reads the display; {@link #selectTargetHz} is pure and unit-tested.
  */

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="@string/version_name"
         android:textColor="?attr/colorPrimary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+        android:textAppearance="@style/TextAppearance.Caramel.Title"
         android:textStyle="bold"
         android:fontFamily="@font/misans"
     android:accessibilityHeading="true" />
@@ -26,7 +26,7 @@
         android:layout_marginTop="@dimen/space_4"
         android:padding="@dimen/space_3"
         android:textColor="?attr/colorOnSurface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+        android:textAppearance="@style/TextAppearance.Caramel.Title"
         android:singleLine="true"
         android:inputType="text"
         android:background="@drawable/bg_edit_text"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:text="@string/name_invalid"
         android:textColor="@color/status_danger_soft"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:visibility="gone"
         android:layout_marginTop="@dimen/space_1" />
 
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:text="@string/import_isolation_note"
         android:textColor="?attr/colorOnSurfaceVariant"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:layout_marginTop="@dimen/space_3" />
 
     <LinearLayout

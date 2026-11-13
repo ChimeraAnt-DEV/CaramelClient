@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.chimeramc.client.core.antegg.ModHash;
+import org.chimeramc.client.core.mods.ModHash;
 import org.chimeramc.client.core.minecraft.ElfHeaderValidator;
 import org.chimeramc.client.core.minecraft.ElfLibraryReader;
 import org.chimeramc.client.core.minecraft.NativeLibraryLoadOrder;
@@ -166,7 +166,7 @@ public class ModNativeLoader {
 
                 System.load(targetFile.getAbsolutePath());
 
-                if (ModManager.ensurePreloaderLoaded()) {
+                if (ModManager.ensureSweetLoaderLoaded()) {
                     if (!ModManager.initializeLoadedMod(
                             targetFile.getAbsolutePath(),
                             cachedEntry.sourceDirectory.getAbsolutePath(),

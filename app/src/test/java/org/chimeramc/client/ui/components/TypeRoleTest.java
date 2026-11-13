@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * The type scale (U8), enforced against the real resource files.
  *
  * <p>The roles exist twice by necessity — once as {@code UiType} for code that builds a view, once
- * as {@code TextAppearance.Glowberry.*} for a layout that declares one — and a scale that lives in
+ * as {@code TextAppearance.Caramel.*} for a layout that declares one — and a scale that lives in
  * two places is a scale that drifts. This test reads the layout and style XML off disk and asserts
  * the two halves agree, so a size changed in one place and not the other fails here instead of
  * shipping as two screens whose "body text" is a different size.
@@ -49,9 +49,9 @@ public class TypeRoleTest {
     public void everyRoleExistsAsAStyleWithTheCodesSize() throws IOException {
         String styles = readResource("app/src/main/res/values/styles.xml");
         for (Map.Entry<String, Float> e : expectedSizes().entrySet()) {
-            String size = styleItem(styles, "TextAppearance.Glowberry." + e.getKey(),
+            String size = styleItem(styles, "TextAppearance.Caramel." + e.getKey(),
                     "android:textSize");
-            assertEquals("TextAppearance.Glowberry." + e.getKey() + " size",
+            assertEquals("TextAppearance.Caramel." + e.getKey() + " size",
                     formatSp(e.getValue()), size);
         }
     }
@@ -61,11 +61,11 @@ public class TypeRoleTest {
         String styles = readResource("app/src/main/res/values/styles.xml");
         // The base role style carries the family; each role inherits it rather than restating one.
         assertEquals("@font/misans",
-                styleItem(styles, "TextAppearance.Glowberry", "android:fontFamily"));
+                styleItem(styles, "TextAppearance.Caramel", "android:fontFamily"));
         for (String role : expectedSizes().keySet()) {
-            assertFalse("TextAppearance.Glowberry." + role + " must not restate a family; it "
+            assertFalse("TextAppearance.Caramel." + role + " must not restate a family; it "
                             + "inherits the base role's, so one family change moves every role",
-                    hasItem(styles, "TextAppearance.Glowberry." + role, "android:fontFamily"));
+                    hasItem(styles, "TextAppearance.Caramel." + role, "android:fontFamily"));
         }
     }
 
@@ -74,9 +74,9 @@ public class TypeRoleTest {
         String styles = readResource("app/src/main/res/values/styles.xml");
         // Wordmark is display art, Micro is a badge inside a pill. Both are deliberate, and both
         // are named so they stay countable rather than becoming an accidental third scale.
-        assertEquals("34sp", styleItem(styles, "TextAppearance.Glowberry.Wordmark",
+        assertEquals("34sp", styleItem(styles, "TextAppearance.Caramel.Wordmark",
                 "android:textSize"));
-        assertEquals("9sp", styleItem(styles, "TextAppearance.Glowberry.Micro",
+        assertEquals("9sp", styleItem(styles, "TextAppearance.Caramel.Micro",
                 "android:textSize"));
     }
 
@@ -91,7 +91,7 @@ public class TypeRoleTest {
             }
         }
         assertTrue("a raw textSize is the drift the type roles exist to prevent; use a "
-                        + "TextAppearance.Glowberry.* role instead. Offenders: " + offenders,
+                        + "TextAppearance.Caramel.* role instead. Offenders: " + offenders,
                 offenders.isEmpty());
     }
 
@@ -102,7 +102,7 @@ public class TypeRoleTest {
         for (Path layout : layoutFiles()) {
             String xml = new String(Files.readAllBytes(layout), StandardCharsets.UTF_8);
             Matcher m = Pattern.compile(
-                    "android:textAppearance=\"@style/(TextAppearance\\.Glowberry\\.[A-Za-z]+)\"")
+                    "android:textAppearance=\"@style/(TextAppearance\\.Caramel\\.[A-Za-z]+)\"")
                     .matcher(xml);
             while (m.find()) {
                 String name = m.group(1);
@@ -119,7 +119,7 @@ public class TypeRoleTest {
     @Test
     public void theRoleFamilyIsTheCjkCapableOne() throws IOException {
         String styles = readResource("app/src/main/res/values/styles.xml");
-        String xmlFamily = styleItem(styles, "TextAppearance.Glowberry", "android:fontFamily");
+        String xmlFamily = styleItem(styles, "TextAppearance.Caramel", "android:fontFamily");
         assertEquals("@font/misans", xmlFamily);
 
         // The code half must name the same family, or a view built in code would use a Latin-only
