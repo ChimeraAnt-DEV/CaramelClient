@@ -343,7 +343,7 @@ public class SplashActivity extends BaseActivity {
         int accent = resolveAccentColor();
         boolean dark = isDarkMode();
         binding.tvAppName.setTextColor(accent);
-        // The Glowberry mark is full-colour art, so it keeps its own palette; only the wordmark,
+        // The Caramel mark is full-colour art, so it keeps its own palette; only the wordmark,
         // the halo and the backdrop follow the user's accent.
         binding.imgLeaf.setImageTintList(null);
         binding.logoGlow.setBackground(createRadialGlow(accent));
@@ -416,7 +416,7 @@ public class SplashActivity extends BaseActivity {
                     }
                 }
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "SplashActivity:549", "Ignored a failure at SplashActivity:549", ignored);
+                AppLog.warnOnce("CaramelClient", "SplashActivity:549", "Ignored a failure at SplashActivity:549", ignored);
             }
         }
     }

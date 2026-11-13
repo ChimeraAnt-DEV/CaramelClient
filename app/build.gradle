@@ -248,7 +248,7 @@ android {
             initWith release
             // The beta channel is the release build under a different name, so it inherits R8 and
             // the symbol-table level from release rather than redeclaring them.
-            resValue "string", "app_name", "Glowberry Client Beta"
+            resValue "string", "app_name", "Caramel Client Beta"
             buildConfigField "boolean", "IS_BETA", "true"
             matchingFallbacks = ["release"]
         }

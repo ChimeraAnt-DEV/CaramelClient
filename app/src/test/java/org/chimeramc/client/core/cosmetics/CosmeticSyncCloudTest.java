@@ -30,7 +30,7 @@ public class CosmeticSyncCloudTest {
     @Test
     public void theTopicIsPrefixedAndSanitised() {
         String topic = CosmeticSyncCloudRelay.topicForWorld("The Hive!! / server#1");
-        assertTrue("must be prefixed", topic.startsWith("glowberry-cosmetics-"));
+        assertTrue("must be prefixed", topic.startsWith("caramel-cosmetics-"));
         for (char c : topic.toCharArray()) {
             assertTrue("only ntfy-safe characters: " + c,
                     (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-');
@@ -39,8 +39,8 @@ public class CosmeticSyncCloudTest {
 
     @Test
     public void anEmptyWorldYieldsTheSharedDefaultTopic() {
-        assertEquals("glowberry-cosmetics-world", CosmeticSyncCloudRelay.topicForWorld(""));
-        assertEquals("glowberry-cosmetics-world", CosmeticSyncCloudRelay.topicForWorld(null));
+        assertEquals("caramel-cosmetics-world", CosmeticSyncCloudRelay.topicForWorld(""));
+        assertEquals("caramel-cosmetics-world", CosmeticSyncCloudRelay.topicForWorld(null));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class CosmeticSyncCloudTest {
         assertFalse(without.hasCloudTopic());
         assertEquals("lan", without.routeLabel());
 
-        CosmeticSyncConfig with = without.withCloudTopic("glowberry-cosmetics-world");
+        CosmeticSyncConfig with = without.withCloudTopic("caramel-cosmetics-world");
         assertTrue(with.hasCloudTopic());
         assertEquals("cloud", with.routeLabel());
     }

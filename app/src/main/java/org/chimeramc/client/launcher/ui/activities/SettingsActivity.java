@@ -1707,7 +1707,7 @@ public class SettingsActivity extends BaseActivity {
         TouchTargetHelper.expand(findViewById(R.id.settings_btn_github));
         TouchTargetHelper.expand(findViewById(R.id.settings_btn_discord));
         findViewById(R.id.settings_btn_github).setOnClickListener(v ->
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraAnt-DEV/GlowberryClient"))));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ChimeraAnt-DEV/CaramelClient"))));
 
         findViewById(R.id.settings_btn_discord).setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/jsnzw4ueAt"))));

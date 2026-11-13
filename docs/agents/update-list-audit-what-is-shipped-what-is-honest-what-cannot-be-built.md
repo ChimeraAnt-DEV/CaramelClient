@@ -1,4 +1,4 @@
-## Update-list audit (GlowberryClient) — what is shipped, what is honest, what cannot be built
+## Update-list audit (CaramelClient) — what is shipped, what is honest, what cannot be built
 
 The B/G/U/R/M/F/C update list was audited item by item. Recording the conclusions so a later pass
 does not re-derive them, and so the two items that cannot be built as written are not "fixed" into

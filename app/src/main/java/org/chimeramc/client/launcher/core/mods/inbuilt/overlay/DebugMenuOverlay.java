@@ -40,7 +40,7 @@ public class DebugMenuOverlay extends TextOverlay {
         try {
             frameMeter.start(fps -> { });
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "DebugMenuOverlay:43", "Ignored a failure at DebugMenuOverlay:43", ignored);
+            AppLog.warnOnce("CaramelClient", "DebugMenuOverlay:43", "Ignored a failure at DebugMenuOverlay:43", ignored);
         }
     }
 
@@ -49,7 +49,7 @@ public class DebugMenuOverlay extends TextOverlay {
         try {
             frameMeter.stop();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "DebugMenuOverlay:52", "Ignored a failure at DebugMenuOverlay:52", ignored);
+            AppLog.warnOnce("CaramelClient", "DebugMenuOverlay:52", "Ignored a failure at DebugMenuOverlay:52", ignored);
         }
         super.hide();
     }

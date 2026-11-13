@@ -96,7 +96,7 @@ public final class LibraryHashManifest {
             try {
                 out.put(parts[0], new Entry(parts[0], Long.parseLong(parts[1]), Long.parseLong(parts[2]), parts[3]));
             } catch (NumberFormatException ignored) {
-                AppLog.warnOnce("GlowberryClient", "LibraryHashManifest:99", "Ignored a failure at LibraryHashManifest:99", ignored);
+                AppLog.warnOnce("CaramelClient", "LibraryHashManifest:99", "Ignored a failure at LibraryHashManifest:99", ignored);
             }
         }
         return out;

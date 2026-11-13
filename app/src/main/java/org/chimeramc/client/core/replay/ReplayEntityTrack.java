@@ -183,7 +183,7 @@ public final class ReplayEntityTrack {
                             Float.parseFloat(parts[4].trim()),
                             Float.parseFloat(parts[5].trim()));
                 } catch (NumberFormatException ignored) {
-                    AppLog.warnOnce("GlowberryClient", "ReplayEntityTrack:parse",
+                    AppLog.warnOnce("CaramelClient", "ReplayEntityTrack:parse",
                             "Ignored a malformed entity frame", ignored);
                 }
             }

@@ -142,7 +142,7 @@ public class ApkVersionConfirmDialog extends DialogFragment {
                 btnInstall.setTextColor(Color.WHITE);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ApkVersionConfirmDialog:145", "Ignored a failure at ApkVersionConfirmDialog:145", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkVersionConfirmDialog:145", "Ignored a failure at ApkVersionConfirmDialog:145", ignored);
         }
 
         return dialog;

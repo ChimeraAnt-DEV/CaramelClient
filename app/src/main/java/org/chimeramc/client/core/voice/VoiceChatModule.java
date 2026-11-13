@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * The proximity voice chat module: transport + registry + audio, driven from one place.
  *
- * <p>It is a launcher-side peer link between Chimera users in the same world. Nothing here talks
+ * <p>It is a launcher-side peer link between Caramel users in the same world. Nothing here talks
  * to the game; the microphone is captured by the launcher, framed by {@link VoiceProtocol}, sent
  * on the LAN multicast group by {@link VoiceTransport}, and played back through
  * {@link VoiceAudioEngine} with the gain {@link VoiceChannel} computes from distance and channel.
@@ -101,7 +101,7 @@ public final class VoiceChatModule {
         this.context = context.getApplicationContext();
         this.peerId = UUID.randomUUID().toString().substring(0, 8);
         this.displayName = displayName == null || displayName.trim().isEmpty()
-                ? "Chimera" : displayName.trim();
+                ? "Caramel" : displayName.trim();
         // Restore the local mute set once, at construction. The set never goes on the wire, so
         // this is the only place it needs loading; toggles persist on the way out.
         InbuiltModManager manager = InbuiltModManager.getInstance(this.context);

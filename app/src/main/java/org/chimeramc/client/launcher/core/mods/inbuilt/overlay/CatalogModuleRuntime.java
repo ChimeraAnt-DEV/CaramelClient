@@ -443,7 +443,7 @@ public final class CatalogModuleRuntime {
 
     /** The watermark line, which is a static client mark. */
     private String watermark() {
-        return "Glowberry Client";
+        return "Caramel Client";
     }
 
     /**

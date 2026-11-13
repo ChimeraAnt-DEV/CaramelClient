@@ -27,7 +27,7 @@
                 android:text="@string/about_page_title"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,13 +37,13 @@
                 android:text="@string/about_subtitle"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_6"
-                style="@style/Widget.Chimera.Card.Compact"
+                style="@style/Widget.Caramel.Card.Compact"
                 android:orientation="vertical"
                 android:padding="@dimen/space_4">
 
@@ -53,7 +53,7 @@
                     android:text="@string/about_people_title"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
                     android:accessibilityHeading="true" />
 
@@ -94,7 +94,7 @@
                                 android:text="@string/about_owner_name"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
                                 android:accessibilityHeading="true"
                                 android:clickable="true"
@@ -111,7 +111,7 @@
                                 android:text="@string/about_owner_badge"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+                                android:textAppearance="@style/TextAppearance.Caramel.Micro"
                                 android:textStyle="bold"
                                 android:background="@drawable/bg_author_badge" />
                         </LinearLayout>
@@ -124,7 +124,7 @@
                             android:text="@string/about_owner_role"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
                                 android:text="@string/about_github"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:background="@drawable/bg_link_chip_blue"
                                 android:drawableStart="@drawable/ic_github"
                                 android:drawablePadding="@dimen/space_2"
@@ -160,7 +160,7 @@
                                 android:text="@string/youtube"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/error"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:textStyle="bold"
                                 android:background="@drawable/bg_link_chip_pink"
                                 android:drawableStart="@drawable/ic_youtube"
@@ -214,7 +214,7 @@
                                 android:text="@string/about_lead_name"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
                                 android:accessibilityHeading="true"
                                 android:clickable="true"
@@ -231,7 +231,7 @@
                                 android:text="@string/about_lead_badge"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+                                android:textAppearance="@style/TextAppearance.Caramel.Micro"
                                 android:textStyle="bold"
                                 android:background="@drawable/bg_author_badge" />
                         </LinearLayout>
@@ -244,7 +244,7 @@
                             android:text="@string/about_lead_role"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -262,7 +262,7 @@
                                 android:text="@string/about_github"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                 android:background="@drawable/bg_link_chip_blue"
                                 android:drawableStart="@drawable/ic_github"
                                 android:drawablePadding="@dimen/space_2"
@@ -284,7 +284,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/space_2"
-                    style="@style/Widget.Chimera.Card.Compact"
+                    style="@style/Widget.Caramel.Card.Compact"
                     android:orientation="vertical"
                     android:padding="@dimen/space_4">
 
@@ -294,7 +294,7 @@
                         android:text="@string/about_source_title"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textStyle="bold"
                         android:drawableStart="@drawable/ic_code"
                         android:drawablePadding="@dimen/space_2"
@@ -316,7 +316,7 @@
                             android:text="@string/about_github_repo"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:background="@drawable/bg_link_chip_blue"
                             android:drawableStart="@drawable/ic_github"
                             android:drawablePadding="@dimen/space_2"
@@ -334,7 +334,7 @@
                             android:text="@string/about_github_org"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:background="@drawable/bg_link_chip_blue"
                             android:drawableStart="@drawable/ic_github"
                             android:drawablePadding="@dimen/space_2"
@@ -349,7 +349,7 @@
                         android:layout_marginTop="@dimen/space_3"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     <TextView
                         android:id="@+id/about_native_status"
@@ -358,7 +358,7 @@
                         android:layout_marginTop="@dimen/space_2"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     <TextView
                         android:id="@+id/about_backend_status"
@@ -367,7 +367,7 @@
                         android:layout_marginTop="@dimen/space_3"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     <TextView
                         android:id="@+id/about_input_backend_status"
@@ -376,7 +376,7 @@
                         android:layout_marginTop="@dimen/space_2"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -385,7 +385,7 @@
                         android:text="@string/about_license_note"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -393,7 +393,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/space_2"
-                    style="@style/Widget.Chimera.Card.Compact"
+                    style="@style/Widget.Caramel.Card.Compact"
                     android:orientation="vertical"
                     android:padding="@dimen/space_4">
 
@@ -403,7 +403,7 @@
                         android:text="@string/about_contribute_title"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textStyle="bold"
                         android:drawableStart="@drawable/ic_github"
                         android:drawablePadding="@dimen/space_2"
@@ -416,7 +416,7 @@
                         android:text="@string/about_contribute_desc"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -434,7 +434,7 @@
                             android:text="@string/about_issues"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:background="@drawable/bg_link_chip_blue"
                             android:drawableStart="@drawable/ic_github"
                             android:drawablePadding="@dimen/space_2"
@@ -452,7 +452,7 @@
                             android:text="@string/about_star_fork"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/primary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption"
                             android:textStyle="bold"
                             android:background="@drawable/bg_link_chip_green"
                             android:drawableStart="@drawable/ic_star"

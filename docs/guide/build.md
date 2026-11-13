@@ -1,6 +1,6 @@
 # Build from Source
 
-This page is for contributors who want to build GlowberryClient itself. Native mod build notes live in [Native Mod Quick Start](/guide/developer).
+This page is for contributors who want to build CaramelClient itself. Native mod build notes live in [Native Mod Quick Start](/guide/developer).
 
 ## Prerequisites
 
@@ -13,11 +13,11 @@ This page is for contributors who want to build GlowberryClient itself. Native m
 ## Open the Project
 
 ```bash
-git clone https://github.com/ChimeraAnt-DEV/GlowberryClient.git
-cd GlowberryClient
+git clone https://github.com/ChimeraAnt-DEV/CaramelClient.git
+cd CaramelClient
 ```
 
-Open the project directory in Android Studio and allow Gradle sync to finish. The project root is named `chimeralauncher` in Gradle settings, while the repository remains `GlowberryClient`.
+Open the project directory in Android Studio and allow Gradle sync to finish. The project root is named `chimeralauncher` in Gradle settings, while the repository remains `CaramelClient`.
 
 ## Build and Run
 

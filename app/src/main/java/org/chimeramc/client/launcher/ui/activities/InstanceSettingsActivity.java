@@ -92,7 +92,7 @@ public class InstanceSettingsActivity extends BaseActivity {
             try {
                 getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "InstanceSettingsActivity:95", "Ignored a failure at InstanceSettingsActivity:95", ignored);
+                AppLog.warnOnce("CaramelClient", "InstanceSettingsActivity:95", "Ignored a failure at InstanceSettingsActivity:95", ignored);
             }
             shortcutIconUri = uri.toString();
             updateShortcutIconPreview();

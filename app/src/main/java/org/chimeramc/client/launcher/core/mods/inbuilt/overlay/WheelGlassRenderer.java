@@ -78,7 +78,7 @@ public final class WheelGlassRenderer {
             layer.setImageBitmap(capture);
             Api31.applyBlur(layer, material.blurDp * Math.max(0.5f, density));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "WheelGlassRenderer:81", "Ignored a failure at WheelGlassRenderer:81", ignored);
+            AppLog.warnOnce("CaramelClient", "WheelGlassRenderer:81", "Ignored a failure at WheelGlassRenderer:81", ignored);
         }
     }
 
@@ -90,7 +90,7 @@ public final class WheelGlassRenderer {
                 layer.setImageDrawable(null);
                 layer.setVisibility(View.GONE);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "WheelGlassRenderer:93", "Ignored a failure at WheelGlassRenderer:93", ignored);
+                AppLog.warnOnce("CaramelClient", "WheelGlassRenderer:93", "Ignored a failure at WheelGlassRenderer:93", ignored);
             }
         }
         recycleScratch();
@@ -102,7 +102,7 @@ public final class WheelGlassRenderer {
         try {
             target.setRenderEffect(null);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "WheelGlassRenderer:105", "Ignored a failure at WheelGlassRenderer:105", ignored);
+            AppLog.warnOnce("CaramelClient", "WheelGlassRenderer:105", "Ignored a failure at WheelGlassRenderer:105", ignored);
         }
     }
 
@@ -170,7 +170,7 @@ public final class WheelGlassRenderer {
         try {
             bitmap.recycle();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "WheelGlassRenderer:173", "Ignored a failure at WheelGlassRenderer:173", ignored);
+            AppLog.warnOnce("CaramelClient", "WheelGlassRenderer:173", "Ignored a failure at WheelGlassRenderer:173", ignored);
         }
     }
 
@@ -286,7 +286,7 @@ public final class WheelGlassRenderer {
             try {
                 blurScratch.recycle();
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "WheelGlassRenderer:289", "Ignored a failure at WheelGlassRenderer:289", ignored);
+                AppLog.warnOnce("CaramelClient", "WheelGlassRenderer:289", "Ignored a failure at WheelGlassRenderer:289", ignored);
             }
         }
         blurScratch = null;

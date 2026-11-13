@@ -7,8 +7,8 @@ can land.
 
 ```bash
 # 1. Clone with the two native submodules the build needs.
-git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/GlowberryClient.git
-cd GlowberryClient
+git clone --recurse-submodules https://github.com/ChimeraAnt-DEV/CaramelClient.git
+cd CaramelClient
 
 # Already cloned without them?
 git submodule update --init --recursive

@@ -5,8 +5,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        For mod authoring questions, the [developer guide](https://github.com/ChimeraAnt-DEV/GlowberryClient/blob/main/docs/guide/developer.md)
-        and the [.AntEgg template](https://github.com/ChimeraAnt-DEV/GlowberryClient/tree/main/examples/antegg-template)
+        For mod authoring questions, the [developer guide](https://github.com/ChimeraAnt-DEV/CaramelClient/blob/main/docs/guide/developer.md)
+        and the [.AntEgg template](https://github.com/ChimeraAnt-DEV/CaramelClient/tree/main/examples/antegg-template)
         cover most of the surface. Search the existing issues before opening a new one.
   - type: textarea
     id: question

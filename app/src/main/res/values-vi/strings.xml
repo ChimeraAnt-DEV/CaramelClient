@@ -1,6 +1,6 @@
 <resources>
     <!-- Common -->
-    <string name="app_name">GlowberryClient</string>
+    <string name="app_name">CaramelClient</string>
     <string name="minecraft">Minecraft</string>
     <string name="launch">Khởi Chạy</string>
     <string name="beta_badge">Thử Nghiệm</string>
@@ -22,9 +22,9 @@
 
     <!-- About -->
     <string name="about_title">Về</string>
-    <string name="copyright">©2024–2026 GlowberryClient. Được cấp phép theo Giấy phép Apache 2.0.</string>
+    <string name="copyright">©2024–2026 CaramelClient. Được cấp phép theo Giấy phép Apache 2.0.</string>
     <string name="font_license">Ứng dụng đang sử dụng phông chữ Misans.</string>
-    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient</string>
+    <string name="about_footer_github">GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient</string>
     <string name="quick_actions_title">Thao tác nhanh</string>
     <string name="content_mgmt_section_title">Quản lý nội dung</string>
     <string name="misc_section_title">Khác</string>
@@ -63,7 +63,7 @@
 
     <!-- Permissions -->
     <string name="storage_permission_title">Quyền truy cập bộ nhớ </string>
-    <string name="storage_permission_message">Vui lòng cấp quyền truy cập bộ nhớ để GlowberryClient có thể sao chép dữ liệu từ thư mục games/org.chimeramc cũ. Quyền này chỉ cần thiết cho bước di chuyển dữ liệu.</string>
+    <string name="storage_permission_message">Vui lòng cấp quyền truy cập bộ nhớ để CaramelClient có thể sao chép dữ liệu từ thư mục games/org.chimeramc cũ. Quyền này chỉ cần thiết cho bước di chuyển dữ liệu.</string>
     <string name="grant_permission">Cấp quyền</string>
     <string name="cancel">Hủy</string>
 
@@ -164,7 +164,7 @@
     <string name="repair_finalizing">Hoàn tất sửa chữa…</string>
 
     <string name="storage_migration_title">Cần có quyền chỉnh sửa kho lưu trữ</string>
-    <string name="storage_migration_message">GlowberryClient phải di chuyển dữ liệu từ games/org.chimeramc sang %1$s trước khi tiếp tục.
+    <string name="storage_migration_message">CaramelClient phải di chuyển dữ liệu từ games/org.chimeramc sang %1$s trước khi tiếp tục.
 
 Việc thay đổi thư mục lưu trữ này là cần thiết để tuân thủ các quy định về hiển thị danh sách trên Google Play. Thư mục cũ sẽ được giữ nguyên, nhưng sẽ không còn được sử dụng sau khi chuyển đổi. 
 
@@ -186,11 +186,11 @@ Quá trình chuyển đổi có thể mất một lúc. Bạn có thể để �
 
 Thư mục games/org.chimeramc cũ không bị xóa và không còn được sử dụng nữa.</string>
     <string name="storage_migration_partial_title">Di chuyển chưa hoàn tất</string>
-    <string name="storage_migration_partial_message">Không thể sao chép tập tin %1$d trong %2$d. Quá trình di chuyển phải hoàn tất trước khi GlowberryClient có thể tiếp tục. </string>
+    <string name="storage_migration_partial_message">Không thể sao chép tập tin %1$d trong %2$d. Quá trình di chuyển phải hoàn tất trước khi CaramelClient có thể tiếp tục. </string>
     <string name="storage_migration_failed_title">Quá trình di chuyển thất bại</string>
     <string name="storage_migration_failed_message">Quá trình di chuyển không thể tiếp tục: %1$s
 
-Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có thể tiếp tục.</string>
+Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có thể tiếp tục.</string>
 
     <string name="theme_title">Chế độ chủ đề</string>
     <string name="theme_follow_system">Theo hệ thống</string>
@@ -199,8 +199,8 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
 
     <string name="error_no_browser">Không có trình duyệt nào khả dụng</string>
 
-    <string name="eula_title">Thỏa thuận cấp phép GlowberryClient</string>
-    <string name="eula_message"><b>Chào mừng bạn đến với GlowberryClient</b>\n\nBằng cách sử dụng phần mềm này, bạn đồng ý với các điều khoản sau:\n\n• Đây là trình khởi chạy Minecraft  <b>không chính thức</b>\n• Bạn phải sở hữu một bản sao Minecraft <b>được cấp phép</b> \n• Mọi hình thức vi phạm bản quyền hoặc gian lận đều bị nghiêm cấm\n• Việc sử dụng các bản Mods/gói tài nguyên là do bạn tự chịu rủi ro\n• Không liên kết với Mojang/Microsoft\n\nViệc tiếp tục sử dụng đồng nghĩa với việc bạn đồng ý</string>
+    <string name="eula_title">Thỏa thuận cấp phép CaramelClient</string>
+    <string name="eula_message"><b>Chào mừng bạn đến với CaramelClient</b>\n\nBằng cách sử dụng phần mềm này, bạn đồng ý với các điều khoản sau:\n\n• Đây là trình khởi chạy Minecraft  <b>không chính thức</b>\n• Bạn phải sở hữu một bản sao Minecraft <b>được cấp phép</b> \n• Mọi hình thức vi phạm bản quyền hoặc gian lận đều bị nghiêm cấm\n• Việc sử dụng các bản Mods/gói tài nguyên là do bạn tự chịu rủi ro\n• Không liên kết với Mojang/Microsoft\n\nViệc tiếp tục sử dụng đồng nghĩa với việc bạn đồng ý</string>
     <string name="eula_agree">Đồng ý</string>
     <string name="eula_exit">Từ chối</string>
 
@@ -243,7 +243,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="instance_delete_confirm_title">Xóa phiên bản</string>
     <string name="instance_delete_confirm_msg">Bạn có chắc chắn muốn xóa phiên bản này không? Tất cả dữ liệu, bao gồm cả thế giới, sẽ bị xóa vĩnh viễn.</string>
     <string name="instance_backup_title">Sao lưu phiên bản</string>
-    <string name="instance_backup_desc">Tạo bản sao lưu đầy đủ của phiên bản này trong Download/GlowberryClient/Backups.</string>
+    <string name="instance_backup_desc">Tạo bản sao lưu đầy đủ của phiên bản này trong Download/CaramelClient/Backups.</string>
     <string name="instance_backup_button">Sao lưu phiên bản</string>
     <string name="instance_backup_confirm_message">Tạo bản sao lưu đầy đủ của phiên bản này ngay bây giờ? Nếu Minecraft đang chạy, hãy thoát trước để tránh làm thay đổi các file trong quá trình sao lưu.</string>
     <string name="instance_backup_in_progress">Đang sao lưu phiên bản…</string>
@@ -503,7 +503,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="ms_active_badge">Bật</string>
     <string name="ms_account_subtitle_format">ID người dùng: %1$s • Đã cập nhật: %2$s</string>
     <string name="xbox_avatar">Ảnh đại diện Xbox</string>
-    <string name="launcher_managed_mc_login">Đăng nhập vào Minecraft bằng GlowberryClient</string>
+    <string name="launcher_managed_mc_login">Đăng nhập vào Minecraft bằng CaramelClient</string>
     <string name="dialog_title_login_required">Cần đăng nhập</string>
     <string name="dialog_message_login_required">Tính năng đăng nhập do launcher quản lý đã được bật, nhưng chưa có tài khoản nào được đăng nhập. Vui lòng vào mục Tài khoản để đăng nhập.</string>
     <string name="go_to_accounts">Tài khoản</string>
@@ -729,25 +729,25 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="vanilla_prefix">Vanilla %s</string>
 
     <string name="about_page_title">Về</string>
-    <string name="about_subtitle">GlowberryClient — Một Launcher Hiện Đại Cho Minecraft Bedrock</string>
+    <string name="about_subtitle">CaramelClient — Một Launcher Hiện Đại Cho Minecraft Bedrock</string>
     <string name="about_authors_title">Tác giả &amp; Người bảo trì</string>
     <string name="about_author_name">DreamGuXiang</string>
     <string name="about_author_badge">Tác giả</string>
-    <string name="about_author_role">Tác giả GlowberryClient</string>
+    <string name="about_author_role">Tác giả CaramelClient</string>
     <string name="about_afdian">Afdian</string>
     <string name="about_patreon">Patreon</string>
     <string name="about_source_title">Mã nguồn &amp; Mã nguồn mở</string>
-    <string name="about_github_repo">GitHub · GlowberryClient</string>
+    <string name="about_github_repo">GitHub · CaramelClient</string>
     <string name="about_github_org">ChimeraAnt-DEV</string>
     <string name="about_license_note">Xem file LICENSE trong kho lưu trữ để biết chi tiết về giấy phép.</string>
     <string name="about_contribute_title">Đóng góp</string>
-    <string name="about_contribute_desc">Chúng tôi hoan nghênh các đóng góp thông qua Issues hoặc Pull Requests để cải thiện GlowberryClient.</string>
+    <string name="about_contribute_desc">Chúng tôi hoan nghênh các đóng góp thông qua Issues hoặc Pull Requests để cải thiện CaramelClient.</string>
     <string name="about_issues">Issue</string>
     <string name="about_star_fork">Star / Fork</string>
 
     <string-array name="launcher_tips">
        <item>Phần Cài đặt cho phép bạn điều chỉnh chủ đề, màu sắc, hình nền và các tùy chọn hiển thị khác sao cho phù hợp với thiết lập của mình.</item>
-        <item>GlowberryClient là mã nguồn mở. Vui lòng sử dụng GitHub Issues để báo cáo sự cố hoặc đề xuất cải tiến.</item>
+        <item>CaramelClient là mã nguồn mở. Vui lòng sử dụng GitHub Issues để báo cáo sự cố hoặc đề xuất cải tiến.</item>
         <item>Sử dụng menu thả xuống phiên bản để nhanh chóng chuyển đổi giữa các phiên bản hiện tại.</item>
         <item>Liệu mọi người có thực sự đọc những thứ này không:)?</item>
         <item>Bạn có thể kéo các mod để thay đổi thứ tự ưu tiên tải của chúng.</item>
@@ -840,9 +840,9 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="ms_device_code_login_desc">Mở phiên trình duyệt riêng tư với mã thiết bị đã được điền sẵn.</string>
     <string name="ms_webview_login">Mở đăng nhập nhúng</string>
     <string name="ms_webview_option_title">WebView nhúng</string>
-    <string name="ms_webview_login_desc">Đăng nhập mà không rời GlowberryClient. Dùng tùy chọn này khi luồng trình duyệt không khả dụng.</string>
+    <string name="ms_webview_login_desc">Đăng nhập mà không rời CaramelClient. Dùng tùy chọn này khi luồng trình duyệt không khả dụng.</string>
     <string name="ms_device_code_title">Đăng nhập bằng Mã thiết bị</string>
-    <string name="ms_device_code_instructions">Mở trang đăng nhập thiết bị của Microsoft, nhập mã này rồi chấp thuận quyền truy cập. GlowberryClient sẽ tự động hoàn tất.</string>
+    <string name="ms_device_code_instructions">Mở trang đăng nhập thiết bị của Microsoft, nhập mã này rồi chấp thuận quyền truy cập. CaramelClient sẽ tự động hoàn tất.</string>
     <string name="ms_device_code_label">Mã thiết bị Microsoft</string>
     <string name="ms_device_code_requesting">Đang yêu cầu mã bảo mật…</string>
     <string name="ms_device_code_waiting_code">--------</string>
@@ -856,7 +856,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="ms_device_code_copied">Đã sao chép mã</string>
     <string name="ms_device_code_open_browser">Mở đăng nhập Microsoft</string>
     <string name="ms_device_code_step_title">Hoàn tất đăng nhập trong trình duyệt</string>
-    <string name="ms_device_code_browser_note">GlowberryClient mở trình duyệt mặc định trong phiên riêng tư, tự động điền mã và yêu cầu đăng nhập Microsoft mới.</string>
+    <string name="ms_device_code_browser_note">CaramelClient mở trình duyệt mặc định trong phiên riêng tư, tự động điền mã và yêu cầu đăng nhập Microsoft mới.</string>
     <string name="ms_choose_other_method">Phương thức khác</string>
     <string name="ms_no_browser">Không có trình duyệt nào trên thiết bị này.</string>
     <string name="ms_default_browser_no_private_mode">Trình duyệt mặc định của bạn không hỗ trợ đăng nhập riêng tư. Hãy cập nhật hoặc dùng đăng nhập WebView.</string>
@@ -864,7 +864,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="ms_login_state_failed">Không thể xác minh phản hồi đăng nhập Microsoft. Hãy bắt đầu đăng nhập lại.</string>
     <string name="ms_login_missing_code">Microsoft không trả về mã đăng nhập. Hãy bắt đầu đăng nhập lại hoặc dùng Mã thiết bị.</string>
     <string name="ms_feature_disabled_title">Tính năng bị tắt</string>
-    <string name="ms_feature_disabled_desc">Hãy bật “Đăng nhập Minecraft bằng GlowberryClient” trong Cài đặt để quản lý tài khoản Microsoft.</string>
+    <string name="ms_feature_disabled_desc">Hãy bật “Đăng nhập Minecraft bằng CaramelClient” trong Cài đặt để quản lý tài khoản Microsoft.</string>
     <string name="ms_activated">Đã kích hoạt</string>
     <string name="inbuilt_mod_gyro">Con quay hồi chuyển</string>
     <string name="inbuilt_mod_gyro_desc">Dùng con quay hồi chuyển của thiết bị để điều khiển xoay camera</string>
@@ -1015,7 +1015,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="home_no_mods">Chưa cài đặt mod nào</string>
     <string name="home_content_library">Thư viện nội dung</string>
     <string name="home_more">Thêm</string>
-    <string name="setup_step_import_title">Chào mừng đến với GlowberryClient</string>
+    <string name="setup_step_import_title">Chào mừng đến với CaramelClient</string>
     <string name="setup_step_import_body">Nhập tệp trò chơi Minecraft của bạn để bắt đầu. Chọn APK bạn muốn chơi.</string>
     <string name="setup_step_import_action">Nhập trò chơi</string>
     <string name="setup_step_version_title">Chọn phiên bản của bạn</string>
@@ -1058,7 +1058,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
 
     <string name="launch_failure_message_play_store">Đây là bản Minecraft từ Google Play, hoặc một phiên bản thiếu tệp cần thiết để khởi chạy trò chơi.\n\nTrình khởi chạy phải tải trực tiếp thư viện gốc của trò chơi, còn bản Play Store giữ nó bên trong ứng dụng đã cài, nơi trình khởi chạy này không thể truy cập.\n\nĐể chơi, hãy nhập APK Minecraft từ Thư viện. Bản cài từ Play Store có thể vẫn nằm trên thiết bị — bạn không cần gỡ nó.</string>
     <string name="launch_failure_message_game_files_missing">Tệp trò chơi của bản cài này bị thiếu hoặc chưa đầy đủ. Hãy nhập lại phiên bản từ Thư viện, hoặc chạy Sửa bản cài trong Cài đặt \u2192 Chẩn đoán.</string>
-    <string name="launch_failure_message_abi">Phiên bản Minecraft này chỉ có thư viện gốc 32-bit, còn GlowberryClient chạy dưới dạng ứng dụng 64-bit. Hãy nhập bản dựng 64-bit của phiên bản này.</string>
+    <string name="launch_failure_message_abi">Phiên bản Minecraft này chỉ có thư viện gốc 32-bit, còn CaramelClient chạy dưới dạng ứng dụng 64-bit. Hãy nhập bản dựng 64-bit của phiên bản này.</string>
     <string name="launch_failure_message_stale_libs">Thư viện gốc đã giải nén thuộc phiên bản trình khởi chạy cũ hơn. Chúng sẽ được giải nén lại tự động ở lần khởi chạy tới. Nếu trò chơi vẫn không khởi động, hãy chạy Sửa bản cài trong Cài đặt \u2192 Chẩn đoán.</string>
     <string name="launch_failure_message_rules">Chưa có định nghĩa hook cho bản dựng Minecraft này, nên lớp phủ và trang phục trong trò chơi bị tắt. Bản thân trò chơi vẫn chạy bình thường.</string>
     <string name="launch_failure_message_unexpected">Trình khởi chạy không thể bắt đầu trò chơi và nguyên nhân không thuộc những gì nó nhận ra. Không có gì trên thiết bị của bạn bị thay đổi. Hãy mở lại trình khởi chạy và thử lại; nếu vẫn tiếp diễn, hãy chạy Sửa bản cài trong Cài đặt \u2192 Chẩn đoán.</string>
@@ -1099,7 +1099,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="crash_disable_no_suspects">Không có mod nào được ghi nhận cho lỗi này.</string>
     <string name="crash_disable_done">Đã tắt %1$d mod. Hãy khởi chạy lại để thử mà không có chúng.</string>
     <string name="session_restart_loop_message">Đã dừng khởi động lại: phiên này đã khởi động lại %1$d lần liên tiếp. Hãy khởi chạy lại từ màn hình chính hoặc tắt các mod bạn vừa thêm.</string>
-    <string name="nav_logo_home">Trang chủ GlowberryClient</string>
+    <string name="nav_logo_home">Trang chủ CaramelClient</string>
     <string name="cosmetics_preview_preparing" formatted="false">Đang chuẩn bị xem trước…</string>
     <string name="mod_overlay_snaplook_on">Sẵn sàng</string>
     <string name="mod_overlay_snaplook_off">Chờ</string>
@@ -1267,7 +1267,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="servers_favourites_first">Mục yêu thích được hiển thị trước</string>
     <string name="server_favourite_label">Yêu thích</string>
     <string name="cosmetics_sync_setting_title">Đồng bộ trang phục</string>
-    <string name="cosmetics_sync_setting_desc">Hiển thị áo choàng, phụ kiện và thú cưng đang dùng cho người dùng Glowberry khác trong cùng thế giới, và xem của họ. Chỉ ở phía ứng dụng; tắt sẽ dừng cả gửi và nhận.</string>
+    <string name="cosmetics_sync_setting_desc">Hiển thị áo choàng, phụ kiện và thú cưng đang dùng cho người dùng Caramel khác trong cùng thế giới, và xem của họ. Chỉ ở phía ứng dụng; tắt sẽ dừng cả gửi và nhận.</string>
     <string name="pack_changer_pack_size">%1$s · %2$s</string>
     <string name="pack_changer_move_up">Di chuyển lên</string>
     <string name="pack_changer_move_down">Di chuyển xuống</string>
@@ -1317,11 +1317,11 @@ Quá trình chuyển đổi phải hoàn tất trước khi GlowberryClient có 
     <string name="replay_save_native_done">Đã lưu %1$s</string>
     <string name="replay_save_native_empty">Chưa có bản phát lại trò chơi để lưu. Hãy ghi một bản trước.</string>
     <string name="settings_run_setup">Chạy lại thiết lập</string>
-    <string name="about_people_title">Ai làm nên GlowberryClient</string>
+    <string name="about_people_title">Ai làm nên CaramelClient</string>
     <string name="about_owner_badge">Chủ sở hữu</string>
-    <string name="about_owner_role">Chủ sở hữu GlowberryClient</string>
+    <string name="about_owner_role">Chủ sở hữu CaramelClient</string>
     <string name="about_lead_badge">Dev chính</string>
-    <string name="about_lead_role">Nhà phát triển chính của GlowberryClient</string>
+    <string name="about_lead_role">Nhà phát triển chính của CaramelClient</string>
     <string name="about_github">GitHub</string>
     <string name="changelog_card_title">Có gì mới trong %1$s</string>
     <string name="changelog_card_subtitle">Chạm để xem danh sách đầy đủ những gì đã thêm, thay đổi và sửa.</string>

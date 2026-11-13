@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/custom_uri_hint"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:textColor="?android:textColorSecondary"
         android:layout_marginBottom="@dimen/space_3" />
 

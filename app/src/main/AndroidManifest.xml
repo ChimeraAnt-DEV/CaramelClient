@@ -128,7 +128,7 @@
         <service
             android:name="org.chimeramc.client.launcher.settings.PerformanceTileService"
             android:exported="true"
-            android:icon="@drawable/ic_glowberry_mono"
+            android:icon="@drawable/ic_caramel_mono"
             android:label="@string/performance_preset_title"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

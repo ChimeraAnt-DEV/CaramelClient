@@ -68,7 +68,7 @@ public final class ReplayThumbnails {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayThumbnails:71", "Ignored a failure at ReplayThumbnails:71", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayThumbnails:71", "Ignored a failure at ReplayThumbnails:71", ignored);
             }
         }
     }
@@ -134,7 +134,7 @@ public final class ReplayThumbnails {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayThumbnails:137", "Ignored a failure at ReplayThumbnails:137", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayThumbnails:137", "Ignored a failure at ReplayThumbnails:137", ignored);
             }
         }
     }

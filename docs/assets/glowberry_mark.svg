@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    GlowberryClient brand mark: a golden glowberry (a faceted berry with a crown of sepals and a
+    CaramelClient brand mark: a golden caramel (a faceted berry with a crown of sepals and a
     small leaf) on a rounded dark-purple tile. Original artwork drawn as vectors so it scales
     cleanly and carries no third-party assets. Used for the README banner and icon.
 -->
@@ -42,7 +42,7 @@
              C 182 418, 124 366, 124 292
              C 124 214, 182 150, 256 150 Z"
           fill="url(#berryGlow)"/>
-    <!-- facet highlights: three beads that read as the glowberry's lobes -->
+    <!-- facet highlights: three beads that read as the caramel's lobes -->
     <ellipse cx="214" cy="244" rx="34" ry="42" fill="#FFE9A0" opacity="0.55"/>
     <ellipse cx="300" cy="266" rx="30" ry="38" fill="#FFD873" opacity="0.45"/>
     <ellipse cx="256" cy="336" rx="44" ry="40" fill="#FFB020" opacity="0.35"/>

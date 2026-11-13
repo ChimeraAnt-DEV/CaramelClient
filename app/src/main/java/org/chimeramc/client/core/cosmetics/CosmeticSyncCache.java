@@ -60,7 +60,7 @@ public final class CosmeticSyncCache {
                 CosmeticSyncProtocol.Advert advert = CosmeticSyncProtocol.decode(raw);
                 if (advert != null && !advert.peerId.isEmpty()) out.add(advert);
             } catch (RuntimeException ignored) {
-                AppLog.warnOnce("GlowberryClient", "CosmeticSyncCache:63", "Ignored a failure at CosmeticSyncCache:63", ignored);
+                AppLog.warnOnce("CaramelClient", "CosmeticSyncCache:63", "Ignored a failure at CosmeticSyncCache:63", ignored);
             }
         }
         return out;

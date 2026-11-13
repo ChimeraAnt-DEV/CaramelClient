@@ -150,7 +150,7 @@ public class InbuiltModManager {
     private static final String KEY_VOICE_RELAY_PASSWORD = "voice_relay_password";
     private static final String KEY_VOICE_RELAY_TOKEN_SECRET = "voice_relay_token_secret";
     private static final String KEY_VOICE_DEVICE_ID = "voice_device_id";
-    /** Whether the equipped cape/accessory/pet is advertised to other Chimera users in the world. */
+    /** Whether the equipped cape/accessory/pet is advertised to other Caramel users in the world. */
     private static final String KEY_COSMETIC_SYNC_ENABLED = "cosmetic_sync_enabled";
     private static final String KEY_COSMETIC_VFX_ENABLED = "cosmetic_vfx_enabled";
     private static final String KEY_RENDER_DEBUG_OVERLAY = "render_debug_overlay";
@@ -1445,7 +1445,7 @@ public class InbuiltModManager {
     }
 
     /**
-     * Whether the equipped cape/accessory/pet is advertised to other Chimera users in the world.
+     * Whether the equipped cape/accessory/pet is advertised to other Caramel users in the world.
      *
      * <p>On by default: the feature is client-side only and shows your cosmetics to the same
      * players who can already hear you on proximity voice, so the expected behaviour is that it

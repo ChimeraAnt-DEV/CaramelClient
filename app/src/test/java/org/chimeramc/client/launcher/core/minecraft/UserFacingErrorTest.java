@@ -208,7 +208,7 @@ public class UserFacingErrorTest {
         // source's page layout had changed - sending them to retry a download that can never work
         // on this 64-bit build.
         IOException abiRefusal = new IOException(
-                "This build ships 32-bit native libraries only, and GlowberryClient runs as a "
+                "This build ships 32-bit native libraries only, and CaramelClient runs as a "
                         + "64-bit app, so its libraries cannot be loaded.");
         assertEquals(UserFacingError.Cause.ABI_INCOMPATIBLE, UserFacingError.classify(abiRefusal));
         assertNotEquals(UserFacingError.Cause.BAD_RESPONSE, UserFacingError.classify(abiRefusal));

@@ -20,7 +20,7 @@
             android:text="@string/full_mods_title"
             android:fontFamily="@font/misans"
             android:textColor="@color/primary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Display"
+            android:textAppearance="@style/TextAppearance.Caramel.Display"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -47,7 +47,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/total_mods"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                         android:textColor="@color/text_secondary"
                         android:fontFamily="@font/misans" />
 
@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_hairline"
                         tools:text="0"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textColor="@color/accent_text"
                         android:fontFamily="@font/misans"
                         android:textStyle="bold"
@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/enabled_mods"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                         android:textColor="@color/text_secondary"
                         android:fontFamily="@font/misans" />
 
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_hairline"
                         tools:text="0"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textColor="@color/accent_text"
                         android:fontFamily="@font/misans"
                         android:textStyle="bold"
@@ -104,7 +104,7 @@
                 android:textColor="@color/on_secondary"
                 android:paddingHorizontal="@dimen/space_4"
                 android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:gravity="center"
@@ -122,7 +122,7 @@
                 android:textColor="@color/on_secondary"
                 android:paddingHorizontal="@dimen/space_4"
                 android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:gravity="center"
@@ -140,7 +140,7 @@
                 android:textColor="@color/on_secondary"
                 android:paddingHorizontal="@dimen/space_4"
                 android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:gravity="center"
@@ -158,7 +158,7 @@
                 android:textColor="@color/on_secondary"
                 android:paddingHorizontal="@dimen/space_4"
                 android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:gravity="center"
@@ -176,7 +176,7 @@
                 android:textColor="@color/on_primary"
                 android:paddingHorizontal="@dimen/space_4"
                 android:layout_marginStart="@dimen/space_3"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:textAllCaps="false"
                 android:gravity="center"
@@ -218,7 +218,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/mod_load_diagnostics_title"
                     android:textColor="?attr/colorOnPrimaryContainer"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                     android:textStyle="bold" />
 
                 <TextView
@@ -228,7 +228,7 @@
                     android:layout_marginTop="@dimen/space_1"
                     android:fontFamily="@font/misans"
                     android:textColor="?attr/colorOnPrimaryContainer"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <TextView
                     android:id="@+id/mod_load_diagnostics_details"
@@ -237,7 +237,7 @@
                     android:layout_marginTop="@dimen/space_2"
                     android:fontFamily="@font/misans"
                     android:textColor="?attr/colorOnPrimaryContainer"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <TextView
                     android:id="@+id/mod_load_diagnostics_dismiss"
@@ -251,7 +251,7 @@
                     android:paddingVertical="@dimen/space_2"
                     android:text="@string/mod_load_diagnostics_dismiss"
                     android:textColor="?attr/colorOnPrimaryContainer"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -288,7 +288,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/empty_mods_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -300,7 +300,7 @@
                     android:gravity="center"
                     android:text="@string/empty_mods_message"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                 <TextView
                     android:id="@+id/empty_mods_action"
@@ -313,7 +313,7 @@
                     android:text="@string/add_mod"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold"
                     android:background="@drawable/bg_filter_chip"
                     android:clickable="true"

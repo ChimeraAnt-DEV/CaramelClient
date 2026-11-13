@@ -127,6 +127,6 @@ public final class SkinIdentity {
                     "Steve (default — no skin found)");
         }
         return new Choice(SkinResolution.Source.PLACEHOLDER, false,
-                "Chimera default (no skin could be loaded)");
+                "Caramel default (no skin could be loaded)");
     }
 }

@@ -48,7 +48,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@color/dock_text_primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -74,7 +74,7 @@
                     android:maxWidth="180dp"
                     android:text="@string/home_edition_version_placeholder"
                     android:textColor="@color/mc_stone_text"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <ImageView
                     android:layout_width="16dp"
@@ -107,7 +107,7 @@
                 android:ellipsize="end"
                 android:text="@string/home_play"
                 android:textColor="@color/mc_button_text"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:fontFamily="@font/misans"

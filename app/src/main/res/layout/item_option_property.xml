@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/Widget.Chimera.Card.Compact"
+    style="@style/Widget.Caramel.Card.Compact"
     android:layout_marginVertical="@dimen/space_1"
     android:orientation="horizontal"
     android:padding="@dimen/space_3"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:textStyle="bold" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:alpha="0.6" />
     </LinearLayout>
 
@@ -41,7 +41,7 @@
         android:fontFamily="@font/misans"
         android:padding="@dimen/space_2"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+        android:textAppearance="@style/TextAppearance.Caramel.Label"
         android:maxLines="1"
         android:inputType="text"
         android:imeOptions="actionDone" />

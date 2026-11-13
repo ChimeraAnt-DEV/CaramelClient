@@ -32,7 +32,7 @@
         android:background="@color/overlay_scrim"
         android:paddingStart="@dimen/space_1"
         android:paddingEnd="@dimen/space_1"
-        android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+        android:textAppearance="@style/TextAppearance.Caramel.Micro"
         android:textColor="@color/overlay_text_primary"
         tools:text="1.5x" />
 </FrameLayout>

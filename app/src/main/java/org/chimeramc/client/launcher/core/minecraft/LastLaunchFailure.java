@@ -214,7 +214,7 @@ public final class LastLaunchFailure {
                 out.flush();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "LastLaunchFailure:217", "Ignored a failure at LastLaunchFailure:217", ignored);
+            AppLog.warnOnce("CaramelClient", "LastLaunchFailure:217", "Ignored a failure at LastLaunchFailure:217", ignored);
         }
     }
 
@@ -257,7 +257,7 @@ public final class LastLaunchFailure {
                 target.deleteOnExit();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "LastLaunchFailure:260", "Ignored a failure at LastLaunchFailure:260", ignored);
+            AppLog.warnOnce("CaramelClient", "LastLaunchFailure:260", "Ignored a failure at LastLaunchFailure:260", ignored);
         }
     }
 

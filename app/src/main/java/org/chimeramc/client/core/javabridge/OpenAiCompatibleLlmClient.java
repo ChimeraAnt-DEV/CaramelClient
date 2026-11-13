@@ -98,7 +98,7 @@ public final class OpenAiCompatibleLlmClient implements LlmClient {
                 builder.socketFactory(LowLatencyNetworkManager.createSocketFactory());
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "OpenAiCompatibleLlmClient:101", "Ignored a failure at OpenAiCompatibleLlmClient:101", ignored);
+            AppLog.warnOnce("CaramelClient", "OpenAiCompatibleLlmClient:101", "Ignored a failure at OpenAiCompatibleLlmClient:101", ignored);
         }
         return builder.build();
     }

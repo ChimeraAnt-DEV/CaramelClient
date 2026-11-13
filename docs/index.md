@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: GlowberryClient
+  name: CaramelClient
   text: A lightweight Android launcher for Minecraft Bedrock
   tagline: Import and launch your official Minecraft installation, manage isolated versions, switch accounts, organize worlds and packs, and extend the game with native modules.
   image:
     src: /appicon.png
-    alt: GlowberryClient
+    alt: CaramelClient
   actions:
     - theme: brand
       text: Get started
@@ -20,11 +20,11 @@ hero:
       link: /guide/developer
     - theme: alt
       text: Download
-      link: https://github.com/ChimeraAnt-DEV/GlowberryClient/releases/latest
+      link: https://github.com/ChimeraAnt-DEV/CaramelClient/releases/latest
 
 features:
   - title: Your own game, launched cleanly
-    details: GlowberryClient is built for legitimate Minecraft Bedrock players and launches a Minecraft Bedrock Edition copy you already own — it never ships or redistributes the game.
+    details: CaramelClient is built for legitimate Minecraft Bedrock players and launches a Minecraft Bedrock Edition copy you already own — it never ships or redistributes the game.
   - title: Version isolation
     details: Keep multiple game versions and their data separated so testing one setup does not disturb another.
   - title: Content management
@@ -43,7 +43,7 @@ Use the language selector or open [简体中文](/zh-CN/).
 
 ## What this site covers
 
-GlowberryClient is an open-source Android launcher for Minecraft Bedrock Edition. It focuses on practical launcher workflows first: installing the launcher, preparing an official Minecraft copy, managing versions, starting the game, and keeping player content organized.
+CaramelClient is an open-source Android launcher for Minecraft Bedrock Edition. It focuses on practical launcher workflows first: installing the launcher, preparing an official Minecraft copy, managing versions, starting the game, and keeping player content organized.
 
 Developer-facing Preloader APIs are still documented here, but they are part of the Developer section instead of the main entry point.
 

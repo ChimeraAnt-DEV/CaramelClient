@@ -108,7 +108,7 @@ public final class KillEffectsOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "KillEffectsOverlay:111", "Ignored a failure at KillEffectsOverlay:111", ignored);
+            AppLog.warnOnce("CaramelClient", "KillEffectsOverlay:111", "Ignored a failure at KillEffectsOverlay:111", ignored);
         }
         overlayView = null;
         wmParams = null;

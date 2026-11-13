@@ -522,7 +522,7 @@ public final class InGamePackChanger {
                 return parsed.getAsJsonArray();
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:525", "Ignored a failure at InGamePackChanger:525", ignored);
+            AppLog.warnOnce("CaramelClient", "InGamePackChanger:525", "Ignored a failure at InGamePackChanger:525", ignored);
         }
         return null;
     }
@@ -564,7 +564,7 @@ public final class InGamePackChanger {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "InGamePackChanger:567", "Ignored a failure at InGamePackChanger:567", ignored);
+            AppLog.warnOnce("CaramelClient", "InGamePackChanger:567", "Ignored a failure at InGamePackChanger:567", ignored);
         }
         return pack.getName();
     }

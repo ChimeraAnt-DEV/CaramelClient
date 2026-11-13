@@ -53,7 +53,7 @@ public final class CurseForgeKeyDialog {
                         activity.startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse("https://console.curseforge.com/?#/api-keys")));
                     } catch (Exception ignored) {
-                        AppLog.warnOnce("GlowberryClient", "CurseForgeKeyDialog:56", "Ignored a failure at CurseForgeKeyDialog:56", ignored);
+                        AppLog.warnOnce("CaramelClient", "CurseForgeKeyDialog:56", "Ignored a failure at CurseForgeKeyDialog:56", ignored);
                     }
                     show(activity, onSaved);
                 })

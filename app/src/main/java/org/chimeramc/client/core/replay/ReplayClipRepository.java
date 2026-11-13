@@ -108,7 +108,7 @@ public final class ReplayClipRepository {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ReplayClipRepository:104", "Ignored a failure at ReplayClipRepository:104", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayClipRepository:104", "Ignored a failure at ReplayClipRepository:104", ignored);
             }
         }
     }
@@ -209,7 +209,7 @@ public final class ReplayClipRepository {
             out.write(bytes);
             return target;
         } catch (java.io.IOException e) {
-            AppLog.warnOnce("GlowberryClient", "ReplayClipRepository:berryWrite",
+            AppLog.warnOnce("CaramelClient", "ReplayClipRepository:berryWrite",
                     "Could not write the native replay file", e);
             return null;
         }

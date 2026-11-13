@@ -83,8 +83,8 @@ It is built for legitimate players: it runs the copy of Minecraft you already ow
 <details>
 <summary><b>Upgrading from a previous name</b></summary>
 
-- **From “GlowberryClient”:** CaramelClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
-- **From the older “Chimera Launcher”:** that rename changed the package id, so Android will not offer an in-place update and the old app's private settings are not reachable. Export them from the old app (**Settings → Backup & Restore → Export**) and import them here. Account credentials and API keys are never included in the export.
+- **From “CaramelClient”:** CaramelClient is a display-name rebrand; the package id (`org.chimeramc.client`) is unchanged, so it installs as an in-place update and your settings carry over.
+- **From the older “Caramel Launcher”:** that rename changed the package id, so Android will not offer an in-place update and the old app's private settings are not reachable. Export them from the old app (**Settings → Backup & Restore → Export**) and import them here. Account credentials and API keys are never included in the export.
 
 </details>
 
@@ -230,7 +230,7 @@ Submit PRs with a detailed description, reference related issues, and include sc
 
 ### Prohibited Uses
 
-- Do not claim CaramelClient as your own without crediting the Chimera Team and its contributors.
+- Do not claim CaramelClient as your own without crediting the Caramel Team and its contributors.
 - Do not use CaramelClient to violate Mojang or Microsoft's user agreements.
 
 > **Disclaimer:** The authors and contributors are not responsible for bans, damages, or issues arising from the use of this software. Use it at your own risk and in accordance with Minecraft's terms of service.
@@ -243,7 +243,7 @@ Full legal details: see the LICENSE.
 
 CaramelClient is an independent project that stands on the shoulders of the open-source Android and Minecraft modding ecosystems.
 
-- **Chimera Team** – For designing, building, and maintaining CaramelClient and providing infrastructure support.
+- **Caramel Team** – For designing, building, and maintaining CaramelClient and providing infrastructure support.
 - **LeviLamina / Levilamina-Android ecosystem** – For the `levilauncher-android-mod-template` ([QYCottage/levilauncher-android-mod-template](https://github.com/QYCottage/levilauncher-android-mod-template)) and its mod lifecycle / packaging conventions, which the CaramelClient native-modding layer builds upon and adapts as `.AntEgg`.
 - **LeviLaunchroid** ([LiteLDev/LeviLaunchroid](https://github.com/LiteLDev/LeviLaunchroid)) – For the preloader signature-rules source that CaramelClient's bundled snapshot is derived from. The rules are a data dependency, not code: `PreloaderSignatureRulesManager` uses the app's own **signed** rule file when one is published and verified, and otherwise the bundled offline snapshot — a fetched rule set is installed only if its detached signature verifies against the public key the app ships (see [Rule File Signing](https://docs/preloader-rule-signing.md)). Credit is due to that project for the rules themselves. The XERJ Corpus Hub tags this corpus `levilaunchroid` for the same reason; the tag describes the ecosystem this launcher interoperates with, not a claim of authorship.
 - **Open-Source Bedrock Modding Community** – For the shared knowledge, tooling conventions, and ecosystem research that inform how native modules are packaged, loaded, and kept safe.
@@ -257,12 +257,11 @@ CaramelClient is an independent project that stands on the shoulders of the open
 
 | ↕▾ | ↕▾ |
 |---|---|
-| −**Author / Team** | Chimera Team |
+| −**Author / Team** | Caramel Team |
 | −**Repository** | [github.com/ChimeraAnt-DEV/CaramelClient](https://github.com/ChimeraAnt-DEV/CaramelClient) |
 | −**Report an issue** | [GitHub Issues](https://github.com/ChimeraAnt-DEV/CaramelClient/issues) — templates for bugs, mod questions, and feature requests |
 | −**Community support** | [Discord](https://discord.gg/qAKpyKM3GP) — setup help, crash triage, and modding questions |
 | −**Security** | Report privately via [Security Advisories](https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new) |
-⚙
 
 ---
 <div align="center">
@@ -274,9 +273,9 @@ CaramelClient is an independent project that stands on the shoulders of the open
 <br><br>
 <a href="https://hub.xerj.org/contributors/ChimeraAnt-DEV"><img src="https://hub.xerj.org/contributors/ChimeraAnt-DEV/badge.svg" alt="XERJ Corpus Hub contributor"></a>
 <br><br>
-<b>Made by the Chimera Team Community</b>
+<b>Made by the Caramel Team Community</b>
 <br>
 <sub>Licensed under the Apache License 2.0.</sub>
 <br>
-<sub>This account is shared among the 20 members of the Official ChimeraTeam.</sub>
+<sub>This account is shared among the 20 members of the Official CaramelTeam.</sub>
 </div>

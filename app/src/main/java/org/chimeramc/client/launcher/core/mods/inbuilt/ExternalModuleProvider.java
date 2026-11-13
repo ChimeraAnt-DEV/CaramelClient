@@ -47,7 +47,7 @@ public final class ExternalModuleProvider {
                 UnifiedMod mod = parse(activity, new JSONObject(ExternalModBridge.getExternalModInfo(i)), externalGroupNames);
                 if (mod != null) modules.add(mod);
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "ExternalModuleProvider:50", "Ignored a failure at ExternalModuleProvider:50", ignored);
+                AppLog.warnOnce("CaramelClient", "ExternalModuleProvider:50", "Ignored a failure at ExternalModuleProvider:50", ignored);
             }
         }
         return modules;
@@ -169,7 +169,7 @@ public final class ExternalModuleProvider {
                                 : displayName.trim());
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ExternalModuleProvider:172", "Ignored a failure at ExternalModuleProvider:172", ignored);
+            AppLog.warnOnce("CaramelClient", "ExternalModuleProvider:172", "Ignored a failure at ExternalModuleProvider:172", ignored);
         }
         return names;
     }

@@ -1,6 +1,6 @@
 # 从源码构建
 
-本页面向想构建 GlowberryClient 本体的贡献者。Native mod 的构建说明位于 [Native Mod 快速开始](/zh-CN/guide/developer)。
+本页面向想构建 CaramelClient 本体的贡献者。Native mod 的构建说明位于 [Native Mod 快速开始](/zh-CN/guide/developer)。
 
 ## 前置要求
 
@@ -13,11 +13,11 @@
 ## 打开项目
 
 ```bash
-git clone https://github.com/ChimeraAnt-DEV/GlowberryClient.git
-cd GlowberryClient
+git clone https://github.com/ChimeraAnt-DEV/CaramelClient.git
+cd CaramelClient
 ```
 
-用 Android Studio 打开项目目录，并等待 Gradle sync 完成。Gradle 设置里的项目名是 `chimeralauncher`，仓库名仍然是 `GlowberryClient`。
+用 Android Studio 打开项目目录，并等待 Gradle sync 完成。Gradle 设置里的项目名是 `chimeralauncher`，仓库名仍然是 `CaramelClient`。
 
 ## 构建并运行
 

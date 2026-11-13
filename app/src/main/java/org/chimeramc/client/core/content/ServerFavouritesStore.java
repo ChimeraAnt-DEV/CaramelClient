@@ -56,7 +56,7 @@ public final class ServerFavouritesStore {
                     .putStringSet(KEY, copy)
                     .apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ServerFavouritesStore:59", "Ignored a failure at ServerFavouritesStore:59", ignored);
+            AppLog.warnOnce("CaramelClient", "ServerFavouritesStore:59", "Ignored a failure at ServerFavouritesStore:59", ignored);
         }
     }
 

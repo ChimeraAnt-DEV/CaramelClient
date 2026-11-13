@@ -237,7 +237,7 @@ public class ModMenuSwitchView extends View {
             event.setSource(this);
             sendAccessibilityEventUnchecked(event);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuSwitchView:240", "Ignored a failure at ModMenuSwitchView:240", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuSwitchView:240", "Ignored a failure at ModMenuSwitchView:240", ignored);
         }
     }
 

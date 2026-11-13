@@ -4,7 +4,7 @@
 
 Please report a security issue **privately**, not in a public issue:
 
-- Open a [GitHub security advisory](https://github.com/ChimeraAnt-DEV/GlowberryClient/security/advisories/new), or
+- Open a [GitHub security advisory](https://github.com/ChimeraAnt-DEV/CaramelClient/security/advisories/new), or
 - Contact a maintainer directly through the project's Discord.
 
 Include the app version, the device and Android version, a description of the issue, and the

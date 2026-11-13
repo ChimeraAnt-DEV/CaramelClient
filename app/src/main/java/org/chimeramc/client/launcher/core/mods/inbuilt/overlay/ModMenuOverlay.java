@@ -451,7 +451,7 @@ public class ModMenuOverlay {
             // Throwable, not Exception: an UnsatisfiedLinkError from a native symbol this build does
             // not ship is an Error, so it escaped the old catch and took the whole app down the
             // moment the menu opened. The fallback path still shows the menu.
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:show",
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:show",
                     "The mod menu could not open; falling back", e);
             showFallback();
         }
@@ -557,7 +557,7 @@ public class ModMenuOverlay {
                     fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
                 }
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:536", "Ignored a failure at ModMenuOverlay:536", ignored);
+                AppLog.warnOnce("CaramelClient", "ModMenuOverlay:536", "Ignored a failure at ModMenuOverlay:536", ignored);
             }
             statsFps.setText(ModStatsFormatter.fps(fps));
         }
@@ -613,7 +613,7 @@ public class ModMenuOverlay {
                 if (renderDebugOverlay != null) renderDebugOverlay.start();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:592", "Ignored a failure at ModMenuOverlay:592", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:592", "Ignored a failure at ModMenuOverlay:592", ignored);
         }
     }
 
@@ -1985,7 +1985,7 @@ public class ModMenuOverlay {
                 }
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2008", "Ignored a failure at ModMenuOverlay:2008", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:2008", "Ignored a failure at ModMenuOverlay:2008", ignored);
         }
         return false;
     }
@@ -2638,7 +2638,7 @@ public class ModMenuOverlay {
                 autoDisabled = org.chimeramc.client.core.mods.ModCrashAttribution
                         .wasAutoDisabled(activity, mod.getId());
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2890", "Ignored a failure at ModMenuOverlay:2890", ignored);
+                AppLog.warnOnce("CaramelClient", "ModMenuOverlay:2890", "Ignored a failure at ModMenuOverlay:2890", ignored);
             }
             states.put(mod.getStableKey(), ModMenuRowState.of(
                     registered, available, autoDisabled, mod.isEnabled()));
@@ -2729,7 +2729,7 @@ public class ModMenuOverlay {
                 adapter.setTheme(theme);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:2981", "Ignored a failure at ModMenuOverlay:2981", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:2981", "Ignored a failure at ModMenuOverlay:2981", ignored);
         }
     }
 
@@ -2784,14 +2784,14 @@ public class ModMenuOverlay {
             reduce = new org.chimeramc.client.util.PersonalizationManager(activity)
                     .isReduceMotion();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3036", "Ignored a failure at ModMenuOverlay:3036", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:3036", "Ignored a failure at ModMenuOverlay:3036", ignored);
         }
         try {
             animationsOff = android.provider.Settings.Global.getFloat(
                     activity.getContentResolver(),
                     android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3043", "Ignored a failure at ModMenuOverlay:3043", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:3043", "Ignored a failure at ModMenuOverlay:3043", ignored);
         }
         return menuSettings.effectiveGlass(reduce, animationsOff);
     }
@@ -2881,7 +2881,7 @@ public class ModMenuOverlay {
                 layer.setImageDrawable(null);
                 layer.setVisibility(android.view.View.GONE);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3133", "Ignored a failure at ModMenuOverlay:3133", ignored);
+                AppLog.warnOnce("CaramelClient", "ModMenuOverlay:3133", "Ignored a failure at ModMenuOverlay:3133", ignored);
             }
         }
         recycleQuietly(backdropBlurred);
@@ -2898,7 +2898,7 @@ public class ModMenuOverlay {
         try {
             bitmap.recycle();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3150", "Ignored a failure at ModMenuOverlay:3150", ignored);
+            AppLog.warnOnce("CaramelClient", "ModMenuOverlay:3150", "Ignored a failure at ModMenuOverlay:3150", ignored);
         }
     }
 
@@ -2970,7 +2970,7 @@ public class ModMenuOverlay {
                         }
                     }
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("GlowberryClient", "ModMenuOverlay:3222", "Ignored a failure at ModMenuOverlay:3222", ignored);
+                    AppLog.warnOnce("CaramelClient", "ModMenuOverlay:3222", "Ignored a failure at ModMenuOverlay:3222", ignored);
                 }
                 overlayView = null;
                 isShowing = false;

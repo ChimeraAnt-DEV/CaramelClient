@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * The zero-setup cross-client relay, on public infrastructure no one has to run.
  *
  * <p><b>Why not the Go voice relay.</b> That relay reaches a whole session and reconnects, but it
- * must be deployed and maintained by someone, and a cosmetic must be visible between two Glowberry
+ * must be deployed and maintained by someone, and a cosmetic must be visible between two Caramel
  * users <em>anywhere</em> without either of them standing up a server. This client instead speaks
  * to <a href="https://ntfy.sh">ntfy.sh</a>, a free public pub/sub service that needs no account,
  * no key and no deployment: a topic is created by the first publish. That is the "infrastructure
@@ -68,7 +68,7 @@ public final class CosmeticSyncCloudRelay {
                 safe.append('-');
             }
         }
-        return "glowberry-cosmetics-" + (safe.length() == 0 ? "world" : safe);
+        return "caramel-cosmetics-" + (safe.length() == 0 ? "world" : safe);
     }
 
     /**
@@ -172,7 +172,7 @@ public final class CosmeticSyncCloudRelay {
                                 sb.append((char) Integer.parseInt(json.substring(i + 1, i + 5), 16));
                                 i += 4;
                             } catch (NumberFormatException ignored) {
-                                AppLog.warnOnce("GlowberryClient", "CosmeticSyncCloudRelay:175", "Ignored a failure at CosmeticSyncCloudRelay:175", ignored);
+                                AppLog.warnOnce("CaramelClient", "CosmeticSyncCloudRelay:175", "Ignored a failure at CosmeticSyncCloudRelay:175", ignored);
                             }
                         }
                         break;

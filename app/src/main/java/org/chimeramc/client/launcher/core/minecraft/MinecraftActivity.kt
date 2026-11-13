@@ -319,7 +319,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             )
             org.chimeramc.client.core.mods.ModLoadDiagnostics.record(this, merged)
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
         }
     }
 

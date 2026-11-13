@@ -18,7 +18,7 @@
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
             android:textColor="?android:textColorPrimary" />
 
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_1"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:textColor="?android:textColorSecondary" />
 
     </LinearLayout>

@@ -133,7 +133,7 @@ func TestNormalizeChannelMirrorsTheClient(t *testing.T) {
 		"   ":            ChannelWorld,
 		"Team":           "team",
 		" TEAM ":         "team",
-		"GLOWBERRY-7F2Q": "glowberry-7f2q",
+		"CARAMEL-7F2Q": "caramel-7f2q",
 	}
 	for in, want := range cases {
 		if got := NormalizeChannel(in); got != want {

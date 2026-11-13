@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ms_feature_disabled_title"
             android:textStyle="bold"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textColor="@color/primary"
             android:fontFamily="@font/misans"
     android:accessibilityHeading="true" />
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ms_feature_disabled_desc"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:textColor="@color/muted_text"
             android:textAlignment="center"
             android:layout_marginTop="@dimen/space_2"
@@ -93,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/not_signed_in"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textColor="@color/muted_text"
                             android:fontFamily="@font/misans"/>
                     </LinearLayout>
@@ -109,7 +109,7 @@
                     android:text="@string/ms_add_account"
                     android:textColor="@color/on_primary"
                     android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                     android:fontFamily="@font/misans" />
             </LinearLayout>
 
@@ -118,7 +118,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            style="@style/Widget.Chimera.Card.Compact"
+            style="@style/Widget.Caramel.Card.Compact"
             android:layout_marginStart="@dimen/space_4"
             android:elevation="2dp"
             android:fillViewport="true">
@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/not_signed_in"
                     android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textAlignment="center"
                     android:textColor="@color/on_surface"
                     android:fontFamily="@font/misans"
@@ -169,7 +169,7 @@
                     android:id="@+id/privileges_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                     android:textColor="@color/muted_text"
                     android:textAlignment="center"
                     android:layout_marginTop="@dimen/space_1"
@@ -193,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/xuid"
                         android:textColor="@color/muted_text"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption"
                         android:fontFamily="@font/misans"/>
 
                     <TextView
@@ -201,7 +201,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                        android:textAppearance="@style/TextAppearance.Caramel.Body"
                         android:layout_marginTop="@dimen/space_hairline"
                         android:textColor="@color/on_surface"
                         android:fontFamily="@font/misans"/>

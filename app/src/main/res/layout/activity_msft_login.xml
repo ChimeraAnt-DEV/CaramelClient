@@ -43,7 +43,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/ms_login_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -53,7 +53,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/ms_login_header_subtitle"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
             </LinearLayout>
         </LinearLayout>
 
@@ -92,7 +92,7 @@
                         android:gravity="center"
                         android:text="@string/ms_choose_login_method"
                         android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                        android:textAppearance="@style/TextAppearance.Caramel.Display"
                         android:textStyle="bold" />
 
                     <TextView
@@ -104,20 +104,20 @@
                         android:maxWidth="620dp"
                         android:text="@string/ms_choose_login_method_desc"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
                     <TextView
                         android:id="@+id/msft_method_error"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:fontFamily="@font/misans"
                         android:gravity="center"
                         android:maxWidth="720dp"
                         android:padding="@dimen/space_3"
                         android:textColor="@color/status_danger_dark"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                        android:textAppearance="@style/TextAppearance.Caramel.Body"
                         android:visibility="gone" />
 
                     <LinearLayout
@@ -159,7 +159,7 @@
                                     android:gravity="center"
                                     android:text="@string/ms_device_code_option_title"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -172,7 +172,7 @@
                                     android:minHeight="44dp"
                                     android:text="@string/ms_device_code_login_desc"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/msft_device_login_button"
@@ -184,7 +184,7 @@
                                     android:maxLines="1"
                                     android:text="@string/ms_device_code_login"
                                     android:textAllCaps="false"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                                     android:textStyle="bold"
                                     app:cornerRadius="10dp"
                                     app:icon="@drawable/ic_internet"
@@ -203,7 +203,7 @@
                                 android:paddingBottom="@dimen/space_2"
                                 android:text="@string/ms_method_skin_ok"
                                 android:textColor="@color/method_ok_text"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
 
@@ -239,7 +239,7 @@
                                     android:gravity="center"
                                     android:text="@string/ms_webview_option_title"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -252,7 +252,7 @@
                                     android:minHeight="44dp"
                                     android:text="@string/ms_webview_login_desc"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/msft_web_login_button"
@@ -265,7 +265,7 @@
                                     android:maxLines="1"
                                     android:text="@string/ms_webview_login"
                                     android:textAllCaps="false"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                                     android:textStyle="bold"
                                     app:cornerRadius="10dp"
                                     app:icon="@drawable/ic_monitor"
@@ -283,7 +283,7 @@
                                 android:paddingBottom="@dimen/space_2"
                                 android:text="@string/ms_method_skin_warning"
                                 android:textColor="@color/method_warn_text"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
 
@@ -318,7 +318,7 @@
                                     android:gravity="center"
                                     android:text="@string/ms_oauth_option_title"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -331,7 +331,7 @@
                                     android:minHeight="44dp"
                                     android:text="@string/ms_oauth_desc"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/msft_msal_login_button"
@@ -344,7 +344,7 @@
                                     android:maxLines="1"
                                     android:text="@string/ms_oauth_button_signin"
                                     android:textAllCaps="false"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                                     android:textStyle="bold"
                                     app:cornerRadius="10dp"
                                     app:icon="@drawable/ic_qa_account"
@@ -362,7 +362,7 @@
                                 android:paddingBottom="@dimen/space_2"
                                 android:text="@string/ms_method_skin_warning"
                                 android:textColor="@color/method_warn_text"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
@@ -398,7 +398,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/ms_device_code_title"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                            android:textAppearance="@style/TextAppearance.Caramel.Display"
                             android:textStyle="bold" />
 
                         <TextView
@@ -408,7 +408,7 @@
                             android:fontFamily="@font/misans"
                             android:text="@string/ms_device_code_instructions"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
@@ -432,7 +432,7 @@
                                     android:text="@string/ms_device_code_label"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -470,7 +470,7 @@
                                     android:text="@string/ms_device_code_requesting"
                                     android:textColor="@color/primary"
                                     android:textIsSelectable="true"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -483,7 +483,7 @@
                                     android:paddingHorizontal="@dimen/space_3"
                                     android:paddingVertical="@dimen/space_1"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
@@ -514,7 +514,7 @@
                                     android:fontFamily="@font/misans"
                                     android:text="@string/ms_device_code_step_title"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -525,7 +525,7 @@
                                     android:fontFamily="@font/misans"
                                     android:text="@string/ms_device_code_browser_note"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/msft_open_browser"
@@ -587,7 +587,7 @@
                                         android:fontFamily="@font/misans"
                                         android:text="@string/ms_device_code_requesting"
                                         android:textColor="@color/text_secondary"
-                                        android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                        android:textAppearance="@style/TextAppearance.Caramel.Label" />
                                 </LinearLayout>
 
                                 <com.google.android.material.button.MaterialButton
@@ -663,7 +663,7 @@
                         android:gravity="center"
                         android:text="@string/ms_oauth_option_title"
                         android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                        android:textAppearance="@style/TextAppearance.Caramel.Display"
                         android:textStyle="bold" />
 
                     <TextView
@@ -675,7 +675,7 @@
                         android:maxWidth="620dp"
                         android:text="@string/ms_oauth_desc"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
@@ -697,7 +697,7 @@
                                 android:fontFamily="@font/misans"
                                 android:text="@string/ms_login_card_title"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -708,7 +708,7 @@
                                 android:fontFamily="@font/misans"
                                 android:text="@string/ms_login_card_subtitle"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/msft_msal_signin"
@@ -753,7 +753,7 @@
                                     android:fontFamily="@font/misans"
                                     android:text="@string/ms_oauth_initializing"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
                             </LinearLayout>
 
                             <com.google.android.material.button.MaterialButton
@@ -778,7 +778,7 @@
                         android:maxWidth="620dp"
                         android:text="@string/ms_login_azure_note"
                         android:textColor="@color/status_warning"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                 </LinearLayout>
             </ScrollView>
         </FrameLayout>
@@ -824,7 +824,7 @@
                     android:gravity="center"
                     android:text="@string/ms_login_exchanging"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
             </LinearLayout>

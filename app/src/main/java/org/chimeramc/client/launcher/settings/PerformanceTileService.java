@@ -78,6 +78,6 @@ public class PerformanceTileService extends TileService {
     static int iconFor(PerformancePresetManager.Preset preset) {
         // The monochrome mark, because a Quick Settings tile is tinted by the system and a
         // full-colour launcher icon reads as a smudge. The label carries which preset is active.
-        return org.chimeramc.client.R.drawable.ic_glowberry_mono;
+        return org.chimeramc.client.R.drawable.ic_caramel_mono;
     }
 }

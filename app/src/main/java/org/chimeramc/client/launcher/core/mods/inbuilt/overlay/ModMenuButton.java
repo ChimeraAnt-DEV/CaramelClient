@@ -269,7 +269,7 @@ public class ModMenuButton {
                     }
                 }
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "ModMenuButton:272", "Ignored a failure at ModMenuButton:272", ignored);
+                AppLog.warnOnce("CaramelClient", "ModMenuButton:272", "Ignored a failure at ModMenuButton:272", ignored);
             }
             buttonView = null;
             isShowing = false;

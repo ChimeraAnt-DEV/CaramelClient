@@ -218,7 +218,7 @@ class CrashActivity : BaseActivity() {
                     disabled++
                 }
             } catch (ignored: Throwable) {
-                AppLog.warnOnce("GlowberryClient", "CrashActivity:221", "Ignored a failure at CrashActivity:221", ignored)
+                AppLog.warnOnce("CaramelClient", "CrashActivity:221", "Ignored a failure at CrashActivity:221", ignored)
             }
             ModSafeMode.acknowledgeCrash(this, true)
             val finalDisabled = disabled
@@ -314,7 +314,7 @@ class CrashActivity : BaseActivity() {
         try {
             executor.shutdownNow()
         } catch (ignored: Exception) {
-            AppLog.warnOnce("GlowberryClient", "CrashActivity:317", "Ignored a failure at CrashActivity:317", ignored)
+            AppLog.warnOnce("CaramelClient", "CrashActivity:317", "Ignored a failure at CrashActivity:317", ignored)
         }
     }
 }

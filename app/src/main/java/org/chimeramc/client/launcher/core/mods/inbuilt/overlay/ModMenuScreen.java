@@ -113,7 +113,7 @@ final class ModMenuScreen {
         } catch (Throwable e) {
             // Compose failing must never take the menu down: the View menu is already inflated
             // underneath, so dropping the Compose layer leaves a working screen.
-            AppLog.warnOnce("GlowberryClient", "ModMenuScreen:attach",
+            AppLog.warnOnce("CaramelClient", "ModMenuScreen:attach",
                     "The Compose Mod Menu could not start; using the View menu", e);
             composeView = null;
             state = null;
@@ -132,7 +132,7 @@ final class ModMenuScreen {
                     .withSearch(current.getSearch())
                     .withFavoritesOnly(current.getFavoritesOnly()));
         } catch (Throwable e) {
-            AppLog.warnOnce("GlowberryClient", "ModMenuScreen:refresh",
+            AppLog.warnOnce("CaramelClient", "ModMenuScreen:refresh",
                     "Could not rebuild the Compose menu rows", e);
         }
     }

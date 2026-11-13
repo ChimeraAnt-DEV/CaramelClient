@@ -209,7 +209,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-debug-apk
+          name: CaramelClient-debug-apk
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/debug/*.apk.sha256
@@ -218,7 +218,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-release-unsigned-apk
+          name: CaramelClient-release-unsigned-apk
           path: |
             app/build/outputs/apk/release/*-unsigned.apk
             app/build/outputs/apk/release/*-unsigned.apk.sha256
@@ -227,7 +227,7 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-beta-apk
+          name: CaramelClient-beta-apk
           path: |
             app/build/outputs/apk/beta/*.apk
             app/build/outputs/apk/beta/*.apk.sha256
@@ -251,7 +251,7 @@ jobs:
         run: |
           TAG=${GITHUB_REF_NAME}
           SIGNED_APK="${{ steps.sign_app.outputs.signedReleaseFile }}"
-          APK_DST="ChimeraClient-${TAG}-release.apk"
+          APK_DST="CaramelClient-${TAG}-release.apk"
           cp "$SIGNED_APK" "$APK_DST"
           echo "Signed APK renamed to $APK_DST"
           # B16: the published release carries a digest next to the signed APK.
@@ -262,10 +262,10 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: ChimeraClient-${{ github.ref_name }}-release.apk
+          name: CaramelClient-${{ github.ref_name }}-release.apk
           path: |
-            ChimeraClient-${{ github.ref_name }}-release.apk
-            ChimeraClient-${{ github.ref_name }}-release.apk.sha256
+            CaramelClient-${{ github.ref_name }}-release.apk
+            CaramelClient-${{ github.ref_name }}-release.apk.sha256
 
       - name: Generate GitHub release notes
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
@@ -276,8 +276,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ChimeraClient-${{ github.ref_name }}-release.apk
-            ChimeraClient-${{ github.ref_name }}-release.apk.sha256
+            CaramelClient-${{ github.ref_name }}-release.apk
+            CaramelClient-${{ github.ref_name }}-release.apk.sha256
           body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -286,11 +286,11 @@ jobs:
         if: env.HAS_GOOGLE_SERVICES == 'true' && startsWith(github.ref, 'refs/tags/')
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          APK_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ChimeraClient-${{ github.ref_name }}-release.apk"
+          APK_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/CaramelClient-${{ github.ref_name }}-release.apk"
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          EMBED_TITLE="ChimeraClient Update!"
-          EMBED_DESC="A new version of **ChimeraClient** is ready."
+          EMBED_TITLE="CaramelClient Update!"
+          EMBED_DESC="A new version of **CaramelClient** is ready."
           EMBED_COLOR=5814783
           THUMB_URL='https://avatars.githubusercontent.com/u/78095377?s=200&v=4'
 

@@ -211,7 +211,7 @@ final class BundledResourcePackInstaller {
                 result.add(new ManagedPack(object.get("uuid").getAsString(), target, type));
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "BundledResourcePackInstaller:214", "Ignored a failure at BundledResourcePackInstaller:214", ignored);
+            AppLog.warnOnce("CaramelClient", "BundledResourcePackInstaller:214", "Ignored a failure at BundledResourcePackInstaller:214", ignored);
         }
         return result;
     }

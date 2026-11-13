@@ -1,6 +1,6 @@
-# Fly.io deployment for the Chimera voice relay.
+# Fly.io deployment for the Caramel voice relay.
 # UDP is the only service the launcher needs; the relay holds no state on disk.
-app = "glowberry-voice-relay"
+app = "caramel-voice-relay"
 primary_region = "iad"
 
 [build]

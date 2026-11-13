@@ -39,7 +39,7 @@ public class DebugScreenTextTest {
     @Test
     public void aFullSnapshotRendersEveryLineTheJavaDebugScreenShows() {
         String text = DebugScreenText.build(full());
-        assertTrue(text, text.contains("Glowberry Client 1.2.3"));
+        assertTrue(text, text.contains("Caramel Client 1.2.3"));
         assertTrue(text, text.contains("Minecraft 1.26.33.1 (arm64-v8a)"));
         assertTrue(text, text.contains("FPS: 60 (1% low 41)"));
         assertTrue(text, text.contains("Frame: 16.7 ms average, 24.0 ms worst (vsync-locked)"));

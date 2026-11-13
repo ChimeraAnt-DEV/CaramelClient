@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The launch screen. The default state is calm and centred: the Glowberry logo, the status line and
+    The launch screen. The default state is calm and centred: the Caramel logo, the status line and
     a rotating colour-shifting ring that reports the launch phase on its own. The raw launch log is a
     diagnostic, so it lives behind the "Show launch log" setting and is hidden unless the user opts
     in; when it is off the whole screen is just the logo, the status and the ring.
@@ -28,7 +28,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:contentDescription="@string/splash_logo_desc"
-            android:src="@drawable/ic_glowberry_logo" />
+            android:src="@drawable/ic_caramel_logo" />
 
 
         <TextView
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:text="@string/minecraft_loading_status_preparing"
             android:textColor="@color/on_background"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title" />
+            android:textAppearance="@style/TextAppearance.Caramel.Title" />
 
         <TextView
             android:id="@+id/minecraftLaunchDetail"
@@ -50,7 +50,7 @@
             android:includeFontPadding="false"
             android:gravity="center"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+            android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
         <!--
             The changelog line: the newest release's headline and the upcoming one, on the launch
@@ -68,7 +68,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -92,7 +92,7 @@
             android:accessibilityHeading="true"
             android:text="@string/minecraft_loading_log_title"
             android:textColor="@color/on_background"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:textStyle="bold" />
 
         <ScrollView
@@ -114,7 +114,7 @@
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="3dp"
                 android:textColor="@color/on_header_gradient_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
         </ScrollView>
     </LinearLayout>
 

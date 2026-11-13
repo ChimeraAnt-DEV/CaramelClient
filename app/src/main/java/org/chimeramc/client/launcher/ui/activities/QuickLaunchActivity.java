@@ -328,7 +328,7 @@ public class QuickLaunchActivity extends BaseActivity {
                 });
             });
         } catch (RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "QuickLaunchActivity:331", "Ignored a failure at QuickLaunchActivity:331", ignored);
+            AppLog.warnOnce("CaramelClient", "QuickLaunchActivity:331", "Ignored a failure at QuickLaunchActivity:331", ignored);
         }
     }
 

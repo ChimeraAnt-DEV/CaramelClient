@@ -26,7 +26,7 @@ import java.util.List;
  *
  * <p>Two jobs:
  * <ul>
- *   <li><b>Export to the gallery</b> — copies the file into the shared {@code Movies/GlowberryClient}
+ *   <li><b>Export to the gallery</b> — copies the file into the shared {@code Movies/CaramelClient}
  *       collection through {@code MediaStore} on API 29+, and a plain file copy on API 28, which is
  *       the only path this app's {@code minSdk} leaves. No storage permission is requested for the
  *       MediaStore route.</li>
@@ -39,7 +39,7 @@ import java.util.List;
 public final class ReplayExporter {
 
     private static final String TAG = "ReplayExporter";
-    private static final String ALBUM = "GlowberryClient";
+    private static final String ALBUM = "CaramelClient";
 
     private ReplayExporter() {
     }

@@ -229,7 +229,7 @@ public final class JarInspector {
                 }
             }
         } catch (IOException ignored) {
-            AppLog.warnOnce("GlowberryClient", "JarInspector:232", "Ignored a failure at JarInspector:232", ignored);
+            AppLog.warnOnce("CaramelClient", "JarInspector:232", "Ignored a failure at JarInspector:232", ignored);
         }
         return classes;
     }

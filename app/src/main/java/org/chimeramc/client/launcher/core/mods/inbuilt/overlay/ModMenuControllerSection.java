@@ -187,7 +187,7 @@ final class ModMenuControllerSection {
                     android.widget.Toast.makeText(activity, R.string.vip_controller_step_failed,
                             android.widget.Toast.LENGTH_SHORT).show();
                 } catch (Throwable ignored) {
-                    AppLog.warnOnce("GlowberryClient", "ModMenuControllerSection:190", "Ignored a failure at ModMenuControllerSection:190", ignored);
+                    AppLog.warnOnce("CaramelClient", "ModMenuControllerSection:190", "Ignored a failure at ModMenuControllerSection:190", ignored);
                 }
             }
         });

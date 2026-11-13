@@ -24,7 +24,7 @@ import org.chimeramc.client.R;
  * {@code LauncherFonts}), where {@code fontVariationSettings} (API 26+, and minSdk is 28) applies.
  *
  * <p>{@code TypeRoleTest} reads {@code res/values/styles.xml} and asserts that
- * {@code TextAppearance.Glowberry.*} carries the same sizes this class does, so the XML half and
+ * {@code TextAppearance.Caramel.*} carries the same sizes this class does, so the XML half and
  * the code half cannot drift apart.
  */
 public final class UiType {

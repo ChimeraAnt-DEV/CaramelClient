@@ -59,7 +59,7 @@ public final class PreloaderSignatureRulesManager {
      * current rules.
      */
     private static final String[] REMOTE_RULES_URLS = {
-            "https://raw.githubusercontent.com/ChimeraAnt-DEV/GlowberryClient/main/resources/preloader/preloader_signature_rules_source.json"
+            "https://raw.githubusercontent.com/ChimeraAnt-DEV/CaramelClient/main/resources/preloader/preloader_signature_rules_source.json"
     };
 
     private static final AtomicBoolean refreshRunning = new AtomicBoolean(false);

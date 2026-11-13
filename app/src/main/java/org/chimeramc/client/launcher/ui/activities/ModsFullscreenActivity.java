@@ -430,7 +430,7 @@ public class ModsFullscreenActivity extends BaseActivity {
         try {
             worker.execute(task);
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModsFullscreenActivity:433", "Ignored a failure at ModsFullscreenActivity:433", ignored);
+            AppLog.warnOnce("CaramelClient", "ModsFullscreenActivity:433", "Ignored a failure at ModsFullscreenActivity:433", ignored);
         }
     }
 

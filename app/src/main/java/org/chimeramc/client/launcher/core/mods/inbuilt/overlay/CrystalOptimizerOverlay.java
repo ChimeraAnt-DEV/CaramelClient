@@ -96,7 +96,7 @@ public final class CrystalOptimizerOverlay {
         try {
             if (overlayView != null && wmParams != null) windowManager.removeView(overlayView);
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "CrystalOptimizerOverlay:99", "Ignored a failure at CrystalOptimizerOverlay:99", ignored);
+            AppLog.warnOnce("CaramelClient", "CrystalOptimizerOverlay:99", "Ignored a failure at CrystalOptimizerOverlay:99", ignored);
         }
         overlayView = null;
         wmParams = null;

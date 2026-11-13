@@ -170,7 +170,7 @@ def mod_menu():
     # titlebar
     rrect(d, [x0, y0, x1, y0 + 56], 18, fill=BG_TITLEBAR)
     d.rectangle([x0, y0 + 40, x1, y0 + 56], fill=BG_TITLEBAR)
-    text(d, (x0 + 20, y0 + 28), "Glowberry", font(20, True), TEXT_PRIMARY, anchor="lm")
+    text(d, (x0 + 20, y0 + 28), "Caramel", font(20, True), TEXT_PRIMARY, anchor="lm")
     # search field
     sf = [x0 + 180, y0 + 12, x1 - 140, y0 + 46]
     rrect(d, sf, 17, fill=BG_SURFACE, outline=HAIRLINE, width=1)
@@ -242,7 +242,7 @@ def ant_egg():
     # installed list
     text(d, (60, 340), "INSTALLED", font(13, True), TEXT_SECONDARY)
     rows = [
-        ("Chimera Tweaks", "native", "1.4.0", True),
+        ("Caramel Tweaks", "native", "1.4.0", True),
         ("Auto-Sort Chests", "script", "0.9.2", True),
         ("Sky HUD Pack", "script", "2.0.1", False),
     ]

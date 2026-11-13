@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             tools:text="Custom items / blocks" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             tools:text="Ported as AntEgg item definitions" />
     </LinearLayout>
 </LinearLayout>

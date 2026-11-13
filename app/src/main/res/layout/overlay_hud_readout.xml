@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
                 android:includeFontPadding="false"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textColor="@color/overlay_text_primary"
                 android:textStyle="bold"
                 tools:text="60" />
@@ -61,7 +61,7 @@
                 android:layout_marginBottom="@dimen/space_hairline"
                 android:letterSpacing="0.08"
                 android:text="@string/mod_overlay_fps_unit"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textColor="@color/overlay_text_muted" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_divider"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textColor="@color/overlay_text_muted"
             tools:text="\u25B2 58 avg / 41 low" />
 

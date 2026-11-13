@@ -207,7 +207,7 @@ public final class ControllerToastView {
             activity.startActivity(new android.content.Intent(
                     activity, org.chimeramc.client.ui.activities.CustomizeActivity.class));
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "ControllerToastView:210", "Ignored a failure at ControllerToastView:210", ignored);
+            AppLog.warnOnce("CaramelClient", "ControllerToastView:210", "Ignored a failure at ControllerToastView:210", ignored);
         }
         dismiss(true);
     }

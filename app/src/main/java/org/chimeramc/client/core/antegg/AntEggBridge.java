@@ -51,7 +51,7 @@ public final class AntEggBridge {
                 }
                 return null;
             } catch (UnsatisfiedLinkError e) {
-                AppLog.warnOnce("GlowberryClient", "AntEggBridge:54", "Ignored a failure at AntEggBridge:54", e);
+                AppLog.warnOnce("CaramelClient", "AntEggBridge:54", "Ignored a failure at AntEggBridge:54", e);
             }
         }
         AntEggPackage.Result result = AntEggPackage.inspect(new java.io.File(filePath));
@@ -82,7 +82,7 @@ public final class AntEggBridge {
                 }
                 return null;
             } catch (UnsatisfiedLinkError e) {
-                AppLog.warnOnce("GlowberryClient", "AntEggBridge:85", "Ignored a failure at AntEggBridge:85", e);
+                AppLog.warnOnce("CaramelClient", "AntEggBridge:85", "Ignored a failure at AntEggBridge:85", e);
             }
         }
         AntEggPackage.Result result = AntEggPackage.extract(new java.io.File(filePath), sandbox);
@@ -95,7 +95,7 @@ public final class AntEggBridge {
             try {
                 return nativeLooksLikeAntEgg(fileName);
             } catch (UnsatisfiedLinkError e) {
-                AppLog.warnOnce("GlowberryClient", "AntEggBridge:98", "Ignored a failure at AntEggBridge:98", e);
+                AppLog.warnOnce("CaramelClient", "AntEggBridge:98", "Ignored a failure at AntEggBridge:98", e);
             }
         }
         return AntEggPackage.looksLikeAntEgg(fileName);

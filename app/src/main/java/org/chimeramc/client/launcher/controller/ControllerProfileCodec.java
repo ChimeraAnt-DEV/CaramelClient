@@ -126,7 +126,7 @@ public final class ControllerProfileCodec {
                 if (type.name().equals(envelope.controllerType)) return type;
             }
         } catch (JsonSyntaxException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ControllerProfileCodec:129", "Ignored a failure at ControllerProfileCodec:129", ignored);
+            AppLog.warnOnce("CaramelClient", "ControllerProfileCodec:129", "Ignored a failure at ControllerProfileCodec:129", ignored);
         }
         return null;
     }

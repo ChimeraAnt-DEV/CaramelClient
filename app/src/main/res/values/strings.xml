@@ -1,6 +1,6 @@
 <resources>
     <!-- Common -->
-    <string name="app_name" translatable="false">GlowberryClient</string>
+    <string name="app_name" translatable="false">CaramelClient</string>
     <string name="minecraft" translatable="false">Minecraft</string>
     <string name="launch">Launch</string>
     <string name="beta_badge">Beta</string>
@@ -40,13 +40,13 @@
 
     <!-- About -->
     <string name="about_title">About</string>
-    <string name="copyright">©2024–2026 GlowberryClient. Licensed under the Apache License 2.0.</string>
+    <string name="copyright">©2024–2026 CaramelClient. Licensed under the Apache License 2.0.</string>
     <string name="font_license">This app uses the Misans font.</string>
-    <string name="about_footer_github" translatable="false">GitHub: https://github.com/ChimeraAnt-DEV/GlowberryClient</string>
+    <string name="about_footer_github" translatable="false">GitHub: https://github.com/ChimeraAnt-DEV/CaramelClient</string>
     <string name="quick_actions_title">Quick Actions</string>
 
     <!-- Home screen -->
-    <string name="home_app_title" translatable="false">GlowberryClient</string>
+    <string name="home_app_title" translatable="false">CaramelClient</string>
     <string name="home_subtitle">Minecraft: Bedrock Edition launcher</string>
     <string name="home_versions">Versions</string>
     <string name="home_mods">Mods</string>
@@ -109,7 +109,7 @@
 
     <!-- Permissions -->
     <string name="storage_permission_title">Storage Migration Permission</string>
-    <string name="storage_permission_message">Please grant storage permission so GlowberryClient can copy data from the old games/org.chimeramc directory. This permission is only needed for the migration step.</string>
+    <string name="storage_permission_message">Please grant storage permission so CaramelClient can copy data from the old games/org.chimeramc directory. This permission is only needed for the migration step.</string>
     <string name="grant_permission">Grant</string>
     <string name="cancel">Cancel</string>
 
@@ -139,7 +139,7 @@
     <string name="not_apk_or_apks">Please select an APK or APKS file</string>
     <string name="import_error_32bit_only">This version only contains 32-bit (armeabi-v7a) libraries. The launcher only supports 64-bit (arm64) versions, so it cannot be installed.</string>
     <string name="import_error_clear_failed">The launcher could not clear the existing files for this instance. Close any other app that may be using them, then try again. If it keeps failing, delete the instance from the Instances tab first.</string>
-    <string name="import_error_create_dir">The launcher could not create the folder for this instance. Free some storage space and check that GlowberryClient has file access in Android Settings, then try again.</string>
+    <string name="import_error_create_dir">The launcher could not create the folder for this instance. Free some storage space and check that CaramelClient has file access in Android Settings, then try again.</string>
     <string name="import_error_cancelled">The import was cancelled because the screen was closed before it could start. Open the import again from a screen you will keep on screen while it runs.</string>
     <string name="import_error_open_package">The selected package could not be opened for reading. It may have been moved or deleted since you picked it. Pick the file again and retry.</string>
     <string name="import_error_no_base_apk">This bundle does not contain a base APK, so it is not a valid Minecraft package. Download it again from the source, or pick a different file.</string>
@@ -216,7 +216,7 @@
     <string name="repair_finalizing">Finalizing repair…</string>
 
     <string name="storage_migration_title">Storage Migration Required</string>
-    <string name="storage_migration_message">GlowberryClient must migrate data from games/org.chimeramc to %1$s before continuing.
+    <string name="storage_migration_message">CaramelClient must migrate data from games/org.chimeramc to %1$s before continuing.
 
 This storage change is required for Google Play listing compliance. The old directory will be kept untouched, but it will no longer be used after migration.
 
@@ -238,15 +238,15 @@ Migration may take a while. You can leave the app in the background while it run
 
 The old games/org.chimeramc directory was not deleted and is no longer used.</string>
     <string name="storage_migration_partial_title">Migration Incomplete</string>
-    <string name="storage_migration_partial_message">%1$d of %2$d files could not be copied. Migration must complete before GlowberryClient can continue.</string>
+    <string name="storage_migration_partial_message">%1$d of %2$d files could not be copied. Migration must complete before CaramelClient can continue.</string>
     <string name="storage_migration_failed_title">Migration Failed</string>
     <string name="storage_migration_failed_message">Migration could not continue: %1$s
 
-Migration must complete before GlowberryClient can continue.</string>
+Migration must complete before CaramelClient can continue.</string>
     <string name="storage_migration_interrupted_title">Migration Interrupted</string>
     <string name="storage_migration_interrupted_message">%1$s
 
-GlowberryClient must complete the migration before continuing.</string>
+CaramelClient must complete the migration before continuing.</string>
     <string name="storage_migration_interrupted_hint">A previous migration attempt was interrupted. Files that already finished copying are skipped when it resumes.</string>
     <string name="migration_cleanup_title">Clean Historical Directory</string>
     <string name="migration_cleanup_desc">Only remove the old games/org.chimeramc directory after you have confirmed every instance launches normally and worlds, resource packs, behavior packs, and settings are not missing. Deleted historical data cannot be restored from this directory.</string>
@@ -272,8 +272,8 @@ GlowberryClient must complete the migration before continuing.</string>
 
     <string name="error_no_browser">No browser available</string>
 
-    <string name="eula_title">GlowberryClient License Agreement</string>
-    <string name="eula_message"><b>Welcome to GlowberryClient</b>\n\nBy using this software you agree to:\n\n• This is an <b>unofficial</b> Minecraft launcher\n• You must own a <b>licensed</b> copy of Minecraft\n• Any form of piracy or cheating is prohibited\n• Mods/resource packs are used at your own risk\n• Not affiliated with Mojang/Microsoft\n\nContinued use constitutes agreement</string>
+    <string name="eula_title">CaramelClient License Agreement</string>
+    <string name="eula_message"><b>Welcome to CaramelClient</b>\n\nBy using this software you agree to:\n\n• This is an <b>unofficial</b> Minecraft launcher\n• You must own a <b>licensed</b> copy of Minecraft\n• Any form of piracy or cheating is prohibited\n• Mods/resource packs are used at your own risk\n• Not affiliated with Mojang/Microsoft\n\nContinued use constitutes agreement</string>
     <string name="eula_agree">Accept</string>
     <string name="eula_exit">Decline</string>
 
@@ -350,7 +350,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="instance_delete_confirm_title">Delete Instance</string>
     <string name="instance_delete_confirm_msg">Are you sure you want to delete this instance? All data including worlds will be permanently removed.</string>
     <string name="instance_backup_title">Backup Instance</string>
-    <string name="instance_backup_desc">Create a full backup of this instance in Download/GlowberryClient/Backups.</string>
+    <string name="instance_backup_desc">Create a full backup of this instance in Download/CaramelClient/Backups.</string>
     <string name="instance_backup_button">Backup Instance</string>
     <string name="instance_backup_confirm_message">Create a full backup of this instance now? Exit Minecraft first if it is running to avoid changing files during backup.</string>
     <string name="instance_backup_in_progress">Backing up instance…</string>
@@ -651,9 +651,9 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_oauth_button_cancel">Cancel OAuth</string>
     <string name="ms_webview_login">Open embedded sign-in</string>
     <string name="ms_webview_option_title">Embedded WebView</string>
-    <string name="ms_webview_login_desc">Sign in without leaving GlowberryClient. Use this when the browser flow is unavailable.</string>
+    <string name="ms_webview_login_desc">Sign in without leaving CaramelClient. Use this when the browser flow is unavailable.</string>
     <string name="ms_device_code_title">Sign in with Device Code</string>
-    <string name="ms_device_code_instructions">Open Microsoft’s device sign-in page, enter this code, then approve access. GlowberryClient will finish automatically.</string>
+    <string name="ms_device_code_instructions">Open Microsoft’s device sign-in page, enter this code, then approve access. CaramelClient will finish automatically.</string>
     <string name="ms_device_code_label">Microsoft device code</string>
     <string name="ms_device_code_requesting">Requesting a secure code…</string>
     <string name="ms_device_code_waiting_code" translatable="false">--------</string>
@@ -667,7 +667,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_device_code_copied">Code copied</string>
     <string name="ms_device_code_open_browser">Open Microsoft sign-in</string>
     <string name="ms_device_code_step_title">Complete sign-in in your browser</string>
-    <string name="ms_device_code_browser_note">GlowberryClient opens your default browser in a private session, fills the code automatically, and requests a fresh Microsoft sign-in.</string>
+    <string name="ms_device_code_browser_note">CaramelClient opens your default browser in a private session, fills the code automatically, and requests a fresh Microsoft sign-in.</string>
     <string name="ms_choose_other_method">Other method</string>
     <string name="ms_no_browser">No browser is available on this device.</string>
     <string name="ms_default_browser_no_private_mode">Your default browser does not support private sign-in. Update it or use WebView login.</string>
@@ -680,7 +680,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="ms_active_badge">Active</string>
     <string name="ms_account_subtitle_format">User ID: %1$s • Updated: %2$s</string>
     <string name="xbox_avatar">Xbox avatar</string>
-    <string name="launcher_managed_mc_login">Sign in to Minecraft with GlowberryClient</string>
+    <string name="launcher_managed_mc_login">Sign in to Minecraft with CaramelClient</string>
     <string name="dialog_title_login_required">Sign-in required</string>
     <string name="dialog_message_login_required">Launcher-managed login is enabled, but no account is signed in. Go to Accounts to sign in.</string>
     <string name="go_to_accounts">Accounts</string>
@@ -688,7 +688,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="launcher_login_disabled_launching">Launcher-managed sign-in disabled. Launching…</string>
 
     <string name="ms_feature_disabled_title">Feature Disabled</string>
-    <string name="ms_feature_disabled_desc">Please enable \'Sign in to Minecraft with GlowberryClient\' in Settings to manage Microsoft accounts.</string>
+    <string name="ms_feature_disabled_desc">Please enable \'Sign in to Minecraft with CaramelClient\' in Settings to manage Microsoft accounts.</string>
     <string name="ms_activated">Activated</string>
 
     <!-- Popup labels -->
@@ -795,7 +795,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="logcat_filter_level_description">Show only %1$s level lines</string>
     <string name="logcat_copied">Logcat copied</string>
     <string name="logcat_no_log_to_share">No log available to share</string>
-    <string name="logcat_share_subject">GlowberryClient — launch debug log</string>
+    <string name="logcat_share_subject">CaramelClient — launch debug log</string>
     <string name="logcat_share_title">Share log file</string>
     <string name="logcat_close">Close</string>
     <string name="logcat_corner_bottom_left">Resize: bottom-left</string>
@@ -1107,7 +1107,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="cosmetics_gait_swim">Swim</string>
     <string name="cosmetics_none">None</string>
     <string name="cosmetics_equipped">Equipped %1$s</string>
-    <string name="cosmetics_scope_note">Capes reach the game through the engine\'s own texture loader, so a cape appears on your character with no resource pack and no reload. Accessories and pets reach the game through the client\'s native player-render hook, which draws their geometry directly onto the game\'s own player model. The preview shows your own skin wearing the equipped cape, accessory and pet, and pets animate their walk, run, crouch, fly and swim gaits here. A cape appears as soon as the engine has loaded your cape texture once; accessories and pets appear through the native hook when it is available on your build. Cosmetic sync shows them to other Glowberry users in the same world. Vanilla players do not see them — Bedrock gives an app no way to push a cosmetic onto someone else\'s account — and the pet is drawn on your own player rather than spawned as an entity, so it needs no server command and cannot trip a server check.</string>
+    <string name="cosmetics_scope_note">Capes reach the game through the engine\'s own texture loader, so a cape appears on your character with no resource pack and no reload. Accessories and pets reach the game through the client\'s native player-render hook, which draws their geometry directly onto the game\'s own player model. The preview shows your own skin wearing the equipped cape, accessory and pet, and pets animate their walk, run, crouch, fly and swim gaits here. A cape appears as soon as the engine has loaded your cape texture once; accessories and pets appear through the native hook when it is available on your build. Cosmetic sync shows them to other Caramel users in the same world. Vanilla players do not see them — Bedrock gives an app no way to push a cosmetic onto someone else\'s account — and the pet is drawn on your own player rather than spawned as an entity, so it needs no server command and cannot trip a server check.</string>
     <string name="accessory_style_note">Each style is a real, different mesh — a cap, a beanie, a crown, horns, a halo and so on are separate geometry. Every palette then tints those meshes, so "Prism Crown" and "Ember Circlet" share a shape in different colours while "Prism Crown" and "Geode Beret" are different shapes. Names are individual to each piece, not one palette word repeated down the list.</string>
     <string name="cosmetics_in_game">On your character in-game</string>
     <string name="cosmetics_known_issues_title">Known upstream issues</string>
@@ -1120,10 +1120,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="cosmetics_route_preview_only">Preview only on this build: the native player-render hook is not live this session, so this piece shows here but not in game yet.</string>
     <string name="cosmetics_native_inactive">Native renderer is not active this session, so cosmetics show in this preview only. They appear in game once the renderer hook is available on your build.</string>
     <string name="cosmetics_sync_setting_title">Cosmetic sync</string>
-    <string name="cosmetics_sync_setting_desc">Advertise your equipped cape, accessory and pet to other Glowberry users in the same world, and see theirs. Client-side only; turning it off stops both sending and receiving.</string>
-    <string name="cosmetics_sync_off">Cosmetic sync is off — other Chimera users cannot see your cosmetics.</string>
-    <string name="cosmetics_sync_with_game">Cosmetic sync starts with the game, so other Chimera users in the same world can see your equipped cape, accessory and pet — and you can see theirs.</string>
-    <string name="cosmetics_sync_seen">Cosmetic sync is on (%2$s) — %1$d other Chimera user(s) in this world can see your cosmetics.</string>
+    <string name="cosmetics_sync_setting_desc">Advertise your equipped cape, accessory and pet to other Caramel users in the same world, and see theirs. Client-side only; turning it off stops both sending and receiving.</string>
+    <string name="cosmetics_sync_off">Cosmetic sync is off — other Caramel users cannot see your cosmetics.</string>
+    <string name="cosmetics_sync_with_game">Cosmetic sync starts with the game, so other Caramel users in the same world can see your equipped cape, accessory and pet — and you can see theirs.</string>
+    <string name="cosmetics_sync_seen">Cosmetic sync is on (%2$s) — %1$d other Caramel user(s) in this world can see your cosmetics.</string>
     <string name="cosmetics_sync_toggle_on">Turn on cosmetic sync</string>
     <string name="cosmetics_sync_toggle_off">Turn off cosmetic sync</string>
     <string name="cosmetics_vfx_toggle_on">Turn on cosmetic VFX</string>
@@ -1410,10 +1410,10 @@ GlowberryClient must complete the migration before continuing.</string>
          performs, not the state, so it reads correctly to a screen reader. -->
     <string name="nav_rail_collapse">Collapse rail</string>
     <string name="nav_rail_expand">Expand rail</string>
-    <string name="nav_logo_home">GlowberryClient home</string>
+    <string name="nav_logo_home">CaramelClient home</string>
     <string name="customize_tab_controller">Controller</string>
     <string name="customize_tab_skins">Skins</string>
-    <string name="settings_about_open">About GlowberryClient</string>
+    <string name="settings_about_open">About CaramelClient</string>
     <string name="controller_title">Controller</string>
     <string name="controller_detected_message">has been connected and detected! Settings loaded.</string>
     <string name="controller_disconnected_message">disconnected. Touch controls active.</string>
@@ -1495,7 +1495,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="controller_import_partial">Imported %1$s (%2$d entries skipped)</string>
     <string name="controller_import_failed">Import failed: %1$s</string>
     <string name="controller_import_empty">This file contains no controller profiles.</string>
-    <string name="controller_import_wrong_format">That file is not a Glowberry controller profile export.</string>
+    <string name="controller_import_wrong_format">That file is not a Caramel controller profile export.</string>
     <string name="controller_import_malformed">That file could not be read as JSON.</string>
     <string name="controller_import_full">All %1$d profile slots are in use. Delete one first.</string>
     <string name="controller_bind_instance">Bind to instance</string>
@@ -1546,7 +1546,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="vanilla_prefix">Vanilla %s</string>
 
     <string name="about_page_title">About</string>
-    <string name="about_subtitle">GlowberryClient — A Modern Minecraft Bedrock Launcher</string>
+    <string name="about_subtitle">CaramelClient — A Modern Minecraft Bedrock Launcher</string>
     <string name="settings_backup_title">Backup &amp; Restore</string>
     <string name="settings_backup_desc">Export your launcher settings, personalization and controller profiles to a file, or restore them from one.</string>
     <string name="settings_backup_export">Export</string>
@@ -1689,21 +1689,21 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="diagnostics_extraction_stale">Stale — will re-extract on next launch</string>
     <string name="diagnostics_repair_error">Repair failed: %1$s</string>
     <string name="about_authors_title">Authors &amp; Maintainers</string>
-    <string name="about_people_title">Who makes GlowberryClient</string>
+    <string name="about_people_title">Who makes CaramelClient</string>
     <string name="about_owner_name" translatable="false">ChimeraAnt-DEV</string>
     <string name="about_owner_badge">Owner</string>
-    <string name="about_owner_role">Owner of GlowberryClient</string>
+    <string name="about_owner_role">Owner of CaramelClient</string>
     <string name="about_lead_name" translatable="false">Lynxifyy</string>
     <string name="about_lead_badge">Lead dev</string>
-    <string name="about_lead_role">Lead developer of GlowberryClient</string>
+    <string name="about_lead_role">Lead developer of CaramelClient</string>
     <string name="about_github">GitHub</string>
     <string name="about_author_name" translatable="false">DreamGuXiang</string>
     <string name="about_author_badge">Author</string>
-    <string name="about_author_role">GlowberryClient Authors</string>
+    <string name="about_author_role">CaramelClient Authors</string>
     <string name="about_afdian">Afdian</string>
     <string name="about_patreon">Patreon</string>
     <string name="about_source_title">Source Code &amp; Open Source</string>
-    <string name="about_github_repo" translatable="false">GitHub · GlowberryClient</string>
+    <string name="about_github_repo" translatable="false">GitHub · CaramelClient</string>
     <string name="about_github_org" translatable="false">ChimeraAnt-DEV</string>
     <string name="about_license_note">See LICENSE in the repository for license details.</string>
     <string name="about_build_info" translatable="false">Build: %1$s</string>
@@ -1711,13 +1711,13 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="about_backend_status">Backend: %1$s</string>
     <string name="about_input_backend_status">Input backend: %1$s</string>
     <string name="about_contribute_title">Contribute</string>
-    <string name="about_contribute_desc">Contributions via Issues or Pull Requests are welcome to improve GlowberryClient.</string>
+    <string name="about_contribute_desc">Contributions via Issues or Pull Requests are welcome to improve CaramelClient.</string>
     <string name="about_issues">Issue</string>
     <string name="about_star_fork">Star / Fork</string>
 
     <string-array name="launcher_tips">
        <item>Settings lets you adjust theme, color, background, and other appearance options to match your setup.</item>
-        <item>GlowberryClient is open source. Use GitHub issues to report launcher problems or suggest improvements.</item>
+        <item>CaramelClient is open source. Use GitHub issues to report launcher problems or suggest improvements.</item>
         <item>Use the version dropdown to switch the current instance quickly.</item>
         <item>Do people actually read these?</item>
         <item>You can drag mods to reorder their load priority.</item>
@@ -1954,7 +1954,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_config_offhand_keybind">Hardware keybind</string>
     <string name="offhand_scope_note">Bedrock has no swap-to-off-hand key. The off-hand slot is filled from your inventory, and only shields, arrows, firework rockets, totems of undying, maps and nautilus shells can go in it. This button opens the inventory for you (or uses the off-hand item), and works the same in a world, a Realm or a server.</string>
     <string name="changelog_title">What’s new</string>
-    <string name="changelog_version" translatable="false">GlowberryClient %1$s</string>
+    <string name="changelog_version" translatable="false">CaramelClient %1$s</string>
     <string name="changelog_continue">Continue</string>
     <string name="changelog_screen_title">Changelog</string>
     <string name="changelog_empty">No changelog is bundled with this build.</string>
@@ -2182,7 +2182,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="mod_config_voice_icon_animate_desc">While a player is talking, their mic icon fills toward green with their live volume. Off leaves it a static glyph.</string>
     <string name="mod_config_voice_icon_nametag">Show mic icon over nametags</string>
     <string name="mod_config_voice_icon_nametag_desc">Draw a small microphone beside the nametag of each player who is in the same world and on your voice channel</string>
-    <string name="voice_chat_scope_note">This links Glowberry launcher users in the same world over the local network. It cannot give a vanilla client without the launcher a voice channel, and the game\'s own friends-only worlds still apply.</string>
+    <string name="voice_chat_scope_note">This links Caramel launcher users in the same world over the local network. It cannot give a vanilla client without the launcher a voice channel, and the game\'s own friends-only worlds still apply.</string>
     <string name="voice_chat_title">Voice</string>
     <string name="voice_chat_status_off">Voice chat is off.</string>
     <string name="voice_chat_status_searching">Listening for nearby players on the local network...</string>
@@ -2242,7 +2242,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="voice_report_send">Open a report</string>
     <string name="voice_report_scope">Reports are written up by you in your own email or chat app and sent to the team; nothing is uploaded automatically. Your report includes your per-session voice id so it can be matched to the session, and nothing else that identifies you.</string>
     <string name="voice_report_chooser">Send report</string>
-    <string name="voice_report_subject">GlowberryClient voice chat report</string>
+    <string name="voice_report_subject">CaramelClient voice chat report</string>
     <string name="voice_report_empty">Describe what happened before opening a report.</string>
     <string name="voice_report_mail_hint">No email app found. The report text was copied to your clipboard.</string>
     <string name="voice_mute_scope">Muting is local to you. The other player is not told and stays in the channel.</string>
@@ -2251,7 +2251,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="voice_create_channel">Create a channel</string>
     <string name="voice_create_button">Create and join</string>
     <string name="voice_join_by_code">Join by code</string>
-    <string name="voice_join_code_hint">GLOWBERRY-XXXX or a channel name</string>
+    <string name="voice_join_code_hint">CARAMEL-XXXX or a channel name</string>
     <string name="voice_join_button">Join</string>
     <string name="voice_join_code_required">Enter a code or channel name</string>
     <string name="voice_joined_channel" formatted="false">Joined %1$s</string>
@@ -2264,16 +2264,16 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="voice_copy_code">Copy code</string>
     <string name="voice_share_code">Share</string>
     <string name="voice_code_copied" formatted="false">Code %1$s copied</string>
-    <string name="voice_channel_code_label">Glowberry channel code</string>
-    <string name="voice_share_subject">Join my Glowberry voice channel</string>
-    <string name="voice_share_body" formatted="false">Join my Glowberry voice channel with code %1$s - open the Voice tab and paste it into "Join by code".</string>
+    <string name="voice_channel_code_label">Caramel channel code</string>
+    <string name="voice_share_subject">Join my Caramel voice channel</string>
+    <string name="voice_share_body" formatted="false">Join my Caramel voice channel with code %1$s - open the Voice tab and paste it into "Join by code".</string>
     <string name="voice_share_chooser">Share channel code</string>
     <string name="voice_members_none">No one else is on this channel yet.</string>
 
-    <!-- Glowberry peer identity -->
-    <string name="glowberry_user_badge">GlowberryClient user</string>
-    <string name="cosmetics_peers_title">Glowberry users in this world</string>
-    <string name="cosmetics_peers_none">No other Glowberry users detected yet. Only Glowberry users can see your cosmetics.</string>
+    <!-- Caramel peer identity -->
+    <string name="caramel_user_badge">CaramelClient user</string>
+    <string name="cosmetics_peers_title">Caramel users in this world</string>
+    <string name="cosmetics_peers_none">No other Caramel users detected yet. Only Caramel users can see your cosmetics.</string>
     <string name="cosmetics_peer_wearing">Wearing: %1$s</string>
     <string name="cosmetics_peer_wearing_none">Wearing: nothing</string>
     <plurals name="voice_members">
@@ -2387,7 +2387,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="nav_replay">Replay</string>
     <string name="replay_capture_channel">Replay recording</string>
     <string name="replay_capture_notification_title">Recording gameplay</string>
-    <string name="replay_capture_notification_text">Chimera Replay is capturing your screen. Open the launcher to stop.</string>
+    <string name="replay_capture_notification_text">Caramel Replay is capturing your screen. Open the launcher to stop.</string>
     <string name="replay_header_title">Replay</string>
     <string name="replay_header_subtitle">Capture, review and export your clips</string>
     <string name="replay_save_native">Save the game\'s replay</string>
@@ -2606,7 +2606,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="closet_effects_note">Toggle the particle aura for the equipped set.</string>
 
     <!-- First-run wizard (U13). -->
-    <string name="setup_step_import_title">Welcome to GlowberryClient</string>
+    <string name="setup_step_import_title">Welcome to CaramelClient</string>
     <string name="setup_step_import_body">Import your Minecraft game files to get started. Pick the APK you want to play.</string>
     <string name="setup_step_import_action">Import game</string>
     <string name="setup_step_version_title">Pick your version</string>
@@ -2659,10 +2659,10 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="setup_import_failed">Import failed: %1$s</string>
 
     <!-- The five-step setup wizard. The licence is the only mandatory step; the rest can be skipped. -->
-    <string name="setup_license_title">GlowberryClient License Agreement</string>
-    <string name="setup_license_body">GlowberryClient is an unofficial Minecraft Bedrock launcher. Read the terms below, then tick the box to continue.</string>
+    <string name="setup_license_title">CaramelClient License Agreement</string>
+    <string name="setup_license_body">CaramelClient is an unofficial Minecraft Bedrock launcher. Read the terms below, then tick the box to continue.</string>
     <string name="setup_license_agree">I have read and accept these terms</string>
-    <string name="setup_license_terms"><b>1. Unofficial software.</b> GlowberryClient is not affiliated with, endorsed by, or sponsored by Mojang Studios, Microsoft, or the Minecraft brand. Minecraft is a trademark of Mojang Synergies AB.\n\n<b>2. You must own Minecraft.</b> You need a genuine, licensed copy of Minecraft Bedrock Edition to use this client. Do not use it with pirated or otherwise unlicensed copies.\n\n<b>3. Google Play versions are not fully supported.</b> A copy of Minecraft installed from the Google Play Store is stripped of a file the client needs, so it cannot be launched through GlowberryClient. To use every feature, import an authentic Minecraft APK you obtained yourself from the Library.\n\n<b>4. No piracy, no cheating.</b> Do not use this client to pirate the game, to bypass account checks, or to cheat on servers. Server bans and account actions are your own responsibility.\n\n<b>5. Mods and content are your responsibility.</b> Mods, resource packs, scripts and cosmetics you install run at your own risk. The authors and the GlowberryClient team are not responsible for damage, data loss, bans, or account suspension caused by third-party content.\n\n<b>6. Accounts and data.</b> Signing in with a Microsoft account stores a token on this device, protected by the Android Keystore. You can sign out at any time; signing out removes the stored token.\n\n<b>7. Privacy.</b> The client sends nothing about you unless you turn on an opt-in reporting switch, and each switch shows exactly what it would send before you turn it on.\n\n<b>8. No warranty.</b> The software is provided \"as is\", without warranty of any kind. The team is not liable for any claim, damage or other liability arising from its use.\n\n<b>9. Changes.</b> These terms may change between releases; a material change is shown again for your acceptance.\n\nBy continuing you confirm you have read and accept these terms.</string>
+    <string name="setup_license_terms"><b>1. Unofficial software.</b> CaramelClient is not affiliated with, endorsed by, or sponsored by Mojang Studios, Microsoft, or the Minecraft brand. Minecraft is a trademark of Mojang Synergies AB.\n\n<b>2. You must own Minecraft.</b> You need a genuine, licensed copy of Minecraft Bedrock Edition to use this client. Do not use it with pirated or otherwise unlicensed copies.\n\n<b>3. Google Play versions are not fully supported.</b> A copy of Minecraft installed from the Google Play Store is stripped of a file the client needs, so it cannot be launched through CaramelClient. To use every feature, import an authentic Minecraft APK you obtained yourself from the Library.\n\n<b>4. No piracy, no cheating.</b> Do not use this client to pirate the game, to bypass account checks, or to cheat on servers. Server bans and account actions are your own responsibility.\n\n<b>5. Mods and content are your responsibility.</b> Mods, resource packs, scripts and cosmetics you install run at your own risk. The authors and the CaramelClient team are not responsible for damage, data loss, bans, or account suspension caused by third-party content.\n\n<b>6. Accounts and data.</b> Signing in with a Microsoft account stores a token on this device, protected by the Android Keystore. You can sign out at any time; signing out removes the stored token.\n\n<b>7. Privacy.</b> The client sends nothing about you unless you turn on an opt-in reporting switch, and each switch shows exactly what it would send before you turn it on.\n\n<b>8. No warranty.</b> The software is provided \"as is\", without warranty of any kind. The team is not liable for any claim, damage or other liability arising from its use.\n\n<b>9. Changes.</b> These terms may change between releases; a material change is shown again for your acceptance.\n\nBy continuing you confirm you have read and accept these terms.</string>
     <string name="setup_instance_title">Install an instance</string>
     <string name="setup_instance_body">Import an authentic Minecraft Bedrock APK to create your first instance. You can add more later from the Library.</string>
     <string name="setup_instance_action">Import an instance</string>
@@ -2694,7 +2694,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="launch_failure_title_game_files_missing">Game files missing</string>
     <string name="launch_failure_message_game_files_missing">This instance\'s game files are missing or incomplete. Re-import the version from the Library, or run Repair installation in Settings \u2192 Diagnostics.</string>
     <string name="launch_failure_title_abi">Unsupported build</string>
-    <string name="launch_failure_message_abi">This Minecraft version ships 32-bit native libraries only, and GlowberryClient runs as a 64-bit app. Import a 64-bit build of this version instead.</string>
+    <string name="launch_failure_message_abi">This Minecraft version ships 32-bit native libraries only, and CaramelClient runs as a 64-bit app. Import a 64-bit build of this version instead.</string>
     <string name="launch_failure_title_stale_libs">Repairing native libraries</string>
     <string name="launch_failure_message_stale_libs">The extracted native libraries are from an older version of the launcher. They will be re-extracted automatically on the next launch. If the game still fails to start, run Repair installation in Settings \u2192 Diagnostics.</string>
     <string name="launch_failure_title_rules">Limited compatibility</string>
@@ -2736,7 +2736,7 @@ GlowberryClient must complete the migration before continuing.</string>
     <string name="error_reason_bad_response">The download source answered, but the launcher could not read a usable download link from it. The source may have changed its page layout. Try Refresh, and report it if it keeps happening.</string>
     <string name="error_reason_out_of_memory">The launcher ran out of memory while handling this file. Close other apps and try again; if it keeps happening, the package may be larger than this device can import.</string>
     <string name="error_reason_out_of_space">There is not enough free storage to finish this. Free some space — the launcher needs room for the downloaded package and for the files it extracts from it — then try again.</string>
-    <string name="error_reason_permission_denied">The launcher is not allowed to read or write that location. Grant storage access to GlowberryClient in Android Settings, then try again.</string>
+    <string name="error_reason_permission_denied">The launcher is not allowed to read or write that location. Grant storage access to CaramelClient in Android Settings, then try again.</string>
     <string name="error_reason_corrupt_package">The downloaded file is damaged or is not a valid Minecraft package. Delete it and download it again; if it fails the same way, the source is serving a broken file.</string>
     <string name="error_reason_interrupted">The download was interrupted before it finished. Keep the launcher open and the screen on while a package downloads, then try again.</string>
     <string name="error_reason_unknown">The operation failed for a reason the launcher could not identify. The exact error is below — it is what a bug report needs.</string>

@@ -43,7 +43,7 @@ public final class SecretVault {
     public static final String PREFIX = "ks1:";
 
     private static final String KEYSTORE = "AndroidKeyStore";
-    private static final String KEY_ALIAS = "glowberry.secret.vault.v1";
+    private static final String KEY_ALIAS = "caramel.secret.vault.v1";
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     /** 128-bit tag is the GCM default and is what the platform will accept. */
     private static final int GCM_TAG_BITS = 128;

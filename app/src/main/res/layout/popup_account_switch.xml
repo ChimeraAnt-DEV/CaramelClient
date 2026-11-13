@@ -16,7 +16,7 @@
         android:paddingTop="@dimen/space_2"
         android:text="@string/label_current_account"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:alpha="0.8" />
     
     <LinearLayout
@@ -44,7 +44,7 @@
             android:layout_marginStart="@dimen/space_3"
             android:layout_weight="1"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title" />
+            android:textAppearance="@style/TextAppearance.Caramel.Title" />
 
         <TextView
             android:id="@+id/manage_action"
@@ -54,7 +54,7 @@
             android:paddingVertical="@dimen/space_2"
             android:text="@string/manage_accounts"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:alpha="0.85"
             android:background="?attr/selectableItemBackground" />
     </LinearLayout>
@@ -74,7 +74,7 @@
         android:paddingTop="@dimen/space_2"
         android:text="@string/label_other_accounts"
         android:textColor="@color/on_surface"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:alpha="0.8" />
 
     <androidx.recyclerview.widget.RecyclerView

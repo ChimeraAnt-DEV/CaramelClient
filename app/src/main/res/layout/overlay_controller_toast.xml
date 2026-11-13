@@ -39,7 +39,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:textStyle="bold" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:ellipsize="end"
             android:text="@string/controller_detected_message"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
     </LinearLayout>
 
@@ -68,7 +68,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textColor="@color/on_primary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:textStyle="bold"
         android:visibility="gone" />
 

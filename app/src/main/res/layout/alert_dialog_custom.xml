@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="@dimen/space_6"
-    style="@style/Widget.Chimera.Card"
+    style="@style/Widget.Caramel.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxHeight="500dp">
 
     <TextView
         android:id="@+id/tv_title"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+        android:textAppearance="@style/TextAppearance.Caramel.Title"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/tv_message"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="40dp" />
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurfaceVariant"
@@ -80,7 +80,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?attr/colorOnSurfaceVariant"
@@ -99,7 +99,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+            android:textAppearance="@style/TextAppearance.Caramel.Body"
             android:ellipsize="end"
             android:maxLines="1"
             android:backgroundTint="?attr/colorPrimary"

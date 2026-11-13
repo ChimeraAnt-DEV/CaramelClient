@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * The wire format for cosmetic sync: a small datagram that advertises which cape, accessory and
- * pet a player has equipped, so other Chimera users in the same world can see it.
+ * pet a player has equipped, so other Caramel users in the same world can see it.
  *
  * <p><b>A separate protocol from voice, on purpose.</b> Voice has its own magic bytes and a
  * versioned layout pinned by cross-language golden vectors against the Go relay; adding cosmetic

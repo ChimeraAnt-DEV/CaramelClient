@@ -18,7 +18,7 @@
 
     <LinearLayout
         android:id="@+id/quickdock_mods"
-        style="@style/Widget.Glowberry.QuickDock.Item"
+        style="@style/Widget.Caramel.QuickDock.Item"
         android:contentDescription="@string/nav_mods">
 
         <ImageView
@@ -29,30 +29,30 @@
             app:tint="@color/dock_text_primary" />
 
         <TextView
-            style="@style/Widget.Glowberry.QuickDock.Label"
+            style="@style/Widget.Caramel.QuickDock.Label"
             android:text="@string/nav_mods" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/quickdock_cosmetics"
-        style="@style/Widget.Glowberry.QuickDock.Item"
+        style="@style/Widget.Caramel.QuickDock.Item"
         android:contentDescription="@string/customize_tab_skins">
 
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_glowberry_logo"
+            android:src="@drawable/ic_caramel_logo"
             app:tint="@color/dock_text_primary" />
 
         <TextView
-            style="@style/Widget.Glowberry.QuickDock.Label"
+            style="@style/Widget.Caramel.QuickDock.Label"
             android:text="@string/customize_tab_skins" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/quickdock_wheel"
-        style="@style/Widget.Glowberry.QuickDock.Item"
+        style="@style/Widget.Caramel.QuickDock.Item"
         android:contentDescription="@string/launch_quickdock_wheel">
 
         <ImageView
@@ -63,7 +63,7 @@
             app:tint="@color/dock_text_primary" />
 
         <TextView
-            style="@style/Widget.Glowberry.QuickDock.Label"
+            style="@style/Widget.Caramel.QuickDock.Label"
             android:text="@string/launch_quickdock_wheel" />
     </LinearLayout>
 </LinearLayout>

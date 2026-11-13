@@ -156,7 +156,7 @@ public final class LauncherCursorOverlay extends View {
             root.dispatchTouchEvent(down);
             root.dispatchTouchEvent(up);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "LauncherCursorOverlay:159", "Ignored a failure at LauncherCursorOverlay:159", ignored);
+            AppLog.warnOnce("CaramelClient", "LauncherCursorOverlay:159", "Ignored a failure at LauncherCursorOverlay:159", ignored);
         } finally {
             dispatchingSyntheticTap = false;
         }

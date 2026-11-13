@@ -28,7 +28,7 @@ public final class VipTheme {
             glow = new org.chimeramc.client.util.PersonalizationManager(context)
                     .isEnableGlowEffects();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "VipTheme:31", "Ignored a failure at VipTheme:31", ignored);
+            AppLog.warnOnce("CaramelClient", "VipTheme:31", "Ignored a failure at VipTheme:31", ignored);
         }
         this.glowEnabled = glow;
     }

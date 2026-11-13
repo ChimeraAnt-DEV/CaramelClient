@@ -1,4 +1,4 @@
-// A minimal GlowberryClient native mod: one config value and one lifecycle object.
+// A minimal CaramelClient native mod: one config value and one lifecycle object.
 //
 // It is the on-ramp for a contributor. The whole API surface a first mod needs is
 // `PL_REGISTER_MOD`, a lifecycle object, and a typed config; everything else in the SDK is

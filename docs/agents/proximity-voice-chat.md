@@ -1,5 +1,5 @@
 ## Proximity voice chat (core.voice + VoiceChatOverlay)
-- **A launcher-side peer link between Chimera users in the same world**, over LAN multicast UDP.
+- **A launcher-side peer link between Caramel users in the same world**, over LAN multicast UDP.
   Transport = `VoiceTransport` (MulticastSocket), framing = `VoiceProtocol` (raw 16 kHz mono PCM;
   no per-ABI codec), mixing = `VoiceRegistry` + `VoiceChannel`, device = `VoiceAudioEngine`.
   Nothing talks to the game.
@@ -35,7 +35,7 @@
   `VoiceProtocol.VERSION = 2`; a v1 datagram still decodes as PUBLIC on channel `world` (what v1
   described, since v1 had no private room). An unknown visibility byte clamps to PUBLIC so a
   malformed packet cannot hide a channel. Pinned by `VoiceProtocolTest`.
-- **A private channel's id _is_ its join code** (`VoiceChannel.generateCode` -> `CHIMERA-7F2Q`).
+- **A private channel's id _is_ its join code** (`VoiceChannel.generateCode` -> `CARAMEL-7F2Q`).
   There is no invite protocol: typing the code normalises to the same channel id and the existing
   `canHear` match does the rest, so sharing the string is the whole mechanism. The alphabet excludes
   `O/0/I/1/L` because a code is read aloud and typed by hand. `isJoinCode` distinguishes a code from

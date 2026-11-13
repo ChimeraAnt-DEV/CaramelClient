@@ -101,7 +101,7 @@ public final class HitPredictionOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "HitPredictionOverlay:104", "Ignored a failure at HitPredictionOverlay:104", ignored);
+            AppLog.warnOnce("CaramelClient", "HitPredictionOverlay:104", "Ignored a failure at HitPredictionOverlay:104", ignored);
         }
         overlayView = null;
         wmParams = null;

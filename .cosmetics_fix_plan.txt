@@ -1,5 +1,5 @@
-Bug fixes: GLOWBERRYCLIENT COSMETICS FIX PLAN
-Base: the newest GlowberryClient-main zip (rules revision 7). Work one phase at a time.
+Bug fixes: CARAMELCLIENT COSMETICS FIX PLAN
+Base: the newest CaramelClient-main zip (rules revision 7). Work one phase at a time.
 Run the unit tests after every step. Commit each step separately as Lynxifyy.
 Written from reading the code and a device diagnostics report. Nothing here was run on a device.
 

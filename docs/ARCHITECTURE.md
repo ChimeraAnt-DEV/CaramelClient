@@ -1,6 +1,6 @@
 # Architecture
 
-GlowberryClient is three cooperating pieces: the **launcher app**, the **preloader** native
+CaramelClient is three cooperating pieces: the **launcher app**, the **preloader** native
 runtime, and an optional **script runtime** (BerryAPI). This page is the one diagram and the
 "who calls whom" that the plan asks for.
 

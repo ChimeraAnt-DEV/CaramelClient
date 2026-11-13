@@ -4,7 +4,7 @@
     android:paddingTop="@dimen/space_3"
     android:paddingBottom="@dimen/space_2"
     android:textStyle="bold"
-    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+    android:textAppearance="@style/TextAppearance.Caramel.Body"
     android:textColor="@color/on_surface"
     android:fontFamily="@font/misans"
     android:layout_marginBottom="@dimen/space_hairline"

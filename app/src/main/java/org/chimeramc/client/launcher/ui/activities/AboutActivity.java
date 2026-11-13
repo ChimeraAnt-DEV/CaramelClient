@@ -27,9 +27,9 @@ public class AboutActivity extends BaseActivity {
 
     private static final String TAG = "AboutActivity";
 
-    private static final String URL_REPO = "https://github.com/ChimeraAnt-DEV/GlowberryClient";
+    private static final String URL_REPO = "https://github.com/ChimeraAnt-DEV/CaramelClient";
     private static final String URL_ORG = "https://github.com/ChimeraAnt-DEV";
-    private static final String URL_ISSUES = "https://github.com/ChimeraAnt-DEV/GlowberryClient/issues";
+    private static final String URL_ISSUES = "https://github.com/ChimeraAnt-DEV/CaramelClient/issues";
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 

@@ -28,7 +28,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/mod_detail_title"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -83,7 +83,7 @@
                             android:fontFamily="@font/misans"
                             android:maxLines="2"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -102,7 +102,7 @@
                                 android:fontFamily="@font/misans"
                                 android:maxLines="1"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                             <TextView
                                 android:id="@+id/mod_version_detail"
@@ -111,7 +111,7 @@
                                 android:layout_marginStart="@dimen/space_3"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
@@ -125,7 +125,7 @@
                     android:fontFamily="@font/misans"
                     android:lineSpacingExtra="2dp"
                     android:textColor="@color/on_surface_variant"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                    android:textAppearance="@style/TextAppearance.Caramel.Body"
                     android:visibility="gone" />
 
                 <LinearLayout
@@ -143,7 +143,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_surface"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                        android:textAppearance="@style/TextAppearance.Caramel.Title"
                         android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -168,7 +168,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/mod_metadata_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -205,7 +205,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/mod_actions_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -225,7 +225,7 @@
                     android:text="@string/configure"
                     android:textAllCaps="false"
                     android:textColor="@color/on_primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:visibility="gone" />
 
                 <Button
@@ -244,7 +244,7 @@
                     android:text="@string/delete_mod"
                     android:textAllCaps="false"
                     android:textColor="@color/on_primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Label" />
             </LinearLayout>
         </LinearLayout>
         </LinearLayout>

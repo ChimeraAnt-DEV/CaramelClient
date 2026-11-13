@@ -182,7 +182,7 @@ public class ScriptManagerActivity extends BaseActivity implements ScriptManager
         try {
             worker.execute(task);
         } catch (RejectedExecutionException rejected) {
-            AppLog.warnOnce("GlowberryClient", "ScriptManagerActivity:185", "Ignored a failure at ScriptManagerActivity:185", rejected);
+            AppLog.warnOnce("CaramelClient", "ScriptManagerActivity:185", "Ignored a failure at ScriptManagerActivity:185", rejected);
         }
     }
 

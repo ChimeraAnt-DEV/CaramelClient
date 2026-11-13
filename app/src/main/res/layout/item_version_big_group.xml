@@ -5,7 +5,7 @@
     android:paddingStart="@dimen/space_4"
     android:paddingEnd="@dimen/space_4"
     android:textStyle="bold"
-    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+    android:textAppearance="@style/TextAppearance.Caramel.Title"
     android:textColor="@color/on_surface"
     android:fontFamily="@font/misans"
     android:layout_marginTop="@dimen/space_2"

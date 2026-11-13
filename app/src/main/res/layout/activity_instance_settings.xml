@@ -39,7 +39,7 @@
                         android:text="@string/instance_settings_title"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/primary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                        android:textAppearance="@style/TextAppearance.Caramel.Display"
                         android:textStyle="bold" />
 
                     <TextView
@@ -49,7 +49,7 @@
                         android:layout_marginTop="@dimen/space_1"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                        android:textAppearance="@style/TextAppearance.Caramel.Label" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -76,7 +76,7 @@
                         android:text="@string/instance_tab_general"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/on_primary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:textStyle="bold"
                         android:background="@drawable/bg_tab_selected"
                         android:clickable="true"
@@ -93,7 +93,7 @@
                         android:text="@string/instance_tab_launch_options"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -109,7 +109,7 @@
                         android:text="@string/instance_tab_management"
                         android:fontFamily="@font/misans"
                         android:textColor="@color/text_secondary"
-                        android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                        android:textAppearance="@style/TextAppearance.Caramel.Label"
                         android:background="@drawable/bg_tab_unselected"
                         android:clickable="true"
                         android:focusable="true" />
@@ -131,7 +131,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -141,7 +141,7 @@
                             android:text="@string/instance_new_name"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -155,7 +155,7 @@
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
                             android:textColorHint="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                            android:textAppearance="@style/TextAppearance.Caramel.Body"
                             android:singleLine="true"
                             android:importantForAutofill="no" />
 
@@ -166,7 +166,7 @@
                             android:text="@string/instance_rename_hint"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -180,7 +180,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -202,7 +202,7 @@
                                     android:text="@string/version_isolation"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -213,7 +213,7 @@
                                     android:text="@string/instance_isolation_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -243,7 +243,7 @@
                                     android:text="@string/launch_vertically"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -254,7 +254,7 @@
                                     android:text="@string/launch_vertically_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -285,7 +285,7 @@
                                     android:text="@string/shader_compat_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -296,7 +296,7 @@
                                     android:text="@string/shader_compat_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -327,7 +327,7 @@
                                     android:text="@string/in_game_pack_changer_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -338,7 +338,7 @@
                                     android:text="@string/in_game_pack_changer_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -369,7 +369,7 @@
                                     android:text="@string/instance_account_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -381,7 +381,7 @@
                                     android:text="@string/instance_account_active"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 <TextView
                                     android:id="@+id/bound_account_warning"
@@ -391,7 +391,7 @@
                                     android:text="@string/instance_account_stale"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/mod_menu_state_warn"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                                     android:visibility="gone" />
                             </LinearLayout>
 
@@ -405,7 +405,7 @@
                                 android:text="@string/instance_account_change"
                                 android:textColor="@color/on_secondary"
                                 android:paddingHorizontal="@dimen/space_4"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textStyle="bold"
                                 android:textAllCaps="false"
                                 android:gravity="center"
@@ -438,7 +438,7 @@
                                     android:text="@string/instance_shortcut_title"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -449,7 +449,7 @@
                                     android:text="@string/instance_shortcut_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -467,7 +467,7 @@
                                 android:text="@string/instance_shortcut_name"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textStyle="bold" />
 
                             <EditText
@@ -482,7 +482,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/on_surface"
                                 android:textColorHint="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Body" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Body" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -491,7 +491,7 @@
                                 android:text="@string/instance_shortcut_icon"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textStyle="bold" />
 
                             <LinearLayout
@@ -521,7 +521,7 @@
                                     android:text="@string/instance_shortcut_choose_icon"
                                     android:textAllCaps="false"
                                     android:textColor="@color/on_primary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 <Button
                                     android:id="@+id/btn_reset_shortcut_icon"
@@ -533,7 +533,7 @@
                                     android:paddingHorizontal="@dimen/space_4"
                                     android:text="@string/instance_shortcut_default_icon"
                                     android:textAllCaps="false"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <Button
@@ -548,7 +548,7 @@
                                 android:text="@string/instance_shortcut_add_button"
                                 android:textAllCaps="false"
                                 android:textColor="@color/on_primary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Label" />
                         </LinearLayout>
 
                         <View
@@ -570,7 +570,7 @@
                                 android:text="@string/instance_notes_title"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/on_surface"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                android:textAppearance="@style/TextAppearance.Caramel.Title"
                                 android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -581,7 +581,7 @@
                                 android:text="@string/instance_notes_desc"
                                 android:fontFamily="@font/misans"
                                 android:textColor="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                             <EditText
                                 android:id="@+id/edit_instance_notes"
@@ -600,7 +600,7 @@
                                 android:padding="@dimen/space_3"
                                 android:textColor="@color/on_surface"
                                 android:textColorHint="@color/text_secondary"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -616,7 +616,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -626,7 +626,7 @@
                             android:text="@string/instance_backup_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -637,7 +637,7 @@
                             android:text="@string/instance_backup_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <Button
                             android:id="@+id/btn_backup_instance"
@@ -648,7 +648,7 @@
                             android:paddingHorizontal="@dimen/space_6"
                             android:text="@string/instance_backup_button"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/primary"
                             android:textAllCaps="false" />
@@ -658,7 +658,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -668,7 +668,7 @@
                             android:text="@string/instance_storage_title"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -679,7 +679,7 @@
                             android:text="@string/instance_storage_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <TextView
                             android:id="@+id/instance_storage_value"
@@ -689,7 +689,7 @@
                             android:text="@string/instance_storage_calculating"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Label" />
 
                         <Button
                             android:id="@+id/btn_clear_instance_cache"
@@ -700,7 +700,7 @@
                             android:paddingHorizontal="@dimen/space_6"
                             android:text="@string/instance_storage_clear_cache"
                             android:fontFamily="@font/misans"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                            android:textAppearance="@style/TextAppearance.Caramel.Label"
                             android:textColor="@color/on_primary"
                             android:backgroundTint="@color/primary"
                             android:textAllCaps="false" />
@@ -711,7 +711,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        style="@style/Widget.Chimera.Card.Compact"
+                        style="@style/Widget.Caramel.Card.Compact"
                         android:orientation="vertical"
                         android:padding="@dimen/space_4">
 
@@ -721,7 +721,7 @@
                             android:text="@string/instance_danger_zone"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/on_surface"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                            android:textAppearance="@style/TextAppearance.Caramel.Title"
                             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -732,7 +732,7 @@
                             android:text="@string/instance_danger_zone_desc"
                             android:fontFamily="@font/misans"
                             android:textColor="@color/text_secondary"
-                            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                         <View
                             android:layout_width="match_parent"
@@ -760,7 +760,7 @@
                                     android:text="@string/delete"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/on_surface"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -771,7 +771,7 @@
                                     android:text="@string/instance_delete_desc"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/text_secondary"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -780,7 +780,7 @@
                                     android:text="@string/instance_delete_warning"
                                     android:fontFamily="@font/misans"
                                     android:textColor="@color/status_danger"
-                                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
                             </LinearLayout>
 
                             <Button
@@ -791,7 +791,7 @@
                                 android:paddingHorizontal="@dimen/space_6"
                                 android:text="@string/delete"
                                 android:fontFamily="@font/misans"
-                                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                                android:textAppearance="@style/TextAppearance.Caramel.Label"
                                 android:textColor="@color/on_error"
                                 android:backgroundTint="@color/status_danger"
                                 android:textAllCaps="false" />

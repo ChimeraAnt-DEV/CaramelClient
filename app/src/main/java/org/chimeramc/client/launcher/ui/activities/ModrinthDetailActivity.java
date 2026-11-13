@@ -211,7 +211,7 @@ public class ModrinthDetailActivity extends BaseActivity {
                 }
             });
         } catch (RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "ModrinthDetailActivity:214", "Ignored a failure at ModrinthDetailActivity:214", ignored);
+            AppLog.warnOnce("CaramelClient", "ModrinthDetailActivity:214", "Ignored a failure at ModrinthDetailActivity:214", ignored);
         }
     }
 

@@ -33,7 +33,7 @@ public class UiGalleryActivity extends Activity {
         scroll.addView(root);
 
         int accent = UiTokens.resolveAccent(this);
-        addTitle(root, density, "GlowberryClient — UI gallery");
+        addTitle(root, density, "CaramelClient — UI gallery");
         addTitle(root, density, "Accent: #" + Integer.toHexString(accent).toUpperCase());
 
         addSection(root, density, "Colours");

@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/tv_title"
         android:text="@string/installing_title"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+        android:textAppearance="@style/TextAppearance.Caramel.Title"
         android:textStyle="bold"
         android:textColor="?attr/colorPrimary"
         android:fontFamily="@font/misans"
@@ -35,7 +35,7 @@
             android:maxLines="2"
             android:text="@string/installing_message"
             android:textColor="?attr/colorOnSurface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -48,7 +48,7 @@
             android:minWidth="54dp"
             tools:text="0%"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
     android:accessibilityHeading="true" />
     </LinearLayout>

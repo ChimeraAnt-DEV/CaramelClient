@@ -29,7 +29,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/crash_title"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
@@ -40,7 +40,7 @@
         android:minHeight="0dp"
         android:layout_marginTop="@dimen/space_4"
         android:layout_weight="1"
-        style="@style/Widget.Chimera.Card.Compact"
+        style="@style/Widget.Caramel.Card.Compact"
         android:orientation="vertical"
         android:padding="@dimen/space_4">
 
@@ -66,7 +66,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/crash_details_title"
                 android:textColor="@color/on_surface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold"
     android:accessibilityHeading="true" />
         </LinearLayout>
@@ -98,7 +98,7 @@
                 android:lineSpacingExtra="3dp"
                 android:textColor="@color/on_surface"
                 android:textIsSelectable="true"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
         </ScrollView>
 
         <LinearLayout
@@ -120,7 +120,7 @@
                 android:text="@string/crash_disable_last_mod"
                 android:textAllCaps="false"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 android:visibility="gone" />
 
@@ -136,7 +136,7 @@
                 android:text="@string/crash_back_to_main"
                 android:textAllCaps="false"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold" />
 
             <Button
@@ -152,7 +152,7 @@
                 android:text="@string/crash_share_log"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textStyle="bold"
                 app:icon="@drawable/ic_upload"
                 app:iconGravity="textStart"

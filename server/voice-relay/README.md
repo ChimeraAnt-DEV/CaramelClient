@@ -1,4 +1,4 @@
-# Chimera voice-relay deployment
+# Caramel voice-relay deployment
 
 This is the server half of the launcher's relay voice transport. The launcher still speaks over
 LAN multicast by default; pointing it at a relay makes voice work across the internet, with the

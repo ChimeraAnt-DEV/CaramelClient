@@ -278,7 +278,7 @@ public class ControllerSettingsFragment extends Fragment {
             try {
                 inputManager.unregisterInputDeviceListener(deviceListener);
             } catch (Exception ignored) {
-                AppLog.warnOnce("GlowberryClient", "ControllerSettingsFragment:281", "Ignored a failure at ControllerSettingsFragment:281", ignored);
+                AppLog.warnOnce("CaramelClient", "ControllerSettingsFragment:281", "Ignored a failure at ControllerSettingsFragment:281", ignored);
             }
         }
         illustration = null;

@@ -14,6 +14,6 @@
         android:layout_gravity="center"
         android:text="@string/cursor"
         android:textColor="@color/overlay_text_primary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+        android:textAppearance="@style/TextAppearance.Caramel.Body"
         android:textStyle="bold" />
 </FrameLayout>

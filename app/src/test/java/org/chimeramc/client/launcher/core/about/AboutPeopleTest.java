@@ -32,7 +32,7 @@ public class AboutPeopleTest {
         AboutPeople.Person owner = AboutPeople.of(AboutPeople.Role.OWNER);
         assertNotNull(owner);
         assertEquals("https://github.com/ChimeraAnt-DEV", owner.githubUrl);
-        assertEquals("https://youtube.com/@glowberryclient", owner.youtubeUrl);
+        assertEquals("https://youtube.com/@caramelclient", owner.youtubeUrl);
         assertTrue(owner.hasGithub());
         assertTrue(owner.hasYoutube());
     }

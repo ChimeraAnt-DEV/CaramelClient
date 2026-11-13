@@ -21,7 +21,7 @@ public class ScreenshotSharingTest {
 
     @Test
     public void aPngIsDeclaredAsPng() throws Exception {
-        File png = folder.newFile("glowberry_1.png");
+        File png = folder.newFile("caramel_1.png");
         assertEquals("image/png", ScreenshotSharing.mimeType(png));
     }
 

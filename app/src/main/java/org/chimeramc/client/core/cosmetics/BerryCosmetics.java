@@ -68,12 +68,12 @@ public final class BerryCosmetics {
             for (String id : equipIds(capeId, accessoryId, petId)) {
                 int status = BerryApi.cosmeticEquip(id);
                 if (status != BerryApi.COSMETIC_OK) {
-                    AppLog.warnOnce("GlowberryClient", "berry:equip:" + id,
+                    AppLog.warnOnce("CaramelClient", "berry:equip:" + id,
                             "BerryAPI refused cosmetic '" + id + "' (status " + status + ")", null);
                 }
             }
         } catch (Throwable t) {
-            AppLog.warnOnce("GlowberryClient", "berry:cosmetic-sync",
+            AppLog.warnOnce("CaramelClient", "berry:cosmetic-sync",
                     "BerryAPI cosmetics sync failed", t);
         }
     }

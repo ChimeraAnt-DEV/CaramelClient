@@ -30,7 +30,7 @@
                 android:maxLines="1"
                 android:text="@string/script_manager_title"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <Button
@@ -46,7 +46,7 @@
                 android:paddingHorizontal="@dimen/space_4"
                 android:text="@string/script_manager_reload"
                 android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                android:textAppearance="@style/TextAppearance.Caramel.Label"
                 android:textColor="@color/on_primary"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -59,7 +59,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/script_manager_subtitle"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                 android:gravity="center"
                 android:text="@string/script_manager_empty"
                 android:textColor="@color/on_surface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Body"
+                android:textAppearance="@style/TextAppearance.Caramel.Body"
                 android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>

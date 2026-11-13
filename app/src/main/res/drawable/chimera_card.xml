@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     The one card surface. Every card in the launcher (hero, quick actions, settings rows,
-    list items) points here via @style/Widget.Chimera.Card, so changes to radius or border
+    list items) points here via @style/Widget.Caramel.Card, so changes to radius or border
     are made once. Do not hand-roll another rounded rect.
 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"

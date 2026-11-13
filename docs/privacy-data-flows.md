@@ -24,7 +24,7 @@ action you take or is a check you can turn off.
 - **Sends.** A plain `GET` to the GitHub releases API. No account, device or install identifier is
   attached; the request carries only what any HTTP client sends (an IP address, which GitHub sees).
 - **Receives.** The latest release tag and its asset URLs.
-- **Where.** `api.github.com/repos/ChimeraAnt-DEV/GlowberryClient/releases/latest`.
+- **Where.** `api.github.com/repos/ChimeraAnt-DEV/CaramelClient/releases/latest`.
 - **Turn off.** Disable the update check in Settings; the app then never calls the API.
 
 ## Preloader signature rules
@@ -33,7 +33,7 @@ action you take or is a check you can turn off.
 - **Sends.** A plain `GET` for the rules file.
 - **Receives.** A signed JSON rule set. The signature is verified before the rules are used, so a
   tampered file is rejected and the bundled offline snapshot is kept instead.
-- **Where.** `raw.githubusercontent.com/ChimeraAnt-DEV/GlowberryClient/main/resources/preloader/`.
+- **Where.** `raw.githubusercontent.com/ChimeraAnt-DEV/CaramelClient/main/resources/preloader/`.
 
 ## Package mirror (Installations tab)
 

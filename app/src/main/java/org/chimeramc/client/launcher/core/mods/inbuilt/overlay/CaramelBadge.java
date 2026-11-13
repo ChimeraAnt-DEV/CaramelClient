@@ -8,19 +8,19 @@ import android.widget.LinearLayout;
 import org.chimeramc.client.R;
 
 /**
- * The small GlowberryClient badge shown beside a player who is running the client.
+ * The small CaramelClient badge shown beside a player who is running the client.
  *
- * <p>A voice channel member or a cosmetic-sync peer is by definition another GlowberryClient user
+ * <p>A voice channel member or a cosmetic-sync peer is by definition another CaramelClient user
  * — only this client speaks those protocols — so the badge beside their name is the "I can see
- * you're a Glowberry user" marker. It is deliberately the launcher's own mark, so a player can
+ * you're a Caramel user" marker. It is deliberately the launcher's own mark, so a player can
  * tell at a glance who shares the client and therefore whose cosmetics they can see.
  *
  * <p>Kept as one helper so the Voice section and the Cosmetics section draw the same badge at the
  * same size; two hand-built ImageViews is how the two would drift.
  */
-final class GlowberryBadge {
+final class CaramelBadge {
 
-    private GlowberryBadge() {
+    private CaramelBadge() {
     }
 
     /**
@@ -30,8 +30,8 @@ final class GlowberryBadge {
      */
     static ImageView create(Context context, boolean compact) {
         ImageView badge = new ImageView(context);
-        badge.setImageResource(R.drawable.ic_glowberry_badge);
-        badge.setContentDescription(context.getString(R.string.glowberry_user_badge));
+        badge.setImageResource(R.drawable.ic_caramel_badge);
+        badge.setContentDescription(context.getString(R.string.caramel_user_badge));
         int size = (int) ((compact ? 12 : 14) * context.getResources().getDisplayMetrics().density);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
         params.gravity = Gravity.CENTER_VERTICAL;

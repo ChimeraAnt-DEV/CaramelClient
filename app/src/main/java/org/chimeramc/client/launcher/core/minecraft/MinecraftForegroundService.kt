@@ -88,7 +88,7 @@ class MinecraftForegroundService : Service() {
         try {
             if (wifiLock?.isHeld == true) wifiLock?.release()
         } catch (t: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftForegroundService:91", "Ignored a failure at MinecraftForegroundService:91", t)
+            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:91", "Ignored a failure at MinecraftForegroundService:91", t)
         } finally {
             wifiLock = null
         }
@@ -96,7 +96,7 @@ class MinecraftForegroundService : Service() {
         try {
             if (wakeLock?.isHeld == true) wakeLock?.release()
         } catch (t: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftForegroundService:99", "Ignored a failure at MinecraftForegroundService:99", t)
+            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:99", "Ignored a failure at MinecraftForegroundService:99", t)
         } finally {
             wakeLock = null
         }
@@ -128,7 +128,7 @@ class MinecraftForegroundService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_glowberry_mono)
+            .setSmallIcon(R.drawable.ic_caramel_mono)
             .setContentTitle(getString(R.string.foreground_service_notification_title))
             .setContentText(getString(R.string.foreground_service_notification_text))
             .setContentIntent(contentIntent)

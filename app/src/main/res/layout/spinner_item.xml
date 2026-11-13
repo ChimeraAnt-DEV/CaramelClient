@@ -7,4 +7,4 @@
     android:paddingEnd="@dimen/space_1"
     android:paddingVertical="@dimen/space_1"
     android:textColor="@color/on_surface"
-    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+    android:textAppearance="@style/TextAppearance.Caramel.Caption" />

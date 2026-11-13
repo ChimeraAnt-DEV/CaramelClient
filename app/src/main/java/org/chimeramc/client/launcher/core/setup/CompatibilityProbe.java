@@ -53,7 +53,7 @@ public final class CompatibilityProbe {
             try {
                 target = LauncherStorage.getStorageFilesRoot(context, null, false, false);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "CompatibilityProbe:56", "Ignored a failure at CompatibilityProbe:56", ignored);
+                AppLog.warnOnce("CaramelClient", "CompatibilityProbe:56", "Ignored a failure at CompatibilityProbe:56", ignored);
             }
             if (target == null) {
                 target = context != null ? context.getFilesDir() : null;

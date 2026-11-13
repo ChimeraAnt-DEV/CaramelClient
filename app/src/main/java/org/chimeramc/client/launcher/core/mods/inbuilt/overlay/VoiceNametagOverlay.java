@@ -120,7 +120,7 @@ public final class VoiceNametagOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "VoiceNametagOverlay:123", "Ignored a failure at VoiceNametagOverlay:123", ignored);
+            AppLog.warnOnce("CaramelClient", "VoiceNametagOverlay:123", "Ignored a failure at VoiceNametagOverlay:123", ignored);
         }
         overlayView = null;
         wmParams = null;

@@ -1,6 +1,6 @@
 # Privacy Policy
 
-This privacy policy applies to the GlowberryClient app for mobile devices, together with any related services operated by the Chimera Team (collectively, the "Application"). The Chimera Team is hereby referred to as the "Service Provider".
+This privacy policy applies to the CaramelClient app for mobile devices, together with any related services operated by the Caramel Team (collectively, the "Application"). The Caramel Team is hereby referred to as the "Service Provider".
 
 ## Information Collection and Use
 

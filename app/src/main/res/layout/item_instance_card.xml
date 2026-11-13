@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/misans"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -37,7 +37,7 @@
             android:paddingHorizontal="@dimen/space_3"
             android:gravity="center"
             android:fontFamily="@font/misans"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:textColor="@color/primary"
             android:background="@drawable/bg_release_tag" />
@@ -51,7 +51,7 @@
             android:paddingHorizontal="@dimen/space_2"
             android:gravity="center"
             android:fontFamily="@font/misans"
-            android:textAppearance="@style/TextAppearance.Glowberry.Micro"
+            android:textAppearance="@style/TextAppearance.Caramel.Micro"
             android:textStyle="bold"
             android:background="@drawable/bg_alpha_chip"
             android:visibility="gone" />
@@ -91,7 +91,7 @@
             android:layout_marginStart="@dimen/space_2"
             android:fontFamily="@font/misans"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:maxLines="1"
             android:ellipsize="end" />
     </LinearLayout>
@@ -103,7 +103,7 @@
         android:layout_marginTop="@dimen/space_2"
         android:fontFamily="@font/misans"
         android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:maxLines="1" />
 
     <TextView
@@ -113,7 +113,7 @@
         android:layout_marginTop="@dimen/space_1"
         android:fontFamily="@font/misans"
         android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:maxLines="1"
         android:visibility="gone" />
 
@@ -124,7 +124,7 @@
         android:layout_marginTop="@dimen/space_1"
         android:fontFamily="@font/misans"
         android:textColor="@color/text_secondary"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:maxLines="2"
         android:ellipsize="end"
         android:visibility="gone" />

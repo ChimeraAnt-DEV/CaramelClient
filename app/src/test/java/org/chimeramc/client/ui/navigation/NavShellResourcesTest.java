@@ -39,7 +39,7 @@ public class NavShellResourcesTest {
 
         String styles = read("app/src/main/res/values/styles.xml");
         Matcher m = Pattern.compile(
-                "<style name=\"Widget\\.Chimera\\.NavRailTab\"[^>]*>(.*?)</style>", Pattern.DOTALL)
+                "<style name=\"Widget\\.Caramel\\.NavRailTab\"[^>]*>(.*?)</style>", Pattern.DOTALL)
                 .matcher(styles);
         assertTrue("NavRailTab style missing", m.find());
         String body = m.group(1);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    GlowberryClient README banner: the glowberry mark on a dark-purple gradient with the product
+    CaramelClient README banner: the caramel mark on a dark-purple gradient with the product
     wordmark and a one-line tagline. Original vector artwork, no third-party assets.
 -->
 <svg width="1280" height="360" viewBox="0 0 1280 360" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +55,7 @@
 
   <!-- Wordmark -->
   <text x="360" y="178" font-family="Segoe UI, Helvetica, Arial, sans-serif"
-        font-size="92" font-weight="700" fill="#FFFFFF">Glowberry<tspan fill="#FFC94D">Client</tspan></text>
+        font-size="92" font-weight="700" fill="#FFFFFF">Caramel<tspan fill="#FFC94D">Client</tspan></text>
   <rect x="364" y="206" width="300" height="4" rx="2" fill="url(#rule)"/>
   <text x="362" y="256" font-family="Segoe UI, Helvetica, Arial, sans-serif"
         font-size="30" font-weight="500" fill="#CDBEF0">Android launcher for Minecraft: Bedrock Edition</text>

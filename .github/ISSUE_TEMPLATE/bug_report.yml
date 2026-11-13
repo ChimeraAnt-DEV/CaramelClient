@@ -10,7 +10,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: GlowberryClient version
+      label: CaramelClient version
       description: Shown in Settings → About, or on the release page you installed from.
       placeholder: e.g. BETA3
     validations:

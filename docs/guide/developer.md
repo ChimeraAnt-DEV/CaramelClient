@@ -1,12 +1,12 @@
 # Native Mod Quick Start
 
-This page describes the supported developer path for GlowberryClient native
+This page describes the supported developer path for CaramelClient native
 mods. The public SDK is published in
 [ChimeraAnt-DEV/preloader-android](https://github.com/ChimeraAnt-DEV/preloader-android).
 
 For standalone third-party mods, start from the
 [LeviLauncher Android mod template](https://github.com/QYCottage/levilauncher-android-mod-template),
-which GlowberryClient's native-modding layer builds upon and adapts as `.AntEgg`
+which CaramelClient's native-modding layer builds upon and adapts as `.AntEgg`
 packages.
 
 Use `examples/full-cpp-mod` as the reference implementation. It includes

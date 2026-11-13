@@ -74,7 +74,7 @@ public final class XboxFriendsClient {
                 }
             } catch (Throwable t) {
                 error = "Could not reach Xbox Live.";
-                AppLog.warnOnce("GlowberryClient", "XboxFriendsClient:fetch",
+                AppLog.warnOnce("CaramelClient", "XboxFriendsClient:fetch",
                         "Reading the Xbox Live friends list failed", t);
             } finally {
                 if (connection != null) connection.disconnect();

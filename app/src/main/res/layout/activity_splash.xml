@@ -62,7 +62,7 @@
                 android:layout_height="84dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/splash_logo_desc"
-                android:src="@drawable/ic_glowberry_logo" />
+                android:src="@drawable/ic_caramel_logo" />
         </FrameLayout>
 
         <LinearLayout
@@ -80,7 +80,7 @@
                 android:letterSpacing="0.04"
                 android:text="@string/app_name"
                 android:textColor="@color/on_background"
-                android:textAppearance="@style/TextAppearance.Glowberry.Wordmark"
+                android:textAppearance="@style/TextAppearance.Caramel.Wordmark"
                 android:textStyle="bold" />
 
             <TextView
@@ -92,7 +92,7 @@
                 android:letterSpacing="0.08"
                 android:text="@string/preparing_to_launch"
                 android:textColor="@color/on_background"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
         </LinearLayout>
     </LinearLayout>
 
@@ -119,6 +119,6 @@
         android:paddingBottom="@dimen/space_4"
         android:text="@string/minecraft_disclaimer"
         android:textColor="@color/on_background"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+        android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
 </FrameLayout>

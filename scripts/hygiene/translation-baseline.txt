@@ -418,7 +418,7 @@ values-es:foreground_service_notification_title
 values-es:fps_modules_scope_note
 values-es:fps_optimizer_desc
 values-es:fps_optimizer_title
-values-es:glowberry_user_badge
+values-es:caramel_user_badge
 values-es:haptic_feedback
 values-es:haptic_feedback_desc
 values-es:hit_prediction_scope_note
@@ -1744,7 +1744,7 @@ values-fr:foreground_service_notification_title
 values-fr:fps_modules_scope_note
 values-fr:fps_optimizer_desc
 values-fr:fps_optimizer_title
-values-fr:glowberry_user_badge
+values-fr:caramel_user_badge
 values-fr:haptic_feedback
 values-fr:haptic_feedback_desc
 values-fr:hit_prediction_scope_note
@@ -3070,7 +3070,7 @@ values-hi:foreground_service_notification_title
 values-hi:fps_modules_scope_note
 values-hi:fps_optimizer_desc
 values-hi:fps_optimizer_title
-values-hi:glowberry_user_badge
+values-hi:caramel_user_badge
 values-hi:haptic_feedback
 values-hi:haptic_feedback_desc
 values-hi:hit_prediction_scope_note
@@ -4396,7 +4396,7 @@ values-id:foreground_service_notification_title
 values-id:fps_modules_scope_note
 values-id:fps_optimizer_desc
 values-id:fps_optimizer_title
-values-id:glowberry_user_badge
+values-id:caramel_user_badge
 values-id:haptic_feedback
 values-id:haptic_feedback_desc
 values-id:hit_prediction_scope_note
@@ -5722,7 +5722,7 @@ values-ja:foreground_service_notification_title
 values-ja:fps_modules_scope_note
 values-ja:fps_optimizer_desc
 values-ja:fps_optimizer_title
-values-ja:glowberry_user_badge
+values-ja:caramel_user_badge
 values-ja:haptic_feedback
 values-ja:haptic_feedback_desc
 values-ja:hit_prediction_scope_note
@@ -7048,7 +7048,7 @@ values-pt:foreground_service_notification_title
 values-pt:fps_modules_scope_note
 values-pt:fps_optimizer_desc
 values-pt:fps_optimizer_title
-values-pt:glowberry_user_badge
+values-pt:caramel_user_badge
 values-pt:haptic_feedback
 values-pt:haptic_feedback_desc
 values-pt:hit_prediction_scope_note
@@ -8374,7 +8374,7 @@ values-ru:foreground_service_notification_title
 values-ru:fps_modules_scope_note
 values-ru:fps_optimizer_desc
 values-ru:fps_optimizer_title
-values-ru:glowberry_user_badge
+values-ru:caramel_user_badge
 values-ru:haptic_feedback
 values-ru:haptic_feedback_desc
 values-ru:hit_prediction_scope_note
@@ -9700,7 +9700,7 @@ values-tr:foreground_service_notification_title
 values-tr:fps_modules_scope_note
 values-tr:fps_optimizer_desc
 values-tr:fps_optimizer_title
-values-tr:glowberry_user_badge
+values-tr:caramel_user_badge
 values-tr:haptic_feedback
 values-tr:haptic_feedback_desc
 values-tr:hit_prediction_scope_note
@@ -11026,7 +11026,7 @@ values-vi:foreground_service_notification_title
 values-vi:fps_modules_scope_note
 values-vi:fps_optimizer_desc
 values-vi:fps_optimizer_title
-values-vi:glowberry_user_badge
+values-vi:caramel_user_badge
 values-vi:haptic_feedback
 values-vi:haptic_feedback_desc
 values-vi:hit_prediction_scope_note
@@ -12350,7 +12350,7 @@ values-zh-rCN:foreground_service_notification_title
 values-zh-rCN:fps_modules_scope_note
 values-zh-rCN:fps_optimizer_desc
 values-zh-rCN:fps_optimizer_title
-values-zh-rCN:glowberry_user_badge
+values-zh-rCN:caramel_user_badge
 values-zh-rCN:haptic_feedback
 values-zh-rCN:haptic_feedback_desc
 values-zh-rCN:hit_prediction_scope_note

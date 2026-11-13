@@ -1,82 +1,82 @@
 {
   "es": {
-    "about_people_title": "Quién hace GlowberryClient",
+    "about_people_title": "Quién hace CaramelClient",
     "about_owner_badge": "Propietario",
-    "about_owner_role": "Propietario de GlowberryClient",
+    "about_owner_role": "Propietario de CaramelClient",
     "about_lead_badge": "Dev principal",
-    "about_lead_role": "Desarrollador principal de GlowberryClient",
+    "about_lead_role": "Desarrollador principal de CaramelClient",
     "about_github": "GitHub"
   },
   "fr": {
-    "about_people_title": "Qui fait GlowberryClient",
+    "about_people_title": "Qui fait CaramelClient",
     "about_owner_badge": "Propriétaire",
-    "about_owner_role": "Propriétaire de GlowberryClient",
+    "about_owner_role": "Propriétaire de CaramelClient",
     "about_lead_badge": "Dev principal",
-    "about_lead_role": "Développeur principal de GlowberryClient",
+    "about_lead_role": "Développeur principal de CaramelClient",
     "about_github": "GitHub"
   },
   "hi": {
-    "about_people_title": "GlowberryClient कौन बनाता है",
+    "about_people_title": "CaramelClient कौन बनाता है",
     "about_owner_badge": "मालिक",
-    "about_owner_role": "GlowberryClient के मालिक",
+    "about_owner_role": "CaramelClient के मालिक",
     "about_lead_badge": "मुख्य डेव",
-    "about_lead_role": "GlowberryClient के मुख्य डेवलपर",
+    "about_lead_role": "CaramelClient के मुख्य डेवलपर",
     "about_github": "GitHub"
   },
   "id": {
-    "about_people_title": "Siapa yang membuat GlowberryClient",
+    "about_people_title": "Siapa yang membuat CaramelClient",
     "about_owner_badge": "Pemilik",
-    "about_owner_role": "Pemilik GlowberryClient",
+    "about_owner_role": "Pemilik CaramelClient",
     "about_lead_badge": "Dev utama",
-    "about_lead_role": "Pengembang utama GlowberryClient",
+    "about_lead_role": "Pengembang utama CaramelClient",
     "about_github": "GitHub"
   },
   "ja": {
-    "about_people_title": "GlowberryClient を作る人々",
+    "about_people_title": "CaramelClient を作る人々",
     "about_owner_badge": "オーナー",
-    "about_owner_role": "GlowberryClient のオーナー",
+    "about_owner_role": "CaramelClient のオーナー",
     "about_lead_badge": "リード開発",
-    "about_lead_role": "GlowberryClient のリード開発者",
+    "about_lead_role": "CaramelClient のリード開発者",
     "about_github": "GitHub"
   },
   "pt": {
-    "about_people_title": "Quem faz o GlowberryClient",
+    "about_people_title": "Quem faz o CaramelClient",
     "about_owner_badge": "Proprietário",
-    "about_owner_role": "Proprietário do GlowberryClient",
+    "about_owner_role": "Proprietário do CaramelClient",
     "about_lead_badge": "Dev principal",
-    "about_lead_role": "Desenvolvedor principal do GlowberryClient",
+    "about_lead_role": "Desenvolvedor principal do CaramelClient",
     "about_github": "GitHub"
   },
   "ru": {
-    "about_people_title": "Кто делает GlowberryClient",
+    "about_people_title": "Кто делает CaramelClient",
     "about_owner_badge": "Владелец",
-    "about_owner_role": "Владелец GlowberryClient",
+    "about_owner_role": "Владелец CaramelClient",
     "about_lead_badge": "Гл. разработчик",
-    "about_lead_role": "Главный разработчик GlowberryClient",
+    "about_lead_role": "Главный разработчик CaramelClient",
     "about_github": "GitHub"
   },
   "tr": {
-    "about_people_title": "GlowberryClient'ı kim yapıyor",
+    "about_people_title": "CaramelClient'ı kim yapıyor",
     "about_owner_badge": "Sahip",
-    "about_owner_role": "GlowberryClient sahibi",
+    "about_owner_role": "CaramelClient sahibi",
     "about_lead_badge": "Baş geliştirici",
-    "about_lead_role": "GlowberryClient baş geliştiricisi",
+    "about_lead_role": "CaramelClient baş geliştiricisi",
     "about_github": "GitHub"
   },
   "vi": {
-    "about_people_title": "Ai làm nên GlowberryClient",
+    "about_people_title": "Ai làm nên CaramelClient",
     "about_owner_badge": "Chủ sở hữu",
-    "about_owner_role": "Chủ sở hữu GlowberryClient",
+    "about_owner_role": "Chủ sở hữu CaramelClient",
     "about_lead_badge": "Dev chính",
-    "about_lead_role": "Nhà phát triển chính của GlowberryClient",
+    "about_lead_role": "Nhà phát triển chính của CaramelClient",
     "about_github": "GitHub"
   },
   "zh-rCN": {
-    "about_people_title": "GlowberryClient 的制作者",
+    "about_people_title": "CaramelClient 的制作者",
     "about_owner_badge": "所有者",
-    "about_owner_role": "GlowberryClient 所有者",
+    "about_owner_role": "CaramelClient 所有者",
     "about_lead_badge": "主开发者",
-    "about_lead_role": "GlowberryClient 主开发者",
+    "about_lead_role": "CaramelClient 主开发者",
     "about_github": "GitHub"
   }
 }

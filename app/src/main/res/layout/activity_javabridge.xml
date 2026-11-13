@@ -4,7 +4,7 @@
 
     The screen is a vertical scroll of plain cards rather than a tab host: the flow is linear
     (inspect -> score -> port -> review), so a tab bar would imply navigation the user does not
-    need. Each section is a Widget.Chimera.Card so the geometry comes from the shared card tokens.
+    need. Each section is a Widget.Caramel.Card so the geometry comes from the shared card tokens.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -34,7 +34,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/javabridge_title"
                 android:textColor="@color/on_surface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Display"
+                android:textAppearance="@style/TextAppearance.Caramel.Display"
                 android:textStyle="bold" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:fontFamily="@font/misans"
                 android:text="@string/javabridge_subtitle"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
             <!-- Honest scope: this rewrites mods, it does not run Java Edition. -->
             <TextView
@@ -57,7 +57,7 @@
                 android:padding="@dimen/space_3"
                 android:text="@string/javabridge_scope_note"
                 android:textColor="@color/on_surface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,7 +87,7 @@
             <!-- The report card is hidden until a mod has been inspected. -->
             <LinearLayout
                 android:id="@+id/javabridge_report_card"
-                style="@style/Widget.Chimera.Card"
+                style="@style/Widget.Caramel.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
                     tools:text="Cool Mod"
     android:accessibilityHeading="true" />
@@ -113,7 +113,7 @@
                     android:layout_marginTop="@dimen/space_hairline"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     tools:text="Fabric \u00b7 1.2.0 \u00b7 by Alice" />
 
                 <!-- Portability score pill. -->
@@ -127,7 +127,7 @@
                     android:paddingHorizontal="@dimen/space_3"
                     android:paddingVertical="@dimen/space_1"
                     android:textColor="@color/primary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     android:textStyle="bold"
                     tools:text="Portability: High" />
 
@@ -138,7 +138,7 @@
                     android:layout_marginTop="@dimen/space_2"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     tools:text="This is a small, data-driven mod." />
 
                 <TextView
@@ -151,7 +151,7 @@
                     android:padding="@dimen/space_3"
                     android:text="@string/javabridge_reimplementation_warning"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_what_ported"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -178,7 +178,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_what_partial"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -196,7 +196,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_what_dropped"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -213,7 +213,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_mapped_apis"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Label"
+                    android:textAppearance="@style/TextAppearance.Caramel.Label"
                     android:textStyle="bold" />
 
                 <TextView
@@ -223,7 +223,7 @@
                     android:layout_marginTop="@dimen/space_1"
                     android:fontFamily="@font/misans"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption"
                     tools:text="Item.Settings \u2192 AntEggItemDef\nRegistry.register \u2192 AntEggRegistry.register" />
 
                 <Button
@@ -238,7 +238,7 @@
             <!-- Skeleton shimmer while the jar is being read; no spinner. -->
             <LinearLayout
                 android:id="@+id/javabridge_loading"
-                style="@style/Widget.Chimera.Card"
+                style="@style/Widget.Caramel.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
@@ -254,7 +254,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_inspecting"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
                 <View
                     android:layout_width="180dp"
@@ -277,7 +277,7 @@
             <!-- Empty state: illustrative, not a blank screen. -->
             <LinearLayout
                 android:id="@+id/javabridge_empty_state"
-                style="@style/Widget.Chimera.Card"
+                style="@style/Widget.Caramel.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
@@ -300,7 +300,7 @@
                     android:fontFamily="@font/misans"
                     android:text="@string/javabridge_empty_title"
                     android:textColor="@color/on_surface"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                    android:textAppearance="@style/TextAppearance.Caramel.Title"
                     android:textStyle="bold"
     android:accessibilityHeading="true" />
 
@@ -313,7 +313,7 @@
                     android:paddingHorizontal="@dimen/space_6"
                     android:text="@string/javabridge_empty_body"
                     android:textColor="@color/text_secondary"
-                    android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                    android:textAppearance="@style/TextAppearance.Caramel.Caption" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

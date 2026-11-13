@@ -53,7 +53,7 @@ public class LoadingDialog extends Dialog {
                 progressBar.setIndeterminateTintList(ColorStateList.valueOf(accent));
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "LoadingDialog:56", "Ignored a failure at LoadingDialog:56", ignored);
+            AppLog.warnOnce("CaramelClient", "LoadingDialog:56", "Ignored a failure at LoadingDialog:56", ignored);
         }
     }
 

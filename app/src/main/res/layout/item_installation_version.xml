@@ -22,7 +22,7 @@
             android:fontFamily="@font/misans"
             android:maxLines="2"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Title"
+            android:textAppearance="@style/TextAppearance.Caramel.Title"
             android:textStyle="bold" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/installations_release_tag"
             android:textColor="?attr/colorPrimary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:background="@drawable/bg_release_tag"
             android:visibility="gone" />
@@ -51,7 +51,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/installations_installed_tag"
             android:textColor="@color/on_surface"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:background="@drawable/bg_alpha_chip"
             android:visibility="gone" />
@@ -73,7 +73,7 @@
             android:fontFamily="@font/misans"
             android:maxLines="2"
             android:textColor="@color/text_secondary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+            android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
         <TextView
             android:id="@+id/installation_action"
@@ -85,7 +85,7 @@
             android:fontFamily="@font/misans"
             android:text="@string/installations_download"
             android:textColor="?attr/colorOnPrimary"
-            android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+            android:textAppearance="@style/TextAppearance.Caramel.Caption"
             android:textStyle="bold"
             android:background="@drawable/button_accent"
             android:clickable="true"

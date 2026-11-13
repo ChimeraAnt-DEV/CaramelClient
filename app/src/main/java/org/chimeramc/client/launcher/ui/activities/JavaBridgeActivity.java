@@ -584,7 +584,7 @@ public class JavaBridgeActivity extends BaseActivity {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "JavaBridgeActivity:587", "Ignored a failure at JavaBridgeActivity:587", ignored);
+            AppLog.warnOnce("CaramelClient", "JavaBridgeActivity:587", "Ignored a failure at JavaBridgeActivity:587", ignored);
         }
         String path = uri.getLastPathSegment();
         return path == null ? null : new File(path).getName();

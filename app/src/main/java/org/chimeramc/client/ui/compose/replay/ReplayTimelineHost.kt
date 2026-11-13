@@ -21,7 +21,7 @@ object ReplayTimelineHost {
     fun state(initial: ReplayTimelineData): MutableState<ReplayTimelineData> =
         mutableStateOf(initial)
 
-    /** Mounts the strip into [composeView], wrapping it in the Glowberry theme. */
+    /** Mounts the strip into [composeView], wrapping it in the Caramel theme. */
     @JvmStatic
     fun setContent(
         composeView: ComposeView,

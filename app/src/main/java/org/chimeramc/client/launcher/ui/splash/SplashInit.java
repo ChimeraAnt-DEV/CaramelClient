@@ -86,7 +86,7 @@ public final class SplashInit {
         try {
             work.run();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "SplashInit:89", "Ignored a failure at SplashInit:89", ignored);
+            AppLog.warnOnce("CaramelClient", "SplashInit:89", "Ignored a failure at SplashInit:89", ignored);
         }
         final int finished = done.incrementAndGet();
         final float fraction = finished / (float) STEPS;

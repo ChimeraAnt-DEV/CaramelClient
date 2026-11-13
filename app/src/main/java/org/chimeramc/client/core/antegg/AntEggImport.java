@@ -38,7 +38,7 @@ public final class AntEggImport {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("GlowberryClient", "AntEggImport:41", "Ignored a failure at AntEggImport:41", ignored);
+            AppLog.warnOnce("CaramelClient", "AntEggImport:41", "Ignored a failure at AntEggImport:41", ignored);
         }
         String path = uri.getLastPathSegment();
         return path == null || path.isEmpty() ? "mod.antegg" : new File(path).getName();

@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Microsoft OAuth Integration using official MSAL library
- * Provides official Microsoft login flows for GlowberryClient
+ * Provides official Microsoft login flows for CaramelClient
  */
 public class MicrosoftOAuthManager {
     private static final String TAG = "MicrosoftOAuth";

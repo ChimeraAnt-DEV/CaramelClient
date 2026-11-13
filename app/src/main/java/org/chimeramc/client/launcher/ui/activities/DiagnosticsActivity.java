@@ -207,7 +207,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String bundle = buildDebugBundle();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient debug info", bundle));
             Toast.makeText(this, R.string.diagnostics_debug_info_copied, Toast.LENGTH_LONG).show();
         }
     }
@@ -222,7 +222,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String bundle = buildDebugBundle();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient debug info", bundle));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient debug info", bundle));
         }
         String url = getString(R.string.discord_join_url);
         try {
@@ -770,7 +770,7 @@ public class DiagnosticsActivity extends BaseActivity {
         String report = buildReport();
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("GlowberryClient diagnostics", report));
+            cm.setPrimaryClip(ClipData.newPlainText("CaramelClient diagnostics", report));
             Toast.makeText(this, R.string.diagnostics_copied, Toast.LENGTH_SHORT).show();
         }
     }
@@ -795,7 +795,7 @@ public class DiagnosticsActivity extends BaseActivity {
     private String buildReport() {
         Snapshot data = current();
         StringBuilder sb = new StringBuilder();
-        sb.append("GlowberryClient Diagnostics\n");
+        sb.append("CaramelClient Diagnostics\n");
         sb.append("===========================\n\n");
         sb.append("App version: ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n");
         sb.append("Android: ").append(Build.VERSION.RELEASE).append(" (API ").append(ApiLevels.sdkInt()).append(")\n");

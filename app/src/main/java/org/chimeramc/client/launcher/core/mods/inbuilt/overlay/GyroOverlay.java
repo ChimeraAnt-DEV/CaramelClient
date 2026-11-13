@@ -419,7 +419,7 @@ public class GyroOverlay extends BaseOverlayButton implements SensorEventListene
         try {
             PojavControlsMod.nativeSendLookDelta(dx, dy);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GyroOverlay:422", "Ignored a failure at GyroOverlay:422", ignored);
+            AppLog.warnOnce("CaramelClient", "GyroOverlay:422", "Ignored a failure at GyroOverlay:422", ignored);
         }
     }
 

@@ -47,7 +47,7 @@ public final class AboutPeople {
     private static final List<Person> ROSTER = Collections.unmodifiableList(Arrays.asList(
             new Person("ChimeraAnt-DEV",
                     "https://github.com/ChimeraAnt-DEV",
-                    "https://youtube.com/@glowberryclient",
+                    "https://youtube.com/@caramelclient",
                     Role.OWNER),
             new Person("Lynxifyy",
                     "https://github.com/Lynxifyy",

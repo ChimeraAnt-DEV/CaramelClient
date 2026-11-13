@@ -327,7 +327,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             startActivity(Intent(this, org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity::class.java))
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:313", "Ignored a failure at MinecraftLoadingActivity:313", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:313", "Ignored a failure at MinecraftLoadingActivity:313", ignored)
         }
         scheduleWatchdog()
     }
@@ -337,7 +337,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.mods.ModSafeMode.suppressModsForNextLaunch(this)
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:323", "Ignored a failure at MinecraftLoadingActivity:323", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:323", "Ignored a failure at MinecraftLoadingActivity:323", ignored)
         }
         appendLog("Restarting without mods")
         returnToLauncher()
@@ -579,7 +579,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("GlowberryClient", "MinecraftLoadingActivity:521", "Ignored a failure at MinecraftLoadingActivity:521", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:521", "Ignored a failure at MinecraftLoadingActivity:521", ignored)
         }
         appendLog("Returning to launcher")
         returnToLauncher()

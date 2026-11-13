@@ -56,7 +56,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
         try {
             PreloaderInput.nativeClearCapturedSkin();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:59", "Ignored a failure at GameSkinFeed:59", ignored);
+            AppLog.warnOnce("CaramelClient", "GameSkinFeed:59", "Ignored a failure at GameSkinFeed:59", ignored);
         }
     }
 
@@ -122,7 +122,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
                     SkinCacheStore.DEFAULT_BUDGET_BYTES, System.currentTimeMillis());
             LocalSkinCache.write(context.getFilesDir(), entry);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:125", "Ignored a failure at GameSkinFeed:125", ignored);
+            AppLog.warnOnce("CaramelClient", "GameSkinFeed:125", "Ignored a failure at GameSkinFeed:125", ignored);
         }
     }
 
@@ -138,7 +138,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
                     System.currentTimeMillis());
             if (fromStore != null && fromStore.argb != null) return fromStore;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:141", "Ignored a failure at GameSkinFeed:141", ignored);
+            AppLog.warnOnce("CaramelClient", "GameSkinFeed:141", "Ignored a failure at GameSkinFeed:141", ignored);
         }
         return LocalSkinCache.read(context.getFilesDir());
     }
@@ -222,7 +222,7 @@ public final class GameSkinFeed implements GameSkinSource.Provider {
                 return Bitmap.createBitmap(argb, width, height, Bitmap.Config.ARGB_8888);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "GameSkinFeed:225", "Ignored a failure at GameSkinFeed:225", ignored);
+            AppLog.warnOnce("CaramelClient", "GameSkinFeed:225", "Ignored a failure at GameSkinFeed:225", ignored);
         }
         return null;
     }

@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement or a new capability for GlowberryClient.
+description: Suggest an improvement or a new capability for CaramelClient.
 labels: ["enhancement"]
 body:
   - type: markdown

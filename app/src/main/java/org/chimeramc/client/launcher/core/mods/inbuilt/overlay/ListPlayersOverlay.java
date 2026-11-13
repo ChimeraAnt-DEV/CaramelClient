@@ -14,7 +14,7 @@ import java.util.Locale;
  *
  * <p>The peers come from the proximity-voice feed ({@link PeerPositions}), which needs no native
  * entity feed: peers advertise their own position over the voice protocol. Vanilla players are not
- * in that feed, so this lists other Glowberry users — the same limit the Hitboxes peer boxes
+ * in that feed, so this lists other Caramel users — the same limit the Hitboxes peer boxes
  * document. The local player's own position/health comes from the local-player feed.
  */
 public class ListPlayersOverlay extends TextOverlay {

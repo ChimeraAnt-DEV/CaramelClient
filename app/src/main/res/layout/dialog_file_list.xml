@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="@dimen/space_4"
-    style="@style/Widget.Chimera.Card">
+    style="@style/Widget.Caramel.Card">
 
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/curseforge_available_files"
-        android:textAppearance="@style/TextAppearance.Glowberry.Title"
+        android:textAppearance="@style/TextAppearance.Caramel.Title"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/on_surface"

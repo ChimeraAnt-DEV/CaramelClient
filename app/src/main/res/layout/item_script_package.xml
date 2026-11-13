@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/space_1"
-    style="@style/Widget.Chimera.Card"
+    style="@style/Widget.Caramel.Card"
     android:orientation="vertical"
     android:padding="@dimen/space_3">
 
@@ -28,7 +28,7 @@
                 android:fontFamily="@font/misans"
                 android:maxLines="1"
                 android:textColor="@color/on_surface"
-                android:textAppearance="@style/TextAppearance.Glowberry.Title"
+                android:textAppearance="@style/TextAppearance.Caramel.Title"
                 android:textStyle="bold" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:fontFamily="@font/misans"
                 android:maxLines="1"
                 android:textColor="@color/text_secondary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption" />
+                android:textAppearance="@style/TextAppearance.Caramel.Caption" />
 
             <TextView
                 android:id="@+id/script_row_load_order"
@@ -49,7 +49,7 @@
                 android:layout_marginTop="@dimen/space_1"
                 android:fontFamily="@font/misans"
                 android:textColor="@color/primary"
-                android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_2"
         android:fontFamily="@font/misans"
-        android:textAppearance="@style/TextAppearance.Glowberry.Caption"
+        android:textAppearance="@style/TextAppearance.Caramel.Caption"
         android:visibility="gone" />
 
     <LinearLayout
@@ -93,7 +93,7 @@
             android:paddingHorizontal="@dimen/space_4"
             android:text="@string/script_manager_run"
             android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:textColor="@color/on_primary"
             android:textStyle="bold" />
 
@@ -111,7 +111,7 @@
             android:paddingHorizontal="@dimen/space_4"
             android:text="@string/script_manager_remove"
             android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.Glowberry.Label"
+            android:textAppearance="@style/TextAppearance.Caramel.Label"
             android:textColor="@color/on_error"
             android:textStyle="bold" />
     </LinearLayout>

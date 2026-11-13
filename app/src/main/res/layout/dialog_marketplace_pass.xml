@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/select_tab"
-        android:textAppearance="@style/TextAppearance.Glowberry.Body"
+        android:textAppearance="@style/TextAppearance.Caramel.Body"
         android:textColor="?android:textColorSecondary"
         android:layout_marginBottom="@dimen/space_2" />
 

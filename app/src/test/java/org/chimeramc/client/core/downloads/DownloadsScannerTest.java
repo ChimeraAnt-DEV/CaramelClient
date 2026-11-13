@@ -92,7 +92,7 @@ public class DownloadsScannerTest {
     public void scanRecursesIntoSubdirectories() throws Exception {
         java.io.File root = java.nio.file.Files.createTempDirectory("dl2").toFile();
         root.deleteOnExit();
-        java.io.File nested = new java.io.File(root, "Chimera");
+        java.io.File nested = new java.io.File(root, "Caramel");
         assertTrue(nested.mkdirs());
         write(new java.io.File(nested, "deep.mcworld"), "w");
 

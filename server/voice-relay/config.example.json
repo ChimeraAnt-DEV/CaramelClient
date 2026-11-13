@@ -2,7 +2,7 @@
   "listen": ":47902",
   "http_listen": ":8081",
   "public_address": "voice.example.com:47902",
-  "server_name": "Chimera Voice Relay",
+  "server_name": "Caramel Voice Relay",
   "password": "",
   "token_secret": "",
   "token_ttl_hours": 6,

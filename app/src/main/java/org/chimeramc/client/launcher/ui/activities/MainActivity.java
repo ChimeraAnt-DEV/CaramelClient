@@ -915,7 +915,7 @@ import okhttp3.OkHttpClient;
                 try {
                     shouldOfferMigration = storageMigrationManager.shouldOfferMigration();
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("GlowberryClient", "MainActivity:1042", "Ignored a failure at MainActivity:1042", ignored);
+                    AppLog.warnOnce("CaramelClient", "MainActivity:1042", "Ignored a failure at MainActivity:1042", ignored);
                 }
                 boolean finalShouldOfferMigration = shouldOfferMigration;
                 runOnUiThread(() -> {
@@ -1594,7 +1594,7 @@ import okhttp3.OkHttpClient;
             while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
             return out.toString(java.nio.charset.StandardCharsets.UTF_8.name());
         } catch (Throwable t) {
-            AppLog.warnOnce("GlowberryClient", "MainActivity:changelog",
+            AppLog.warnOnce("CaramelClient", "MainActivity:changelog",
                     "Reading the bundled release notes failed", t);
             return null;
         }
@@ -1629,7 +1629,7 @@ import okhttp3.OkHttpClient;
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(announcement.url)));
                     } catch (Throwable ignored) {
-                        AppLog.warnOnce("GlowberryClient", "MainActivity:1721", "Ignored a failure at MainActivity:1721", ignored);
+                        AppLog.warnOnce("CaramelClient", "MainActivity:1721", "Ignored a failure at MainActivity:1721", ignored);
                     }
                 });
             } else if (link != null) {
@@ -1818,7 +1818,7 @@ import okhttp3.OkHttpClient;
                 });
             });
         } catch (java.util.concurrent.RejectedExecutionException ignored) {
-            AppLog.warnOnce("GlowberryClient", "MainActivity:1904", "Ignored a failure at MainActivity:1904", ignored);
+            AppLog.warnOnce("CaramelClient", "MainActivity:1904", "Ignored a failure at MainActivity:1904", ignored);
         }
     }
 
@@ -1839,7 +1839,7 @@ import okhttp3.OkHttpClient;
             // game through the engine hook when available) rather than a stale or generic one.
             launchPreview.refreshSkin();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MainActivity:1925", "Ignored a failure at MainActivity:1925", ignored);
+            AppLog.warnOnce("CaramelClient", "MainActivity:1925", "Ignored a failure at MainActivity:1925", ignored);
         }
     }
 
@@ -2131,7 +2131,7 @@ import okhttp3.OkHttpClient;
         try {
             new org.chimeramc.client.launcher.ui.dialogs.ProfileSheet(this).show();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MainActivity:2221", "Ignored a failure at MainActivity:2221", ignored);
+            AppLog.warnOnce("CaramelClient", "MainActivity:2221", "Ignored a failure at MainActivity:2221", ignored);
         }
     }
 
@@ -2266,7 +2266,7 @@ import okhttp3.OkHttpClient;
             try {
                 GamePackageManager.invalidateExtractionCache(this, version);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("GlowberryClient", "MainActivity:2371", "Ignored a failure at MainActivity:2371", ignored);
+                AppLog.warnOnce("CaramelClient", "MainActivity:2371", "Ignored a failure at MainActivity:2371", ignored);
             }
         }
         if (readiness == LaunchReadiness.State.GAME_NEWER_THAN_RULES) {
@@ -2294,7 +2294,7 @@ import okhttp3.OkHttpClient;
         try {
             covered = PreloaderSignatureRulesManager.highestCoveredVersion(this);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("GlowberryClient", "MainActivity:2399", "Ignored a failure at MainActivity:2399", ignored);
+            AppLog.warnOnce("CaramelClient", "MainActivity:2399", "Ignored a failure at MainActivity:2399", ignored);
         }
         String message = getString(R.string.launch_failure_message_newer_game);
         if (covered != null && !covered.isEmpty()) {

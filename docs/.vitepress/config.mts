@@ -1,6 +1,6 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
 
-const repo = "https://github.com/ChimeraAnt-DEV/GlowberryClient";
+const repo = "https://github.com/ChimeraAnt-DEV/CaramelClient";
 const releases = `${repo}/releases`;
 const base = process.env.VITEPRESS_BASE ?? "/";
 
@@ -108,8 +108,8 @@ function buildChineseNav(): DefaultTheme.NavItem[] {
 }
 
 export default defineConfig({
-  title: "GlowberryClient",
-  description: "Documentation for the GlowberryClient Android Minecraft Bedrock launcher.",
+  title: "CaramelClient",
+  description: "Documentation for the CaramelClient Android Minecraft Bedrock launcher.",
   lang: "en-US",
   base,
   cleanUrls: true,
@@ -125,7 +125,7 @@ export default defineConfig({
     },
     socialLinks: [{ icon: "github", link: repo }],
     footer: {
-      copyright: "Copyright © 2024-2026 ChimeraMC",
+      copyright: "Copyright © 2024-2026 CaramelClient",
     },
   },
   locales: {

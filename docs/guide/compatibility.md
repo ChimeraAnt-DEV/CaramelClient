@@ -1,6 +1,6 @@
 # Compatibility
 
-One-page statement of what GlowberryClient runs on and needs.
+One-page statement of what CaramelClient runs on and needs.
 
 ## At-a-glance
 
@@ -13,7 +13,7 @@ One-page statement of what GlowberryClient runs on and needs.
 
 ## How the game is obtained and used
 
-GlowberryClient is a launcher, not a game. It **requires an existing Minecraft:
+CaramelClient is a launcher, not a game. It **requires an existing Minecraft:
 Bedrock Edition APK** — an authentic, licensed copy of a supported version,
 supplied by you — and it runs the copy you already own. It never ships,
 redistributes, or bypasses licensing for the game. The launcher extracts native
@@ -73,7 +73,7 @@ data this build cannot read fail closed and say so in-app.
 ## Common questions
 
 **Why does the launcher say Minecraft is missing?** — Import an authentic
-Bedrock Edition APK (1.21.80 or newer) from the Library and open GlowberryClient
+Bedrock Edition APK (1.21.80 or newer) from the Library and open CaramelClient
 again. Installing or updating the Play Store copy does not help: the launcher
 cannot read the game library out of an app it does not own.
 
