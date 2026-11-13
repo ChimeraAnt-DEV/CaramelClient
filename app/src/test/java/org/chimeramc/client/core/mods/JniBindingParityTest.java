@@ -253,8 +253,15 @@ public class JniBindingParityTest {
         Path cppRoot = repo.resolve("app/src/main/cpp/sweetloader");
         try (Stream<Path> stream = Files.walk(cppRoot)) {
             for (Path file : (Iterable<Path>) stream
-                    .filter(p -> p.toString().endsWith(".cpp") || p.toString().endsWith(".cc")
-                            || p.toString().endsWith(".h") || p.toString().endsWith(".hpp"))
+                    .filter(p -> {
+                        String s = p.toString();
+                        return s.endsWith(".cpp") || s.endsWith(".cc")
+                                || s.endsWith(".h") || s.endsWith(".hpp")
+                                // The .universe/.singularity loader is a Rust cdylib now; its JNI
+                                // exports (`#[no_mangle] … fn Java_…`) are part of the same surface
+                                // and must be compared against the Java declarations too.
+                                || s.endsWith(".rs");
+                    })
                     ::iterator) {
                 String text = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
                 Matcher m = CPP_EXPORT.matcher(text);

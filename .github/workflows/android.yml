@@ -135,6 +135,17 @@ jobs:
           ndk-version: r28c
           link-to-sdk: true
 
+      - name: Setup Rust toolchain
+        # The .universe/.singularity engine is a Rust Cargo workspace inside the sweetloader
+        # submodule (rust/). It is cross-compiled for arm64-v8a and packaged into the APK by the
+        # buildRustEngine Gradle task, which silently skips when cargo is absent — so without this
+        # step the APK would ship with no loader and every .universe/.singularity feature would be
+        # dark. The android target is added so `cargo build --target aarch64-linux-android` works.
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup target add aarch64-linux-android --toolchain stable
+          cargo --version
+
       - name: Grant Execute Permission to gradlew
         run: chmod +x ./gradlew
 
@@ -144,6 +155,15 @@ jobs:
         # must break the build on every commit, not only on a device. The runner self-fetches
         # nlohmann/json into a gitignored cache when needed.
         run: bash app/src/main/cpp/sweetloader/tests/cosmetics/run_tests.sh
+
+      - name: Run the Rust engine host tests
+        # The .universe/.singularity loaders' logic (manifest parsing, Ed25519 signature
+        # verification, Zip-Slip-safe extraction, load ordering, permissions, config) lives in the
+        # sweetloader's Rust cores and is device-free. A broken loader must fail here, not on a
+        # device; the JNI crates themselves are a thin shell and are exercised by the core tests.
+        run: |
+          cd app/src/main/cpp/sweetloader/rust
+          cargo test --workspace
 
       - name: Verify the bundled BerryAPI ABI
         # The sweetloader dlopens libBerryAPI.so and resolves a fixed set of BERRY_* symbols. A

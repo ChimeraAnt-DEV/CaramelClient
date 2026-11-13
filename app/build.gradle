@@ -405,3 +405,83 @@ android.sourceSets.main.assets.srcDir(changelogAssetsDir)
 tasks.matching { it.name == 'preBuild' }.configureEach {
     dependsOn 'syncChangelogAsset'
 }
+
+// The .universe / .singularity engine is a Rust Cargo workspace inside the sweetloader submodule
+// (rust/). Like the C++ sweetloader, it must be cross-compiled for arm64-v8a and packaged into the
+// APK's lib/ directory; the JNI-bound Java classes load it with System.loadLibrary.
+//
+// The build is skipped with a warning when cargo or the NDK is absent, so a Java-only build
+// (./gradlew :app:compileDebugJavaWithJavac) still works — the loader then reports "unavailable"
+// rather than the assembler failing on a missing .so. A full APK build (assembleDebug) runs it.
+def rustWorkspaceDir = layout.projectDirectory.dir('src/main/cpp/sweetloader/rust')
+def rustJniLibsDir = layout.projectDirectory.dir('src/main/jniLibs/arm64-v8a')
+def rustPackages = [['universe-jni', 'libcaramel_universe.so'],
+                    ['singularity-jni', 'libcaramel_singularity.so']]
+
+def buildRustEngine = tasks.register('buildRustEngine') {
+    description = 'Cross-compiles the .universe/.singularity Rust cdylibs for arm64-v8a.'
+    group = 'build'
+    inputs.files(fileTree(rustWorkspaceDir) {
+        include '**/*.rs', '**/Cargo.toml', '**/Cargo.lock'
+    })
+    outputs.files(rustPackages.collect { rustJniLibsDir.file(it[1]) })
+    doLast {
+        def homeCargo = new File(System.getProperty('user.home'), '.cargo/bin/cargo')
+        def cargo = homeCargo.canExecute() ? homeCargo.absolutePath : 'cargo'
+        def cargoFound = homeCargo.canExecute() ||
+                ['sh', '-c', 'command -v cargo >/dev/null 2>&1'].execute().waitFor() == 0
+        if (!cargoFound) {
+            logger.warn("cargo was not found; skipping the Rust engine build " +
+                    "(the .universe/.singularity loader will report unavailable).")
+            return
+        }
+        def ndkHome = System.getenv('ANDROID_NDK_HOME') ?: System.getenv('ANDROID_NDK_ROOT')
+        if (ndkHome == null) {
+            def sdk = System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT')
+            def ndks = sdk == null ? [] : new File(sdk, 'ndk').listFiles()?.sort()
+            if (ndks) ndkHome = ndks.last().absolutePath
+        }
+        if (ndkHome == null) {
+            logger.warn("the Android NDK was not found; skipping the Rust engine build.")
+            return
+        }
+        def toolchain = new File(ndkHome, 'toolchains/llvm/prebuilt').listFiles()?.find {
+            it.isDirectory()
+        }
+        if (toolchain == null) {
+            throw new GradleException("no NDK LLVM toolchain under ${ndkHome}")
+        }
+        def api = 28 // matches minSdkVersion
+        def clang = new File(toolchain, "bin/aarch64-linux-android${api}-clang")
+        def project = rustWorkspaceDir.asFile
+        rustPackages.each { pkg, _ ->
+            exec {
+                workingDir project
+                environment 'ANDROID_NDK_HOME', ndkHome
+                environment "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER", clang.absolutePath
+                environment 'CC_aarch64_linux_android', clang.absolutePath
+                environment 'AR_aarch64_linux_android', new File(toolchain, 'bin/llvm-ar').absolutePath
+                commandLine cargo, 'build', '-p', pkg, '--target', 'aarch64-linux-android',
+                        '--release'
+            }
+        }
+        def outDir = new File(project, 'target/aarch64-linux-android/release')
+        rustPackages.each { pkg, soName ->
+            def built = new File(outDir, soName)
+            if (!built.isFile()) {
+                throw new GradleException("the Rust build did not produce ${built}")
+            }
+            copy {
+                from built
+                into rustJniLibsDir
+            }
+        }
+    }
+}
+
+// Only the APK assembly needs the packaged .so; a Java-only compile stays fast and device-free.
+tasks.matching { it.name in ['mergeDebugJniLibFolders', 'mergeReleaseJniLibFolders',
+        'mergeBetaJniLibFolders', 'mergeDebugNativeLibs', 'mergeReleaseNativeLibs',
+        'mergeBetaNativeLibs'] }.configureEach {
+    dependsOn buildRustEngine
+}

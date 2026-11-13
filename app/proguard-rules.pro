@@ -21,6 +21,12 @@
 # segment is not part of the name; keep the package.
 -keep class org.chimeramc.client.preloader.** { *; }
 
+# The .universe / .singularity engine JNI surface (Java -> libcaramel_universe.so and
+# libcaramel_singularity.so). The JNI symbols encode the FQN and every method name, so both the
+# package and the class must survive R8 untouched.
+-keep class org.chimeramc.client.universe.** { *; }
+-keep class org.chimeramc.client.singularity.** { *; }
+
 # The JNI helpers under core.jni.
 -keep class org.chimeramc.client.core.jni.** { *; }
 
