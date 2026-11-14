@@ -13,9 +13,9 @@ import java.util.List;
 /**
  * Persists the overlay layouts and the active one.
  *
- * <p>Stored in SharedPreferences as JSON, the same shape {@link WheelProfileStore} uses, so there is
- * one persistence idiom for a user-authored list. The store never throws: a corrupt blob reads as
- * "no layouts", because a wheel with an unreadable layout list must still be usable.
+ * <p>Stored in SharedPreferences as JSON, one persistence idiom for a user-authored list. The store
+ * never throws: a corrupt blob reads as "no layouts", because an overlay with an unreadable layout
+ * list must still be usable.
  */
 public final class OverlayLayoutStore {
 

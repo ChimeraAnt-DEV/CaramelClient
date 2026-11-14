@@ -2110,12 +2110,6 @@ import okhttp3.OkHttpClient;
             DynamicAnim.applyPressScale(cosmetics);
             DynamicAnim.applyHoverBloom(cosmetics);
         }
-        View wheel = findViewById(R.id.quickdock_wheel);
-        if (wheel != null) {
-            wheel.setOnClickListener(v -> openModsFromHome());
-            DynamicAnim.applyPressScale(wheel);
-            DynamicAnim.applyHoverBloom(wheel);
-        }
     }
 
     /** Opens the Customize screen on a specific tab (Skins or Controller). */
@@ -2137,18 +2131,6 @@ import okhttp3.OkHttpClient;
         } catch (Throwable ignored) {
             AppLog.warnOnce("CaramelClient", "MainActivity:2221", "Ignored a failure at MainActivity:2221", ignored);
         }
-    }
-
-    /**
-     * Opens the launcher's Mods screen.
-     *
-     * <p>This dock entry used to raise the radial wheel over the launcher. The wheel was removed
-     * with the Java menu screen, and the launcher cannot host the native menu (that draws on the
-     * game's GL context and needs a running session), so the entry opens the launcher's own Mods
-     * screen — the same module list, as a normal screen.
-     */
-    private void openModsFromHome() {
-        openModsFullscreen();
     }
 
     private void openModsFullscreen() {

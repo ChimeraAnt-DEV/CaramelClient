@@ -505,7 +505,7 @@
         android:paddingHorizontal="@dimen/space_4"
         android:paddingBottom="@dimen/space_4">
 
-        <!-- The quick dock: Mods, Cosmetics and the radial wheel, one tap away. -->
+        <!-- The quick dock: Mods and Cosmetics, one tap away. -->
         <include
             layout="@layout/include_launch_quickdock"
             android:id="@+id/launch_quickdock"

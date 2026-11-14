@@ -1,4 +1,8 @@
 ## Mod Menu focus highlight (the "50% white overlay")
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 - **The white wash is the platform's default focus highlight.** A clickable View is implicitly
   focusable, so the d-pad/analogue stick moved focus onto the overlay root and the framework
   painted a full-screen translucent white highlight. Fix: `overlay_mod_menu.xml` root is

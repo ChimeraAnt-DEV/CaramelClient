@@ -1,11 +1,13 @@
 ## One UI: the Caramel UI pack, the native ImGui menu, and FPS honesty
 
 - **The UI pack (`Lynxifyy/CaramelClient-UI-pack`) is the single design reference**, and both
-  surfaces are already its port: the Compose launcher through `ui.compose.caramel.Caramel*` +
-  `CaramelColors`/`CaramelType`, and the in-game menu through `sweetloader/src/pl/menu/MenuTheme.*`
-  + `MenuWidgets.*` (the pack's `imgui/src/CaramelTheme` + `CaramelWidgets`, token for token). Do not
-  re-port a component; `docs/agents/ui-pack-review.md` lists the traps (do not wire the GLFW
-  backend, do not port the window-blur model, do not take the pack's version pins).
+  surfaces carry its tokens: the Compose launcher through `ui.compose.theme.GlowPalette.java` +
+  `GlowTheme.kt` + `GlowGlass.kt`, and the in-game menu through `sweetloader/src/pl/menu/MenuTheme.*`
+  + `MenuWidgets.*` (the pack's `imgui/src/CaramelTheme` + `CaramelWidgets`, token for token). The
+  pack's Compose *Desktop* component files are not imported anywhere — a duplicate
+  `ui/compose/caramel/Caramel*` layer was removed as dead code. Do not re-port a component;
+  `docs/agents/ui-pack-review.md` lists the traps (do not wire the GLFW backend, do not port the
+  window-blur model, do not take the pack's version pins).
 - **The in-game Mod Menu is the native ImGui menu, and the Compose/View mod-menu surface is gone.**
   `ui/compose/modmenu/`, `overlay/ModMenuOverlay.java`, the radial wheel (`RadialMenu*`, `Wheel*`)
   and their layouts were deleted. `PreloaderMenu` (Java) ↔ `pl/menu/MenuJni.cpp` is the only bridge;

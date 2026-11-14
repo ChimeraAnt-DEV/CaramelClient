@@ -1,4 +1,8 @@
 ## Cosmetics preview alpha cutout + head-look (Phase 2)
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 - **`drawBitmapMesh` bilinear-filters and has no source rect, so a transparent atlas edge bleeds into
   every opaque texel.** That is why the character read as a hollow, see-through sheet. The fix is
   alpha testing, realised as a hard-edged cutout mask applied with `PorterDuff.DST_IN`:

@@ -15,8 +15,12 @@ parts that are not done are listed as not done.
   components carry a `contentDescription`; the active tab is marked `setSelected(true)` so a screen
   reader announces it. Decorative images are marked `importantForAccessibility="no"` rather than
   left unlabelled.
-- **Focus order.** The nav order is back button, tabs, then content. The in-game Mod Menu computes
-  its grid focus in Java (`ModMenuNavigation`) so a controller or a keyboard can move through it.
+- **Focus order.** The nav order is back button, tabs, then content. The in-game Mod Menu is drawn
+  by the native ImGui layer, which enables Dear ImGui's own keyboard/gamepad navigation
+  (`ImGuiConfigFlags_NavEnableKeyboard` in `pl/menu/MenuHost.cpp`), so a controller or a keyboard
+  can move through the rows without a touch; `InGameMenuController` forwards the touch and back
+  events. The native menu is not an Android view, so TalkBack cannot read it; the launcher's Mods
+  screen is the accessible path to the same modules.
 - **Touch targets.** Interactive controls meet the 48dp minimum. A control whose visual is smaller
   than 48dp (a 27-32dp icon button in a header or a row) keeps its size and gains a widened touch
   area through `TouchTargets.expandTouchTargetsRecursively`, which `BaseActivity` runs on the nav

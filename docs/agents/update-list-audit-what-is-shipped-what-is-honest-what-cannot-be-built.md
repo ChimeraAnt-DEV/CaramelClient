@@ -1,4 +1,8 @@
 ## Update-list audit (CaramelClient) — what is shipped, what is honest, what cannot be built
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 
 The B/G/U/R/M/F/C update list was audited item by item. Recording the conclusions so a later pass
 does not re-derive them, and so the two items that cannot be built as written are not "fixed" into

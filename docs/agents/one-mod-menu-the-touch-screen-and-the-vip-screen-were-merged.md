@@ -1,4 +1,8 @@
 ## One Mod Menu (U4): the touch screen and the VIP screen were merged
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 - **There is one Mod Menu.** `ModMenuOverlay` is the only menu. The VIP window
   (`VipModMenuOverlay`, `VipModuleAdapter`, `VipInputMode`, `overlay_vip_mod_menu.xml`, the VIP card
   layouts) is **deleted** — do not reintroduce a second menu, a second page list, or a "premium

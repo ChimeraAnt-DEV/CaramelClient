@@ -1,4 +1,8 @@
 ## Mod Menu tabs (PvP group)
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 - The Mod Menu's top-level nav is General / HUD Editor / Settings. The **PvP tab is a filter + section**, not a fourth nav entry: `ModuleFilter.PVP` with a `filter_pvp` chip, plus `ModIds.GROUP_PVP`.
 - `ModIds.isPvpModule(id)` is the single source of truth for what counts as PvP (`aim_settings`, `cps_display`, `snaplook`). The filter predicate and the provider's grouping both call it so they cannot drift.
 - **PvP modules must stay contiguous in the provider's list.** `ModMenuAdapter` emits one group header per contiguous run of `groupId`, so `InbuiltModuleProvider.groupPvpLast(...)` moves them to the end. Reordering them apart renders the PvP header more than once. `PvpModuleGroupingTest` pins this.

@@ -51,14 +51,26 @@ The repo was called **GlowberryClient** before; the package is `org.chimeramc.cl
 
 ### UI
 - The UI pack (`Lynxifyy/CaramelClient-UI-pack`) is a Compose **Desktop** app plus a GLFW Dear ImGui
-  demo, not an Android library. Its `components/` layer is **already ported** to
-  `ui/compose/caramel/` (`CaramelButtons`/`Controls`/`Dropdowns`/`Labels`/`LoaderIcons`, `GlowGlass`,
-  `GlowTheme`), improved where it diverged (touch `collectIsPressedAsState` not desktop
-  `collectIsHoveredAsState`; explicit imports not `layout.*`; docs explaining *why*). Remaining
-  hazards for a naive port: the whole-window `HazeState` blur model, 63 hardcoded `Text("...")`
-  literals with no `strings.xml`, `(size / 2).dp` truncating `Int` division, no wrapper, no tests,
-  Kotlin 2.0.21/Compose 1.7.3 vs the client's 2.3.0/BOM 2026.01.01. The pack's preview apple is a
-  *different* asset from the launcher art. Full review: `docs/agents/ui-pack-review.md`.
+  demo, not an Android library. **Its tokens are the single design reference**, carried by two live
+  sources: the launcher in `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt`),
+  and the in-game menu in `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (token for token).
+  The pack's Desktop component files are **not** imported anywhere; a duplicate
+  `ui/compose/caramel/Caramel*` layer was dead code and has been deleted — do not recreate it, and
+  never wire the GLFW backend. PR #183 + SweetLoader #38.
+  Hazards (Haze blur model, hardcoded `Text` literals, `(size / 2).dp`, version skew, and a preview
+  apple that is not the launcher art) are in `docs/agents/ui-pack-review.md`.
+- **The mod menu is the native ImGui one; the Compose/View mod menu and the radial wheel are deleted**
+  (`ui/compose/modmenu/`, `ModMenuOverlay`, `RadialMenu*`/`Wheel*`, their layouts). `PreloaderMenu`
+  (Java) ↔ `pl/menu/MenuJni.cpp` is the only bridge; `ModMenuNavLayoutTest` fails if a deleted layout
+  comes back or the native tab bar loses its single labels+icons source.
+- **Dear ImGui 1.91.5 is vendored at `sweetloader/third_party/imgui/`** (the configure step must not
+  need the network). `check_pinned_deps.py` only inspects `GIT_REPOSITORY` pins, so a vendored dep
+  just needs a NOTICE row.
+- **Frame generation + motion blur are present-frame effects, not frame-rate gains.** Both live in
+  `core.mods.render.PresentFrameCatalog`/`PresentFramePolicy` and run on the `eglSwapBuffers` detour
+  (`pl/render/PresentFrameEffect.cpp`); they blend the previous presented frame in, present no extra
+  frame, and are badged while the present hook is absent. `PresentFrameModulesTest` forbids any
+  frame-rate claim in their copy.
 - **Animated values that cross zero belong on `offset`, never `padding`.** `Modifier.padding` throws
   `IllegalArgumentException: Padding must be non-negative`; a drift of `(value - 0.5f) * 6f` is
   negative on the first frame, so `LaunchChangelogCard` threw on **every** launch.

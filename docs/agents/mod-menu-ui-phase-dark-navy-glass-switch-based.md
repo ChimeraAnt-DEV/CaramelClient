@@ -1,4 +1,8 @@
 ## Mod Menu UI phase (M1-M10) — dark navy, glass, switch-based
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 
 The Mod Menu is the in-game surface, so it has its **own** palette rather than following the
 launcher's. `ModMenuPalette` is that token set (`#070A0F` base, `#0B1118`/`#101823`/`#16202D`

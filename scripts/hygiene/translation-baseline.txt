@@ -579,8 +579,6 @@ values-es:launch_error_message_unknown
 values-es:launch_mods_status_none
 values-es:launch_mods_status_ready
 values-es:launch_preparing
-values-es:launch_quickdock_wheel
-values-es:launch_quickdock_wheel_unavailable
 values-es:launch_replay_status_count
 values-es:launch_replay_status_none
 values-es:launch_toggle_mods
@@ -1857,8 +1855,6 @@ values-fr:launch_error_message_unknown
 values-fr:launch_mods_status_none
 values-fr:launch_mods_status_ready
 values-fr:launch_preparing
-values-fr:launch_quickdock_wheel
-values-fr:launch_quickdock_wheel_unavailable
 values-fr:launch_replay_status_count
 values-fr:launch_replay_status_none
 values-fr:launch_toggle_mods
@@ -3135,8 +3131,6 @@ values-hi:launch_error_message_unknown
 values-hi:launch_mods_status_none
 values-hi:launch_mods_status_ready
 values-hi:launch_preparing
-values-hi:launch_quickdock_wheel
-values-hi:launch_quickdock_wheel_unavailable
 values-hi:launch_replay_status_count
 values-hi:launch_replay_status_none
 values-hi:launch_toggle_mods
@@ -4413,8 +4407,6 @@ values-id:launch_error_message_unknown
 values-id:launch_mods_status_none
 values-id:launch_mods_status_ready
 values-id:launch_preparing
-values-id:launch_quickdock_wheel
-values-id:launch_quickdock_wheel_unavailable
 values-id:launch_replay_status_count
 values-id:launch_replay_status_none
 values-id:launch_toggle_mods
@@ -5691,8 +5683,6 @@ values-ja:launch_error_message_unknown
 values-ja:launch_mods_status_none
 values-ja:launch_mods_status_ready
 values-ja:launch_preparing
-values-ja:launch_quickdock_wheel
-values-ja:launch_quickdock_wheel_unavailable
 values-ja:launch_replay_status_count
 values-ja:launch_replay_status_none
 values-ja:launch_toggle_mods
@@ -6969,8 +6959,6 @@ values-pt:launch_error_message_unknown
 values-pt:launch_mods_status_none
 values-pt:launch_mods_status_ready
 values-pt:launch_preparing
-values-pt:launch_quickdock_wheel
-values-pt:launch_quickdock_wheel_unavailable
 values-pt:launch_replay_status_count
 values-pt:launch_replay_status_none
 values-pt:launch_toggle_mods
@@ -8247,8 +8235,6 @@ values-ru:launch_error_message_unknown
 values-ru:launch_mods_status_none
 values-ru:launch_mods_status_ready
 values-ru:launch_preparing
-values-ru:launch_quickdock_wheel
-values-ru:launch_quickdock_wheel_unavailable
 values-ru:launch_replay_status_count
 values-ru:launch_replay_status_none
 values-ru:launch_toggle_mods
@@ -9525,8 +9511,6 @@ values-tr:launch_error_message_unknown
 values-tr:launch_mods_status_none
 values-tr:launch_mods_status_ready
 values-tr:launch_preparing
-values-tr:launch_quickdock_wheel
-values-tr:launch_quickdock_wheel_unavailable
 values-tr:launch_replay_status_count
 values-tr:launch_replay_status_none
 values-tr:launch_toggle_mods
@@ -10803,8 +10787,6 @@ values-vi:launch_error_message_unknown
 values-vi:launch_mods_status_none
 values-vi:launch_mods_status_ready
 values-vi:launch_preparing
-values-vi:launch_quickdock_wheel
-values-vi:launch_quickdock_wheel_unavailable
 values-vi:launch_replay_status_count
 values-vi:launch_replay_status_none
 values-vi:launch_toggle_mods
@@ -12079,8 +12061,6 @@ values-zh-rCN:launch_error_message_unknown
 values-zh-rCN:launch_mods_status_none
 values-zh-rCN:launch_mods_status_ready
 values-zh-rCN:launch_preparing
-values-zh-rCN:launch_quickdock_wheel
-values-zh-rCN:launch_quickdock_wheel_unavailable
 values-zh-rCN:launch_replay_status_count
 values-zh-rCN:launch_replay_status_none
 values-zh-rCN:launch_toggle_mods
