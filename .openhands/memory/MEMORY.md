@@ -51,12 +51,16 @@ The repo was called **GlowberryClient** before; the package is `org.chimeramc.cl
 
 ### UI
 - The UI pack (`Lynxifyy/CaramelClient-UI-pack`) is a Compose **Desktop** app plus a GLFW Dear ImGui
-  demo, not an Android library. **Its tokens are the single design reference**, carried by two live
-  sources: the launcher in `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt`),
-  and the in-game menu in `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (token for token).
-  The pack's Desktop component files are **not** imported anywhere; a duplicate
-  `ui/compose/caramel/Caramel*` layer was dead code and has been deleted — do not recreate it, and
-  never wire the GLFW backend. PR #183 + SweetLoader #38.
+  demo, not an Android library. **Its tokens are the single design reference**, carried by three live
+  sources that must agree: the shared theme `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` +
+  `GlowGlass.kt`, used by account/connect/replay), the pack component port `ui/compose/caramel/`
+  (`CaramelTheme.kt` + `CaramelControls/Labels/Glass.kt`, used by the launch screen; `CaramelColors` =
+  the pack's `theme/Theme.kt` value for value incl. amber/greens the shared scale lacks), and the
+  in-game menu `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (token for token).
+  `CaramelPaletteParityTest` pins the overlap equal to `UiTokens`/`GlowPalette` and the ImGui twin
+  equal to the Compose port. (An earlier `caramel/Caramel*` layer was dead code and deleted; it is
+  live again because the launch screen imports it — check for importers before calling it dead.)
+  Never wire the GLFW backend. PR #183 + SweetLoader #38.
   Hazards (Haze blur model, hardcoded `Text` literals, `(size / 2).dp`, version skew, and a preview
   apple that is not the launcher art) are in `docs/agents/ui-pack-review.md`.
 - **The mod menu is the native ImGui one; the Compose/View mod menu and the radial wheel are deleted**

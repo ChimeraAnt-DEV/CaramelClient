@@ -63,11 +63,17 @@ public class ComposeGlassSurfaceTest {
 
     @Test
     public void theComposeSurfacesUseTheSharedGlassMaterial() throws IOException {
+        // The Caramel launch screen draws every card with the shared GlassPanel, so the launch tab,
+        // the mod rows and the content cards cannot drift onto a flat fill. The Caramel glass is the
+        // UI pack's material (CaramelGlass.kt); GlassSurface remains the material for the older
+        // Compose screens (the account and connect sections).
+        String screen = read(
+                "app/src/main/java/org/chimeramc/client/ui/compose/caramel/launch/CaramelLaunchScreen.kt");
+        assertTrue("the launch screen must draw its cards with the shared GlassPanel",
+                screen.contains("GlassPanel("));
         String[] surfaces = {
-                "app/src/main/java/org/chimeramc/client/ui/compose/launch/LaunchHero.kt",
-                "app/src/main/java/org/chimeramc/client/ui/compose/launch/LaunchToggles.kt",
-                "app/src/main/java/org/chimeramc/client/ui/compose/launch/LaunchPreviewStage.kt",
                 "app/src/main/java/org/chimeramc/client/ui/compose/account/AccountSection.kt",
+                "app/src/main/java/org/chimeramc/client/ui/compose/connect/ConnectionStatus.kt",
         };
         for (String path : surfaces) {
             String src = read(path);

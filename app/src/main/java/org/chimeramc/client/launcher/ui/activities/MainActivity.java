@@ -145,18 +145,11 @@ import okhttp3.OkHttpClient;
     private ActivityResultLauncher<String> notificationPermissionLauncher;
 
     private ContentManager contentManager;
-    private TextView worldsCountText;
-    private TextView resourcePacksCountText;
-    private TextView behaviorPacksCountText;
 
     private com.microsoft.xbox.idp.toolkit.CircleImageView accountAvatar;
     private View accountAvatarContainer;
     private ProgressBar avatarProgress;
     private Button signInButton;
-    private boolean headerAccountViewsLoaded;
-    private com.microsoft.xbox.idp.toolkit.CircleImageView headerAccountAvatar;
-    private TextView headerAccountName;
-    private Button headerSignInButton;
     private String lastAvatarXuid;
     private final OkHttpClient avatarClient = MainActivity.buildLatencyTunedClient();
 
@@ -222,8 +215,6 @@ import okhttp3.OkHttpClient;
     private final ExecutorService launchStatsExecutor = Executors.newSingleThreadExecutor();
 
     private final Handler uiHandler = MainThread.handler();
-    /** The announcements feed client, shut down in onDestroy. */
-    private org.chimeramc.client.core.announce.AnnouncementClient announcementClient;
 
     /** The lifetime of the self-reposting tip rotation, closed in onDestroy. */
     private final MainThread.Scope tipScope = MainThread.scope();
@@ -232,27 +223,23 @@ import okhttp3.OkHttpClient;
     private View launchShimmer;
     private Runnable shimmerRunnable;
     private boolean shimmerRunning;
-    private org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView launchPreview;
-
-    /** The Compose hero host and the state it renders; set up in setupLaunchHero(). */
-    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchHeroState> heroState;
-    /** The preview stage's background state, and the picker host shown on a long-press. */
-    private androidx.compose.runtime.MutableState<String> backgroundState;
-    private androidx.compose.ui.platform.ComposeView backgroundPickerCompose;
-    private androidx.compose.ui.platform.ComposeView heroCompose;
+    /** The Caramel launch screen's state, and the ComposeView that hosts the whole tab. */
+    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState> launchState;
+    private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle>> toggleState;
+    private androidx.compose.runtime.MutableState<Integer> worldsCount;
+    private androidx.compose.runtime.MutableState<Integer> packsCount;
+    private androidx.compose.runtime.MutableState<Integer> behaviorsCount;
+    private androidx.compose.ui.platform.ComposeView launchCompose;
+    /** The selected instance's name, the line the launch face shows, and its version id. */
     private String heroName = "";
-    private String heroVersion = "";
-    private org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind heroAbi =
-            org.chimeramc.client.ui.compose.launch.LaunchHeroState.AbiKind.NONE;
-    private int heroInstancesCount;
+    private String heroBuildLine = "";
+    private String heroVersionId = "";
+    /** The active mod count, kept for anything that reads it (not drawn on the Caramel screen). */
     private int heroModsCount;
-    private String heroPlaytime = "0m";
-    private androidx.compose.runtime.MutableState<java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>> toggleState;
-    private androidx.compose.ui.platform.ComposeView toggleCompose;
-    /** The Compose release-notes card and its popup, and the state they render. */
-    private androidx.compose.ui.platform.ComposeView changelogCompose;
-    private androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> changelogState;
-    private androidx.compose.runtime.MutableState<Boolean> changelogOpen;
+    /** Whether the Compose launch control accepts a tap. */
+    private boolean launchEnabled;
+    /** The live character preview inside the Caramel hero, owned by the composition. */
+    private org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView launchPreview;
     private String modsStatusText = "";
     private String voiceStatusText = "";
     private String replayStatusText = "";
@@ -337,42 +324,17 @@ import okhttp3.OkHttpClient;
         animateBlurFadeIn();
     }
 
-    /**
-     * Home screen entrance stagger in reading order: account row, hero, toggles, content, dock, then
-     * the launch control. The order comes from {@link LaunchIntro} rather than being spelled out
-     * here, so a layout reorder cannot desync the eye's path from the animation's.
-     *
-     * <p>Reduced motion is handled inside {@link DynamicAnim#overshootScaleIn}, which snaps the views
-     * straight to full.
-     */
     private void animateHomeCardsArrival() {
-        for (LaunchIntro.Block block : LaunchIntro.ORDER) {
-            View view = viewForIntroBlock(block);
-            if (view == null) continue;
-            DynamicAnim.overshootScaleIn(view, LaunchIntro.delayFor(block));
-        }
+        // The whole tab is one Compose screen now, so there are no per-block views to stagger. The
+        // screen fades in as a unit instead, which is the entrance the pack's desktop window uses.
+        if (binding == null || binding.getRoot() == null) return;
+        if (!DynamicAnim.areAnimationsEnabled()) return;
+        View root = binding.getRoot();
+        root.setAlpha(0f);
+        root.animate().alpha(1f).setDuration(LaunchIntro.BLUR_FADE_MS)
+                .setInterpolator(DynamicAnim.getDefaultInterpolator()).start();
     }
 
-    /** The view a reading-order block animates, or null when this screen does not carry it. */
-    private View viewForIntroBlock(LaunchIntro.Block block) {
-        switch (block) {
-            case ACCOUNT:
-                return findViewById(R.id.account_status_bar);
-            case HERO:
-                return findViewById(R.id.launch_hero_compose);
-            case TOGGLES:
-                return findViewById(R.id.launch_toggles_compose);
-            case CONTENT:
-                return findViewById(R.id.section_content);
-            case DOCK:
-                return findViewById(R.id.launch_quickdock);
-            case LAUNCH:
-                return binding != null && binding.launchDock != null
-                        ? binding.launchDock.launchButton : null;
-            default:
-                return null;
-        }
-    }
 
     /**
      * Fades the backdrop in behind the arriving blocks.
@@ -533,7 +495,6 @@ import okhttp3.OkHttpClient;
      }
 
     private void refreshAccountHeaderUI() {
-        ensureHeaderAccountViews();
         MsftAccountStore.MsftAccount active = getActiveAccount();
         if (active == null) {
             if (signInButton != null) signInButton.setVisibility(View.VISIBLE);
@@ -541,28 +502,13 @@ import okhttp3.OkHttpClient;
             if (accountAvatar != null) accountAvatar.setImageDrawable(null);
             lastAvatarXuid = null;
             if (avatarProgress != null) avatarProgress.setVisibility(View.GONE);
-            if (headerSignInButton != null) headerSignInButton.setVisibility(View.VISIBLE);
-            if (headerAccountAvatar != null) headerAccountAvatar.setVisibility(View.GONE);
-            if (headerAccountName != null) headerAccountName.setText(AccountTextUtils.displayNameOrNotSigned(this, null));
         } else {
             if (signInButton != null) signInButton.setVisibility(View.GONE);
             if (accountAvatarContainer != null) accountAvatarContainer.setVisibility(View.VISIBLE);
-            if (headerSignInButton != null) headerSignInButton.setVisibility(View.GONE);
-            if (headerAccountAvatar != null) headerAccountAvatar.setVisibility(View.VISIBLE);
-            if (headerAccountName != null) headerAccountName.setText(AccountTextUtils.displayNameOrNotSigned(this, active));
             loadXboxAvatar(active);
-            if (headerAccountAvatar != null && accountAvatar != null && accountAvatar.getDrawable() != null) {
-                headerAccountAvatar.setImageDrawable(accountAvatar.getDrawable());
-            }
         }
-    }
-
-    private void ensureHeaderAccountViews() {
-        if (headerAccountViewsLoaded) return;
-        headerAccountAvatar = findViewById(R.id.header_account_avatar);
-        headerAccountName = findViewById(R.id.header_account_name);
-        headerSignInButton = findViewById(R.id.header_sign_in_button);
-        headerAccountViewsLoaded = true;
+        // The Compose title bar draws the account pill, so the same state is pushed there.
+        refreshLaunchState();
     }
 
     private void loadXboxAvatar(MsftAccountStore.MsftAccount active) {
@@ -585,8 +531,8 @@ import okhttp3.OkHttpClient;
         if (cached != null) {
             accountAvatar.setTag(R.id.nav_account_avatar, url);
             accountAvatar.setImageBitmap(cached);
-            if (headerAccountAvatar != null) headerAccountAvatar.setImageBitmap(cached);
             if (avatarProgress != null) avatarProgress.setVisibility(View.GONE);
+            refreshLaunchState();
             return;
         }
 
@@ -602,7 +548,7 @@ import okhttp3.OkHttpClient;
                         if (bmp != null) {
                             AccountTextUtils.cacheAvatar(url, bmp);
                             accountAvatar.setImageBitmap(bmp);
-                            if (headerAccountAvatar != null) headerAccountAvatar.setImageBitmap(bmp);
+                            refreshLaunchState();
                         }
                         if (avatarProgress != null) avatarProgress.setVisibility(View.GONE);
                     });
@@ -1324,20 +1270,9 @@ import okhttp3.OkHttpClient;
     }
     
     private void applyCardRounding(int roundingDp) {
-        if (binding == null) return;
-        float density = getResources().getDisplayMetrics().density;
-        float radiusPx = roundingDp * density;
-        
-        // The launch face is a state-list drawable, so there is no single GradientDrawable to
-        // retune; its 20dp radius comes from @dimen/radius_split_launch and is deliberately fixed,
-        // because the corner-radius preference is a card/shape preference and the pack's launch
-        // control is its own shape. Rounding it here would also break the flush seam with the
-        // chevron segment, which shares that radius on its trailing edge only.
-        
-        // Apply to select version button
-        if (binding.launchDock.selectVersionButton.getBackground() instanceof GradientDrawable) {
-            ((GradientDrawable) binding.launchDock.selectVersionButton.getBackground()).setCornerRadius(radiusPx);
-        }
+        // The Caramel screen owns its own shape scale (the pack's radii), so the corner-radius
+        // preference no longer retunes a dock drawable here. The preference still drives the View
+        // screens; this screen reads none of it, which is the point of a single design system.
     }
     
     private void applyIconSize(int sizePercent) {
@@ -1365,77 +1300,12 @@ import okhttp3.OkHttpClient;
     }
 
     private void applyGlowEffects(boolean enabled) {
-        float glowElevation = enabled ? dp(8f) : dp(0f);
-        float cardElevation = enabled ? dp(3f) : dp(0f);
-
-        if (binding != null) {
-            if (binding.launchDock.launchButton != null) binding.launchDock.launchButton.setElevation(glowElevation);
-            if (binding.launchDock.getRoot() != null) binding.launchDock.getRoot().setElevation(cardElevation);
-        }
-
-        int[] cardIds = {
-                R.id.launch_hero_compose,
-                R.id.launch_toggles_compose
-        };
-        for (int id : cardIds) {
-            View card = findViewById(id);
-            if (card != null) {
-                card.setElevation(enabled ? dp(4f) : dp(0f));
-                if (enabled && card.getBackground() instanceof GradientDrawable && card.getId() == R.id.launch_hero_compose) {
-                    GradientDrawable bg = (GradientDrawable) card.getBackground().mutate();
-                    int accent = new PersonalizationManager(this).getAccentColor();
-                    bg.setStroke((int) dp(1.5f), accent != 0 ? accent : getColor(R.color.grad_pulse_glow));
-                }
-            }
-        }
+        // The Caramel screen draws its own glass shadows (GlassPanel), so there is no dock or card
+        // view here to raise. The elevation values stay for the View screens that still use them.
     }
     
     private void startHeroCardPulse() {
-        View heroCard = findViewById(R.id.launch_hero_compose);
-        if (heroCard == null) return;
-        PersonalizationManager pm = new PersonalizationManager(this);
-        if (!pm.isShowAnimations()) return;
-        if (pulseRunning) return;
-        // Cancel any stale per-card touches (spring shenanigans) so the pulse owns the card.
-        heroCard.animate().cancel();
-        pulseRunning = true;
-        int glowColor = pm.isDarkMode(this)
-                ? getColor(R.color.grad_pulse_glow)
-                : pm.getAccentColor() != 0 ? pm.getAccentColor() : getColor(R.color.grad_pulse_glow);
-        pulseRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!pulseRunning) return;
-                // A gentle lift-and-settle: elevation and a hair of scale, never alpha. Dimming the
-                // card faded its own text with it, which read as a flicker rather than a pulse.
-                heroCard.animate().cancel();
-                heroCard.animate()
-                        .translationZ(dp(6f))
-                        .scaleX(1.012f)
-                        .scaleY(1.012f)
-                        .setDuration(700L)
-                        .setInterpolator(DynamicAnim.getDefaultInterpolator())
-                        .start();
-                heroCard.postDelayed(() -> {
-                    if (!pulseRunning) return;
-                    heroCard.animate()
-                            .translationZ(dp(0f))
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(900L)
-                            .setInterpolator(DynamicAnim.getDefaultInterpolator())
-                            .withLayer()
-                            .start();
-                }, 700L);
-                uiHandler.postDelayed(this, 2400L);
-            }
-        };
-        // Straightforward glow ring via a highlight drawable when glow effects are on.
-        if (pm.isEnableGlowEffects() && heroCard.getBackground() instanceof GradientDrawable) {
-            GradientDrawable base = (GradientDrawable) heroCard.getBackground().mutate();
-            base.setStroke((int) dp(1.5f), glowColor);
-        }
-        uiHandler.post(pulseRunnable);
+        // The hero is Compose now and draws its own focus state; there is no View to pulse.
     }
 
     private void stopHeroCardPulse() {
@@ -1444,58 +1314,9 @@ import okhttp3.OkHttpClient;
             uiHandler.removeCallbacks(pulseRunnable);
             pulseRunnable = null;
         }
-        View heroCard = findViewById(R.id.launch_hero_compose);
-        if (heroCard != null) {
-            heroCard.animate().cancel();
-            heroCard.animate().translationZ(0f).alpha(1f)
-                    .scaleX(1f).scaleY(1f).setDuration(200L).start();
-        }
     }
 
-    /**
-     * Smoothly advances the launch progress bar (with a subtle glow on the thumb),
-     * instead of snapping between values. The bar is revealed on the first update
-     * and hidden again once any file import finishes.
-     */
-    private void animateProgressTo(int target) {
-        if (binding == null || binding.launchDock.progressLoader == null) return;
-        if (activeProgressAnimator != null) {
-            activeProgressAnimator.cancel();
-        }
-        if (binding.launchDock.progressLoader.getVisibility() != View.VISIBLE) {
-            binding.launchDock.progressLoader.setIndeterminate(false);
-            binding.launchDock.progressLoader.setProgress(0);
-            binding.launchDock.progressLoader.setVisibility(View.VISIBLE);
-        }
-        PersonalizationManager pm = new PersonalizationManager(this);
-        int from = binding.launchDock.progressLoader.getProgress();
-        int duration = pm.isShowAnimations() ? 350 : 0;
-        if (duration == 0) {
-            binding.launchDock.progressLoader.setProgress(target);
-            return;
-        }
-        activeProgressAnimator = ValueAnimator.ofInt(from, target).setDuration(duration);
-        activeProgressAnimator.setInterpolator(DynamicAnim.getDefaultInterpolator());
-        activeProgressAnimator.addUpdateListener(animator ->
-                binding.launchDock.progressLoader.setProgress((Integer) animator.getAnimatedValue()));
-        activeProgressAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                activeProgressAnimator = null;
-            }
-        });
-        activeProgressAnimator.start();
-    }
 
-    private void hideProgressLoader() {
-        if (binding == null || binding.launchDock.progressLoader == null) return;
-        if (activeProgressAnimator != null) {
-            activeProgressAnimator.cancel();
-            activeProgressAnimator = null;
-        }
-        binding.launchDock.progressLoader.setProgress(0);
-        binding.launchDock.progressLoader.setVisibility(View.GONE);
-    }
 
     private float dp(float value) {
         return value * getResources().getDisplayMetrics().density;
@@ -1504,7 +1325,6 @@ import okhttp3.OkHttpClient;
     @Override
     protected void onStop() {
         stopHeroCardPulse();
-        stopLaunchShimmer();
         if (launchPreview != null) launchPreview.stopPreview();
         if (activeProgressAnimator != null) {
             activeProgressAnimator.cancel();
@@ -1529,259 +1349,49 @@ import okhttp3.OkHttpClient;
 
     @SuppressLint({"ClickableViewAccessibility", "UnsafeIntentLaunch"})
     private void initListeners() {
-        setLaunchControlEnabled(false);
-        binding.launchDock.launchButton.setOnClickListener(v -> launchGame());
-        DynamicAnim.applyPressScale(binding.launchDock.launchButton);
-        // The split button's chevron is the other half: it opens the instance/version picker, so
-        // tapping the wrong half never starts a session.
-        binding.launchDock.launchChevron.setOnClickListener(v -> showVersionSelectDialog());
-        DynamicAnim.applyPressScale(binding.launchDock.launchChevron);
-        binding.launchDock.selectVersionButton.setOnClickListener(v -> showVersionSelectDialog());
-        DynamicAnim.applyPressScale(binding.launchDock.selectVersionButton);
-
-        // Setup Quick Actions Grid
-        setupQuickActions();
-
-        // Setup Launch-tab quick toggles (Mods / Voice)
-        setupLaunchToggles();
-
-        // Setup the docked launch controls' shimmer feedback
-        setupDockFeedback();
-
-        // Setup Account Header
+        // The launch control lives in the Compose screen now; its callbacks are wired in
+        // setupCaramelLaunchScreen(), so there is no dock view to bind here.
         setupAccountHeader();
-
-        // Setup Launch-tab section headers
-        setupSectionHeaders();
-
         FeatureSettings.init(getApplicationContext());
-        showRandomTip();
-        setupAnnouncementCard();
-        setupLaunchChangelog();
-        // One mod-update notification a day, never a prompt per mod. The scheduler applies
-        // the feature switch and the throttle, and does nothing at all when this build has no feed.
+        // One mod-update notification a day, never a prompt per mod. The scheduler applies the
+        // feature switch and the throttle, and does nothing at all when this build has no feed.
         org.chimeramc.client.core.mods.update.ModUpdateScheduler.requestCheck(this);
     }
 
-    /**
-     * Sets up the release-notes card: parses the bundled changelog and pushes it into Compose.
-     *
-     * <p>The parse runs on the existing launch-stats executor rather than the UI thread, because the
-     * card is not needed for the first frame and the JSON is a couple of kilobytes. A build with no
-     * release notes leaves the card hidden rather than opening an empty screen.
-     */
-    private void setupLaunchChangelog() {
-        changelogCompose = findViewById(R.id.launch_changelog_compose);
-        if (changelogCompose == null) return;
-        changelogState = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.state(
-                org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
-                        org.chimeramc.client.core.changelog.LaunchChangelog.empty(),
-                        BuildConfig.VERSION_NAME));
-        changelogOpen = org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.openState(false);
-        org.chimeramc.client.ui.compose.launch.LaunchChangelogHost.setContent(
-                changelogCompose, changelogState, changelogOpen);
-        SafeExecutor.submit(launchStatsExecutor, () -> {
-            org.chimeramc.client.core.changelog.LaunchChangelog parsed =
-                    org.chimeramc.client.core.changelog.LaunchChangelog.parse(readBundledChangelog());
-            androidx.compose.runtime.MutableState<org.chimeramc.client.ui.compose.launch.LaunchChangelogState> state = changelogState;
-            if (state == null) return;
-            state.setValue(org.chimeramc.client.ui.compose.launch.LaunchChangelogStateBuilder.build(
-                    parsed, BuildConfig.VERSION_NAME));
-        });
-    }
 
-    /** Reads the bundled release-notes asset; a missing or unreadable file reads as empty. */
-    private String readBundledChangelog() {
-        try (java.io.InputStream in = getAssets().open("launcher/changelog.json")) {
-            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-            byte[] buffer = new byte[4096];
-            int read;
-            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
-            return out.toString(java.nio.charset.StandardCharsets.UTF_8.name());
-        } catch (Throwable t) {
-            AppLog.warnOnce("CaramelClient", "MainActivity:changelog",
-                    "Reading the bundled release notes failed", t);
-            return null;
-        }
-    }
 
-    /**
-     * Shows the announcement card when the feed yields one that applies to this build.
-     *
-     * <p>The card is hidden by default and only made visible for a matching, undismissed card, so a
-     * failed fetch leaves the Launch tab exactly as it was. Dismissing writes the id and hides the
-     * card; the cached feed means the choice survives a restart.
-     */
-    private void setupAnnouncementCard() {
-        if (binding.launchAnnouncement == null) return;
-        View card = binding.launchAnnouncement.announcementCard;
-        TextView title = binding.launchAnnouncement.announcementTitle;
-        TextView body = binding.launchAnnouncement.announcementBody;
-        TextView link = binding.launchAnnouncement.announcementLink;
-        View dismiss = binding.launchAnnouncement.announcementDismiss;
 
-        announcementClient = new org.chimeramc.client.core.announce.AnnouncementClient();
-        announcementClient.load(this, BuildConfig.VERSION_CODE, announcement -> {
-            if (announcement == null) {
-                card.setVisibility(View.GONE);
-                return;
-            }
-            title.setText(announcement.title);
-            body.setText(announcement.body);
-            if (announcement.hasLink() && link != null) {
-                link.setVisibility(View.VISIBLE);
-                link.setOnClickListener(v -> {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(announcement.url)));
-                    } catch (Throwable ignored) {
-                        AppLog.warnOnce("CaramelClient", "MainActivity:1721", "Ignored a failure at MainActivity:1721", ignored);
-                    }
-                });
-            } else if (link != null) {
-                link.setVisibility(View.GONE);
-            }
-            if (dismiss != null) {
-                dismiss.setOnClickListener(v -> {
-                    org.chimeramc.client.core.announce.AnnouncementStore.dismiss(this, announcement.id);
-                    card.setVisibility(View.GONE);
-                });
-            }
-            card.setVisibility(View.VISIBLE);
-            DynamicAnim.applyPressScale(card);
-        });
-    }
 
-    private void setupQuickActions() {
-        // The hero is a Compose screen now and owns its own click (the host passes launchGame as
-        // onHeroClick), so there is nothing to wire here beyond the sections below.
 
-        // Refresh hero card stats
-        refreshLastPlayedCard();
-        startHeroCardPulse();
 
-        // Quick Launch Card was removed: the hero card and PLAY MINECRAFT already launch, and
-        // version selection now lives on the dock's Select Version button.
-
-        // Quick Mods Card and Quick Content Card were removed with the old quick-action grid:
-        // the Launch tab now uses purpose-built quick toggles (Mods, Voice)
-        // and the content rows below.
-    }
-
-    /**
-     * Wires the Launch tab's quick-toggle cards. Each card is a shortcut into a feature and shows
-     * that feature's live state on its own status line, refreshed whenever the tab resumes.
-     */
-    private void setupLaunchToggles() {
-        setupLaunchHero();
-        setupLaunchToggleRow();
-        refreshLaunchToggles();
-    }
-
-    /** Hosts the Compose quick-toggle row and keeps its data in step with the live statuses. */
-    private void setupLaunchToggleRow() {
-        View host = findViewById(R.id.launch_toggles_compose);
-        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
-        toggleCompose = (androidx.compose.ui.platform.ComposeView) host;
-        toggleState = org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.state(
-                buildToggleRow());
-        toggleCompose.setViewCompositionStrategy(
-                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
-        org.chimeramc.client.ui.compose.launch.LaunchTogglesHost.setContent(
-                toggleCompose,
-                toggleState,
-                kind -> {
-                    switch (kind) {
-                        case MODS:
-                            openModsFullscreen();
-                            break;
-                        case VOICE:
-                            startActivity(new Intent(this,
-                                    org.chimeramc.client.ui.activities.VoiceChatActivity.class));
-                            break;
-                        case REPLAY:
-                            LibraryActivity.open(this, LibraryActivity.TAB_REPLAY);
-                            break;
-                        default:
-                            break;
-                    }
-                });
-    }
-
-    /** The row's data: guest mode hides the Mods and Voice cards. */
-    private java.util.List<org.chimeramc.client.ui.compose.launch.LaunchToggleState.Toggle>
-            buildToggleRow() {
-        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
-        return org.chimeramc.client.ui.compose.launch.LaunchToggleState.visible(
-                guest,
-                getString(R.string.launch_toggle_mods), modsStatusText,
-                getString(R.string.launch_toggle_voice), voiceStatusText,
-                getString(R.string.launch_toggle_replay), replayStatusText);
-    }
-
-    /** Rebuilds the toggle row from the live statuses and recomposes. */
+    /** Rebuilds the Caramel quick toggles from the live statuses and recomposes. */
     private void refreshToggleRow() {
         if (toggleState == null) return;
-        toggleState.setValue(buildToggleRow());
+        toggleState.setValue(buildQuickToggles());
     }
 
-    /**
-     * Wires the docked launch controls' feedback: the sweeping shimmer that runs while the launcher
-     * is still preparing (assets/native bridges loading), and the mirror of the Play button's
-     * enabled state onto the dock.
-     */
-    private void setupDockFeedback() {
-        launchShimmer = findViewById(R.id.launch_button_shimmer);
-        View play = binding != null ? binding.launchDock.launchButton : null;
-        if (play == null) return;
-        // The button starts disabled until the version manager is ready; start the shimmer now and
-        // let resetLaunchButton() stop it, so the control never reads as frozen on a cold start.
-        startLaunchShimmer();
+    /** The quick toggles the Caramel screen draws: Mods, Voice and Replay, with live statuses. */
+    private java.util.List<org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle>
+            buildQuickToggles() {
+        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
+        java.util.List<org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle> list =
+                new java.util.ArrayList<>();
+        if (!guest) {
+            list.add(new org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle(
+                    "mods", getString(R.string.launch_toggle_mods), modsStatusText,
+                    !TextUtils.isEmpty(modsStatusText), true));
+        }
+        list.add(new org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle(
+                "voice", getString(R.string.launch_toggle_voice), voiceStatusText,
+                voiceStatusText != null && voiceStatusText.contains("on"), true));
+        list.add(new org.chimeramc.client.ui.compose.caramel.launch.CaramelQuickToggle(
+                "replay", getString(R.string.launch_toggle_replay), replayStatusText,
+                !TextUtils.isEmpty(replayStatusText), true));
+        return list;
     }
 
-    private void startLaunchShimmer() {
-        if (launchShimmer == null) return;
-        PersonalizationManager pm = new PersonalizationManager(this);
-        if (!pm.isShowAnimations()) {
-            launchShimmer.setVisibility(View.GONE);
-            return;
-        }
-        if (shimmerRunning) return;
-        shimmerRunning = true;
-        launchShimmer.setVisibility(View.VISIBLE);
-        launchShimmer.setTranslationX(-launchShimmer.getWidth());
-        shimmerRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!shimmerRunning || launchShimmer == null) return;
-                float width = launchShimmer.getWidth() > 0
-                        ? launchShimmer.getWidth()
-                        : getResources().getDisplayMetrics().widthPixels;
-                launchShimmer.setTranslationX(-width);
-                launchShimmer.animate()
-                        .translationX(width)
-                        .setDuration(1100L)
-                        .setInterpolator(new android.view.animation.LinearInterpolator())
-                        .withEndAction(() -> {
-                            if (!shimmerRunning) return;
-                            uiHandler.postDelayed(shimmerRunnable, 350L);
-                        })
-                        .start();
-            }
-        };
-        uiHandler.post(shimmerRunnable);
-    }
 
-    private void stopLaunchShimmer() {
-        shimmerRunning = false;
-        if (shimmerRunnable != null) {
-            uiHandler.removeCallbacks(shimmerRunnable);
-            shimmerRunnable = null;
-        }
-        if (launchShimmer != null) {
-            launchShimmer.animate().cancel();
-            launchShimmer.setVisibility(View.GONE);
-        }
-    }
+
 
     /**
      * Refreshes the quick-toggle status lines from each feature's own state: the selected version's
@@ -1827,26 +1437,6 @@ import okhttp3.OkHttpClient;
         }
     }
 
-    /**
-     * Applies the player's equipped cosmetics to the Launch-tab hero preview, using the same
-     * {@code CosmeticStore} the Cosmetics panel writes, so the hero shows exactly what the game
-     * will render (or the Optifine default cape when Optifine Mode is on).
-     */
-    private void bindLaunchPreviewCosmetics() {
-        if (launchPreview == null) return;
-        try {
-            org.chimeramc.client.core.cosmetics.CosmeticStore store =
-                    new org.chimeramc.client.core.cosmetics.CosmeticStore(this);
-            launchPreview.setCape(store.getEquippedCapeForDisplay());
-            launchPreview.setAccessory(store.getEquippedAccessory());
-            launchPreview.setPet(store.getEquippedPet());
-            // Re-resolve the skin so the hero shows the player's real Minecraft skin (read from the
-            // game through the engine hook when available) rather than a stale or generic one.
-            launchPreview.refreshSkin();
-        } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MainActivity:1925", "Ignored a failure at MainActivity:1925", ignored);
-        }
-    }
 
     private int countInstalledMods() {
         try {
@@ -1879,176 +1469,36 @@ import okhttp3.OkHttpClient;
     }
 
     private void setupAccountHeader() {
-        Button headerSignInButton = findViewById(R.id.header_sign_in_button);
-        if (headerSignInButton != null) {
-            headerSignInButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MsftLoginActivity.class);
-                accountLoginLauncher.launch(intent);
-            });
-            DynamicAnim.applyPressScale(headerSignInButton);
-        }
-
-        TextView headerAccountName = findViewById(R.id.header_account_name);
-        com.microsoft.xbox.idp.toolkit.CircleImageView headerAvatar = findViewById(R.id.header_account_avatar);
-        
-        // Update header account info when account changes
+        // The account pill in the Compose title bar drives sign-in and account switching through the
+        // launch screen's actions, so there is no separate header view to wire here.
         refreshAccountHeaderUI();
     }
 
-    private void setupSectionHeaders() {
-        bindSectionHeader(R.id.section_quick, R.string.quick_actions_title, R.drawable.ic_nav_launch, 0);
-        View contentAction = bindSectionHeader(R.id.section_content,
-                R.string.home_content_library, R.drawable.ic_content, R.string.view_all);
-        if (contentAction != null) {
-            contentAction.setOnClickListener(v -> openContentManagement());
-            DynamicAnim.applyPressScale(contentAction);
-        }
-        bindSectionHeader(R.id.section_more, R.string.home_more, R.drawable.ic_modules, 0);
-    }
 
-    /**
-     * Fills one included section header. The header layout carries a shared action view, so a
-     * section with no action leaves it {@code GONE} rather than shipping a second near-identical
-     * header layout that would drift from this one.
-     *
-     * @return the trailing action view when one was shown, so the caller can wire its click;
-     *         {@code null} when the section has no action
-     */
-    private View bindSectionHeader(int includeId, int titleRes, int actionRes) {
-        return bindSectionHeader(includeId, titleRes, 0, actionRes);
-    }
 
-    private View bindSectionHeader(int includeId, int titleRes, int iconRes, int actionRes) {
-        View include = findViewById(includeId);
-        if (include == null) return null;
-        TextView title = include.findViewById(R.id.section_title);
-        if (title != null) title.setText(titleRes);
-        ImageView icon = include.findViewById(R.id.section_icon);
-        if (icon != null) {
-            if (iconRes != 0) {
-                icon.setImageResource(iconRes);
-                icon.setVisibility(View.VISIBLE);
-            } else {
-                icon.setVisibility(View.GONE);
-            }
-        }
-        TextView action = include.findViewById(R.id.section_action);
-        if (action == null) return null;
-        if (actionRes == 0) {
-            action.setVisibility(View.GONE);
-            return null;
-        }
-        action.setText(actionRes);
-        action.setVisibility(View.VISIBLE);
-        return action;
-    }
 
-    /**
-     * Shows the tip carousel, or hides it once the launch budget is spent.
-     *
-     * <p>The retirement and the no-repeat rotation are {@link org.chimeramc.client.core.stats
-     * .TipsCarousel}'s rules; this method only paints the result and owns the timer. The panel is
-     * hidden rather than left showing a stale tip, because "no tips any more" is a deliberate
-     * state, not an empty rotation.
-     */
-    private void showRandomTip() {
-        String[] tips = getResources().getStringArray(R.array.launcher_tips);
-        if (binding.tipText == null) return;
-
-        int launches = org.chimeramc.client.core.stats.LaunchStatsRecorder
-                .load(this).launches();
-        if (tips.length == 0 || !org.chimeramc.client.core.stats.TipsCarousel.shouldShow(launches)) {
-            binding.tipText.setVisibility(android.view.View.GONE);
-            return;
-        }
-
-        final java.util.Random random = new java.util.Random();
-        tipIndex = org.chimeramc.client.core.stats.TipsCarousel.nextIndex(
-                tips.length, tipIndex, random.nextInt(Integer.MAX_VALUE));
-        binding.tipText.setVisibility(android.view.View.VISIBLE);
-        binding.tipText.setText(tips[tipIndex]);
-
-        // The tip rotation is a self-reposting tick. It runs through the activity's scope so
-        // onDestroy removes the pending post instead of firing into a destroyed Activity
-        //.
-        if (tipScope.isClosed()) return;
-        tipScope.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (binding == null || binding.tipText == null) return;
-                final int next = org.chimeramc.client.core.stats.TipsCarousel.nextIndex(
-                        tips.length, tipIndex, random.nextInt(Integer.MAX_VALUE));
-                binding.tipText.animate().alpha(0f).setDuration(300).withEndAction(() -> {
-                    if (binding == null || binding.tipText == null) return;
-                    tipIndex = next;
-                    binding.tipText.setText(tips[tipIndex]);
-                    binding.tipText.animate().alpha(1f).setDuration(300).start();
-                }).start();
-                tipScope.postDelayed(this, TIP_ROTATE_MS);
-            }
-        }, TIP_ROTATE_MS);
-    }
 
     private void initContentManagementSection() {
-        worldsCountText = binding.contentWorldsCount;
-        resourcePacksCountText = binding.contentResourcePacksCount;
-        behaviorPacksCountText = binding.contentBehaviorPacksCount;
-
+        // The Caramel screen shows the three counts as cards and opens the list on a tap, so the
+        // activity only has to keep the counts in its Compose state. These observers feed the three
+        // MutableState<Int> values the screen reads.
         contentManager = ContentManager.getInstance(this);
-        contentManager.getWorldsLiveData().observe(this, worlds -> {
-            if (worldsCountText != null)
-                worldsCountText.setText(String.valueOf(worlds != null ? worlds.size() : 0));
-        });
-        contentManager.getResourcePacksLiveData().observe(this, packs -> {
-            if (resourcePacksCountText != null)
-                resourcePacksCountText.setText(String.valueOf(packs != null ? packs.size() : 0));
-        });
-        contentManager.getBehaviorPacksLiveData().observe(this, packs -> {
-            if (behaviorPacksCountText != null)
-                behaviorPacksCountText.setText(String.valueOf(packs != null ? packs.size() : 0));
-        });
+        contentManager.getWorldsLiveData().observe(this, worlds ->
+                setCount(worldsCount, worlds != null ? worlds.size() : 0));
+        contentManager.getResourcePacksLiveData().observe(this, packs ->
+                setCount(packsCount, packs != null ? packs.size() : 0));
+        contentManager.getBehaviorPacksLiveData().observe(this, behaviors ->
+                setCount(behaviorsCount, behaviors != null ? behaviors.size() : 0));
+    }
 
-        binding.contentWorldsRow.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_WORLDS));
-        binding.contentResourcePacksRow.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_RESOURCE_PACKS));
-        binding.contentBehaviorPacksRow.setOnClickListener(v -> openContentList(ContentListActivity.TYPE_BEHAVIOR_PACKS));
-        DynamicAnim.applyPressScale(binding.contentWorldsRow);
-        DynamicAnim.applyPressScale(binding.contentResourcePacksRow);
-        DynamicAnim.applyPressScale(binding.contentBehaviorPacksRow);
-
-        refreshContentCounts();
+    /** Pushes a count into its Compose state, tolerating a screen that is not mounted yet. */
+    private static void setCount(androidx.compose.runtime.MutableState<Integer> state, int value) {
+        if (state != null) state.setValue(value);
     }
 
     private void refreshContentCounts() {
-        if (versionManager == null || contentManager == null) return;
-        GameVersion currentVersion = versionManager.getSelectedVersion();
-        if (currentVersion == null) return;
-
-        android.content.SharedPreferences cmPrefs = getSharedPreferences("content_management", MODE_PRIVATE);
-        String savedType = cmPrefs.getString("storage_type", "INTERNAL");
-        org.chimeramc.client.settings.FeatureSettings.StorageType storageType;
-        try {
-            storageType = org.chimeramc.client.settings.FeatureSettings.StorageType.valueOf(savedType);
-        } catch (IllegalArgumentException e) {
-            storageType = org.chimeramc.client.settings.FeatureSettings.StorageType.INTERNAL;
-        }
-        storageType = LauncherStorage.normalizeContentStorageType(
-                storageType,
-                currentVersion.versionIsolation
-        );
-
-        java.io.File baseDir = LauncherStorage.getContentGameDataDir(
-                this,
-                currentVersion.getStorageProfileId(),
-                storageType
-        );
-
-        contentManager.setStorageDirectories(
-                new java.io.File(baseDir, "minecraftWorlds"),
-                new java.io.File(baseDir, "resource_packs"),
-                new java.io.File(baseDir, "behavior_packs"),
-                new java.io.File(baseDir, "skin_packs"),
-                new java.io.File(baseDir, "Screenshots"),
-                new java.io.File(baseDir, "minecraftpe"));
+        // The counts arrive through the LiveData observers in initContentManagementSection and are
+        // pushed straight into the Compose state, so there is nothing to recompute here.
     }
 
     private void openContentList(int contentType) {
@@ -2062,62 +1512,13 @@ import okhttp3.OkHttpClient;
         startActivity(intent);
     }
 
-    private static void setRowVisible(View view, boolean visible) {
-        if (view != null) view.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
 
     private void initMiscellaneousSection() {
-        binding.miscCurseforgeRow.setOnClickListener(v -> startActivity(new Intent(this, CurseForgeActivity.class)));
-        binding.miscModHubRow.setOnClickListener(v -> startActivity(new Intent(this, ModHubActivity.class)));
-        // Guest mode hides the mod-download rows; both are binding fields, so this adds
-        // no new lookup.
-        boolean guest = org.chimeramc.client.core.privacy.PrivacyModes.current(this).isGuestMode();
-        setRowVisible(binding.miscModHubRow, !guest);
-        setRowVisible(binding.miscCurseforgeRow, !guest);
-        binding.miscAccountsRow.setOnClickListener(v -> startActivity(new Intent(this, AccountsActivity.class)));
-        binding.miscQuickLaunchRow.setOnClickListener(v -> startActivity(new Intent(this, QuickLaunchActivity.class)));
-        DynamicAnim.applyPressScale(binding.miscCurseforgeRow);
-        DynamicAnim.applyPressScale(binding.miscModHubRow);
-        DynamicAnim.applyPressScale(binding.miscAccountsRow);
-        DynamicAnim.applyPressScale(binding.miscQuickLaunchRow);
-        initLaunchQuickDock();
+        // The Miscellaneous rows (CurseForge, Mod Hub, Accounts, Quick Launch) are the Compose title
+        // bar's app menu now, wired through the launch screen's actions. Nothing to bind here.
     }
 
-    /**
-     * The Launch tab's quick dock: Mods, Cosmetics and the radial wheel.
-     *
-     * <p>Each entry opens the destination the spec names. Mods and Cosmetics open their tabs;
-     * the wheel entry asks the shared radial wheel to show, which is the same overlay the in-game
-     * bind uses, so the dock cannot drift from the in-game menu. The version label carries the
-     * real build version rather than a hardcoded string.
-     */
-    private void initLaunchQuickDock() {
-        View dock = findViewById(R.id.launch_quickdock);
-        if (dock == null) return;
 
-        View mods = findViewById(R.id.quickdock_mods);
-        if (mods != null) {
-            mods.setOnClickListener(v -> startActivity(new Intent(this, ModsFullscreenActivity.class)));
-            DynamicAnim.applyPressScale(mods);
-            DynamicAnim.applyHoverBloom(mods);
-            // Guest mode removes the Mods shortcut from the dock too.
-            setRowVisible(mods, !org.chimeramc.client.core.privacy.PrivacyModes.current(this)
-                    .isGuestMode());
-        }
-        View cosmetics = findViewById(R.id.quickdock_cosmetics);
-        if (cosmetics != null) {
-            cosmetics.setOnClickListener(v -> openProfileSheet());
-            DynamicAnim.applyPressScale(cosmetics);
-            DynamicAnim.applyHoverBloom(cosmetics);
-        }
-    }
-
-    /** Opens the Customize screen on a specific tab (Skins or Controller). */
-    private void openCustomizeTab(int tab) {
-        Intent intent = new Intent(this, CustomizeActivity.class);
-        intent.putExtra(CustomizeActivity.EXTRA_INITIAL_TAB, tab);
-        startActivity(intent);
-    }
 
     /**
      * Opens the profile sheet: who you are, your cosmetics and your skins (U2).
@@ -2143,21 +1544,16 @@ import okhttp3.OkHttpClient;
         performActualLaunch();
     }
 
-    /** Enables or disables both halves of the split launch control as one. */
+    /** Enables or disables the Compose launch control as one. */
     private void setLaunchControlEnabled(boolean enabled) {
-        if (binding == null) return;
-        binding.launchDock.launchButton.setEnabled(enabled);
-        // The chevron opens a picker, which is meaningless while the version manager is not ready,
-        // so it is disabled with the face: a live chevron on a dead control is a confusing tap.
-        binding.launchDock.launchChevron.setEnabled(enabled);
-        binding.launchDock.launchChevron.setAlpha(enabled ? 1f : 0.55f);
+        launchEnabled = enabled;
+        refreshLaunchState();
     }
 
     /** Clears the in-flight flag and re-enables the Play button after a launch is abandoned. */
     private void resetLaunchButton() {
         launchInProgress = false;
         setLaunchControlEnabled(true);
-        stopLaunchShimmer();
     }
 
     private void performActualLaunch() {
@@ -2428,180 +1824,7 @@ import okhttp3.OkHttpClient;
         return launchIntent;
     }
 
-     private void showVersionSelectDialog() {
-        if (!isVersionManagerReady()) return;
 
-        List<GameVersion> allVersions = new ArrayList<>();
-        List<GameVersion> installed = versionManager.getInstalledVersions();
-        List<GameVersion> custom = versionManager.getCustomVersions();
-        if (installed != null) allVersions.addAll(installed);
-        if (custom != null) allVersions.addAll(custom);
-
-        View popupView = LayoutInflater.from(this).inflate(R.layout.popup_instance_selector, null);
-        new PersonalizationManager(this).applyAccentToView(popupView, this);
-        PopupWindow popup = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true);
-        popup.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        popup.setElevation(16f);
-        popup.setOutsideTouchable(true);
-
-        RecyclerView recycler = popupView.findViewById(R.id.recycler_instances);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-
-        GameVersion selectedVersion = versionManager.getSelectedVersion();
-        InstancePopupAdapter adapter = new InstancePopupAdapter(allVersions, selectedVersion);
-        recycler.setAdapter(adapter);
-
-        android.widget.EditText searchInput = popupView.findViewById(R.id.search_input);
-        searchInput.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.filter(s.toString());
-            }
-            @Override public void afterTextChanged(android.text.Editable s) {}
-        });
-
-        adapter.setOnItemClickListener(version -> {
-            versionManager.selectVersion(version);
-            viewModel.setCurrentVersion(version);
-            setTextMinecraftVersion();
-            popup.dismiss();
-        });
-
-        popupView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        int popupWidth = popupView.getMeasuredWidth();
-        int popupHeight = popupView.getMeasuredHeight();
-        View anchor = binding.launchDock.selectVersionButton;
-        // The picker sits at the bottom of the screen, so a drop-down popup would open off-screen.
-        // Lift it above the anchor, into the page area, where the instance list has room to render.
-        int xOffset = Math.max(0, (anchor.getWidth() - popupWidth) / 2);
-        int yOffset = -(anchor.getHeight() + popupHeight + 8);
-        popup.showAsDropDown(anchor, xOffset, yOffset);
-    }
-
-    private static class InstancePopupAdapter extends RecyclerView.Adapter<InstancePopupAdapter.VH> {
-        private final List<GameVersion> allVersions;
-        private List<GameVersion> filteredVersions;
-        private final GameVersion selectedVersion;
-        private OnItemClickListener listener;
-
-        interface OnItemClickListener {
-            void onClick(GameVersion version);
-        }
-
-        void setOnItemClickListener(OnItemClickListener l) { this.listener = l; }
-
-        InstancePopupAdapter(List<GameVersion> versions, GameVersion selected) {
-            this.allVersions = versions;
-            this.filteredVersions = new ArrayList<>(versions);
-            this.selectedVersion = selected;
-        }
-
-        void filter(String query) {
-            List<GameVersion> next = new ArrayList<>();
-            if (query == null || query.isEmpty()) {
-                next.addAll(allVersions);
-            } else {
-                String q = query.toLowerCase();
-                for (GameVersion v : allVersions) {
-                    String name = getInstanceDisplayName(v).toLowerCase();
-                    String code = v.versionCode != null ? v.versionCode.toLowerCase() : "";
-                    String dir = v.directoryName != null ? v.directoryName.toLowerCase() : "";
-                    if (name.contains(q) || code.contains(q) || dir.contains(q)) {
-                        next.add(v);
-                    }
-                }
-            }
-            // The filtered list is a subset of the same rows, so diffing keeps the rows that are
-            // still shown and animates the ones that a keystroke removed. A dataset change here
-            // rebuilt the whole popup on every character typed.
-            ListDiff.Result diff = ListDiff.compute(filteredVersions, next,
-                    version -> version.directoryName,
-                    (old, fresh) -> java.util.Objects.equals(old.displayName, fresh.displayName)
-                            && java.util.Objects.equals(old.versionCode, fresh.versionCode));
-            filteredVersions = next;
-            ListDiffDispatch.apply(this, diff);
-        }
-
-        @NonNull @Override
-        public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_instance_popup, parent, false);
-            return new VH(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull VH holder, int position) {
-            GameVersion v = filteredVersions.get(position);
-            boolean isSelected = selectedVersion != null
-                    && selectedVersion.directoryName != null
-                    && selectedVersion.directoryName.equals(v.directoryName);
-
-            holder.name.setText(getInstanceDisplayName(v));
-            String versionText = getInstanceVersionText(v);
-            holder.version.setText(versionText);
-            holder.version.setVisibility(TextUtils.isEmpty(versionText) ? View.GONE : View.VISIBLE);
-            String abi = v.abiList;
-            if (abi != null && !abi.isEmpty()) {
-                boolean is32Bit = "armeabi-v7a".equals(abi) || "x86".equals(abi);
-                holder.abiBadge.setText(holder.itemView.getContext().getString(
-                        is32Bit ? R.string.abi_32_bit : R.string.abi_64_bit));
-                holder.abiBadge.setTextColor(is32Bit ? 0xFFF6A821 : 0xFF0F5BE4);
-                holder.abiBadge.setVisibility(View.VISIBLE);
-            } else {
-                holder.abiBadge.setVisibility(View.GONE);
-            }
-            holder.itemView.setActivated(isSelected);
-            holder.check.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-            holder.tag.setVisibility(View.GONE);
-            applyInstanceSelectionStyle(holder, isSelected);
-
-            holder.itemView.setOnClickListener(_v -> {
-                if (listener != null) listener.onClick(v);
-            });
-        }
-
-        private static void applyInstanceSelectionStyle(@NonNull VH holder, boolean isSelected) {
-            android.content.Context context = holder.itemView.getContext();
-            PersonalizationManager pm = new PersonalizationManager(context);
-            int accent = pm.getAccentColor();
-            if (accent == 0) {
-                accent = ContextCompat.getColor(context, R.color.primary);
-            }
-
-            float density = context.getResources().getDisplayMetrics().density;
-            GradientDrawable background = new GradientDrawable();
-            background.setShape(GradientDrawable.RECTANGLE);
-            background.setCornerRadius(10 * density);
-            if (isSelected) {
-                background.setColor(Color.argb(26, Color.red(accent), Color.green(accent), Color.blue(accent)));
-                background.setStroke(Math.max(1, (int) (1 * density)), accent);
-            } else {
-                background.setColor(Color.TRANSPARENT);
-                background.setStroke(0, Color.TRANSPARENT);
-            }
-            holder.itemView.setBackground(background);
-            holder.check.setImageTintList(ColorStateList.valueOf(accent));
-        }
-
-        @Override public int getItemCount() { return filteredVersions.size(); }
-
-        static class VH extends RecyclerView.ViewHolder {
-            TextView name, version, tag;
-            TextView abiBadge;
-            ImageView check;
-            VH(View v) {
-                super(v);
-                name = v.findViewById(R.id.instance_name);
-                version = v.findViewById(R.id.instance_version);
-                tag = v.findViewById(R.id.instance_tag);
-                abiBadge = v.findViewById(R.id.instance_abi_badge);
-                check = v.findViewById(R.id.instance_check);
-            }
-        }
-    }
 
     private void startFilePicker(String type, ActivityResultLauncher<Intent> launcher) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -2637,65 +1860,42 @@ import okhttp3.OkHttpClient;
 
 
     public void setTextMinecraftVersion() {
-        if (binding == null) return;
         if (versionManager == null) {
-            binding.launchDock.textMinecraftVersion.setText(getString(R.string.not_found_version));
-            binding.launchDock.launchButtonSubtitle.setText(getString(R.string.not_found_version));
+            heroName = getString(R.string.not_found_version);
+            heroBuildLine = "";
+            heroVersionId = "";
             updateLastPlayedName(null, null);
+            refreshLaunchState();
             return;
         }
         GameVersion selectedVersion = versionManager.getSelectedVersion();
         String instanceName = selectedVersion != null ? getInstanceDisplayName(selectedVersion) : null;
-        binding.launchDock.textMinecraftVersion.setText(TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName);
+        heroName = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
         // The split button names the build it will start, so the action is unambiguous without
         // reading the picker above it.
-        binding.launchDock.launchButtonSubtitle.setText(TextUtils.isEmpty(instanceName)
-                ? getString(R.string.not_found_version) : instanceName);
+        heroBuildLine = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
+        heroVersionId = selectedVersion != null && !TextUtils.isEmpty(selectedVersion.versionCode)
+                ? selectedVersion.versionCode : "";
         updateLastPlayedName(instanceName, selectedVersion);
         refreshLastPlayedCard();
+        refreshLaunchState();
     }
 
     private void refreshLastPlayedCard() {
-        GameVersion selectedVersion = versionManager != null ? versionManager.getSelectedVersion() : null;
-        int installedCount =0;
-        if (versionManager != null) {
-            List<org.chimeramc.client.core.versions.GameVersion> installed = versionManager.getInstalledVersions();
-            List<org.chimeramc.client.core.versions.GameVersion> custom = versionManager.getCustomVersions();
-            installedCount = (installed != null ? installed.size() : 0) + (custom != null ? custom.size() : 0);
-        }
-        // The hero's stats are rendered by the Compose hero; refreshHero recomposes them from the
-        // live values, so the count-up below only drives the animated number into that state.
-        final int count = installedCount;
-        DynamicAnim.countUp(count, 400L, value -> {
-            heroInstancesCount = (int) value;
-            refreshHero();
-        });
-        // The mods count comes from the live mod list, not from a count captured here: the list
-        // loads asynchronously per instance, so reading it at bind time would report the previous
-        // instance (usually zero). updateModsUI recomputes it whenever the list changes.
-        if (viewModel != null) {
-            refreshActiveModsStat(viewModel.getModsLiveData().getValue());
-        }
-        long totalPlaytime = selectedVersion != null
-                ? PlaytimeManager.getTotalMs(MinecraftLauncher.getStorageProfileId(selectedVersion))
-                : 0L;
-        heroPlaytime = PlaytimeManager.formatPlaytime(totalPlaytime);
-        updateLastPlayedName(
-                selectedVersion != null ? getInstanceDisplayName(selectedVersion) : null,
-                selectedVersion
-        );
+        // The Caramel screen has no stat strip to count up; the version manager's refresh path
+        // calls setTextMinecraftVersion(), which pushes the state the screen draws.
+        refreshLaunchState();
     }
 
     private void updateLastPlayedName(String instanceName, GameVersion selectedVersion) {
         heroName = TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName;
+        // The version line only earns its place when it adds something beyond the instance name.
+        // The rule lives in LaunchHeroState so it stays unit-tested.
         String versionText = selectedVersion != null ? getInstanceVersionText(selectedVersion) : "";
-        // Instances are commonly named after their version, so the same "26.51" would appear twice.
-        // The rule lives in LaunchHeroState so it is unit-tested; the hero renders the result.
-        heroVersion = org.chimeramc.client.ui.compose.launch.LaunchHeroState
+        heroBuildLine = org.chimeramc.client.ui.compose.launch.LaunchHeroState
                 .versionOrEmpty(heroName, versionText);
-        heroAbi = org.chimeramc.client.ui.compose.launch.LaunchHeroState
-                .abiKind(selectedVersion != null ? selectedVersion.abiList : null);
-        refreshHero();
+        if (TextUtils.isEmpty(heroBuildLine)) heroBuildLine = heroVersionId;
+        refreshLaunchState();
     }
 
     private boolean isVersionManagerReady() {
@@ -2756,14 +1956,12 @@ import okhttp3.OkHttpClient;
     private final class IncomingCallback implements FileHandler.FileOperationCallback {
         @Override
         public void onSuccess(int processedFiles) {
-            hideProgressLoader();
             if (processedFiles > 0)
                 UIHelper.showToast(MainActivity.this, getResources().getQuantityString(R.plurals.files_processed, processedFiles, processedFiles));
         }
 
         @Override
         public void onError(String errorMessage) {
-            hideProgressLoader();
             if (errorMessage != null && !errorMessage.isEmpty()) {
                 UIHelper.showToast(MainActivity.this, errorMessage);
             }
@@ -2771,7 +1969,6 @@ import okhttp3.OkHttpClient;
 
         @Override
         public void onProgressUpdate(int progress) {
-            if (binding != null) animateProgressTo(progress);
         }
     }
 
@@ -2815,112 +2012,42 @@ import okhttp3.OkHttpClient;
     }
 
     private void refreshActiveModsStat(List<Mod> mods) {
-        int count = Mod.countEnabled(mods);
-        DynamicAnim.countUp(count, 400L, value -> {
-            heroModsCount = (int) value;
-            refreshHero();
-        });
+        // The Caramel launch screen has no active-mod stat (the pack's hero carries no stat strip),
+        // so this only keeps the count for anything that reads it later.
+        heroModsCount = Mod.countEnabled(mods);
+    }
+
+
+
+
+
+
+    /** Called by the hero composition when the real character preview is created. */
+    private void onLaunchPreviewReady(
+            org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView view) {
+        launchPreview = view;
+        bindLaunchPreviewCosmetics();
+        if (launchPreview != null) launchPreview.startPreview();
     }
 
     /**
-     * Builds the Launch-tab hero once and hosts it in its ComposeView.
-     *
-     * <p>The hero is a Compose screen now, but it is still the real character preview: the host binds
-     * the equipped cape/hat/pet from the CosmeticStore (which the composable cannot read) and starts
-     * the preview, then keeps the [LaunchHeroState] in step so a recomposition shows the new values.
+     * Applies the player's equipped cosmetics to the hero preview, using the same {@code
+     * CosmeticStore} the Cosmetics panel writes, so the hero shows exactly what the game will render
+     * (or the Optifine default cape when Optifine Mode is on).
      */
-    private void setupLaunchHero() {
-        setupLaunchPreviewStage();
-        View host = findViewById(R.id.launch_hero_compose);
-        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
-        heroCompose = (androidx.compose.ui.platform.ComposeView) host;
-        heroState = org.chimeramc.client.ui.compose.launch.LaunchHeroHost.state(buildHeroState());
-        heroCompose.setViewCompositionStrategy(
-                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
-        org.chimeramc.client.ui.compose.launch.LaunchHeroHost.setContent(
-                heroCompose,
-                heroState,
-                this::openProfileSheet,
-                this::launchGame,
-                view -> {
-                    launchPreview = view;
-                    bindLaunchPreviewCosmetics();
-                    if (launchPreview != null) launchPreview.startPreview();
-                });
-    }
-
-    /**
-     * Mounts the preview stage and its background picker.
-     *
-     * <p>The stage shows the character centred on the saved background; a long-press reveals the
-     * picker, which shows each background and stores the choice by its stable id. The character view
-     * is still the real CapePreviewView, handed back through onPreviewReady so the activity binds
-     * the equipped cosmetics.
-     */
-    private void setupLaunchPreviewStage() {
-        View stageHost = binding.launchPreviewStage;
-        if (!(stageHost instanceof androidx.compose.ui.platform.ComposeView)) return;
-        String saved = org.chimeramc.client.settings.FeatureSettings.getInstance()
-                .getLaunchBackgroundId();
-        backgroundState = org.chimeramc.client.ui.compose.launch.LaunchPreviewHost
-                .state(org.chimeramc.client.ui.compose.launch.PreviewBackground.resolve(saved).id);
-        androidx.compose.ui.platform.ComposeView stage =
-                (androidx.compose.ui.platform.ComposeView) stageHost;
-        stage.setViewCompositionStrategy(
-                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
-        org.chimeramc.client.ui.compose.launch.LaunchPreviewHost.setStageContent(
-                stage,
-                backgroundState,
-                getString(R.string.cosmetics_preview_description),
-                this::toggleBackgroundPicker,
-                view -> {
-                    launchPreview = view;
-                    bindLaunchPreviewCosmetics();
-                    if (launchPreview != null) launchPreview.startPreview();
-                });
-
-        View pickerHost = binding.launchBackgroundPicker;
-        if (pickerHost instanceof androidx.compose.ui.platform.ComposeView) {
-            backgroundPickerCompose = (androidx.compose.ui.platform.ComposeView) pickerHost;
-            backgroundPickerCompose.setViewCompositionStrategy(
-                    androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
-            org.chimeramc.client.ui.compose.launch.LaunchPreviewHost.setPickerContent(
-                    backgroundPickerCompose,
-                    backgroundState,
-                    id -> org.chimeramc.client.settings.FeatureSettings.getInstance()
-                            .setLaunchBackgroundId(id));
+    private void bindLaunchPreviewCosmetics() {
+        if (launchPreview == null) return;
+        try {
+            org.chimeramc.client.core.cosmetics.CosmeticStore store =
+                    new org.chimeramc.client.core.cosmetics.CosmeticStore(this);
+            launchPreview.setCape(store.getEquippedCapeForDisplay());
+            launchPreview.setAccessory(store.getEquippedAccessory());
+            launchPreview.setPet(store.getEquippedPet());
+            launchPreview.refreshSkin();
+        } catch (Throwable ignored) {
+            AppLog.warnOnce("CaramelClient", "MainActivity:preview",
+                    "Ignored a failure binding the hero preview cosmetics", ignored);
         }
-    }
-
-    /** Shows or hides the background picker; the long-press on the stage calls this. */
-    private void toggleBackgroundPicker() {
-        View picker = binding.launchBackgroundPicker;
-        if (picker == null) return;
-        boolean show = picker.getVisibility() != View.VISIBLE;
-        picker.setVisibility(show ? View.VISIBLE : View.GONE);
-        if (show) {
-            picker.setAlpha(0f);
-            picker.animate().alpha(1f).setDuration(180L).start();
-        }
-    }
-
-    /** Rebuilds the hero state from the live fields and recomposes. */
-    private void refreshHero() {
-        if (heroState == null) return;
-        heroState.setValue(buildHeroState());
-    }
-
-    private org.chimeramc.client.ui.compose.launch.LaunchHeroState buildHeroState() {
-        return new org.chimeramc.client.ui.compose.launch.LaunchHeroState(
-                getString(R.string.last_played_title),
-                getString(R.string.last_played_tap),
-                heroName.isEmpty() ? getString(R.string.not_found_version) : heroName,
-                heroVersion,
-                heroAbi,
-                heroInstancesCount,
-                heroModsCount,
-                heroPlaytime,
-                getString(R.string.cosmetics_preview_description));
     }
 
     private void setupNavBar() {
@@ -2928,10 +2055,157 @@ import okhttp3.OkHttpClient;
         findViewById(R.id.nav_tab_launch).setOnClickListener(v -> {});
     }
 
+    /**
+     * Mounts the Caramel launch screen — the whole Launch tab.
+     *
+     * <p>One ComposeView renders the entire page (the pack's title bar, sidebar and hero). The
+     * activity keeps the state and the actions; everything Compose-shaped stays in Kotlin, behind
+     * {@link org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost}.
+     */
+    private void setupCaramelLaunchScreen() {
+        View host = findViewById(R.id.launch_content);
+        if (!(host instanceof androidx.compose.ui.platform.ComposeView)) return;
+        launchCompose = (androidx.compose.ui.platform.ComposeView) host;
+        launchState = org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.state(
+                buildLaunchState());
+        toggleState = org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.toggleState(
+                buildQuickToggles());
+        worldsCount = org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.countState(0);
+        packsCount = org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.countState(0);
+        behaviorsCount = org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.countState(0);
+        launchCompose.setViewCompositionStrategy(
+                androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
+        org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.setContent(
+                launchCompose, launchState, toggleState, worldsCount, packsCount, behaviorsCount,
+                this::onLaunchPreviewReady, launchActions);
+        setLaunchControlEnabled(false);
+    }
+
+    /** Rebuilds the launch screen's state from the live fields and recomposes. */
+    private void refreshLaunchState() {
+        if (launchState == null) return;
+        launchState.setValue(buildLaunchState());
+    }
+
+    private org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState buildLaunchState() {
+        java.util.List<org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState.Version>
+                versions = new java.util.ArrayList<>();
+        if (versionManager != null) {
+            java.util.List<GameVersion> installed = versionManager.getInstalledVersions();
+            if (installed != null) {
+                for (GameVersion v : installed) {
+                    versions.add(versionRow(v));
+                }
+            }
+            java.util.List<GameVersion> custom = versionManager.getCustomVersions();
+            if (custom != null) {
+                for (GameVersion v : custom) {
+                    versions.add(versionRow(v));
+                }
+            }
+        }
+        MsftAccountStore.MsftAccount active = getActiveAccount();
+        android.graphics.Bitmap avatar = null;
+        if (active != null) {
+            String url = org.chimeramc.client.util.AccountTextUtils.sanitizeUrl(active.xboxAvatarUrl);
+            if (url != null) avatar = org.chimeramc.client.util.AccountTextUtils.getCachedAvatar(url);
+        }
+        return new org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState(
+                heroName,
+                heroBuildLine,
+                heroVersionId,
+                versions,
+                launchEnabled && !launchInProgress,
+                launchInProgress,
+                active != null
+                        ? org.chimeramc.client.util.AccountTextUtils.displayNameOrNotSigned(this, active)
+                        : "",
+                avatar,
+                org.chimeramc.client.core.minecraft.MinecraftActivityState.isRunning(this) ? 1 : 0,
+                org.chimeramc.client.ui.compose.launch.PreviewBackground
+                        .resolve(org.chimeramc.client.settings.FeatureSettings.getInstance()
+                                .getLaunchBackgroundId())
+                        .drawableRes);
+    }
+
+    /** One version row: the id shown and whether it is a beta build. */
+    private static org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState.Version versionRow(
+            GameVersion v) {
+        String id = !TextUtils.isEmpty(v.versionCode) ? v.versionCode
+                : !TextUtils.isEmpty(v.directoryName) ? v.directoryName : "";
+        boolean beta = id.toLowerCase(java.util.Locale.ROOT).contains("beta");
+        return new org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchState.Version(id, beta);
+    }
+
+    /** The launch screen's callbacks; every one is a real launcher action. */
+    private final org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.Actions launchActions =
+            new org.chimeramc.client.ui.compose.caramel.launch.CaramelLaunchHost.Actions() {
+        @Override public void launch() { launchGame(); }
+        @Override public void selectVersion(String id) { selectVersionById(id); }
+        @Override public void openAccount() { showAccountSwitchPopup(findViewById(R.id.launch_root)); }
+        @Override public void openMods() { openModsFullscreen(); }
+        @Override public void openCosmetics() { openProfileSheet(); }
+        @Override public void openSettings() {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        }
+        @Override public void openContent() { openContentManagement(); }
+        @Override public void openAccounts() {
+            startActivity(new Intent(MainActivity.this, AccountsActivity.class));
+        }
+        @Override public void openCurseForge() {
+            startActivity(new Intent(MainActivity.this, CurseForgeActivity.class));
+        }
+        @Override public void openModHub() {
+            startActivity(new Intent(MainActivity.this, ModHubActivity.class));
+        }
+        @Override public void openQuickLaunch() {
+            startActivity(new Intent(MainActivity.this, QuickLaunchActivity.class));
+        }
+        @Override public void cycleBackground() {
+            org.chimeramc.client.settings.FeatureSettings settings =
+                    org.chimeramc.client.settings.FeatureSettings.getInstance();
+            settings.setLaunchBackgroundId(org.chimeramc.client.ui.compose.launch.PreviewBackground
+                    .next(settings.getLaunchBackgroundId()));
+            refreshLaunchState();
+        }
+        @Override public void toggle(String id, boolean on) {
+            // The quick toggles are shortcuts, not switches: a tap opens the feature. The card's
+            // toggle reflects the feature's live state, so it is refreshed, not flipped here.
+            switch (id) {
+                case "mods": openModsFullscreen(); break;
+                case "voice":
+                    startActivity(new Intent(MainActivity.this,
+                            org.chimeramc.client.ui.activities.VoiceChatActivity.class));
+                    break;
+                case "replay":
+                    LibraryActivity.open(MainActivity.this, LibraryActivity.TAB_REPLAY);
+                    break;
+                default: break;
+            }
+        }
+    };
+
+    /** Selects the installed version whose id matches, then refreshes the screen. */
+    private void selectVersionById(String id) {
+        if (versionManager == null || TextUtils.isEmpty(id)) return;
+        GameVersion match = null;
+        for (GameVersion v : versionManager.getInstalledVersions()) {
+            if (id.equals(v.versionCode) || id.equals(v.directoryName)) { match = v; break; }
+        }
+        if (match == null) {
+            for (GameVersion v : versionManager.getCustomVersions()) {
+                if (id.equals(v.versionCode) || id.equals(v.directoryName)) { match = v; break; }
+            }
+        }
+        if (match == null) return;
+        versionManager.selectVersion(match);
+        setTextMinecraftVersion();
+    }
+
     @Override
     protected void onDestroy() {
-        // The Compose hero releases its own preview when the composition leaves, so there is no
-        // manual release here: doing both would release the same view twice.
+        // The composition releases the preview on the way out; clearing the reference stops the
+        // resume path from touching a released view.
         launchPreview = null;
         unbindStorageMigrationService();
         dismissStorageMigrationDialog(null);
@@ -2952,10 +2226,6 @@ import okhttp3.OkHttpClient;
         accountExecutor.shutdownNow();
         // Removes a pending tip rotation, so it cannot fire into the destroyed Activity.
         tipScope.close();
-        if (announcementClient != null) {
-            announcementClient.shutdown();
-            announcementClient = null;
-        }
     }
 
     /**

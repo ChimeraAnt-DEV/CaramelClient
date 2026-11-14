@@ -24,10 +24,22 @@ carried by two live sources:
 | `components/Glass.kt`               | `theme/GlowGlass.kt` (`glowGlass`/`GlassSurface`) |
 | `imgui/src/CaramelTheme` + `CaramelWidgets` | `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (the in-game ImGui menu) |
 
-The launcher's Compose screens (`ui/compose/launch`, `account`, `connect`, `replay`) consume
-`GlowTheme`/`GlowPalette`/`GlowGlass` directly; there is no second component layer, and a duplicate
-`ui/compose/caramel/Caramel*` port that briefly existed was removed as dead code (nothing imported
-it — the live theme package already carried the same values).
+The launcher has two Compose layers, both drawing from the same pack values:
+
+* **The shared theme** — `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt`) —
+  is consumed by the smaller embedded screens (`account`, `connect`, `replay`). It carries the pack
+  values through `UiTokens` and the personalization accent.
+* **The pack component port** — `ui/compose/caramel/` (`CaramelTheme.kt`, `CaramelControls.kt`,
+  `CaramelLabels.kt`, `CaramelGlass.kt`) — is consumed by the launch screen
+  (`caramel/launch/CaramelLaunchScreen.kt`). It is the pack's own `theme/Theme.kt` and
+  `components/*` value for value, including the accents the shared scale never carried (the caramel
+  amber nav indicator, the green Play face). A first attempt at this layer was removed as dead code
+  when nothing imported it; it is live now because the launch screen is the pack's screen.
+
+`CaramelPaletteParityTest` pins the two layers together: the overlap (navy, blue, text, the three
+status colours) must equal `UiTokens`/`GlowPalette`, and the in-game ImGui twin
+(`MenuTheme.hpp`) must equal the Compose port token for token, so the launcher and the native menu
+cannot drift apart.
 
 Where the port diverged from the pack it improved on it:
 
@@ -122,9 +134,12 @@ port overwrite the launcher icon with the pack's preview.
 ## What to do with it
 
 1. **Keep it as the reference for tokens and shape**, which is what it has already been used for.
-   The port is `ui/compose/theme/GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt` (Compose) and
-   `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (ImGui); do not re-port the pack's
-   Desktop component files, and do not add a second `Caramel*` component layer beside them.
+   The port is `ui/compose/theme/GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt` (the shared
+   theme), `ui/compose/caramel/Caramel*` (the pack component port the launch screen uses) and
+   `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (ImGui). **Do not add a third token
+   source**: a new pack colour goes into `CaramelColors` (Compose port) and `MenuTheme.hpp` (ImGui)
+   together, and the overlap with `UiTokens` stays equal — `CaramelPaletteParityTest` fails the build
+   otherwise. A pack *component* belongs in `ui/compose/caramel/`, not beside it.
 2. **Port screens one at a time**, each behind the JVM test suite and the CI APK job, replacing the
    desktop window layer with CaramelClient's activity + `GlowTheme`, and routing strings through
    resources.

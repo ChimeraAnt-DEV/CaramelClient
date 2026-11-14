@@ -28,6 +28,12 @@ import org.chimeramc.client.preloader.PreloaderInput;
  */
 public class DebugMenuOverlay extends TextOverlay {
 
+    /**
+     * The launcher's own {@code Choreographer} cadence. Used only for the host-side avg/low and the
+     * "launcher refresh" note; the headline FPS line takes the game's own render-tick rate through
+     * {@link org.chimeramc.client.core.backend.GameBridge} so a debug screenshot never shows the
+     * launcher's vsync tick as the game's frame rate.
+     */
     private final FrameRateMeter frameMeter = new FrameRateMeter();
 
     public DebugMenuOverlay(Activity activity) {
@@ -65,8 +71,19 @@ public class DebugMenuOverlay extends TextOverlay {
         s.clientVersion = BuildConfig.VERSION_NAME;
         s.gameVersion = selectedGameVersion();
         s.abi = primaryAbi();
-        s.fps = frameMeter.currentFps();
-        s.onePercentLowFps = frameMeter.currentOnePercentLowFps();
+        // The headline rate is the game's own render-tick rate when the backend can produce one; the
+        // launcher's Choreographer cadence is a different measurement and is only shown, named, when
+        // the game's rate is unavailable.
+        int gameFps = org.chimeramc.client.core.backend.GameBridge.readFps();
+        boolean exact = org.chimeramc.client.core.backend.GameBridge.isFrameRateExact();
+        if (gameFps > 0) {
+            s.fps = gameFps;
+            s.fpsIsApproximate = !exact;
+        } else {
+            s.fps = frameMeter.currentFps();
+            s.fpsIsLauncherRefresh = s.fps > 0;
+        }
+        s.onePercentLowFps = s.fpsIsLauncherRefresh ? frameMeter.currentOnePercentLowFps() : 0;
         s.position = PreloaderInput.readLocalPlayerPosition();
         s.rotation = PreloaderInput.readLocalPlayerRotation();
         s.health = PreloaderInput.readLocalPlayerHealth();

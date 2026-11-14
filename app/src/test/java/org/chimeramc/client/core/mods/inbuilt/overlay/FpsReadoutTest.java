@@ -35,13 +35,32 @@ public class FpsReadoutTest {
     }
 
     @Test
-    public void theLauncherCadenceIsMarkedAsTheLauncherRefresh() {
+    public void theLauncherCadenceIsNeverShownUnderTheFpsUnit() {
+        // The launcher's own Choreographer cadence is not the game's frame rate. It is exposed
+        // separately so a surface can name it, but the readout's text (the value that sits under an
+        // "FPS" unit) must read as "no reading" rather than as a bare "~60 FPS", which is the
+        // fabricated-frame bug the marker alone did not fix.
         FpsReadout readout = FpsReadout.of(0, true, 60);
         assertEquals(60, readout.value);
         assertEquals(FpsReadout.Source.HOST_REFRESH, readout.source);
         assertTrue(readout.approximate());
         assertTrue(readout.isHostRefresh());
-        assertEquals("~60 FPS", readout.text());
+        assertEquals("the launcher cadence has no game rate behind it", 0, readout.gameValue());
+        assertEquals(60, readout.launcherRefreshHz());
+        assertEquals(ModStatsFormatter.NO_READING, readout.text());
+    }
+
+    @Test
+    public void onlyTheGamesOwnRateIsExposedAsTheGameValue() {
+        assertEquals(72, FpsReadout.of(72, true, 0).gameValue());
+        assertEquals(58, FpsReadout.of(58, false, 60).gameValue());
+        assertEquals("an inferred game rate is still the game's own", 58,
+                FpsReadout.of(58, false, 60).gameValue());
+        // The launcher cadence never leaks into the game value, even when it is the headline.
+        assertEquals(0, FpsReadout.of(0, true, 60).gameValue());
+        assertEquals(0, FpsReadout.of(-1, true, 48).gameValue());
+        // And the launcher refresh is only reported when it is the headline.
+        assertEquals(0, FpsReadout.of(72, true, 60).launcherRefreshHz());
     }
 
     @Test

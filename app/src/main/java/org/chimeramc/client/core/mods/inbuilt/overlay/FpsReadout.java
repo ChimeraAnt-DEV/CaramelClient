@@ -68,6 +68,29 @@ public final class FpsReadout {
     }
 
     /**
+     * The value to show next to an "FPS" unit, or 0 when there is none.
+     *
+     * <p>Only the game's own render rate may sit beside the unit: a headline of "60 FPS" that is
+     * actually the launcher's vsync cadence is the fabricated-frame bug, and the "~" marker does not
+     * repair it. The launcher's cadence is exposed separately by {@link #launcherRefreshHz()} so a
+     * surface can name it as what it is.
+     */
+    public int gameValue() {
+        return (source == Source.GAME || source == Source.GAME_APPROXIMATE) ? value : 0;
+    }
+
+    /**
+     * The launcher's own refresh cadence, in Hz, or 0 when the headline is already the game's rate.
+     *
+     * <p>This is a liveness reading of the launcher main thread's vsync tick — it keeps counting
+     * while the game is paused or loading — so it is a different measurement from the game's frame
+     * rate and must never be rendered under an "FPS" unit.
+     */
+    public int launcherRefreshHz() {
+        return source == Source.HOST_REFRESH ? value : 0;
+    }
+
+    /**
      * Chooses the reading, treating a positive game rate as exact.
      *
      * <p>Kept for callers that already know the tick is the exact present boundary (and for tests).
@@ -95,8 +118,16 @@ public final class FpsReadout {
         return new FpsReadout(0, Source.NONE);
     }
 
-    /** The value as the readout text, marked with {@code ~} when it is not the game's exact rate. */
+    /**
+     * The value as the readout text, marked with {@code ~} when it is not the game's exact rate.
+     *
+     * <p>The launcher's own refresh cadence has no game rate behind it, so it reads as the
+     * no-reading dash here rather than as a number under "FPS". The cadence itself is available from
+     * {@link #launcherRefreshHz()} for a surface that wants to name it.
+     */
     public String text() {
-        return ModStatsFormatter.fps(value, approximate());
+        int game = gameValue();
+        if (game <= 0) return ModStatsFormatter.NO_READING;
+        return ModStatsFormatter.fps(game, approximate());
     }
 }
