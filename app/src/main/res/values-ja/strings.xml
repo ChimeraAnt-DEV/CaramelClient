@@ -1284,4 +1284,13 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="changelog_upcoming_soon">近日公開!</string>
     <string name="changelog_upcoming_soon_body">Wiki は現在作成中です。公開され次第、ここで開きます。</string>
     <string name="setup_finish_changelog_loading">新着情報を読み込んでいます…</string>
+    <string name="inbuilt_mod_frame_generation">フレーム生成</string>
+    <string name="inbuilt_mod_frame_generation_desc">前のフレームを現在のフレームに合成し、動きを滑らかに見せます。</string>
+    <string name="frame_generation_scope_note">フレーム生成はゲームの描画を速くするものではなく、追加のフレームを提示するものでもありません。最後に提示されたフレームを保持し、エンジンの提示境界で新しいフレームに合成するため、画像はゲームがすでに描画した2つのフレームの間になり、同じ描画レートで動きが滑らかに見えます。提示/フレーム境界フックが必要で、そのフックがビルドにインストールされるまでモジュールは無効です。ゲームが描画していないディテールを捏造することはできず、強い合成は速い動きの周囲にアーティファクトを追加するため、控えめに開始します。</string>
+    <string name="inbuilt_mod_motion_blur_desc">前のフレームを現在のフレームに、視点の速さに応じて重み付けして混ぜます。</string>
+    <string name="motion_blur_scope_note">モーションブラーは提示フレーム効果です。最後に提示したフレームを保持し、エンジンの提示境界で新しいフレームに混ぜるため、速い動きは進行方向にぶれます。設計上画像を柔らかくします。フレームを追加せず、無償にはできないため、混合の予算は制限されています。提示/フレーム境界フックが必要で、そのフックがあなたのビルドにインストールされるまで無効です。</string>
+    <string name="mod_config_category_effect">効果</string>
+    <string name="mod_unavailable_reason_hook">エンジンの提示フレームフックが必要ですが、このビルドにはインストールされていません。フックが利用可能になるまで無効です。</string>
+    <string name="launch_button_label">ゲームを起動</string>
+    <string name="launch_menu_open">起動オプションを開く</string>
 </resources>

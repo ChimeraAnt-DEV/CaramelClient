@@ -17,7 +17,18 @@ public final class ModStatsFormatter {
 
     /** FPS text, or the em dash when the native counter has not produced a value yet. */
     public static String fps(int fps) {
-        return fps <= 0 ? NO_READING : fps + " FPS";
+        return fps(fps, false);
+    }
+
+    /**
+     * FPS text, marked with {@code ~} when the value is not the game's exact rate.
+     *
+     * <p>A rate derived from an inferred frame boundary, or the launcher's own refresh cadence, is
+     * not the game's frame rate; showing it bare would pass one measurement off as another.
+     */
+    public static String fps(int fps, boolean approximate) {
+        if (fps <= 0) return NO_READING;
+        return approximate ? "~" + fps + " FPS" : fps + " FPS";
     }
 
     /** Ping text. There is no latency source wired yet, so an unknown reads as the em dash. */

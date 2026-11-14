@@ -26,4 +26,14 @@ public final class FpsMod {
     public static int nativeGetFps() {
         return GameBridge.readFps();
     }
+
+    /**
+     * Whether {@link #nativeGetFps()} is the game's exact frame rate.
+     *
+     * <p>True only while the engine's present boundary is live and counting; an inferred tick reads
+     * as false so the overlay marks the number instead of passing it off as the game's exact rate.
+     */
+    public static boolean nativeIsFrameRateExact() {
+        return GameBridge.isFrameRateExact();
+    }
 }

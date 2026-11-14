@@ -33,6 +33,19 @@ public final class DebugScreenText {
         public String abi = "unknown";
         /** Frames per second over the last second, or 0 before two frames are known. */
         public int fps;
+        /**
+         * True when {@link #fps} is the launcher's own refresh cadence rather than the game's
+         * render-tick rate. It is the launcher process's {@code Choreographer} tick, which is not
+         * the game's frame rate and not the game's present rate either, so it is shown with a
+         * {@code ~} and named, never passed off as the game's frame rate.
+         */
+        public boolean fpsIsLauncherRefresh;
+        /**
+         * True when {@link #fps} is the game's own render-tick rate but the tick was inferred from
+         * render-entry timestamps rather than the exact present boundary (the present hook is absent
+         * on this build). The rate is close but not exact, so it is marked and named.
+         */
+        public boolean fpsIsApproximate;
         /** The 1% low frame rate (the worst frame in the window), or 0 when unknown. */
         public int onePercentLowFps;
         /** The player's world position, or null when the feed has no reading. */
@@ -94,9 +107,19 @@ public final class DebugScreenText {
         return b.toString();
     }
 
-    /** "FPS: 60 (1% low 41)". The low is omitted when the window has no reading for it. */
+    /**
+     * "FPS: 60 (1% low 41)". The low is omitted when the window has no reading for it.
+     *
+     * <p>When the reading is the launcher's own refresh cadence (the game's own render-tick counter
+     * is unavailable), the line is marked with {@code ~} and named as the launcher refresh rate, so a
+     * debug screenshot never shows the launcher's own vsync cadence as if it were the game's frame
+     * rate. When the game's own tick was inferred rather than the exact present boundary, the rate is
+     * marked and named as approximate for the same reason.
+     */
     private static String frameRateLine(Snapshot v) {
         if (v.fps <= 0) return "FPS: unavailable";
+        if (v.fpsIsLauncherRefresh) return "FPS: ~" + v.fps + " (launcher refresh, not the game's)";
+        if (v.fpsIsApproximate) return "FPS: ~" + v.fps + " (approximate; present hook absent)";
         if (v.onePercentLowFps > 0 && v.onePercentLowFps != v.fps) {
             return "FPS: " + v.fps + " (1% low " + v.onePercentLowFps + ")";
         }

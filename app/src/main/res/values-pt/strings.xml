@@ -1287,4 +1287,13 @@ A migração deve ser concluída antes que o CaramelClient continue.</string>
     <string name="changelog_upcoming_soon">Em breve!</string>
     <string name="changelog_upcoming_soon_body">A wiki está sendo escrita. Ela abrirá aqui assim que estiver no ar.</string>
     <string name="setup_finish_changelog_loading">Carregando novidades…</string>
+    <string name="inbuilt_mod_frame_generation">Geração de Quadros</string>
+    <string name="inbuilt_mod_frame_generation_desc">Mistura o quadro anterior com o atual para que o movimento pareça mais suave.</string>
+    <string name="frame_generation_scope_note">A geração de quadros não faz o jogo renderizar mais rápido e não apresenta um quadro extra. Ela mantém o último quadro apresentado e o mistura com o novo no limite de apresentação do motor, então a imagem fica entre os dois quadros que o jogo já desenhou e o movimento parece mais suave na mesma taxa de renderização. Precisa do hook de apresentação/limite de quadro; o módulo fica desativado até esse hook ser instalado na sua build. Não pode inventar detalhes que o jogo não desenhou, e uma mistura forte adiciona artefatos em movimento rápido, por isso começa de forma conservadora.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Mistura o quadro anterior no atual, ponderado pela velocidade da visão.</string>
+    <string name="motion_blur_scope_note">O desfoque de movimento é um efeito de quadro apresentado: mantém o último quadro apresentado e o mistura no novo no limite de apresentação da engine, então o movimento rápido borra na direção do deslocamento. Suaviza a imagem por design; não adiciona quadros e não pode ser gratuito, por isso o orçamento de mistura é limitado. Precisa do hook de apresentação/limite de quadro e fica desativado até esse hook ser instalado na sua build.</string>
+    <string name="mod_config_category_effect">Efeito</string>
+    <string name="mod_unavailable_reason_hook">Precisa do hook de quadro apresentado da engine, que não está instalado nesta build. Fica desativado até o hook estar disponível.</string>
+    <string name="launch_button_label">Iniciar Jogo</string>
+    <string name="launch_menu_open">Abrir opções de inicialização</string>
 </resources>

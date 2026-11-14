@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.chimeramc.client.R;
+import org.chimeramc.client.databinding.OverlayHudReadoutBinding;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
 import org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod;
@@ -33,8 +34,10 @@ public class FpsDisplayOverlay {
     private final Handler handler = MainThread.handler();
 
     private View overlayView;
+    private OverlayHudReadoutBinding binding;
     private TextView statsText;
     private TextView hudStats;
+    private TextView hudApprox;
     private View hudAccent;
     private FrameTimeGraphView graphView;
     private boolean statsEnabled;
@@ -108,11 +111,13 @@ public class FpsDisplayOverlay {
         InbuiltModManager manager = InbuiltModManager.getInstance(activity);
         statsEnabled = manager.isFpsStatsEnabled(ModIds.FPS_DISPLAY);
         boolean graph = manager.isFrameTimeGraphEnabled(ModIds.FPS_DISPLAY);
-        overlayView = LayoutInflater.from(activity).inflate(R.layout.overlay_hud_readout, null);
-        statsText = overlayView.findViewById(R.id.stats_text);
-        hudStats = overlayView.findViewById(R.id.hud_stats);
-        hudAccent = overlayView.findViewById(R.id.hud_accent);
-        graphView = overlayView.findViewById(R.id.frame_time_graph);
+        binding = OverlayHudReadoutBinding.inflate(LayoutInflater.from(activity));
+        overlayView = binding.getRoot();
+        statsText = binding.statsText;
+        hudStats = binding.hudStats;
+        hudAccent = binding.hudAccent;
+        hudApprox = binding.hudApprox;
+        graphView = binding.frameTimeGraph;
         if (graphView != null) {
             graphView.setVisibility(graph ? View.VISIBLE : View.GONE);
             if (graph) {
@@ -208,19 +213,23 @@ public class FpsDisplayOverlay {
 
     private void updateDisplay() {
         if (statsText == null) return;
-        int fps = nativeFps();
-        if (fps <= 0 && fallbackMeter.isRunning() && fallbackFps > 0) {
-            // The native hook did not resolve on this build; show the host's own present rate
-            // rather than a permanent "--", which read as a broken module.
-            fps = fallbackFps;
-        }
+        // Three readings, and they are not the same number: the game's exact rate (present boundary
+        // live), the game's inferred rate (present boundary absent), and the launcher's own refresh
+        // cadence. FpsReadout owns which one wins and whether it must be marked; the overlay only
+        // renders the choice. A bare number therefore always means the game's exact frame rate.
+        int hostFps = fallbackMeter.isRunning() ? fallbackFps : 0;
+        FpsReadout readout = FpsReadout.of(nativeFps(), nativeExact(), hostFps);
         // The timer runs four times a second but the readout changes far less often, so the
-        // text is built and set only when the number actually differs.
-        if (refreshGate.shouldRefresh(Integer.toString(fps), SystemClock.uptimeMillis())) {
-            HudThreshold.Level level = HudThreshold.levelForFps(fps);
-            statsText.setText(fps > 0
-                    ? Integer.toString(fps)
+        // text is built and set only when the number (or its exactness) actually differs.
+        if (refreshGate.shouldRefresh(readout.text(), SystemClock.uptimeMillis())) {
+            HudThreshold.Level level = HudThreshold.levelForFps(readout.hasReading() ? readout.value : 0);
+            statsText.setText(readout.hasReading()
+                    ? Integer.toString(readout.value)
                     : activity.getString(R.string.mod_overlay_fps_no_reading));
+            // The "~" marker is the one cue that the number is not the game's exact frame rate.
+            if (hudApprox != null) {
+                hudApprox.setVisibility(readout.approximate() ? View.VISIBLE : View.GONE);
+            }
             // The level is carried by the accent bar's colour and by the shape cue on the stats
             // line, never by colouring the number: a coloured number is hard to read on a bright
             // scene and says nothing at all to a colour-blind player.
@@ -228,7 +237,11 @@ public class FpsDisplayOverlay {
                 hudAccent.setBackgroundColor(HudThreshold.colourFor(level));
             }
             if (hudStats != null) {
-                String stats = statsEnabled ? fpsStatsText() : null;
+                // The avg/low come from the same Choreographer history the graph draws, which is the
+                // launcher's own cadence — not the game's render path. They are shown only when the
+                // headline number is that same host cadence, so the two lines can never disagree
+                // about what was measured.
+                String stats = statsEnabled && readout.isHostRefresh() ? fpsStatsText() : null;
                 String cue = HudThreshold.cue(level);
                 String line = stats == null ? "" : stats;
                 if (!cue.isEmpty() && !line.isEmpty()) line = cue + " " + line;
@@ -268,6 +281,18 @@ public class FpsDisplayOverlay {
      */
     private void startFallbackMeter() {
         fallbackMeter.start(fps -> fallbackFps = fps);
+    }
+
+    /**
+     * Whether the native reading is the game's exact rate. Only the live present boundary is exact;
+     * an inferred tick reads as approximate so the number is marked rather than passed off as exact.
+     */
+    private boolean nativeExact() {
+        try {
+            return initialized && FpsMod.nativeIsFrameRateExact();
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     /** The native FPS, or 0 when the hook is not available/initialised. */
@@ -461,8 +486,10 @@ public class FpsDisplayOverlay {
             AppLog.warnOnce("CaramelClient", "FpsDisplayOverlay:442", "Ignored a failure at FpsDisplayOverlay:442", ignored);
         }
         overlayView = null;
+        binding = null;
         statsText = null;
         hudStats = null;
+        hudApprox = null;
         hudAccent = null;
         graphView = null;
         statsEnabled = false;

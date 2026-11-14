@@ -21,16 +21,17 @@ Column meanings:
 | `org.chimeramc.client.core.mods.inbuilt.MoreButtonsSvgBridge` | `src/pl/runtime/ExternalModBridgeJni.cpp` | 1 |
 | `org.chimeramc.client.preloader.BerryApi` | `src/pl/runtime/BerryApiJni.cpp` | 9 |
 | `org.chimeramc.client.preloader.PreloaderInput` | `src/pl/SweetLoader.cpp` | 2 |
+| `org.chimeramc.client.preloader.PreloaderMenu` | `src/pl/menu/MenuJni.cpp` | 9 |
 | `org.chimeramc.client.universe.UniverseLoader` | `rust/universe-jni/src/lib.rs` | 8 |
 | `org.chimeramc.client.singularity.SingularityEngine` | `rust/singularity-jni/src/lib.rs` | 6 |
 | `org.chimeramc.client.core.nethernet.NativeNetherNet` | `rust/nethernet-jni/src/lib.rs` | 14 |
 |  | `src/pl/cosmetics/animation/AnimationJni.cpp` | 1 |
 |  | `src/pl/cosmetics/network/CosmeticSyncJni.cpp` | 3 |
 |  | `src/pl/runtime/GameCosmeticsJni.cpp` | 48 |
-|  | `src/pl/runtime/InputJni.cpp` | 19 |
+|  | `src/pl/runtime/InputJni.cpp` | 22 |
 |  | `src/pl/runtime/OptifineJni.cpp` | 8 |
 
-Total: **147 exports** across **9 owner classes**.
+Total: **159 exports** across **10 owner classes**.
 
 The `rust/…-jni` rows are the native cdylibs: the `.universe` loader (`libcaramel_universe.so`), the
 `.singularity` engine (`libcaramel_singularity.so`) and the NetherNet transport
@@ -57,6 +58,11 @@ JNI call made from a detour therefore has to be safe from that thread:
 - **`PreloaderInput` configuration** (`nativeConfigureSignatureRules`, `nativeSetSignatureCacheDir`)
   runs once during launch preparation on the launcher thread. The cache directory is private app
   storage; an empty path disables the cache.
+- **`PreloaderMenu` menu entry points** (`nativeSetCatalogue`, `nativePushTouch`, `nativePushBack`,
+  `nativeRegisterFont`) are called from the launcher's own thread: they publish the module catalogue,
+  queue an input event and register a font face for the native ImGui menu. `nativeDrainEvents` and
+  the `nativeIs*` readers return a copy of an atomically-published snapshot, so the launcher can poll
+  them from the UI thread. The menu itself draws from the present hook, never from these calls.
 - **`ModManager` lifecycle calls** (`nativeLoadMod`, `nativeEnableLoadedMods`, …) run during launch
   preparation on the launcher thread; they are not safe to call from a game callback.
 - **`ExternalModBridge`** is called by the launcher and by mods; treat it as

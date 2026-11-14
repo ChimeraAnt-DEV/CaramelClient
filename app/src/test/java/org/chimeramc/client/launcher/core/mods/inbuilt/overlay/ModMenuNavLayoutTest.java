@@ -14,36 +14,40 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The mod menu's bottom bar is a valid horizontal scroller.
+ * The mod menu's tab bar is drawn natively, from one ordered list, and the old Android layout is
+ * gone for good.
  *
- * <p>The bar was moved from a vertical {@code ScrollView} to a {@code HorizontalScrollView}. The
- * original kept {@code fillViewport="true"} with {@code layout_height="match_parent"}, which is
- * meaningful for a vertical scroller. On a horizontal one with {@code wrap_content} height the flag
- * asks the scroller to stretch its child to a viewport it has no measured height for, which is a
- * measure-time fault; and a scroller whose content cannot scroll is dead weight.
- *
- * <p>A build machine cannot open the menu, so the rule is asserted against the real layout: the
- * horizontal bar must not carry a vertical-only flag, and its height must be a real value.
+ * <p>The menu used to be an Android {@code overlay_mod_menu.xml} whose bottom bar was a
+ * {@code HorizontalScrollView}. It kept {@code fillViewport="true"} with a {@code wrap_content}
+ * height, which asks a horizontal scroller to stretch its child to a viewport it has no measured
+ * height for — a measure-time fault — and the bar could not scroll anyway. The menu is Dear ImGui on
+ * the game's GL context now, so the layout is deleted; this pins that it stays deleted and that the
+ * native header's tab bar keeps one source of truth for its labels and icons.
  */
 public class ModMenuNavLayoutTest {
 
+    private static final String RENDER =
+            "app/src/main/cpp/sweetloader/src/pl/menu/MenuRender.cpp";
+
     @Test
-    public void theHorizontalBarIsNotAskedToFillAVerticalViewport() throws IOException {
-        String xml = read("app/src/main/res/layout/overlay_mod_menu.xml");
-        // The tab host's own element: from its <HorizontalScrollView ...> opening tag to its id line.
-        // The file has a second HorizontalScrollView earlier, so anchor on the id itself.
-        int idAt = xml.indexOf("@+id/mod_menu_tab_host");
-        assertTrue("the bottom bar must exist", idAt > 0);
-        int openAt = xml.lastIndexOf("<HorizontalScrollView", idAt);
-        int closeAt = xml.indexOf(">", idAt);
-        assertTrue("the tab host must be a HorizontalScrollView", openAt > 0 && openAt < idAt);
-        String attrs = xml.substring(openAt, closeAt);
-        assertFalse("a horizontal bar with wrap_content height must not set fillViewport: there is "
-                        + "no measured height for it to fill. attrs: " + attrs,
-                attrs.contains("fillViewport"));
-        assertFalse("the bar must not keep the vertical scroller's match_parent height. attrs: "
-                        + attrs,
-                attrs.contains("layout_height=\"match_parent\""));
+    public void theOldAndroidMenuLayoutIsGone() {
+        assertFalse("the Android menu layout must stay deleted; the menu is native now",
+                Files.exists(root().resolve("app/src/main/res/layout/overlay_mod_menu.xml")));
+        assertFalse("the Android radial menu layout must stay deleted",
+                Files.exists(root().resolve("app/src/main/res/layout/overlay_radial_menu.xml")));
+    }
+
+    @Test
+    public void theNativeTabBarHasOneSourceForItsLabelsAndIcons() throws IOException {
+        String source = read(RENDER);
+        // The header declares the labels and the icons as parallel arrays and passes their shared
+        // count to the tab bar, so a tab cannot be added to one and forgotten in the other.
+        assertTrue("the header must declare the tab labels",
+                source.contains("static const char *labels[] = {"));
+        assertTrue("the header must declare the tab icons",
+                source.contains("static const Icon icons[] = {"));
+        assertTrue("the tab bar must be driven by the label array's count",
+                source.contains("ui::TabBar(\"tabs\", labels, icons,"));
     }
 
     private static String read(String relativePath) throws IOException {

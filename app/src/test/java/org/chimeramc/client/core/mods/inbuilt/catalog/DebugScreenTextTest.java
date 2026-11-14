@@ -89,6 +89,32 @@ public class DebugScreenTextTest {
     }
 
     @Test
+    public void aLauncherRefreshRateIsMarkedAndNamedNotShownAsTheGamesRate() {
+        // The host meter counts the launcher's own Choreographer callbacks, which is a different
+        // measurement from the game's render-tick rate. When it backs the line it must be marked with
+        // ~ and named, so a debug screenshot never passes the launcher's refresh cadence off as the
+        // game's frame rate.
+        DebugScreenText.Snapshot s = full();
+        s.fpsIsLauncherRefresh = true;
+        String text = DebugScreenText.build(s);
+        assertTrue(text, text.contains("FPS: ~60"));
+        assertTrue(text, text.contains("launcher refresh, not the game's"));
+        assertFalse(text, text.contains("1% low"));
+    }
+
+    @Test
+    public void anInferredGameRateIsMarkedApproximateNotShownAsExact() {
+        // Without the present hook the render tick is inferred, so the game's rate is close but not
+        // exact. It must be marked and named, so a debug screenshot does not present an inferred rate
+        // as the game's exact frame rate.
+        DebugScreenText.Snapshot s = full();
+        s.fpsIsApproximate = true;
+        String text = DebugScreenText.build(s);
+        assertTrue(text, text.contains("FPS: ~60"));
+        assertTrue(text, text.contains("approximate"));
+    }
+
+    @Test
     public void aHitchingReadingIsLabelledHitchingNotLocked() {
         DebugScreenText.Snapshot s = full();
         s.frameVsyncLocked = false;

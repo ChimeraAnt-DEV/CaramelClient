@@ -1287,4 +1287,13 @@ La migración debe completarse antes de continuar con CaramelClient.</string>
     <string name="changelog_upcoming_soon">¡Muy pronto!</string>
     <string name="changelog_upcoming_soon_body">La wiki se está escribiendo. Se abrirá aquí en cuanto esté disponible.</string>
     <string name="setup_finish_changelog_loading">Cargando novedades…</string>
+    <string name="inbuilt_mod_frame_generation">Generación de fotogramas</string>
+    <string name="inbuilt_mod_frame_generation_desc">Combina el fotograma anterior con el actual para que el movimiento se vea más fluido.</string>
+    <string name="frame_generation_scope_note">La generación de fotogramas no hace que el juego renderice más rápido y no presenta un fotograma adicional. Conserva el último fotograma presentado y lo combina con el nuevo en el límite de presentación del motor, así que la imagen queda entre los dos fotogramas que el juego ya dibujó y el movimiento se ve más fluido con la misma tasa de renderizado. Necesita el hook de presentación/límite de fotograma; el módulo está desactivado hasta que ese hook se instale en tu compilación. No puede inventar detalles que el juego no dibujó, y una mezcla intensa añade artefactos en movimiento rápido, por lo que empieza de forma conservadora.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Combina el fotograma anterior con el actual, ponderado por la velocidad de la vista.</string>
+    <string name="motion_blur_scope_note">El desenfoque de movimiento es un efecto de fotograma presentado: guarda el último fotograma presentado y lo combina con el nuevo en el límite de presentación del motor, así que el movimiento rápido se difumina en la dirección del desplazamiento. Suaviza la imagen por diseño; no añade fotogramas y no puede ser gratis, por lo que el presupuesto de mezcla está limitado. Necesita el hook de presentación/límite de fotograma y está desactivado hasta que ese hook se instale en tu compilación.</string>
+    <string name="mod_config_category_effect">Efecto</string>
+    <string name="mod_unavailable_reason_hook">Necesita el hook de fotograma presentado del motor, que no está instalado en esta compilación. Está desactivado hasta que el hook esté disponible.</string>
+    <string name="launch_button_label">Iniciar juego</string>
+    <string name="launch_menu_open">Abrir opciones de inicio</string>
 </resources>

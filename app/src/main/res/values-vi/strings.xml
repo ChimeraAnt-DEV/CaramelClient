@@ -1317,4 +1317,13 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="changelog_upcoming_soon">Sắp ra mắt!</string>
     <string name="changelog_upcoming_soon_body">Wiki đang được viết. Nó sẽ mở ở đây ngay khi hoạt động.</string>
     <string name="setup_finish_changelog_loading">Đang tải thông tin mới…</string>
+    <string name="inbuilt_mod_frame_generation">Tạo Khung Hình</string>
+    <string name="inbuilt_mod_frame_generation_desc">Trộn khung hình trước vào khung hình hiện tại để chuyển động trông mượt hơn.</string>
+    <string name="frame_generation_scope_note">Tạo khung hình không làm trò chơi kết xuất nhanh hơn và không trình bày thêm khung hình nào. Nó giữ khung hình được trình bày gần nhất và trộn vào khung hình mới tại ranh giới trình bày của engine, nên hình ảnh nằm giữa hai khung hình mà trò chơi đã vẽ và chuyển động trông mượt hơn ở cùng tốc độ kết xuất. Nó cần hook trình bày/ranh giới khung hình; mô-đun bị tắt cho đến khi hook đó được cài trên bản dựng của bạn. Nó không thể bịa ra chi tiết mà trò chơi không vẽ, và trộn mạnh sẽ thêm hiện tượng lạ khi chuyển động nhanh, nên nó bắt đầu một cách thận trọng.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Trộn khung hình trước vào khung hình hiện tại, có trọng số theo tốc độ góc nhìn.</string>
+    <string name="motion_blur_scope_note">Làm mờ chuyển động là một hiệu ứng khung hình trình bày: nó giữ khung hình trình bày cuối và trộn vào khung hình mới tại ranh giới trình bày của engine, nên chuyển động nhanh bị nhòe theo hướng di chuyển. Nó làm mềm hình ảnh theo thiết kế; nó không thêm khung hình và không thể miễn phí, nên ngân sách trộn bị giới hạn. Nó cần hook trình bày/ranh giới khung hình và bị tắt cho đến khi hook đó được cài trên bản dựng của bạn.</string>
+    <string name="mod_config_category_effect">Hiệu ứng</string>
+    <string name="mod_unavailable_reason_hook">Cần hook khung hình trình bày của engine, thứ chưa được cài trên bản dựng này. Nó bị tắt cho đến khi hook khả dụng.</string>
+    <string name="launch_button_label">Khởi chạy game</string>
+    <string name="launch_menu_open">Mở tùy chọn khởi chạy</string>
 </resources>

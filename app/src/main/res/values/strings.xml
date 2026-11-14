@@ -3,6 +3,11 @@
     <string name="app_name" translatable="false">CaramelClient</string>
     <string name="minecraft" translatable="false">Minecraft</string>
     <string name="launch">Launch</string>
+    <!-- The split launch button (the UI pack's LAUNCH GAME control). The label is the action; the
+         subtitle names the build about to start, so the button says what will happen, not just
+         "go". The chevron opens the launch menu instead of starting a session. -->
+    <string name="launch_button_label">Launch Game</string>
+    <string name="launch_menu_open">Open launch options</string>
     <string name="beta_badge">Beta</string>
     <string name="debug_badge">Debug</string>
     <string name="cursor">Cursor</string>
@@ -995,7 +1000,6 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="inbuilt_mod_block_outline">Block Outline</string>
     <string name="inbuilt_mod_block_outline_desc">Draws an outline around the block you look at.</string>
     <string name="inbuilt_mod_motion_blur">Motion Blur</string>
-    <string name="inbuilt_mod_motion_blur_desc">Adds a subtle motion blur while you move.</string>
     <string name="inbuilt_mod_saturation">Saturation</string>
     <string name="inbuilt_mod_saturation_desc">Raises the colour saturation of the frame.</string>
     <string name="inbuilt_mod_crosshair">Crosshair</string>
@@ -1267,6 +1271,13 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="mod_overlay_fps_no_reading" translatable="false">--</string>
     <string name="mod_overlay_fps_unit" translatable="false">FPS</string>
     <string name="mod_overlay_fps_stats" formatted="false">%1$d avg / %2$d low</string>
+    <!-- Shown beside the readout while the game's own render-tick reading is unavailable and the
+         number is the launcher's own refresh cadence, not the game's frame rate. Honest labelling,
+         not decoration: the two are different measurements. -->
+    <string name="mod_overlay_fps_approx" translatable="false">~</string>
+    <string name="mod_overlay_fps_launcher_note" translatable="false">launcher refresh</string>
+    <string name="mod_overlay_fps_inferred_note" translatable="false">inferred</string>
+    <string name="mod_overlay_fps_waiting" translatable="false">Waiting for a game frame…</string>
     <string name="mod_config_cursor_sensitivity_percent" formatted="false">Cursor Sensitivity (%)</string>
     <string name="mod_config_zoom_level_percent" formatted="false">Zoom Level (%)</string>
     <string name="mod_config_auto_sprint_keybind">Auto Sprint Keybind</string>
@@ -2164,6 +2175,15 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="mod_config_category_timing">Timing</string>
     <string name="mod_config_category_prediction">Prediction</string>
     <string name="mod_config_category_network">Network</string>
+
+    <!-- Frame generation + motion blur (present-frame effects; need the present/frame-boundary hook) -->
+    <string name="inbuilt_mod_frame_generation">Frame Generation</string>
+    <string name="inbuilt_mod_frame_generation_desc">Blends the previous frame into the current one so motion reads as smoother.</string>
+    <string name="frame_generation_scope_note">Frame generation does not make the game render faster and it does not present an extra frame. It keeps the last presented frame and blends it into the new one on the engine\'s present boundary, so the image sits between the two frames the game already drew and motion reads as smoother at the same render rate. It needs the present/frame-boundary hook; the module is disabled until that hook installs on your build. It cannot invent detail the game did not draw, and a heavy blend adds artefacts around fast motion, so it starts conservative.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Blends the previous frame into the current one.</string>
+    <string name="motion_blur_scope_note">Motion blur is a present-frame effect: it keeps the last presented frame and blends it into the new one on the engine\'s present boundary, so fast movement smears along the direction of travel. It softens the image by design; it does not add frames and it cannot be free, so the blend budget is bounded. It needs the present/frame-boundary hook and is disabled until that hook installs on your build.</string>
+    <string name="mod_config_category_effect">Effect</string>
+    <string name="mod_unavailable_reason_hook">Needs the engine\'s present-frame hook, which is not installed on this build. It is disabled until the hook is available.</string>
 
     <!-- Proximity Voice Chat -->
     <string name="inbuilt_mod_voice_chat">Proximity Voice Chat</string>

@@ -28,6 +28,13 @@
     <dimen name="radius_button">@dimen/radius_large</dimen>
     <!-- The Minecraft button slab: a small radius, not a pill. -->
     <dimen name="radius_button_mc">6dp</dimen>
+
+    <!-- The split LAUNCH GAME button (the UI pack's control). The 20dp radius is the pack's, and
+         the 72dp height is what gives the label and its build subtitle room without crowding. -->
+    <dimen name="radius_split_launch">20dp</dimen>
+    <dimen name="split_launch_height">72dp</dimen>
+    <dimen name="split_launch_chevron_width">52dp</dimen>
+    <dimen name="split_launch_divider_height">48dp</dimen>
     <dimen name="radius_field">@dimen/radius_small</dimen>
     <dimen name="radius_toggle">999dp</dimen>
 

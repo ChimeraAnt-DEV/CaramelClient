@@ -30,4 +30,9 @@ public final class SweetLoaderFrameTickSource implements FrameTickSource {
             return -1L;
         }
     }
+
+    @Override
+    public boolean isExact() {
+        return PreloaderInput.isRenderTickExact();
+    }
 }

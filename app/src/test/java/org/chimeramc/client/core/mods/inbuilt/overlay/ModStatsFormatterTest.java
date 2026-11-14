@@ -19,6 +19,13 @@ public class ModStatsFormatterTest {
     }
 
     @Test
+    public void aHostRateIsMarkedAsApproximateAndAGameRateIsNot() {
+        assertEquals("60 FPS", ModStatsFormatter.fps(60, false));
+        assertEquals("~60 FPS", ModStatsFormatter.fps(60, true));
+        assertEquals(ModStatsFormatter.NO_READING, ModStatsFormatter.fps(0, true));
+    }
+
+    @Test
     public void anUnknownPingIsAnEmDashNotZeroMillis() {
         assertEquals(ModStatsFormatter.NO_READING, ModStatsFormatter.ping(0));
         assertTrue(ModStatsFormatter.ping(42).contains("42"));

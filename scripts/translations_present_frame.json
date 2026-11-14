@@ -1,0 +1,92 @@
+{
+  "es": {
+    "inbuilt_mod_frame_generation": "Generación de fotogramas",
+    "inbuilt_mod_frame_generation_desc": "Combina el fotograma anterior con el actual para que el movimiento se vea más fluido.",
+    "frame_generation_scope_note": "La generación de fotogramas no hace que el juego renderice más rápido y no presenta un fotograma adicional. Conserva el último fotograma presentado y lo combina con el nuevo en el límite de presentación del motor, así que la imagen queda entre los dos fotogramas que el juego ya dibujó y el movimiento se ve más fluido con la misma tasa de renderizado. Necesita el hook de presentación/límite de fotograma; el módulo está desactivado hasta que ese hook se instale en tu compilación. No puede inventar detalles que el juego no dibujó, y una mezcla intensa añade artefactos en movimiento rápido, por lo que empieza de forma conservadora.",
+    "inbuilt_mod_motion_blur_desc": "Combina el fotograma anterior con el actual, ponderado por la velocidad de la vista.",
+    "motion_blur_scope_note": "El desenfoque de movimiento es un efecto de fotograma presentado: guarda el último fotograma presentado y lo combina con el nuevo en el límite de presentación del motor, así que el movimiento rápido se difumina en la dirección del desplazamiento. Suaviza la imagen por diseño; no añade fotogramas y no puede ser gratis, por lo que el presupuesto de mezcla está limitado. Necesita el hook de presentación/límite de fotograma y está desactivado hasta que ese hook se instale en tu compilación.",
+    "mod_config_category_effect": "Efecto",
+    "mod_unavailable_reason_hook": "Necesita el hook de fotograma presentado del motor, que no está instalado en esta compilación. Está desactivado hasta que el hook esté disponible."
+  },
+  "fr": {
+    "inbuilt_mod_frame_generation": "Génération d'images",
+    "inbuilt_mod_frame_generation_desc": "Mélange l'image précédente à l'image actuelle pour un mouvement plus fluide.",
+    "frame_generation_scope_note": "La génération d'images ne fait pas rendre le jeu plus vite et ne présente pas d'image supplémentaire. Elle conserve la dernière image présentée et la mélange à la nouvelle à la limite de présentation du moteur, donc l'image se situe entre les deux images déjà dessinées par le jeu et le mouvement paraît plus fluide à la même cadence de rendu. Elle nécessite le hook de présentation/limite d'image ; le module est désactivé tant que ce hook n'est pas installé sur votre build. Elle ne peut pas inventer des détails que le jeu n'a pas dessinés, et un mélange trop fort ajoute des artefacts lors de mouvements rapides, donc elle démarre prudemment.",
+    "inbuilt_mod_motion_blur_desc": "Mélange l'image précédente à l'image actuelle, pondéré par la vitesse de la vue.",
+    "motion_blur_scope_note": "Le flou de mouvement est un effet d'image présentée : il conserve la dernière image présentée et la mélange à la nouvelle à la limite de présentation du moteur, donc un mouvement rapide s'étire dans la direction du déplacement. Il adoucit l'image par conception ; il n'ajoute pas d'images et ne peut pas être gratuit, donc le budget de mélange est borné. Il nécessite le hook de présentation/limite d'image et est désactivé tant que ce hook n'est pas installé sur votre build.",
+    "mod_config_category_effect": "Effet",
+    "mod_unavailable_reason_hook": "Nécessite le hook d'image présentée du moteur, qui n'est pas installé sur ce build. Il est désactivé jusqu'à ce que le hook soit disponible."
+  },
+  "hi": {
+    "inbuilt_mod_frame_generation": "फ़्रेम जनरेशन",
+    "inbuilt_mod_frame_generation_desc": "पिछले फ़्रेम को वर्तमान फ़्रेम में मिलाता है ताकि गति अधिक सहज दिखे।",
+    "frame_generation_scope_note": "फ़्रेम जनरेशन खेल को तेज़ रेंडर नहीं कराता और अतिरिक्त फ़्रेम प्रस्तुत नहीं करता। यह अंतिम प्रस्तुत फ़्रेम को सुरक्षित रखता है और इंजन की प्रस्तुति सीमा पर उसे नए फ़्रेम में मिलाता है, इसलिए छवि खेल के पहले से बनाए दो फ़्रेमों के बीच रहती है और उसी रेंडर दर पर गति अधिक सहज दिखती है। इसे प्रस्तुति/फ़्रेम-सीमा हुक चाहिए; जब तक वह हुक आपके बिल्ड पर इंस्टॉल न हो, मॉड्यूल अक्षम रहता है। यह वह विवरण नहीं गढ़ सकता जो खेल ने नहीं बनाया, और तेज़ गति में भारी मिश्रण कलाकृतियाँ जोड़ता है, इसलिए यह सतर्क रूप से शुरू होता है।",
+    "inbuilt_mod_motion_blur_desc": "पिछले फ़्रेम को वर्तमान फ़्रेम में मिलाता है, दृश्य की गति के अनुसार भारित।",
+    "motion_blur_scope_note": "मोशन ब्लर एक प्रस्तुति-फ़्रेम प्रभाव है: यह अंतिम प्रस्तुत फ़्रेम रखता है और उसे इंजन की प्रस्तुति सीमा पर नए फ़्रेम में मिलाता है, इसलिए तेज़ गति यात्रा की दिशा में फैलती है। यह डिज़ाइन से छवि को कोमल बनाता है; यह फ़्रेम नहीं जोड़ता और मुफ़्त नहीं हो सकता, इसलिए मिश्रण बजट सीमित है। इसे प्रस्तुति/फ़्रेम-सीमा हुक चाहिए और जब तक वह हुक आपके बिल्ड पर इंस्टॉल न हो, यह अक्षम रहता है।",
+    "mod_config_category_effect": "प्रभाव",
+    "mod_unavailable_reason_hook": "इंजन के प्रस्तुति-फ़्रेम हुक की आवश्यकता है, जो इस बिल्ड पर इंस्टॉल नहीं है। जब तक हुक उपलब्ध न हो, यह अक्षम रहता है।"
+  },
+  "id": {
+    "inbuilt_mod_frame_generation": "Pembuatan Bingkai",
+    "inbuilt_mod_frame_generation_desc": "Mencampur bingkai sebelumnya ke bingkai saat ini agar gerakan tampak lebih halus.",
+    "frame_generation_scope_note": "Pembuatan bingkai tidak membuat game merender lebih cepat dan tidak menyajikan bingkai tambahan. Ini menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gambar berada di antara dua bingkai yang sudah digambar game dan gerakan tampak lebih halus pada laju render yang sama. Ini memerlukan hook penyajian/batas bingkai; modul dinonaktifkan sampai hook itu terpasang di build Anda. Ini tidak dapat mengarang detail yang tidak digambar game, dan pencampuran yang berat menambah artefak saat gerakan cepat, jadi ia mulai secara konservatif.",
+    "inbuilt_mod_motion_blur_desc": "Mencampur bingkai sebelumnya ke bingkai saat ini, dibobot oleh kecepatan pandangan.",
+    "motion_blur_scope_note": "Motion blur adalah efek bingkai penyajian: ia menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gerakan cepat mengabur searah pergerakan. Ini melembutkan gambar secara desain; ia tidak menambah bingkai dan tidak bisa gratis, jadi anggaran pencampuran dibatasi. Ini memerlukan hook penyajian/batas bingkai dan dinonaktifkan sampai hook itu terpasang di build Anda.",
+    "mod_config_category_effect": "Efek",
+    "mod_unavailable_reason_hook": "Memerlukan hook bingkai penyajian mesin, yang tidak terpasang di build ini. Ini dinonaktifkan sampai hook tersedia."
+  },
+  "ja": {
+    "inbuilt_mod_frame_generation": "フレーム生成",
+    "inbuilt_mod_frame_generation_desc": "前のフレームを現在のフレームに合成し、動きを滑らかに見せます。",
+    "frame_generation_scope_note": "フレーム生成はゲームの描画を速くするものではなく、追加のフレームを提示するものでもありません。最後に提示されたフレームを保持し、エンジンの提示境界で新しいフレームに合成するため、画像はゲームがすでに描画した2つのフレームの間になり、同じ描画レートで動きが滑らかに見えます。提示/フレーム境界フックが必要で、そのフックがビルドにインストールされるまでモジュールは無効です。ゲームが描画していないディテールを捏造することはできず、強い合成は速い動きの周囲にアーティファクトを追加するため、控えめに開始します。",
+    "inbuilt_mod_motion_blur_desc": "前のフレームを現在のフレームに、視点の速さに応じて重み付けして混ぜます。",
+    "motion_blur_scope_note": "モーションブラーは提示フレーム効果です。最後に提示したフレームを保持し、エンジンの提示境界で新しいフレームに混ぜるため、速い動きは進行方向にぶれます。設計上画像を柔らかくします。フレームを追加せず、無償にはできないため、混合の予算は制限されています。提示/フレーム境界フックが必要で、そのフックがあなたのビルドにインストールされるまで無効です。",
+    "mod_config_category_effect": "効果",
+    "mod_unavailable_reason_hook": "エンジンの提示フレームフックが必要ですが、このビルドにはインストールされていません。フックが利用可能になるまで無効です。"
+  },
+  "pt": {
+    "inbuilt_mod_frame_generation": "Geração de Quadros",
+    "inbuilt_mod_frame_generation_desc": "Mistura o quadro anterior com o atual para que o movimento pareça mais suave.",
+    "frame_generation_scope_note": "A geração de quadros não faz o jogo renderizar mais rápido e não apresenta um quadro extra. Ela mantém o último quadro apresentado e o mistura com o novo no limite de apresentação do motor, então a imagem fica entre os dois quadros que o jogo já desenhou e o movimento parece mais suave na mesma taxa de renderização. Precisa do hook de apresentação/limite de quadro; o módulo fica desativado até esse hook ser instalado na sua build. Não pode inventar detalhes que o jogo não desenhou, e uma mistura forte adiciona artefatos em movimento rápido, por isso começa de forma conservadora.",
+    "inbuilt_mod_motion_blur_desc": "Mistura o quadro anterior no atual, ponderado pela velocidade da visão.",
+    "motion_blur_scope_note": "O desfoque de movimento é um efeito de quadro apresentado: mantém o último quadro apresentado e o mistura no novo no limite de apresentação da engine, então o movimento rápido borra na direção do deslocamento. Suaviza a imagem por design; não adiciona quadros e não pode ser gratuito, por isso o orçamento de mistura é limitado. Precisa do hook de apresentação/limite de quadro e fica desativado até esse hook ser instalado na sua build.",
+    "mod_config_category_effect": "Efeito",
+    "mod_unavailable_reason_hook": "Precisa do hook de quadro apresentado da engine, que não está instalado nesta build. Fica desativado até o hook estar disponível."
+  },
+  "ru": {
+    "inbuilt_mod_frame_generation": "Генерация кадров",
+    "inbuilt_mod_frame_generation_desc": "Смешивает предыдущий кадр с текущим, чтобы движение выглядело плавнее.",
+    "frame_generation_scope_note": "Генерация кадров не ускоряет отрисовку игры и не выводит дополнительный кадр. Она сохраняет последний выведенный кадр и смешивает его с новым на границе вывода движка, поэтому изображение оказывается между двумя кадрами, которые игра уже нарисовала, и движение выглядит плавнее при той же частоте отрисовки. Требуется хук вывода/границы кадра; модуль отключён, пока этот хук не установится в вашей сборке. Он не может выдумать детали, которые игра не нарисовала, а сильное смешивание добавляет артефакты при быстром движении, поэтому стартует осторожно.",
+    "inbuilt_mod_motion_blur_desc": "Смешивает предыдущий кадр с текущим, с весом по скорости обзора.",
+    "motion_blur_scope_note": "Размытие движения — это эффект представленного кадра: он сохраняет последний представленный кадр и смешивает его с новым на границе представления движка, поэтому быстрое движение размазывается по направлению перемещения. Оно смягчает изображение по замыслу; оно не добавляет кадры и не может быть бесплатным, поэтому бюджет смешивания ограничен. Требуется хук представления/границы кадра, и он отключён, пока этот хук не установлен в вашей сборке.",
+    "mod_config_category_effect": "Эффект",
+    "mod_unavailable_reason_hook": "Требуется хук представленного кадра движка, который не установлен в этой сборке. Он отключён, пока хук недоступен."
+  },
+  "tr": {
+    "inbuilt_mod_frame_generation": "Kare Oluşturma",
+    "inbuilt_mod_frame_generation_desc": "Önceki kareyi geçerli kareyle birleştirerek hareketin daha akıcı görünmesini sağlar.",
+    "frame_generation_scope_note": "Kare oluşturma, oyunu daha hızlı işlemez ve fazladan bir kare sunmaz. Son sunulan kareyi saklar ve motorun sunum sınırında yeni kareyle birleştirir; böylece görüntü oyunun zaten çizdiği iki kare arasında kalır ve aynı işleme hızında hareket daha akıcı görünür. Sunum/kare sınırı kancasını gerektirir; bu kanca yapınıza kurulana kadar modül devre dışıdır. Oyunun çizmediği ayrıntıları uyduramaz ve ağır bir karışım hızlı harekette yapaylık ekler, bu yüzden temkinli başlar.",
+    "inbuilt_mod_motion_blur_desc": "Önceki kareyi geçerli kareye, görüş hızına göre ağırlıklandırarak karıştırır.",
+    "motion_blur_scope_note": "Hareket bulanıklığı bir sunum karesi etkisidir: son sunulan kareyi tutar ve motorun sunum sınırında yenisine karıştırır, böylece hızlı hareket gidiş yönünde yayılır. Görüntüyü tasarım gereği yumuşatır; kare eklemez ve bedava olamaz, bu yüzden karıştırma bütçesi sınırlıdır. Sunum/kare sınırı kancasına ihtiyaç duyar ve bu kanca derlemenize kurulana kadar devre dışıdır.",
+    "mod_config_category_effect": "Etki",
+    "mod_unavailable_reason_hook": "Bu derlemede kurulu olmayan motor sunum-kare kancasına ihtiyaç duyar. Kanca kullanılabilir olana kadar devre dışıdır."
+  },
+  "vi": {
+    "inbuilt_mod_frame_generation": "Tạo Khung Hình",
+    "inbuilt_mod_frame_generation_desc": "Trộn khung hình trước vào khung hình hiện tại để chuyển động trông mượt hơn.",
+    "frame_generation_scope_note": "Tạo khung hình không làm trò chơi kết xuất nhanh hơn và không trình bày thêm khung hình nào. Nó giữ khung hình được trình bày gần nhất và trộn vào khung hình mới tại ranh giới trình bày của engine, nên hình ảnh nằm giữa hai khung hình mà trò chơi đã vẽ và chuyển động trông mượt hơn ở cùng tốc độ kết xuất. Nó cần hook trình bày/ranh giới khung hình; mô-đun bị tắt cho đến khi hook đó được cài trên bản dựng của bạn. Nó không thể bịa ra chi tiết mà trò chơi không vẽ, và trộn mạnh sẽ thêm hiện tượng lạ khi chuyển động nhanh, nên nó bắt đầu một cách thận trọng.",
+    "inbuilt_mod_motion_blur_desc": "Trộn khung hình trước vào khung hình hiện tại, có trọng số theo tốc độ góc nhìn.",
+    "motion_blur_scope_note": "Làm mờ chuyển động là một hiệu ứng khung hình trình bày: nó giữ khung hình trình bày cuối và trộn vào khung hình mới tại ranh giới trình bày của engine, nên chuyển động nhanh bị nhòe theo hướng di chuyển. Nó làm mềm hình ảnh theo thiết kế; nó không thêm khung hình và không thể miễn phí, nên ngân sách trộn bị giới hạn. Nó cần hook trình bày/ranh giới khung hình và bị tắt cho đến khi hook đó được cài trên bản dựng của bạn.",
+    "mod_config_category_effect": "Hiệu ứng",
+    "mod_unavailable_reason_hook": "Cần hook khung hình trình bày của engine, thứ chưa được cài trên bản dựng này. Nó bị tắt cho đến khi hook khả dụng."
+  },
+  "zh-rCN": {
+    "inbuilt_mod_frame_generation": "帧生成",
+    "inbuilt_mod_frame_generation_desc": "将上一帧混合到当前帧，让运动看起来更流畅。",
+    "frame_generation_scope_note": "帧生成不会让游戏渲染得更快，也不会呈现额外的帧。它保留最后呈现的帧，并在引擎的呈现边界将其混合进新帧，因此画面位于游戏已经绘制的两帧之间，在相同渲染速率下运动看起来更流畅。它需要呈现/帧边界钩子；在该钩子安装到你的构建之前，模块处于禁用状态。它无法凭空生成游戏没有绘制的细节，过强的混合会在快速运动周围产生伪影，因此它从保守设置开始。",
+    "inbuilt_mod_motion_blur_desc": "按视角移动速度加权，将上一帧混入当前帧。",
+    "motion_blur_scope_note": "运动模糊是一种呈现帧效果：它保留上一次呈现的帧，并在引擎的呈现边界上将其混入新帧，因此快速运动沿移动方向产生拖影。它按设计使画面变柔和；它不增加帧，也不可能没有代价，因此混合预算是有上限的。它需要呈现/帧边界钩子，在该钩子安装到你的构建之前处于禁用状态。",
+    "mod_config_category_effect": "效果",
+    "mod_unavailable_reason_hook": "需要引擎的呈现帧钩子，而此构建未安装该钩子。在钩子可用之前它处于禁用状态。"
+  }
+}

@@ -1311,4 +1311,13 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="changelog_upcoming_soon">Segera hadir!</string>
     <string name="changelog_upcoming_soon_body">Wiki sedang ditulis. Wiki akan terbuka di sini begitu tersedia.</string>
     <string name="setup_finish_changelog_loading">Memuat yang baru…</string>
+    <string name="inbuilt_mod_frame_generation">Pembuatan Bingkai</string>
+    <string name="inbuilt_mod_frame_generation_desc">Mencampur bingkai sebelumnya ke bingkai saat ini agar gerakan tampak lebih halus.</string>
+    <string name="frame_generation_scope_note">Pembuatan bingkai tidak membuat game merender lebih cepat dan tidak menyajikan bingkai tambahan. Ini menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gambar berada di antara dua bingkai yang sudah digambar game dan gerakan tampak lebih halus pada laju render yang sama. Ini memerlukan hook penyajian/batas bingkai; modul dinonaktifkan sampai hook itu terpasang di build Anda. Ini tidak dapat mengarang detail yang tidak digambar game, dan pencampuran yang berat menambah artefak saat gerakan cepat, jadi ia mulai secara konservatif.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Mencampur bingkai sebelumnya ke bingkai saat ini, dibobot oleh kecepatan pandangan.</string>
+    <string name="motion_blur_scope_note">Motion blur adalah efek bingkai penyajian: ia menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gerakan cepat mengabur searah pergerakan. Ini melembutkan gambar secara desain; ia tidak menambah bingkai dan tidak bisa gratis, jadi anggaran pencampuran dibatasi. Ini memerlukan hook penyajian/batas bingkai dan dinonaktifkan sampai hook itu terpasang di build Anda.</string>
+    <string name="mod_config_category_effect">Efek</string>
+    <string name="mod_unavailable_reason_hook">Memerlukan hook bingkai penyajian mesin, yang tidak terpasang di build ini. Ini dinonaktifkan sampai hook tersedia.</string>
+    <string name="launch_button_label">Luncurkan Game</string>
+    <string name="launch_menu_open">Buka opsi peluncuran</string>
 </resources>

@@ -107,3 +107,4 @@ file is missing from the index.
 - [World reconstruction — RE groundwork and the remaining wall](docs/agents/world-reconstruction-re-groundwork.md)
 - [MB shader loader version support (mtbinloader2 / libmtbinloader2.so)](docs/agents/mb-shader-loader-version-support.md)
 - [BerryAPI cosmetic C ABI (sweetloader mirror + launcher surface)](docs/agents/berryapi-cosmetic-c-abi.md)
+- [One UI: the Caramel UI pack, the native ImGui menu, and FPS honesty](docs/agents/one-ui-the-caramel-ui-pack-the-native-imgui-menu-and-fps-honesty.md)

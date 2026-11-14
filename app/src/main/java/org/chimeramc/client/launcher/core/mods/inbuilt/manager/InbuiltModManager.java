@@ -56,7 +56,6 @@ public class InbuiltModManager {
     private static final String KEY_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
     /** The radial wheel's centre dead zone, as a percentage of full stick travel. */
-    private static final String KEY_WHEEL_CENTER_DEAD_ZONE = "wheel_center_dead_zone_percent";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String KEY_GYRO_INVERT_X = "gyro_invert_x";
@@ -181,7 +180,6 @@ public class InbuiltModManager {
     /** The snap-look return-speed slider bounds. */
     public static final int MAX_SNAPLOOK_RETURN_SPEED = 100;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
-    private static final int DEFAULT_WHEEL_DEAD_ZONE_PERCENT = 15;
     private static final int DEFAULT_GYRO_SENSITIVITY = 100;
     private static final int DEFAULT_GYRO_DEADZONE = 5;
     private static final float DEFAULT_VOICE_RANGE = 24f;
@@ -674,25 +672,6 @@ public class InbuiltModManager {
 
     public void setCursorSensitivity(int sensitivity) {
         prefs.edit().putInt(KEY_CURSOR_SENSITIVITY, Math.max(10, Math.min(300, sensitivity))).apply();
-    }
-
-    /**
-     * The radial wheel's centre dead zone, as a fraction of full stick travel.
-     *
-     * <p>Stored as a percentage so the settings slider has integers, and read through
-     * {@link RadialWheelMotion#clampCenterDeadZone} so a stored value from an older build, or a
-     * hand-edited preference file, cannot drive the cursor with an out-of-range dead zone.
-     */
-    public float getWheelCenterDeadZone() {
-        int percent = prefs.getInt(KEY_WHEEL_CENTER_DEAD_ZONE, DEFAULT_WHEEL_DEAD_ZONE_PERCENT);
-        return org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
-                .clampCenterDeadZone(percent / 100f);
-    }
-
-    public void setWheelCenterDeadZone(float fraction) {
-        float clamped = org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
-                .clampCenterDeadZone(fraction);
-        prefs.edit().putInt(KEY_WHEEL_CENTER_DEAD_ZONE, Math.round(clamped * 100f)).apply();
     }
 
     public int getOverlayPositionX(String modId, int defaultX) {

@@ -32,7 +32,7 @@ public final class ModCategory {
             ModIds.FULLBRIGHT, ModIds.TIME_CHANGER, ModIds.LOW_FIRE, ModIds.BLOCK_OUTLINE,
             ModIds.MOTION_BLUR, ModIds.SATURATION, ModIds.CROSSHAIR, ModIds.ARMOR_VIEW_BENDING,
             ModIds.PROJECTILE_SCALER, ModIds.FREECAM, ModIds.TNT, ModIds.ZOOM, ModIds.FPS_DISPLAY,
-            ModIds.CPS_DISPLAY);
+            ModIds.CPS_DISPLAY, ModIds.FRAME_GENERATION);
 
     /** The information/utility modules the MISC tab collects. */
     private static final Set<String> MISC = Api28Compat.setOf(

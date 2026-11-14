@@ -1,92 +1,112 @@
 {
- "es": {
-  "launch_watchdog_stalled": "Este inicio no ha avanzado desde hace un rato. Puede que siga funcionando; abre los registros para ver qué está haciendo.",
-  "launch_watchdog_dead": "Este inicio no ha dibujado ningún fotograma desde hace mucho tiempo. Reinicia sin mods para descartar un mod.",
-  "launch_watchdog_open_logs": "Abrir registros",
-  "launch_watchdog_restart_without_mods": "Reiniciar sin mods",
-  "performance_preset_thermal_message": "Este dispositivo está limitado por temperatura. El modo Batería daría menos trabajo a la CPU.",
-  "performance_preset_thermal_apply": "Usar Batería",
-  "instance_size_on_disk": "%1$s en disco"
- },
- "fr": {
-  "launch_watchdog_stalled": "Ce lancement n'a pas progressé depuis un moment. Il fonctionne peut-être encore ; ouvrez les journaux pour voir ce qu'il fait.",
-  "launch_watchdog_dead": "Ce lancement n'a dessiné aucune image depuis longtemps. Redémarrez sans mods pour écarter un mod.",
-  "launch_watchdog_open_logs": "Ouvrir les journaux",
-  "launch_watchdog_restart_without_mods": "Redémarrer sans mods",
-  "performance_preset_thermal_message": "Cet appareil est limité par la température. Le mode Batterie donnerait moins de travail au processeur.",
-  "performance_preset_thermal_apply": "Utiliser Batterie",
-  "instance_size_on_disk": "%1$s sur le disque"
- },
- "hi": {
-  "launch_watchdog_stalled": "यह लॉन्च कुछ समय से आगे नहीं बढ़ा है। यह अभी भी काम कर रहा हो सकता है; देखने के लिए लॉग खोलें कि यह क्या कर रहा है।",
-  "launch_watchdog_dead": "यह लॉन्च बहुत देर से कोई फ़्रेम नहीं बनाया है। किसी मॉड को बाहर करने के लिए बिना मॉड्स के पुनः आरंभ करें।",
-  "launch_watchdog_open_logs": "लॉग खोलें",
-  "launch_watchdog_restart_without_mods": "बिना मॉड्स के पुनः आरंभ करें",
-  "performance_preset_thermal_message": "यह डिवाइस गर्मी के कारण धीमा है। बैटरी मोड CPU को कम काम देगा।",
-  "performance_preset_thermal_apply": "बैटरी का उपयोग करें",
-  "instance_size_on_disk": "डिस्क पर %1$s"
- },
- "id": {
-  "launch_watchdog_stalled": "Peluncuran ini tidak mengalami kemajuan selama beberapa waktu. Mungkin masih berjalan; buka log untuk melihat apa yang sedang dilakukannya.",
-  "launch_watchdog_dead": "Peluncuran ini sudah lama tidak menggambar satu bingkai pun. Mulai ulang tanpa mod untuk menyingkirkan kemungkinan mod.",
-  "launch_watchdog_open_logs": "Buka log",
-  "launch_watchdog_restart_without_mods": "Mulai ulang tanpa mod",
-  "performance_preset_thermal_message": "Perangkat ini dibatasi suhu. Mode Baterai akan memberi CPU lebih sedikit pekerjaan.",
-  "performance_preset_thermal_apply": "Gunakan Baterai",
-  "instance_size_on_disk": "%1$s di disk"
- },
- "ja": {
-  "launch_watchdog_stalled": "この起動はしばらく進んでいません。まだ動作中の可能性があります。ログを開いて何をしているか確認してください。",
-  "launch_watchdog_dead": "この起動は長時間フレームを描画していません。mod を除外するため、mod なしで再起動してください。",
-  "launch_watchdog_open_logs": "ログを開く",
-  "launch_watchdog_restart_without_mods": "mod なしで再起動",
-  "performance_preset_thermal_message": "このデバイスは熱によって制限されています。バッテリーモードなら CPU の負担が減ります。",
-  "performance_preset_thermal_apply": "バッテリーを使う",
-  "instance_size_on_disk": "ディスク上 %1$s"
- },
- "pt": {
-  "launch_watchdog_stalled": "Este início não avançou por um tempo. Ele ainda pode estar funcionando; abra os registros para ver o que está fazendo.",
-  "launch_watchdog_dead": "Este início não desenhou nenhum quadro há muito tempo. Reinicie sem mods para descartar um mod.",
-  "launch_watchdog_open_logs": "Abrir registros",
-  "launch_watchdog_restart_without_mods": "Reiniciar sem mods",
-  "performance_preset_thermal_message": "Este dispositivo está limitado por temperatura. O modo Bateria daria menos trabalho à CPU.",
-  "performance_preset_thermal_apply": "Usar Bateria",
-  "instance_size_on_disk": "%1$s no disco"
- },
- "ru": {
-  "launch_watchdog_stalled": "Этот запуск давно не продвигается. Возможно, он ещё работает; откройте журналы, чтобы увидеть, что происходит.",
-  "launch_watchdog_dead": "Этот запуск давно не отрисовал ни одного кадра. Перезапустите без модов, чтобы исключить мод.",
-  "launch_watchdog_open_logs": "Открыть журналы",
-  "launch_watchdog_restart_without_mods": "Перезапустить без модов",
-  "performance_preset_thermal_message": "Это устройство ограничено из-за нагрева. Режим «Батарея» даст процессору меньше работы.",
-  "performance_preset_thermal_apply": "Использовать «Батарея»",
-  "instance_size_on_disk": "%1$s на диске"
- },
- "tr": {
-  "launch_watchdog_stalled": "Bu başlatma bir süredir ilerlemiyor. Hâlâ çalışıyor olabilir; ne yaptığını görmek için günlükleri açın.",
-  "launch_watchdog_dead": "Bu başlatma uzun süredir hiç kare çizmedi. Bir modu elemek için modsuz yeniden başlatın.",
-  "launch_watchdog_open_logs": "Günlükleri aç",
-  "launch_watchdog_restart_without_mods": "Modsuz yeniden başlat",
-  "performance_preset_thermal_message": "Bu cihaz ısı nedeniyle kısıtlanmış. Pil modu CPU'ya daha az iş verir.",
-  "performance_preset_thermal_apply": "Pil kullan",
-  "instance_size_on_disk": "Diskte %1$s"
- },
- "vi": {
-  "launch_watchdog_stalled": "Lần khởi chạy này đã không tiến triển trong một lúc. Nó có thể vẫn đang chạy; mở nhật ký để xem nó đang làm gì.",
-  "launch_watchdog_dead": "Lần khởi chạy này đã lâu không vẽ khung hình nào. Khởi động lại mà không có mod để loại trừ một mod.",
-  "launch_watchdog_open_logs": "Mở nhật ký",
-  "launch_watchdog_restart_without_mods": "Khởi động lại không có mod",
-  "performance_preset_thermal_message": "Thiết bị này bị giới hạn do nhiệt. Chế độ Pin sẽ cho CPU ít việc hơn.",
-  "performance_preset_thermal_apply": "Dùng Pin",
-  "instance_size_on_disk": "%1$s trên đĩa"
- },
- "zh-rCN": {
-  "launch_watchdog_stalled": "本次启动已有一段时间没有进展。它可能仍在运行；打开日志查看它正在做什么。",
-  "launch_watchdog_dead": "本次启动长时间没有绘制任何画面。请在没有模组的情况下重新启动，以排除模组问题。",
-  "launch_watchdog_open_logs": "打开日志",
-  "launch_watchdog_restart_without_mods": "在没有模组的情况下重新启动",
-  "performance_preset_thermal_message": "此设备因温度过高而降速。电池模式会减轻 CPU 的负担。",
-  "performance_preset_thermal_apply": "使用电池模式",
-  "instance_size_on_disk": "磁盘上 %1$s"
- }
+  "es": {
+    "launch_watchdog_stalled": "Este inicio no ha avanzado desde hace un rato. Puede que siga funcionando; abre los registros para ver qué está haciendo.",
+    "launch_watchdog_dead": "Este inicio no ha dibujado ningún fotograma desde hace mucho tiempo. Reinicia sin mods para descartar un mod.",
+    "launch_watchdog_open_logs": "Abrir registros",
+    "launch_watchdog_restart_without_mods": "Reiniciar sin mods",
+    "performance_preset_thermal_message": "Este dispositivo está limitado por temperatura. El modo Batería daría menos trabajo a la CPU.",
+    "performance_preset_thermal_apply": "Usar Batería",
+    "instance_size_on_disk": "%1$s en disco",
+    "launch_button_label": "Iniciar juego",
+    "launch_menu_open": "Abrir opciones de inicio"
+  },
+  "fr": {
+    "launch_watchdog_stalled": "Ce lancement n'a pas progressé depuis un moment. Il fonctionne peut-être encore ; ouvrez les journaux pour voir ce qu'il fait.",
+    "launch_watchdog_dead": "Ce lancement n'a dessiné aucune image depuis longtemps. Redémarrez sans mods pour écarter un mod.",
+    "launch_watchdog_open_logs": "Ouvrir les journaux",
+    "launch_watchdog_restart_without_mods": "Redémarrer sans mods",
+    "performance_preset_thermal_message": "Cet appareil est limité par la température. Le mode Batterie donnerait moins de travail au processeur.",
+    "performance_preset_thermal_apply": "Utiliser Batterie",
+    "instance_size_on_disk": "%1$s sur le disque",
+    "launch_button_label": "Lancer le jeu",
+    "launch_menu_open": "Ouvrir les options de lancement"
+  },
+  "hi": {
+    "launch_watchdog_stalled": "यह लॉन्च कुछ समय से आगे नहीं बढ़ा है। यह अभी भी काम कर रहा हो सकता है; देखने के लिए लॉग खोलें कि यह क्या कर रहा है।",
+    "launch_watchdog_dead": "यह लॉन्च बहुत देर से कोई फ़्रेम नहीं बनाया है। किसी मॉड को बाहर करने के लिए बिना मॉड्स के पुनः आरंभ करें।",
+    "launch_watchdog_open_logs": "लॉग खोलें",
+    "launch_watchdog_restart_without_mods": "बिना मॉड्स के पुनः आरंभ करें",
+    "performance_preset_thermal_message": "यह डिवाइस गर्मी के कारण धीमा है। बैटरी मोड CPU को कम काम देगा।",
+    "performance_preset_thermal_apply": "बैटरी का उपयोग करें",
+    "instance_size_on_disk": "डिस्क पर %1$s",
+    "launch_button_label": "गेम लॉन्च करें",
+    "launch_menu_open": "लॉन्च विकल्प खोलें"
+  },
+  "id": {
+    "launch_watchdog_stalled": "Peluncuran ini tidak mengalami kemajuan selama beberapa waktu. Mungkin masih berjalan; buka log untuk melihat apa yang sedang dilakukannya.",
+    "launch_watchdog_dead": "Peluncuran ini sudah lama tidak menggambar satu bingkai pun. Mulai ulang tanpa mod untuk menyingkirkan kemungkinan mod.",
+    "launch_watchdog_open_logs": "Buka log",
+    "launch_watchdog_restart_without_mods": "Mulai ulang tanpa mod",
+    "performance_preset_thermal_message": "Perangkat ini dibatasi suhu. Mode Baterai akan memberi CPU lebih sedikit pekerjaan.",
+    "performance_preset_thermal_apply": "Gunakan Baterai",
+    "instance_size_on_disk": "%1$s di disk",
+    "launch_button_label": "Luncurkan Game",
+    "launch_menu_open": "Buka opsi peluncuran"
+  },
+  "ja": {
+    "launch_watchdog_stalled": "この起動はしばらく進んでいません。まだ動作中の可能性があります。ログを開いて何をしているか確認してください。",
+    "launch_watchdog_dead": "この起動は長時間フレームを描画していません。mod を除外するため、mod なしで再起動してください。",
+    "launch_watchdog_open_logs": "ログを開く",
+    "launch_watchdog_restart_without_mods": "mod なしで再起動",
+    "performance_preset_thermal_message": "このデバイスは熱によって制限されています。バッテリーモードなら CPU の負担が減ります。",
+    "performance_preset_thermal_apply": "バッテリーを使う",
+    "instance_size_on_disk": "ディスク上 %1$s",
+    "launch_button_label": "ゲームを起動",
+    "launch_menu_open": "起動オプションを開く"
+  },
+  "pt": {
+    "launch_watchdog_stalled": "Este início não avançou por um tempo. Ele ainda pode estar funcionando; abra os registros para ver o que está fazendo.",
+    "launch_watchdog_dead": "Este início não desenhou nenhum quadro há muito tempo. Reinicie sem mods para descartar um mod.",
+    "launch_watchdog_open_logs": "Abrir registros",
+    "launch_watchdog_restart_without_mods": "Reiniciar sem mods",
+    "performance_preset_thermal_message": "Este dispositivo está limitado por temperatura. O modo Bateria daria menos trabalho à CPU.",
+    "performance_preset_thermal_apply": "Usar Bateria",
+    "instance_size_on_disk": "%1$s no disco",
+    "launch_button_label": "Iniciar Jogo",
+    "launch_menu_open": "Abrir opções de inicialização"
+  },
+  "ru": {
+    "launch_watchdog_stalled": "Этот запуск давно не продвигается. Возможно, он ещё работает; откройте журналы, чтобы увидеть, что происходит.",
+    "launch_watchdog_dead": "Этот запуск давно не отрисовал ни одного кадра. Перезапустите без модов, чтобы исключить мод.",
+    "launch_watchdog_open_logs": "Открыть журналы",
+    "launch_watchdog_restart_without_mods": "Перезапустить без модов",
+    "performance_preset_thermal_message": "Это устройство ограничено из-за нагрева. Режим «Батарея» даст процессору меньше работы.",
+    "performance_preset_thermal_apply": "Использовать «Батарея»",
+    "instance_size_on_disk": "%1$s на диске",
+    "launch_button_label": "Запустить игру",
+    "launch_menu_open": "Открыть параметры запуска"
+  },
+  "tr": {
+    "launch_watchdog_stalled": "Bu başlatma bir süredir ilerlemiyor. Hâlâ çalışıyor olabilir; ne yaptığını görmek için günlükleri açın.",
+    "launch_watchdog_dead": "Bu başlatma uzun süredir hiç kare çizmedi. Bir modu elemek için modsuz yeniden başlatın.",
+    "launch_watchdog_open_logs": "Günlükleri aç",
+    "launch_watchdog_restart_without_mods": "Modsuz yeniden başlat",
+    "performance_preset_thermal_message": "Bu cihaz ısı nedeniyle kısıtlanmış. Pil modu CPU'ya daha az iş verir.",
+    "performance_preset_thermal_apply": "Pil kullan",
+    "instance_size_on_disk": "Diskte %1$s",
+    "launch_button_label": "Oyunu Başlat",
+    "launch_menu_open": "Başlatma seçeneklerini aç"
+  },
+  "vi": {
+    "launch_watchdog_stalled": "Lần khởi chạy này đã không tiến triển trong một lúc. Nó có thể vẫn đang chạy; mở nhật ký để xem nó đang làm gì.",
+    "launch_watchdog_dead": "Lần khởi chạy này đã lâu không vẽ khung hình nào. Khởi động lại mà không có mod để loại trừ một mod.",
+    "launch_watchdog_open_logs": "Mở nhật ký",
+    "launch_watchdog_restart_without_mods": "Khởi động lại không có mod",
+    "performance_preset_thermal_message": "Thiết bị này bị giới hạn do nhiệt. Chế độ Pin sẽ cho CPU ít việc hơn.",
+    "performance_preset_thermal_apply": "Dùng Pin",
+    "instance_size_on_disk": "%1$s trên đĩa",
+    "launch_button_label": "Khởi chạy game",
+    "launch_menu_open": "Mở tùy chọn khởi chạy"
+  },
+  "zh-rCN": {
+    "launch_watchdog_stalled": "本次启动已有一段时间没有进展。它可能仍在运行；打开日志查看它正在做什么。",
+    "launch_watchdog_dead": "本次启动长时间没有绘制任何画面。请在没有模组的情况下重新启动，以排除模组问题。",
+    "launch_watchdog_open_logs": "打开日志",
+    "launch_watchdog_restart_without_mods": "在没有模组的情况下重新启动",
+    "performance_preset_thermal_message": "此设备因温度过高而降速。电池模式会减轻 CPU 的负担。",
+    "performance_preset_thermal_apply": "使用电池模式",
+    "instance_size_on_disk": "磁盘上 %1$s",
+    "launch_button_label": "启动游戏",
+    "launch_menu_open": "打开启动选项"
+  }
 }

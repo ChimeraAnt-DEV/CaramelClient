@@ -103,6 +103,33 @@ public class PreloaderInput {
     public static native boolean nativeIsPlayerRenderHookLive();
 
     /**
+     * Whether the engine's present / frame-boundary hook is installed (the {@code eglSwapBuffers}
+     * detour). Frame generation and motion blur both act on the presented frame, so this is the probe
+     * that decides whether they can run on this build: false on a Vulkan-only build with no libEGL
+     * present call, in which case the modules stay badged instead of toggling to no effect.
+     */
+    public static native boolean nativeIsPresentHookLive();
+
+    /**
+     * Pushes the present-frame effect plan (frame generation + motion blur) to the native seam.
+     *
+     * <p>Values are clamped on the native side, so a stored option can never drive an out-of-range
+     * blend. A no-op when the seam is not live: the launcher keeps both modules badged and the plan
+     * is simply never acted on.
+     */
+    public static native void nativeSetPresentFramePlan(
+            boolean frameGenerationEnabled, float interpolationStrength, int maxFramesPerRendered,
+            boolean reduceEdgeArtifacts, boolean motionBlurEnabled, float blurStrength,
+            float blurBudget, boolean weightByViewSpeed);
+
+    /**
+     * Whether the present-frame effect seam is installed and live. False until the engine's present
+     * boundary has been seen with a current EGL context and the composite program has compiled, so a
+     * module never reads as running before it can actually draw.
+     */
+    public static native boolean nativeIsPresentFrameEffectLive();
+
+    /**
      * The render tick and per-frame call count, as
      * {@code {renderTick, callsThisFrame, totalCalls, msSinceLastRender}}, or null when the
      * renderer has not run. {@code callsThisFrame > 1} means the renderer drew more than one
@@ -586,9 +613,57 @@ public class PreloaderInput {
     }
 
     /**
+     * True once the engine's present / frame-boundary hook is installed.
+     *
+     * <p>Fail-closed: an unavailable native library, or a build with no libEGL present call, reads as
+     * false, so frame generation and motion blur stay badged rather than acting on a frame boundary
+     * that was never observed.
+     */
+    public static boolean isPresentHookLive() {
+        try {
+            return nativeIsPresentHookLive();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
+     * Pushes the present-frame effect plan to the native seam.
+     *
+     * <p>Fail-closed: an unavailable native library is a no-op, so the plan simply never reaches a
+     * seam and both modules stay badged.
+     */
+    public static void setPresentFramePlan(boolean frameGenerationEnabled, float interpolationStrength,
+                                           int maxFramesPerRendered, boolean reduceEdgeArtifacts,
+                                           boolean motionBlurEnabled, float blurStrength,
+                                           float blurBudget, boolean weightByViewSpeed) {
+        try {
+            nativeSetPresentFramePlan(frameGenerationEnabled, interpolationStrength,
+                    maxFramesPerRendered, reduceEdgeArtifacts, motionBlurEnabled, blurStrength,
+                    blurBudget, weightByViewSpeed);
+        } catch (UnsatisfiedLinkError e) {
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:present-frame-plan",
+                    "No native present-frame seam; the plan is not applied", e);
+        }
+    }
+
+    /** True once the present-frame effect seam is installed and live. Fail-closed. */
+    public static boolean isPresentFrameEffectLive() {
+        try {
+            return nativeIsPresentFrameEffectLive();
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
+    }
+
+    /**
      * The render tick and call counts, or null when the renderer has not run.
      *
-     * @return {@code {renderTick, callsThisFrame, totalCalls, msSinceLastRender}}, or null.
+     * @return {@code {renderTick, callsThisFrame, totalCalls, msSinceLastRender, tickExact}}, or
+     *     null. {@code tickExact} is 1 when the tick is the engine's exact present boundary (the
+     *     {@code eglSwapBuffers} hook is live) and 0 when it is inferred from render-entry timestamps.
+     *     A reader that derives a frame rate must label an inferred tick as approximate. Older
+     *     libraries returned four elements; a shorter array is accepted and treated as inexact.
      */
     public static int[] readPlayerRenderStats() {
         try {
@@ -597,6 +672,17 @@ public class PreloaderInput {
         } catch (UnsatisfiedLinkError e) {
             return null;
         }
+    }
+
+    /**
+     * Whether the render tick is the engine's exact present boundary rather than an inference.
+     *
+     * <p>Fail-closed: a missing library, a null reading or a short array all read as false, so a
+     * derived frame rate is labelled approximate rather than presented as the game's exact rate.
+     */
+    public static boolean isRenderTickExact() {
+        int[] value = readPlayerRenderStats();
+        return value != null && value.length >= 5 && value[4] == 1;
     }
 
     /**

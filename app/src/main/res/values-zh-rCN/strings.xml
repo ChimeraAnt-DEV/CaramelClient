@@ -1308,4 +1308,13 @@
     <string name="changelog_upcoming_soon">即将推出!</string>
     <string name="changelog_upcoming_soon_body">Wiki 正在编写中。上线后会在此处打开。</string>
     <string name="setup_finish_changelog_loading">正在加载新内容…</string>
+    <string name="inbuilt_mod_frame_generation">帧生成</string>
+    <string name="inbuilt_mod_frame_generation_desc">将上一帧混合到当前帧，让运动看起来更流畅。</string>
+    <string name="frame_generation_scope_note">帧生成不会让游戏渲染得更快，也不会呈现额外的帧。它保留最后呈现的帧，并在引擎的呈现边界将其混合进新帧，因此画面位于游戏已经绘制的两帧之间，在相同渲染速率下运动看起来更流畅。它需要呈现/帧边界钩子；在该钩子安装到你的构建之前，模块处于禁用状态。它无法凭空生成游戏没有绘制的细节，过强的混合会在快速运动周围产生伪影，因此它从保守设置开始。</string>
+    <string name="inbuilt_mod_motion_blur_desc">按视角移动速度加权，将上一帧混入当前帧。</string>
+    <string name="motion_blur_scope_note">运动模糊是一种呈现帧效果：它保留上一次呈现的帧，并在引擎的呈现边界上将其混入新帧，因此快速运动沿移动方向产生拖影。它按设计使画面变柔和；它不增加帧，也不可能没有代价，因此混合预算是有上限的。它需要呈现/帧边界钩子，在该钩子安装到你的构建之前处于禁用状态。</string>
+    <string name="mod_config_category_effect">效果</string>
+    <string name="mod_unavailable_reason_hook">需要引擎的呈现帧钩子，而此构建未安装该钩子。在钩子可用之前它处于禁用状态。</string>
+    <string name="launch_button_label">启动游戏</string>
+    <string name="launch_menu_open">打开启动选项</string>
 </resources>

@@ -41,16 +41,6 @@ public class SkinListenerCoverageTest {
     }
 
     @Test
-    public void theRadialWheelRegistersForSkinUpdates() throws IOException {
-        String wheel = read("app/src/main/java/org/chimeramc/client/launcher/core/mods/"
-                + "inbuilt/overlay/RadialMenuView.java");
-        assertTrue("the wheel must register a skin listener so a late skin reaches it",
-                wheel.contains("AccountSkinService.addListener("));
-        assertTrue("and it must unregister on detach, so a discarded view is never woken",
-                wheel.contains("AccountSkinService.removeListener("));
-    }
-
-    @Test
     public void theCapePreviewRegistersForSkinUpdates() throws IOException {
         String preview = read("app/src/main/java/org/chimeramc/client/launcher/core/mods/"
                 + "inbuilt/overlay/CapePreviewView.java");

@@ -476,7 +476,6 @@ values-es:inbuilt_mod_list_players_desc
 values-es:inbuilt_mod_low_fire
 values-es:inbuilt_mod_low_fire_desc
 values-es:inbuilt_mod_motion_blur
-values-es:inbuilt_mod_motion_blur_desc
 values-es:inbuilt_mod_offhand
 values-es:inbuilt_mod_offhand_desc
 values-es:inbuilt_mod_projectile_scaler
@@ -1755,7 +1754,6 @@ values-fr:inbuilt_mod_list_players_desc
 values-fr:inbuilt_mod_low_fire
 values-fr:inbuilt_mod_low_fire_desc
 values-fr:inbuilt_mod_motion_blur
-values-fr:inbuilt_mod_motion_blur_desc
 values-fr:inbuilt_mod_offhand
 values-fr:inbuilt_mod_offhand_desc
 values-fr:inbuilt_mod_projectile_scaler
@@ -3034,7 +3032,6 @@ values-hi:inbuilt_mod_list_players_desc
 values-hi:inbuilt_mod_low_fire
 values-hi:inbuilt_mod_low_fire_desc
 values-hi:inbuilt_mod_motion_blur
-values-hi:inbuilt_mod_motion_blur_desc
 values-hi:inbuilt_mod_offhand
 values-hi:inbuilt_mod_offhand_desc
 values-hi:inbuilt_mod_projectile_scaler
@@ -4313,7 +4310,6 @@ values-id:inbuilt_mod_list_players_desc
 values-id:inbuilt_mod_low_fire
 values-id:inbuilt_mod_low_fire_desc
 values-id:inbuilt_mod_motion_blur
-values-id:inbuilt_mod_motion_blur_desc
 values-id:inbuilt_mod_offhand
 values-id:inbuilt_mod_offhand_desc
 values-id:inbuilt_mod_projectile_scaler
@@ -5592,7 +5588,6 @@ values-ja:inbuilt_mod_list_players_desc
 values-ja:inbuilt_mod_low_fire
 values-ja:inbuilt_mod_low_fire_desc
 values-ja:inbuilt_mod_motion_blur
-values-ja:inbuilt_mod_motion_blur_desc
 values-ja:inbuilt_mod_offhand
 values-ja:inbuilt_mod_offhand_desc
 values-ja:inbuilt_mod_projectile_scaler
@@ -6871,7 +6866,6 @@ values-pt:inbuilt_mod_list_players_desc
 values-pt:inbuilt_mod_low_fire
 values-pt:inbuilt_mod_low_fire_desc
 values-pt:inbuilt_mod_motion_blur
-values-pt:inbuilt_mod_motion_blur_desc
 values-pt:inbuilt_mod_offhand
 values-pt:inbuilt_mod_offhand_desc
 values-pt:inbuilt_mod_projectile_scaler
@@ -8150,7 +8144,6 @@ values-ru:inbuilt_mod_list_players_desc
 values-ru:inbuilt_mod_low_fire
 values-ru:inbuilt_mod_low_fire_desc
 values-ru:inbuilt_mod_motion_blur
-values-ru:inbuilt_mod_motion_blur_desc
 values-ru:inbuilt_mod_offhand
 values-ru:inbuilt_mod_offhand_desc
 values-ru:inbuilt_mod_projectile_scaler
@@ -9429,7 +9422,6 @@ values-tr:inbuilt_mod_list_players_desc
 values-tr:inbuilt_mod_low_fire
 values-tr:inbuilt_mod_low_fire_desc
 values-tr:inbuilt_mod_motion_blur
-values-tr:inbuilt_mod_motion_blur_desc
 values-tr:inbuilt_mod_offhand
 values-tr:inbuilt_mod_offhand_desc
 values-tr:inbuilt_mod_projectile_scaler
@@ -10708,7 +10700,6 @@ values-vi:inbuilt_mod_list_players_desc
 values-vi:inbuilt_mod_low_fire
 values-vi:inbuilt_mod_low_fire_desc
 values-vi:inbuilt_mod_motion_blur
-values-vi:inbuilt_mod_motion_blur_desc
 values-vi:inbuilt_mod_offhand
 values-vi:inbuilt_mod_offhand_desc
 values-vi:inbuilt_mod_projectile_scaler
@@ -11985,7 +11976,6 @@ values-zh-rCN:inbuilt_mod_list_players_desc
 values-zh-rCN:inbuilt_mod_low_fire
 values-zh-rCN:inbuilt_mod_low_fire_desc
 values-zh-rCN:inbuilt_mod_motion_blur
-values-zh-rCN:inbuilt_mod_motion_blur_desc
 values-zh-rCN:inbuilt_mod_offhand
 values-zh-rCN:inbuilt_mod_offhand_desc
 values-zh-rCN:inbuilt_mod_projectile_scaler

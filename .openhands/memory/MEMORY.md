@@ -110,3 +110,25 @@ The repo was called **GlowberryClient** before; the package is `org.chimeramc.cl
   (diagnose with `actionlint`, not the API); and `set -o pipefail` + `cmd | grep -q` exits 74
   (SIGPIPE) even on a match — dump to a file and grep the file. The Rust tree is rustfmt-normalized;
   keep it so.
+
+### Hygiene gates (the four that fail a local change)
+- **`FileSizeBudgetTest`** (`scripts/hygiene/file-sizes-baseline.txt`, threshold 1500 lines): a listed
+  file may only **shrink**. `InbuiltModuleProvider.java` was at its 1765 baseline; the fix is to
+  **split**, not to edit the baseline. It was split into `ModConfigSchema.java` (config keys +
+  `ConfigEntry` list + `RuntimeConfigSchema` builders, 1175 lines) and the provider (748). The
+  provider keeps thin `static schemaTypeFor`/`configDescriptionRes` delegators so
+  `InbuiltModuleProviderTypeTest` (same package) still compiles; the moved members are package-private
+  and the provider calls them as `ModConfigSchema.x(...)`.
+- **`ModuleDescriptionsTest`**: every `inbuilt_mod_*_desc` in `values/strings.xml` must be ≤ **80**
+  chars (target 60) and one sentence. A long "weighted by how fast the view is moving" tail is the
+  usual miss — keep it in the `*_scope_note` instead.
+- **`TranslationCoverageTest` / `check_ui_hygiene.py` translation baseline**: a new string must be
+  translated in all 10 locales (`es fr hi id ja pt ru tr vi zh-rCN`) or marked `translatable="false"`.
+  Add a `scripts/translations_*.json` batch, register it in `BATCHES` in
+  `scripts/apply_translations.py`, then run the applier (it is idempotent and refuses a dropped `%s`).
+  After applying, `check_ui_hygiene.py` may report baseline entries that "no longer exist" — retire
+  them with `python3 scripts/check_ui_hygiene.py --update` (that also refreshes the findViewById
+  baseline, which *shrinks* when a `findViewById` is replaced by a ViewBinding read).
+- **`NoSilentCatchTest`**: a `catch` that discards the throwable fails. Use
+  `AppLog.warnOnce(tag, key, message, e)`, even for an expected `UnsatisfiedLinkError` fail-closed path.
+- Baseline format note: the baseline files live under **`scripts/hygiene/`**, not `scripts/`.

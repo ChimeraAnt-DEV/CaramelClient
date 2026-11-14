@@ -1,13 +1,19 @@
 package org.chimeramc.client.core.backend;
 
 /**
- * Derives the game's real frame rate from the sweetloader's render-hook frame counter.
+ * Derives the game's frame rate from the sweetloader's render-hook frame counter.
  *
  * <p>The game strips its symbols, so there is no frame-rate API to call. The sweetloader does,
  * however, own a hook on the game's own player renderer ({@code GamePlayerRender}), and that hook
- * increments a monotonic tick once per frame it draws. Counting how many of those ticks elapse in a
- * wall-clock window is the game's own frame rate — a reading of frames the game actually presented,
- * not a guess and not the host's vsync callback.
+ * advances a monotonic tick once per frame. Counting how many of those ticks elapse in a wall-clock
+ * window is a reading of the game's own render path — not a guess and not the host's vsync callback.
+ *
+ * <p><b>How exact the reading is.</b> The tick is the true frame boundary only while the engine's
+ * present hook (the {@code eglSwapBuffers} detour) is live and counting; then it is exact. Without
+ * that hook the tick is inferred from render-entry timestamps (a few-millisecond floor), which can
+ * collapse or split frames when the visible-model count changes, so the derived rate is close but not
+ * exact. A caller must read {@code PreloaderInput.isRenderTickExact()} and label the rate
+ * accordingly rather than presenting an inferred rate as the game's exact frame rate.
  *
  * <p>The counter is read on demand (the FPS overlay polls it), so this class is fed a
  * {@code (renderTick, nowMs)} sample on each call and keeps only the first sample of the current

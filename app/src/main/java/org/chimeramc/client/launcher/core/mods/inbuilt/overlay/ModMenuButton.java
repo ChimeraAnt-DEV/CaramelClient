@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.manager.InbuiltModManager;
 import org.chimeramc.client.preloader.PreloaderInput;
+import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuController;
 import org.chimeramc.client.util.MainThread;
 
 public class ModMenuButton {
@@ -42,10 +43,6 @@ public class ModMenuButton {
     private static final long TAP_TIMEOUT = 200;
     private static final float DRAG_THRESHOLD = 10f;
     
-    /** The one Mod Menu (U4). It used to be two windows; the bind and the launcher open this. */
-    private ModMenuOverlay menuOverlay;
-    /** The radial mod wheel (section 1), opened from the same bind. */
-    private org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay radialMenuOverlay;
     
     public ModMenuButton(Activity activity) {
         this.activity = activity;
@@ -228,16 +225,9 @@ public class ModMenuButton {
             return;
         }
 
-        if (menuOverlay == null) {
-            menuOverlay = new ModMenuOverlay(activity);
-            menuOverlay.setCallback(new ModMenuCallback());
-        }
-
-        if (menuOverlay.isShowing()) {
-            menuOverlay.hide();
-        } else {
-            menuOverlay.show();
-        }
+        InGameMenuController menu = InGameMenuController.install(activity);
+        if (menu == null) return;
+        menu.toggle();
     }
     
 
@@ -253,10 +243,7 @@ public class ModMenuButton {
         // Invalidated before the isShowing check so a hide during the attach delay still wins.
         showGate.invalidate();
         handler.removeCallbacksAndMessages(null);
-        if (menuOverlay != null) {
-            menuOverlay.hide();
-            menuOverlay = null;
-        }
+        hideMenu();
         if (!isShowing || buttonView == null) return;
         handler.post(() -> {
             try {
@@ -287,136 +274,31 @@ public class ModMenuButton {
     }
 
     /**
-     * The open menu, or null.
+     * Whether the native menu is showing.
      *
-     * <p>Exists so the game activity can hand controller input to the menu before the sweetloader may
-     * swallow it — the overlay root is unfocusable, so the framework never routes a key or a stick
-     * movement to it on its own.
+     * <p>The menu is drawn by the sweetloader on the game's GL context, so there is no Android view
+     * to inspect; the native side owns the open state.
      */
-    public ModMenuOverlay getMenuOverlay() {
-        return menuOverlay;
-    }
-
     public boolean isMenuShowing() {
-        return (menuOverlay != null && menuOverlay.isShowing())
-                || (radialMenuOverlay != null && radialMenuOverlay.isShowing());
+        InGameMenuController menu = InGameMenuController.getInstance();
+        return menu != null && menu.isMenuOpen();
     }
 
     /**
-     * Opens or closes the Mod Menu from the bound input.
+     * Opens or closes the native in-game Mod Menu from the bound input.
      *
-     * <p>The bind opens the radial wheel, whose sectors route into the one Mod Menu (U4). The
-     * launcher's Mods screen opens the same menu, so a module or a page cannot exist in one and be
-     * missing from the other.
+     * <p>The bind opens the one menu (U4); the launcher's Mods screen opens the same one, so a
+     * module cannot exist in one and be missing from the other.
      */
     public void toggleMenuFromBind() {
         if (!isShowing) return;
-        ensureRadialMenuOverlay();
-        radialMenuOverlay.toggle();
+        InGameMenuController menu = InGameMenuController.install(activity);
+        if (menu != null) menu.toggle();
     }
 
-    /**
-     * The radial wheel, created lazily and wired to this menu's destinations.
-     *
-     * <p>Exposed so the hold-to-open path can reach the wheel on the *press* (before any toggle has
-     * happened) — creating it inside {@code toggleMenuFromBind} alone left the first press with a
-     * null wheel, which is exactly the gesture hold-to-open needs to work.
-     */
-    public org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay
-            ensureRadialMenuOverlay() {
-        if (!isShowing) return null;
-        if (radialMenuOverlay == null) {
-            radialMenuOverlay =
-                    new org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay(activity);
-            radialMenuOverlay.setDestinations(new org.chimeramc.client.core.mods.inbuilt.overlay
-                    .RadialMenuOverlay.Destinations() {
-                @Override
-                public void openMods() {
-                    openMenuFiltered(
-                            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter.ALL);
-                }
-
-                @Override
-                public void openHud() {
-                    // The HUD sector is a filter over the one module list, so it lands on the same
-                    // rows the HUD chip shows rather than a second, hand-built list.
-                    openMenuFiltered(
-                            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter.HUD);
-                }
-
-                @Override
-                public void openCustomize() {
-                    new org.chimeramc.client.core.mods.inbuilt.overlay.CustomizeChooser(
-                            activity,
-                            () -> openMenuSection(org.chimeramc.client.core.mods.inbuilt.overlay
-                                    .ModMenuPage.SETTINGS),
-                            () -> openMenuSection(org.chimeramc.client.core.mods.inbuilt.overlay
-                                    .ModMenuPage.COSMETICS)).show();
-                }
-
-                @Override
-                public void openSettings() {
-                    openMenuSection(
-                            org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuPage.SETTINGS);
-                }
-            });
-        }
-        return radialMenuOverlay;
-    }
-
-    /**
-     * Opens the one Mod Menu on a specific page, creating it if needed.
-     *
-     * <p>The radial wheel's sectors route here, so a sector opens the same menu the launcher and
-     * the bind do, on the page it names.
-     */
-    private void openMenuSection(org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuPage page) {
-        if (menuOverlay == null) {
-            menuOverlay = new ModMenuOverlay(activity);
-            menuOverlay.setCallback(new ModMenuCallback());
-        }
-        menuOverlay.showPage(page);
-    }
-
-    /**
-     * Opens the one Mod Menu's module list already filtered to a section.
-     *
-     * <p>The wheel's MODS and HUD sectors route here, so the wheel lands on the same filtered rows
-     * the filter chip shows. The menu is created lazily and the filter is applied on the first
-     * frame, so a cold open and an already-open menu behave identically.
-     */
-    private void openMenuFiltered(
-            org.chimeramc.client.core.mods.inbuilt.overlay.ModuleFilter filter) {
-        if (menuOverlay == null) {
-            menuOverlay = new ModMenuOverlay(activity);
-            menuOverlay.setCallback(new ModMenuCallback());
-        }
-        menuOverlay.showModulesFiltered(filter);
-    }
-
-    /** The callback the overlay calls back into, kept in one place so both paths share it. */
-    private final class ModMenuCallback implements ModMenuOverlay.ModMenuCallback {
-        @Override
-        public void onModToggled(String modId, boolean enabled) {
-        }
-
-        @Override
-        public void onButtonOpacityChanged(int opacity) {
-            applyButtonOpacity();
-        }
-    }
-
-    /** The open radial wheel, or null. */
-    public org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay getRadialMenuOverlay() {
-        return radialMenuOverlay;
-    }
-
+    /** Closes the native menu if it is open. */
     public void hideMenu() {
-        if (menuOverlay != null && menuOverlay.isShowing()) {
-            menuOverlay.hide();
-        }
-        if (radialMenuOverlay != null && radialMenuOverlay.isShowing()) {
-            radialMenuOverlay.hide();
-        }
+        InGameMenuController menu = InGameMenuController.getInstance();
+        if (menu != null) menu.hide();
     }
 }

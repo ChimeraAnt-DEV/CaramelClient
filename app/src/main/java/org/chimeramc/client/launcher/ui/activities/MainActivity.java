@@ -701,7 +701,7 @@ import okhttp3.OkHttpClient;
     }
 
     private void initializeVersionManager() {
-        binding.launchDock.launchButton.setEnabled(false);
+        setLaunchControlEnabled(false);
         versionManager = VersionManager.getIfInitialized();
         if (versionManager != null) {
             onVersionManagerReady();
@@ -1328,10 +1328,11 @@ import okhttp3.OkHttpClient;
         float density = getResources().getDisplayMetrics().density;
         float radiusPx = roundingDp * density;
         
-        // Apply to launch button
-        if (binding.launchDock.launchButton.getBackground() instanceof GradientDrawable) {
-            ((GradientDrawable) binding.launchDock.launchButton.getBackground()).setCornerRadius(radiusPx);
-        }
+        // The launch face is a state-list drawable, so there is no single GradientDrawable to
+        // retune; its 20dp radius comes from @dimen/radius_split_launch and is deliberately fixed,
+        // because the corner-radius preference is a card/shape preference and the pack's launch
+        // control is its own shape. Rounding it here would also break the flush seam with the
+        // chevron segment, which shares that radius on its trailing edge only.
         
         // Apply to select version button
         if (binding.launchDock.selectVersionButton.getBackground() instanceof GradientDrawable) {
@@ -1528,9 +1529,13 @@ import okhttp3.OkHttpClient;
 
     @SuppressLint({"ClickableViewAccessibility", "UnsafeIntentLaunch"})
     private void initListeners() {
-        binding.launchDock.launchButton.setEnabled(false);
+        setLaunchControlEnabled(false);
         binding.launchDock.launchButton.setOnClickListener(v -> launchGame());
         DynamicAnim.applyPressScale(binding.launchDock.launchButton);
+        // The split button's chevron is the other half: it opens the instance/version picker, so
+        // tapping the wrong half never starts a session.
+        binding.launchDock.launchChevron.setOnClickListener(v -> showVersionSelectDialog());
+        DynamicAnim.applyPressScale(binding.launchDock.launchChevron);
         binding.launchDock.selectVersionButton.setOnClickListener(v -> showVersionSelectDialog());
         DynamicAnim.applyPressScale(binding.launchDock.selectVersionButton);
 
@@ -1726,7 +1731,7 @@ import okhttp3.OkHttpClient;
      */
     private void setupDockFeedback() {
         launchShimmer = findViewById(R.id.launch_button_shimmer);
-        Button play = binding != null ? binding.launchDock.launchButton : null;
+        View play = binding != null ? binding.launchDock.launchButton : null;
         if (play == null) return;
         // The button starts disabled until the version manager is ready; start the shimmer now and
         // let resetLaunchButton() stop it, so the control never reads as frozen on a cold start.
@@ -2107,7 +2112,7 @@ import okhttp3.OkHttpClient;
         }
         View wheel = findViewById(R.id.quickdock_wheel);
         if (wheel != null) {
-            wheel.setOnClickListener(v -> openRadialWheelFromHome());
+            wheel.setOnClickListener(v -> openModsFromHome());
             DynamicAnim.applyPressScale(wheel);
             DynamicAnim.applyHoverBloom(wheel);
         }
@@ -2135,16 +2140,15 @@ import okhttp3.OkHttpClient;
     }
 
     /**
-     * Shows the radial wheel over the launcher, so the dock's wheel entry is the same menu the
-     * in-game bind opens. The wheel needs no game session to draw.
+     * Opens the launcher's Mods screen.
+     *
+     * <p>This dock entry used to raise the radial wheel over the launcher. The wheel was removed
+     * with the Java menu screen, and the launcher cannot host the native menu (that draws on the
+     * game's GL context and needs a running session), so the entry opens the launcher's own Mods
+     * screen — the same module list, as a normal screen.
      */
-    private void openRadialWheelFromHome() {
-        try {
-            org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay
-                    .showForActivity(this);
-        } catch (Throwable t) {
-            Toast.makeText(this, R.string.launch_quickdock_wheel_unavailable, Toast.LENGTH_SHORT).show();
-        }
+    private void openModsFromHome() {
+        openModsFullscreen();
     }
 
     private void openModsFullscreen() {
@@ -2157,10 +2161,20 @@ import okhttp3.OkHttpClient;
         performActualLaunch();
     }
 
+    /** Enables or disables both halves of the split launch control as one. */
+    private void setLaunchControlEnabled(boolean enabled) {
+        if (binding == null) return;
+        binding.launchDock.launchButton.setEnabled(enabled);
+        // The chevron opens a picker, which is meaningless while the version manager is not ready,
+        // so it is disabled with the face: a live chevron on a dead control is a confusing tap.
+        binding.launchDock.launchChevron.setEnabled(enabled);
+        binding.launchDock.launchChevron.setAlpha(enabled ? 1f : 0.55f);
+    }
+
     /** Clears the in-flight flag and re-enables the Play button after a launch is abandoned. */
     private void resetLaunchButton() {
         launchInProgress = false;
-        if (binding != null) binding.launchDock.launchButton.setEnabled(true);
+        setLaunchControlEnabled(true);
         stopLaunchShimmer();
     }
 
@@ -2173,7 +2187,7 @@ import okhttp3.OkHttpClient;
         // binding is nullable on this screen (resetLaunchButton guards it), so dereferencing it
         // unguarded here threw on the UI thread when the launch was triggered from a path where the
         // view had not been bound yet.
-        if (binding != null) binding.launchDock.launchButton.setEnabled(false);
+        setLaunchControlEnabled(false);
         LaunchTrace trace = LaunchTrace.create(null);
         trace.milestone("Launch requested");
 
@@ -2644,12 +2658,17 @@ import okhttp3.OkHttpClient;
         if (binding == null) return;
         if (versionManager == null) {
             binding.launchDock.textMinecraftVersion.setText(getString(R.string.not_found_version));
+            binding.launchDock.launchButtonSubtitle.setText(getString(R.string.not_found_version));
             updateLastPlayedName(null, null);
             return;
         }
         GameVersion selectedVersion = versionManager.getSelectedVersion();
         String instanceName = selectedVersion != null ? getInstanceDisplayName(selectedVersion) : null;
         binding.launchDock.textMinecraftVersion.setText(TextUtils.isEmpty(instanceName) ? getString(R.string.not_found_version) : instanceName);
+        // The split button names the build it will start, so the action is unambiguous without
+        // reading the picker above it.
+        binding.launchDock.launchButtonSubtitle.setText(TextUtils.isEmpty(instanceName)
+                ? getString(R.string.not_found_version) : instanceName);
         updateLastPlayedName(instanceName, selectedVersion);
         refreshLastPlayedCard();
     }

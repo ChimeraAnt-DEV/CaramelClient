@@ -47,7 +47,7 @@ public class BackdropRefreshScheduleTest {
     @Test
     public void theIntervalNeverGoesFasterThanTheCap() {
         // Asking for 120fps must not produce an 8ms interval; the cap is the point of the class.
-        assertEquals(RadialWheelMaterial.BLUR_FPS_MAX, 10);
+        assertEquals(BackdropRefreshSchedule.MAX_FPS, 10);
         assertEquals(100L, BackdropRefreshSchedule.intervalMs(120));
         assertEquals(BackdropRefreshSchedule.MIN_INTERVAL_MS, BackdropRefreshSchedule.intervalMs(60));
     }

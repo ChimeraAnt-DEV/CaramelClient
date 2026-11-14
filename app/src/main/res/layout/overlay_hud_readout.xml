@@ -53,6 +53,23 @@
                 android:textStyle="bold"
                 tools:text="60" />
 
+            <!-- The approximation marker. A "~" beside the number is the one cue that says this is
+                 not the game's exact frame rate: the reading is either inferred from render-entry
+                 timestamps or the launcher's own refresh cadence. It is never shown beside an exact
+                 reading, so a plain number always means the game's real rate. -->
+            <TextView
+                android:id="@+id/hud_approx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_hairline"
+                android:layout_marginBottom="@dimen/space_1"
+                android:includeFontPadding="false"
+                android:text="@string/mod_overlay_fps_approx"
+                android:textAppearance="@style/TextAppearance.Caramel.Caption"
+                android:textColor="@color/overlay_text_muted"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <TextView
                 android:id="@+id/hud_unit"
                 android:layout_width="wrap_content"

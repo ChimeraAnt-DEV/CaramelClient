@@ -42,6 +42,7 @@ BATCHES = [
     ROOT / "scripts/translations_launch_changelog.json",
     ROOT / "scripts/translations_native_replay.json",
     ROOT / "scripts/translations_settings_run_setup.json",
+    ROOT / "scripts/translations_present_frame.json",
 ]
 
 STRING_RE = re.compile(r'<string name="([^"]+)"([^>]*)>(.*?)</string>', re.S)
