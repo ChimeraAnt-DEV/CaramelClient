@@ -168,6 +168,18 @@ public final class LauncherGameBackend implements GameBackend {
     }
 
     /**
+     * Whether {@link #readFps()} is the game's exact frame rate.
+     *
+     * <p>Exact only when the tick source reports its tick is the engine's present boundary. An
+     * inferred tick reads as approximate so the overlay can mark the number, rather than passing a
+     * close-but-not-exact rate off as the game's real frame rate. Fail-closed when there is no source.
+     */
+    @Override
+    public boolean isFrameRateExact() {
+        return frameTickSource != null && frameTickSource.isExact();
+    }
+
+    /**
      * Replaces the clock the frame-rate window is measured against.
      *
      * <p>Tests only: on a device the default {@code SystemClock.uptimeMillis} is the correct

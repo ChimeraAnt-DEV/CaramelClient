@@ -48,7 +48,8 @@ accessor-name strings are stripped).
 | `time_changer` | Changes client time | Native frame/time feed | **no** | needs-hook |
 | `low_fire` | Lowers the fire overlay | Native frame feed | **no** | needs-hook |
 | `block_outline` | Toggles the block outline | Native frame feed | **no** | needs-hook |
-| `motion_blur` | Motion blur | Native frame feed | **no** | needs-hook |
+| `motion_blur` | Blends the previous presented frame into the new one, weighted by view speed | The engine's present/frame-boundary hook (`eglSwapBuffers` detour); the composite shader is pure GL | yes when libEGL exposes a present call (no Vulkan-only build); the seam is a live probe | working (host math tested); badged while the present hook is absent |
+| `frame_generation` | Blends the previous presented frame into the current one on the present boundary (motion reads smoother at the same render rate; no extra frame is presented) | The engine's present/frame-boundary hook (`eglSwapBuffers` detour) | yes when libEGL exposes a present call; the seam is a live probe | working (host math tested); badged while the present hook is absent |
 | `saturation` | Colour saturation | Native frame feed | **no** | needs-hook |
 | `crosshair` | Custom crosshair | Inbuilt overlay | yes (client-only) | working (tested) |
 | `armor_view_bending` | Bends armour with the view | Native model feed | **no** | needs-hook |

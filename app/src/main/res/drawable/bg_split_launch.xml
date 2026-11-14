@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The split LAUNCH GAME button's main segment: the UI pack's green action face.
+
+    The pack draws it as a vertical gradient (GreenLight -> GreenDark) under a white top sheen, with a
+    lit 1dp border, inside a 20dp radius. The sheen is what makes a gradient read as a lit surface
+    rather than a flat wash, so it is a second gradient layer over the first. The green is the pack's
+    action colour: its primary "go" tone, distinct from the blue accent the rest of the UI uses.
+
+    The selector carries the three states the pack's ImGui button has: resting, hovered (on a phone,
+    the focused state a controller or keyboard produces) and pressed (a deeper fill, so the face
+    visibly sinks).
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused: the same face with the bright focus ring, so a controller user sees the selection. -->
+    <item android:state_focused="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_split_launch" />
+                    <stroke android:width="2dp" android:color="@color/ui_focus_ring" />
+                </shape>
+            </item>
+            <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:startColor="@color/split_launch_top"
+                        android:endColor="@color/split_launch_bottom"
+                        android:angle="270" />
+                    <corners android:radius="@dimen/radius_split_launch" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <!-- Pressed: a deeper fill, so the face darkens under the finger. -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:startColor="@color/split_launch_pressed"
+                        android:endColor="@color/split_launch_pressed"
+                        android:angle="270" />
+                    <corners android:radius="@dimen/radius_split_launch" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <!-- Resting: the gradient face, a white top sheen and the lit hairline. -->
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:startColor="@color/split_launch_top"
+                        android:endColor="@color/split_launch_bottom"
+                        android:angle="270" />
+                    <corners android:radius="@dimen/radius_split_launch" />
+                </shape>
+            </item>
+            <item android:bottom="18dp">
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:startColor="@color/split_launch_sheen"
+                        android:endColor="@android:color/transparent"
+                        android:angle="270" />
+                    <corners
+                        android:topLeftRadius="@dimen/radius_split_launch"
+                        android:topRightRadius="@dimen/radius_split_launch" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/radius_split_launch" />
+                    <stroke android:width="1dp" android:color="@color/split_launch_border" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

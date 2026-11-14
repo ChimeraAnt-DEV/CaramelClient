@@ -3,8 +3,8 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
 /**
  * The throttling rule for the wheel's backdrop capture (R3).
  *
- * <p>The wheel sits over a live game, so its blurred backdrop is captured from the window rather
- * than drawn. Capturing every frame is the fastest way to lose the frame budget on a mid-range
+ * <p>A panel that sits over a live game captures its blurred backdrop from the window rather than
+ * drawing it. Capturing every frame is the fastest way to lose the frame budget on a mid-range
  * Adreno, so the capture is rate-limited to a small number of refreshes per second and the last
  * result is reused in between. This class holds only the arithmetic of "is a refresh due", because
  * the timing rule is the part that is easy to get subtly wrong (a naive {@code now - last > period}
@@ -15,8 +15,10 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
  */
 public final class BackdropRefreshSchedule {
 
+    /** The most backdrop refreshes per second, so the capture cannot eat the frame budget. */
+    public static final int MAX_FPS = 10;
     /** Never refresh faster than this, in milliseconds. */
-    public static final long MIN_INTERVAL_MS = 1000L / RadialWheelMaterial.BLUR_FPS_MAX;
+    public static final long MIN_INTERVAL_MS = 1000L / MAX_FPS;
 
     private long lastCaptureMs = Long.MIN_VALUE;
     private int refreshes;
@@ -59,7 +61,7 @@ public final class BackdropRefreshSchedule {
      */
     public static long intervalMs(int fps) {
         if (fps <= 0) return -1L;
-        int clamped = Math.min(RadialWheelMaterial.BLUR_FPS_MAX, fps);
+        int clamped = Math.min(MAX_FPS, fps);
         return Math.max(MIN_INTERVAL_MS, 1000L / clamped);
     }
 }

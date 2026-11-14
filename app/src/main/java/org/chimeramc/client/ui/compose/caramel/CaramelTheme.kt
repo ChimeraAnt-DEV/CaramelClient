@@ -1,26 +1,26 @@
 package org.chimeramc.client.ui.compose.caramel
 
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.chrisbanes.haze.HazeState
 import org.chimeramc.client.R
 
 /**
- * The Caramel design tokens: the navy-and-glass palette the UI pack defines, as Compose values.
+ * The Caramel Client design tokens, ported from the `CaramelClient-UI-pack` Compose launcher.
  *
- * Ported from the UI pack's `dev.caramel.ui.theme`. The pack is a Compose *Desktop* project; the
- * values are the same, but the two font declarations are different here because Android resolves
- * fonts through `res/font` resources rather than a classpath path string.
+ * <p>The pack's `theme/Theme.kt` defines its palette as a flat `object C`. That is kept here rather
+ * than folded into Material's `ColorScheme`, because most of what this UI draws (hairlines, fills,
+ * glass sheens, the caramel accent) has no Material slot. The Material theme is still installed so
+ * `Text`/`Icon` defaults resolve; the tokens below are what the Caramel surfaces actually read.
  *
- * The palette lives in one object rather than in a Material `ColorScheme` because most of it —
- * the three-step text ramp, the hairline and fill alphas, the caramel accent — has no Material
- * name, and inventing `surfaceVariant`-style aliases for them would make the screens harder to
- * read, not easier.
+ * <p>Colour values are byte-for-byte the pack's. Changing one here without changing the pack's
+ * `Theme.kt` and `CaramelTheme.cpp` (the ImGui twin) is how the launcher and the in-game menu drift
+ * apart, so the three are meant to move together.
  */
 object CaramelColors {
     val Abyss = Color(0xFF060B1A)
@@ -37,67 +37,91 @@ object CaramelColors {
     val Red = Color(0xFFFF5468)
     val Orange = Color(0xFFFF9F2E)
     val Yellow = Color(0xFFFFD040)
-
-    /** Primary text. */
     val Text = Color(0xFFEAF0FF)
-
-    /** Secondary text: labels under a value, descriptions. */
     val Text2 = Color(0xFF9AA8D0)
-
-    /** Tertiary text: captions, disabled. */
     val Text3 = Color(0xFF66749E)
-
-    /** Text on a green fill, dark enough to pass contrast on [Green]. */
     val OnGreen = Color(0xFF062412)
-
-    /** A 1dp border. */
     val Hairline = Color.White.copy(alpha = 0.14f)
-
-    /** A quiet fill: an inactive control's track. */
     val Fill = Color.White.copy(alpha = 0.07f)
-
-    /** A stronger fill: a hovered or pressed control. */
     val FillStrong = Color.White.copy(alpha = 0.12f)
 }
 
-/**
- * Poppins for display, Inter for controls and body.
- *
- * Android cannot load a font from an arbitrary path the way Desktop can, so these are the two
- * bundled `res/font` families. Both are the same typefaces the pack ships; the weight mapping is
- * done by the system from the single variable font rather than from four static files, which is why
- * each family is one resource here.
- */
-object CaramelFonts {
-    val Poppins = FontFamily(Font(R.font.poppins))
-    val Inter = FontFamily(Font(R.font.inter))
-}
+/** Short alias, matching the pack's `C`. */
+typealias C = CaramelColors
 
-/** The type ramp. Every style names its colour, so a caller does not repeat it at the call site. */
+/**
+ * The pack's type scale: Poppins for display and titles, Inter for controls and body.
+ *
+ * <p>Both families ship as variable fonts in `res/font`, so one file per family carries every
+ * weight and the weight is selected by axis rather than by a second file.
+ */
+private val Poppins = FontFamily(
+    Font(R.font.poppins, FontWeight.Normal),
+    Font(R.font.poppins, FontWeight.Medium),
+    Font(R.font.poppins, FontWeight.Bold),
+)
+
+private val Inter = FontFamily(
+    Font(R.font.inter, FontWeight.Normal),
+    Font(R.font.inter, FontWeight.Medium),
+    Font(R.font.inter, FontWeight.SemiBold),
+    Font(R.font.inter, FontWeight.Bold),
+)
+
+/** Short alias, matching the pack's `T`. */
 object CaramelType {
-    val Display = TextStyle(fontFamily = CaramelFonts.Poppins, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = CaramelColors.Text)
-    val Title = TextStyle(fontFamily = CaramelFonts.Poppins, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = CaramelColors.Text)
-    val Subtitle = TextStyle(fontFamily = CaramelFonts.Poppins, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = CaramelColors.Text)
-    val Button = TextStyle(fontFamily = CaramelFonts.Poppins, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = CaramelColors.Text)
-    val Label = TextStyle(fontFamily = CaramelFonts.Inter, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = CaramelColors.Text)
-    val Body = TextStyle(fontFamily = CaramelFonts.Inter, fontWeight = FontWeight.Normal, fontSize = 12.sp, color = CaramelColors.Text2)
-    val Caption = TextStyle(fontFamily = CaramelFonts.Inter, fontWeight = FontWeight.Normal, fontSize = 11.sp, color = CaramelColors.Text3)
-    val Chip = TextStyle(fontFamily = CaramelFonts.Inter, fontWeight = FontWeight.SemiBold, fontSize = 10.5.sp, color = CaramelColors.Text)
+    val Display = TextStyle(fontFamily = Poppins, fontWeight = FontWeight.Bold, fontSize = 24.sp, color = C.Text)
+    val Title = TextStyle(fontFamily = Poppins, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = C.Text)
+    val Subtitle = TextStyle(fontFamily = Poppins, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = C.Text)
+    val Button = TextStyle(fontFamily = Poppins, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = C.Text)
+    val Label = TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = C.Text)
+    val Body = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 12.sp, color = C.Text2)
+    val Caption = TextStyle(fontFamily = Inter, fontWeight = FontWeight.Normal, fontSize = 11.sp, color = C.Text3)
+    val Chip = TextStyle(fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 10.5.sp)
 }
+
+typealias T = CaramelType
 
 /**
- * The two blur sources a glass surface can sample.
+ * Installs the Caramel palette into Material so `Text`, `Icon` and the Material defaults resolve to
+ * Caramel colours.
  *
- * The pack splits them so a modal can blur the whole window while a card blurs only the wallpaper.
- * On Android there is no wallpaper to sample — the launcher owns its own backdrop — so both are
- * declared here for parity with the pack and a screen provides whichever it means. A screen that
- * never provides one and never renders a glass surface is fine: the locals are only read inside
- * [CaramelGlassPanel], so the error message names the real mistake.
+ * <p>Most Caramel surfaces read [CaramelColors] directly — they draw things Material's scheme has no
+ * slot for. This wrapper exists so a Material component dropped into the tree (a
+ * `CircularProgressIndicator`, a ripple) does not fall back to the default purple.
  */
-val LocalHaze = staticCompositionLocalOf<HazeState> {
-    error("No HazeState provided: a glass surface needs one, see CaramelBackdrop")
+@Composable
+fun CaramelTheme(content: @Composable () -> Unit) {
+    androidx.compose.material3.MaterialTheme(
+        colorScheme = androidx.compose.material3.darkColorScheme(
+            primary = C.Blue,
+            onPrimary = Color.White,
+            primaryContainer = C.DeepBlue,
+            onPrimaryContainer = C.Text,
+            secondary = C.Caramel,
+            onSecondary = Color.White,
+            background = C.Abyss,
+            onBackground = C.Text,
+            surface = C.Navy,
+            onSurface = C.Text,
+            surfaceVariant = C.DeepBlue,
+            onSurfaceVariant = C.Text2,
+            outline = C.Hairline,
+            error = C.Red,
+            onError = Color.White,
+        ),
+        content = content,
+    )
 }
 
-val LocalWindowHaze = staticCompositionLocalOf<HazeState> {
-    error("No window HazeState provided: a modal's glass surface needs one")
+/** The pack's spacing and radius scale. */
+object CaramelDimens {
+    val RadiusCard = 20.dp
+    val RadiusHero = 24.dp
+    val RadiusPanel = 18.dp
+    val RadiusControl = 11.dp
+    val RadiusButton = 12.dp
+    val PagePad = 14.dp
+    val Gap = 16.dp
+    val GapLarge = 20.dp
 }

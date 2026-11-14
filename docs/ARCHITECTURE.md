@@ -68,7 +68,7 @@ flowchart TD
   When the library is missing every capability is clear, so a dependent feature is greyed out
   rather than appearing to work.
 - **Pure-rule extraction.** Rules that must be unit-tested live in Android-free classes
-  (`ApiLevels`, `DisplayModePreference`, `LauncherTab`, `NavLayoutMode`, `ModMenuNavigation`,
+  (`ApiLevels`, `DisplayModePreference`, `LauncherTab`, `NavLayoutMode`, `ModAvailability`,
   `CapeAnimationCurve`, …); the Android type only paints or applies what the pure class returns.
   This is why a JVM test can pin behaviour that a device would otherwise be needed to see.
 
@@ -77,7 +77,8 @@ flowchart TD
 | Concern | Package |
 | --- | --- |
 | Launch flow, versions, storage | `launcher.core.minecraft`, `launcher.core.versions` |
-| In-game overlays and the Mod Menu | `launcher.core.mods.inbuilt.overlay` |
+| In-game overlays (HUD, stats) | `launcher.core.mods.inbuilt.overlay` |
+| The Mod Menu itself | native Dear ImGui: `sweetloader/src/pl/menu/`, bridged by `launcher.preloader.PreloaderMenu` + `launcher.core.mods.inbuilt.overlay.InGameMenuController` |
 | Mod loading | `launcher.core.mods`, `launcher.core.mods.inbuilt` |
 | Cosmetics (catalogue, preview, native feed) | `core.cosmetics`, `launcher.core.mods.inbuilt.overlay` |
 | Replay | `core.replay` |

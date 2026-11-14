@@ -243,8 +243,4 @@ final class ModMenuTheme {
         return 0f;
     }
 
-    /** The row's disabled opacity, from the tested state rule (M10). */
-    float rowAlpha(ModMenuRowState rowState) {
-        return rowState != null && rowState.isDimmed() ? 0.6f : 1f;
-    }
 }

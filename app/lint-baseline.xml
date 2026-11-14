@@ -498,17 +498,6 @@
 
     <issue
         id="NewApi"
-        message="Call requires API level 30 (current min is 28): `android.os.Environment#isExternalStorageManager`"
-        errorLine1="                return Environment.isExternalStorageManager();"
-        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/core/setup/CompatibilityProbe.java"
-            line="93"
-            column="36"/>
-    </issue>
-
-    <issue
-        id="NewApi"
         message="Call requires API level 30 (current min is 28): `android.view.Window#setDecorFitsSystemWindows`"
         errorLine1="                dialog.getWindow().setDecorFitsSystemWindows(false);"
         errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -916,50 +905,6 @@
 
     <issue
         id="NewApi"
-        message="Call requires API level 29 (current min is 28): `android.graphics.Paint#setBlendMode`"
-        errorLine1="            emberPaint.setBlendMode(BlendMode.PLUS);"
-        errorLine2="                       ~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/ui/splash/SplashSceneView.java"
-            line="116"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Field requires API level 29 (current min is 28): `android.graphics.BlendMode#PLUS`"
-        errorLine1="            emberPaint.setBlendMode(BlendMode.PLUS);"
-        errorLine2="                                    ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/ui/splash/SplashSceneView.java"
-            line="116"
-            column="37"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 29 (current min is 28): `android.graphics.Paint#setBlendMode`"
-        errorLine1="            starPaint.setBlendMode(BlendMode.PLUS);"
-        errorLine2="                      ~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/ui/splash/SplashSceneView.java"
-            line="117"
-            column="23"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Field requires API level 29 (current min is 28): `android.graphics.BlendMode#PLUS`"
-        errorLine1="            starPaint.setBlendMode(BlendMode.PLUS);"
-        errorLine2="                                   ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/ui/splash/SplashSceneView.java"
-            line="117"
-            column="36"/>
-    </issue>
-
-    <issue
-        id="NewApi"
         message="Call requires API level 30 (current min is 28): `android.os.Environment#isExternalStorageManager`"
         errorLine1="                &amp;&amp; !Environment.isExternalStorageManager()) {"
         errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -1214,17 +1159,6 @@
     <issue
         id="InflateParams"
         message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
-        errorLine1="        View customView = getLayoutInflater().inflate(R.layout.dialog_rename_entry, null);"
-        errorLine2="                                                                                    ~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/ui/dialogs/GameVersionSelectDialog.java"
-            line="88"
-            column="85"/>
-    </issue>
-
-    <issue
-        id="InflateParams"
-        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
         errorLine1="        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_loading, null);"
         errorLine2="                                                                                       ~~~~">
         <location
@@ -1429,28 +1363,6 @@
             file="${:minecraft*buildDir}/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml"
             line="20"
             column="36"/>
-    </issue>
-
-    <issue
-        id="UseSwitchCompatOrMaterialCode"
-        message="Use `SwitchCompat` from AppCompat or `MaterialSwitch` from Material library"
-        errorLine1="        android.widget.Switch vibration = new android.widget.Switch(context);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ControllerProfileEditor.java"
-            line="110"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="UseSwitchCompatOrMaterialCode"
-        message="Use `SwitchCompat` from AppCompat or `MaterialSwitch` from Material library"
-        errorLine1="        android.widget.Switch antiDrift = new android.widget.Switch(context);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/ControllerProfileEditor.java"
-            line="150"
-            column="9"/>
     </issue>
 
     <issue
@@ -13113,17 +13025,6 @@
             file="src/main/java/org/chimeramc/client/launcher/ui/activities/QuickLaunchActivity.java"
             line="409"
             column="25"/>
-    </issue>
-
-    <issue
-        id="SetTextI18n"
-        message="String literal in `setText` can not be translated. Use Android resources instead."
-        errorLine1="                text.setText(&quot;render debug unavailable&quot;);"
-        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/chimeramc/client/launcher/core/mods/inbuilt/overlay/RenderDebugOverlay.java"
-            line="115"
-            column="30"/>
     </issue>
 
     <issue

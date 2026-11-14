@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuController;
 
 public class InbuiltOverlayManager {
     public interface HudEditorSelectionListener {
@@ -1242,19 +1243,9 @@ public class InbuiltOverlayManager {
             boolean matchesBind = InbuiltModManager.matchesModMenuBind(
                     manager.getModMenuKeybind(), manager.getModMenuControllerBind(),
                     keyCode, rawKeyCode);
-            if (matchesBind) {
-                boolean hold = manager.isRadialWheelHoldToOpen();
-                org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay wheel =
-                        modMenuButton.ensureRadialMenuOverlay();
-                if (action == android.view.KeyEvent.ACTION_DOWN) {
-                    if (wheel != null && wheel.onBindPress(hold)) return true;
-                    if (!hold) {
-                        modMenuButton.toggleMenuFromBind();
-                        return true;
-                    }
-                } else if (action == android.view.KeyEvent.ACTION_UP && hold) {
-                    if (wheel != null && wheel.onBindRelease(true)) return true;
-                }
+            if (matchesBind && action == android.view.KeyEvent.ACTION_DOWN) {
+                modMenuButton.toggleMenuFromBind();
+                return true;
             }
         }
 
@@ -1311,33 +1302,20 @@ public class InbuiltOverlayManager {
      * would otherwise be consumed by the game first.
      */
     public boolean handleMenuControllerKey(int rawKeyCode, int action) {
-        if (modMenuButton == null) return false;
-        // The radial wheel owns controller input while it is open, so the stick drives the cursor
-        // and no button reaches the game (no camera spin, no attacks).
-        org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay wheel =
-                modMenuButton.getRadialMenuOverlay();
-        if (wheel != null && wheel.isShowing()) {
-            return wheel.handleControllerKey(rawKeyCode,
-                    action == android.view.KeyEvent.ACTION_DOWN);
-        }
-        // There is one Mod Menu now (U4); it owns controller input while it is open.
-        ModMenuOverlay menu = modMenuButton.getMenuOverlay();
-        if (menu == null || !menu.isShowing()) return false;
-        return menu.handleControllerKey(rawKeyCode,
-                action == android.view.KeyEvent.ACTION_DOWN);
+        // The menu is drawn natively, so a controller key is translated to a menu action here and
+        // pushed into the native input queue rather than routed to an Android view. Only the back
+        // button is handled for now; the native menu's own nav flags cover the rest once it is open.
+        if (action != android.view.KeyEvent.ACTION_DOWN) return false;
+        if (rawKeyCode != android.view.KeyEvent.KEYCODE_BACK) return false;
+        InGameMenuController menu = InGameMenuController.getInstance();
+        return menu != null && menu.handleBack();
     }
 
     /** Hands analogue stick movement to the open Mod Menu, so the stick can move the selection. */
     public boolean handleMenuControllerMotion(android.view.MotionEvent event) {
-        if (modMenuButton == null) return false;
-        // The radial wheel takes the stick first while it is open.
-        org.chimeramc.client.core.mods.inbuilt.overlay.RadialMenuOverlay wheel =
-                modMenuButton.getRadialMenuOverlay();
-        if (wheel != null && wheel.isShowing() && wheel.handleControllerMotion(event)) {
-            return true;
-        }
-        ModMenuOverlay menu = modMenuButton.getMenuOverlay();
-        return menu != null && menu.isShowing() && menu.handleControllerMotion(event);
+        // The native menu navigates with touch and the keyboard nav flags; stick-driven selection is
+        // not wired yet, so this reports false rather than swallowing the movement.
+        return false;
     }
 
     public boolean handleScrollEvent(float scrollDelta) {

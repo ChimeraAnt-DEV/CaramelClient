@@ -1,6 +1,5 @@
 package org.chimeramc.client.launcher.ui.activities;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -12,42 +11,43 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * The launch dock uses the Minecraft-style slab controls, not Material pills.
+ * The launch control is the UI pack's split LAUNCH GAME face, not a Material pill or a Minecraft slab.
  *
- * <p>The Play action and the instance dropdown are two standalone controls with space between them,
- * not one merged bar. The Play face is the light blue the game itself uses, and the dropdown is the
- * neutral stone slab, so the two read as siblings rather than a single joined surface.
+ * <p>The pack's control is one green gradient face carrying the action and its build subtitle, with a
+ * chevron segment that opens the launch options. The two halves are separate tap targets on one
+ * surface, so the two things a launch control does — start a session, and change what will start —
+ * cannot be confused. The screen is Compose now, so the check reads the real source: a build machine
+ * cannot tap the control.
  */
 public class LaunchDockStyleTest {
 
+    private static final String SCREEN =
+            "app/src/main/java/org/chimeramc/client/ui/compose/caramel/launch/CaramelLaunchScreen.kt";
+
     @Test
-    public void thePlayButtonAndDropdownAreSeparateSpacedSlabs() throws IOException {
-        String dock = read("app/src/main/res/layout/include_launch_dock.xml");
-        // Both controls exist with their own backgrounds.
-        assertTrue("the Play button must use the Minecraft slab drawable",
-                dock.contains("android:background=\"@drawable/bg_dock_play\""));
-        assertTrue("the dropdown must use its own slab drawable",
-                dock.contains("android:background=\"@drawable/bg_dock_version_chip\""));
-        // The two must be spaced apart, not adjacent.
-        assertTrue("the dropdown and Play must be separated by a margin",
-                dock.contains("android:layout_marginTop=\"@dimen/space_3\""));
+    public void theLaunchControlIsThePacksSplitFace() throws IOException {
+        String screen = read(SCREEN);
+        assertTrue("the launch face must use the pack's green action tone",
+                screen.contains("C.GreenLight") && screen.contains("C.GreenDark"));
+        assertTrue("the two halves must be one row",
+                screen.contains("verticalAlignment = Alignment.CenterVertically"));
+        assertTrue("the face must carry the launch label",
+                screen.contains("\"LAUNCH GAME\""));
+        assertTrue("the face must carry the build subtitle",
+                screen.contains("state.buildLine.ifEmpty { state.versionId }"));
     }
 
     @Test
-    public void thePlayFaceIsLightBlueAndTheDropdownIsStone() throws IOException {
-        String play = read("app/src/main/res/drawable/bg_dock_play.xml");
-        assertTrue("the Play face must be the light-blue Minecraft family",
-                play.contains("@color/mc_button_face")
-                        && play.contains("@color/mc_button_top")
-                        && play.contains("@color/mc_button_edge"));
-        String chip = read("app/src/main/res/drawable/bg_dock_version_chip.xml");
-        assertTrue("the dropdown must be the neutral stone slab",
-                chip.contains("@color/mc_stone_face"));
-        String dock = read("app/src/main/res/layout/include_launch_dock.xml");
-        assertTrue("the Play label must use the dark text that reads on the light face",
-                dock.contains("@color/mc_button_text"));
-        assertTrue("the dropdown label must use the stone text colour",
-                dock.contains("@color/mc_stone_text"));
+    public void theSplitHalvesAreSeparateAccessibleTargets() throws IOException {
+        String screen = read(SCREEN);
+        assertTrue("the face must be its own tap target, gated on the launch state",
+                screen.contains(".clickable(enabled = state.launchEnabled && !state.launching, "
+                        + "onClick = onLaunch)"));
+        assertTrue("the chevron must be its own tap target that opens the picker",
+                screen.contains(".clickable { open = !open }"));
+        // The subtitle is what tells the user which build the button will start.
+        assertTrue("the chevron must be reachable from a controller as well as a finger",
+                screen.contains("Icon("));
     }
 
     private static String read(String relativePath) throws IOException {

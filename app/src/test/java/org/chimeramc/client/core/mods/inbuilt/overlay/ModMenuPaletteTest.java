@@ -100,15 +100,6 @@ public class ModMenuPaletteTest {
     }
 
     @Test
-    public void theFailureDotIsRedAndTheUnsupportedDotIsAmber() {
-        assertEquals(ModMenuPalette.STATE_ERROR, ModMenuPalette.dotFor(ModMenuRowState.FAILED));
-        assertEquals(ModMenuPalette.STATE_ERROR, ModMenuPalette.dotFor(ModMenuRowState.CRASHED));
-        assertEquals(ModMenuPalette.STATE_WARN, ModMenuPalette.dotFor(ModMenuRowState.UNSUPPORTED));
-        assertEquals(0, ModMenuPalette.dotFor(ModMenuRowState.LOADED));
-        assertEquals(0, ModMenuPalette.dotFor(ModMenuRowState.DISABLED));
-    }
-
-    @Test
     public void theGlassTintRisesWithIntensity() {
         assertTrue(ModMenuPalette.tintFor(ModMenuSettings.GlassIntensity.OFF)
                 < ModMenuPalette.tintFor(ModMenuSettings.GlassIntensity.SUBTLE));
@@ -126,14 +117,14 @@ public class ModMenuPaletteTest {
 
     @Test
     public void theGlassPanelFillIsTranslucentAndTintedLikeTheWheel() {
-        // M4: the panel with glass on must be the wheel's regular tier, not a second material. The
-        // two halves of that claim are the fill alpha and the white tint; asserting both is what
-        // keeps "the panel and the wheel look like one product" from silently drifting.
+        // The panel with glass on must be the shared glass tier, not a second material. The two
+        // halves of that claim are the fill alpha and the white tint; asserting both is what keeps
+        // "every translucent panel looks like one product" from silently drifting.
         ModMenuPalette.Scheme scheme = ModMenuPalette.schemeFor(
                 ModMenuSettings.Theme.NAVY, true);
         int glass = ModMenuPalette.panelFill(scheme, ModMenuSettings.GlassIntensity.SUBTLE);
-        assertEquals("the fill carries the regular tier's alpha",
-                RadialWheelMaterial.REGULAR_FILL_ALPHA, (glass >>> 24) & 0xFF);
+        assertEquals("the fill carries the shared glass tier's alpha",
+                ModMenuPalette.GLASS_FILL_ALPHA, (glass >>> 24) & 0xFF);
         assertTrue("the tint lightens the fill", luminance(glass) > luminance(scheme.surface1));
         assertTrue("the tint is not a white-out",
                 luminance(glass) < luminance(0xFFFFFFFF));

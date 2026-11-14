@@ -34,7 +34,13 @@ public final class HookAvailability {
         /** The local-player feed, which the nametag icon and distance falloff need. */
         LOCAL_PLAYER("local_player"),
         /** The texture-cache flush callback, which a live cosmetic swap needs. */
-        TEXTURE_FLUSH("texture_flush");
+        TEXTURE_FLUSH("texture_flush"),
+        /**
+         * The engine's present / frame-boundary hook (the {@code eglSwapBuffers} detour). Frame
+         * generation and motion blur both act on the presented frame, so neither can run until this
+         * hook is live. Absent on Vulkan-only builds that expose no libEGL present call.
+         */
+        PRESENT("present");
         // Only hooks with a real "resolved" probe are listed. The pause-menu and HUD-screen queries
         // report whether a screen is *open*, not whether the hook installed, so there is nothing
         // honest to put here for them and they are deliberately absent rather than always-false.

@@ -1069,7 +1069,7 @@ public final class CosmeticsPanel {
         return root;
     }
 
-    /** Stops the preview's animation. Kept for the ModMenuOverlay hide path. */
+    /** Stops the preview's animation. Kept for the host's hide path. */
     public void onHidden() {
         if (preview != null) preview.stopPreview();
     }

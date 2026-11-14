@@ -1065,24 +1065,6 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="keyboard_disconnected_message">डिस्कनेक्ट हो गया। कीबोर्ड नियंत्रण जारी किए गए।</string>
     <string name="keyboard_title">कीबोर्ड</string>
     <string name="mod_menu_filter_hud">HUD</string>
-    <string name="wheel_customize_title">आप किसे अनुकूलित करना चाहेंगे?</string>
-    <string name="mod_menu_action_manage_wheel">रेडियल मेनू प्रबंधित करें</string>
-    <string name="mod_menu_action_manage_wheel_desc">रेडियल मेनू प्रोफ़ाइल बनाएँ, नाम बदलें, क्रम बदलें और हटाएँ</string>
-    <string name="wheel_manager_title">रेडियल मेनू प्रोफ़ाइल</string>
-    <string name="wheel_manager_add">नया मेनू</string>
-    <string name="wheel_manager_add_title">नए मेनू का नाम दें</string>
-    <string name="wheel_manager_rename_title">इस मेनू का नाम बदलें</string>
-    <string name="wheel_manager_name_hint">मेनू का नाम</string>
-    <string name="wheel_manager_cancel">रद्द करें</string>
-    <string name="wheel_manager_save">सहेजें</string>
-    <string name="wheel_manager_done">हो गया</string>
-    <string name="wheel_manager_root_label">की से खुलता है</string>
-    <string name="wheel_manager_entry_count">%1$d प्रविष्टियाँ</string>
-    <string name="wheel_manager_last_note">अंतिम मेनू हटाया नहीं जा सकता; खोलने के लिए की को एक चाहिए।</string>
-    <string name="wheel_manager_entries_title">मेनू प्रविष्टियाँ संपादित करें</string>
-    <string name="wheel_manager_no_entries">अभी कोई प्रविष्टि नहीं। इस मेनू पर क्रिया डालने के लिए एक जोड़ें।</string>
-    <string name="wheel_manager_add_entry">प्रविष्टि जोड़ें</string>
-    <string name="wheel_manager_pick_action">क्रिया चुनें</string>
     <string name="diagnostics_field_berry_api">BerryAPI बैकएंड</string>
     <string name="diagnostics_field_berry_cosmetics">BerryAPI कॉस्मेटिक्स</string>
     <string name="about_backend_status">बैकएंड: %1$s</string>
@@ -1108,7 +1090,6 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">स्प्रिंट चालू</string>
     <string name="mod_overlay_autosprint_off">स्प्रिंट बंद</string>
-    <string name="mod_menu_setting_wheel_dead_zone">व्हील डेड ज़ोन</string>
     <string name="overlay_layout_title">ओवरले लेआउट</string>
     <string name="overlay_layout_save_current">वर्तमान सहेजें</string>
     <string name="overlay_layout_save_title">इस लेआउट को नाम दें</string>
@@ -1315,4 +1296,13 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="changelog_upcoming_soon">जल्द आ रहा है!</string>
     <string name="changelog_upcoming_soon_body">विकी लिखी जा रही है। लाइव होते ही यह यहाँ खुलेगी।</string>
     <string name="setup_finish_changelog_loading">नया क्या है लोड हो रहा है…</string>
+    <string name="inbuilt_mod_frame_generation">फ़्रेम जनरेशन</string>
+    <string name="inbuilt_mod_frame_generation_desc">पिछले फ़्रेम को वर्तमान फ़्रेम में मिलाता है ताकि गति अधिक सहज दिखे।</string>
+    <string name="frame_generation_scope_note">फ़्रेम जनरेशन खेल को तेज़ रेंडर नहीं कराता और अतिरिक्त फ़्रेम प्रस्तुत नहीं करता। यह अंतिम प्रस्तुत फ़्रेम को सुरक्षित रखता है और इंजन की प्रस्तुति सीमा पर उसे नए फ़्रेम में मिलाता है, इसलिए छवि खेल के पहले से बनाए दो फ़्रेमों के बीच रहती है और उसी रेंडर दर पर गति अधिक सहज दिखती है। इसे प्रस्तुति/फ़्रेम-सीमा हुक चाहिए; जब तक वह हुक आपके बिल्ड पर इंस्टॉल न हो, मॉड्यूल अक्षम रहता है। यह वह विवरण नहीं गढ़ सकता जो खेल ने नहीं बनाया, और तेज़ गति में भारी मिश्रण कलाकृतियाँ जोड़ता है, इसलिए यह सतर्क रूप से शुरू होता है।</string>
+    <string name="inbuilt_mod_motion_blur_desc">पिछले फ़्रेम को वर्तमान फ़्रेम में मिलाता है, दृश्य की गति के अनुसार भारित।</string>
+    <string name="motion_blur_scope_note">मोशन ब्लर एक प्रस्तुति-फ़्रेम प्रभाव है: यह अंतिम प्रस्तुत फ़्रेम रखता है और उसे इंजन की प्रस्तुति सीमा पर नए फ़्रेम में मिलाता है, इसलिए तेज़ गति यात्रा की दिशा में फैलती है। यह डिज़ाइन से छवि को कोमल बनाता है; यह फ़्रेम नहीं जोड़ता और मुफ़्त नहीं हो सकता, इसलिए मिश्रण बजट सीमित है। इसे प्रस्तुति/फ़्रेम-सीमा हुक चाहिए और जब तक वह हुक आपके बिल्ड पर इंस्टॉल न हो, यह अक्षम रहता है।</string>
+    <string name="mod_config_category_effect">प्रभाव</string>
+    <string name="mod_unavailable_reason_hook">इंजन के प्रस्तुति-फ़्रेम हुक की आवश्यकता है, जो इस बिल्ड पर इंस्टॉल नहीं है। जब तक हुक उपलब्ध न हो, यह अक्षम रहता है।</string>
+    <string name="launch_button_label">गेम लॉन्च करें</string>
+    <string name="launch_menu_open">लॉन्च विकल्प खोलें</string>
 </resources>

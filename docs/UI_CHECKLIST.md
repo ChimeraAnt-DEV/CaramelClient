@@ -7,68 +7,42 @@ shots back.
 Everything below is **unverified (needs device)** until you run it. No claim in the release notes
 should say a screen "works in game" until this list passes.
 
-## 1. Radial wheel
+## 1. Mod Menu (native, drawn in-game)
 
-### 1a. Glass, motion and fallbacks (R1-R13)
+The menu is Dear ImGui on the game's GL context. Nothing about it is an Android view, so the checks
+are about the seam (does the menu draw over the game at all) and about the theme matching the
+launcher.
 
-1. Glass tiers.
-   - [ ] Over the game the ring sits on a frosted sheet (a blur, not a flat grey disc).
-   - [ ] A very bright scene (snow, sky) still leaves the sector labels readable - the scrim
-     escalates; the labels never wash out.
-2. Fallbacks.
-   - [ ] On Android 11 or older (or with "remove animations" / reduce motion on) the wheel draws
-     solid with a clear 1dp border instead of a blur - still fully usable.
-   - [ ] With "reduce motion" on, the wheel appears in ~120ms with no spring, and no haptic fires.
-   - [ ] High-contrast on: every sector label has an outline.
-3. Thermal.
-   - [ ] With a session running and the device hot (or battery saver on), the wheel drops its blur
-     instead of stuttering; it does not make the game stutter.
-4. Motion and haptics.
-   - [ ] The ring scales up from 0.86 to 1.0 on open; **no** haptic fires on open.
-   - [ ] A light tick on each segment crossing, a firmer one on commit.
-5. Cancel gesture.
-   - [ ] Drag well past the outer ring: the wheel dims to ~40% and shrinks slightly; releasing
-     dismisses and does not open a destination.
-6. Targets.
-   - [ ] Every sector is comfortably tappable; a small screen never shows more segments than can
-     hold a 48dp target.
+1. It opens and draws.
+   - [ ] The in-game bind opens the menu; it appears over the game, centred, with the launcher's
+     panel fill and hairline border.
+   - [ ] Opening and closing costs no visible stutter in the game.
+   - [ ] Back (or the menu's close control) closes it and returns to the game; the game keeps
+     running underneath, never a black frame.
+2. It is the same product as the launcher.
+   - [ ] The header, the tab bar and the panel colours match the launcher's Caramel theme (same
+     navy glass, same accent blue) — no default ImGui grey anywhere.
+   - [ ] No violet/magenta anywhere; the accent is blue.
+3. Controls.
+   - [ ] A module row is a pill switch on the right; the whole row toggles it.
+   - [ ] A row that cannot run says why, and its switch does not read as a plain off toggle.
+   - [ ] A one-shot action is a chevron, not a switch.
+   - [ ] A slider drags with the finger and its value is shown.
+   - [ ] Touch targets are comfortably tappable; a small screen does not crowd a row.
+4. Tabs.
+   - [ ] The tab bar lists every page (Mods, Replay, Cosmetics, Voice, Settings).
+   - [ ] Switching tabs redraws the page and keeps the tab bar in the same place.
+   - [ ] The Cosmetics tab shows no fabricated preview: it states the preview is launcher-side and
+     offers an "Open launcher" action, rather than drawing a stand-in character.
+5. Honesty on device.
+   - [ ] While the present hook is absent, the frame-rate readout is marked approximate (a leading
+     `~`) and names its source; it never shows a bare number as if it were the game's.
+   - [ ] Frame Generation and Motion Blur are badged while the present hook is absent, whatever
+     their switches say.
 
-1. Open the wheel from its in-game bind.
-   - [ ] Opens in under ~200ms; the ring scales up with the scrim fading in.
-   - [ ] The four sectors (top MODS, right CLOSET, bottom SETTINGS, left HUD) are rounded wedges
-     with a constant-width gap between them (the gap should look parallel, not a widening wedge).
-   - [ ] Each sector shows an outline icon above a caps label.
-   - [ ] The hub shows your **real skin head**, turning slowly. If you have no skin set, it shows a
-     neutral disc, never an emoji.
-2. Drag across sectors.
-   - [ ] The sector under your finger lightens and grows slightly.
-   - [ ] A short haptic tick fires on each change.
-3. Quick chips.
-   - [ ] Chips float outside the ring (two top-left, three top-right, one right-middle), none
-     overlapping the ring or each other.
-   - [ ] Tapping a chip toggles the module and the dot changes colour.
-4. Release on a sector opens that screen; releasing outside the ring or pressing Back closes.
+## 2. Mod Menu row, switch and appearance rules
 
-## 2. Mod Menu (one screen, touch and bind)
-
-- [ ] The window is centred, ~66% of the width (capped at 720dp), ~78% of the height, with a
-  hairline border and a shadow.
-- [ ] The title bar carries the brand, the search field and the close button.
-- [ ] The module list is **two columns** on a wide screen, **one** in compact mode.
-- [ ] A module row: icon, name, toggle on the right; the whole row taps to toggle.
-- [ ] Toggling a module updates the toggle and the row tint; a settings gear opens the side sheet.
-- [ ] No violet/magenta anywhere; the accent is blue.
-- [ ] The in-game bind opens the radial wheel; its sectors open the same Mod Menu the launcher's
-  Mods screen opens, on the page the sector names.
-- [ ] The rail lists every page (General, Voice, Packs, Cosmetics, HUD editor, Replay, Settings,
-  Controller, Keyboard). The Controller and Keyboard tiles carry a small accent dot — the
-  Supporter badge — and are otherwise ordinary pages.
-- [ ] L1/R1 cycle every page in both directions and wrap.
-- [ ] The Controller page draws the connected pad and lights the pressed button; a modifier
-  capture in the full editor takes the next press.
-- [ ] The Keyboard page draws the board, flashes a captured key and rebinds the action.
-
-### Mod Menu appearance (M1-M10)
+The menu is the native one (section 1); these are the row, switch and appearance rules it must keep.
 
 - [ ] The panel is the dark navy surface at a 28dp radius — no violet/magenta and no pure black.
   The accent appears only on switches and focus rings, never on a header or a card border.
@@ -97,7 +71,7 @@ should say a screen "works in game" until this list passes.
 - [ ] The active rail row's corners animate between the chip and card stops as the selection moves,
   and its label is heavier than the inactive rows'.
 
-## 3b. First run, failure states, Play dock and mod rows (U13-U17)
+## 4. First run, failure states, Play dock and mod rows (U13-U17)
 
 - [ ] Fresh install with no instance: the splash opens the **first-run wizard**, not the dashboard.
 - [ ] The wizard shows Import game -> Pick version -> Sign in -> Ready, and the progress rail has
@@ -117,7 +91,7 @@ should say a screen "works in game" until this list passes.
   content description is the recorded `kind: reason`.
 - [ ] A mod that failed to load can still be switched off from its row.
 
-## 3c. Per-instance account binding (F2)
+## 5. Per-instance account binding (F2)
 
 - [ ] Sign in two accounts. Open Instance Settings: the account row says "Using the account that is
   active in the launcher."
@@ -131,7 +105,7 @@ should say a screen "works in game" until this list passes.
 - [ ] Bind an account, then remove its sign-in data: the warning appears and the launch is not
   blocked.
 
-## 4. Closet (cosmetics)
+## 6. Closet (cosmetics)
 
 - [ ] Left rail: Capes, Hats, Pets, Back, Offhand, Effects.
 - [ ] Centre: a 3-column grid of cards with a name and an Equipped/Owned pill.
@@ -140,7 +114,7 @@ should say a screen "works in game" until this list passes.
 - [ ] Tapping a card equips it (the pill moves to it) and the preview updates.
 - [ ] The Equip button below the preview is the accent gradient.
 
-## 5. Launch tab
+## 7. Launch tab
 
 - [ ] The hero shows your character (real skin) standing on a soft shadow, with the instances/mods/
   playtime stats beside it.
@@ -149,16 +123,18 @@ should say a screen "works in game" until this list passes.
 - [ ] Scrolling to the bottom, no row runs underneath the dock.
 - [ ] No empty grey banner at the top of the tab.
 
-## 6. Skin behaviour (the special update)
+## 8. Skin behaviour (the special update)
 
-- [ ] The radial hub head and the Closet/hero preview show the **same** skin.
-- [ ] Change your skin (import one in the launcher, or apply a skin pack) and reopen the wheel /
-  Closet: the head updates **without restarting** the app.
+- [ ] The Closet and the Launch hero preview show the **same** skin (both are the launcher's own
+  real-skin preview). The in-game Cosmetics tab holds **no** preview; it says so and points at the
+  launcher, so the two surfaces never disagree about your skin.
+- [ ] Change your skin (import one in the launcher, or apply a skin pack) and reopen the Closet /
+  Cosmetics page: the head updates **without restarting** the app.
 - [ ] With a game session running, the preview shows your **real Minecraft skin** read from the
   game (the engine image-loader seam). The Cosmetics diagnostics screen should read
   "Game-skin feed installed: yes" and "Base skin captured from game: yes" once you are in a world.
 
-## 7. UI gallery (debug)
+## 9. UI gallery (debug)
 
 - [ ] Settings > Updates, tap the version text 7 times: the gallery opens.
 - [ ] Every component (toggle off/on/disabled, rows, colours, type) is visible and legible.
@@ -175,7 +151,7 @@ should say a screen "works in game" until this list passes.
 
 ---
 
-## 9. Device screenshots (B7)
+## 10. Device screenshots (B7)
 
 No screenshot in the README is a device capture yet. This is how they get produced, and what makes
 one acceptable.
@@ -196,8 +172,8 @@ Three, at minimum, because the layout changes by width class (U5):
    does not represent what users get.
 2. Set the device to its **default** font scale and a light **and** dark wallpaper if you can, so
    the dynamic-color path is visible.
-3. Capture: Launch tab, Library/Instances, Mods, Settings, the radial wheel open in game, the Mod
-   Menu open in game, and the Diagnostics screen.
+3. Capture: Launch tab, Library/Instances, Mods, Settings, the Mod Menu open in game, and the
+   Diagnostics screen.
 4. Save to `docs/assets/screenshots/<slot>-<screen>.png`, e.g. `lowend-launch.png`.
 
 ### Caption rules

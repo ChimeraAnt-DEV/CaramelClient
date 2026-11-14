@@ -1,4 +1,8 @@
 ## Radial wheel glass overhaul (R1-R13)
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 
 The wheel (`RadialMenuView` + `RadialMenuOverlay`) is now a glassmorphic, iOS-style radial menu.
 The rules live in three pure classes and the view only applies them.

@@ -10,9 +10,12 @@ import android.view.Choreographer;
  * meter counts the display's own vsync callbacks through {@link Choreographer}, which needs no
  * native hook and works on any build the launcher runs on.
  *
- * <p><b>What the number means.</b> This is the host's present rate, i.e. the rate the game's
- * frames are being delivered to the display on this process, not an internal game counter. It is
- * the honest reading available without a native feed; the overlay's own label does not claim more.
+ * <p><b>What the number means.</b> This is the launcher's own refresh cadence: the rate at which
+ * the launcher's main thread receives {@code Choreographer} vsync ticks. It is
+ * <em>not</em> the game's frame rate and not the game's present rate. The launcher does not own the
+ * game's {@code eglSwapBuffers}, so the meter keeps counting at the display refresh cadence while
+ * the game is paused, loading or stalled. It is a liveness reading of last resort, and the overlay
+ * labels it as the launcher refresh so it is never passed off as the game's frame rate.
  *
  * <p>Allocation-free on the frame path: a fixed ring of frame timestamps and a rolling one-second
  * window. {@link #post()} must be called from the main thread; the callback re-arms itself while

@@ -209,6 +209,25 @@ public final class GameBridge {
         }
     }
 
+    /**
+     * Whether the last {@link #readFps()} reading is the game's exact frame rate.
+     *
+     * <p>Exact only when the engine's present hook is live and counting. An inferred tick (the hook
+     * absent) or no backend at all reads as approximate, so the FPS overlay marks the number instead
+     * of passing a close-but-not-exact rate off as the game's real frame rate. Fail-closed.
+     */
+    public static boolean isFrameRateExact() {
+        GameBackend b = backend;
+        if (b == null || !supports(GameBackend.Feature.FPS)) {
+            return false;
+        }
+        try {
+            return b.isFrameRateExact();
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
     /** Releases every key and button the backend injected. Safe to call with no backend. */
     public static void releaseAll() {
         GameBackend b = backend;

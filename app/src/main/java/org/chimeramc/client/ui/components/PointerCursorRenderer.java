@@ -6,11 +6,11 @@ import android.graphics.Path;
  * Draws the macOS-style pointer without allocating on the draw path (Phase 12).
  *
  * <p>{@link UiDraw#pointerCursor} builds a fresh {@code float[]} and {@code Path} on every call, and
- * the three cursor hosts ({@code MenuCursorOverlay}, {@code RadialMenuView},
- * {@code LauncherCursorOverlay}) draw the pointer inside {@code onDraw}. That is two allocations per
- * frame on the input-to-photon path for a shape whose outline never changes — only its position
- * does. This class owns one {@link Path} and one scratch {@code float[]}, rebuilds the path only
- * when the cursor actually moves, and otherwise reuses it, so a held-still cursor allocates nothing.
+ * the cursor hosts ({@code MenuCursorOverlay}, {@code LauncherCursorOverlay}) draw the pointer inside
+ * {@code onDraw}. That is two allocations per frame on the input-to-photon path for a shape whose
+ * outline never changes — only its position does. This class owns one {@link Path} and one scratch
+ * {@code float[]}, rebuilds the path only when the cursor actually moves, and otherwise reuses it, so
+ * a held-still cursor allocates nothing.
  *
  * <p>The geometry itself stays in {@link PointerCursorGeometry}; this class only caches the
  * transform, so the shape is still unit-testable through the pure class.

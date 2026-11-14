@@ -51,14 +51,30 @@ The repo was called **GlowberryClient** before; the package is `org.chimeramc.cl
 
 ### UI
 - The UI pack (`Lynxifyy/CaramelClient-UI-pack`) is a Compose **Desktop** app plus a GLFW Dear ImGui
-  demo, not an Android library. Its `components/` layer is **already ported** to
-  `ui/compose/caramel/` (`CaramelButtons`/`Controls`/`Dropdowns`/`Labels`/`LoaderIcons`, `GlowGlass`,
-  `GlowTheme`), improved where it diverged (touch `collectIsPressedAsState` not desktop
-  `collectIsHoveredAsState`; explicit imports not `layout.*`; docs explaining *why*). Remaining
-  hazards for a naive port: the whole-window `HazeState` blur model, 63 hardcoded `Text("...")`
-  literals with no `strings.xml`, `(size / 2).dp` truncating `Int` division, no wrapper, no tests,
-  Kotlin 2.0.21/Compose 1.7.3 vs the client's 2.3.0/BOM 2026.01.01. The pack's preview apple is a
-  *different* asset from the launcher art. Full review: `docs/agents/ui-pack-review.md`.
+  demo, not an Android library. **Its tokens are the single design reference**, carried by three live
+  sources that must agree: the shared theme `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` +
+  `GlowGlass.kt`, used by account/connect/replay), the pack component port `ui/compose/caramel/`
+  (`CaramelTheme.kt` + `CaramelControls/Labels/Glass.kt`, used by the launch screen; `CaramelColors` =
+  the pack's `theme/Theme.kt` value for value incl. amber/greens the shared scale lacks), and the
+  in-game menu `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (token for token).
+  `CaramelPaletteParityTest` pins the overlap equal to `UiTokens`/`GlowPalette` and the ImGui twin
+  equal to the Compose port. (An earlier `caramel/Caramel*` layer was dead code and deleted; it is
+  live again because the launch screen imports it — check for importers before calling it dead.)
+  Never wire the GLFW backend. PR #183 + SweetLoader #38.
+  Hazards (Haze blur model, hardcoded `Text` literals, `(size / 2).dp`, version skew, and a preview
+  apple that is not the launcher art) are in `docs/agents/ui-pack-review.md`.
+- **The mod menu is the native ImGui one; the Compose/View mod menu and the radial wheel are deleted**
+  (`ui/compose/modmenu/`, `ModMenuOverlay`, `RadialMenu*`/`Wheel*`, their layouts). `PreloaderMenu`
+  (Java) ↔ `pl/menu/MenuJni.cpp` is the only bridge; `ModMenuNavLayoutTest` fails if a deleted layout
+  comes back or the native tab bar loses its single labels+icons source.
+- **Dear ImGui 1.91.5 is vendored at `sweetloader/third_party/imgui/`** (the configure step must not
+  need the network). `check_pinned_deps.py` only inspects `GIT_REPOSITORY` pins, so a vendored dep
+  just needs a NOTICE row.
+- **Frame generation + motion blur are present-frame effects, not frame-rate gains.** Both live in
+  `core.mods.render.PresentFrameCatalog`/`PresentFramePolicy` and run on the `eglSwapBuffers` detour
+  (`pl/render/PresentFrameEffect.cpp`); they blend the previous presented frame in, present no extra
+  frame, and are badged while the present hook is absent. `PresentFrameModulesTest` forbids any
+  frame-rate claim in their copy.
 - **Animated values that cross zero belong on `offset`, never `padding`.** `Modifier.padding` throws
   `IllegalArgumentException: Padding must be non-negative`; a drift of `(value - 0.5f) * 6f` is
   negative on the first frame, so `LaunchChangelogCard` threw on **every** launch.
@@ -110,3 +126,25 @@ The repo was called **GlowberryClient** before; the package is `org.chimeramc.cl
   (diagnose with `actionlint`, not the API); and `set -o pipefail` + `cmd | grep -q` exits 74
   (SIGPIPE) even on a match — dump to a file and grep the file. The Rust tree is rustfmt-normalized;
   keep it so.
+
+### Hygiene gates (the four that fail a local change)
+- **`FileSizeBudgetTest`** (`scripts/hygiene/file-sizes-baseline.txt`, threshold 1500 lines): a listed
+  file may only **shrink**. `InbuiltModuleProvider.java` was at its 1765 baseline; the fix is to
+  **split**, not to edit the baseline. It was split into `ModConfigSchema.java` (config keys +
+  `ConfigEntry` list + `RuntimeConfigSchema` builders, 1175 lines) and the provider (748). The
+  provider keeps thin `static schemaTypeFor`/`configDescriptionRes` delegators so
+  `InbuiltModuleProviderTypeTest` (same package) still compiles; the moved members are package-private
+  and the provider calls them as `ModConfigSchema.x(...)`.
+- **`ModuleDescriptionsTest`**: every `inbuilt_mod_*_desc` in `values/strings.xml` must be ≤ **80**
+  chars (target 60) and one sentence. A long "weighted by how fast the view is moving" tail is the
+  usual miss — keep it in the `*_scope_note` instead.
+- **`TranslationCoverageTest` / `check_ui_hygiene.py` translation baseline**: a new string must be
+  translated in all 10 locales (`es fr hi id ja pt ru tr vi zh-rCN`) or marked `translatable="false"`.
+  Add a `scripts/translations_*.json` batch, register it in `BATCHES` in
+  `scripts/apply_translations.py`, then run the applier (it is idempotent and refuses a dropped `%s`).
+  After applying, `check_ui_hygiene.py` may report baseline entries that "no longer exist" — retire
+  them with `python3 scripts/check_ui_hygiene.py --update` (that also refreshes the findViewById
+  baseline, which *shrinks* when a `findViewById` is replaced by a ViewBinding read).
+- **`NoSilentCatchTest`**: a `catch` that discards the throwable fails. Use
+  `AppLog.warnOnce(tag, key, message, e)`, even for an expected `UnsatisfiedLinkError` fail-closed path.
+- Baseline format note: the baseline files live under **`scripts/hygiene/`**, not `scripts/`.

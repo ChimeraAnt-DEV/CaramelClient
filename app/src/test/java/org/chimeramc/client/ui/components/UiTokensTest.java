@@ -21,17 +21,35 @@ import java.util.regex.Pattern;
 public class UiTokensTest {
 
     @Test
-    public void thePaletteMatchesTheSpec() {
-        assertEquals(0xFF17191D, UiTokens.BG_SURFACE);
-        assertEquals(0xFF1E2126, UiTokens.BG_SURFACE_HOVER);
-        assertEquals(0xFF0F5BE4, UiTokens.ACCENT_500);
-        assertEquals(0xFF3682E2, UiTokens.ACCENT_400);
-        assertEquals(0xFF71ACEF, UiTokens.ACCENT_300);
-        assertEquals(0xFF10254F, UiTokens.ACCENT_900);
-        assertEquals(0xFFE8EAED, UiTokens.TEXT_PRIMARY);
-        assertEquals(0xFF9AA0A6, UiTokens.TEXT_SECONDARY);
-        assertEquals(0xFF5F6368, UiTokens.TEXT_DISABLED);
-        assertEquals(0xFF2A2D33, UiTokens.TOGGLE_OFF_TRACK);
+    public void thePaletteMatchesThePack() {
+        // The CaramelClient-UI-pack is the design reference, so its numbers are the ones the client
+        // draws: the Abyss/Navy/DeepBlue surface ramp, the #4A78FF blue, the #F5A742 caramel family
+        // and the three-step text ramp. Pinning them here means a "close enough" retune fails the
+        // build instead of drifting the client away from the pack it is meant to match.
+        assertEquals(0xFF0A1330, UiTokens.BG_SURFACE);
+        assertEquals(0xFF0F1B44, UiTokens.BG_SURFACE_HOVER);
+        assertEquals(0xFF4A78FF, UiTokens.ACCENT_500);
+        assertEquals(0xFF628CFF, UiTokens.ACCENT_400);
+        assertEquals(0xFF7FA0FF, UiTokens.ACCENT_300);
+        assertEquals(0xFF152252, UiTokens.ACCENT_900);
+        assertEquals(0xFFEAF0FF, UiTokens.TEXT_PRIMARY);
+        assertEquals(0xFF9AA8D0, UiTokens.TEXT_SECONDARY);
+        assertEquals(0xFF66749E, UiTokens.TEXT_DISABLED);
+        assertEquals(0xFF232C40, UiTokens.TOGGLE_OFF_TRACK);
+    }
+
+    @Test
+    public void theSurfaceRampIsNavyAndOrdered() {
+        // The pack's ramp is Abyss -> Navy -> DeepBlue: every step bluer and lighter than the last,
+        // and all of them blue-dominant. A grey surface is the "unfinished rectangle" look the ramp
+        // exists to avoid.
+        assertTrue("the window is the darkest surface",
+                UiTokens.luminance(UiTokens.BG_WINDOW) < UiTokens.luminance(UiTokens.BG_SURFACE));
+        assertTrue("a raised surface is lighter than its base",
+                UiTokens.luminance(UiTokens.BG_SURFACE) < UiTokens.luminance(UiTokens.BG_SURFACE_HOVER));
+        for (int c : new int[]{UiTokens.BG_WINDOW, UiTokens.BG_SURFACE, UiTokens.BG_SURFACE_HOVER}) {
+            assertTrue("surface must be navy, not grey", UiTokens.isBlueDominant(c));
+        }
     }
 
     @Test

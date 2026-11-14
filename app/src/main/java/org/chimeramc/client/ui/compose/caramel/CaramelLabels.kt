@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.LockOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,17 +29,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 /**
- * A small tinted pill: a fill at 16% of the tone, a border at 50%, and the label in the tone.
+ * The Caramel label and chip set, ported from the pack's `components/Labels.kt`.
  *
- * The tint does the talking, which is why the caller passes a colour rather than a severity enum:
- * the same pill is used for a version channel, a profile mode and a version range, and each has its
- * own tone that does not map onto a shared severity scale.
+ * <p>Labels carry status (Release/Beta, Locked/Unlocked, Equipped, a server's version range). The
+ * pack's rule is one tinted pill per status with a matching hairline, so a status reads the same
+ * wherever it appears. Keeping the rule in one function is what stops a "Beta" pill drifting to a
+ * different orange in one screen.
  */
 @Composable
-fun CaramelStatusLabel(
+fun StatusLabel(
     text: String,
     color: Color,
     modifier: Modifier = Modifier,
@@ -54,18 +57,26 @@ fun CaramelStatusLabel(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         if (icon != null) Icon(icon, null, Modifier.size(11.dp), color)
-        Text(text, style = CaramelType.Chip.copy(color = color))
+        Text(text, style = T.Chip.copy(color = color))
     }
 }
 
-/** A selectable filter pill: a blue gradient when selected, a quiet fill when not. */
+/** A "Release" (green) or "Beta" (orange) pill. */
 @Composable
-fun CaramelFilterChip(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun ChannelLabel(label: String, color: Color, modifier: Modifier = Modifier) = StatusLabel(label, color, modifier)
+
+/** An "Unlocked" (green, open padlock) or "Locked" (red, closed padlock) pill. */
+@Composable
+fun ProfileLabel(locked: Boolean, modifier: Modifier = Modifier) = StatusLabel(
+    if (locked) "Locked" else "Unlocked",
+    if (locked) C.Red else C.Green,
+    modifier,
+    if (locked) Icons.Rounded.Lock else Icons.Rounded.LockOpen,
+)
+
+/** A selectable filter chip; the selected one is a blue gradient. */
+@Composable
+fun FilterChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(50)
     Box(
         modifier
@@ -73,7 +84,7 @@ fun CaramelFilterChip(
             .clip(shape)
             .background(
                 if (selected) {
-                    Brush.verticalGradient(listOf(CaramelColors.BlueLight, CaramelColors.BlueDark))
+                    Brush.verticalGradient(listOf(C.BlueLight, C.BlueDark))
                 } else {
                     SolidColor(Color.White.copy(0.07f))
                 },
@@ -83,30 +94,17 @@ fun CaramelFilterChip(
             .padding(horizontal = 13.dp),
         Alignment.Center,
     ) {
-        Text(
-            text,
-            style = CaramelType.Chip.copy(
-                fontSize = 11.5.sp,
-                color = if (selected) Color.White else CaramelColors.Text2,
-            ),
-        )
+        Text(text, style = T.Chip.copy(fontSize = 11.5.sp_, color = if (selected) Color.White else C.Text2))
     }
 }
 
-/**
- * A segmented control.
- *
- * Each segment is a fixed width, so the control does not resize as the selection moves and the
- * highlight cannot appear to jump. A caller with more than a few segments wants a scrollable row of
- * chips instead.
- */
+/** The pack's `SegmentedTabs`: a pill row with a sliding blue selection. */
 @Composable
-fun CaramelSegmentedTabs(
+fun SegmentedTabs(
     items: List<String>,
     selected: Int,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    segmentWidth: Int = 96,
 ) {
     val shape = RoundedCornerShape(50)
     Row(
@@ -117,29 +115,27 @@ fun CaramelSegmentedTabs(
             .border(1.dp, Color.White.copy(0.14f), shape)
             .padding(3.dp),
     ) {
-        items.forEachIndexed { index, label ->
+        items.forEachIndexed { i, t ->
             Box(
                 Modifier
-                    .width(segmentWidth.dp)
+                    .width(96.dp)
                     .fillMaxHeight()
                     .clip(shape)
                     .background(
-                        if (index == selected) {
-                            Brush.verticalGradient(
-                                listOf(CaramelColors.BlueLight, CaramelColors.BlueDark),
-                            )
+                        if (i == selected) {
+                            Brush.verticalGradient(listOf(C.BlueLight, C.BlueDark))
                         } else {
                             SolidColor(Color.Transparent)
                         },
                     )
-                    .clickable(remember { MutableInteractionSource() }, null) { onSelect(index) },
+                    .clickable(remember { MutableInteractionSource() }, null) { onSelect(i) },
                 Alignment.Center,
             ) {
                 Text(
-                    label.uppercase(),
-                    style = CaramelType.Chip.copy(
-                        letterSpacing = 1.sp,
-                        color = if (index == selected) Color.White else CaramelColors.Text2,
+                    t.uppercase(),
+                    style = T.Chip.copy(
+                        letterSpacing = androidx.compose.ui.unit.TextUnit(1f, androidx.compose.ui.unit.TextUnitType.Sp),
+                        color = if (i == selected) Color.White else C.Text2,
                     ),
                 )
             }
@@ -147,38 +143,23 @@ fun CaramelSegmentedTabs(
     }
 }
 
-/**
- * A placeholder avatar ring.
- *
- * A slot, not a picture: the Microsoft profile image is supplied by the caller, so this draws the
- * ring and the fill and leaves the middle empty. A green ring means the account is signed in.
- */
+/** The account avatar slot. The profile picture is drawn by the caller over this. */
 @Composable
-fun CaramelAvatar(size: Int = 36, online: Boolean = false) {
+fun CaramelAvatar(size: Int = 36, online: Boolean = false, modifier: Modifier = Modifier) {
     Box(
-        Modifier
+        modifier
             .size(size.dp)
             .background(Color.White.copy(0.09f), CircleShape)
-            .border(
-                if (online) 2.dp else 1.dp,
-                if (online) CaramelColors.Green else Color.White.copy(0.3f),
-                CircleShape,
-            ),
+            .border(if (online) 2.dp else 1.dp, if (online) C.Green else Color.White.copy(0.3f), CircleShape),
     )
 }
 
-/**
- * A server icon slot.
- *
- * The inner square is where the server's own icon goes; until the caller supplies one this is a
- * tinted rounded square with a solid core, which reads as an icon without pretending to be a
- * particular server.
- */
+/** The server-icon slot used by Quick play and the Servers list. */
 @Composable
-fun CaramelServerIcon(color: Color, size: Int = 26) {
+fun ServerIcon(color: Color, size: Int = 26, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape((size * 0.3f).dp)
     Box(
-        Modifier
+        modifier
             .size(size.dp)
             .clip(shape)
             .background(color.copy(0.22f))
@@ -189,7 +170,7 @@ fun CaramelServerIcon(color: Color, size: Int = 26) {
     }
 }
 
-/** The supported-version range of a server, e.g. `1.21.132 - 26.62`. */
+/** A "1.21.132 – 26.62" supported-version label for a server. */
 @Composable
-fun CaramelVersionRangeLabel(min: String, max: String, modifier: Modifier = Modifier) =
-    CaramelStatusLabel("$min - $max", Color(0xFF78A0FF), modifier)
+fun VersionRangeLabel(min: String, max: String, modifier: Modifier = Modifier) =
+    StatusLabel("$min – $max", Color(0xFF78A0FF), modifier)

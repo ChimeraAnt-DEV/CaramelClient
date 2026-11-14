@@ -8,13 +8,32 @@ import org.chimeramc.client.ui.components.UiTokens;
 import org.junit.Test;
 
 /**
- * The navy palette and the snow-blue toggle, pinned without a device.
+ * The navy palette and the pack's blue toggle, pinned without a device.
  *
- * <p>These are the two decisions the redesign rests on: the surfaces are navy (never neutral grey)
- * and the toggle is snow blue (never the brand blue). A contrast floor is asserted too, so a future
- * tweak to either cannot quietly produce an unreadable theme.
+ * <p>These are the decisions the redesign rests on: the surfaces are the UI pack's navy ramp (never
+ * neutral grey), the accent is the pack's blue, and the Compose tokens equal the View tokens so the
+ * two layers cannot drift. A contrast floor is asserted too, so a future tweak cannot quietly produce
+ * an unreadable theme.
  */
 public class GlowPaletteTest {
+
+    @Test
+    public void theComposeTokensEqualTheViewTokens() {
+        // GlowPalette (Compose) and UiTokens (View) are two files for one palette. A change to one
+        // that is not made to the other is how the Compose hero and the View mod menu end up two
+        // shades apart, so the equality is pinned rather than trusted to review.
+        assertEquals(UiTokens.BG_SURFACE, GlowPalette.NAVY_SURFACE);
+        assertEquals(UiTokens.BG_SURFACE_HOVER, GlowPalette.NAVY_SURFACE_RAISED);
+        assertEquals(UiTokens.ACCENT_500, GlowPalette.SNOW_BLUE);
+        assertEquals(UiTokens.ACCENT_400, GlowPalette.SNOW_BLUE_LIGHT);
+        assertEquals(UiTokens.TEXT_PRIMARY, GlowPalette.TEXT_PRIMARY);
+        assertEquals(UiTokens.TEXT_SECONDARY, GlowPalette.TEXT_SECONDARY);
+        assertEquals(UiTokens.TEXT_DISABLED, GlowPalette.TEXT_DISABLED);
+        assertEquals(UiTokens.TOGGLE_OFF_TRACK, GlowPalette.TOGGLE_TRACK_OFF);
+        assertEquals(UiTokens.SUCCESS, GlowPalette.SUCCESS);
+        assertEquals(UiTokens.WARNING, GlowPalette.WARNING);
+        assertEquals(UiTokens.DANGER, GlowPalette.DANGER);
+    }
 
     @Test
     public void theSurfaceRampGoesUpFromTheWindow() {

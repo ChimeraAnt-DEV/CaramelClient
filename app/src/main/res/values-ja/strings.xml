@@ -1034,24 +1034,6 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="keyboard_disconnected_message">切断しました。キーボード操作を解除しました。</string>
     <string name="keyboard_title">キーボード</string>
     <string name="mod_menu_filter_hud">HUD</string>
-    <string name="wheel_customize_title">何をカスタマイズしますか？</string>
-    <string name="mod_menu_action_manage_wheel">ラジアルメニューを管理</string>
-    <string name="mod_menu_action_manage_wheel_desc">ラジアルメニューのプロファイルを作成、名前変更、並べ替え、削除します</string>
-    <string name="wheel_manager_title">ラジアルメニューのプロファイル</string>
-    <string name="wheel_manager_add">新しいメニュー</string>
-    <string name="wheel_manager_add_title">新しいメニューに名前を付ける</string>
-    <string name="wheel_manager_rename_title">このメニューの名前を変更</string>
-    <string name="wheel_manager_name_hint">メニュー名</string>
-    <string name="wheel_manager_cancel">キャンセル</string>
-    <string name="wheel_manager_save">保存</string>
-    <string name="wheel_manager_done">完了</string>
-    <string name="wheel_manager_root_label">キーで開く</string>
-    <string name="wheel_manager_entry_count">%1$d 項目</string>
-    <string name="wheel_manager_last_note">最後のメニューは削除できません。開くにはキーが必要です。</string>
-    <string name="wheel_manager_entries_title">メニュー項目を編集</string>
-    <string name="wheel_manager_no_entries">項目がまだありません。このメニューにアクションを追加してください。</string>
-    <string name="wheel_manager_add_entry">項目を追加</string>
-    <string name="wheel_manager_pick_action">アクションを選択</string>
     <string name="diagnostics_field_berry_api">BerryAPIバックエンド</string>
     <string name="diagnostics_field_berry_cosmetics">BerryAPIコスメティック</string>
     <string name="about_backend_status">バックエンド: %1$s</string>
@@ -1077,7 +1059,6 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">スプリント オン</string>
     <string name="mod_overlay_autosprint_off">スプリント オフ</string>
-    <string name="mod_menu_setting_wheel_dead_zone">ホイールのデッドゾーン</string>
     <string name="overlay_layout_title">オーバーレイレイアウト</string>
     <string name="overlay_layout_save_current">現在を保存</string>
     <string name="overlay_layout_save_title">このレイアウトに名前を付ける</string>
@@ -1284,4 +1265,13 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="changelog_upcoming_soon">近日公開!</string>
     <string name="changelog_upcoming_soon_body">Wiki は現在作成中です。公開され次第、ここで開きます。</string>
     <string name="setup_finish_changelog_loading">新着情報を読み込んでいます…</string>
+    <string name="inbuilt_mod_frame_generation">フレーム生成</string>
+    <string name="inbuilt_mod_frame_generation_desc">前のフレームを現在のフレームに合成し、動きを滑らかに見せます。</string>
+    <string name="frame_generation_scope_note">フレーム生成はゲームの描画を速くするものではなく、追加のフレームを提示するものでもありません。最後に提示されたフレームを保持し、エンジンの提示境界で新しいフレームに合成するため、画像はゲームがすでに描画した2つのフレームの間になり、同じ描画レートで動きが滑らかに見えます。提示/フレーム境界フックが必要で、そのフックがビルドにインストールされるまでモジュールは無効です。ゲームが描画していないディテールを捏造することはできず、強い合成は速い動きの周囲にアーティファクトを追加するため、控えめに開始します。</string>
+    <string name="inbuilt_mod_motion_blur_desc">前のフレームを現在のフレームに、視点の速さに応じて重み付けして混ぜます。</string>
+    <string name="motion_blur_scope_note">モーションブラーは提示フレーム効果です。最後に提示したフレームを保持し、エンジンの提示境界で新しいフレームに混ぜるため、速い動きは進行方向にぶれます。設計上画像を柔らかくします。フレームを追加せず、無償にはできないため、混合の予算は制限されています。提示/フレーム境界フックが必要で、そのフックがあなたのビルドにインストールされるまで無効です。</string>
+    <string name="mod_config_category_effect">効果</string>
+    <string name="mod_unavailable_reason_hook">エンジンの提示フレームフックが必要ですが、このビルドにはインストールされていません。フックが利用可能になるまで無効です。</string>
+    <string name="launch_button_label">ゲームを起動</string>
+    <string name="launch_menu_open">起動オプションを開く</string>
 </resources>

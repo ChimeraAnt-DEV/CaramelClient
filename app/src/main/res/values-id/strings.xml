@@ -1061,24 +1061,6 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="keyboard_disconnected_message">Terputus. Kontrol papan ketik dilepas.</string>
     <string name="keyboard_title">Papan ketik</string>
     <string name="mod_menu_filter_hud">HUD</string>
-    <string name="wheel_customize_title">Apa yang ingin Anda sesuaikan?</string>
-    <string name="mod_menu_action_manage_wheel">Kelola menu radial</string>
-    <string name="mod_menu_action_manage_wheel_desc">Buat, ganti nama, urutkan ulang, dan hapus profil menu radial</string>
-    <string name="wheel_manager_title">Profil menu radial</string>
-    <string name="wheel_manager_add">Menu baru</string>
-    <string name="wheel_manager_add_title">Beri nama menu baru</string>
-    <string name="wheel_manager_rename_title">Ganti nama menu ini</string>
-    <string name="wheel_manager_name_hint">Nama menu</string>
-    <string name="wheel_manager_cancel">Batal</string>
-    <string name="wheel_manager_save">Simpan</string>
-    <string name="wheel_manager_done">Selesai</string>
-    <string name="wheel_manager_root_label">Terbuka dengan tombol</string>
-    <string name="wheel_manager_entry_count">%1$d entri</string>
-    <string name="wheel_manager_last_note">Menu terakhir tidak dapat dihapus; tombol memerlukan satu untuk dibuka.</string>
-    <string name="wheel_manager_entries_title">Edit entri menu</string>
-    <string name="wheel_manager_no_entries">Belum ada entri. Tambahkan satu untuk menaruh aksi di menu ini.</string>
-    <string name="wheel_manager_add_entry">Tambah entri</string>
-    <string name="wheel_manager_pick_action">Pilih aksi</string>
     <string name="diagnostics_field_berry_api">Backend BerryAPI</string>
     <string name="diagnostics_field_berry_cosmetics">Kosmetik BerryAPI</string>
     <string name="about_backend_status">Backend: %1$s</string>
@@ -1104,7 +1086,6 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Sprint aktif</string>
     <string name="mod_overlay_autosprint_off">Sprint nonaktif</string>
-    <string name="mod_menu_setting_wheel_dead_zone">Zona mati roda</string>
     <string name="overlay_layout_title">Tata letak overlay</string>
     <string name="overlay_layout_save_current">Simpan saat ini</string>
     <string name="overlay_layout_save_title">Beri nama tata letak ini</string>
@@ -1311,4 +1292,13 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="changelog_upcoming_soon">Segera hadir!</string>
     <string name="changelog_upcoming_soon_body">Wiki sedang ditulis. Wiki akan terbuka di sini begitu tersedia.</string>
     <string name="setup_finish_changelog_loading">Memuat yang baru…</string>
+    <string name="inbuilt_mod_frame_generation">Pembuatan Bingkai</string>
+    <string name="inbuilt_mod_frame_generation_desc">Mencampur bingkai sebelumnya ke bingkai saat ini agar gerakan tampak lebih halus.</string>
+    <string name="frame_generation_scope_note">Pembuatan bingkai tidak membuat game merender lebih cepat dan tidak menyajikan bingkai tambahan. Ini menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gambar berada di antara dua bingkai yang sudah digambar game dan gerakan tampak lebih halus pada laju render yang sama. Ini memerlukan hook penyajian/batas bingkai; modul dinonaktifkan sampai hook itu terpasang di build Anda. Ini tidak dapat mengarang detail yang tidak digambar game, dan pencampuran yang berat menambah artefak saat gerakan cepat, jadi ia mulai secara konservatif.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Mencampur bingkai sebelumnya ke bingkai saat ini, dibobot oleh kecepatan pandangan.</string>
+    <string name="motion_blur_scope_note">Motion blur adalah efek bingkai penyajian: ia menyimpan bingkai terakhir yang disajikan dan mencampurnya ke bingkai baru pada batas penyajian mesin, sehingga gerakan cepat mengabur searah pergerakan. Ini melembutkan gambar secara desain; ia tidak menambah bingkai dan tidak bisa gratis, jadi anggaran pencampuran dibatasi. Ini memerlukan hook penyajian/batas bingkai dan dinonaktifkan sampai hook itu terpasang di build Anda.</string>
+    <string name="mod_config_category_effect">Efek</string>
+    <string name="mod_unavailable_reason_hook">Memerlukan hook bingkai penyajian mesin, yang tidak terpasang di build ini. Ini dinonaktifkan sampai hook tersedia.</string>
+    <string name="launch_button_label">Luncurkan Game</string>
+    <string name="launch_menu_open">Buka opsi peluncuran</string>
 </resources>

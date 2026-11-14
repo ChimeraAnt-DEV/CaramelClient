@@ -13,10 +13,17 @@ import org.chimeramc.client.util.PersonalizationManager;
  * ({@code ModMenuTheme} and {@code VipTheme}). Every screen — the radial wheel, the one mod menu, the
  * Closet and the Launch tab — reads from here, so a screen cannot drift onto its own colours.
  *
- * <p>The values are the "blueberry" palette: a near-black, very slightly cool window on a blue
- * accent. The user's selectable accent still applies (the mod menus and the wheel draw themselves,
- * so they resolve it here), but <b>blue is the default</b> — {@link #resolveAccent} falls back to
- * {@link #ACCENT_500} whenever no custom accent has been chosen.
+ * <p>The values are the {@code CaramelClient-UI-pack}'s navy-and-glass palette, adopted verbatim:
+ * the pack is the design reference, so its numbers are the ones the client draws. That means a
+ * deep-navy window ramp ({@code Abyss #060B1A} → {@code Navy #0A1330} → {@code DeepBlue #0F1B44}),
+ * the pack's brighter blue accent ({@code #4A78FF}), its caramel ({@code #F5A742}) and its three-step
+ * text ramp. The old "blueberry" ramp ({@code #17191D} on {@code #0F5BE4}) was a grey-on-blue
+ * palette; the pack's is navy-on-blue, which is what makes a surface read as glass rather than as a
+ * dark rectangle.
+ *
+ * <p>The user's selectable accent still applies (the mod menus and the wheel draw themselves, so
+ * they resolve it here), but <b>the pack's blue is the default</b> — {@link #resolveAccent} falls
+ * back to {@link #ACCENT_500} whenever no custom accent has been chosen.
  *
  * <p>Android-free apart from {@link Context} for the accent preference; the constants and the pure
  * derivations are unit-tested without a device.
@@ -28,57 +35,53 @@ public final class UiTokens {
 
     // --- Colours: window and surfaces --------------------------------------------------------
 
-    /** The window panel fill (alpha 0.96). */
-    public static final int BG_WINDOW = 0xF5111214;
-    public static final int BG_SURFACE = 0xFF17191D;
-    public static final int BG_SURFACE_HOVER = 0xFF1E2126;
-    public static final int BG_TITLEBAR = 0xFF141418;
+    /** The window panel fill (alpha 0.96) over the pack's {@code Abyss}. */
+    public static final int BG_WINDOW = 0xF5060B1A;
+    /** A panel surface, the pack's {@code Navy}. */
+    public static final int BG_SURFACE = 0xFF0A1330;
+    /** A raised surface, the pack's {@code DeepBlue}. */
+    public static final int BG_SURFACE_HOVER = 0xFF0F1B44;
+    /** The titlebar: one step under {@link #BG_SURFACE}, so it reads as a recessed rail. */
+    public static final int BG_TITLEBAR = 0xFF081026;
 
     /** 1dp borders and dividers. */
     public static final int STROKE_HAIRLINE = 0x12FFFFFF;  // rgba(255,255,255,0.07)
 
     // --- Colours: accent ---------------------------------------------------------------------
 
-    /** Toggle ON, selected rail icon, primary button. */
-    public static final int ACCENT_500 = 0xFF0F5BE4;
-    /** Hover/pressed lighter, gradient end. */
-    public static final int ACCENT_400 = 0xFF3682E2;
-    /** Icons on dark, focus ring. */
-    public static final int ACCENT_300 = 0xFF71ACEF;
-    /** Tinted selected-row background. */
-    public static final int ACCENT_900 = 0xFF10254F;
+    /** Toggle ON, selected rail icon, primary button. The pack's {@code Blue}. */
+    public static final int ACCENT_500 = 0xFF4A78FF;
+    /** Hover/pressed lighter, gradient end. The pack's {@code BlueLight}. */
+    public static final int ACCENT_400 = 0xFF628CFF;
+    /** Icons on dark, focus ring. A step lighter still, for a ring that must be unmistakable. */
+    public static final int ACCENT_300 = 0xFF7FA0FF;
+    /** Tinted selected-row background. The pack's {@code DeepBlue} family, darkened for a wash. */
+    public static final int ACCENT_900 = 0xFF152252;
     /** Section tint. */
-    public static final int NAVY_TINT = 0xFF1D283D;
+    public static final int NAVY_TINT = 0xFF16224A;
 
     // --- Colours: text -----------------------------------------------------------------------
 
-    public static final int TEXT_PRIMARY = 0xFFE8EAED;
-    public static final int TEXT_SECONDARY = 0xFF9AA0A6;
-    public static final int TEXT_DISABLED = 0xFF5F6368;
+    /** The pack's {@code Text}. */
+    public static final int TEXT_PRIMARY = 0xFFEAF0FF;
+    /** The pack's {@code Text2}. */
+    public static final int TEXT_SECONDARY = 0xFF9AA8D0;
+    /** The pack's {@code Text3}. */
+    public static final int TEXT_DISABLED = 0xFF66749E;
 
-    public static final int TOGGLE_OFF_TRACK = 0xFF2A2D33;
+    public static final int TOGGLE_OFF_TRACK = 0xFF232C40;
 
     // --- Colours: status (status only) -------------------------------------------------------
 
-    public static final int SUCCESS = 0xFF3DDC84;
-    public static final int WARNING = 0xFFFFB020;
-    public static final int DANGER = 0xFFFF5C5C;
+    /** The pack's {@code Green}. */
+    public static final int SUCCESS = 0xFF2FD36B;
+    /** The pack's {@code Orange}. */
+    public static final int WARNING = 0xFFFF9F2E;
+    /** The pack's {@code Red}. */
+    public static final int DANGER = 0xFFFF5468;
 
-    // --- Radial wheel (translucent, over the game) -------------------------------------------
+    // --- Translucent, over the game -----------------------------------------------------------
 
-    /**
-     * The wheel's scrim. It is now the {@link RadialWheelMaterial} scrim floor's dark base rather
-     * than the retired violet wash: the material decides the strength (R2), this is only the hue, and
-     * a violet scrim under a blue palette was the last place the old brand survived.
-     */
-    public static final int WHEEL_SCRIM = 0x73070A0F;             // rgba(7,10,15,0.45)
-    /** The segment's dark base fill; the material's white tint is laid over it (R2). */
-    public static final int WHEEL_SEGMENT_BASE = 0xCC0B1118;      // rgba(11,17,24,0.80)
-    /** The hovered/selected segment: one surface step lighter. */
-    public static final int WHEEL_SEGMENT_HOVER = 0xE616202D;     // rgba(22,32,45,0.90)
-    public static final int WHEEL_SEGMENT_RIM = 0x24FFFFFF;       // rgba(255,255,255,0.14)
-    /** The hub disc: the panel surface, so the head sits on the same material as the ring (R7). */
-    public static final int WHEEL_HUB_FILL = 0xE60B1118;          // rgba(11,17,24,0.90)
     public static final int CHIP_BG = 0xC7101823;                 // rgba(16,24,35,0.78)
     public static final int CHIP_BORDER = 0x1AFFFFFF;             // rgba(255,255,255,0.10)
 
@@ -309,5 +312,20 @@ public final class UiTokens {
         double lighter = Math.max(la, lb);
         double darker = Math.min(la, lb);
         return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    /**
+     * Whether a surface colour is navy (blue-dominant) rather than a neutral grey.
+     *
+     * <p>The pack's whole look rests on this: a surface whose blue channel is not the strongest is a
+     * grey rectangle, which is the "unfinished" look the navy ramp exists to replace. The check is
+     * deliberately strict — blue must be at least as strong as both other channels — so a colour that
+     * merely leans slightly blue is not mistaken for navy.
+     */
+    public static boolean isBlueDominant(int color) {
+        int r = (color >>> 16) & 0xFF;
+        int g = (color >>> 8) & 0xFF;
+        int b = color & 0xFF;
+        return b >= r && b >= g;
     }
 }

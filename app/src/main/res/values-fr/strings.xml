@@ -1037,24 +1037,6 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="keyboard_disconnected_message">Déconnecté. Commandes clavier libérées.</string>
     <string name="keyboard_title">Clavier</string>
     <string name="mod_menu_filter_hud">HUD</string>
-    <string name="wheel_customize_title">Que souhaitez-vous personnaliser ?</string>
-    <string name="mod_menu_action_manage_wheel">Gérer le menu radial</string>
-    <string name="mod_menu_action_manage_wheel_desc">Créer, renommer, réorganiser et supprimer des profils du menu radial</string>
-    <string name="wheel_manager_title">Profils du menu radial</string>
-    <string name="wheel_manager_add">Nouveau menu</string>
-    <string name="wheel_manager_add_title">Nommer le nouveau menu</string>
-    <string name="wheel_manager_rename_title">Renommer ce menu</string>
-    <string name="wheel_manager_name_hint">Nom du menu</string>
-    <string name="wheel_manager_cancel">Annuler</string>
-    <string name="wheel_manager_save">Enregistrer</string>
-    <string name="wheel_manager_done">Terminé</string>
-    <string name="wheel_manager_root_label">S\'ouvre avec la touche</string>
-    <string name="wheel_manager_entry_count">%1$d entrées</string>
-    <string name="wheel_manager_last_note">Le dernier menu ne peut pas être supprimé ; la touche en a besoin pour s\'ouvrir.</string>
-    <string name="wheel_manager_entries_title">Modifier les entrées du menu</string>
-    <string name="wheel_manager_no_entries">Aucune entrée. Ajoutez-en une pour placer une action sur ce menu.</string>
-    <string name="wheel_manager_add_entry">Ajouter une entrée</string>
-    <string name="wheel_manager_pick_action">Choisir une action</string>
     <string name="diagnostics_field_berry_api">Backend BerryAPI</string>
     <string name="diagnostics_field_berry_cosmetics">Cosmétiques BerryAPI</string>
     <string name="about_backend_status">Backend : %1$s</string>
@@ -1080,7 +1062,6 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Sprint activé</string>
     <string name="mod_overlay_autosprint_off">Sprint désactivé</string>
-    <string name="mod_menu_setting_wheel_dead_zone">Zone morte de la roue</string>
     <string name="overlay_layout_title">Dispositions de superposition</string>
     <string name="overlay_layout_save_current">Enregistrer l\'actuel</string>
     <string name="overlay_layout_save_title">Nommer cette disposition</string>
@@ -1287,4 +1268,13 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="changelog_upcoming_soon">Bientôt disponible !</string>
     <string name="changelog_upcoming_soon_body">Le wiki est en cours de rédaction. Il s\'ouvrira ici dès qu\'il sera en ligne.</string>
     <string name="setup_finish_changelog_loading">Chargement des nouveautés…</string>
+    <string name="inbuilt_mod_frame_generation">Génération d\'images</string>
+    <string name="inbuilt_mod_frame_generation_desc">Mélange l\'image précédente à l\'image actuelle pour un mouvement plus fluide.</string>
+    <string name="frame_generation_scope_note">La génération d\'images ne fait pas rendre le jeu plus vite et ne présente pas d\'image supplémentaire. Elle conserve la dernière image présentée et la mélange à la nouvelle à la limite de présentation du moteur, donc l\'image se situe entre les deux images déjà dessinées par le jeu et le mouvement paraît plus fluide à la même cadence de rendu. Elle nécessite le hook de présentation/limite d\'image ; le module est désactivé tant que ce hook n\'est pas installé sur votre build. Elle ne peut pas inventer des détails que le jeu n\'a pas dessinés, et un mélange trop fort ajoute des artefacts lors de mouvements rapides, donc elle démarre prudemment.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Mélange l\'image précédente à l\'image actuelle, pondéré par la vitesse de la vue.</string>
+    <string name="motion_blur_scope_note">Le flou de mouvement est un effet d\'image présentée : il conserve la dernière image présentée et la mélange à la nouvelle à la limite de présentation du moteur, donc un mouvement rapide s\'étire dans la direction du déplacement. Il adoucit l\'image par conception ; il n\'ajoute pas d\'images et ne peut pas être gratuit, donc le budget de mélange est borné. Il nécessite le hook de présentation/limite d\'image et est désactivé tant que ce hook n\'est pas installé sur votre build.</string>
+    <string name="mod_config_category_effect">Effet</string>
+    <string name="mod_unavailable_reason_hook">Nécessite le hook d\'image présentée du moteur, qui n\'est pas installé sur ce build. Il est désactivé jusqu\'à ce que le hook soit disponible.</string>
+    <string name="launch_button_label">Lancer le jeu</string>
+    <string name="launch_menu_open">Ouvrir les options de lancement</string>
 </resources>

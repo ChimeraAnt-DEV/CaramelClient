@@ -159,8 +159,6 @@ public final class CosmeticsDiagnosticsReport {
         public boolean sessionActive;
         /** The HUD hook's "a HUD screen is open" reading, or false when the hook has not fired. */
         public boolean hudScreenOpen;
-        /** Mod-menu build-step failures captured by the containment guard (formatted). */
-        public String menuGuardFailures = "  none\n";
         public long timestampMs;
     }
 
@@ -323,7 +321,6 @@ public final class CosmeticsDiagnosticsReport {
             AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:317", "Ignored a failure at CosmeticsDiagnosticsReport:317", ignored);
         }
         // Mod-menu build failures the containment guard caught.
-        in.menuGuardFailures = org.chimeramc.client.core.mods.inbuilt.overlay.ModMenuGuard.format();
 
         // Per-cosmetic asset audit: the real PNG size, the geometry's declared size and the cube
         // count, so a size mismatch (which used to crash the preview) is visible without a device.
@@ -453,10 +450,6 @@ public final class CosmeticsDiagnosticsReport {
         b.append('\n');
 
         b.append("Status: ").append(statusText(v)).append('\n');
-        b.append('\n');
-
-        b.append("Mod-menu build failures (containment guard):\n");
-        b.append(v.menuGuardFailures == null ? "  none\n" : v.menuGuardFailures);
         b.append('\n');
 
         b.append("Last crash report: ");

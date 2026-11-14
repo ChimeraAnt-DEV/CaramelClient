@@ -37,10 +37,9 @@ import java.util.List;
  * together with the account row and the skin-pack manager, which are the other things that describe
  * the player.
  *
- * <p>Two inner tabs, exactly as the old Customize host had: the Closet (the same
- * {@link CosmeticsPanel} the in-game Mod Menu hosts, so there is no second catalogue) and Skins
- * (the same {@link SkinsSettingsFragment} the Customize host used). The header is the one place a
- * player can see who they are signed in as and switch accounts.
+ * <p>Two inner tabs: the Closet (the same {@link CosmeticsPanel} the rest of the launcher uses, so
+ * there is no second catalogue) and Skins (the same {@link SkinsSettingsFragment} the Customize host
+ * used). The header is the one place a player can see who they are signed in as and switch accounts.
  */
 public class ProfileSheet extends Dialog {
 

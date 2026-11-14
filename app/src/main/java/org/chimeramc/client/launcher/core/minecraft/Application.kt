@@ -41,6 +41,8 @@ class LauncherApplication : Application() {
                     org.chimeramc.client.preloader.PreloaderInput.isLocalPlayerAvailable()
                 org.chimeramc.client.core.backend.HookAvailability.Hook.TEXTURE_FLUSH ->
                     org.chimeramc.client.preloader.PreloaderInput.isTextureCacheFlushAvailable()
+                org.chimeramc.client.core.backend.HookAvailability.Hook.PRESENT ->
+                    org.chimeramc.client.preloader.PreloaderInput.isPresentHookLive()
             }
         }
         // Send any crash report captured by a previous run, but only when the user's own

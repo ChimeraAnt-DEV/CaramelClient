@@ -20,4 +20,17 @@ public interface FrameTickSource {
      * this session (so the caller reports "unknown" rather than a fabricated rate).
      */
     long renderTick();
+
+    /**
+     * Whether {@link #renderTick()} is the engine's exact present boundary rather than an inference.
+     *
+     * <p>When the engine's present hook (the {@code eglSwapBuffers} detour) is live the tick is the
+     * true frame boundary and the derived rate is the game's exact frame rate. Without it the tick is
+     * inferred from render-entry timestamps, which can collapse or split frames, so the derived rate
+     * is close but not exact. Fail-closed: a source that cannot tell reports {@code false}, so the
+     * rate is labelled approximate rather than presented as exact.
+     */
+    default boolean isExact() {
+        return false;
+    }
 }

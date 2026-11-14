@@ -24,6 +24,11 @@ package org.chimeramc.client.core.mods.inbuilt.overlay;
  */
 public final class ModMenuPalette {
 
+    /** The glass fill alpha (0..255) shared by every translucent panel. */
+    public static final int GLASS_FILL_ALPHA = 0x8C;
+    /** The white tint shared by every translucent panel. */
+    public static final float GLASS_TINT = 0.14f;
+
     private ModMenuPalette() {
     }
 
@@ -148,16 +153,16 @@ public final class ModMenuPalette {
     /**
      * The panel's fill for a glass intensity (M4).
      *
-     * <p>Reuses the wheel's own regular tier — the same fill alpha and the same white tint — so the
-     * Mod Menu panel and the radial wheel are the same material rather than two similar ones. A
-     * solid intensity returns the opaque surface: with no blur behind it, a translucent panel would
-     * just show the game through the menu's own text.
+     * <p>Uses the shared glass tier — one fill alpha and one white tint — so every translucent panel
+     * in the client is the same material rather than two similar ones. A solid intensity returns the
+     * opaque surface: with no blur behind it, a translucent panel would just show the game through
+     * the menu's own text.
      */
     public static int panelFill(Scheme scheme, ModMenuSettings.GlassIntensity glass) {
         if (scheme == null) return BG_SURFACE_1;
         if (glass == null || glass == ModMenuSettings.GlassIntensity.OFF) return scheme.surface1;
-        int base = withAlpha(scheme.surface1, RadialWheelMaterial.REGULAR_FILL_ALPHA);
-        return blend(base, 0xFFFFFFFF, RadialWheelMaterial.REGULAR_TINT);
+        int base = withAlpha(scheme.surface1, GLASS_FILL_ALPHA);
+        return blend(base, 0xFFFFFFFF, GLASS_TINT);
     }
 
     private static int clampChannel(int value) {
@@ -180,18 +185,6 @@ public final class ModMenuPalette {
         return (alpha << 24) | (ACCENT_MUTED & 0x00FFFFFF);
     }
 
-    /** The state dot colour for a row's load state (M10). */
-    public static int dotFor(ModMenuRowState state) {
-        switch (state) {
-            case FAILED:
-            case CRASHED:
-                return STATE_ERROR;
-            case UNSUPPORTED:
-                return STATE_WARN;
-            default:
-                return 0;
-        }
-    }
 
     /** The tint laid over the glass for a glass-intensity step (M4). */
     public static float tintFor(ModMenuSettings.GlassIntensity intensity) {

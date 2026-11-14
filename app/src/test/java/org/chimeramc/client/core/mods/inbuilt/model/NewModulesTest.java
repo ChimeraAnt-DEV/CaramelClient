@@ -24,7 +24,7 @@ public class NewModulesTest {
             ModIds.FULLBRIGHT, ModIds.TIME_CHANGER, ModIds.LOW_FIRE, ModIds.BLOCK_OUTLINE,
             ModIds.MOTION_BLUR, ModIds.SATURATION, ModIds.CROSSHAIR, ModIds.ARMOR_VIEW_BENDING,
             ModIds.PROJECTILE_SCALER, ModIds.FREECAM, ModIds.TNT, ModIds.LIST_PLAYERS,
-            ModIds.DEBUG_MENU, ModIds.THIRD_PERSON_NAMETAG,
+            ModIds.DEBUG_MENU, ModIds.THIRD_PERSON_NAMETAG, ModIds.FRAME_GENERATION,
     };
 
     @Test
@@ -67,16 +67,36 @@ public class NewModulesTest {
 
         // These need a native frame or entity feed that no mod can read in this build.
         for (String id : new String[]{ModIds.TIME_CHANGER, ModIds.LOW_FIRE, ModIds.BLOCK_OUTLINE,
-                ModIds.MOTION_BLUR, ModIds.SATURATION, ModIds.ARMOR_VIEW_BENDING,
+                ModIds.SATURATION, ModIds.ARMOR_VIEW_BENDING,
                 ModIds.PROJECTILE_SCALER, ModIds.FREECAM, ModIds.TNT,
                 ModIds.THIRD_PERSON_NAMETAG}) {
             assertTrue("module should need game data: " + id, ModIds.requiresGameData(id));
         }
     }
 
+    /**
+     * Motion Blur and Frame Generation are present-frame effects, so their availability follows the
+     * live present/frame-boundary hook rather than the static "needs game data" list. They are badged
+     * only while that hook is absent, and would un-badge the moment it installs.
+     */
+    @Test
+    public void presentFrameModulesFollowThePresentHookNotTheGameDataList() {
+        for (String id : new String[]{ModIds.MOTION_BLUR, ModIds.FRAME_GENERATION}) {
+            assertFalse(id + " must not be in the permanent game-data list",
+                    ModIds.requiresGameData(id));
+            assertEquals("must require the present hook",
+                    org.chimeramc.client.core.backend.HookAvailability.Hook.PRESENT,
+                    ModIds.requiredHook(id));
+        }
+    }
+
     @Test
     public void theAvailabilityBadgeFollowsRequiresGameDataWithoutDrifting() {
         for (String id : NEW_VISUAL) {
+            if (ModIds.MOTION_BLUR.equals(id) || ModIds.FRAME_GENERATION.equals(id)) {
+                // Gated on the live present hook, not the static list; covered by the test above.
+                continue;
+            }
             assertEquals("availability drifted for " + id,
                     ModIds.requiresGameData(id), ModAvailability.isUnavailable(id));
             assertEquals("interactivity drifted for " + id,

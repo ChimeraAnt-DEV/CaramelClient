@@ -29,6 +29,12 @@ public final class ModAvailability {
             // factually wrong.
             return REASON_NO_BACKEND;
         }
+        if (ModIds.requiresHook(modId)) {
+            // Frame generation and motion blur act on the presented frame, so they need the engine's
+            // present/frame-boundary hook. That hook is a live probe, not a permanent gap: the module
+            // reads as unavailable only while the hook is absent on this build.
+            return REASON_NO_HOOK;
+        }
         if (!ModIds.requiresGameData(modId)) return null;
         // A catalogue entry is badged for one of two distinct causes, and telling them apart matters:
         // an engine-hook module is waiting for a feed this build cannot yet read, while a
@@ -84,6 +90,14 @@ public final class ModAvailability {
      * does not advertise (zoom without a field-of-view provider).
      */
     public static final String REASON_NO_BACKEND = "no_backend";
+
+    /**
+     * A stable id for the reason shown when a module needs a sweetloader hook (the engine's present
+     * boundary) that did not install on this build. Distinct from {@link #REASON_NO_GAME_DATA}: that
+     * is a feed no build can read, while this is a hook that is absent here but would un-badge the
+     * module the moment it installs.
+     */
+    public static final String REASON_NO_HOOK = "no_hook";
 
     private ModAvailability() {}
 }

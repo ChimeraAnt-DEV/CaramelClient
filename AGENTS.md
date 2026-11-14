@@ -59,7 +59,7 @@ file is missing from the index.
 - [Select Hit touch ordering](docs/agents/select-hit-touch-ordering.md)
 - [Proximity voice chat (core.voice + VoiceChatOverlay)](docs/agents/proximity-voice-chat.md)
 - [Voice relay server (server/voice-relay, Go) тАФ internet voice](docs/agents/voice-relay-server-internet-voice.md)
-- [In-game pack changer (core.content.InGamePackChanger + PackChangerPanel)](docs/agents/in-game-pack-changer.md)
+- [In-game pack changer (core.content.InGamePackChanger)](docs/agents/in-game-pack-changer.md)
 - [One Mod Menu (U4): the touch screen and the VIP screen were merged](docs/agents/one-mod-menu-the-touch-screen-and-the-vip-screen-were-merged.md)
 - [Mod Menu focus highlight (the "50% white overlay")](docs/agents/mod-menu-focus-highlight.md)
 - [Mod Menu keybinds (keyboard + controller) and the in-game capture](docs/agents/mod-menu-keybinds-and-the-in-game-capture.md)
@@ -107,3 +107,4 @@ file is missing from the index.
 - [World reconstruction — RE groundwork and the remaining wall](docs/agents/world-reconstruction-re-groundwork.md)
 - [MB shader loader version support (mtbinloader2 / libmtbinloader2.so)](docs/agents/mb-shader-loader-version-support.md)
 - [BerryAPI cosmetic C ABI (sweetloader mirror + launcher surface)](docs/agents/berryapi-cosmetic-c-abi.md)
+- [One UI: the Caramel UI pack, the native ImGui menu, and FPS honesty](docs/agents/one-ui-the-caramel-ui-pack-the-native-imgui-menu-and-fps-honesty.md)

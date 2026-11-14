@@ -20,46 +20,61 @@ public final class GlowPalette {
 
     // --- Navy ramp ---------------------------------------------------------------------------
 
-    /** The window: the deepest step, a near-black navy. */
-    public static final int NAVY_WINDOW = 0xFF0A0E16;
-    /** A panel or card surface, one step above the window. */
-    public static final int NAVY_SURFACE = 0xFF111826;
-    /** A raised surface (a row inside a card, a hovered panel). */
-    public static final int NAVY_SURFACE_RAISED = 0xFF18213A;
+    /**
+     * The window: the pack's {@code Abyss}. The deepest step, a near-black navy — never pure black,
+     * because on an LCD "OLED harsh" is a defect rather than a feature.
+     */
+    public static final int NAVY_WINDOW = 0xFF060B1A;
+    /** A panel or card surface, one step above the window: the pack's {@code Navy}. */
+    public static final int NAVY_SURFACE = 0xFF0A1330;
+    /** A raised surface (a row inside a card, a hovered panel): the pack's {@code DeepBlue}. */
+    public static final int NAVY_SURFACE_RAISED = 0xFF0F1B44;
     /** The hairline that separates two navy surfaces. */
-    public static final int NAVY_STROKE = 0xFF223052;
+    public static final int NAVY_STROKE = 0xFF22305A;
 
     /** The AMOLED window: true black, for the burn-in-conscious theme. */
     public static final int AMOLED_WINDOW = 0xFF000000;
     public static final int AMOLED_SURFACE = 0xFF070A11;
     public static final int AMOLED_SURFACE_RAISED = 0xFF101724;
 
-    // --- Snow blue (the toggle + accent family) ----------------------------------------------
+    // --- Blue (the accent family) ------------------------------------------------------------
 
-    /** Snow blue: the toggle track when on, the primary action, the selected state. */
-    public static final int SNOW_BLUE = 0xFFB8D8F5;
-    /** A step lighter, for hover and the toggle thumb. */
-    public static final int SNOW_BLUE_LIGHT = 0xFFDCEBFA;
-    /** A step deeper, for pressed and for text on a snow-blue fill. */
-    public static final int SNOW_BLUE_DEEP = 0xFF6FA8DC;
+    /**
+     * The pack's {@code Blue}: the toggle track when on, the primary action, the selected state.
+     *
+     * <p>The pack's toggle-on is its green, not its blue, but the launcher's toggle is the accent —
+     * one accent per screen is the rule the mod menu's palette states, and the launch toggles are
+     * the accent surface. The pack's blue is still the accent the rest of the UI uses.
+     */
+    public static final int SNOW_BLUE = 0xFF4A78FF;
+    /** A step lighter, for hover and the toggle thumb: the pack's {@code BlueLight}. */
+    public static final int SNOW_BLUE_LIGHT = 0xFF628CFF;
+    /** A step deeper, for pressed and for text on a blue fill. */
+    public static final int SNOW_BLUE_DEEP = 0xFF3458E6;
     /** The washed fill behind a selected row. */
-    public static final int SNOW_BLUE_WASH = 0xFF1A2740;
+    public static final int SNOW_BLUE_WASH = 0xFF152252;
     /** The toggle track when off: a muted navy, never grey. */
     public static final int TOGGLE_TRACK_OFF = 0xFF232C40;
 
     // --- Text --------------------------------------------------------------------------------
 
-    public static final int TEXT_PRIMARY = 0xFFE9EEF7;
-    public static final int TEXT_SECONDARY = 0xFF9FB0C9;
-    public static final int TEXT_DISABLED = 0xFF5C6B84;
-    /** Text drawn on a snow-blue fill. */
-    public static final int TEXT_ON_SNOW = 0xFF0A0E16;
+    /** The pack's {@code Text}. */
+    public static final int TEXT_PRIMARY = 0xFFEAF0FF;
+    /** The pack's {@code Text2}. */
+    public static final int TEXT_SECONDARY = 0xFF9AA8D0;
+    /** The pack's {@code Text3}. */
+    public static final int TEXT_DISABLED = 0xFF66749E;
+    /** Text drawn on a blue fill. */
+    public static final int TEXT_ON_SNOW = 0xFF060B1A;
 
     // --- Status ------------------------------------------------------------------------------
 
-    public static final int SUCCESS = 0xFF4ADE80;
-    public static final int WARNING = 0xFFFBBF5C;
-    public static final int DANGER = 0xFFFF6B6B;
+    /** The pack's {@code Green}. */
+    public static final int SUCCESS = 0xFF2FD36B;
+    /** The pack's {@code Orange}. */
+    public static final int WARNING = 0xFFFF9F2E;
+    /** The pack's {@code Red}. */
+    public static final int DANGER = 0xFFFF5468;
 
     // --- Glass (the shared card material) ----------------------------------------------------
 

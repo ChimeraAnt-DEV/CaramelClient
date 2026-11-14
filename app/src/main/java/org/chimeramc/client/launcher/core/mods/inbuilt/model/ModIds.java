@@ -55,6 +55,14 @@ public final class ModIds {
     public static final String TICK_RATE_PREDICTOR = "tick_rate_predictor";
     public static final String ADAPTIVE_FRAME_PACING = "adaptive_frame_pacing";
     public static final String THERMAL_QUALITY_HOLD = "thermal_quality_hold";
+    /**
+     * Frame generation. There is exactly one honest route: the engine's present/frame-boundary hook
+     * (the {@code eglSwapBuffers} detour), which is where a second presented frame could be emitted.
+     * Gated on {@link #requiredHook} rather than the static {@link #requiresGameData} list, so the
+     * module un-badges on a build where the present seam is actually live instead of claiming the
+     * feed can never exist.
+     */
+    public static final String FRAME_GENERATION = "frame_generation";
 
     // --- Visual / HUD / Misc modules (the mod-panel list) ------------------------------------
 
@@ -173,6 +181,29 @@ public final class ModIds {
     }
 
     /**
+     * The sweetloader hook a module needs before it can run, or null when it needs none.
+     *
+     * <p>Frame generation and motion blur are the two modules that act on the presented frame
+     * rather than on the launcher's own surface, so both need the engine's present/frame-boundary
+     * hook (the {@code eglSwapBuffers} detour). Unlike {@link #requiresGameData} — a static list of
+     * feeds this build can never read — this is a live probe: the module is badged while the hook is
+     * absent and becomes usable the moment the sweetloader installs it, so the menu tells the truth
+     * about the running build instead of a build-time guess.
+     */
+    public static org.chimeramc.client.core.backend.HookAvailability.Hook requiredHook(String modId) {
+        if (FRAME_GENERATION.equals(modId) || MOTION_BLUR.equals(modId)) {
+            return org.chimeramc.client.core.backend.HookAvailability.Hook.PRESENT;
+        }
+        return null;
+    }
+
+    /** True when the module needs a present/frame-boundary hook that is not live on this build. */
+    public static boolean requiresHook(String modId) {
+        org.chimeramc.client.core.backend.HookAvailability.Hook hook = requiredHook(modId);
+        return hook != null && !org.chimeramc.client.core.backend.HookAvailability.isLive(hook);
+    }
+
+    /**
      * True when the active backend does not provide what the module needs.
      *
      * <p>Reads {@link org.chimeramc.client.core.backend.GameBridge}, so the answer follows the live
@@ -220,7 +251,7 @@ public final class ModIds {
                 // and List Players / Debug Menu (the local-player feed and the proximity-voice peer
                 // list).
                 || TIME_CHANGER.equals(modId) || LOW_FIRE.equals(modId)
-                || BLOCK_OUTLINE.equals(modId) || MOTION_BLUR.equals(modId)
+                || BLOCK_OUTLINE.equals(modId)
                 || SATURATION.equals(modId) || ARMOR_VIEW_BENDING.equals(modId)
                 || PROJECTILE_SCALER.equals(modId) || FREECAM.equals(modId)
                 || TNT.equals(modId)

@@ -1,4 +1,8 @@
 ## Blueberry UI (UiTokens + shared components)
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 
 - **One token file: `ui/components/UiTokens`.** It replaces the retired violet/magenta palette and
   the two separate mod-menu themes; `ModMenuTheme` and `VipTheme` are now thin adapters over it. Blue

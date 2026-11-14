@@ -150,43 +150,4 @@ public class OverlayLayoutTest {
         assertNull(OverlayLayoutStore.findById(layouts, null));
     }
 
-    @Test
-    public void theWheelOffersALayoutEntryPerStoredLayout() {
-        List<OverlayLayout> layouts = new ArrayList<>();
-        layouts.add(new OverlayLayout("pvp", "PvP"));
-        layouts.add(new OverlayLayout("survival", "Survival"));
-        List<WheelEntryCatalog.Choice> choices =
-                WheelEntryCatalog.forProfile(new ArrayList<>(), "root", layouts);
-        int layoutChoices = 0;
-        for (WheelEntryCatalog.Choice choice : choices) {
-            if (choice.action == WheelEntry.Action.SWITCH_LAYOUT) {
-                layoutChoices++;
-                assertTrue("a layout entry names its layout",
-                        "pvp".equals(choice.target) || "survival".equals(choice.target));
-            }
-        }
-        assertEquals(2, layoutChoices);
-        // The plain catalog is unchanged, so a caller without layouts sees the same set as before.
-        assertEquals(WheelEntryCatalog.all().size(),
-                WheelEntryCatalog.forProfile(new ArrayList<>(), "root", null).size());
-    }
-
-    @Test
-    public void aLayoutEntryWithoutANameUsesItsId() {
-        List<OverlayLayout> layouts = new ArrayList<>();
-        layouts.add(new OverlayLayout("pvp", ""));
-        List<WheelEntryCatalog.Choice> choices =
-                WheelEntryCatalog.forProfile(new ArrayList<>(), "root", layouts);
-        WheelEntryCatalog.Choice layoutChoice = null;
-        for (WheelEntryCatalog.Choice choice : choices) {
-            if (choice.action == WheelEntry.Action.SWITCH_LAYOUT) layoutChoice = choice;
-        }
-        assertNotNull(layoutChoice);
-        assertEquals("pvp", layoutChoice.literalLabel);
-    }
-
-    @Test
-    public void aLayoutEntryIsNotASubWheel() {
-        assertFalse(new WheelEntry(WheelEntry.Action.SWITCH_LAYOUT, "pvp", "PvP").isSubWheel());
-    }
 }

@@ -21,22 +21,29 @@ import java.nio.file.Paths;
  */
 public class LaunchTabLayoutTest {
 
+    private static final String SCREEN =
+            "app/src/main/java/org/chimeramc/client/ui/compose/caramel/launch/CaramelLaunchScreen.kt";
+
     @Test
-    public void theHeroIsHostedAsAComposeViewAndTheOldLayoutIsGone() throws IOException {
+    public void theLaunchTabIsOneComposeScreenAndTheOldLayoutIsGone() throws IOException {
         String main = read("app/src/main/res/layout/activity_main.xml");
-        assertTrue("the launch tab must host the Compose hero",
+        assertTrue("the launch tab must host the Caramel Compose screen",
                 main.contains("androidx.compose.ui.platform.ComposeView")
-                        && main.contains("@+id/launch_hero_compose"));
+                        && main.contains("@+id/launch_content"));
         assertFalse("the old hero include must be gone", main.contains("@layout/include_hero_panel"));
         assertFalse("include_hero_panel.xml is the old hero and must not exist",
                 Files.exists(root().resolve("app/src/main/res/layout/include_hero_panel.xml")));
+        assertFalse("the old dock include must be gone",
+                main.contains("@layout/include_launch_dock"));
+        assertFalse("include_launch_dock.xml is the old dock and must not exist",
+                Files.exists(root().resolve("app/src/main/res/layout/include_launch_dock.xml")));
     }
 
     @Test
     public void theIdentityColumnPrecedesThePreviewInTheRow() throws IOException {
-        String hero = read("app/src/main/java/org/chimeramc/client/ui/compose/launch/LaunchHero.kt");
-        int identity = hero.indexOf("Left: identity and stats");
-        int preview = hero.indexOf("Right: the live 3D preview");
+        String hero = read(SCREEN);
+        int identity = hero.indexOf("Left: identity and the launch control");
+        int preview = hero.indexOf("Right: the live 3D character preview");
         assertTrue("the hero must label its two halves", identity >= 0 && preview >= 0);
         assertTrue("the identity column must come before the preview, so the preview is on the right",
                 identity < preview);
@@ -44,7 +51,7 @@ public class LaunchTabLayoutTest {
 
     @Test
     public void thePreviewUsesTheRealCapePreviewView() throws IOException {
-        String hero = read("app/src/main/java/org/chimeramc/client/ui/compose/launch/LaunchHero.kt");
+        String hero = read(SCREEN);
         assertTrue("the preview must be the real CapePreviewView, not a reimplementation",
                 hero.contains("org.chimeramc.client.core.mods.inbuilt.overlay.CapePreviewView"));
         assertTrue("the preview must be released when the composition leaves",

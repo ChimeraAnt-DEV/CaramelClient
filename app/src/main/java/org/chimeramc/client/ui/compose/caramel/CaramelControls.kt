@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -51,16 +50,108 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
-/** A switch: a gradient track when on, a hairline outline when off, and a spring-driven knob. */
+/**
+ * The Caramel control set, ported from the pack's `components/Buttons.kt` and `Controls.kt`.
+ *
+ * <p>The pack styles its buttons on hover, which a touch screen never does. `collectIsHoveredAsState`
+ * is replaced by `collectIsPressedAsState`, so the same brightening happens under a finger instead
+ * of a cursor; everything else (the tone ramps, the shadow, the top-edge highlight) is the pack's.
+ */
+
+/** The pack's `Tone` ramps: a vertical gradient plus the colour text sits on. */
+enum class Tone(val top: Color, val bottom: Color, val on: Color) {
+    Green(C.GreenLight, C.GreenDark, C.OnGreen),
+    Caramel(Color(0xFFFFBE5A), C.CaramelDark, Color.White),
+    Blue(C.BlueLight, C.BlueDark, Color.White),
+    Red(Color(0xFFFF6C7E), Color(0xFFD6344E), Color.White),
+}
+
+/** The pack's `PrimaryButton`: a filled, gradient, glowing action. */
 @Composable
-fun CaramelToggle(
-    checked: Boolean,
-    onChange: (Boolean) -> Unit,
+fun PrimaryButton(
+    text: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
+    tone: Tone = Tone.Green,
+    icon: ImageVector? = null,
+    height: Int = 44,
 ) {
-    val knobOffset by animateDpAsState(if (checked) 21.dp else 3.dp, spring(stiffness = 600f))
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val shape = RoundedCornerShape((height / 2.6).dp)
+    Box(
+        modifier
+            .height(height.dp)
+            .shadow(if (pressed) 16.dp else 10.dp, shape, ambientColor = tone.bottom, spotColor = tone.bottom)
+            .clip(shape)
+            .background(Brush.verticalGradient(listOf(tone.top, tone.bottom)))
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color.White.copy(if (pressed) 0.28f else 0.20f), Color.Transparent, Color.Transparent),
+                ),
+            )
+            .border(1.dp, Color.White.copy(0.28f), shape)
+            .clickable(src, null, onClick = onClick),
+        Alignment.Center,
+    ) {
+        Row(
+            Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            if (icon != null) Icon(icon, null, Modifier.size(18.dp), tone.on)
+            Text(text, style = T.Button.copy(color = tone.on))
+        }
+    }
+}
+
+/** The pack's `GlassButton`: a translucent secondary action. `text == null` makes it square. */
+@Composable
+fun GlassButton(
+    text: String?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    danger: Boolean = false,
+    active: Boolean = false,
+    height: Int = 40,
+) {
+    val src = remember { MutableInteractionSource() }
+    val pressed by src.collectIsPressedAsState()
+    val tint = when {
+        danger -> C.Red
+        active -> C.Blue
+        else -> Color.White
+    }
+    val shape = RoundedCornerShape(CaramelDimens.RadiusButton)
+    val fg = if (danger) C.Red else C.Text
+    Box(
+        modifier
+            .height(height.dp)
+            .then(if (text == null) Modifier.width(height.dp) else Modifier)
+            .clip(shape)
+            .background(tint.copy(if (danger || active) 0.16f else if (pressed) 0.14f else 0.08f))
+            .border(1.dp, tint.copy(if (danger || active) 0.45f else if (pressed) 0.28f else 0.17f), shape)
+            .clickable(src, null, onClick = onClick),
+        Alignment.Center,
+    ) {
+        Row(
+            Modifier.padding(horizontal = if (text == null) 0.dp else 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            if (icon != null) Icon(icon, null, Modifier.size(17.dp), fg)
+            if (text != null) Text(text, style = T.Label.copy(color = fg))
+        }
+    }
+}
+
+/** The pack's `CaramelToggle`: a gradient track with a sliding thumb. */
+@Composable
+fun CaramelToggle(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+    val x by animateDpAsState(if (checked) 21.dp else 3.dp, spring(stiffness = 600f))
     val shape = RoundedCornerShape(50)
     Box(
         modifier
@@ -68,17 +159,17 @@ fun CaramelToggle(
             .clip(shape)
             .background(
                 if (checked) {
-                    Brush.horizontalGradient(listOf(CaramelColors.GreenLight, CaramelColors.GreenDark))
+                    Brush.horizontalGradient(listOf(C.GreenLight, C.GreenDark))
                 } else {
                     SolidColor(Color.White.copy(0.10f))
                 },
             )
             .border(1.dp, if (checked) Color.Transparent else Color.White.copy(0.24f), shape)
-            .clickable(remember { MutableInteractionSource() }, null, enabled = enabled) { onChange(!checked) },
+            .clickable(remember { MutableInteractionSource() }, null) { onChange(!checked) },
     ) {
         Box(
             Modifier
-                .offset(knobOffset, 3.dp)
+                .offset(x, 3.dp)
                 .size(16.dp)
                 .shadow(3.dp, CircleShape)
                 .background(if (checked) Color.White else Color(0xFFBECAEB), CircleShape),
@@ -86,7 +177,7 @@ fun CaramelToggle(
     }
 }
 
-/** A checkbox: a blue gradient fill and a tick when checked. */
+/** The pack's `CaramelCheckbox`. */
 @Composable
 fun CaramelCheckbox(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(5.dp)
@@ -96,7 +187,7 @@ fun CaramelCheckbox(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Mod
             .clip(shape)
             .background(
                 if (checked) {
-                    Brush.verticalGradient(listOf(CaramelColors.BlueLight, CaramelColors.BlueDark))
+                    Brush.verticalGradient(listOf(C.BlueLight, C.BlueDark))
                 } else {
                     SolidColor(Color.White.copy(0.06f))
                 },
@@ -109,79 +200,40 @@ fun CaramelCheckbox(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Mod
     }
 }
 
-/** A radio: an outlined circle with an accent core when selected. */
-@Composable
-fun CaramelRadio(selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
-        modifier
-            .size(18.dp)
-            .clip(CircleShape)
-            .background(Color.White.copy(0.06f))
-            .border(
-                1.4.dp,
-                if (selected) CaramelColors.Blue else Color.White.copy(0.28f),
-                CircleShape,
-            )
-            .clickable(remember { MutableInteractionSource() }, null, onClick = onClick),
-        Alignment.Center,
-    ) {
-        if (selected) Box(Modifier.size(8.dp).background(CaramelColors.Blue, CircleShape))
-    }
-}
-
-/**
- * A slider with a gradient track and a knob carrying an accent core.
- *
- * Drawn on a [Canvas] rather than built from Material's slider because the track is a two-colour
- * gradient and the knob is three concentric circles; reproducing that through the Material API would
- * mean overriding every slot. The two gesture detectors are separate so a tap jumps the knob and a
- * drag tracks it — one detector cannot do both without lagging a jump.
- */
+/** The pack's `CaramelSlider`: a gradient track and a white knob with an accent core. */
 @Composable
 fun CaramelSlider(
     value: Float,
     onChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
-    accent: Color = CaramelColors.Blue,
+    accent: Color = C.Blue,
     accentEnd: Color = Color(0xFF4ABEFF),
 ) {
-    var trackWidth by remember { mutableIntStateOf(1) }
+    var w by remember { mutableStateOf(1) }
     Canvas(
         modifier
             .fillMaxWidth()
             .height(22.dp)
-            .onSizeChanged { trackWidth = it.width.coerceAtLeast(1) }
+            .onSizeChanged { w = it.width.coerceAtLeast(1) }
             .pointerInput(Unit) {
-                detectTapGestures { onChange((it.x / trackWidth).coerceIn(0f, 1f)) }
+                detectTapGestures { onChange((it.x / w).coerceIn(0f, 1f)) }
             }
             .pointerInput(Unit) {
-                detectDragGestures { change, _ ->
-                    onChange((change.position.x / trackWidth).coerceIn(0f, 1f))
-                }
+                detectDragGestures { c, _ -> onChange((c.position.x / w).coerceIn(0f, 1f)) }
             },
     ) {
-        val centreY = size.height / 2
-        val thickness = 6.dp.toPx()
-        val knobX = size.width * value.coerceIn(0f, 1f)
-        drawRoundRect(
-            Color.White.copy(0.12f),
-            Offset(0f, centreY - thickness / 2),
-            Size(size.width, thickness),
-            CornerRadius(thickness),
-        )
-        drawRoundRect(
-            Brush.horizontalGradient(listOf(accent, accentEnd)),
-            Offset(0f, centreY - thickness / 2),
-            Size(knobX, thickness),
-            CornerRadius(thickness),
-        )
-        drawCircle(Color.Black.copy(0.35f), 9.dp.toPx(), Offset(knobX, centreY + 1.5.dp.toPx()))
-        drawCircle(Color.White, 8.dp.toPx(), Offset(knobX, centreY))
-        drawCircle(accent, 3.dp.toPx(), Offset(knobX, centreY))
+        val cy = size.height / 2
+        val th = 6.dp.toPx()
+        val kx = size.width * value
+        drawRoundRect(Color.White.copy(0.12f), Offset(0f, cy - th / 2), Size(size.width, th), CornerRadius(th))
+        drawRoundRect(Brush.horizontalGradient(listOf(accent, accentEnd)), Offset(0f, cy - th / 2), Size(kx, th), CornerRadius(th))
+        drawCircle(Color.Black.copy(0.35f), 9.dp.toPx(), Offset(kx, cy + 1.5.dp.toPx()))
+        drawCircle(Color.White, 8.dp.toPx(), Offset(kx, cy))
+        drawCircle(accent, 3.dp.toPx(), Offset(kx, cy))
     }
 }
 
-/** A single-line field: a dark translucent fill and a border that lights up on focus. */
+/** The pack's `CaramelTextField`, with a search leading icon for [SearchField]. */
 @Composable
 fun CaramelTextField(
     value: String,
@@ -191,22 +243,20 @@ fun CaramelTextField(
     leading: ImageVector? = null,
 ) {
     var focused by remember { mutableStateOf(false) }
-    val border by animateColorAsState(
-        if (focused) CaramelColors.Blue.copy(0.8f) else Color.White.copy(0.16f),
-    )
-    val shape = RoundedCornerShape(11.dp)
+    val border by animateColorAsState(if (focused) C.Blue.copy(0.8f) else Color.White.copy(0.16f))
+    val shape = RoundedCornerShape(CaramelDimens.RadiusControl)
     BasicTextField(
-        value = value,
-        onValueChange = onChange,
-        modifier = modifier
+        value,
+        onChange,
+        modifier
             .height(38.dp)
             .clip(shape)
             .background(Color(0x6E040A1A))
             .border(1.dp, border, shape)
             .onFocusChangedCompat { focused = it },
         singleLine = true,
-        textStyle = CaramelType.Label.copy(fontWeight = FontWeight.Normal),
-        cursorBrush = SolidColor(CaramelColors.Blue),
+        textStyle = T.Label.copy(fontWeight = FontWeight.Normal),
+        cursorBrush = SolidColor(C.Blue),
         decorationBox = { inner ->
             Row(
                 Modifier
@@ -215,17 +265,9 @@ fun CaramelTextField(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                if (leading != null) Icon(leading, null, Modifier.size(16.dp), CaramelColors.Text3)
+                if (leading != null) Icon(leading, null, Modifier.size(16.dp), C.Text3)
                 Box(Modifier.weight(1f)) {
-                    if (value.isEmpty()) {
-                        Text(
-                            placeholder,
-                            style = CaramelType.Label.copy(
-                                color = CaramelColors.Text3,
-                                fontWeight = FontWeight.Normal,
-                            ),
-                        )
-                    }
+                    if (value.isEmpty()) Text(placeholder, style = T.Label.copy(color = C.Text3, fontWeight = FontWeight.Normal))
                     inner()
                 }
             }
@@ -233,51 +275,54 @@ fun CaramelTextField(
     )
 }
 
-/** The search variant of [CaramelTextField]. */
+/** A search box, the pack's `SearchField`. */
 @Composable
-fun CaramelSearchField(
+fun SearchField(
     value: String,
     onChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
 ) = CaramelTextField(value, onChange, modifier, placeholder, Icons.Rounded.Search)
 
-/** A settings row: the label and its description on the left, the control on the right. */
+/** A title, an optional description and a trailing control, from the pack's `SettingRow`. */
 @Composable
-fun CaramelSettingRow(
+fun SettingRow(
     title: String,
-    modifier: Modifier = Modifier,
     desc: String? = null,
+    modifier: Modifier = Modifier,
     control: @Composable () -> Unit,
 ) {
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
-            Text(title, style = CaramelType.Label)
-            if (desc != null) Text(desc, style = CaramelType.Body)
+            Text(title, style = T.Label)
+            if (desc != null) Text(desc, style = T.Body)
         }
         control()
     }
 }
 
-/** A labelled slider with its current value on the right of the label row. */
+/** A labelled slider whose value is shown in the accent colour, from the pack's `SliderRow`. */
 @Composable
-fun CaramelSliderRow(
+fun SliderRow(
     title: String,
     valueText: String,
     value: Float,
     onChange: (Float) -> Unit,
-    accent: Color = CaramelColors.Blue,
+    accent: Color = C.Blue,
     accentEnd: Color = Color(0xFF4ABEFF),
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row {
-            Text(title, style = CaramelType.Label, modifier = Modifier.weight(1f))
-            Text(valueText, style = CaramelType.Label.copy(color = accent))
+            Text(title, style = T.Label, modifier = Modifier.weight(1f))
+            Text(valueText, style = T.Label.copy(color = accent))
         }
         CaramelSlider(value, onChange, accent = accent, accentEnd = accentEnd)
     }
 }
 
-/** Adapts [androidx.compose.ui.focus.onFocusChanged] to a `(focused: Boolean) -> Unit` callback. */
-fun Modifier.onFocusChangedCompat(block: (Boolean) -> Unit): Modifier =
-    onFocusChanged { block(it.isFocused) }
+/** Local sp helpers, so call sites can write `12.sp_` next to the pack's own literals. */
+val Int.sp_: androidx.compose.ui.unit.TextUnit
+    get() = androidx.compose.ui.unit.TextUnit(this.toFloat(), androidx.compose.ui.unit.TextUnitType.Sp)
+
+val Double.sp_: androidx.compose.ui.unit.TextUnit
+    get() = androidx.compose.ui.unit.TextUnit(this.toFloat(), androidx.compose.ui.unit.TextUnitType.Sp)

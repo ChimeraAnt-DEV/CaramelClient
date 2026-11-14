@@ -81,6 +81,17 @@ public interface GameBackend {
      */
     int readFps();
 
+    /**
+     * Whether {@link #readFps()} is the game's exact frame rate rather than an inferred one.
+     *
+     * <p>Only the present-boundary tick is exact; a rate derived from an inferred frame boundary is
+     * close but not exact, and a caller must label it approximate rather than pass it off as the
+     * game's real frame rate. Optional: a backend that cannot tell reports {@code false} (fail-closed).
+     */
+    default boolean isFrameRateExact() {
+        return false;
+    }
+
     /** Releases every key and button this backend has injected, so input cannot stay stuck. */
     void releaseAll();
 

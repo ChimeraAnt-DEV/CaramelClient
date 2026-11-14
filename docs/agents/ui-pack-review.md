@@ -11,32 +11,47 @@ The pack's own README is honest about its status: *"The Kotlin and C++ were writ
 environment and have not been compiled."* That matches the tree — there is no Gradle wrapper, and no
 tests.
 
-The important finding is that **CaramelClient has already absorbed the pack's component layer.**
-`app/src/main/java/org/chimeramc/client/ui/compose/caramel/` is a port of the pack's
-`compose/src/main/kotlin/dev/caramel/ui/components/`:
+The important finding is that **CaramelClient has absorbed the pack's token layer, not its component
+files.** The pack's `compose/src/main/kotlin/dev/caramel/ui/components/` are Compose *Desktop*
+widgets (`Buttons.kt`, `Controls.kt`, `Dropdowns.kt`, `Labels.kt`, `LoaderIcons.kt`, `Glass.kt`) and
+none of them is imported anywhere in CaramelClient. What the pack actually contributed is the values,
+carried by two live sources:
 
-| Pack file           | CaramelClient counterpart                          |
-| ------------------- | -------------------------------------------------- |
-| `Buttons.kt`        | `caramel/CaramelButtons.kt`                        |
-| `Controls.kt`       | `caramel/CaramelControls.kt`                       |
-| `Dropdowns.kt`      | `caramel/CaramelDropdowns.kt`                      |
-| `Glass.kt`          | `theme/GlowGlass.kt`                               |
-| `Labels.kt`         | `caramel/CaramelLabels.kt`                         |
-| `LoaderIcons.kt`    | `caramel/CaramelLoaderIcons.kt`                    |
-| `Theme.kt` (`C`, `T`) | `theme/GlowTheme.kt`, `theme/GlowDimens.java`    |
+| Pack source                     | CaramelClient counterpart (live)                          |
+| ------------------------------- | --------------------------------------------------------- |
+| `theme/Theme.kt` (`C` colour object) | `ui/compose/theme/GlowPalette.java` (integer maths) + `theme/GlowTheme.kt` (the Compose wrapper) |
+| `theme/Theme.kt` (`T` type scale)    | `theme/GlowDimens.java` + `GlowTheme.kt` |
+| `components/Glass.kt`               | `theme/GlowGlass.kt` (`glowGlass`/`GlassSurface`) |
+| `imgui/src/CaramelTheme` + `CaramelWidgets` | `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (the in-game ImGui menu) |
 
-The port was not mechanical, and in every place it diverged it improved the source:
+The launcher has two Compose layers, both drawing from the same pack values:
 
-* **Desktop-only input removed.** The pack's buttons read `collectIsHoveredAsState()`; the port uses
-  `collectIsPressedAsState()`, which is what a touch device has.
+* **The shared theme** — `ui/compose/theme/` (`GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt`) —
+  is consumed by the smaller embedded screens (`account`, `connect`, `replay`). It carries the pack
+  values through `UiTokens` and the personalization accent.
+* **The pack component port** — `ui/compose/caramel/` (`CaramelTheme.kt`, `CaramelControls.kt`,
+  `CaramelLabels.kt`, `CaramelGlass.kt`) — is consumed by the launch screen
+  (`caramel/launch/CaramelLaunchScreen.kt`). It is the pack's own `theme/Theme.kt` and
+  `components/*` value for value, including the accents the shared scale never carried (the caramel
+  amber nav indicator, the green Play face). A first attempt at this layer was removed as dead code
+  when nothing imported it; it is live now because the launch screen is the pack's screen.
+
+`CaramelPaletteParityTest` pins the two layers together: the overlap (navy, blue, text, the three
+status colours) must equal `UiTokens`/`GlowPalette`, and the in-game ImGui twin
+(`MenuTheme.hpp`) must equal the Compose port token for token, so the launcher and the native menu
+cannot drift apart.
+
+Where the port diverged from the pack it improved on it:
+
+* **Desktop-only input dropped.** The pack's buttons read `collectIsHoveredAsState()`; CaramelClient's
+  own controls use pressed state, which is what a touch device has.
 * **Style normalised.** The pack uses `import androidx.compose.foundation.layout.*` in ten files; the
-  port spells out every import, which is what `check_ui_hygiene.py` and review want.
-* **Documentation added.** The pack's components are one-line files with a header comment; the port
-  explains the *reason* for each shape (why the status pill takes a colour instead of a severity
-  enum, why the dropdown offset is measured rather than assumed).
+  live files spell out every import, which is what `check_ui_hygiene.py` and review want.
+* **Documentation added.** The pack's components are one-line files with a header comment; the live
+  files explain the *reason* for each value.
 
-So the honest headline is: the pack did its job. What follows is what remains unported, and what
-would break if someone tried to port it naively.
+So the honest headline is: the pack did its job as a design reference. What follows is what remains
+unported, and what would break if someone tried to port it naively.
 
 ## Findings
 
@@ -118,16 +133,20 @@ port overwrite the launcher icon with the pack's preview.
 
 ## What to do with it
 
-1. **Keep it as the reference for component shape and tokens**, which is what it has already been
-   used for. `CaramelButtons` / `CaramelControls` / `CaramelDropdowns` / `GlowGlass` are the port;
-   do not re-port them.
+1. **Keep it as the reference for tokens and shape**, which is what it has already been used for.
+   The port is `ui/compose/theme/GlowPalette.java` + `GlowTheme.kt` + `GlowGlass.kt` (the shared
+   theme), `ui/compose/caramel/Caramel*` (the pack component port the launch screen uses) and
+   `sweetloader/src/pl/menu/MenuTheme.*` + `MenuWidgets.*` (ImGui). **Do not add a third token
+   source**: a new pack colour goes into `CaramelColors` (Compose port) and `MenuTheme.hpp` (ImGui)
+   together, and the overlap with `UiTokens` stays equal — `CaramelPaletteParityTest` fails the build
+   otherwise. A pack *component* belongs in `ui/compose/caramel/`, not beside it.
 2. **Port screens one at a time**, each behind the JVM test suite and the CI APK job, replacing the
    desktop window layer with CaramelClient's activity + `GlowTheme`, and routing strings through
    resources.
 3. **Do not port the window blur model**; keep CaramelClient's existing glass and its cheaper blur
    budget.
-4. **Do not wire the GLFW backend.** If an in-game ImGui menu is wanted, it belongs on the game's
-   GL context through the existing SweetLoader render seams, and only `CaramelMenu` /
-   `CaramelWidgets` are worth taking.
+4. **Do not wire the GLFW backend.** The in-game ImGui menu is now built: it runs on the game's GL
+   context through the SweetLoader render seams (`pl/menu/MenuHost.*`), and it took the pack's
+   `CaramelMenu` / `CaramelWidgets` shape (as `MenuTheme.*` / `MenuWidgets.*`), not GLFW.
 5. **Use the pack's `previews/` as the visual spec** when porting a screen — they are drawn from
    the same tokens, so they are a better acceptance target than prose.

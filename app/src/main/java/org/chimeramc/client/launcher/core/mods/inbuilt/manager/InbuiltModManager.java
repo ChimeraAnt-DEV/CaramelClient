@@ -41,7 +41,6 @@ public class InbuiltModManager {
     private static final String KEY_MENU_SECTION_ORDER_PREFIX = "mod_menu_order_";
     private static final String KEY_MOD_MENU_KEYBIND = "mod_menu_keybind";
     private static final String KEY_MOD_MENU_CONTROLLER_BIND = "mod_menu_controller_bind";
-    private static final String KEY_RADIAL_WHEEL_HOLD = "radial_wheel_hold_to_open";
     private static final String KEY_PAUSE_MENU_ONLY = "pause_menu_only";
     private static final String KEY_FAVORITE_MOD_KEYS = "favorite_mod_keys";
     private static final String KEY_MOD_LOADOUTS = "mod_loadouts";
@@ -56,7 +55,6 @@ public class InbuiltModManager {
     private static final String KEY_SNAPLOOK_RETURN_SPEED = "snaplook_return_speed";
     private static final String KEY_CURSOR_SENSITIVITY = "cursor_sensitivity";
     /** The radial wheel's centre dead zone, as a percentage of full stick travel. */
-    private static final String KEY_WHEEL_CENTER_DEAD_ZONE = "wheel_center_dead_zone_percent";
     private static final String KEY_GYRO_SENSITIVITY_X = "gyro_sensitivity_x";
     private static final String KEY_GYRO_SENSITIVITY_Y = "gyro_sensitivity_y";
     private static final String KEY_GYRO_INVERT_X = "gyro_invert_x";
@@ -181,7 +179,6 @@ public class InbuiltModManager {
     /** The snap-look return-speed slider bounds. */
     public static final int MAX_SNAPLOOK_RETURN_SPEED = 100;
     private static final int DEFAULT_CURSOR_SENSITIVITY = 120;
-    private static final int DEFAULT_WHEEL_DEAD_ZONE_PERCENT = 15;
     private static final int DEFAULT_GYRO_SENSITIVITY = 100;
     private static final int DEFAULT_GYRO_DEADZONE = 5;
     private static final float DEFAULT_VOICE_RANGE = 24f;
@@ -514,20 +511,6 @@ public class InbuiltModManager {
         prefs.edit().putInt(KEY_MOD_MENU_CONTROLLER_BIND, Math.max(0, keyCode)).apply();
     }
 
-    /**
-     * Whether the radial wheel opens on the bind's press and confirms on its release (hold-to-open),
-     * or opens and closes on successive presses (toggle).
-     *
-     * <p>Defaults to hold-to-open, the shape the update spec describes; the toggle remains available
-     * for players who prefer it.
-     */
-    public boolean isRadialWheelHoldToOpen() {
-        return prefs.getBoolean(KEY_RADIAL_WHEEL_HOLD, true);
-    }
-
-    public void setRadialWheelHoldToOpen(boolean hold) {
-        prefs.edit().putBoolean(KEY_RADIAL_WHEEL_HOLD, hold).apply();
-    }
 
     /**
      * Whether a key press should open the Mod Menu.
@@ -674,25 +657,6 @@ public class InbuiltModManager {
 
     public void setCursorSensitivity(int sensitivity) {
         prefs.edit().putInt(KEY_CURSOR_SENSITIVITY, Math.max(10, Math.min(300, sensitivity))).apply();
-    }
-
-    /**
-     * The radial wheel's centre dead zone, as a fraction of full stick travel.
-     *
-     * <p>Stored as a percentage so the settings slider has integers, and read through
-     * {@link RadialWheelMotion#clampCenterDeadZone} so a stored value from an older build, or a
-     * hand-edited preference file, cannot drive the cursor with an out-of-range dead zone.
-     */
-    public float getWheelCenterDeadZone() {
-        int percent = prefs.getInt(KEY_WHEEL_CENTER_DEAD_ZONE, DEFAULT_WHEEL_DEAD_ZONE_PERCENT);
-        return org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
-                .clampCenterDeadZone(percent / 100f);
-    }
-
-    public void setWheelCenterDeadZone(float fraction) {
-        float clamped = org.chimeramc.client.core.mods.inbuilt.overlay.RadialWheelMotion
-                .clampCenterDeadZone(fraction);
-        prefs.edit().putInt(KEY_WHEEL_CENTER_DEAD_ZONE, Math.round(clamped * 100f)).apply();
     }
 
     public int getOverlayPositionX(String modId, int defaultX) {

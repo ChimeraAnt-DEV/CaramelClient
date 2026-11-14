@@ -10,9 +10,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,46 +31,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
 
 /**
- * Frosted navy glass: the surface every Caramel panel is cut from.
+ * The Caramel glass surface, ported from the pack's `components/Glass.kt`.
  *
- * Ported from the UI pack's `GlassPanel` with two Android-specific changes:
+ * <p>The pack frosts its glass with Haze, a Compose Multiplatform backdrop-blur library that samples
+ * the window behind the card. Android's Compose has no equivalent (a `RenderEffect` can blur a
+ * view's own content, not what is behind it), so this uses the recipe the pack itself falls back to
+ * for ImGui: layered translucent fills that read as glass without a blur pass.
  *
- * * The backdrop blur samples the screen behind the panel rather than a desktop wallpaper, so
- *   [CaramelBackdrop] draws the colour pools the glass refracts. Without something behind it, a
- *   frosted panel over a flat colour is just a slightly lighter rectangle.
- * * [popup] blurs the window layer instead of the wallpaper layer, for a modal that sits over the
- *   whole screen. Both sources are the same [HazeState] on a phone screen; the split is kept because
- *   it is what the pack's call sites pass and it documents the intent.
+ * <p>Two layers, and the light is what sells it: a cool blue-tinted fill at low alpha, then a
+ * vertical sheen that is brightest at the top and falls to nothing, so the card catches light from
+ * above. The hairline is a diagonal gradient rather than a flat colour, bright at the top-left and
+ * dim at the bottom-right, which is the cheap trick that stops a rounded rectangle reading as a
+ * flat outline.
  */
 @Composable
-fun CaramelGlassPanel(
+fun GlassPanel(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(20.dp),
+    shape: Shape = RoundedCornerShape(CaramelDimens.RadiusCard),
     popup: Boolean = false,
-    blur: Dp = 22.dp,
     elevation: Dp = 24.dp,
+    tint: Color = Color(0xFF9DB4FF).copy(alpha = if (popup) 0.10f else 0.06f),
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val haze: HazeState = if (popup) LocalWindowHaze.current else LocalHaze.current
-    val style = remember(blur, popup) {
-        HazeStyle(
-            backgroundColor = CaramelColors.Navy,
-            tints = listOf(HazeTint(Color(0xFF9DB4FF).copy(alpha = if (popup) 0.10f else 0.06f))),
-            blurRadius = blur,
-            noiseFactor = 0.035f,
-        )
-    }
     Box(
         modifier
             .shadow(elevation, shape, ambientColor = Color.Black, spotColor = Color(0xFF00010F))
             .clip(shape)
-            .hazeEffect(haze, style)
+            .background(C.Navy)
+            .background(tint)
             .background(
                 Brush.verticalGradient(
                     listOf(Color.White.copy(0.075f), Color.White.copy(0.015f)),
@@ -73,7 +68,9 @@ fun CaramelGlassPanel(
             )
             .border(
                 1.dp,
-                Brush.linearGradient(listOf(Color.White.copy(0.30f), Color.White.copy(0.05f))),
+                Brush.linearGradient(
+                    listOf(Color.White.copy(0.30f), Color.White.copy(0.05f)),
+                ),
                 shape,
             ),
         content = content,
@@ -81,11 +78,11 @@ fun CaramelGlassPanel(
 }
 
 /**
- * The deep navy backdrop the glass refracts.
+ * The navy wallpaper with soft colour pools, ported from the pack's `Backdrop`.
  *
- * Four soft colour pools over a vertical gradient. Ported verbatim from the pack: the pool
- * positions and alphas are the reason the glass reads as glass, so they are not a detail to
- * re-derive.
+ * <p>The pools exist so the glass has something to sit on: a flat fill under translucent cards
+ * leaves them looking like slightly lighter rectangles. Four radial gradients, drawn once on a
+ * Canvas, give the glass a light source to refract.
  */
 @Composable
 fun CaramelBackdrop(modifier: Modifier = Modifier) {
@@ -94,15 +91,15 @@ fun CaramelBackdrop(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(Color(0xFF070D22), Color(0xFF050918)))),
     ) {
-        fun pool(x: Float, y: Float, r: Float, color: Color) {
-            val centre = Offset(size.width * x, size.height * y)
-            val radius = size.width * r
-            drawCircle(
-                Brush.radialGradient(listOf(color, Color.Transparent), centre, radius),
-                radius = radius,
-                center = centre,
-            )
-        }
+        fun pool(x: Float, y: Float, r: Float, c: Color) = drawCircle(
+            Brush.radialGradient(
+                listOf(c, Color.Transparent),
+                Offset(size.width * x, size.height * y),
+                size.width * r,
+            ),
+            radius = size.width * r,
+            center = Offset(size.width * x, size.height * y),
+        )
         pool(0.18f, 0.20f, 0.42f, Color(0xFF3660FF).copy(0.55f))
         pool(0.82f, 0.10f, 0.32f, Color(0xFF28AAFF).copy(0.32f))
         pool(0.62f, 0.92f, 0.40f, Color(0xFF563CFF).copy(0.38f))
@@ -110,12 +107,7 @@ fun CaramelBackdrop(modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * A dimmed scrim over a centred glass modal, with a scale-and-fade entrance.
- *
- * The scrim swallows taps so a modal cannot be dismissed by tapping the content behind it — the
- * pack's `clickable {}` no-op, which is a deliberate sink rather than a mistake.
- */
+/** Dimmed scrim plus a centred glass modal with a scale/fade entrance, from the pack's `Modal`. */
 @Composable
 fun CaramelModal(
     visible: Boolean,
@@ -136,7 +128,7 @@ fun CaramelModal(
                 enter = scaleIn(initialScale = 0.96f) + fadeIn(),
                 exit = scaleOut(targetScale = 0.97f) + fadeOut(),
             ) {
-                CaramelGlassPanel(
+                GlassPanel(
                     modifier.clickable(remember { MutableInteractionSource() }, null) {},
                     RoundedCornerShape(26.dp),
                     popup = true,
@@ -146,4 +138,26 @@ fun CaramelModal(
             }
         }
     }
+}
+
+/** The pack's `Pill`: a rounded chip used by the title bar and the account row. */
+@Composable
+fun CaramelPill(
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    content: @Composable RowScope.() -> Unit,
+) {
+    val shape = RoundedCornerShape(50)
+    Row(
+        modifier
+            .height(26.dp)
+            .clip(shape)
+            .background(Color.White.copy(0.07f))
+            .border(1.dp, Color.White.copy(0.16f), shape)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        content = content,
+    )
 }

@@ -1064,24 +1064,6 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="keyboard_disconnected_message">Bağlantı kesildi. Klavye kontrolleri bırakıldı.</string>
     <string name="keyboard_title">Klavye</string>
     <string name="mod_menu_filter_hud">HUD</string>
-    <string name="wheel_customize_title">Neyi özelleştirmek istersiniz?</string>
-    <string name="mod_menu_action_manage_wheel">Radyal menüyü yönet</string>
-    <string name="mod_menu_action_manage_wheel_desc">Radyal menü profillerini oluştur, yeniden adlandır, sırala ve sil</string>
-    <string name="wheel_manager_title">Radyal menü profilleri</string>
-    <string name="wheel_manager_add">Yeni menü</string>
-    <string name="wheel_manager_add_title">Yeni menüyü adlandır</string>
-    <string name="wheel_manager_rename_title">Bu menüyü yeniden adlandır</string>
-    <string name="wheel_manager_name_hint">Menü adı</string>
-    <string name="wheel_manager_cancel">İptal</string>
-    <string name="wheel_manager_save">Kaydet</string>
-    <string name="wheel_manager_done">Bitti</string>
-    <string name="wheel_manager_root_label">Tuşla açılır</string>
-    <string name="wheel_manager_entry_count">%1$d giriş</string>
-    <string name="wheel_manager_last_note">Son menü silinemez; tuşun açılmak için bir menüye ihtiyacı var.</string>
-    <string name="wheel_manager_entries_title">Menü girdilerini düzenle</string>
-    <string name="wheel_manager_no_entries">Henüz girdi yok. Bu menüye bir eylem koymak için bir tane ekleyin.</string>
-    <string name="wheel_manager_add_entry">Girdi ekle</string>
-    <string name="wheel_manager_pick_action">Bir eylem seç</string>
     <string name="diagnostics_field_berry_api">BerryAPI arka ucu</string>
     <string name="diagnostics_field_berry_cosmetics">BerryAPI kozmetikleri</string>
     <string name="about_backend_status">Arka uç: %1$s</string>
@@ -1107,7 +1089,6 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="mod_overlay_gyro_level">%1$.2f° / %2$.2f°</string>
     <string name="mod_overlay_autosprint_on">Koşu açık</string>
     <string name="mod_overlay_autosprint_off">Koşu kapalı</string>
-    <string name="mod_menu_setting_wheel_dead_zone">Tekerlek ölü bölgesi</string>
     <string name="overlay_layout_title">Kaplama yerleşimleri</string>
     <string name="overlay_layout_save_current">Geçerli olanı kaydet</string>
     <string name="overlay_layout_save_title">Bu yerleşimi adlandır</string>
@@ -1314,4 +1295,13 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="changelog_upcoming_soon">Çok yakında!</string>
     <string name="changelog_upcoming_soon_body">Wiki yazılıyor. Yayına girdiğinde burada açılacak.</string>
     <string name="setup_finish_changelog_loading">Yenilikler yükleniyor…</string>
+    <string name="inbuilt_mod_frame_generation">Kare Oluşturma</string>
+    <string name="inbuilt_mod_frame_generation_desc">Önceki kareyi geçerli kareyle birleştirerek hareketin daha akıcı görünmesini sağlar.</string>
+    <string name="frame_generation_scope_note">Kare oluşturma, oyunu daha hızlı işlemez ve fazladan bir kare sunmaz. Son sunulan kareyi saklar ve motorun sunum sınırında yeni kareyle birleştirir; böylece görüntü oyunun zaten çizdiği iki kare arasında kalır ve aynı işleme hızında hareket daha akıcı görünür. Sunum/kare sınırı kancasını gerektirir; bu kanca yapınıza kurulana kadar modül devre dışıdır. Oyunun çizmediği ayrıntıları uyduramaz ve ağır bir karışım hızlı harekette yapaylık ekler, bu yüzden temkinli başlar.</string>
+    <string name="inbuilt_mod_motion_blur_desc">Önceki kareyi geçerli kareye, görüş hızına göre ağırlıklandırarak karıştırır.</string>
+    <string name="motion_blur_scope_note">Hareket bulanıklığı bir sunum karesi etkisidir: son sunulan kareyi tutar ve motorun sunum sınırında yenisine karıştırır, böylece hızlı hareket gidiş yönünde yayılır. Görüntüyü tasarım gereği yumuşatır; kare eklemez ve bedava olamaz, bu yüzden karıştırma bütçesi sınırlıdır. Sunum/kare sınırı kancasına ihtiyaç duyar ve bu kanca derlemenize kurulana kadar devre dışıdır.</string>
+    <string name="mod_config_category_effect">Etki</string>
+    <string name="mod_unavailable_reason_hook">Bu derlemede kurulu olmayan motor sunum-kare kancasına ihtiyaç duyar. Kanca kullanılabilir olana kadar devre dışıdır.</string>
+    <string name="launch_button_label">Oyunu Başlat</string>
+    <string name="launch_menu_open">Başlatma seçeneklerini aç</string>
 </resources>

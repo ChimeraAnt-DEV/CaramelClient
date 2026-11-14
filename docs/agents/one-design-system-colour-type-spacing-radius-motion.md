@@ -1,4 +1,8 @@
 ## One design system: colour, type, spacing, radius, motion (U7–U11)
+- **REMOVED.** The Compose/View mod menu, the radial wheel and their layouts were deleted; the
+  in-game menu is the native Dear ImGui menu now (`sweetloader/src/pl/menu/`, bridged by
+  `PreloaderMenu` + `InGameMenuController`). The class names below no longer exist; this
+  section is kept as history.
 - **`UiTokens` is the single source of truth and every scale is closed.** `RADIUS_SMALL/MEDIUM/
   LARGE/XLARGE` = 8/12/16/28dp and the named surface radii (`RADIUS_WINDOW/CARD/CHIP/BUTTON`) are
   aliases of those four, never literals. `SPACE_1/2/3/4/6/8` = 4/8/12/16/24/32dp.
@@ -10,6 +14,11 @@
   drawable read, so an XML card and a code-drawn `UiCard` rounded different corners;
   `UiTokensTest.theXmlRadiusTokensAreTheSameScaleAsTheCode` reads the real resource file to keep
   them aliased.
+  **The one exception is the pack component port** (`ui/compose/caramel/CaramelTheme.kt`): it carries
+  the pack's `theme/Theme.kt` verbatim, including accents `UiTokens` never had (the caramel amber, the
+  green family). Its overlap with `UiTokens` — and the in-game ImGui twin — is pinned by
+  `CaramelPaletteParityTest`, so it is a faithful copy, not a second source of truth. Do not read a
+  colour from it that `UiTokens` already names.
 - **One accent, resolved from the theme (U7).** `PersonalizationManager.getAccentColor()` now reads
   the theme's `colorPrimary` through `resolveThemeColor` — so Material You's wallpaper palette wins
   when dynamic colour is on and the brand colour is the fallback. The stored accent pref, the two
