@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 /**
  * A large source file may only get smaller.
  *
- * <p>The client's biggest classes and layouts had been growing for years — ModMenuOverlay past 3,300
- * lines, MainActivity past 3,000, activity_settings.xml past 2,400 — because nothing stopped them.
- * Every new feature was cheaper to add to an existing file than to open a new one, so the files that
- * are hardest to reason about were the ones that kept absorbing work.
+ * <p>The client's biggest classes and layouts had been growing for years — the old mod-menu overlay
+ * past 3,300 lines, MainActivity past 3,000, activity_settings.xml past 2,400 — because nothing
+ * stopped them. Every new feature was cheaper to add to an existing file than to open a new one, so
+ * the files that are hardest to reason about were the ones that kept absorbing work.
  *
  * <p>This is the ratchet. The current size of every file at or above the threshold is recorded in
  * {@code scripts/hygiene/file-sizes-baseline.txt}; a file may shrink (the baseline is then lowered)

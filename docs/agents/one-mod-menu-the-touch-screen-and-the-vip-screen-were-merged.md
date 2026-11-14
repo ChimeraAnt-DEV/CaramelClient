@@ -40,9 +40,9 @@
 - **The VIP overlay's controller-input priority is gone with it.** `InbuiltOverlayManager` hands
   controller keys/motion to the one `ModMenuOverlay`; the radial wheel still takes the stick first
   while it is open. `ModMenuButton.isMenuShowing()` now covers the menu and the wheel.
-- `VipTheme` and `bg_vip_*` / `ic_vip_*` survive only where the ported pages use them
-  (`bg_vip_topbar`, `bg_vip_surface`, `bg_vip_icon_tile`, `bg_vip_icon_button`, `bg_vip_status_off`).
-  The VIP-only shimmer/skeleton/empty/indicator drawables and the VIP module cards were deleted with
-  the window; do not re-add a VIP card layout.
-- **`MenuBindRelay` remains the single bind-capture sink**, now shared by the Settings tab's bind
-  rows and the Keyboard page's rows.
+- The `bg_vip_*` drawables outlived the theme class: `VipTheme.java` is gone, but the pause menu still
+  borrows `bg_vip_surface` and `bg_vip_icon_button` (see `overlay_pause_menu_row.xml` and
+  `PauseMenuRow`), so they stay. The VIP-only shimmer/skeleton/empty/indicator drawables and the VIP
+  module cards were deleted with the window; do not re-add a VIP card layout.
+- **`MenuBindRelay` is gone.** The View menu's bind-capture sink was deleted with the menu; the
+  native ImGui menu handles keybind capture itself.

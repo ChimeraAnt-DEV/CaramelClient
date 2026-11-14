@@ -33,7 +33,7 @@ app/src/main/java/org/chimeramc/client/launcher/ui/activities/CustomizeActivity.
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/DiagnosticsActivity.java 15
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/InstanceSettingsActivity.java 29
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/LibraryActivity.java 4
-app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 38
+app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java 37
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModConfigActivity.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModDetailActivity.java 23
 app/src/main/java/org/chimeramc/client/launcher/ui/activities/ModHubActivity.java 17
@@ -61,13 +61,11 @@ app/src/main/java/org/chimeramc/client/launcher/ui/adapter/WorldPropertiesAdapte
 app/src/main/java/org/chimeramc/client/launcher/ui/adapter/WorldsAdapter.java 10
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/ApkVersionConfirmDialog.java 7
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/CustomAlertDialog.java 14
-app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/GameVersionSelectDialog.java 4
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/InstallProgressDialog.java 2
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/LibsRepairDialog.java 11
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/LoadingDialog.java 2
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/LogcatOverlay.java 20
 app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/LogcatOverlayManager.java 1
-app/src/main/java/org/chimeramc/client/launcher/ui/dialogs/gameversionselect/UltimateVersionAdapter.java 5
 app/src/main/java/org/chimeramc/client/launcher/ui/fragments/SkinsSettingsFragment.java 10
 app/src/main/java/org/chimeramc/client/launcher/util/PersonalizationManager.java 5
 app/src/main/java/org/chimeramc/client/ui/fragments/InstallationsFragment.java 19

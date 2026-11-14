@@ -1,4 +1,4 @@
-## In-game pack changer (core.content.InGamePackChanger + PackChangerPanel)
+## In-game pack changer (core.content.InGamePackChanger)
 - Per-instance opt-in toggle in Instance Settings (`GameVersion.inGamePackChangerEnabled`,
   persisted in `VersionProfileMetadata`). When on, the in-game Mod Menu's **Packs** section lists
   the instance's resource packs with a per-pack pill toggle.

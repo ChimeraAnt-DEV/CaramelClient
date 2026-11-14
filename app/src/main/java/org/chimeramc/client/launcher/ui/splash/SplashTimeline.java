@@ -8,7 +8,7 @@ package org.chimeramc.client.launcher.ui.splash;
  * than flashing past. Two clocks are involved and this class is the only place they meet:
  *
  * <ul>
- *   <li><b>Real progress</b> -- milestones from actual initialization work, so the block reflects
+ *   <li><b>Real progress</b> -- milestones from actual initialization work, so the loader reflects
  *       work being done rather than a decorative timer.</li>
  *   <li><b>Pace</b> -- how fast the loader is allowed to <em>look</em> like it is moving.</li>
  * </ul>
@@ -65,16 +65,11 @@ public final class SplashTimeline {
      * the two conditions can never hold at once and the hold state would never fire. What actually
      * defines a hold is "the clock has run out but the work has not", which is a pace comparison.
      *
-     * <p>This is a state, not an error: the block freezes at its current crack stage and the
-     * pickaxe idles rather than looping, so slow initialization looks deliberate instead of stuck.
+     * <p>This is a state, not an error: the spinner keeps turning at its steady pace
+     * rather than looping or stalling, so slow initialization looks deliberate instead of stuck.
      */
     public static boolean isHolding(float realProgress, long elapsedMs) {
         return realProgress < 1f && paced(elapsedMs) >= 1f;
-    }
-
-    /** The crack stage to show for the given real progress and elapsed time. */
-    public static int crackStage(float realProgress, long elapsedMs) {
-        return OreCrackSprites.crackStageFor(displayed(realProgress, elapsedMs));
     }
 
     private static float clamp01(float value) {
