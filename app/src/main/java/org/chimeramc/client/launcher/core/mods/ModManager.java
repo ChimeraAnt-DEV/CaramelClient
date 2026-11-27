@@ -124,7 +124,7 @@ public class ModManager {
     private static native void nativeDisableAndUnloadLoadedMods();
     private static native boolean nativePumpGameHookInstall();
     private static native boolean nativeIsGameHookInstallPending();
-    /** Deferred-install state: {state (0 not armed, 1 waiting, 2 resolved), frameTicks}. */
+    /** Deferred-install state: {state (0 not armed, 1 waiting, 2 resolved), frameTicks, attempted}. */
     private static native int[] nativeGameHookInstallState();
     /** The effective hook rule's resolved fields (which rule and slots the running build used). */
     private static native String nativeGameHookRulesSummary();
@@ -199,44 +199,23 @@ public class ModManager {
      * blame. {@code ModManager::EnableLoadedMods()} is a no-op when nothing is loaded, so the call is
      * safe and the hook install still arms.
      *
-     * <p>The call is bounded. This runs from the game activity's {@code onCreate}, on the main
-     * thread, and the native side {@code dlopen}s every enabled mod and runs its initialiser. A mod
-     * that blocks there (a spin, a lock, a slow static constructor) hung the launch with no way out,
-     * because nothing can interrupt native code once it is running. The enable therefore runs on its
-     * own thread and the main thread waits at most {@link #ENABLE_BUDGET_MS}; on a timeout the launch
-     * continues without it and the stall is recorded, so a bad mod costs its own features rather
-     * than the whole session.
+     * <p>Fire-and-forget, never on the caller's thread. The native side {@code dlopen}s every
+     * enabled mod and runs its initialiser, and native code cannot be interrupted once it is
+     * running, so a mod that blocks there used to hang the launch. This used to run the enable on a
+     * worker and then wait on the <em>main</em> thread for up to {@link #ENABLE_BUDGET_MS} — which
+     * still froze the UI for up to fifteen seconds, and thirty with the engine enable. It now
+     * returns immediately; a timer records a timeout via {@link #recordEnableTimeout()} if the
+     * worker has not finished inside the budget, so a stuck mod is visible in diagnostics without
+     * costing the session. The deferred hook install the native side arms is pumped from the first
+     * frame tick, so nothing downstream needs this call to have completed.
      */
     public static void enableLoadedMods() {
-        if (!ensureSweetLoaderLoaded()) {
-            return;
-        }
-        final java.util.concurrent.CountDownLatch done = new java.util.concurrent.CountDownLatch(1);
-        // A dedicated daemon thread rather than the shared MOD pool: the pool's caller-runs policy
-        // would run the task on this (main) thread if the pool were saturated, which is exactly the
-        // hang this guards against. A raw thread is guaranteed off the caller.
-        AppExecutors.thread("mod-enable", () -> {
-            try {
-                nativeEnableLoadedMods();
-            } catch (UnsatisfiedLinkError e) {
-                Log.e(TAG, "Failed to invoke nativeEnableLoadedMods", e);
-            } catch (Throwable t) {
-                AppLog.warnOnce(TAG, "mod-enable:throw", "Native mod enable threw", t);
-            } finally {
-                done.countDown();
+        runBoundedOffMainThread("mod-enable", () -> {
+            if (!ensureSweetLoaderLoaded()) {
+                return;
             }
-        }).start();
-        try {
-            if (!done.await(ENABLE_BUDGET_MS, java.util.concurrent.TimeUnit.MILLISECONDS)) {
-                // The native thread is still inside a mod. It cannot be interrupted, so the launch
-                // proceeds; the record names the timeout so a support report can tell it from a crash.
-                AppLog.warn(TAG, "Native mod enable did not finish within " + ENABLE_BUDGET_MS
-                        + "ms; continuing the launch without waiting for it");
-                recordEnableTimeout();
-            }
-        } catch (InterruptedException interrupted) {
-            Thread.currentThread().interrupt();
-        }
+            nativeEnableLoadedMods();
+        }, true);
     }
 
     /** True when the last {@link #enableLoadedMods()} hit its budget. For diagnostics and tests. */
@@ -249,41 +228,64 @@ public class ModManager {
     }
 
     /**
-     * Extracts and loads the instance's enabled {@code .universe} packages into the engine runtime.
+     * Starts {@code work} on its own daemon thread and returns immediately.
      *
-     * <p>This is the load half of the lifecycle the audit found missing: the Rust loader's
-     * {@code load_mods} existed and was tested but nothing called it, so an enabled engine package
-     * could be listed yet never run. It runs on its own thread and the caller waits at most
-     * {@link #ENABLE_BUDGET_MS}, for the same reason {@link #enableLoadedMods()} does — the engine
-     * {@code dlopen}s and initialises mod code, which cannot be interrupted once it starts.
+     * <p>A dedicated thread rather than the shared MOD pool: the pool's caller-runs policy would
+     * run the task on the caller if the pool were saturated, which is exactly the main-thread hang
+     * this guards against. A raw thread is guaranteed off the caller.
      *
-     * @param filesDir the app's files dir; each package is extracted under {@code filesDir/universe}
+     * @param name           thread name, so a stack trace names the operation
+     * @param work           the native work, which may block indefinitely
+     * @param recordTimeout  whether a miss of {@link #ENABLE_BUDGET_MS} should set
+     *                       {@link #lastEnableTimedOut()}
      */
-    public static void enableLoadedEngineMods(File filesDir) {
-        if (!ensureSweetLoaderLoaded() || filesDir == null) {
-            return;
-        }
-        final File sandboxRoot = new File(filesDir, "universe");
+    private static void runBoundedOffMainThread(String name, Runnable work, boolean recordTimeout) {
         final java.util.concurrent.CountDownLatch done = new java.util.concurrent.CountDownLatch(1);
-        AppExecutors.thread("engine-enable", () -> {
+        AppExecutors.thread(name, () -> {
             try {
-                org.chimeramc.client.universe.UniverseRuntime.load(sandboxRoot, getInstance().getMods());
+                work.run();
             } catch (UnsatisfiedLinkError e) {
-                Log.e(TAG, "The engine runtime is not available", e);
+                Log.e(TAG, "Native entry point unavailable for " + name, e);
             } catch (Throwable t) {
-                AppLog.warnOnce(TAG, "engine-enable:throw", "Engine mod load threw", t);
+                AppLog.warnOnce(TAG, name + ":throw", "Background native work threw", t);
             } finally {
                 done.countDown();
             }
         }).start();
-        try {
-            if (!done.await(ENABLE_BUDGET_MS, java.util.concurrent.TimeUnit.MILLISECONDS)) {
-                AppLog.warn(TAG, "Engine mod load did not finish within " + ENABLE_BUDGET_MS
-                        + "ms; continuing the launch without waiting for it");
+        AppExecutors.timer().schedule(() -> {
+            if (done.getCount() == 0L) {
+                return;
             }
-        } catch (InterruptedException interrupted) {
-            Thread.currentThread().interrupt();
+            AppLog.warn(TAG, name + " did not finish within " + ENABLE_BUDGET_MS
+                    + "ms; continuing the launch without waiting for it");
+            if (recordTimeout) {
+                recordEnableTimeout();
+            }
+        }, ENABLE_BUDGET_MS, java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Extracts and loads the instance's enabled {@code .universe} packages into the engine runtime.
+     *
+     * <p>This is the load half of the lifecycle the audit found missing: the Rust loader's
+     * {@code load_mods} existed and was tested but nothing called it, so an enabled engine package
+     * could be listed yet never run. Like {@link #enableLoadedMods()} it is fire-and-forget on its
+     * own thread: the engine {@code dlopen}s and initialises mod code, which cannot be interrupted
+     * once it starts.
+     *
+     * @param filesDir the app's files dir; each package is extracted under {@code filesDir/universe}
+     */
+    public static void enableLoadedEngineMods(File filesDir) {
+        if (filesDir == null) {
+            return;
         }
+        final File sandboxRoot = new File(filesDir, "universe");
+        runBoundedOffMainThread("engine-enable", () -> {
+            if (!ensureSweetLoaderLoaded()) {
+                return;
+            }
+            org.chimeramc.client.universe.UniverseRuntime.load(sandboxRoot, getInstance().getMods());
+        }, false);
     }
 
     /**
@@ -384,7 +386,13 @@ public class ModManager {
         }
     }
 
-    /** The deferred-install state for diagnostics: 0 not armed, 1 waiting, 2 resolved. */
+    /**
+     * The deferred-install state for diagnostics: 0 not armed, 1 waiting, 2 resolved.
+     *
+     * <p>"Resolved" is only set once the install reached a terminal decision, so a state of 1 can
+     * mean either "still waiting" or "attempted and gave up". {@link #gameHookInstallAttempted()}
+     * tells the two apart.
+     */
     public static int gameHookInstallState() {
         if (!ensureSweetLoaderLoaded()) return 0;
         try {
@@ -392,6 +400,20 @@ public class ModManager {
             return value != null && value.length >= 1 ? value[0] : 0;
         } catch (UnsatisfiedLinkError e) {
             return 0;
+        }
+    }
+
+    /**
+     * Whether an install attempt has begun. A state of 1 with this true means the install ran and
+     * could not resolve its targets; with this false it means the install has not run yet.
+     */
+    public static boolean gameHookInstallAttempted() {
+        if (!ensureSweetLoaderLoaded()) return false;
+        try {
+            int[] value = nativeGameHookInstallState();
+            return value != null && value.length >= 3 && value[2] != 0;
+        } catch (UnsatisfiedLinkError e) {
+            return false;
         }
     }
 
