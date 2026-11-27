@@ -617,7 +617,10 @@ public final class LauncherSettingsController implements CaramelSettingsActions,
         String url = state.getUpdateUrl();
         if (url == null || url.isEmpty()) return;
         try {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
+            // A chooser, not a bare VIEW: the XAL sign-in library registers a non-exported
+            // activity for VIEW, and an implicit launch is the one way to land in it.
+            Intent view = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url));
+            activity.startActivity(Intent.createChooser(view, activity.getString(R.string.download_update)));
         } catch (RuntimeException e) {
             AppLog.warnOnce(TAG, "update-download", "No browser could open the release page", e);
             org.chimeramc.client.ui.compose.caramel.CaramelNoticeBus.postWarning(activity,
