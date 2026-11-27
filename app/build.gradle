@@ -105,6 +105,27 @@ tasks.matching { it.name.startsWith('merge') || it.name.startsWith('compile') ||
 android {
     namespace 'org.chimeramc.client'
     compileSdkVersion 36
+
+    // The beta channel is the artifact users download, so it is signed. The key is read from
+    // local.properties, which is gitignored: a signing key is not source. With no key configured the
+    // build falls back to the debug key so a clean clone still produces an installable beta, and the
+    // About screen's build line is what tells a locally built beta from a published one.
+    signingConfigs {
+        beta {
+            def storePath = localProperties.getProperty('caramel.keystore.file', '')
+            if (storePath) {
+                storeFile file(storePath)
+                storePassword localProperties.getProperty('caramel.keystore.storePassword', '')
+                keyAlias localProperties.getProperty('caramel.keystore.keyAlias', '')
+                keyPassword localProperties.getProperty('caramel.keystore.keyPassword', '')
+            } else {
+                storeFile file(System.getProperty('user.home') + '/.android/debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
+        }
+    }
     defaultConfig {
         applicationId "org.chimeramc.client"
         minSdkVersion 28
@@ -200,12 +221,18 @@ android {
             }
         }
         beta {
-            initWith release
-            // The beta channel is the release build under a different name, so it inherits R8 and
-            // the symbol-table level from release rather than redeclaring them.
+            // The beta channel ships the code shape that was tested, not a shrunk one. R8 on this
+            // tree produced a build whose game launch died in libfmod's JNI_OnLoad (a native lookup
+            // the shrinker changed), so the channel that users download stays unminified until that
+            // is diagnosed; `release` keeps R8 for when it is.
+            initWith debug
             resValue "string", "app_name", "Caramel Client Beta"
             buildConfigField "boolean", "IS_BETA", "true"
-            matchingFallbacks = ["release"]
+            matchingFallbacks = ["debug"]
+            signingConfig signingConfigs.beta
+            // Debug symbols are the one debug-build property worth dropping: they are most of the
+            // 131 MB download and nothing in the beta channel reads them.
+            ndk { debugSymbolLevel 'SYMBOL_TABLE' }
         }
 
     }

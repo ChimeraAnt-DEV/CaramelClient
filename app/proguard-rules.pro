@@ -151,3 +151,23 @@
 -dontwarn javax.naming.**
 -dontwarn org.ietf.jgss.**
 -dontwarn reactor.blockhound.**
+
+# The Mod Hub's HTTP client carries Lombok's @Generated annotation, which is a compile-time-only
+# type and absent at runtime. Nothing reads it, so it is declared absent rather than bundled.
+-dontwarn lombok.**
+
+# ---------------------------------------------------------------------------
+# Classes that only native code references, by their JNI name.
+#
+# Nothing in Java calls these, so the shrinker would rename or delete them and the lookup that
+# matters — FindClass from a .so — would fail at runtime. libHttpClient.Android.so aborts the process
+# outright when its NetworkObserver class is missing (BETA7's first release build did exactly that,
+# SIGABRT right after the game files were prepared). The com.mojang.minecraftpe and com.microsoft.xal
+# stubs are the surface the game's own libminecraftpe.so calls into, so they must keep their names
+# too, or sign-in and the game activity entry points fail in a way that looks like a sign-in loop.
+# ---------------------------------------------------------------------------
+-keep class com.xbox.httpclient.** { *; }
+-keep class com.microsoft.playfab.utilities.multiplayer.** { *; }
+-keep class com.microsoft.applications.events.** { *; }
+-keep class com.mojang.minecraftpe.** { *; }
+-keep class com.microsoft.xal.** { *; }
