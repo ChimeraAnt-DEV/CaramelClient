@@ -21,6 +21,7 @@ Column meanings:
 | `org.chimeramc.client.core.mods.inbuilt.MoreButtonsSvgBridge` | `src/pl/runtime/ExternalModBridgeJni.cpp` | 1 |
 | `org.chimeramc.client.preloader.BerryApi` | `src/pl/runtime/BerryApiJni.cpp` | 9 |
 | `org.chimeramc.client.preloader.PreloaderInput` | `src/pl/SweetLoader.cpp` | 2 |
+| `org.chimeramc.client.preloader.NativeMapper` | `src/pl/SweetLoader.cpp` | 1 |
 | `org.chimeramc.client.preloader.PreloaderMenu` | `src/pl/menu/MenuJni.cpp` | 9 |
 | `org.chimeramc.client.universe.UniverseLoader` | `rust/universe-jni/src/lib.rs` | 9 |
 | `org.chimeramc.client.universe.UniverseRuntime` | `src/pl/SweetLoader.cpp` | 4 |

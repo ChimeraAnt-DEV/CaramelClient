@@ -18,6 +18,7 @@ import java.util.zip.ZipFile
 
 import org.chimeramc.client.core.minecraft.ExtractionCachePolicy
 import org.chimeramc.client.core.minecraft.ExtractionManifest
+import org.chimeramc.client.core.minecraft.GameLibraryOpener
 import org.chimeramc.client.core.minecraft.NativeLibraryVersionGate
 import org.chimeramc.client.core.minecraft.RequiredNativeLibraries
 import org.chimeramc.client.util.AtomicFiles
@@ -966,13 +967,12 @@ class GamePackageManager private constructor(
             val processIs64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
             val abiMismatch = ElfHeaderValidator.describeMismatch(libFile, processIs64Bit)
             if (abiMismatch != null) {
-                val detail = abiMismatch
-                mirrorLogcat('E', "Refusing to load $fileName from ${libFile.absolutePath}: $detail")
-                return LibraryLoadResult(normalizedName, fileName, source, false, elapsedSince(startedAt), detail)
+                mirrorLogcat('E', "Refusing to load $fileName from ${libFile.absolutePath}: $abiMismatch")
+                return LibraryLoadResult(normalizedName, fileName, source, false, elapsedSince(startedAt), abiMismatch)
             }
             try {
                 ensureReadOnly(libFile)
-                System.load(libFile.absolutePath)
+                GameLibraryOpener.open(libFile, File(nativeLibDir), version?.versionCode)
                 LibraryLoadResult(normalizedName, fileName, source, true, elapsedSince(startedAt), libFile.absolutePath)
             } catch (e: UnsatisfiedLinkError) {
                 val detail = processBitnessMismatchDetail(e) ?: (e.message ?: e.javaClass.simpleName)

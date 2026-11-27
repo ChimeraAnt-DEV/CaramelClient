@@ -25,6 +25,9 @@ import org.chimeramc.client.util.LauncherStorage
 import java.io.File
 
 object MinecraftRuntimePreparer {
+    /** Hard bound on one account's token refresh; an overrun is cancelled and the launch continues. */
+    private const val ACCOUNT_REFRESH_TIMEOUT_MS = 8_000L
+
     data class PreparedRuntime(
         val version: GameVersion?,
         val gameManager: GamePackageManager,
@@ -631,6 +634,12 @@ object MinecraftRuntimePreparer {
      *
      * <p>Only accounts whose snapshot is older than the trust window are refreshed, so a launch right
      * after a sign-in does no network work. Failures are logged and never block the launch.
+     *
+     * <p>Each refresh is a network call with no natural bound, and the launch bar used to sit at
+     * "Native mods ready" with no sign that anything was happening. It now reports progress, and
+     * each account is bounded to {@link #ACCOUNT_REFRESH_TIMEOUT_MS}: a refresh that overruns is
+     * cancelled, logged, and the launch continues with the stored chain, which is what the export
+     * would have used anyway.
      */
     private fun refreshAccountsForLaunch(
         context: android.content.Context,
@@ -639,18 +648,50 @@ object MinecraftRuntimePreparer {
     ) {
         try {
             val now = System.currentTimeMillis()
-            for (account in MsftAccountStore.list(context)) {
-                if (!org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
-                        account.lastUpdated, now)) {
-                    continue
+            val accounts = MsftAccountStore.list(context)
+            if (accounts.none {
+                    org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
+                        it.lastUpdated, now)
+                }) {
+                return
+            }
+            fileListener.onProgress(97, "Refreshing sign-in")
+            val executor = java.util.concurrent.Executors.newCachedThreadPool { work ->
+                Thread(work, "signin-refresh").apply { isDaemon = true }
+            }
+            try {
+                for (account in accounts) {
+                    if (!org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
+                            account.lastUpdated, now)) {
+                        continue
+                    }
+                    val future = executor.submit<Boolean> {
+                        org.chimeramc.client.core.auth.MsftAuthManager
+                            .refreshStoredAccount(context, account)
+                    }
+                    val refreshed = try {
+                        future.get(ACCOUNT_REFRESH_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS)
+                    } catch (timeout: java.util.concurrent.TimeoutException) {
+                        future.cancel(true)
+                        fileListener.onLog("Sign-in refresh timed out; continuing with the stored sign-in")
+                        trace.warning("Sign-in refresh timed out", account.id)
+                        false
+                    } catch (failed: java.util.concurrent.ExecutionException) {
+                        trace.error(
+                            "Sign-in refresh failed",
+                            failed.cause?.javaClass?.simpleName ?: failed.javaClass.simpleName
+                        )
+                        false
+                    }
+                    if (refreshed) {
+                        fileListener.onLog("Refreshed the sign-in for ${account.xboxGamertag ?: account.id}")
+                        trace.mark("Sign-in refreshed", account.id)
+                    } else {
+                        trace.mark("Sign-in refresh skipped", account.id)
+                    }
                 }
-                if (org.chimeramc.client.core.auth.MsftAuthManager
-                        .refreshStoredAccount(context, account)) {
-                    fileListener.onLog("Refreshed the sign-in for ${account.xboxGamertag ?: account.id}")
-                    trace.mark("Sign-in refreshed", account.id)
-                } else {
-                    trace.mark("Sign-in refresh skipped", account.id)
-                }
+            } finally {
+                executor.shutdownNow()
             }
         } catch (error: Throwable) {
             // An account problem must never block a launch; the export below still runs.

@@ -41,6 +41,19 @@ public final class NativeLibraryVersionGate {
     public static final String PLAY_FAB_RELEASE = "1.21.130";
     public static final String PLAY_FAB_BETA = "1.21.130.20";
 
+    /**
+     * {@code libpairipcore.so} (PairIP anti-tamper) arrived in 1.26.60, where it is a
+     * {@code DT_NEEDED} entry of {@code libminecraftpe.so} itself.
+     *
+     * <p>Because it is a direct dependency rather than something the game {@code dlopen}s later,
+     * the loader has to open it before {@code libminecraftpe.so} or the game library fails with
+     * {@code dlopen failed: library "libpairipcore.so" not found} on every launch of a 26.60 build.
+     * Any 26.60 beta carries a build number ({@code 1.26.60.x}), which already sorts at or above
+     * the release target, so the beta form is the release with a zero build number.
+     */
+    public static final String PAIRIP_RELEASE = "1.26.60";
+    public static final String PAIRIP_BETA = "1.26.60.0";
+
     /** Whether the build ships and needs {@code libHttpClient.Android.so}. */
     public static boolean shouldLoadHttpClient(String versionCode) {
         return atLeast(versionCode, HTTP_CLIENT_RELEASE, HTTP_CLIENT_BETA);
@@ -57,12 +70,23 @@ public final class NativeLibraryVersionGate {
     }
 
     /**
+     * Whether the build links against {@code libpairipcore.so}.
+     *
+     * <p>1.26.60 is the first build whose {@code libminecraftpe.so} names it in {@code DT_NEEDED},
+     * so a loader that does not open it first cannot open the game library at all.
+     */
+    public static boolean shouldLoadPairIp(String versionCode) {
+        return atLeast(versionCode, PAIRIP_RELEASE, PAIRIP_BETA);
+    }
+
+    /**
      * Every library the loader opens from the extracted cache because of a version gate, in load
      * order. The cache's completeness check and the loader both derive from this one list, so the
      * cache can never call itself complete while the loader is still going to open one of these.
      */
     public static List<String> gatedLibraries(String versionCode) {
-        List<String> libs = new ArrayList<>(3);
+        List<String> libs = new ArrayList<>(4);
+        if (shouldLoadPairIp(versionCode)) libs.add("libpairipcore.so");
         if (shouldLoadHttpClient(versionCode)) libs.add("libHttpClient.Android.so");
         if (shouldLoadMaesdk(versionCode)) libs.add("libmaesdk.so");
         if (shouldLoadPlayFab(versionCode)) libs.add("libPlayFabMultiplayer.so");

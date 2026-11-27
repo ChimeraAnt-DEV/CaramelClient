@@ -100,6 +100,22 @@ public class NativeLibraryVersionGateTest {
     }
 
     @Test
+    public void thePairIpGateOpensAt12660AndNotBefore() {
+        // Device evidence (26.60.28 arm64): libminecraftpe.so lists libpairipcore.so in DT_NEEDED,
+        // so a loader that skips it dies with 'dlopen failed: library "libpairipcore.so" not found'
+        // before the game library is even mapped. Builds below 26.60 do not ship the file.
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.26.60"));
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.26.60.22"));
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.26.60.28"));
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.26.60.30"));
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.26.61"));
+        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp("1.27.0"));
+        assertFalse(NativeLibraryVersionGate.shouldLoadPairIp("1.26.59.9"));
+        assertFalse(NativeLibraryVersionGate.shouldLoadPairIp("1.26.52"));
+        assertFalse(NativeLibraryVersionGate.shouldLoadPairIp(null));
+    }
+
+    @Test
     public void theGatedLibraryListCoversEveryGateAndNothingElse() {
         // The cache's completeness check is built from this list, and the loader opens exactly these
         // files out of the extracted directory. A library in one but not the other is a launch
@@ -117,9 +133,27 @@ public class NativeLibraryVersionGateTest {
                 NativeLibraryVersionGate.gatedLibraries("1.26.50.4"));
         assertEquals(java.util.Collections.emptyList(),
                 NativeLibraryVersionGate.gatedLibraries("1.21.80"));
+        // 1.26.60 added libpairipcore.so, which libminecraftpe.so names in DT_NEEDED: it leads the
+        // list because it has to be mapped before the game library.
+        assertEquals(java.util.Arrays.asList(
+                        "libpairipcore.so", "libHttpClient.Android.so", "libmaesdk.so",
+                        "libPlayFabMultiplayer.so"),
+                NativeLibraryVersionGate.gatedLibraries("1.26.60.28"));
+        assertEquals(java.util.Arrays.asList(
+                        "libpairipcore.so", "libHttpClient.Android.so", "libmaesdk.so",
+                        "libPlayFabMultiplayer.so"),
+                NativeLibraryVersionGate.gatedLibraries("1.26.60.30"));
+        assertEquals(java.util.Arrays.asList(
+                        "libpairipcore.so", "libHttpClient.Android.so", "libmaesdk.so",
+                        "libPlayFabMultiplayer.so"),
+                NativeLibraryVersionGate.gatedLibraries("1.27.0"));
+        assertEquals(java.util.Arrays.asList(
+                        "libHttpClient.Android.so", "libmaesdk.so", "libPlayFabMultiplayer.so"),
+                NativeLibraryVersionGate.gatedLibraries("1.26.59.9"));
 
         // Every returned name must be one the loader would actually open, i.e. its gate says yes.
-        for (String version : new String[]{"1.21.80", "1.21.110", "1.21.130", "1.26.50.4"}) {
+        for (String version : new String[]{
+                "1.21.80", "1.21.110", "1.21.130", "1.26.50.4", "1.26.59.9", "1.26.60.28"}) {
             for (String lib : NativeLibraryVersionGate.gatedLibraries(version)) {
                 switch (lib) {
                     case "libHttpClient.Android.so":
@@ -130,6 +164,9 @@ public class NativeLibraryVersionGateTest {
                         break;
                     case "libPlayFabMultiplayer.so":
                         assertTrue(NativeLibraryVersionGate.shouldLoadPlayFab(version));
+                        break;
+                    case "libpairipcore.so":
+                        assertTrue(NativeLibraryVersionGate.shouldLoadPairIp(version));
                         break;
                     default:
                         throw new AssertionError("unexpected gated library: " + lib);
