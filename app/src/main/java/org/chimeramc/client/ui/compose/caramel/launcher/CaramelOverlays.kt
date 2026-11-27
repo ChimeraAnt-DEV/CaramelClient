@@ -52,7 +52,12 @@ import org.chimeramc.client.ui.compose.caramel.sp_
  * mode, launch) are the pack's.
  */
 @Composable
-fun CaramelLaunchMenuOverlay(state: CaramelLauncherState, onLaunch: () -> Unit) {
+fun CaramelLaunchMenuOverlay(
+    state: CaramelLauncherState,
+    onLaunch: () -> Unit,
+    onSelectVersion: (String) -> Unit,
+    onImportInstance: () -> Unit,
+) {
     if (!state.launchMenu) return
     // A tap outside a menu must not throw it away — the same rule the modals follow, and the one the
     // user asked for: a menu closes from its own X, or from the system back gesture. The scrim still
@@ -67,22 +72,37 @@ fun CaramelLaunchMenuOverlay(state: CaramelLauncherState, onLaunch: () -> Unit) 
             Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.caramel_version), style = T.Title.copy(fontSize = 15.sp_), modifier = Modifier.weight(1f))
-                    CaramelVersionDropdown(state.versions, state.version, onSelect = { state.version = it })
+                    CaramelVersionDropdown(
+                        state.versions,
+                        state.version,
+                        onSelect = { onSelectVersion(it.id) },
+                        onImportInstance = onImportInstance,
+                    )
                     Spacer(Modifier.width(8.dp))
                     GlassButton(null, { state.launchMenu = false }, icon = Icons.Rounded.Close, height = 32)
                 }
-                // The loader row gives the picker a fixed column so the three tiles and the note
-                // cannot push the "Loaders" label into a one-letter-per-line column.
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(stringResource(R.string.caramel_loaders), style = T.Title.copy(fontSize = 15.sp_), modifier = Modifier.weight(1f))
+                // The label is top-aligned with the tile row, not centred on the tiles *plus* the
+                // note: centring on the whole picker pushed "Loaders" down beside the note, which
+                // read as if the title sat below the icons.
+                Row(verticalAlignment = Alignment.Top) {
+                    Text(
+                        stringResource(R.string.caramel_loaders),
+                        style = T.Title.copy(fontSize = 15.sp_),
+                        modifier = Modifier.weight(1f).padding(top = 13.dp),
+                    )
                     Box(Modifier.width(240.dp)) {
                         val loaderUnavailable =
                             stringResource(R.string.caramel_loader_unavailable)
+                        val roadLoaderUnavailable =
+                            stringResource(R.string.caramel_roadloader_soon)
                         CaramelLoaderPicker(
                             state.loader,
                             { state.loader = it },
                             onUnavailable = {
                                 state.notice = CaramelNotice(loaderUnavailable, warning = true)
+                            },
+                            onInDevelopment = {
+                                state.notice = CaramelNotice(roadLoaderUnavailable, warning = true)
                             },
                         )
                     }

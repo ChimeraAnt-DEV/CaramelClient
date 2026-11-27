@@ -51,12 +51,22 @@ fun CaramelLauncherScreen(
                         skinViewer = cosmeticsSkinViewer,
                     )
                     CaramelTab.News -> CaramelNewsScreen(state)
+                    CaramelTab.CurseForge -> CaramelCurseForgeScreen(
+                        state,
+                        onSearch = actions::searchCurseForge,
+                        onDownload = actions::downloadCurseForge,
+                    )
                     CaramelTab.Store -> CaramelStoreScreen(state)
                     CaramelTab.Settings -> CaramelSettingsTabScreen(settings)
                 }
             }
         }
-        CaramelLaunchMenuOverlay(state, actions::launch)
+        CaramelLaunchMenuOverlay(
+            state,
+            actions::launch,
+            onSelectVersion = actions::selectVersion,
+            onImportInstance = actions::importInstance,
+        )
         CaramelModDetailModal(state, actions::toggleMod)
         CaramelAppMenu(state, actions)
         CaramelAccountMenu(state, actions)

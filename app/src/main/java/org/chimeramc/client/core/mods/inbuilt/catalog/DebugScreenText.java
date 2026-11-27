@@ -82,7 +82,7 @@ public final class DebugScreenText {
         Snapshot v = s == null ? new Snapshot() : s;
         List<String> lines = new ArrayList<>();
 
-        lines.add("Caramel Client " + text(v.clientVersion));
+        lines.add("CaramelClient " + text(v.clientVersion));
         lines.add("Minecraft " + text(v.gameVersion) + " (" + text(v.abi) + ")");
         lines.add(frameRateLine(v));
         lines.add("Frame: " + framePacingText(v));

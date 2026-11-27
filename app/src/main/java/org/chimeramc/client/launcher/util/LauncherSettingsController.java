@@ -53,6 +53,8 @@ import java.util.Locale;
 public final class LauncherSettingsController implements CaramelSettingsActions, CaramelSettingsProvider {
 
     private static final String TAG = "CaramelSettings";
+    /** Developer mode is a launcher preference, not a module switch, so it lives on its own. */
+    private static final String PREF_DEVELOPER = "caramel_developer_mode";
 
     private final Activity activity;
     private final PersonalizationManager personalization;
@@ -168,6 +170,8 @@ public final class LauncherSettingsController implements CaramelSettingsActions,
         refreshMigration();
         state.setLanguageTag(languageManager.getCurrentLanguage());
         state.setFlags(buildFlags());
+        state.setDeveloperMode(activity.getSharedPreferences(PREF_DEVELOPER, android.content.Context.MODE_PRIVATE)
+                .getBoolean("enabled", false));
         state.setUpdateAvailable(GithubReleaseUpdater.isUpdateAvailable(activity));
         state.setVersionName(installedVersionName());
     }
@@ -564,29 +568,68 @@ public final class LauncherSettingsController implements CaramelSettingsActions,
     }
 
     @Override
+    /**
+     * A manual press always answers, in the Compose modal the panel already declares: a progress
+     * circle while the release request is in flight, then the verdict. The legacy alert is
+     * suppressed so the same answer is not shown twice in two visual languages.
+     */
     public void checkForUpdates() {
         if (updater == null) {
             updater = new GithubReleaseUpdater(activity, GithubReleaseUpdater.REPO_OWNER,
                     GithubReleaseUpdater.REPO_NAME, null);
         }
-        // A manual press must always answer: the button used to look dead because a failed request
-        // only reached the log. The panel now shows a line for the duration and the result.
-        state.setBusyMessage(activity.getString(R.string.caramel_checking_updates));
+        state.setUpdateDialogOpen(true);
+        state.setUpdateRunning(true);
+        state.setUpdateStatus(activity.getString(R.string.caramel_checking_updates));
+        state.setUpdateLatest("");
+        state.setUpdateUrl("");
         updater.checkUpdate((outcome, latestVersion, downloadUrl, error) -> {
+            state.setUpdateRunning(false);
             switch (outcome) {
                 case UPDATE_AVAILABLE:
                     state.setUpdateAvailable(true);
-                    state.setBusyMessage(activity.getString(R.string.caramel_update_available_version, latestVersion));
+                    state.setUpdateLatest(latestVersion);
+                    state.setUpdateUrl(downloadUrl);
+                    state.setUpdateStatus(activity.getString(
+                            R.string.caramel_update_available_version, latestVersion));
                     break;
                 case UP_TO_DATE:
                     state.setUpdateAvailable(false);
-                    state.setBusyMessage(activity.getString(R.string.already_latest_version, latestVersion));
+                    state.setUpdateLatest(latestVersion);
+                    state.setUpdateStatus(activity.getString(
+                            R.string.already_latest_version, latestVersion));
                     break;
                 default:
-                    state.setBusyMessage(activity.getString(R.string.caramel_update_check_failed));
+                    state.setUpdateStatus(activity.getString(R.string.caramel_update_check_failed));
                     break;
             }
-        });
+        }, false);
+    }
+
+    @Override
+    public void dismissUpdateDialog() {
+        if (state.getUpdateRunning()) return;
+        state.setUpdateDialogOpen(false);
+    }
+
+    @Override
+    public void openUpdateDownload() {
+        String url = state.getUpdateUrl();
+        if (url == null || url.isEmpty()) return;
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)));
+        } catch (RuntimeException e) {
+            AppLog.warnOnce(TAG, "update-download", "No browser could open the release page", e);
+            org.chimeramc.client.ui.compose.caramel.CaramelNoticeBus.postWarning(activity,
+                    activity.getString(R.string.caramel_update_check_failed));
+        }
+    }
+
+    @Override
+    public void setDeveloperMode(boolean enabled) {
+        activity.getSharedPreferences(PREF_DEVELOPER, android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("enabled", enabled).apply();
+        state.setDeveloperMode(enabled);
     }
 
     @Override

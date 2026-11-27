@@ -37,6 +37,7 @@ BATCHES = [
     ROOT / "scripts/translations_priority_launch.json",
     ROOT / "scripts/translations_priority_nav.json",
     ROOT / "scripts/translations_diagnostics.json",
+    ROOT / "scripts/translations_caramel_tools.json",
     ROOT / "scripts/translations_cinematic.json",
     ROOT / "scripts/translations_setup_changelog.json",
     ROOT / "scripts/translations_about_people.json",

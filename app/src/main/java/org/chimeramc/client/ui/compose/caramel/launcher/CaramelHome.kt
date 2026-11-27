@@ -183,22 +183,41 @@ private fun LaunchSplitButton(state: CaramelLauncherState, onLaunch: () -> Unit)
 
 @Composable
 private fun NewsCard(state: CaramelLauncherState, post: CaramelNewsInfo, art: List<Color>, modifier: Modifier) {
-    GlassPanel(modifier, RoundedCornerShape(18.dp), elevation = 10.dp) {
+    // Tapping the card opens the News tab with this post featured: the three cards used to be
+    // static, so two of the three announcements could not be read at all.
+    GlassPanel(
+        modifier.clickable(remember { MutableInteractionSource() }, null) {
+            state.featuredNewsTitle = post.title
+            state.tab = org.chimeramc.client.ui.compose.caramel.CaramelTab.News
+        },
+        RoundedCornerShape(18.dp),
+        elevation = 10.dp,
+    ) {
         Column(Modifier.padding(6.dp)) {
             Box(
                 Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(13.dp))
                     .background(Brush.verticalGradient(art)),
             ) {
-                Canvas(Modifier.fillMaxSize()) {
-                    val u = 12.dp.toPx()
-                    var x = 0f
-                    var i = 0
-                    while (x < size.width) {
-                        val h = size.height * 0.36f + (kotlin.math.sin(i * 0.5) * 18.dp.toPx()).toFloat()
-                        drawRect(Color.Black.copy(0.45f), Offset(x, size.height - h), androidx.compose.ui.geometry.Size(u, h))
-                        drawRect(Color.White.copy(0.25f), Offset(x, size.height - h), androidx.compose.ui.geometry.Size(u, 3.dp.toPx()))
-                        x += u
-                        i++
+                if (post.imageRes != 0) {
+                    Image(
+                        painterResource(post.imageRes),
+                        contentDescription = null,
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+                if (post.imageRes == 0) {
+                    Canvas(Modifier.fillMaxSize()) {
+                        val u = 12.dp.toPx()
+                        var x = 0f
+                        var i = 0
+                        while (x < size.width) {
+                            val h = size.height * 0.36f + (kotlin.math.sin(i * 0.5) * 18.dp.toPx()).toFloat()
+                            drawRect(Color.Black.copy(0.45f), Offset(x, size.height - h), androidx.compose.ui.geometry.Size(u, h))
+                            drawRect(Color.White.copy(0.25f), Offset(x, size.height - h), androidx.compose.ui.geometry.Size(u, 3.dp.toPx()))
+                            x += u
+                            i++
+                        }
                     }
                 }
             }
@@ -267,8 +286,8 @@ private fun FriendsCard(state: CaramelLauncherState, modifier: Modifier) {
                     }
                 } else {
                     Box(
-                        Modifier.size(60.dp).clip(CircleShape).background(Color.White.copy(0.07f))
-                            .border(1.dp, Color.White.copy(0.17f), CircleShape),
+                        Modifier.size(60.dp).clip(CircleShape).background(C.sheen(0.07f))
+                            .border(1.dp, C.sheen(0.17f), CircleShape),
                         Alignment.Center,
                     ) { Icon(Icons.Rounded.Group, null, Modifier.size(28.dp), C.Text2) }
                     Spacer(Modifier.height(16.dp))

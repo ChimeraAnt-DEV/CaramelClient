@@ -1,8 +1,11 @@
 package org.chimeramc.client.ui.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.compose.runtime.MutableState;
 import androidx.compose.ui.platform.ComposeView;
@@ -11,6 +14,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy;
 import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.changelog.ChangelogFeed;
+import org.chimeramc.client.core.content.ContentImporter;
+import org.chimeramc.client.core.curseforge.CurseForgeBrowser;
 import org.chimeramc.client.core.cosmetics.CosmeticCatalog;
 import org.chimeramc.client.core.cosmetics.CosmeticStore;
 import org.chimeramc.client.core.cosmetics.CaramelUserDirectory;
@@ -51,6 +56,7 @@ import org.chimeramc.client.ui.compose.caramel.CaramelFriendInfo;
 import org.chimeramc.client.ui.compose.caramel.CaramelFoundUser;
 import org.chimeramc.client.ui.compose.caramel.CaramelLauncherState;
 import org.chimeramc.client.ui.compose.caramel.CaramelModInfo;
+import org.chimeramc.client.ui.compose.caramel.CaramelCurseForgeItem;
 import org.chimeramc.client.ui.compose.caramel.CaramelNewsInfo;
 import org.chimeramc.client.ui.compose.caramel.CaramelScreenshotInfo;
 import org.chimeramc.client.ui.compose.caramel.CaramelServerInfo;
@@ -507,11 +513,13 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
             ChangelogFeed feed = ChangelogFeed.parse(sb.toString());
             ChangelogFeed.Section newest = feed.newest();
             if (newest != null && newest.headline != null && !newest.headline.isEmpty()) {
-                out.add(new CaramelNewsInfo(newest.headline, joinItems(newest.items), newest.version, true));
+                out.add(new CaramelNewsInfo(newest.headline, joinItems(newest.items),
+                        newest.version, true, "", "", R.drawable.news_banner_beta3));
             }
             ChangelogFeed.Section upcoming = feed.upcoming();
             if (upcoming != null && upcoming.headline != null && !upcoming.headline.isEmpty()) {
-                out.add(new CaramelNewsInfo(upcoming.headline, joinItems(upcoming.items), upcoming.version, false));
+                out.add(new CaramelNewsInfo(upcoming.headline, joinItems(upcoming.items),
+                        upcoming.version, false, "", "", R.drawable.news_banner_berryapi));
             }
         } catch (Throwable t) {
             AppLog.warnOnce(TAG, "buildNews", "Could not read the changelog feed", t);
@@ -524,7 +532,8 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
                 getString(R.string.caramel_news_honey_meta),
                 false,
                 getString(R.string.caramel_news_honey_button),
-                "https://honeyclient.github.io/"));
+                "https://honeyclient.github.io/",
+                R.drawable.news_banner_honey));
         return out;
     }
 
@@ -1391,6 +1400,208 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
     @Override
     public void quit() {
         finishAffinity();
+    }
+
+    /**
+     * The package picker for "Import instance".
+     *
+     * <p>Registered as a field so it exists before the activity is started, which is the only time
+     * the activity-result API accepts a registration. The chooser asks for every MIME type rather
+     * than a fixed one: an `.xapk` has no registered MIME type on most devices, and a narrower
+     * filter hides the very files this exists to import.
+     */
+    private final ActivityResultLauncher<String[]> instancePicker = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), uri -> {
+                if (uri != null) importInstanceFrom(uri);
+            });
+
+    @Override
+    public void importInstance() {
+        try {
+            instancePicker.launch(new String[]{"*/*"});
+        } catch (Throwable t) {
+            AppLog.warnOnce(TAG, "import-picker", "The package picker could not be opened", t);
+            toastWarning(getString(R.string.caramel_import_picker_unavailable));
+        }
+    }
+
+    /** Copies the picked package into the cache, then hands it to the version importer. */
+    private void importInstanceFrom(Uri uri) {
+        if (versionManager == null) return;
+        mutateState(s -> s.setBusyMessage(getString(R.string.caramel_import_instance_progress, 0)));
+        AppExecutors.run(AppExecutors.Kind.DISK, "instance-import-copy", () -> {
+            File copied = null;
+            try {
+                String name = queryDisplayName(uri);
+                if (name == null || name.isEmpty()) name = "instance.xapk";
+                File dir = new File(getCacheDir(), "instance-import");
+                if (!dir.exists() && !dir.mkdirs()) throw new java.io.IOException("no cache directory");
+                copied = new File(dir, name);
+                try (java.io.InputStream in = getContentResolver().openInputStream(uri);
+                     java.io.FileOutputStream out = new java.io.FileOutputStream(copied)) {
+                    if (in == null) throw new java.io.IOException("the picked file could not be read");
+                    byte[] buffer = new byte[8192];
+                    int read;
+                    while ((read = in.read(buffer)) > 0) out.write(buffer, 0, read);
+                }
+                File file = copied;
+                versionManager.importGameFile(file, new VersionManager.VersionCallback() {
+                    @Override
+                    public void onSuccess(String versionId) {
+                        runOnUiThread(() -> {
+                            mutateState(s -> s.setBusyMessage(""));
+                            toast(getString(R.string.caramel_import_instance_done, versionId));
+                            refreshState();
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        runOnUiThread(() -> {
+                            mutateState(s -> s.setBusyMessage(""));
+                            toastWarning(getString(R.string.caramel_import_instance_failed, error));
+                        });
+                    }
+
+                    @Override
+                    public void onProgress(int percent) {
+                        runOnUiThread(() -> mutateState(s ->
+                                s.setBusyMessage(getString(R.string.caramel_import_instance_progress, percent))));
+                    }
+                });
+            } catch (Throwable t) {
+                AppLog.warnOnce(TAG, "instance-import", "Copying the picked package failed", t);
+                runOnUiThread(() -> {
+                    mutateState(s -> s.setBusyMessage(""));
+                    toastWarning(getString(R.string.caramel_import_instance_failed,
+                            t.getMessage() == null ? "" : t.getMessage()));
+                });
+            }
+        });
+    }
+
+    /** The picked document's display name, or null when the provider does not report one. */
+    @Nullable
+    private String queryDisplayName(Uri uri) {
+        try (android.database.Cursor cursor = getContentResolver().query(
+                uri, new String[]{android.provider.OpenableColumns.DISPLAY_NAME}, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                if (index >= 0) return cursor.getString(index);
+            }
+        } catch (Throwable t) {
+            AppLog.warnOnce(TAG, "display-name", "The picker did not report a file name", t);
+        }
+        return null;
+    }
+
+    @Override
+    public void searchCurseForge(String query) {
+        mutateState(s -> {
+            s.setCurseForgeQuery(query == null ? "" : query);
+            s.setCurseForgeBusy(true);
+            s.setCurseForgeStatus(getString(R.string.caramel_curseforge_searching));
+        });
+        CurseForgeBrowser.search(this, query, new CurseForgeBrowser.SearchListener() {
+            @Override
+            public void onResults(List<CaramelCurseForgeItem> items) {
+                mutateState(s -> {
+                    s.setCurseForgeResults(items);
+                    s.setCurseForgeBusy(false);
+                    s.setCurseForgeSearched(true);
+                    s.setCurseForgeStatus(items.isEmpty()
+                            ? "" : getString(R.string.caramel_curseforge_result_count, items.size()));
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                mutateState(s -> {
+                    s.setCurseForgeBusy(false);
+                    s.setCurseForgeSearched(true);
+                    s.setCurseForgeStatus(getString(R.string.caramel_curseforge_failed, message));
+                });
+            }
+        });
+    }
+
+    @Override
+    public void downloadCurseForge(CaramelCurseForgeItem item) {
+        if (item == null) return;
+        if (!item.getDownloadable()) {
+            toastWarning(getString(R.string.caramel_curseforge_no_file));
+            return;
+        }
+        mutateState(s -> {
+            s.setCurseForgeBusy(true);
+            s.setCurseForgeDownloadingId(item.getId());
+        });
+        CurseForgeBrowser.download(this, item, new CurseForgeBrowser.DownloadListener() {
+            @Override
+            public void onFile(File file) {
+                importDownloadedContent(file, item);
+            }
+
+            @Override
+            public void onError(String message) {
+                mutateState(s -> {
+                    s.setCurseForgeBusy(false);
+                    s.setCurseForgeDownloadingId(0);
+                });
+                toastWarning(getString(R.string.caramel_curseforge_failed, message));
+            }
+        });
+    }
+
+    /** Imports a downloaded add-on/world/pack into the selected instance's content folders. */
+    private void importDownloadedContent(File file, CaramelCurseForgeItem item) {
+        File data = activeGameDataDir();
+        if (data == null) {
+            mutateState(s -> {
+                s.setCurseForgeBusy(false);
+                s.setCurseForgeDownloadingId(0);
+            });
+            toastWarning(getString(R.string.caramel_curseforge_failed,
+                    getString(R.string.caramel_no_instance)));
+            return;
+        }
+        ContentImporter importer = new ContentImporter(this);
+        importer.importContent(
+                java.util.Collections.singletonList(Uri.fromFile(file)),
+                new File(data, "resource_packs"),
+                new File(data, "behavior_packs"),
+                new File(data, "skin_packs"),
+                new File(data, "minecraftWorlds"),
+                new ContentImporter.ImportCallback() {
+                    @Override
+                    public void onSuccess(String message) {
+                        runOnUiThread(() -> {
+                            mutateState(s -> {
+                                s.setCurseForgeBusy(false);
+                                s.setCurseForgeDownloadingId(0);
+                            });
+                            toast(getString(R.string.caramel_curseforge_imported, item.getName()));
+                            refreshContentDirectories();
+                            importer.shutdown();
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        runOnUiThread(() -> {
+                            mutateState(s -> {
+                                s.setCurseForgeBusy(false);
+                                s.setCurseForgeDownloadingId(0);
+                            });
+                            toastWarning(getString(R.string.caramel_curseforge_failed, error));
+                            importer.shutdown();
+                        });
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+                    }
+                });
     }
 
     /**

@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.PersonOff
@@ -204,7 +205,7 @@ private fun SkinViewport(
         modifier
             .clip(RoundedCornerShape(22.dp))
             .background(Brush.verticalGradient(listOf(C.Navy, C.Abyss)))
-            .border(1.dp, Color.White.copy(0.10f), RoundedCornerShape(22.dp)),
+            .border(1.dp, C.sheen(0.10f), RoundedCornerShape(22.dp)),
         Alignment.Center,
     ) {
         if (signedIn) {
@@ -254,7 +255,7 @@ private fun CosmeticTile(c: CaramelCosmeticInfo, onFav: () -> Unit, onEquip: () 
                 Box(
                     Modifier.align(Alignment.TopEnd).padding(8.dp).size(28.dp).clip(CircleShape)
                         .background(Color(0x96081024))
-                        .border(1.dp, if (c.favourite) C.Caramel else Color.White.copy(0.25f), CircleShape)
+                        .border(1.dp, if (c.favourite) C.Caramel else C.sheen(0.25f), CircleShape)
                         .clickable(remember { MutableInteractionSource() }, null, onClick = onFav),
                     Alignment.Center,
                 ) {
@@ -286,7 +287,12 @@ private fun CosmeticTile(c: CaramelCosmeticInfo, onFav: () -> Unit, onEquip: () 
 fun CaramelNewsScreen(state: CaramelLauncherState) {
     CaramelPage(stringResource(R.string.caramel_news_title), stringResource(R.string.caramel_news_sub)) {
         Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            val featured = state.news.firstOrNull { it.featured } ?: state.news.firstOrNull()
+            // The featured slot follows the card the user pressed, falling back to the newest
+            // flagged post. Without this the screen always showed the first post and the other two
+            // announcements could not be opened at all.
+            val featured = state.news.firstOrNull { it.title == state.featuredNewsTitle }
+                ?: state.news.firstOrNull { it.featured }
+                ?: state.news.firstOrNull()
             if (featured == null) {
                 EmptyState(stringResource(R.string.caramel_no_news_title), stringResource(R.string.caramel_no_news_body), Modifier.fillMaxSize())
             } else {
@@ -295,23 +301,60 @@ fun CaramelNewsScreen(state: CaramelLauncherState) {
                         Box(
                             Modifier.fillMaxWidth().height(260.dp)
                                 .background(Brush.verticalGradient(listOf(Color(0xFF5A2818), Color(0xFFF5963C))), RoundedCornerShape(18.dp)),
-                        )
+                        ) {
+                            if (featured.imageRes != 0) {
+                                androidx.compose.foundation.Image(
+                                    androidx.compose.ui.res.painterResource(featured.imageRes),
+                                    contentDescription = null,
+                                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(18.dp)),
+                                )
+                            }
+                        }
                         Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             StatusLabel(stringResource(R.string.caramel_featured), C.Caramel)
                             Text(featured.title, style = T.Display)
                             Text(featured.summary, style = T.Body.copy(fontSize = 13.sp_))
                             Text(featured.meta, style = T.Label.copy(color = C.Caramel))
+                            if (featured.actionLabel.isNotEmpty() && featured.actionUrl.isNotEmpty()) {
+                                PrimaryButton(
+                                    featured.actionLabel,
+                                    {
+                                        state.webTitle = featured.title
+                                        state.webUrl = featured.actionUrl
+                                    },
+                                    tone = Tone.Blue,
+                                    icon = androidx.compose.material.icons.Icons.Rounded.OpenInNew,
+                                    height = 34,
+                                )
+                            }
                         }
                     }
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    state.news.drop(1).take(3).forEachIndexed { i, n ->
-                        GlassPanel(Modifier.fillMaxWidth().height(130.dp), RoundedCornerShape(20.dp), elevation = 6.dp) {
+                    state.news.filter { it.title != featured.title }.take(3).forEachIndexed { i, n ->
+                        GlassPanel(
+                            Modifier.fillMaxWidth().height(130.dp)
+                                .clickable(remember { MutableInteractionSource() }, null) {
+                                    state.featuredNewsTitle = n.title
+                                },
+                            RoundedCornerShape(20.dp),
+                            elevation = 6.dp,
+                        ) {
                             Row(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                                 Box(
                                     Modifier.size(150.dp, 106.dp)
                                         .background(Brush.verticalGradient(listOf(cosAccents[i % 4].copy(0.5f), cosAccents[i % 4].copy(0.1f))), RoundedCornerShape(12.dp)),
-                                )
+                                ) {
+                                    if (n.imageRes != 0) {
+                                        androidx.compose.foundation.Image(
+                                            androidx.compose.ui.res.painterResource(n.imageRes),
+                                            contentDescription = null,
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)),
+                                        )
+                                    }
+                                }
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     Text(n.title, style = T.Subtitle.copy(fontSize = 15.sp_), maxLines = 2)
                                     Text(n.summary, style = T.Body, maxLines = 2)

@@ -78,13 +78,13 @@ fun GlassPanel(
             .background(tint.copy(alpha = tint.alpha * glass * fill))
             .background(
                 Brush.verticalGradient(
-                    listOf(Color.White.copy(0.075f * glass * fill), Color.White.copy(0.015f * glass * fill)),
+                    listOf(C.sheen(0.075f * glass * fill), C.sheen(0.015f * glass * fill)),
                 ),
             )
             .border(
                 1.dp,
                 Brush.linearGradient(
-                    listOf(Color.White.copy(0.30f), Color.White.copy(0.05f)),
+                    listOf(C.sheen(0.30f), C.sheen(0.05f)),
                 ),
                 shape,
             ),
@@ -101,10 +101,16 @@ fun GlassPanel(
  */
 @Composable
 fun CaramelBackdrop(modifier: Modifier = Modifier) {
+    val light = C.light
     Canvas(
         modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFF070D22), Color(0xFF050918)))),
+            .background(
+                Brush.verticalGradient(
+                    if (light) listOf(Color(0xFFF8FAFE), Color(0xFFE9EEF9))
+                    else listOf(Color(0xFF070D22), Color(0xFF050918)),
+                ),
+            ),
     ) {
         fun pool(x: Float, y: Float, r: Float, c: Color) = drawCircle(
             Brush.radialGradient(
@@ -115,10 +121,11 @@ fun CaramelBackdrop(modifier: Modifier = Modifier) {
             radius = size.width * r,
             center = Offset(size.width * x, size.height * y),
         )
-        pool(0.18f, 0.20f, 0.42f, Color(0xFF3660FF).copy(0.55f))
-        pool(0.82f, 0.10f, 0.32f, Color(0xFF28AAFF).copy(0.32f))
-        pool(0.62f, 0.92f, 0.40f, Color(0xFF563CFF).copy(0.38f))
-        pool(0.06f, 0.95f, 0.26f, Color(0xFFF5A742).copy(0.20f))
+        val strength = if (light) 0.30f else 1f
+        pool(0.18f, 0.20f, 0.42f, Color(0xFF3660FF).copy(0.55f * strength))
+        pool(0.82f, 0.10f, 0.32f, Color(0xFF28AAFF).copy(0.32f * strength))
+        pool(0.62f, 0.92f, 0.40f, Color(0xFF563CFF).copy(0.38f * strength))
+        pool(0.06f, 0.95f, 0.26f, Color(0xFFF5A742).copy(0.20f * strength))
     }
 }
 
@@ -161,18 +168,23 @@ fun CaramelBackgroundImage(modifier: Modifier = Modifier) {
     if (bitmap == null) return
     val brightness = pm.getBackgroundImageBrightness() / 100f
     val veil = (pm.getBackgroundImageBlur() / 25f) * 0.5f
+    // Dimming is a scrim drawn over the image, not a `ColorFilter.tint`: a tint with alpha 0 is a
+    // SrcIn blend whose result is transparent, so the default brightness of 100% erased the image
+    // entirely — which is why picking a background looked like nothing happened.
+    val scrim = (1f - brightness).coerceIn(0f, 0.9f)
+    val scrimColor = if (C.light) Color(0xFFF2F5FB) else Color(0xFF050918)
     Box(modifier.fillMaxSize()) {
         Image(
             bitmap = bitmap.asImageBitmap(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            colorFilter = ColorFilter.tint(
-                Color(0xFF050918).copy(alpha = (1f - brightness).coerceIn(0f, 0.9f)),
-            ),
             modifier = Modifier.fillMaxSize(),
         )
+        if (scrim > 0f) {
+            Box(Modifier.fillMaxSize().background(scrimColor.copy(alpha = scrim)))
+        }
         if (veil > 0f) {
-            Box(Modifier.fillMaxSize().background(Color(0xFF070D22).copy(alpha = veil)))
+            Box(Modifier.fillMaxSize().background(scrimColor.copy(alpha = veil)))
         }
     }
 }
@@ -229,8 +241,8 @@ fun CaramelPill(
         modifier
             .height(26.dp)
             .clip(shape)
-            .background(Color.White.copy(0.07f))
-            .border(1.dp, Color.White.copy(0.16f), shape)
+            .background(C.sheen(0.07f))
+            .border(1.dp, C.sheen(0.16f), shape)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically,

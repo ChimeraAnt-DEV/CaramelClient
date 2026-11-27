@@ -2788,7 +2788,7 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="usage_stats_unavailable">This build has no collector configured, so nothing can be sent.</string>
 
     <!-- Caramel launcher (the Compose UI pack port). Newest surface, translated in every locale. -->
-    <string name="caramel_brand">Caramel Client</string>
+    <string name="caramel_brand" translatable="false">CaramelClient</string>
     <string name="caramel_launchpad">Launchpad</string>
     <string name="caramel_quick_play">Quick play</string>
     <string name="caramel_instances_running">%1$d instances</string>
@@ -2877,6 +2877,43 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_version">Version</string>
     <string name="caramel_loaders">Loaders</string>
     <string name="caramel_loader_unavailable">This preloader has not been built yet.</string>
+    <string name="caramel_loader_in_development">In development</string>
+    <string name="caramel_roadloader_soon">This preloader option is still in development. Ask one of the lead developers for more information.</string>
+    <string name="caramel_skip">Skip</string>
+    <string name="caramel_import_instance">Import instance</string>
+    <string name="caramel_import_instance_sub">Import a .zip or a folder from this device</string>
+    <string name="caramel_import_instance_progress">Importing instance… %1$d%%</string>
+    <string name="caramel_import_instance_done">Imported instance %1$s</string>
+    <string name="caramel_import_instance_failed">Import failed: %1$s</string>
+    <string name="caramel_import_picker_unavailable">No file picker is available on this device.</string>
+    <string name="caramel_curseforge_title">CurseForge</string>
+    <string name="caramel_curseforge_sub">Mods, add-ons, worlds and packs from CurseForge</string>
+    <string name="caramel_curseforge_search_hint">Search CurseForge</string>
+    <string name="caramel_curseforge_search">Search</string>
+    <string name="caramel_curseforge_searching">Searching CurseForge…</string>
+    <string name="caramel_curseforge_result_count">%1$d results</string>
+    <string name="caramel_curseforge_failed">CurseForge: %1$s</string>
+    <string name="caramel_curseforge_no_file">This project has no downloadable file.</string>
+    <string name="caramel_curseforge_imported">Added %1$s to the instance</string>
+    <string name="caramel_curseforge_download">Download</string>
+    <string name="caramel_curseforge_empty_title">Find something to install</string>
+    <string name="caramel_curseforge_empty_body">Search CurseForge for mods, add-ons, worlds and texture packs. Downloads land in the selected instance.</string>
+    <string name="caramel_curseforge_no_results_title">Nothing found</string>
+    <string name="caramel_curseforge_no_results_body">No project matched that search. Try a shorter query or a different spelling.</string>
+    <string name="caramel_curseforge_downloads">%1$s downloads</string>
+    <string name="caramel_diagnostics_title">Diagnostics</string>
+    <string name="caramel_diagnostics_sub">The build, the device and the instance store, as text you can share</string>
+    <string name="caramel_diagnostics_build">Build</string>
+    <string name="caramel_diagnostics_device">Device</string>
+    <string name="caramel_diagnostics_storage">Storage</string>
+    <string name="caramel_diagnostics_instances">Instances</string>
+    <string name="caramel_diagnostics_copy">Copy</string>
+    <string name="caramel_diagnostics_copied">Copied</string>
+    <string name="caramel_diagnostics_share">Share</string>
+    <string name="caramel_update_current">You are on %1$s</string>
+    <string name="caramel_update_latest">Newest release: %1$s</string>
+    <string name="settings_developer_mode">Developer mode</string>
+    <string name="settings_developer_mode_desc">Shows advanced options, including the CurseForge API key.</string>
     <string name="caramel_loaders_note">Only SweetLoader is built. RustyLoader and LightningLoader are not ready yet.</string>
     <string name="caramel_no_versions_match">No versions match</string>
     <string name="caramel_open_config">Open config</string>
@@ -2993,7 +3030,7 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_account_online">Online</string>
     <string name="caramel_no_instance">No instance selected</string>
     <string name="caramel_no_version_installed">No version installed</string>
-    <string name="caramel_instance_launch_sub">Caramel Client %1$s</string>
+    <string name="caramel_instance_launch_sub" translatable="false">CaramelClient %1$s</string>
     <string name="caramel_repair">Repair</string>
     <string name="caramel_busy_repair">Repairing the instance…</string>
     <string name="caramel_profile_open">Open Instance Profile</string>

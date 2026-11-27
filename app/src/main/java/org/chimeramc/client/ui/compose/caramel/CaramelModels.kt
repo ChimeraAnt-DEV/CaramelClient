@@ -27,17 +27,22 @@ data class CaramelVersion(val id: String, val beta: Boolean) {
 }
 
 /**
- * The three preloaders a game can be started with.
+ * The preloaders a game can be started with.
  *
  * <p>Only [Bedrock] exists: it is the shipped SweetLoader path the launcher actually runs. The
- * other two are named so the choice is visible and are marked unavailable, because a loader that
- * has not been built cannot be started — offering it as a working option would be a lie the launch
+ * others are named so the choice is visible and are marked unavailable, because a loader that has
+ * not been built cannot be started — offering it as a working option would be a lie the launch
  * could not keep.
+ *
+ * <p>[Road] is a loader that is still in development. Unlike the other unavailable choices it is
+ * clickable, because pressing it is how the user is told what is happening: the tile shakes, its
+ * timer turns red and the launcher raises a notice naming the development state.
  */
-enum class CaramelLoader(val title: String, val available: Boolean) {
+enum class CaramelLoader(val title: String, val available: Boolean, val inDevelopment: Boolean = false) {
     Bedrock("SweetLoader", true),
     Rust("RustyLoader", false),
     Lightning("LightningLoader", false),
+    Road("RoadLoader", false, inDevelopment = true),
 }
 
 /** The instance profile mode: a shared "Open" profile or an isolated one. */
@@ -46,8 +51,8 @@ enum class CaramelProfileMode(val title: String, val desc: String, val label: St
     Isolated("Isolated Instance Profile", "Separate files and mods", "Locked", true),
 }
 
-/** The six launcher tabs the pack's sidebar carries. */
-enum class CaramelTab { Home, Mods, Servers, Cosmetics, News, Store, Settings }
+/** The launcher tabs the pack's sidebar carries, plus the CurseForge browser. */
+enum class CaramelTab { Home, Mods, Servers, Cosmetics, News, Store, CurseForge, Settings }
 
 /**
  * A transient in-app notice — the launcher's toast.
@@ -128,7 +133,36 @@ data class CaramelNewsInfo @JvmOverloads constructor(
      */
     val actionLabel: String = "",
     val actionUrl: String = "",
+    /**
+     * The post's banner drawable, or 0 when it has none.
+     *
+     * <p>A post with a banner paints it; a post without one keeps the generated gradient, so the
+     * card never shows an empty hole where art is missing.
+     */
+    val imageRes: Int = 0,
 )
+
+/**
+ * One CurseForge project, as the CurseForge tab draws it.
+ *
+ * <p>[fileId] and [downloadUrl] are the newest file the API returned. A project with no file is
+ * still listed (it exists) but its Download button is disabled rather than pretending there is
+ * something to fetch.
+ */
+data class CaramelCurseForgeItem @JvmOverloads constructor(
+    val id: Int,
+    val name: String,
+    val summary: String,
+    val author: String,
+    val downloads: Long,
+    val logoUrl: String = "",
+    val fileId: Int = 0,
+    val fileName: String = "",
+    val downloadUrl: String = "",
+    val websiteUrl: String = "",
+) {
+    val downloadable: Boolean get() = downloadUrl.isNotEmpty()
+}
 
 /** One captured screenshot: the Screenshots modal draws these from the instance's folder. */
 data class CaramelScreenshotInfo(
@@ -226,6 +260,9 @@ class CaramelLauncherState {
 
     /** Whether the "View all news" modal is open. */
     var newsAll by mutableStateOf(false)
+
+    /** The post the News screen shows in its featured slot; empty means "the newest featured". */
+    var featuredNewsTitle by mutableStateOf("")
 
     /**
      * The current release's notes, shown by the Release notes popup.
@@ -378,6 +415,28 @@ class CaramelLauncherState {
 
     /** Whether this instance exposes the in-game resource-pack changer. */
     var instancePackChanger by mutableStateOf(false)
+
+    // --- CurseForge browser ---------------------------------------------------------------
+
+    /** The text in the CurseForge search box, as typed. */
+    var curseForgeQuery by mutableStateOf("")
+
+    /** The projects the last CurseForge search returned. */
+    var curseForgeResults by mutableStateOf<List<CaramelCurseForgeItem>>(emptyList())
+
+    /** A status line under the search box: "Searching", an error, or the result count. */
+    var curseForgeStatus by mutableStateOf("")
+
+    /** True while a search or a download is in flight, so the screen can show progress. */
+    var curseForgeBusy by mutableStateOf(false)
+
+    /** The project id being downloaded, or 0 when nothing is downloading. */
+    var curseForgeDownloadingId by mutableStateOf(0)
+
+    /** True once a search has run, so the empty state can tell "not searched" from "no matches". */
+    var curseForgeSearched by mutableStateOf(false)
+
+    // --- Update check ---------------------------------------------------------------------
 }
 
 /** One row in the mods-folder browser: a file or a sub-directory. */

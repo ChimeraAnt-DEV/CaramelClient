@@ -129,7 +129,7 @@ fun CaramelAppMenu(state: CaramelLauncherState, actions: CaramelLauncherHost.Act
                 CaramelMenuItem(stringResource(R.string.caramel_menu_about), Icons.Rounded.Info) {
                     state.appMenu = false; state.aboutOpen = true
                 }
-                Box(Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 6.dp).height(1.dp).background(Color.White.copy(0.1f)))
+                Box(Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 6.dp).height(1.dp).background(C.sheen(0.1f)))
                 CaramelMenuItem(stringResource(R.string.caramel_menu_quit), Icons.Rounded.Close, danger = true) {
                     state.appMenu = false; actions.quit()
                 }
@@ -221,7 +221,7 @@ fun CaramelScreenshotsModal(state: CaramelLauncherState, actions: CaramelLaunche
                         ) {
                             Box(
                                 Modifier.fillMaxWidth().height(118.dp).clip(RoundedCornerShape(14.dp))
-                                    .border(if (selected) 2.dp else 1.dp, if (selected) C.Blue else Color.White.copy(0.16f), RoundedCornerShape(14.dp)),
+                                    .border(if (selected) 2.dp else 1.dp, if (selected) C.Blue else C.sheen(0.16f), RoundedCornerShape(14.dp)),
                             ) {
                                 CaramelScreenshotThumbnail(s.path, s.name, Modifier.fillMaxSize())
                             }
@@ -299,7 +299,16 @@ fun CaramelNewsModal(state: CaramelLauncherState, actions: CaramelLauncherHost.A
                                         Brush.verticalGradient(listOf(tint.copy(0.5f), tint.copy(0.1f))),
                                         RoundedCornerShape(12.dp),
                                     ),
-                                )
+                                ) {
+                                    if (post.imageRes != 0) {
+                                        androidx.compose.foundation.Image(
+                                            androidx.compose.ui.res.painterResource(post.imageRes),
+                                            contentDescription = null,
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)),
+                                        )
+                                    }
+                                }
                                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     if (post.featured) StatusLabel(stringResource(R.string.caramel_featured), C.Caramel)
                                     Text(post.title, style = T.Subtitle.copy(fontSize = 15.sp_), maxLines = 2)
@@ -508,7 +517,7 @@ fun CaramelAddAccountModal(state: CaramelLauncherState, actions: CaramelLauncher
                 )
                 Column(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(Color(0x78040A1A))
-                        .border(1.dp, Color.White.copy(0.16f), RoundedCornerShape(18.dp)).padding(20.dp),
+                        .border(1.dp, C.sheen(0.16f), RoundedCornerShape(18.dp)).padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
@@ -560,7 +569,7 @@ fun CaramelAddAccountModal(state: CaramelLauncherState, actions: CaramelLauncher
                         state.deviceCodeUrl,
                         Modifier.fillMaxWidth().height(320.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .border(1.dp, Color.White.copy(0.16f), RoundedCornerShape(16.dp)),
+                            .border(1.dp, C.sheen(0.16f), RoundedCornerShape(16.dp)),
                     )
                     GlassButton(
                         stringResource(R.string.ms_device_code_open_browser),
@@ -782,7 +791,7 @@ fun CaramelInstanceSettingsModal(state: CaramelLauncherState, actions: CaramelLa
                         CaramelSideItem(stringResource(titleRes), icon, i == section) { section = i }
                     }
                 }
-                Box(Modifier.width(1.dp).fillMaxHeight().background(Color.White.copy(0.08f)))
+                Box(Modifier.width(1.dp).fillMaxHeight().background(C.sheen(0.08f)))
                 Column(
                     Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(28.dp),
                     verticalArrangement = Arrangement.spacedBy(22.dp),
@@ -793,16 +802,26 @@ fun CaramelInstanceSettingsModal(state: CaramelLauncherState, actions: CaramelLa
                                 CaramelTextField(name, { name = it }, Modifier.fillMaxWidth())
                             }
                             SettingRow(stringResource(R.string.caramel_game_version)) {
-                                CaramelVersionDropdown(state.versions, state.version, onSelect = { state.version = it })
+                                CaramelVersionDropdown(
+                                    state.versions,
+                                    state.version,
+                                    onSelect = { actions.selectVersion(it.id) },
+                                    onImportInstance = { actions.importInstance() },
+                                )
                             }
                             SettingRow(stringResource(R.string.caramel_loader)) {
                                 val loaderUnavailable =
                                     stringResource(R.string.caramel_loader_unavailable)
+                                val roadLoaderUnavailable =
+                                    stringResource(R.string.caramel_roadloader_soon)
                                 org.chimeramc.client.ui.compose.caramel.CaramelLoaderPicker(
                                     state.loader,
                                     { state.loader = it },
                                     onUnavailable = {
                                         state.notice = CaramelNotice(loaderUnavailable, warning = true)
+                                    },
+                                    onInDevelopment = {
+                                        state.notice = CaramelNotice(roadLoaderUnavailable, warning = true)
                                     },
                                 )
                             }
@@ -841,8 +860,8 @@ fun CaramelInstanceSettingsModal(state: CaramelLauncherState, actions: CaramelLa
                             } else {
                                 state.mods.forEach { m ->
                                     Row(
-                                        Modifier.fillMaxWidth().clip(RoundedCornerShape(13.dp)).background(Color.White.copy(0.06f))
-                                            .border(1.dp, Color.White.copy(0.12f), RoundedCornerShape(13.dp)).padding(12.dp),
+                                        Modifier.fillMaxWidth().clip(RoundedCornerShape(13.dp)).background(C.sheen(0.06f))
+                                            .border(1.dp, C.sheen(0.12f), RoundedCornerShape(13.dp)).padding(12.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                                     ) {

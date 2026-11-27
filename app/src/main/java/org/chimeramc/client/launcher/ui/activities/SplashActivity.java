@@ -79,12 +79,19 @@ public class SplashActivity extends BaseActivity {
         view.setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool.INSTANCE);
         CaramelSplashHost.setContent(
-                view, art, show, getString(R.string.launch_preparing), this::onShowFinished);
+                view, art, show, getString(R.string.launch_preparing), this::onShowFinished,
+                this::onShowSkipped);
         return view;
     }
 
     /** The show ran its length: play the hand-over pop and open the launcher. */
     private void onShowFinished() {
+        sound.play();
+        navigateToMain();
+    }
+
+    /** The user skipped the show: the same hand-over, without waiting out the clock. */
+    private void onShowSkipped() {
         sound.play();
         navigateToMain();
     }

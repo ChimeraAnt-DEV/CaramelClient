@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
+import org.chimeramc.client.ui.compose.caramel.CaramelCurseForgeItem
 import org.chimeramc.client.ui.compose.caramel.CaramelFileEntry
 import org.chimeramc.client.ui.compose.caramel.CaramelLauncherState
 import org.chimeramc.client.ui.compose.caramel.CaramelModInfo
@@ -32,6 +33,8 @@ object CaramelLauncherHost {
     interface Actions {
         fun launch()
         fun selectVersion(id: String)
+        /** Opens the package picker and imports the chosen .apk/.xapk as a new instance. */
+        fun importInstance()
         fun toggleMod(mod: CaramelModInfo, on: Boolean)
         fun equipCosmetic(cosmetic: CaramelCosmeticInfo)
         fun toggleFavourite(cosmetic: CaramelCosmeticInfo)
@@ -75,6 +78,10 @@ object CaramelLauncherHost {
         fun setInstanceLaunchVertical(enabled: Boolean)
         /** Toggles the in-game resource-pack changer for this instance. */
         fun setInstancePackChanger(enabled: Boolean)
+        /** Runs a CurseForge search for [query] and publishes the results into the state. */
+        fun searchCurseForge(query: String)
+        /** Downloads [item]'s newest file and imports it into the selected instance. */
+        fun downloadCurseForge(item: CaramelCurseForgeItem)
         fun quit()
     }
 
@@ -123,6 +130,8 @@ object CaramelSplashHost {
      * <p>[art] is the ordered list of drawables this launch picked, [show] its timeline, and
      * [onFinished] is called once the show has run its length — the activity plays the hand-over pop
      * and opens the launcher there, so the screen is on the clock rather than the warm-up.
+     * [onSkip] is the same hand-over, taken immediately: the show is twenty seconds of art and a
+     * returning user should not have to sit through it.
      */
     @JvmStatic
     fun setContent(
@@ -131,6 +140,7 @@ object CaramelSplashHost {
         show: SplashShow,
         preparing: String,
         onFinished: Runnable,
+        onSkip: Runnable,
     ) {
         composeView.setContent {
             CaramelTheme {
@@ -139,6 +149,7 @@ object CaramelSplashHost {
                     show = show,
                     preparing = preparing,
                     onFinished = { onFinished.run() },
+                    onSkip = { onSkip.run() },
                 )
             }
         }

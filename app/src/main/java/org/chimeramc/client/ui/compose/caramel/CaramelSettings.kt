@@ -13,14 +13,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Article
 import androidx.compose.material.icons.rounded.Build
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.RocketLaunch
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -125,6 +128,19 @@ class CaramelSettingsState {
     var versionName by mutableStateOf("")
     /** A status line for a long action (an update check); empty when idle. */
     var busyMessage by mutableStateOf("")
+
+    /** Whether the update-check dialog is open. */
+    var updateDialogOpen by mutableStateOf(false)
+    /** True while the release request is in flight, so the dialog shows a progress circle. */
+    var updateRunning by mutableStateOf(false)
+    /** The dialog's status line: checking, up to date, available or failed. */
+    var updateStatus by mutableStateOf("")
+    /** The version the last check found, empty when it found none. */
+    var updateLatest by mutableStateOf("")
+    /** The release page for the found version, empty when there is nothing to open. */
+    var updateUrl by mutableStateOf("")
+    /** Whether the developer-only rows (the CurseForge key) are shown. */
+    var developerMode by mutableStateOf(false)
 }
 
 /** One client switch, as the panel draws it: its id, its label, its description and its value. */
@@ -169,6 +185,11 @@ interface CaramelSettingsActions {
     fun setLanguageTag(tag: String)
     fun setFlag(id: String, value: Boolean)
     fun checkForUpdates()
+    /** Closes the update dialog; refused while a check is still running. */
+    fun dismissUpdateDialog()
+    /** Opens the release page the last check found. */
+    fun openUpdateDownload()
+    fun setDeveloperMode(enabled: Boolean)
     fun openDiagnostics()
     fun openChangelog()
     fun resetSettings()
@@ -543,7 +564,10 @@ fun CaramelSettingsPanel(
                 )
             }
         }
-        if (matches(stringResource(R.string.curseforge_api_key_title), state.curseForgeKeyStatus)) {
+        // The key row is developer-only: the client ships its own default CurseForge key, so an
+        // ordinary user never has to see or enter one.
+        if (state.developerMode
+            && matches(stringResource(R.string.curseforge_api_key_title), state.curseForgeKeyStatus)) {
             SettingRow(
                 stringResource(R.string.curseforge_api_key_title),
                 state.curseForgeKeyStatus,
@@ -598,12 +622,22 @@ fun CaramelSettingsPanel(
                     else R.string.caramel_check_updates_desc
                 ),
             ) {
-                GlassButton(
-                    stringResource(R.string.check_update),
-                    actions::checkForUpdates,
-                    icon = Icons.Rounded.RocketLaunch,
-                    height = 34,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (state.updateRunning) {
+                        androidx.compose.material3.CircularProgressIndicator(
+                            color = C.Caramel,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                    GlassButton(
+                        stringResource(R.string.check_update),
+                        actions::checkForUpdates,
+                        icon = Icons.Rounded.RocketLaunch,
+                        enabled = !state.updateRunning,
+                        height = 34,
+                    )
+                }
             }
         }
 
@@ -625,6 +659,13 @@ fun CaramelSettingsPanel(
             SettingRow(stringResource(R.string.settings_open_changelog), null) {
                 GlassButton(stringResource(R.string.settings_open_changelog), actions::openChangelog, icon = Icons.Rounded.Article, height = 34)
             }
+        }
+        if (matches(stringResource(R.string.settings_developer_mode), stringResource(R.string.settings_developer_mode_desc))) {
+            ToggleRow(
+                stringResource(R.string.settings_developer_mode),
+                stringResource(R.string.settings_developer_mode_desc),
+                state.developerMode,
+            ) { actions.setDeveloperMode(it) }
         }
         SettingRow(stringResource(R.string.settings_reset), stringResource(R.string.settings_reset_desc)) {
             GlassButton(
@@ -649,6 +690,94 @@ fun CaramelSettingsPanel(
             ) { body() }
         } else {
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) { body() }
+        }
+    }
+    CaramelUpdateDialog(state, actions)
+}
+
+/**
+ * The update-check dialog.
+ *
+ * <p>Pressing "Check" used to run a request with no visible state: the button stayed live, nothing
+ * said whether the check was running, and a found release was a line of text. This is the menu the
+ * press should open — a progress circle while the release request is in flight, then the verdict
+ * ("you are on the latest release" or the newer version) with a link to the release page.
+ */
+@Composable
+private fun CaramelUpdateDialog(state: CaramelSettingsState, actions: CaramelSettingsActions) {
+    if (!state.updateDialogOpen) return
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = { if (!state.updateRunning) actions.dismissUpdateDialog() },
+    ) {
+        GlassPanel(Modifier.width(440.dp), RoundedCornerShape(22.dp), popup = true, elevation = 40.dp) {
+            Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(R.string.caramel_menu_check_updates), style = T.Title)
+                        Text(
+                            stringResource(R.string.caramel_update_current, state.versionName),
+                            style = T.Body,
+                        )
+                    }
+                    GlassButton(
+                        null,
+                        { if (!state.updateRunning) actions.dismissUpdateDialog() },
+                        icon = Icons.Rounded.Close,
+                        enabled = !state.updateRunning,
+                        height = 32,
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    if (state.updateRunning) {
+                        androidx.compose.material3.CircularProgressIndicator(
+                            color = C.Caramel,
+                            strokeWidth = 2.5.dp,
+                            modifier = Modifier.size(28.dp),
+                        )
+                    } else {
+                        Icon(
+                            if (state.updateUrl.isNotEmpty()) Icons.Rounded.RocketLaunch else Icons.Rounded.CheckCircle,
+                            null,
+                            Modifier.size(26.dp),
+                            if (state.updateUrl.isNotEmpty()) C.Caramel else C.Green,
+                        )
+                    }
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Text(
+                            state.updateStatus.ifEmpty { stringResource(R.string.caramel_checking_updates) },
+                            style = T.Body,
+                        )
+                        if (state.updateLatest.isNotEmpty() && !state.updateRunning) {
+                            Text(
+                                stringResource(R.string.caramel_update_latest, state.updateLatest),
+                                style = T.Caption,
+                            )
+                        }
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (state.updateUrl.isNotEmpty() && !state.updateRunning) {
+                        PrimaryButton(
+                            stringResource(R.string.download_update),
+                            actions::openUpdateDownload,
+                            Modifier.weight(1f),
+                            tone = Tone.Caramel,
+                            icon = Icons.Rounded.RocketLaunch,
+                            height = 40,
+                        )
+                    }
+                    GlassButton(
+                        stringResource(R.string.close),
+                        { if (!state.updateRunning) actions.dismissUpdateDialog() },
+                        Modifier.weight(1f),
+                        enabled = !state.updateRunning,
+                        height = 40,
+                    )
+                }
+            }
         }
     }
 }

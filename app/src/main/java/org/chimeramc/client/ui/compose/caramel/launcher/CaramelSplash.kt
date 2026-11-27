@@ -54,6 +54,7 @@ fun CaramelSplashScreen(
     show: SplashShow,
     preparing: String,
     onFinished: () -> Unit,
+    onSkip: () -> Unit = onFinished,
 ) {
     val elapsedMs = rememberShowClock(show, onFinished)
     val outgoing = show.indexAt(elapsedMs)
@@ -89,6 +90,13 @@ fun CaramelSplashScreen(
                 Column(Modifier.padding(start = 12.dp)) {
                     Text(stringResource(R.string.app_name), style = T.Display.copy(fontSize = 22.sp_))
                     Text(preparing, style = T.Body)
+                }
+                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                // The show is the clock, but it is also twenty seconds: a returning user gets to
+                // leave it. Skipping runs the same hand-over the timeline would, so nothing that
+                // waits for the launcher (the version warm-up, the share intent) is dropped.
+                androidx.compose.material3.TextButton(onClick = onSkip) {
+                    Text(stringResource(R.string.caramel_skip), style = T.Label.copy(color = C.Text))
                 }
             }
             Column {

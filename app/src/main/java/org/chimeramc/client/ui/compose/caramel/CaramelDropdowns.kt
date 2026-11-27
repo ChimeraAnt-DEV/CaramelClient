@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -84,8 +85,8 @@ fun CaramelDropdownField(text: String, open: Boolean, modifier: Modifier = Modif
         modifier
             .height(38.dp)
             .clip(shape)
-            .background(Color.White.copy(if (open) 0.13f else 0.08f))
-            .border(1.dp, if (open) C.Blue.copy(0.7f) else Color.White.copy(0.18f), shape)
+            .background(C.sheen(if (open) 0.13f else 0.08f))
+            .border(1.dp, if (open) C.Blue.copy(0.7f) else C.sheen(0.18f), shape)
             .clickable(remember { MutableInteractionSource() }, null, onClick = onClick)
             .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -124,7 +125,9 @@ fun CaramelSimpleDropdown(
  * The version picker: a search box over a scrolling list, each row carrying its channel chip.
  *
  * <p>The pack filters a hardcoded list; this filters the list the activity supplies, so the picker
- * can only ever show a version that is actually installed.
+ * can only ever show a version that is actually installed. [onImportInstance] adds the import row
+ * under the list, which is where a user looks for "a version I do not have yet" — the launcher
+ * imports an `.apk` / `.xapk` package into a new sandboxed instance.
  */
 @Composable
 fun CaramelVersionDropdown(
@@ -132,6 +135,7 @@ fun CaramelVersionDropdown(
     selected: CaramelVersion?,
     onSelect: (CaramelVersion) -> Unit,
     modifier: Modifier = Modifier,
+    onImportInstance: (() -> Unit)? = null,
 ) = CaramelDropdown(selected?.id ?: "", modifier, width = 124, panelWidth = 300) { close ->
     var q by remember { mutableStateOf("") }
     val list = remember(q, versions) { versions.filter { it.id.contains(q.trim()) } }
@@ -155,6 +159,24 @@ fun CaramelVersionDropdown(
             }
             if (list.isEmpty()) item { Text(stringResource(R.string.caramel_no_versions_match), style = T.Body, modifier = Modifier.padding(12.dp)) }
         }
+        if (onImportInstance != null) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(C.Blue.copy(0.16f))
+                    .clickable { close(); onImportInstance() }
+                    .padding(horizontal = 12.dp, vertical = 9.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Icon(Icons.Rounded.FileDownload, null, Modifier.size(18.dp), C.Blue)
+                Column(Modifier.weight(1f)) {
+                    Text(stringResource(R.string.caramel_import_instance), style = T.Label)
+                    Text(stringResource(R.string.caramel_import_instance_sub), style = T.Caption)
+                }
+            }
+        }
     }
 }
 
@@ -174,8 +196,8 @@ fun CaramelProfileDropdown(
                 .width(width.dp)
                 .height(38.dp)
                 .clip(shape)
-                .background(Color.White.copy(if (open) 0.13f else 0.08f))
-                .border(1.dp, if (open) C.Blue.copy(0.7f) else Color.White.copy(0.18f), shape)
+                .background(C.sheen(if (open) 0.13f else 0.08f))
+                .border(1.dp, if (open) C.Blue.copy(0.7f) else C.sheen(0.18f), shape)
                 .clickable(remember { MutableInteractionSource() }, null) { open = !open }
                 .padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically,

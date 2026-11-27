@@ -149,6 +149,17 @@ public class GithubReleaseUpdater {
      * do nothing. [listener] now receives every outcome, so the surface that asked can say so.
      */
     public void checkUpdate(ResultListener listener) {
+        checkUpdate(listener, true);
+    }
+
+    /**
+     * A manual check whose surface the caller owns.
+     *
+     * <p>With {@code showDialog} false the legacy alert is suppressed: the Compose update modal
+     * draws the progress circle and the verdict itself, and popping the old dialog on top of it
+     * would show the same answer twice, in two visual languages.
+     */
+    public void checkUpdate(ResultListener listener, boolean showDialog) {
         String url = String.format(GITHUB_LATEST_API, owner, repo);
         Request request = new Request.Builder().url(url).build();
         client.newCall(request).enqueue(new Callback() {
@@ -187,7 +198,7 @@ public class GithubReleaseUpdater {
                     String localVersion = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
                     rememberLatestSeen(activity, latestVersion);
                     if (compareVersion(latestVersion, localVersion) > 0) {
-                        showUpdateDialog(latestVersion, downloadUrl);
+                        if (showDialog) showUpdateDialog(latestVersion, downloadUrl);
                         if (listener != null) {
                             String version = latestVersion;
                             String link = downloadUrl;
@@ -195,7 +206,10 @@ public class GithubReleaseUpdater {
                                     listener.onResult(Outcome.UPDATE_AVAILABLE, version, link, null));
                         }
                     } else {
-                        org.chimeramc.client.ui.compose.caramel.CaramelNoticeBus.post(activity, activity.getString(R.string.already_latest_version, localVersion));
+                        if (showDialog) {
+                            org.chimeramc.client.ui.compose.caramel.CaramelNoticeBus.post(activity,
+                                    activity.getString(R.string.already_latest_version, localVersion));
+                        }
                         if (listener != null) {
                             String version = latestVersion;
                             activity.runOnUiThread(() ->

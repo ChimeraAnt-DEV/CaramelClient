@@ -64,7 +64,7 @@ internal fun CaramelModalHeader(
 
 @Composable
 internal fun CaramelRule() =
-    Box(Modifier.fillMaxWidth().padding(horizontal = 24.dp).height(1.dp).background(Color.White.copy(0.09f)))
+    Box(Modifier.fillMaxWidth().padding(horizontal = 24.dp).height(1.dp).background(C.sheen(0.09f)))
 
 /** A labelled group: a caption over its content, from the pack's `Field`. */
 @Composable

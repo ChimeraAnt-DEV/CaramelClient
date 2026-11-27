@@ -138,7 +138,7 @@ fun GlassButton(
     val tint = when {
         danger -> C.Red
         active -> C.Blue
-        else -> Color.White
+        else -> C.Text
     }
     val shape = RoundedCornerShape(CaramelDimens.RadiusButton)
     val fg = when {
@@ -187,10 +187,10 @@ fun CaramelToggle(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Modif
                 if (checked) {
                     Brush.horizontalGradient(listOf(C.GreenLight, C.GreenDark))
                 } else {
-                    SolidColor(Color.White.copy(0.10f))
+                    SolidColor(C.sheen(0.10f))
                 },
             )
-            .border(1.dp, if (checked) Color.Transparent else Color.White.copy(0.24f), shape)
+            .border(1.dp, if (checked) Color.Transparent else C.sheen(0.24f), shape)
             .clickable(remember { MutableInteractionSource() }, null) { onChange(!checked) },
     ) {
         Box(
@@ -215,10 +215,10 @@ fun CaramelCheckbox(checked: Boolean, onChange: (Boolean) -> Unit, modifier: Mod
                 if (checked) {
                     Brush.verticalGradient(listOf(C.BlueLight, C.BlueDark))
                 } else {
-                    SolidColor(Color.White.copy(0.06f))
+                    SolidColor(C.sheen(0.06f))
                 },
             )
-            .border(1.dp, if (checked) Color.Transparent else Color.White.copy(0.28f), shape)
+            .border(1.dp, if (checked) Color.Transparent else C.sheen(0.28f), shape)
             .clickable(remember { MutableInteractionSource() }, null) { onChange(!checked) },
         Alignment.Center,
     ) {
@@ -251,7 +251,7 @@ fun CaramelSlider(
         val cy = size.height / 2
         val th = 6.dp.toPx()
         val kx = size.width * value
-        drawRoundRect(Color.White.copy(0.12f), Offset(0f, cy - th / 2), Size(size.width, th), CornerRadius(th))
+        drawRoundRect(C.sheen(0.12f), Offset(0f, cy - th / 2), Size(size.width, th), CornerRadius(th))
         drawRoundRect(Brush.horizontalGradient(listOf(accent, accentEnd)), Offset(0f, cy - th / 2), Size(kx, th), CornerRadius(th))
         drawCircle(Color.Black.copy(0.35f), 9.dp.toPx(), Offset(kx, cy + 1.5.dp.toPx()))
         drawCircle(Color.White, 8.dp.toPx(), Offset(kx, cy))
@@ -269,7 +269,7 @@ fun CaramelTextField(
     leading: ImageVector? = null,
 ) {
     var focused by remember { mutableStateOf(false) }
-    val border by animateColorAsState(if (focused) C.Blue.copy(0.8f) else Color.White.copy(0.16f))
+    val border by animateColorAsState(if (focused) C.Blue.copy(0.8f) else C.sheen(0.16f))
     val shape = RoundedCornerShape(CaramelDimens.RadiusControl)
     BasicTextField(
         value,

@@ -99,10 +99,10 @@ fun FilterChip(text: String, selected: Boolean, onClick: () -> Unit, modifier: M
                 if (selected) {
                     Brush.verticalGradient(listOf(C.BlueLight, C.BlueDark))
                 } else {
-                    SolidColor(Color.White.copy(0.07f))
+                    SolidColor(C.sheen(0.07f))
                 },
             )
-            .border(1.dp, if (selected) Color.Transparent else Color.White.copy(0.16f), shape)
+            .border(1.dp, if (selected) Color.Transparent else C.sheen(0.16f), shape)
             .clickable(remember { MutableInteractionSource() }, null, onClick = onClick)
             .padding(horizontal = 13.dp),
         Alignment.Center,
@@ -124,8 +124,8 @@ fun SegmentedTabs(
         modifier
             .height(36.dp)
             .clip(shape)
-            .background(Color.White.copy(0.06f))
-            .border(1.dp, Color.White.copy(0.14f), shape)
+            .background(C.sheen(0.06f))
+            .border(1.dp, C.sheen(0.14f), shape)
             .padding(3.dp),
     ) {
         items.forEachIndexed { i, t ->
@@ -162,8 +162,8 @@ fun CaramelAvatar(size: Int = 36, online: Boolean = false, modifier: Modifier = 
     Box(
         modifier
             .size(size.dp)
-            .background(Color.White.copy(0.09f), CircleShape)
-            .border(if (online) 2.dp else 1.dp, if (online) C.Green else Color.White.copy(0.3f), CircleShape),
+            .background(C.sheen(0.09f), CircleShape)
+            .border(if (online) 2.dp else 1.dp, if (online) C.Green else C.sheen(0.3f), CircleShape),
     )
 }
 
@@ -220,7 +220,7 @@ fun ServerIcon(
         modifier
             .size(size.dp)
             .clip(shape)
-            .background(if (icon != 0) Color.White.copy(0.06f) else color.copy(0.22f))
+            .background(if (icon != 0) C.sheen(0.06f) else color.copy(0.22f))
             .border(1.dp, color.copy(0.6f), shape),
         Alignment.Center,
     ) {
@@ -246,7 +246,7 @@ fun CaramelFriendRow(friend: CaramelFriendInfo, modifier: Modifier = Modifier) {
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.White.copy(0.05f))
+            .background(C.sheen(0.05f))
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),

@@ -15,6 +15,14 @@ public class ThemeManager {
 
     private static final String THEME_PREFS = "theme_prefs";
     private static final String THEME_MODE_KEY = "theme_mode";
+
+    /**
+     * The mode a fresh install starts in.
+     *
+     * <p>The client's own surfaces are a dark navy design, so dark is the honest default; "Follow
+     * system" remains a real choice that resolves to whatever the device is set to.
+     */
+    private static final int DEFAULT_MODE = MODE_DARK;
     private static int sThemeChangeGeneration = 0;
     private final SharedPreferences prefs;
     private final Activity activity;
@@ -67,7 +75,7 @@ public class ThemeManager {
     }
 
     public void setThemeMode(int mode) {
-        int previous = prefs.getInt(THEME_MODE_KEY, MODE_FOLLOW_SYSTEM);
+        int previous = prefs.getInt(THEME_MODE_KEY, DEFAULT_MODE);
         prefs.edit().putInt(THEME_MODE_KEY, mode).apply();
         updateNightMode();
         if (previous != mode) {
@@ -79,7 +87,7 @@ public class ThemeManager {
     }
 
     private void updateNightMode() {
-        int mode = prefs.getInt(THEME_MODE_KEY, MODE_FOLLOW_SYSTEM);
+        int mode = prefs.getInt(THEME_MODE_KEY, DEFAULT_MODE);
         switch (mode) {
             case MODE_LIGHT:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -93,12 +101,30 @@ public class ThemeManager {
     }
 
     public int getCurrentMode() {
-        int mode = prefs.getInt(THEME_MODE_KEY, MODE_FOLLOW_SYSTEM);
+        int mode = prefs.getInt(THEME_MODE_KEY, DEFAULT_MODE);
         if (mode < MODE_FOLLOW_SYSTEM || mode > MODE_DARK) {
             mode = MODE_FOLLOW_SYSTEM;
             prefs.edit().putInt(THEME_MODE_KEY, mode).apply();
         }
         return mode;
+    }
+
+    /**
+     * Whether the light palette should be drawn, for a surface that cannot ask the activity.
+     *
+     * <p>The Compose launcher paints its own tokens rather than the AppCompat theme, so it has to
+     * resolve the stored mode itself. Following the system means reading the current
+     * configuration's night flag, which is what AppCompat does for the View surfaces.
+     */
+    public static boolean isLightActive(Context context) {
+        if (context == null) return false;
+        int mode = context.getSharedPreferences(THEME_PREFS, Context.MODE_PRIVATE)
+                .getInt(THEME_MODE_KEY, DEFAULT_MODE);
+        if (mode == MODE_LIGHT) return true;
+        if (mode == MODE_DARK) return false;
+        int night = context.getResources().getConfiguration().uiMode
+                & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return night != android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static int getThemeChangeGeneration() {

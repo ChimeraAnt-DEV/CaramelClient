@@ -33,27 +33,48 @@ import org.chimeramc.client.R
  * apart, so the three are meant to move together.
  */
 object CaramelColors {
-    val Abyss = Color(0xFF060B1A)
-    val Navy = Color(0xFF0A1330)
-    val DeepBlue = Color(0xFF0F1B44)
-    val Blue = Color(0xFF4A78FF)
-    val BlueLight = Color(0xFF628CFF)
-    val BlueDark = Color(0xFF3458E6)
-    val Caramel = Color(0xFFF5A742)
-    val CaramelDark = Color(0xFFDE8624)
-    val Green = Color(0xFF2FD36B)
-    val GreenLight = Color(0xFF3EE27A)
-    val GreenDark = Color(0xFF18A050)
-    val Red = Color(0xFFFF5468)
-    val Orange = Color(0xFFFF9F2E)
-    val Yellow = Color(0xFFFFD040)
-    val Text = Color(0xFFEAF0FF)
-    val Text2 = Color(0xFF9AA8D0)
-    val Text3 = Color(0xFF66749E)
-    val OnGreen = Color(0xFF062412)
-    val Hairline = Color.White.copy(alpha = 0.14f)
-    val Fill = Color.White.copy(alpha = 0.07f)
-    val FillStrong = Color.White.copy(alpha = 0.12f)
+    /**
+     * Whether the light palette is active.
+     *
+     * <p>[CaramelTheme] resolves the user's night-mode choice once per composition and stores it
+     * here, and every token below reads it. The launcher is recreated when the mode changes
+     * (`ThemeManager.setThemeMode` calls `activity.recreate()`), so the whole tree is rebuilt with
+     * the new palette; nothing has to observe this value.
+     */
+    @Volatile
+    var light: Boolean = false
+
+    /**
+     * A white sheen in dark mode, a dark one in light mode.
+     *
+     * <p>The glass recipe is built from translucent white layers. On a light page white layers are
+     * invisible, so the same surface would read as a flat rectangle; inverting the sheen keeps the
+     * "light falls on glass" cue in both palettes without a second set of constants.
+     */
+    fun sheen(alpha: Float): Color =
+        if (light) Color(0xFF0C1430).copy(alpha = alpha) else Color.White.copy(alpha = alpha)
+
+    val Abyss: Color get() = if (light) Color(0xFFF2F5FB) else Color(0xFF060B1A)
+    val Navy: Color get() = if (light) Color(0xFFFFFFFF) else Color(0xFF0A1330)
+    val DeepBlue: Color get() = if (light) Color(0xFFE6ECF8) else Color(0xFF0F1B44)
+    val Blue: Color get() = if (light) Color(0xFF3559E0) else Color(0xFF4A78FF)
+    val BlueLight: Color get() = if (light) Color(0xFF4A6BE8) else Color(0xFF628CFF)
+    val BlueDark: Color get() = if (light) Color(0xFF2743B8) else Color(0xFF3458E6)
+    val Caramel: Color get() = if (light) Color(0xFFB96A10) else Color(0xFFF5A742)
+    val CaramelDark: Color get() = if (light) Color(0xFF9A560B) else Color(0xFFDE8624)
+    val Green: Color get() = if (light) Color(0xFF148A46) else Color(0xFF2FD36B)
+    val GreenLight: Color get() = if (light) Color(0xFF22A85A) else Color(0xFF3EE27A)
+    val GreenDark: Color get() = if (light) Color(0xFF0E6E38) else Color(0xFF18A050)
+    val Red: Color get() = if (light) Color(0xFFC62B3E) else Color(0xFFFF5468)
+    val Orange: Color get() = if (light) Color(0xFFB86A00) else Color(0xFFFF9F2E)
+    val Yellow: Color get() = if (light) Color(0xFFC08A00) else Color(0xFFFFD040)
+    val Text: Color get() = if (light) Color(0xFF0C1430) else Color(0xFFEAF0FF)
+    val Text2: Color get() = if (light) Color(0xFF48567A) else Color(0xFF9AA8D0)
+    val Text3: Color get() = if (light) Color(0xFF7784A4) else Color(0xFF66749E)
+    val OnGreen: Color get() = if (light) Color.White else Color(0xFF062412)
+    val Hairline: Color get() = sheen(0.14f)
+    val Fill: Color get() = sheen(0.07f)
+    val FillStrong: Color get() = sheen(0.12f)
 }
 
 /** Short alias, matching the pack's `C`. */
@@ -155,29 +176,53 @@ fun CaramelTheme(prefs: CaramelUiPrefs = rememberCaramelUiPrefs(), content: @Com
         val res = org.chimeramc.client.util.LauncherFonts.loadableFontRes(context, prefs.fontFamilyKey)
         if (res != 0) familyFor(res) else null
     }
+    // The night-mode choice resolves to one of two palettes. The launcher is recreated when the
+    // choice changes, so resolving it here (rather than observing it) is enough.
+    val light = org.chimeramc.client.util.ThemeManager.isLightActive(context)
+    CaramelColors.light = light
     CompositionLocalProvider(
         LocalCaramelPrefs provides prefs,
         LocalCaramelFamily provides family,
         LocalDensity provides Density(density.density, prefs.fontScale),
     ) {
         androidx.compose.material3.MaterialTheme(
-            colorScheme = androidx.compose.material3.darkColorScheme(
-                primary = C.Blue,
-                onPrimary = Color.White,
-                primaryContainer = C.DeepBlue,
-                onPrimaryContainer = C.Text,
-                secondary = C.Caramel,
-                onSecondary = Color.White,
-                background = C.Abyss,
-                onBackground = C.Text,
-                surface = C.Navy,
-                onSurface = C.Text,
-                surfaceVariant = C.DeepBlue,
-                onSurfaceVariant = C.Text2,
-                outline = C.Hairline,
-                error = C.Red,
-                onError = Color.White,
-            ),
+            colorScheme = if (light) {
+                androidx.compose.material3.lightColorScheme(
+                    primary = C.Blue,
+                    onPrimary = Color.White,
+                    primaryContainer = C.DeepBlue,
+                    onPrimaryContainer = C.Text,
+                    secondary = C.Caramel,
+                    onSecondary = Color.White,
+                    background = C.Abyss,
+                    onBackground = C.Text,
+                    surface = C.Navy,
+                    onSurface = C.Text,
+                    surfaceVariant = C.DeepBlue,
+                    onSurfaceVariant = C.Text2,
+                    outline = C.Hairline,
+                    error = C.Red,
+                    onError = Color.White,
+                )
+            } else {
+                androidx.compose.material3.darkColorScheme(
+                    primary = C.Blue,
+                    onPrimary = Color.White,
+                    primaryContainer = C.DeepBlue,
+                    onPrimaryContainer = C.Text,
+                    secondary = C.Caramel,
+                    onSecondary = Color.White,
+                    background = C.Abyss,
+                    onBackground = C.Text,
+                    surface = C.Navy,
+                    onSurface = C.Text,
+                    surfaceVariant = C.DeepBlue,
+                    onSurfaceVariant = C.Text2,
+                    outline = C.Hairline,
+                    error = C.Red,
+                    onError = Color.White,
+                )
+            },
             content = content,
         )
     }

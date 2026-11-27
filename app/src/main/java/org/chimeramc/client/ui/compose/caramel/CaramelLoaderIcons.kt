@@ -1,6 +1,10 @@
 package org.chimeramc.client.ui.compose.caramel
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,15 +21,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -34,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.chimeramc.client.R
 import kotlin.math.PI
 import kotlin.math.cos
@@ -92,6 +104,11 @@ fun LoaderGlyph(loader: CaramelLoader, modifier: Modifier = Modifier.size(28.dp)
             }
             drawPath(p, C.Yellow)
         }
+        CaramelLoader.Road -> Image(
+            painterResource(R.drawable.roadloader_icon),
+            contentDescription = null,
+            modifier = modifier,
+        )
     }
 }
 
@@ -114,28 +131,78 @@ fun LoaderTile(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     onUnavailable: () -> Unit = {},
+    onInDevelopment: () -> Unit = onUnavailable,
 ) {
     val shape = RoundedCornerShape(CaramelDimens.RadiusControl)
     val source = remember { MutableInteractionSource() }
+    // A loader still in development answers a press: it shakes, its timer turns red and the host
+    // raises the notice that says why it cannot be chosen. The other unavailable loaders stay inert
+    // and explain themselves on a long press.
+    val interactive = loader.available || loader.inDevelopment
+    val shake = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    var warned by remember { mutableStateOf(false) }
+    val shakeT = shake.value
+    // A decaying oscillation reads as a struck object rather than a linear wobble: the angle and
+    // the offset both fade out over the same 620ms, so the tile settles instead of snapping back.
+    val decay = (1f - shakeT).coerceIn(0f, 1f)
+    val angle = (sin(shakeT * 2.0 * PI * 4.5) * 9.0 * decay).toFloat()
+    val nudge = (sin(shakeT * 2.0 * PI * 3.5) * 7.0 * decay).toFloat()
     Box(
         modifier
             .size(44.dp)
-            .background(Color.White.copy(if (selected) 0.12f else 0.07f), shape)
+            .graphicsLayer {
+                rotationZ = angle
+                translationX = nudge * density
+            }
+            .background(C.sheen(if (selected) 0.12f else 0.07f), shape)
             .border(
                 if (selected) 1.6.dp else 1.dp,
-                if (selected) C.Green else Color.White.copy(0.14f),
+                if (selected) C.Green else C.sheen(0.14f),
                 shape,
             )
-            .clickable(source, null, enabled = loader.available, onClick = onClick)
+            .clickable(
+                source,
+                null,
+                enabled = interactive,
+                onClick = {
+                    if (loader.inDevelopment) {
+                        warned = true
+                        onInDevelopment()
+                        scope.launch {
+                            shake.snapTo(0f)
+                            shake.animateTo(1f, tween(620, easing = LinearEasing))
+                            shake.snapTo(0f)
+                        }
+                    } else {
+                        onClick()
+                    }
+                },
+            )
             .pointerInput(loader) {
                 detectTapGestures(onLongPress = {
-                    if (!loader.available) onUnavailable()
+                    if (!loader.available && !loader.inDevelopment) onUnavailable()
                 })
             },
         Alignment.Center,
     ) {
         Box(Modifier.alpha(if (loader.available) 1f else 0.35f)) {
             LoaderGlyph(loader, Modifier.size(28.dp))
+        }
+        if (loader.inDevelopment) {
+            // The timer sits in front of the glyph: it is the "not yet" mark, grey until the user
+            // presses the tile and red afterwards, so the refusal has a visible reason.
+            Box(
+                Modifier.size(22.dp).background(C.Abyss.copy(0.72f), CircleShape),
+                Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Rounded.Timer,
+                    contentDescription = stringResource(R.string.caramel_loader_in_development),
+                    modifier = Modifier.size(15.dp),
+                    tint = if (warned) C.Red else C.Text3,
+                )
+            }
         }
         if (selected) {
             // The tick sits on the glyph's centre, not the tile's top-right corner: it marks the
@@ -168,6 +235,7 @@ fun CaramelLoaderPicker(
     onSelect: (CaramelLoader) -> Unit,
     modifier: Modifier = Modifier,
     onUnavailable: (() -> Unit)? = null,
+    onInDevelopment: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val unavailableText = stringResource(R.string.caramel_loader_unavailable)
@@ -179,8 +247,17 @@ fun CaramelLoaderPicker(
         CaramelNoticeBus.post(context, unavailableText, false)
     }
     Column(modifier.width(IntrinsicSize.Min), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        val reportDevelopment: () -> Unit = onInDevelopment ?: report
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            CaramelLoader.entries.forEach { LoaderTile(it, selected == it, { onSelect(it) }, onUnavailable = report) }
+            CaramelLoader.entries.forEach {
+                LoaderTile(
+                    it,
+                    selected == it,
+                    { onSelect(it) },
+                    onUnavailable = report,
+                    onInDevelopment = reportDevelopment,
+                )
+            }
         }
         if (CaramelLoader.entries.any { !it.available }) {
             Text(stringResource(R.string.caramel_loaders_note), style = T.Caption)

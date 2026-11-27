@@ -64,6 +64,8 @@ public class InbuiltOverlayManager {
     private CatalogModuleRuntime catalogRuntime;
     private org.chimeramc.client.core.cosmetics.CosmeticSyncModule cosmeticSyncModule;
     private HudOverlay hudOverlay;
+    /** The touch entry point to the native Mod Menu, kept so a session teardown can drop it. */
+    private ModMenuButtonOverlay modMenuButton;
     private BaseOverlayButton selectedHudEditorOverlay;
     private String selectedDisplayModId;
     private HudEditorSelectionListener hudEditorSelectionListener;
@@ -129,6 +131,14 @@ public class InbuiltOverlayManager {
             hudOverlay = new HudOverlay(activity);
         }
         hudOverlay.show();
+
+        if (modMenuButton == null) {
+            modMenuButton = new ModMenuButtonOverlay(activity);
+            int menuX = activity.getResources().getDisplayMetrics().widthPixels - (int) (72 * activity.getResources().getDisplayMetrics().density);
+            int menuY = (int) (96 * activity.getResources().getDisplayMetrics().density);
+            modMenuButton.show(menuX, menuY);
+            overlays.add(modMenuButton);
+        }
 
         int nextY = baseY;
 
@@ -933,6 +943,7 @@ public class InbuiltOverlayManager {
         hotbarSlotOverlayMap.clear();
         modActiveStates.clear();
         modPositionMap.clear();
+        modMenuButton = null;
         overlaysHiddenForScreenshot = false;
         resetHideAllGesture();
         if (chickPetOverlay != null) {

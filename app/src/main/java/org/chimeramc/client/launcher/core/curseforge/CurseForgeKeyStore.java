@@ -8,10 +8,10 @@ import org.chimeramc.client.BuildConfig;
 /**
  * Resolves the CurseForge API key.
  *
- * CurseForge does not allow unauthenticated calls, and a key baked into a public repository is
- * a leaked key. So the build only carries one when the developer supplied
- * {@code curseforge.api_key} in local.properties, and a key pasted by the user at runtime takes
- * precedence over it.
+ * <p>CurseForge does not allow unauthenticated calls. The client ships its own key
+ * ({@code BuildConfig.CURSEFORGE_API_KEY}) so a user never has to obtain one — the CurseForge tab
+ * works out of the box. A key stored on the device takes precedence: that is the Developer-mode
+ * override, and it exists for rotating the shared key or pointing at a private one.
  */
 public final class CurseForgeKeyStore {
     private static final String PREFS_NAME = "curseforge_prefs";

@@ -1,5 +1,6 @@
 package org.chimeramc.client.ui.compose.caramel.launcher
 
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,11 +34,14 @@ import androidx.compose.material.icons.rounded.ViewInAr
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -97,8 +101,8 @@ private fun CaramelTitleBar(state: CaramelLauncherState, onJoinServer: (CaramelS
         val menuShape = RoundedCornerShape(8.dp)
         Box(
             Modifier.size(22.dp).clip(menuShape)
-                .background(Color.White.copy(if (state.appMenu) 0.14f else 0.06f))
-                .border(1.dp, Color.White.copy(0.18f), menuShape)
+                .background(C.sheen(if (state.appMenu) 0.14f else 0.06f))
+                .border(1.dp, C.sheen(0.18f), menuShape)
                 .clickable(remember { MutableInteractionSource() }, null) { state.appMenu = !state.appMenu },
             Alignment.Center,
         ) {
@@ -150,6 +154,7 @@ private val nav = listOf(
     CaramelTab.Servers to Icons.Rounded.Public,
     CaramelTab.Cosmetics to Icons.Rounded.ViewInAr,
     CaramelTab.News to Icons.Rounded.Article,
+    CaramelTab.CurseForge to Icons.Rounded.Extension,
     CaramelTab.Store to Icons.Rounded.ShoppingCart,
 )
 
@@ -161,7 +166,13 @@ private fun CaramelSidebar(state: CaramelLauncherState) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            nav.forEach { (tab, icon) -> CaramelNavItem(icon, state.tab == tab) { state.tab = tab } }
+            nav.forEach { (tab, icon) ->
+                if (tab == CaramelTab.CurseForge) {
+                    CaramelCurseForgeNavItem(state.tab == tab) { state.tab = tab }
+                } else {
+                    CaramelNavItem(icon, state.tab == tab) { state.tab = tab }
+                }
+            }
             Spacer(Modifier.weight(1f))
             CaramelNavItem(Icons.Rounded.Settings, state.tab == CaramelTab.Settings) { state.tab = CaramelTab.Settings }
         }
@@ -170,18 +181,64 @@ private fun CaramelSidebar(state: CaramelLauncherState) {
 
 @Composable
 private fun CaramelNavItem(icon: ImageVector, active: Boolean, onClick: () -> Unit) {
+    CaramelNavSlot(active, onClick) { tint ->
+        Icon(icon, null, Modifier.size(22.dp), tint)
+    }
+}
+
+/**
+ * The CurseForge rail item: the real forge mark, orange while the tab is open.
+ *
+ * <p>The mark swings and its colour travels from forge orange to red as it swings — the hammer is
+ * "struck", which is what makes the tab read as live rather than as another static glyph. The
+ * accent bar under it is orange, the tab's own colour.
+ */
+@Composable
+private fun CaramelCurseForgeNavItem(active: Boolean, onClick: () -> Unit) {
+    val transition = androidx.compose.animation.core.rememberInfiniteTransition(label = "curseforge")
+    val phase by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = androidx.compose.animation.core.infiniteRepeatable(
+            animation = androidx.compose.animation.core.tween(1800, easing = androidx.compose.animation.core.LinearEasing),
+        ),
+        label = "curseforge-swing",
+    )
+    val swing = kotlin.math.sin(phase * 2.0 * kotlin.math.PI).toFloat()
+    val tint = when {
+        !active -> C.Text3
+        else -> androidx.compose.ui.graphics.lerp(C.Orange, C.Red, (swing + 1f) / 2f)
+    }
+    CaramelNavSlot(active, onClick, accent = C.Orange) {
+        Image(
+            painterResource(R.drawable.ic_brand_curseforge),
+            contentDescription = null,
+            modifier = Modifier.size(22.dp).graphicsLayer { rotationZ = if (active) swing * 11f else 0f },
+            colorFilter = ColorFilter.tint(tint),
+        )
+    }
+}
+
+/** The shared rail slot: the hit area, the active fill and the accent bar. */
+@Composable
+private fun CaramelNavSlot(
+    active: Boolean,
+    onClick: () -> Unit,
+    accent: Color = C.Caramel,
+    content: @Composable (Color) -> Unit,
+) {
     Box(Modifier.size(44.dp), Alignment.Center) {
         Box(
             Modifier.size(44.dp).clip(RoundedCornerShape(13.dp))
-                .background(if (active) Color.White.copy(0.12f) else Color.Transparent)
-                .then(if (active) Modifier.border(1.dp, Color.White.copy(0.2f), RoundedCornerShape(13.dp)) else Modifier)
+                .background(if (active) C.sheen(0.12f) else Color.Transparent)
+                .then(if (active) Modifier.border(1.dp, C.sheen(0.2f), RoundedCornerShape(13.dp)) else Modifier)
                 .clickable(remember { MutableInteractionSource() }, null, onClick = onClick),
             Alignment.Center,
-        ) { Icon(icon, null, Modifier.size(22.dp), if (active) C.Text else C.Text3) }
+        ) { content(if (active) C.Text else C.Text3) }
         if (active) {
             Box(
                 Modifier.align(Alignment.CenterStart).offset((-14).dp).size(3.dp, 22.dp)
-                    .background(C.Caramel, RoundedCornerShape(2.dp)),
+                    .background(accent, RoundedCornerShape(2.dp)),
             )
         }
     }

@@ -110,8 +110,8 @@ fun CaramelModsFolderModal(state: CaramelLauncherState, actions: CaramelLauncher
 private fun ModsFolderRow(entry: CaramelFileEntry, actions: CaramelLauncherHost.Actions) {
     Row(
         Modifier.fillMaxWidth().height(52.dp).clip(RoundedCornerShape(13.dp))
-            .background(Color.White.copy(0.06f))
-            .border(1.dp, Color.White.copy(0.12f), RoundedCornerShape(13.dp))
+            .background(C.sheen(0.06f))
+            .border(1.dp, C.sheen(0.12f), RoundedCornerShape(13.dp))
             .clickable(remember { MutableInteractionSource() }, null) { actions.openModsFolderEntry(entry) }
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
