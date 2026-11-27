@@ -114,7 +114,7 @@ public final class SkinPackActivator {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "SkinPackActivator:117", "Ignored a failure at SkinPackActivator:117", ignored);
+            AppLog.warnOnce("CaramelClient", "SkinPackActivator:readIdentity", "Ignored a failure in readIdentity", ignored);
         }
         return null;
     }
@@ -245,7 +245,7 @@ public final class SkinPackActivator {
                     }
                 }
             } catch (Exception ignored) {
-                AppLog.warnOnce("CaramelClient", "SkinPackActivator:248", "Ignored a failure at SkinPackActivator:248", ignored);
+                AppLog.warnOnce("CaramelClient", "SkinPackActivator:removeManaged", "Ignored a failure in removeManaged", ignored);
             }
         }
         return result;
@@ -282,7 +282,7 @@ public final class SkinPackActivator {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "SkinPackActivator:285", "Ignored a failure at SkinPackActivator:285", ignored);
+            AppLog.warnOnce("CaramelClient", "SkinPackActivator:managedUuids", "Ignored a failure in managedUuids", ignored);
         }
         return result;
     }

@@ -99,7 +99,7 @@ public final class ReachIndicatorOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ReachIndicatorOverlay:102", "Ignored a failure at ReachIndicatorOverlay:102", ignored);
+            AppLog.warnOnce("CaramelClient", "ReachIndicatorOverlay:hide", "Ignored a failure in hide", ignored);
         }
         overlayView = null;
         wmParams = null;

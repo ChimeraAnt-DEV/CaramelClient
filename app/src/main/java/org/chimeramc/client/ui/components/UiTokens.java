@@ -260,7 +260,7 @@ public final class UiTokens {
             int accent = new PersonalizationManager(context).getAccentColor();
             if (accent != 0) return accent;
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "UiTokens:260", "Ignored a failure at UiTokens:260", ignored);
+            AppLog.warnOnce("CaramelClient", "UiTokens:resolveAccent", "Ignored a failure in resolveAccent", ignored);
         }
         return ACCENT_500;
     }

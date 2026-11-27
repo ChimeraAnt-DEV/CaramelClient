@@ -140,7 +140,7 @@ public final class LowLatencyNetworkManager {
                 try {
                     socket.setTcpNoDelay(true);
                 } catch (IOException ignored) {
-                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:143", "Ignored a failure at LowLatencyNetworkManager:143", ignored);
+                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:configure", "Ignored a failure in configure", ignored);
                 }
                 enableQuickAck(socket);
                 try {
@@ -150,7 +150,7 @@ public final class LowLatencyNetworkManager {
                     socket.setSendBufferSize(SOCKET_BUFFER_SIZE);
                     socket.setReceiveBufferSize(SOCKET_BUFFER_SIZE);
                 } catch (IOException ignored) {
-                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:153", "Ignored a failure at LowLatencyNetworkManager:153", ignored);
+                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:configure#2", "Ignored a failure in configure", ignored);
                 }
                 return socket;
             }
@@ -176,7 +176,7 @@ public final class LowLatencyNetworkManager {
                 setsockopt.invoke(null, fdesc, 6 /* SOL_TCP */, 12 /* TCP_QUICKACK */, 1);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:179", "Ignored a failure at LowLatencyNetworkManager:179", ignored);
+            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:enableQuickAck", "Ignored a failure in enableQuickAck", ignored);
         }
     }
 
@@ -189,11 +189,11 @@ public final class LowLatencyNetworkManager {
                     m.setAccessible(true);
                     return m.invoke(target);
                 } catch (NoSuchMethodException ignored) {
-                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:192", "Ignored a failure at LowLatencyNetworkManager:192", ignored);
+                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:callGetter", "Ignored a failure in callGetter", ignored);
                 }
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:196", "Ignored a failure at LowLatencyNetworkManager:196", ignored);
+            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:callGetter#2", "Ignored a failure in callGetter", ignored);
         }
         return null;
     }
@@ -206,7 +206,7 @@ public final class LowLatencyNetworkManager {
                 try {
                     InetAddress.getAllByName(host);
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:209", "Ignored a failure at LowLatencyNetworkManager:209", ignored);
+                    AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:prefetchDnsOnBackground", "Ignored a failure in prefetchDnsOnBackground", ignored);
                 }
             });
         }
@@ -260,7 +260,7 @@ public final class LowLatencyNetworkManager {
                 sWifiLock.release();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:263", "Ignored a failure at LowLatencyNetworkManager:263", ignored);
+            AppLog.warnOnce("CaramelClient", "LowLatencyNetworkManager:updateWifiLock", "Ignored a failure in updateWifiLock", ignored);
         }
     }
 

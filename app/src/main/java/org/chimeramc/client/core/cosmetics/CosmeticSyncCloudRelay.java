@@ -172,7 +172,7 @@ public final class CosmeticSyncCloudRelay {
                                 sb.append((char) Integer.parseInt(json.substring(i + 1, i + 5), 16));
                                 i += 4;
                             } catch (NumberFormatException ignored) {
-                                AppLog.warnOnce("CaramelClient", "CosmeticSyncCloudRelay:175", "Ignored a failure at CosmeticSyncCloudRelay:175", ignored);
+                                AppLog.warnOnce("CaramelClient", "CosmeticSyncCloudRelay:jsonStringField", "Ignored a failure in jsonStringField", ignored);
                             }
                         }
                         break;

@@ -132,7 +132,7 @@ public final class AccountSkinCache {
                      new java.io.FileOutputStream(new File(target.getParentFile(), PNG_NAME + ".key"))) {
             out.write(entry.accountKey.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         } catch (java.io.IOException ignored) {
-            AppLog.warnOnce("CaramelClient", "AccountSkinCache:86", "Ignored a failure at AccountSkinCache:86", ignored);
+            AppLog.warnOnce("CaramelClient", "AccountSkinCache:write", "Ignored a failure in write", ignored);
         }
         // The fetch time lives in its own sibling too, so the PNG and key stay untouched by it.
         try (java.io.FileOutputStream out =

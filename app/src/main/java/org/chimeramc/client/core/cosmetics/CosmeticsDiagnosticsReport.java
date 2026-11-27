@@ -214,7 +214,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingVsyncLocked = (pacing[3] & 2) != 0;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:213", "Ignored a failure at CosmeticsDiagnosticsReport:213", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs", "Ignored a failure in readInputs", ignored);
         }
 
         // The percentile + hitch reading. Separate from the per-frame one because it
@@ -228,7 +228,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.framePacingHitchesPerMinute = percentiles[4];
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:227", "Ignored a failure at CosmeticsDiagnosticsReport:227", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#2", "Ignored a failure in readInputs", ignored);
         }
 
         // The process footprint, so a session that grows is visible in the report.
@@ -239,7 +239,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.processProportionalKb = memory[2];
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:238", "Ignored a failure at CosmeticsDiagnosticsReport:238", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#3", "Ignored a failure in readInputs", ignored);
         }
 
         // The local-player feed, decoded from its raw float bits. Only present when live.
@@ -257,13 +257,13 @@ public final class CosmeticsDiagnosticsReport {
                     org.chimeramc.client.core.mods.ModManager.gameHookInstallFrameTicks();
             in.rulesSummary = org.chimeramc.client.core.mods.ModManager.gameHookRulesSummary();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:256", "Ignored a failure at CosmeticsDiagnosticsReport:256", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#4", "Ignored a failure in readInputs", ignored);
         }
         try {
             in.rulesSource = org.chimeramc.client.preloader.SweetLoaderSignatureRulesManager
                     .getRulesSource(context);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:262", "Ignored a failure at CosmeticsDiagnosticsReport:262", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#5", "Ignored a failure in readInputs", ignored);
         }
         in.capeEngineRouteLive = NativeCosmeticsFeed.isCapeEngineRouteLive();
         in.imagePipelineLive = NativeCosmeticsBridge.isImagePipelineLive();
@@ -271,18 +271,18 @@ public final class CosmeticsDiagnosticsReport {
             in.hookInstallPending =
                     org.chimeramc.client.core.mods.ModManager.isGameHookInstallPending();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:270", "Ignored a failure at CosmeticsDiagnosticsReport:270", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#6", "Ignored a failure in readInputs", ignored);
         }
         try {
             in.sessionActive =
                     org.chimeramc.client.settings.LowLatencyNetworkManager.isGameSessionActive();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:276", "Ignored a failure at CosmeticsDiagnosticsReport:276", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#7", "Ignored a failure in readInputs", ignored);
         }
         try {
             in.hudScreenOpen = PreloaderInput.isHudScreenOpen();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:281", "Ignored a failure at CosmeticsDiagnosticsReport:281", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#8", "Ignored a failure in readInputs", ignored);
         }
         // "In a world" is the HUD hook having reported a world at least once and no HUD screen being
         // open right now. Before the hook fires there is no reading at all, so the report says so
@@ -291,7 +291,7 @@ public final class CosmeticsDiagnosticsReport {
         try {
             in.skinCaptured = PreloaderInput.nativeHasCapturedSkin();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:290", "Ignored a failure at CosmeticsDiagnosticsReport:290", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#9", "Ignored a failure in readInputs", ignored);
         }
         in.skinFeedInstalled = GameSkinSource.hasProvider();
         // Which stage the skin path reached, so a "skin not visible" report can be routed
@@ -305,7 +305,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.skinSeamNote = PreloaderInput.describeSkinSeam(seam[0]);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:304", "Ignored a failure at CosmeticsDiagnosticsReport:304", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#10", "Ignored a failure in readInputs", ignored);
         }
 
         // The most recent crash report, so a device crash trace can be copied/shared from inside the
@@ -318,7 +318,7 @@ public final class CosmeticsDiagnosticsReport {
                 in.lastCrashTruncated = report.truncated;
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:317", "Ignored a failure at CosmeticsDiagnosticsReport:317", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#11", "Ignored a failure in readInputs", ignored);
         }
         // Mod-menu build failures the containment guard caught.
 
@@ -330,7 +330,7 @@ public final class CosmeticsDiagnosticsReport {
                         path -> context.getAssets().open(path));
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:330", "Ignored a failure at CosmeticsDiagnosticsReport:330", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsReport:readInputs#12", "Ignored a failure in readInputs", ignored);
         }
         // Faces the scene refused to build, with the reason.
         java.util.List<PreviewSceneDiagnostics.Entry> skipped = PreviewSceneDiagnostics.snapshot();

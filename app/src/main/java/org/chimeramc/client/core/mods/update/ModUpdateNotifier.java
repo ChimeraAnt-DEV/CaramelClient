@@ -62,7 +62,7 @@ public final class ModUpdateNotifier {
         try {
             manager.notify(NOTIFICATION_ID, notification);
         } catch (RuntimeException ignored) {
-            AppLog.warnOnce("CaramelClient", "ModUpdateNotifier:65", "Ignored a failure at ModUpdateNotifier:65", ignored);
+            AppLog.warnOnce("CaramelClient", "ModUpdateNotifier:notify", "Ignored a failure in notify", ignored);
         }
     }
 

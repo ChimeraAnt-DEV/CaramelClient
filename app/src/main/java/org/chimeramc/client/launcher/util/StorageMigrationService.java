@@ -641,7 +641,7 @@ public class StorageMigrationService extends Service {
             wakeLock.setReferenceCounted(false);
             wakeLock.acquire();
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "StorageMigrationService:644", "Ignored a failure at StorageMigrationService:644", ignored);
+            AppLog.warnOnce("CaramelClient", "StorageMigrationService:acquireWakeLock", "Ignored a failure in acquireWakeLock", ignored);
         }
     }
 
@@ -651,7 +651,7 @@ public class StorageMigrationService extends Service {
                 wakeLock.release();
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "StorageMigrationService:654", "Ignored a failure at StorageMigrationService:654", ignored);
+            AppLog.warnOnce("CaramelClient", "StorageMigrationService:releaseWakeLock", "Ignored a failure in releaseWakeLock", ignored);
         } finally {
             wakeLock = null;
         }

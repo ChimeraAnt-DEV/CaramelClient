@@ -58,7 +58,7 @@ public final class ModUpdateStore {
         try {
             prefs(context).edit().putLong(KEY_LAST_CHECK_AT, nowMs).apply();
         } catch (RuntimeException ignored) {
-            AppLog.warnOnce("CaramelClient", "ModUpdateStore:61", "Ignored a failure at ModUpdateStore:61", ignored);
+            AppLog.warnOnce("CaramelClient", "ModUpdateStore:recordCheck", "Ignored a failure in recordCheck", ignored);
         }
     }
 
@@ -84,7 +84,7 @@ public final class ModUpdateStore {
                             ? Collections.emptySet() : new HashSet<>(fingerprint))
                     .apply();
         } catch (RuntimeException ignored) {
-            AppLog.warnOnce("CaramelClient", "ModUpdateStore:87", "Ignored a failure at ModUpdateStore:87", ignored);
+            AppLog.warnOnce("CaramelClient", "ModUpdateStore:setAnnounced", "Ignored a failure in setAnnounced", ignored);
         }
     }
 
@@ -93,7 +93,7 @@ public final class ModUpdateStore {
         try {
             prefs(context).edit().remove(KEY_LAST_CHECK_AT).apply();
         } catch (RuntimeException ignored) {
-            AppLog.warnOnce("CaramelClient", "ModUpdateStore:96", "Ignored a failure at ModUpdateStore:96", ignored);
+            AppLog.warnOnce("CaramelClient", "ModUpdateStore:clearThrottle", "Ignored a failure in clearThrottle", ignored);
         }
     }
 }

@@ -228,7 +228,7 @@ public class ApkImportManager {
         try {
             dismissProgress();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "ApkImportManager:240", "Ignored a failure at ApkImportManager:240", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkImportManager:release", "Ignored a failure in release", ignored);
         }
         importExecutor.shutdownNow();
     }

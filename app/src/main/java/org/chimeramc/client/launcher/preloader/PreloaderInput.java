@@ -394,7 +394,7 @@ public class PreloaderInput {
         try {
             nativeConfigureOptifineMode(blob == null ? "" : blob);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:351", "Ignored a failure at PreloaderInput:351", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:configureOptifineMode", "Ignored a failure in configureOptifineMode", e);
         }
     }
 
@@ -418,7 +418,7 @@ public class PreloaderInput {
         try {
             nativeSetOptifineRefreshTarget(hz);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:375", "Ignored a failure at PreloaderInput:375", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setOptifineRefreshTarget", "Ignored a failure in setOptifineRefreshTarget", e);
         }
     }
 
@@ -428,7 +428,7 @@ public class PreloaderInput {
             nativeConfigureRenderDistance(minDistance, maxDistance, fpsThreshold, stepSize,
                     minDwellMs);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:385", "Ignored a failure at PreloaderInput:385", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:configureRenderDistance", "Ignored a failure in configureRenderDistance", e);
         }
     }
 
@@ -711,7 +711,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeOverride(playerKey, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:609", "Ignored a failure at PreloaderInput:609", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setCapeOverride", "Ignored a failure in setCapeOverride", e);
         }
     }
 
@@ -719,7 +719,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeOverrides();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:617", "Ignored a failure at PreloaderInput:617", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearCapeOverrides", "Ignored a failure in clearCapeOverrides", e);
         }
     }
 
@@ -744,7 +744,7 @@ public class PreloaderInput {
         try {
             nativeSetTextureOverride(textureId, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:642", "Ignored a failure at PreloaderInput:642", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setTextureOverride", "Ignored a failure in setTextureOverride", e);
         }
     }
 
@@ -752,7 +752,7 @@ public class PreloaderInput {
         try {
             nativeClearTextureOverrides();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:650", "Ignored a failure at PreloaderInput:650", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearTextureOverrides", "Ignored a failure in clearTextureOverrides", e);
         }
     }
 
@@ -777,7 +777,7 @@ public class PreloaderInput {
         try {
             nativeSetRenderGeometry(data);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:675", "Ignored a failure at PreloaderInput:675", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setRenderGeometry", "Ignored a failure in setRenderGeometry", e);
         }
     }
 
@@ -786,7 +786,7 @@ public class PreloaderInput {
         try {
             nativePushCosmeticFrame(frame);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:684", "Ignored a failure at PreloaderInput:684", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:pushCosmeticFrame", "Ignored a failure in pushCosmeticFrame", e);
         }
     }
 
@@ -827,7 +827,7 @@ public class PreloaderInput {
         try {
             nativeSetPieceAtlas(piece, rgba, width, height);
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:725", "Ignored a failure at PreloaderInput:725", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setPieceAtlas", "Ignored a failure in setPieceAtlas", ignored);
         }
     }
 
@@ -836,7 +836,7 @@ public class PreloaderInput {
         try {
             nativeClearPieceAtlases();
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:734", "Ignored a failure at PreloaderInput:734", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearPieceAtlases", "Ignored a failure in clearPieceAtlases", ignored);
         }
     }
 
@@ -909,7 +909,7 @@ public class PreloaderInput {
         try {
             nativeSetDisplayRefreshHz(hz);
         } catch (UnsatisfiedLinkError ignored) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:807", "Ignored a failure at PreloaderInput:807", ignored);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setDisplayRefreshHz", "Ignored a failure in setDisplayRefreshHz", ignored);
         }
     }
 
@@ -1037,7 +1037,7 @@ public class PreloaderInput {
         try {
             nativeSetContentSubstitution(sourceBytes, rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:935", "Ignored a failure at PreloaderInput:935", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setContentSubstitution", "Ignored a failure in setContentSubstitution", e);
         }
     }
 
@@ -1045,7 +1045,7 @@ public class PreloaderInput {
         try {
             nativeClearContentSubstitutions();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:943", "Ignored a failure at PreloaderInput:943", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearContentSubstitutions", "Ignored a failure in clearContentSubstitutions", e);
         }
     }
 
@@ -1061,7 +1061,7 @@ public class PreloaderInput {
         try {
             nativeArmNextImageOverride(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:959", "Ignored a failure at PreloaderInput:959", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:armNextImageOverride", "Ignored a failure in armNextImageOverride", e);
         }
     }
 
@@ -1069,7 +1069,7 @@ public class PreloaderInput {
         try {
             nativeClearNextImageOverride();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:967", "Ignored a failure at PreloaderInput:967", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearNextImageOverride", "Ignored a failure in clearNextImageOverride", e);
         }
     }
 
@@ -1094,7 +1094,7 @@ public class PreloaderInput {
         try {
             nativeClearCapturedCape();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:992", "Ignored a failure at PreloaderInput:992", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearCapturedCape", "Ignored a failure in clearCapturedCape", e);
         }
     }
 
@@ -1103,7 +1103,7 @@ public class PreloaderInput {
         try {
             nativeSetCapeSubstitution(rgba, width, height);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:1001", "Ignored a failure at PreloaderInput:1001", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setCapeSubstitution", "Ignored a failure in setCapeSubstitution", e);
         }
     }
 
@@ -1111,7 +1111,7 @@ public class PreloaderInput {
         try {
             nativeClearCapeSubstitution();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:1009", "Ignored a failure at PreloaderInput:1009", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearCapeSubstitution", "Ignored a failure in clearCapeSubstitution", e);
         }
     }
 
@@ -1210,7 +1210,7 @@ public class PreloaderInput {
                     error == null ? "" : error
             );
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:1108", "Ignored a failure at PreloaderInput:1108", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:onDocumentResult", "Ignored a failure in onDocumentResult", e);
         }
     }
 
@@ -1314,7 +1314,7 @@ public class PreloaderInput {
         try {
             nativeSetActivity(activity);
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:1212", "Ignored a failure at PreloaderInput:1212", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:setActivity", "Ignored a failure in setActivity", e);
         }
     }
 
@@ -1323,7 +1323,7 @@ public class PreloaderInput {
         try {
             nativeClearActivity();
         } catch (UnsatisfiedLinkError e) {
-            AppLog.warnOnce("CaramelClient", "PreloaderInput:1221", "Ignored a failure at PreloaderInput:1221", e);
+            AppLog.warnOnce("CaramelClient", "PreloaderInput:clearActivity", "Ignored a failure in clearActivity", e);
         }
     }
 }

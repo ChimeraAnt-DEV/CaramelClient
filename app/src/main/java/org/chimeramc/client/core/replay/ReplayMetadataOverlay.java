@@ -117,7 +117,7 @@ final class ReplayMetadataOverlay {
             try {
                 windowManager.removeView(root);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:120", "Ignored a failure at ReplayMetadataOverlay:120", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:detach", "Ignored a failure in detach", ignored);
             }
         }
         root = null;
@@ -131,13 +131,13 @@ final class ReplayMetadataOverlay {
                 fps = org.chimeramc.client.launcher.core.mods.inbuilt.nativemod.FpsMod.nativeGetFps();
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:134", "Ignored a failure at ReplayMetadataOverlay:134", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:update", "Ignored a failure in update", ignored);
         }
         int combo = 0;
         try {
             if (HitTimingMod.isActive()) combo = HitTimingMod.getCombo();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:140", "Ignored a failure at ReplayMetadataOverlay:140", ignored);
+            AppLog.warnOnce("CaramelClient", "ReplayMetadataOverlay:update#2", "Ignored a failure in update", ignored);
         }
         long elapsed = Math.max(0L, System.currentTimeMillis() - startedAtMs);
         String line = ReplayMetadata.line(ReplayMetadata.defaultFields(), fps, 0, elapsed, -1, combo);

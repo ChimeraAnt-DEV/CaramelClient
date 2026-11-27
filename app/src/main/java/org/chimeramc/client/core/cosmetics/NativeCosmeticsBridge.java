@@ -200,7 +200,7 @@ public final class NativeCosmeticsBridge {
         try {
             uploadPieceAtlases(context, cape, accessory, pet);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "NativeCosmeticsBridge:169", "Ignored a failure at NativeCosmeticsBridge:169", ignored);
+            AppLog.warnOnce("CaramelClient", "NativeCosmeticsBridge:publishPieceAtlases", "Ignored a failure in publishPieceAtlases", ignored);
         }
     }
 

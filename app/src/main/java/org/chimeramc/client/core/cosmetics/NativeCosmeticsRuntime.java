@@ -51,7 +51,7 @@ public final class NativeCosmeticsRuntime {
                 try {
                     NativeCosmeticsBridge.publishPeer(peerId, null, null, null);
                 } catch (Throwable ignored) {
-                    AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:54", "Ignored a failure at NativeCosmeticsRuntime:54", ignored);
+                    AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:onPeerLeft", "Ignored a failure in onPeerLeft", ignored);
                 }
             }
         });
@@ -63,7 +63,7 @@ public final class NativeCosmeticsRuntime {
         try {
             GameSkinFeed.install(context);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:66", "Ignored a failure at NativeCosmeticsRuntime:66", ignored);
+            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:onPeerLeft#2", "Ignored a failure in onPeerLeft", ignored);
         }
         syncEquipped(context);
     }
@@ -93,7 +93,7 @@ public final class NativeCosmeticsRuntime {
             // loadout tracks the launcher's. Fail-closed: without the library this is a no-op.
             BerryCosmetics.syncEquipped(s);
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:93", "Ignored a failure at NativeCosmeticsRuntime:93", ignored);
+            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:syncEquipped", "Ignored a failure in syncEquipped", ignored);
         }
     }
 
@@ -110,7 +110,7 @@ public final class NativeCosmeticsRuntime {
                     CosmeticCatalog.equippedAccessory(advert.accessoryId),
                     CosmeticCatalog.equippedPet(advert.petId));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:110", "Ignored a failure at NativeCosmeticsRuntime:110", ignored);
+            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:renderPeerAdvert", "Ignored a failure in renderPeerAdvert", ignored);
         }
     }
 
@@ -242,7 +242,7 @@ public final class NativeCosmeticsRuntime {
                     0f, 0f, isVfxEnabled());
             PreloaderInput.pushCosmeticFrame(frame.toBytes());
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:227", "Ignored a failure at NativeCosmeticsRuntime:227", ignored);
+            AppLog.warnOnce("CaramelClient", "NativeCosmeticsRuntime:tickFrame", "Ignored a failure in tickFrame", ignored);
         }
     }
 }

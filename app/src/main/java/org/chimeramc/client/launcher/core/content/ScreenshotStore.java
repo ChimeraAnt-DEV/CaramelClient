@@ -40,7 +40,7 @@ public final class ScreenshotStore {
                     LauncherStorage.CONTENT_STORAGE_TYPE_KEY,
                     FeatureSettings.StorageType.INTERNAL.name()));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "ScreenshotStore:43", "Ignored a failure at ScreenshotStore:43", ignored);
+            AppLog.warnOnce("CaramelClient", "ScreenshotStore:screenshotsDir", "Ignored a failure in screenshotsDir", ignored);
         }
         FeatureSettings.StorageType resolved = LauncherStorage.normalizeContentStorageType(
                 stored, version.versionIsolation);

@@ -259,7 +259,7 @@ public final class ReplayTrack {
                         Float.parseFloat(parts[5].trim()),
                         Float.parseFloat(parts[6].trim())));
             } catch (NumberFormatException ignored) {
-                AppLog.warnOnce("CaramelClient", "ReplayTrack:262", "Ignored a failure at ReplayTrack:262", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayTrack:parse", "Ignored a failure in parse", ignored);
             }
         }
         return track;

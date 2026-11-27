@@ -108,7 +108,7 @@ public final class ReplayClipRepository {
             try {
                 retriever.release();
             } catch (Throwable ignored) {
-                AppLog.warnOnce("CaramelClient", "ReplayClipRepository:104", "Ignored a failure at ReplayClipRepository:104", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayClipRepository:readDurationMs", "Ignored a failure in readDurationMs", ignored);
             }
         }
     }

@@ -447,7 +447,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setAimCrosshairColor(Color.parseColor(value));
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:1529", "Ignored a failure at InbuiltModuleProvider:1529", ignored);
+                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:setConfig", "Ignored a failure in setConfig", ignored);
                 }
                 break;
             }
@@ -538,7 +538,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setTrajectoryColor(Color.parseColor(value));
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:1620", "Ignored a failure at InbuiltModuleProvider:1620", ignored);
+                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:setConfig#2", "Ignored a failure in setConfig", ignored);
                 }
                 break;
             case ModConfigSchema.CFG_HIT_PREDICTION_LOOKAHEAD:
@@ -551,7 +551,7 @@ public final class InbuiltModuleProvider {
                 try {
                     manager.setKillEffectColor(Color.parseColor(value));
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:1633", "Ignored a failure at InbuiltModuleProvider:1633", ignored);
+                    AppLog.warnOnce("CaramelClient", "InbuiltModuleProvider:setConfig#3", "Ignored a failure in setConfig", ignored);
                 }
                 break;
             case ModConfigSchema.CFG_VOICE_MIC:

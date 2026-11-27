@@ -100,7 +100,7 @@ object AbiBitness {
                     }
                 }
             } catch (t: Exception) {
-                AppLog.warnOnce("CaramelClient", "AbiBitness:103", "Ignored a failure at AbiBitness:103", t)
+                AppLog.warnOnce("CaramelClient", "AbiBitness:abisInApks", "Ignored a failure in abisInApks", t)
             }
         }
         return shipped

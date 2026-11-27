@@ -66,7 +66,7 @@ public class AimSettingsOverlay {
         try {
             if (view != null) windowManager.removeView(view);
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "AimSettingsOverlay:69", "Ignored a failure at AimSettingsOverlay:69", ignored);
+            AppLog.warnOnce("CaramelClient", "AimSettingsOverlay:hide", "Ignored a failure in hide", ignored);
         }
         view = null;
         showing = false;
@@ -188,7 +188,7 @@ public class AimSettingsOverlay {
                 int themed = new PersonalizationManager(activity).getAccentColor();
                 if (themed != 0) return themed;
             } catch (Throwable ignored) {
-                AppLog.warnOnce("CaramelClient", "AimSettingsOverlay:191", "Ignored a failure at AimSettingsOverlay:191", ignored);
+                AppLog.warnOnce("CaramelClient", "AimSettingsOverlay:flashAccent", "Ignored a failure in flashAccent", ignored);
             }
             return 0xFF0F5BE4;
         }

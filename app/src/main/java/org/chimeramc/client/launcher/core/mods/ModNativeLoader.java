@@ -187,7 +187,11 @@ public class ModNativeLoader {
                 if (listener != null) {
                     listener.onModLoadFinished(mod);
                 }
-            } catch (IOException | UnsatisfiedLinkError e) {
+            } catch (Throwable e) {
+                // Anything a mod can throw while loading must cost only that mod. The previous
+                // IOException|UnsatisfiedLinkError filter let a RuntimeException or an
+                // ExceptionInInitializerError escape the loop and abort the whole launch with a
+                // frozen screen. The mod is recorded as failed and the next one is tried.
                 Log.e(TAG, "Can't load " + mod.getDisplayName() + ": " + e.getMessage(), e);
                 notifyFailure(listener, mod, e);
             }

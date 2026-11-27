@@ -262,7 +262,7 @@ public class CpsDisplayOverlay {
                 try {
                     clampCurrentPosition(true);
                 } catch (Exception ignored) {
-                    AppLog.warnOnce("CaramelClient", "CpsDisplayOverlay:265", "Ignored a failure at CpsDisplayOverlay:265", ignored);
+                    AppLog.warnOnce("CaramelClient", "CpsDisplayOverlay:applySize", "Ignored a failure in applySize", ignored);
                 }
             }
         }
@@ -411,7 +411,7 @@ public class CpsDisplayOverlay {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "CpsDisplayOverlay:414", "Ignored a failure at CpsDisplayOverlay:414", ignored);
+            AppLog.warnOnce("CaramelClient", "CpsDisplayOverlay:hide", "Ignored a failure in hide", ignored);
         }
         overlayView = null;
         statsText = null;

@@ -88,7 +88,7 @@ class MinecraftForegroundService : Service() {
         try {
             if (wifiLock?.isHeld == true) wifiLock?.release()
         } catch (t: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:91", "Ignored a failure at MinecraftForegroundService:91", t)
+            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:releaseBackgroundLocks", "Ignored a failure in releaseBackgroundLocks", t)
         } finally {
             wifiLock = null
         }
@@ -96,7 +96,7 @@ class MinecraftForegroundService : Service() {
         try {
             if (wakeLock?.isHeld == true) wakeLock?.release()
         } catch (t: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:99", "Ignored a failure at MinecraftForegroundService:99", t)
+            AppLog.warnOnce("CaramelClient", "MinecraftForegroundService:releaseBackgroundLocks#2", "Ignored a failure in releaseBackgroundLocks", t)
         } finally {
             wakeLock = null
         }

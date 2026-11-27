@@ -61,7 +61,7 @@ public final class MinecraftSessionRestarter {
         try {
             version = VersionManager.get(activity).getSelectedVersion();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:64", "Ignored a failure at MinecraftSessionRestarter:64", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:restartCurrentInstance", "Ignored a failure in restartCurrentInstance", ignored);
         }
         if (version == null) return false;
 
@@ -124,7 +124,7 @@ public final class MinecraftSessionRestarter {
             context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putBoolean(KEY_PENDING, false).remove(KEY_PENDING_AT).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:126", "Ignored a failure at MinecraftSessionRestarter:126", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:clearPendingRelaunch", "Ignored a failure in clearPendingRelaunch", ignored);
         }
     }
 
@@ -140,11 +140,11 @@ public final class MinecraftSessionRestarter {
                 try {
                     out.add(Long.parseLong(part.trim()));
                 } catch (NumberFormatException ignored) {
-                    AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:142", "Ignored a failure at MinecraftSessionRestarter:142", ignored);
+                    AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:readRelaunchHistory", "Ignored a failure in readRelaunchHistory", ignored);
                 }
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:146", "Ignored a failure at MinecraftSessionRestarter:146", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:readRelaunchHistory#2", "Ignored a failure in readRelaunchHistory", ignored);
         }
         return out;
     }
@@ -162,7 +162,7 @@ public final class MinecraftSessionRestarter {
             context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                     .edit().putString(KEY_RELAUNCH_HISTORY, joined.toString()).apply();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:164", "Ignored a failure at MinecraftSessionRestarter:164", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:recordRelaunch", "Ignored a failure in recordRelaunch", ignored);
         }
     }
 
@@ -176,7 +176,7 @@ public final class MinecraftSessionRestarter {
                     .putLong(KEY_PENDING_AT, System.currentTimeMillis())
                     .commit();
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:178", "Ignored a failure at MinecraftSessionRestarter:178", ignored);
+            AppLog.warnOnce("CaramelClient", "MinecraftSessionRestarter:setPendingRelaunch", "Ignored a failure in setPendingRelaunch", ignored);
         }
     }
 

@@ -71,7 +71,7 @@ public final class ReplayCameraPathCodec {
                         Float.parseFloat(fields[5].trim()),
                         fov));
             } catch (NumberFormatException ignored) {
-                AppLog.warnOnce("CaramelClient", "ReplayCameraPathCodec:53", "Ignored a failure at ReplayCameraPathCodec:53", ignored);
+                AppLog.warnOnce("CaramelClient", "ReplayCameraPathCodec:parse", "Ignored a failure in parse", ignored);
             }
         }
         path.setPreset(preset);

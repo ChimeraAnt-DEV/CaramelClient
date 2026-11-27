@@ -53,7 +53,7 @@ class LauncherApplication : Application() {
             try {
                 org.chimeramc.client.core.crash.CrashReportUploader.uploadPending(applicationContext)
             } catch (t: Throwable) {
-                AppLog.warnOnce("CaramelClient", "Application:59", "Ignored a failure at Application:59", t)
+                AppLog.warnOnce("CaramelClient", "Application:onCreate", "Ignored a failure in onCreate", t)
             }
         }, "crash-report-upload").apply { isDaemon = true }.start()
         // The opt-in anonymous usage counter. Same shape as the crash report above --
@@ -64,7 +64,7 @@ class LauncherApplication : Application() {
                 org.chimeramc.client.core.telemetry.UsageStatsReporter
                     .reportIfDue(applicationContext)
             } catch (t: Throwable) {
-                AppLog.warnOnce("CaramelClient", "Application:70", "Ignored a failure at Application:70", t)
+                AppLog.warnOnce("CaramelClient", "Application:onCreate#2", "Ignored a failure in onCreate", t)
             }
         }, "usage-stats").apply { isDaemon = true }.start()
         // Mirror the persisted haptics preference into the static feedback layer so the

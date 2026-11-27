@@ -223,7 +223,7 @@ public final class ChangelogManager {
         try {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(value)));
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ChangelogManager:226", "Ignored a failure at ChangelogManager:226", ignored);
+            AppLog.warnOnce("CaramelClient", "ChangelogManager:openUrl", "Ignored a failure in openUrl", ignored);
         }
     }
 
@@ -235,7 +235,7 @@ public final class ChangelogManager {
                 PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
                 existingInstallWasUpdated = info.lastUpdateTime > info.firstInstallTime + 1000L;
             } catch (Exception ignored) {
-                AppLog.warnOnce("CaramelClient", "ChangelogManager:238", "Ignored a failure at ChangelogManager:238", ignored);
+                AppLog.warnOnce("CaramelClient", "ChangelogManager:shouldShow", "Ignored a failure in shouldShow", ignored);
             }
             if (!existingInstallWasUpdated) markSeen(context, currentVersionCode);
             return existingInstallWasUpdated;

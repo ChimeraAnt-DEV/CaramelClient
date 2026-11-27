@@ -100,7 +100,7 @@ public final class TrajectoryPredictionOverlay {
                 if (root != null) root.removeView(overlayView);
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "TrajectoryPredictionOverlay:103", "Ignored a failure at TrajectoryPredictionOverlay:103", ignored);
+            AppLog.warnOnce("CaramelClient", "TrajectoryPredictionOverlay:hide", "Ignored a failure in hide", ignored);
         }
         overlayView = null;
         wmParams = null;

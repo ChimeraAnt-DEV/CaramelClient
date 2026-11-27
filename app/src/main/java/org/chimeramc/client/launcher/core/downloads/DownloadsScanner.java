@@ -98,7 +98,7 @@ public final class DownloadsScanner {
                 roots.add(publicDownloads);
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "DownloadsScanner:101", "Ignored a failure at DownloadsScanner:101", ignored);
+            AppLog.warnOnce("CaramelClient", "DownloadsScanner:scanRoots", "Ignored a failure in scanRoots", ignored);
         }
         return roots;
     }

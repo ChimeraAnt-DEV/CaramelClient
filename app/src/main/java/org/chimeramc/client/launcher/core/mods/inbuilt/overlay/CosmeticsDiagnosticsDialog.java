@@ -178,7 +178,7 @@ final class CosmeticsDiagnosticsDialog {
                 clipboard.setPrimaryClip(ClipData.newPlainText("CaramelClient diagnostics", text));
             }
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsDialog:182", "Ignored a failure at CosmeticsDiagnosticsDialog:182", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsDialog:copyToClipboard", "Ignored a failure in copyToClipboard", ignored);
         }
     }
 
@@ -195,7 +195,7 @@ final class CosmeticsDiagnosticsDialog {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             activity.startActivity(Intent.createChooser(intent, chooserTitle));
         } catch (Throwable ignored) {
-            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsDialog:199", "Ignored a failure at CosmeticsDiagnosticsDialog:199", ignored);
+            AppLog.warnOnce("CaramelClient", "CosmeticsDiagnosticsDialog:shareText", "Ignored a failure in shareText", ignored);
         }
     }
 

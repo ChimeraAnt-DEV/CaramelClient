@@ -242,13 +242,13 @@ public class ApkInstaller {
             File versionDir = LauncherStorage.getVersionDir(context, dirName);
             if (versionDir.exists()) deleteDir(versionDir);
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ApkInstaller:245", "Ignored a failure at ApkInstaller:245", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkInstaller:rollBackPartialInstall", "Ignored a failure in rollBackPartialInstall", ignored);
         }
         try {
             File libDir = MinecraftLauncher.getRuntimeLibDir(context, dirName);
             if (libDir.exists()) deleteDir(libDir);
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ApkInstaller:251", "Ignored a failure at ApkInstaller:251", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkInstaller:rollBackPartialInstall#2", "Ignored a failure in rollBackPartialInstall", ignored);
         }
     }
 
@@ -341,7 +341,7 @@ public class ApkInstaller {
                     }
                 }
             } catch (IOException ignored) {
-                AppLog.warnOnce("CaramelClient", "ApkInstaller:344", "Ignored a failure at ApkInstaller:344", ignored);
+                AppLog.warnOnce("CaramelClient", "ApkInstaller:calculateNativeLibBytes", "Ignored a failure in calculateNativeLibBytes", ignored);
             }
         }
         return total;
@@ -371,7 +371,7 @@ public class ApkInstaller {
                 }
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ApkInstaller:374", "Ignored a failure at ApkInstaller:374", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkInstaller:extractApkVersionName", "Ignored a failure in extractApkVersionName", ignored);
         }
         return "unknown_version";
     }
@@ -432,7 +432,7 @@ public class ApkInstaller {
                 return fd.getStatSize();
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "ApkInstaller:435", "Ignored a failure at ApkInstaller:435", ignored);
+            AppLog.warnOnce("CaramelClient", "ApkInstaller:getContentSize", "Ignored a failure in getContentSize", ignored);
         }
         return -1L;
     }

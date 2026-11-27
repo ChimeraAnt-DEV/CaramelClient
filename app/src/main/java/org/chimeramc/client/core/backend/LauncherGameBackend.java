@@ -250,7 +250,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectKey(key, false);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:241", "Ignored a failure at LauncherGameBackend:241", ignored);
+                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:releaseAll", "Ignored a failure in releaseAll", ignored);
             }
         }
 
@@ -260,7 +260,7 @@ public final class LauncherGameBackend implements GameBackend {
             try {
                 host.injectMouseButton(button, false);
             } catch (Throwable ignored) {
-                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:251", "Ignored a failure at LauncherGameBackend:251", ignored);
+                AppLog.warnOnce("CaramelClient", "LauncherGameBackend:releaseAll#2", "Ignored a failure in releaseAll", ignored);
             }
         }
     }

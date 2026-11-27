@@ -828,7 +828,7 @@ public class InbuiltOverlayManager {
                     enabledModules.add(moduleId);
                 }
             } catch (Exception ignored) {
-                AppLog.warnOnce("CaramelClient", "InbuiltOverlayManager:848", "Ignored a failure at InbuiltOverlayManager:848", ignored);
+                AppLog.warnOnce("CaramelClient", "InbuiltOverlayManager:refreshExternalButtons", "Ignored a failure in refreshExternalButtons", ignored);
             }
         }
 

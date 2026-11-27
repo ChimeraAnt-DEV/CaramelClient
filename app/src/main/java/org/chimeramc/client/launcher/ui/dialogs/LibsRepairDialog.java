@@ -145,7 +145,7 @@ public class LibsRepairDialog extends Dialog {
                 iconContainer.setBackgroundTintList(ColorStateList.valueOf(withAlpha(accent, 34)));
             }
         } catch (Exception ignored) {
-            AppLog.warnOnce("CaramelClient", "LibsRepairDialog:148", "Ignored a failure at LibsRepairDialog:148", ignored);
+            AppLog.warnOnce("CaramelClient", "LibsRepairDialog:applyPersonalization", "Ignored a failure in applyPersonalization", ignored);
         }
     }
 
