@@ -1010,16 +1010,6 @@ class GamePackageManager private constructor(
         )
         val results = mutableListOf<LibraryLoadResult>()
 
-        // PairIP first: the bundle's libraries are opened in list order and every one of them is
-        // PairIP-protected, so a library that loads before the mapping fails its JNI_OnLoad with
-        // "Bad JNI version ... : 28" and takes the launch with it. Opening only the game library
-        // mapped it, which is too late whenever another library comes first.
-        val pairIpFailure = GameLibraryOpener.mapPairIpIfNeeded(File(nativeLibDir), version?.versionCode)
-        if (pairIpFailure != null) {
-            trace?.error("PairIP dependency mapping failed", pairIpFailure)
-            mirrorLogcat('E', pairIpFailure)
-        }
-
         for (lib in allLibs) {
             val skipReason = skips[lib]
             if (skipReason != null) {

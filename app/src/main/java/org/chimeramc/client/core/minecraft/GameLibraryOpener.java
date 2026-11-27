@@ -17,7 +17,6 @@ import java.io.File;
 public final class GameLibraryOpener {
 
     private static final String TAG = "GamePackageManager";
-    private static final String GAME_LIBRARY = "libminecraftpe.so";
     private static final String PAIRIP_LIBRARY = "libpairipcore.so";
 
     private GameLibraryOpener() {
@@ -31,34 +30,14 @@ public final class GameLibraryOpener {
      * @param versionCode the instance's version code, for the dependency gate
      */
     public static void open(File library, File nativeDir, String versionCode) {
-        if (GAME_LIBRARY.equals(library.getName())
-                && NativeLibraryVersionGate.shouldLoadPairIp(versionCode)) {
+        // Every library in the bundle is PairIP-protected, and the bundle is opened in list order,
+        // so mapping only when the game library came round was too late: fmod is opened first and
+        // its JNI_OnLoad then returned a version the VM rejects ("Bad JNI version ... : 28"). The
+        // mapping is idempotent, so it simply happens before each open.
+        if (NativeLibraryVersionGate.shouldLoadPairIp(versionCode)) {
             mapDependency(new File(nativeDir, PAIRIP_LIBRARY));
         }
         System.load(library.getAbsolutePath());
-    }
-
-    /**
-     * Maps the PairIP dependency before any bundle library is opened.
-     *
-     * <p>Only the game library's own {@link #open} used to map it, which is too late: the bundle
-     * loader opens the other libraries first (fmod, mcfix, ...), and those are PairIP-protected too.
-     * Their {@code JNI_OnLoad} then returns a version the VM rejects ("Bad JNI version ... : 28")
-     * and the launch fails on a fresh install, where the extracted directory has no cached mapping
-     * yet. Idempotent: a second {@code dlopen} of the same file returns the same handle.
-     *
-     * @param nativeDir   the directory the game's libraries were extracted to
-     * @param versionCode the instance's version code, for the dependency gate
-     * @return null when nothing had to be mapped or it mapped, or the failure to report
-     */
-    public static String mapPairIpIfNeeded(File nativeDir, String versionCode) {
-        if (nativeDir == null || !NativeLibraryVersionGate.shouldLoadPairIp(versionCode)) return null;
-        File dependency = new File(nativeDir, PAIRIP_LIBRARY);
-        if (!dependency.isFile() || dependency.length() <= 0L) return null;
-        String error = NativeMapper.dlopenGlobal(dependency.getAbsolutePath());
-        if (error != null) return "Failed to map " + PAIRIP_LIBRARY + ": " + error;
-        Log.i(TAG, "Mapped " + PAIRIP_LIBRARY + " before the bundle");
-        return null;
     }
 
     private static void mapDependency(File dependency) {
@@ -70,6 +49,6 @@ public final class GameLibraryOpener {
         if (error != null) {
             throw new IllegalStateException("Failed to map " + dependency.getName() + ": " + error);
         }
-        Log.i(TAG, "Mapped " + dependency.getName() + " before the game library");
+        Log.i(TAG, "Mapped " + dependency.getName() + " before the bundle");
     }
 }
