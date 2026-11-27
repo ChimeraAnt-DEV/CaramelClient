@@ -29,8 +29,16 @@ is never `JNI_OnLoad`'d by ART: the linker only maps it. So the launcher maps th
 `dlopen(path, RTLD_NOW | RTLD_GLOBAL)` from its own native code (`NativeMapper` in
 `src/pl/SweetLoader.cpp`) and then opens `libminecraftpe.so` normally.
 
-**Confirmed, fixed.** With that, the launch trace reaches `Runtime preparation finished` and
-`GameActivity` starts the game library:
+**Confirmed, fixed.** The launch trace now runs end to end into the game activity:
+
+```
+I MinecraftLaunchTrace | Launch screen ready
+I GamePackageManager   | Mapped libpairipcore.so before the game library
+I MinecraftLaunchTrace | Runtime preparation finished
+I MinecraftLaunchTrace | Entering game
+```
+
+and `GameActivity` starts the game library:
 
 ```
 I GameActivity | Looking for library libsweetloader.so
