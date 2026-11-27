@@ -49,6 +49,8 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
     companion object {
         private const val PRELOADER_DOCUMENT_REQUEST = 0x4C50
+        /** How long the UI thread waits for the mod unload at normal exit before letting it go. */
+        private const val MOD_UNLOAD_JOIN_MS = 3_000L
     }
 
     private lateinit var gameManager: GamePackageManager
@@ -126,7 +128,9 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
         if (savedInstanceState != null) {
             trace.mark("MinecraftActivity finishing restored instance")
-            gameRuntimeStarted = true
+            // Do not mark the runtime as started: this activity only finishes a restored instance
+            // and never starts the game, so onDestroy's normal-exit path would unload mods and
+            // restart the launcher for a session that never began.
             super.onCreate(null)
             finish()
             return
@@ -150,33 +154,6 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             returnToLauncherAfterLaunchFailure(throwable)
             return
         }
-        trace.mark("Native mod enable started")
-        // enableLoadedMods() reads the instance's mod list off disk, so it can throw on an
-        // unreadable or corrupt store. It sat between the runtime-prepare guard and the super call
-        // with no guard of its own, so a throw there unwound onCreate and killed the process before
-        // the game ever started - a launch the user could not diagnose. Enabling mods is
-        // best-effort: a failure is recorded and the launch continues without them.
-        try {
-            ModManager.enableLoadedMods()
-        } catch (throwable: Throwable) {
-            trace.error("Native mod enable failed", formatLaunchFailure(throwable))
-            recordModEnableFailure(throwable)
-        }
-        trace.mark("Native mod enable finished")
-        // The .universe engine packages are extracted and loaded here too. This is the load half of
-        // the lifecycle the audit found unwired: the Rust loader's load_mods existed but nothing
-        // called it, so an enabled .universe package could be listed yet never run. Bounded and
-        // off the main thread for the same reason as the native enable above.
-        //
-        // applicationContext.filesDir, not this activity's filesDir: the latter is redirected to the
-        // game's storage profile (often external), and a native library extracted there cannot be
-        // dlopen'd on modern Android. The sandbox must be on private internal storage.
-        try {
-            ModManager.enableLoadedEngineMods(applicationContext.filesDir)
-        } catch (throwable: Throwable) {
-            trace.error("Engine mod enable failed", formatLaunchFailure(throwable))
-        }
-        trace.mark("Engine mod enable finished")
         trace.mark("Mojang MainActivity super.onCreate starting")
         try {
             gameRuntimeStarted = true
@@ -187,6 +164,29 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             return
         }
         trace.mark("Mojang MainActivity super.onCreate finished")
+        // The native mod enable and the engine-package load are dispatched only now, after the game
+        // activity exists, and both are fire-and-forget. The native side dlopens every enabled mod
+        // and runs its initialiser, which can block indefinitely and cannot be interrupted; waiting
+        // for it on the main thread (the previous behaviour) froze the already-started game window
+        // for up to 15 s per call. A worker-side timer records a timeout instead, and the deferred
+        // hook install they arm is pumped from the first frame tick, so nothing below depends on
+        // them having finished.
+        trace.mark("Native mod enable dispatched")
+        try {
+            ModManager.enableLoadedMods()
+        } catch (throwable: Throwable) {
+            trace.error("Native mod enable failed", formatLaunchFailure(throwable))
+            recordModEnableFailure(throwable)
+        }
+        // applicationContext.filesDir, not this activity's filesDir: the latter is redirected to the
+        // game's storage profile (often external), and a native library extracted there cannot be
+        // dlopen'd on modern Android. The sandbox must be on private internal storage.
+        trace.mark("Engine mod enable dispatched")
+        try {
+            ModManager.enableLoadedEngineMods(applicationContext.filesDir)
+        } catch (throwable: Throwable) {
+            trace.error("Engine mod enable failed", formatLaunchFailure(throwable))
+        }
         ModSafeMode.completeLaunch(this)
         trace.mark("Mod crash-loop marker cleared")
         // The game process is up, so the previous launch's crash attribution (if any) is stale:
@@ -336,7 +336,7 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
             )
             org.chimeramc.client.core.mods.ModLoadDiagnostics.record(this, merged)
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftActivity:322", "Ignored a failure at MinecraftActivity:322", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftActivity:recordModEnableFailure", "Ignored a failure in recordModEnableFailure", ignored)
         }
     }
 
@@ -827,13 +827,30 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
         val shouldRestartAfterNormalExit = shouldRestartAfterNormalExit()
         if (shouldRestartAfterNormalExit) {
             PreloaderInput.cancelDocumentRequest("Minecraft closed")
-            ModManager.disableAndUnloadLoadedMods()
-            ModManager.disableAndUnloadEngineMods()
+            // A mod's PLMod_Disable runs inside these calls and cannot be interrupted. Running them
+            // on the UI thread blocked the pause for as long as a mod took to shut down; the
+            // cleanup still has to finish before the process restart, so it runs on a worker and the
+            // UI thread waits at most a few seconds for it.
+            unloadModsOffMainThread()
             prepareNormalExitCleanup()
             scheduleNormalExitProcessRestart()
         }
         MinecraftActivityState.onPaused(this)
         super.onPause()
+    }
+
+    /** Disables and unloads the native and engine mods on a worker, bounded for the caller. */
+    private fun unloadModsOffMainThread() {
+        val worker = org.chimeramc.client.util.AppExecutors.thread("mod-unload", Runnable {
+            ModManager.disableAndUnloadLoadedMods()
+            ModManager.disableAndUnloadEngineMods()
+        })
+        worker.start()
+        try {
+            worker.join(MOD_UNLOAD_JOIN_MS)
+        } catch (interrupted: InterruptedException) {
+            Thread.currentThread().interrupt()
+        }
     }
 
     override fun onDestroy() {

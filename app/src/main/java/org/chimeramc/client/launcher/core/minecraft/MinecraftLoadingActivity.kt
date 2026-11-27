@@ -67,7 +67,9 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
     private var currentProgress = 0
     private var lastLogMessage: String? = null
     private var logRenderScheduled = false
-    private var statusRenderScheduled = false
+    private var statusRenderTask: Runnable? = null
+    private var gameStartDispatched = false
+    private var gameStartPreDrawListener: ViewTreeObserver.OnPreDrawListener? = null
     // Time to the loading screen's first drawn frame, or NO_FIRST_FRAME when it was never observed
     // (the fallback path fired before a draw). Fed into the local statistics.
     private var firstFrameMs = org.chimeramc.client.core.stats.LaunchStats.NO_FIRST_FRAME
@@ -323,7 +325,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             startActivity(Intent(this, org.chimeramc.client.launcher.ui.activities.DiagnosticsActivity::class.java))
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:313", "Ignored a failure at MinecraftLoadingActivity:313", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:showLogcat", "Ignored a failure in showLogcat", ignored)
         }
         scheduleWatchdog()
     }
@@ -333,7 +335,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.mods.ModSafeMode.suppressModsForNextLaunch(this)
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:323", "Ignored a failure at MinecraftLoadingActivity:323", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:restartWithoutMods", "Ignored a failure in restartWithoutMods", ignored)
         }
         appendLog("Restarting without mods")
         returnToLauncher()
@@ -371,7 +373,14 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         if (isFinishing || isDestroyed) return
         val clamped = progress.coerceIn(0, 100)
         if (::ring.isInitialized) ring.setState(launchFailed, launchReady, clamped)
-        scheduleStatusRender(status, detail)
+        // The final update is painted synchronously. Debouncing it meant the game activity took the
+        // main thread 100 ms before it could render, so the last text the user ever saw was the
+        // previous one ("Loading native mods") while the screen actually froze in the game.
+        if (clamped >= 100) {
+            renderStatusNow(status, detail)
+        } else {
+            scheduleStatusRender(status, detail)
+        }
     }
 
     private fun scheduleStatusRender(status: String, detail: String?) {
@@ -379,14 +388,28 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         if (status == lastRenderedStatus && detail == lastRenderedDetail) return
         lastRenderedStatus = status
         lastRenderedDetail = detail
-        if (statusRenderScheduled) return
-        statusRenderScheduled = true
-        mainHandler.postDelayed({
-            statusRenderScheduled = false
-            if (isFinishing || isDestroyed) return@postDelayed
+        // Cancel the pending render so a later status cannot be overwritten by an older one that
+        // was still queued.
+        statusRenderTask?.let { mainHandler.removeCallbacks(it) }
+        val task = Runnable {
+            statusRenderTask = null
+            if (isFinishing || isDestroyed) return@Runnable
             statusView.text = status
             detailView.text = detail.orEmpty()
-        }, STATUS_RENDER_DEBOUNCE_MS)
+        }
+        statusRenderTask = task
+        mainHandler.postDelayed(task, STATUS_RENDER_DEBOUNCE_MS)
+    }
+
+    /** Paints the status immediately, cancelling any debounced render still queued. */
+    private fun renderStatusNow(status: String, detail: String?) {
+        if (isFinishing || isDestroyed) return
+        statusRenderTask?.let { mainHandler.removeCallbacks(it) }
+        statusRenderTask = null
+        lastRenderedStatus = status
+        lastRenderedDetail = detail
+        statusView.text = status
+        detailView.text = detail.orEmpty()
     }
 
     private fun appendLog(message: String) {
@@ -526,6 +549,39 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // never opened.
         if (returningToLauncher || isFinishing || isDestroyed) return
         enteringGame = true
+        // The final status was just written; hand the main thread to the game activity only after
+        // that text has been drawn. Calling startActivity() in the same message meant the game
+        // activity's onCreate ran before the frame, so the screen froze showing the previous line
+        // and screenshots went black. The pre-draw callback is the earliest point the new text is
+        // on screen. The timeout is a safety net for a window that never draws (paused, detached).
+        val start = Runnable {
+            if (gameStartDispatched) return@Runnable
+            gameStartDispatched = true
+            startGameActivity(gameIntent)
+        }
+        val decor = window?.decorView
+        if (decor != null && decor.isAttachedToWindow) {
+            // One-shot pre-draw: fires once, just before the frame that contains the final status.
+            val observer = decor.viewTreeObserver
+            val listener = object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    observer.removeOnPreDrawListener(this)
+                    gameStartPreDrawListener = null
+                    start.run()
+                    return false
+                }
+            }
+            gameStartPreDrawListener = listener
+            observer.addOnPreDrawListener(listener)
+        }
+        mainHandler.postDelayed(start, GAME_START_DRAW_FALLBACK_MS)
+    }
+
+    private fun startGameActivity(gameIntent: Intent) {
+        if (returningToLauncher || isFinishing || isDestroyed) {
+            enteringGame = false
+            return
+        }
         // Starting the game is the last step and the only one that was unguarded on this path: the
         // dialog button calls straight into here with no enclosing try, so a throw from
         // startActivity (a missing target, TransactionTooLarge, an OOM while the game activity
@@ -539,7 +595,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
             return
         }
         finish()
-        overridePendingTransition(0, 0)  // no animation, test only
+        overridePendingTransition(0, 0)
     }
 
     private fun showSkippedIncompatibleModsIfNeeded(
@@ -575,7 +631,7 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         try {
             org.chimeramc.client.core.minecraft.GamePackageManager.cancelExtraction()
         } catch (ignored: Throwable) {
-            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:521", "Ignored a failure at MinecraftLoadingActivity:521", ignored)
+            AppLog.warnOnce("CaramelClient", "MinecraftLoadingActivity:onBackPressed", "Ignored a failure in onBackPressed", ignored)
         }
         appendLog("Returning to launcher")
         returnToLauncher()
@@ -596,6 +652,10 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         // cancelled explicitly or it fires into a destroyed screen.
         firstFrameFallback?.let { window.decorView.removeCallbacks(it) }
         firstFrameFallback = null
+        gameStartPreDrawListener?.let {
+            window?.decorView?.viewTreeObserver?.removeOnPreDrawListener(it)
+        }
+        gameStartPreDrawListener = null
         progressAnimator?.cancel()
         watchdogDialog?.dismiss()
         watchdogDialog = null
@@ -608,6 +668,8 @@ class MinecraftLoadingActivity : BaseActivity(), MinecraftRuntimePreparer.Progre
         private const val PROGRESS_ANIMATION_MS = 140L
         private const val LOG_RENDER_DEBOUNCE_MS = 200L
         private const val STATUS_RENDER_DEBOUNCE_MS = 100L
+        /** Safety net when no pre-draw arrives (window paused or detached) before starting the game. */
+        private const val GAME_START_DRAW_FALLBACK_MS = 300L
         private const val TRACK_ALPHA = 42
     }
 }
