@@ -23,6 +23,7 @@ file is missing from the index.
 - [Ids for view tags](docs/agents/ids-for-view-tags.md)
 - [Game session lifecycle & playtime (org.chimeramc.client.launcher.core.minecraft.PlaytimeManager)](docs/agents/game-session-lifecycle-playtime.md)
 - [Low-latency networking (org.chimeramc.client.launcher.settings.LowLatencyNetworkManager)](docs/agents/low-latency-networking.md)
+- [1.26.60 launch: PairIP, the missing dependency, and what is still open (NetherNet sign-in loop)](docs/agents/nethernet-26-60-signin-loop.md)
 - [Performance preset (org.chimeramc.client.launcher.settings.PerformancePresetManager)](docs/agents/performance-preset.md)
 - [32-bit vs 64-bit instances (single arm64 build; dual-ABI versions run on it)](docs/agents/32-bit-vs-64-bit-instances.md)
 - [BerryAPI integration (sweetloader bridge + runtime start)](docs/agents/berryapi-integration-sweetloader-bridge-runtime-start.md)
