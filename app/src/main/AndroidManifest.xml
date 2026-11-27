@@ -133,12 +133,12 @@
             android:foregroundServiceType="mediaProjection" />
 
         <service
-            android:name="org.chimeramc.client.launcher.util.WorldBackupService"
+            android:name="org.chimeramc.client.util.WorldBackupService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
         <receiver
-            android:name="org.chimeramc.client.launcher.util.WorldBackupBootReceiver"
+            android:name="org.chimeramc.client.util.WorldBackupBootReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
