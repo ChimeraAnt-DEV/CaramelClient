@@ -92,4 +92,17 @@ public class LaunchTraceStagesTest {
         assertTrue(text.contains("extract"));
         assertTrue(text.contains("4200"));
     }
+
+    @Test
+    public void describeLastNamesTheStageTheLaunchDidNotLeave() {
+        LaunchTraceStages stages = new LaunchTraceStages();
+        stages.record("start", 0);
+        stages.record("MinecraftActivity onCreate entered", 3100);
+        assertEquals("MinecraftActivity onCreate entered (+3100ms)", stages.describeLast());
+    }
+
+    @Test
+    public void describeLastOnAnEmptyRecordIsAPlaceholder() {
+        assertEquals("(no launch stages recorded)", new LaunchTraceStages().describeLast());
+    }
 }

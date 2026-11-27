@@ -117,6 +117,18 @@ public final class LaunchTraceStages {
         return sb.toString();
     }
 
+    /**
+     * The most recently recorded stage and the elapsed time it was recorded at, or a placeholder
+     * when the trace is empty.
+     *
+     * <p>A stall report should name where the launch was last seen instead of leaving the reader to
+     * guess. The last stage is exactly that: the phase the launch entered and did not leave.
+     */
+    public synchronized String describeLast() {
+        if (size == 0) return "(no launch stages recorded)";
+        return String.format(Locale.US, "%s (+%dms)", names[size - 1], atMs[size - 1]);
+    }
+
     /** Drops every recorded stage. */
     public synchronized void clear() {
         for (int i = 0; i < size; i++) {
