@@ -90,3 +90,47 @@ Nothing in this repo shows a RakNet or NetherNet transport error on 26.60 so far
 got far enough for the game to open a connection. `BedrockTransport.forVersion` exists and is unit
 tested, but no launcher code path has been observed to depend on it yet, and the
 `core/nethernet` scaffold stays unwired (see the README in that package).
+
+## 5. Update, 2026-11-27: the launch reaches the title screen, so there is no sign-in loop to fix yet
+
+Re-tested on the same cloud phone (Android 14, arm64) with Minecraft 1.26.60.4 (`972606004`) after
+the PairIP ordering fix (`GameLibraryOpener.open` maps `libpairipcore.so` before every bundled
+library) and the beta channel's signing change. Three observations, all from `logcat` and a
+screenshot, none of them a guess:
+
+1. **The game starts and stays up.** The loading screen finishes, `MinecraftActivity` runs
+   `super.onCreate`, and the Minecraft title screen paints (`v26.60` in the corner). No `signaled /
+   status 9` exit appears in `GET /v1/phones/{id}/apps/org.chimeramc.client/logs` for the session,
+   so the SIGKILL loop in section 4 is gone. The path that fixed it is the library load, not auth:
+   before it, `libfmod.so` failed `JNI_OnLoad` and the launch never reached the engine's Java.
+2. **Sign-in was not exercised.** The title screen shows "Get started"; no Microsoft account was
+   used on the test device, so the reported "sign-in loop while signed in" is still **UNVERIFIED**.
+   It may well have been the same launch failure seen from the user's side (the launcher showed
+   "Couldn't start Minecraft", which reads as "cannot play while signed in"). Do not claim it is
+   fixed until someone signs in on a 26.60 build.
+3. **The engine hooks are off on this build, by design.**
+   `resources/sweetloader/sweetloader_signature_rules_source.json` (revision 7) covers
+   `1.21.132` … `1.26.50.99` and has no rule for `1.26.60`, so
+   `SweetLoaderSignatureRulesManager.describeCoverageFailure` refuses to hand the rules over and the
+   loader logs, after eight frame-tick defers:
+
+   ```
+   SweetLoader | SweetLoader signature rules were not delivered; deferring hook install
+   SweetLoader | SweetLoader hook install deferred 8 times; the signature rules never arrived, leaving the game unpatched
+   ```
+
+   That is the on-device proof behind the "52 `ENGINE_HOOK` modules need a signature pack for the
+   active build" note: on 26.60 the byte-pattern hooks cannot install because no verified offsets
+   exist for the build, not because the transport changed.
+
+What is still UNKNOWN, with the exact evidence to capture on a 26.60 instance:
+
+- The sign-in path itself: sign in with a real Microsoft account and capture
+  `adb logcat -s XalSignIn:* Xal:* com.mojang.minecraftpe:* org.chimeramc.client:*`. The launcher's
+  own step is `MinecraftRuntimePreparer.refreshAccountsForLaunch` →
+  `XalExporter.exportAccount`; a token-free count of exported accounts and the game's first XAL call
+  is enough to tell "no account reached the game" from "the game rejects the token".
+- Whether NetherNet needs anything from the launcher at all. The game implements the transport; the
+  launcher supplies no socket for it, and nothing in this repo has been observed to fail with
+  `Transport::RAKNET` selected, so `BedrockTransport` stays a pure gate with no caller and
+  `core/nethernet` stays unwired (see the README in that package).
