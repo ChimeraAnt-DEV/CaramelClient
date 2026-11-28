@@ -88,6 +88,29 @@ public final class AccountSkinService {
     }
 
     public static final String DEFAULT_ENDPOINT = "https://api.geysermc.org/v2/skin/";
+
+    /**
+     * Which lookup produced the skin, for one log line and for a support report.
+     *
+     * <p>The two routes fail for different reasons and only one of them is fixable on our side: the
+     * official route needs a Minecraft Services bearer and a Java profile behind it, so a Bedrock-only
+     * account can never be served by it, while the legacy route only knows players a GeyserMC server
+     * has seen. Without the distinction "no skin" reads the same for both, and the answer is guessed.
+     */
+    public enum SkinRoute {
+        /** The official {@code api.minecraftservices.com} profile returned a skin. */
+        OFFICIAL,
+        /** No bearer could be minted, so only the legacy lookup was possible. */
+        LEGACY_WITHOUT_BEARER,
+        /** A bearer was minted but the profile carried no skin, so the legacy lookup was used. */
+        LEGACY_AFTER_OFFICIAL_EMPTY,
+    }
+
+    /** The route a lookup took, from what the two attempts produced. Pure; unit-tested. */
+    public static SkinRoute routeFor(boolean officialResolved, boolean bearerPresent) {
+        if (officialResolved) return SkinRoute.OFFICIAL;
+        return bearerPresent ? SkinRoute.LEGACY_AFTER_OFFICIAL_EMPTY : SkinRoute.LEGACY_WITHOUT_BEARER;
+    }
     /** The Mojang texture CDN the {@code value} field points at. */
     public static final String TEXTURE_HOST = "https://textures.minecraft.net/texture/";
 
@@ -289,15 +312,18 @@ public final class AccountSkinService {
         try {
             String bearer = bearerForActiveAccount(context);
             OfficialSkin official = resolveOfficialWithVariant(bearer);
+            SkinRoute route = routeFor(official != null, bearer != null);
             String url = official != null ? official.textureUrl : resolveTextureUrlLegacy(xuid);
             boolean slim = official != null && official.slim;
             if (url == null) {
-                // "no skin" or "no route to one": the two lookups both came back empty. Logged so a
-                // support report can tell this apart from a token or network failure below.
+                // "no skin" or "no route to one": the two lookups both came back empty. The route says
+                // which one to blame, and it is the difference between "sign in again" and "this
+                // account has no skin either service can see".
                 AppLog.warn("AccountSkinService",
-                        "The account skin lookup found no skin for the signed-in account");
+                        "The account skin lookup found no skin; last route=" + route);
                 return null;
             }
+            AppLog.info("AccountSkinService", "Account skin resolved via " + route);
             byte[] png = downloadSkinBytes(url);
             if (png == null || png.length == 0) {
                 AppLog.warn("AccountSkinService", "The account skin download returned no bytes");

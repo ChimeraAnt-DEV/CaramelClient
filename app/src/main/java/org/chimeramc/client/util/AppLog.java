@@ -59,6 +59,11 @@ public final class AppLog {
         log('W', tag, message, null);
     }
 
+    /** An ordinary progress line: what the client did, for a support report to read. */
+    public static void info(String tag, String message) {
+        log('I', tag, message, null);
+    }
+
     /**
      * The one formatting rule: a report reads as {@code message: ExceptionClass: detail}.
      *

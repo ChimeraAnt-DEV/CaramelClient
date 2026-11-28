@@ -36,3 +36,25 @@
   atlas, so a stale skin updates without the preview flashing the fallback. A 0 stamp (a cache
   written before the stamp existed) reads as stale and is refreshed once. `AccountSkinFreshnessTest`
   pins the rule, the stamp round-trip and the startup wiring.
+
+## "Cosmetics work, the skin does not" — what that actually is
+
+Cosmetics are drawn by us (the native player-render hook), so they work whenever that hook is
+loaded. The skin is **not** ours to draw in game: the game renders the player's own skin from its
+session, and the launcher has no route that overrides it. `AccountSkinService` feeds the launcher's
+**preview** and the replay export, and the preview's order is imported → account → game capture →
+applied pack → Steve (`SkinIdentity.resolve`), so a working account lookup always beats the capture.
+
+Where a preview can still land on Steve, in the order worth checking on a device:
+
+1. `AccountSkinService.isEnabled` is off for the install (`ensureEnabledForExistingAccount` turns it
+   on at startup only when a XUID is present).
+2. No bearer: `MsftAuthManager.minecraftServicesBearer` returns null, so only the legacy GeyserMC
+   lookup runs. `LEGACY_WITHOUT_BEARER` in the new log line.
+3. A Bedrock-only account: a bearer exists but `api.minecraftservices.com/minecraft/profile` carries
+   no Java skin, and GeyserMC has never seen the player. `LEGACY_AFTER_OFFICIAL_EMPTY`, then no skin.
+   This is a real limitation of the keyless routes, not a bug we can fix in the launcher.
+
+`AccountSkinService.routeFor` and the `AccountSkinService` log tag now name the route (and say so
+when neither produced a skin), so the next device run answers 1-3 from `adb logcat -s
+AccountSkinService:*` instead of a guess. **Unverified here: everything in that list.**
