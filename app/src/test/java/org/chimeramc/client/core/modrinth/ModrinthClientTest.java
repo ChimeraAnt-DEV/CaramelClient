@@ -72,4 +72,25 @@ public class ModrinthClientTest {
         String url = ModrinthClient.buildSearchUrl("", null, null, 0, 20, null);
         assertTrue(url, url.startsWith("https://api.modrinth.com/v2/search?"));
     }
+
+    @Test
+    public void versionUrlsKeepTheProjectAsOnePathSegment() {
+        String url = ModrinthClient.buildVersionsUrl("sodium/extra", null);
+        assertTrue(url, url.contains("/v2/project/sodium%2Fextra/version"));
+    }
+
+    @Test
+    public void versionFilterIsJsonEncodedAsAQueryParameter() {
+        String url = ModrinthClient.buildVersionsUrl("fabric-api",
+                java.util.Arrays.asList("1.21.1", "1.21.2"));
+        assertEquals("[\"1.21.1\",\"1.21.2\"]",
+                decode(url.replaceAll(".*game_versions=", "")));
+    }
+
+    @Test
+    public void noVersionFilterProducesNoQueryParameter() {
+        String url = ModrinthClient.buildVersionsUrl("fabric-api", java.util.Collections.emptyList());
+        assertFalse(url, url.contains("game_versions="));
+        assertTrue(url, url.endsWith("/project/fabric-api/version"));
+    }
 }

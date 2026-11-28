@@ -75,10 +75,7 @@ class GamePackageManager private constructor(
 
     private val extractableLibs = requiredLibs + optionalLibs
 
-    private val systemLoadedLibs = arrayOf(
-        "libPlayFabMultiplayer.so",
-        "libmaesdk.so",
-    )
+    private val systemLoadedLibs = NativeLibraryVersionGate.BUNDLED_FALLBACKS.toTypedArray()
 
     data class LibraryLoadResult(
         val name: String,
@@ -932,7 +929,8 @@ class GamePackageManager private constructor(
         val normalizedName = normalizeLibraryName(name)
         val startedAt = SystemClock.elapsedRealtime()
 
-        if (systemLoadedLibs.contains(fileName)) {
+        // The build's own PlayFab/MAE win; the bundled copy is only a fallback (see loadOrder).
+        if (systemLoadedLibs.contains(fileName) && resolveLibraryPath(name) == null) {
             val source = "launcher bundled library"
             try {
                 System.loadLibrary(normalizedName)
@@ -999,7 +997,8 @@ class GamePackageManager private constructor(
         excludeReasons: Map<String, String> = emptyMap()
     ): List<LibraryLoadResult> {
         val deviceSupports64Bit = Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()
-        val allLibs = requiredLibs + systemLoadedLibs
+        // DT_NEEDED binds to whichever copy is loaded, so the build's own PlayFab/MAE open first.
+        val allLibs = NativeLibraryVersionGate.loadOrder(version?.versionCode).toTypedArray()
         // The plan (which libraries load, which are skipped and why, and the progress arithmetic)
         // is a pure class so the rules are testable without a device.
         val plan = LibraryLoadPlan.plan(

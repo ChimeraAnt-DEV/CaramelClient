@@ -71,6 +71,14 @@ public class IntentHandler extends BaseActivity {
         }
         
         Intent newIntent = new Intent(originalIntent);
+        if (data == null) {
+            // The sanitizer refused the URI (or there was none), so do not hand the refused data
+            // and its read grant to the launcher or the game.
+            newIntent.setData(null);
+            newIntent.setClipData(null);
+            newIntent.removeFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
         if (isMinecraftActivityRunning()) {
             newIntent.setClass(this, MinecraftActivity.class);
             newIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -130,10 +130,15 @@ android {
         versionCode getVersionCodeByTimestamp()
         versionName getGitTag()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // The client's own CurseForge key, so a user never has to obtain one. A developer can
-        // override it with `curseforge.api_key` in local.properties; the in-app field is behind
-        // Developer mode and stores an override on the device.
-        buildConfigField "String", "CURSEFORGE_API_KEY", "\"${localProperties.getProperty('curseforge.api_key', '$2a$10$6rAqlOZeor1ovjROhcIUJefeMPgcnZ.z8U4g9TBKO7CBRtl6NEUXi')}\""
+        // The client's own CurseForge key, so a user never has to obtain one. Read from
+        // local.properties (gitignored) or CURSEFORGE_API_KEY in the environment: an API key is a
+        // credential, so it is not committed. With none configured the CurseForge tab reports
+        // MissingApiKeyException rather than sending unauthenticated calls. A developer can also
+        // override it with `curseforge.api_key`; the in-app field is behind Developer mode and
+        // stores an override on the device.
+        def curseForgeApiKey = localProperties.getProperty('curseforge.api_key',
+                System.getenv('CURSEFORGE_API_KEY') ?: '')
+        buildConfigField "String", "CURSEFORGE_API_KEY", "\"${curseForgeApiKey}\""
         // The relay address users get without typing one. Baked in at build time from a local
         // property (gitignored), so the shipped app can default to the operator's own server while
         // the source stays free of a hardcoded host. Empty means "LAN only until configured".

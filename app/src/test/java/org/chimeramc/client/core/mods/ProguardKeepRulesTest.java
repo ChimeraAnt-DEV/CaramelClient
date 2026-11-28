@@ -44,7 +44,8 @@ public class ProguardKeepRulesTest {
     private static final List<String> REQUIRED_KEEPS = List.of(
             "org.chimeramc.client.preloader",
             "org.chimeramc.client.core.jni",
-            "io.bambosan.mbloader.launcherUtils");
+            "io.bambosan.mbloader.launcherUtils",
+            "org.fmod");
 
     private static final Pattern KEEP_CLASS =
             Pattern.compile("^\\s*-keep\\s+class\\s+([\\w.$*]+)", Pattern.MULTILINE);

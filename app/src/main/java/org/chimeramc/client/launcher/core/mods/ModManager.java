@@ -563,7 +563,7 @@ public class ModManager {
         enabledMap.clear();
         modOrder.clear();
 
-        if (!configFile.exists()) {
+        if (configFile == null || !configFile.exists()) {
             updateConfigFromDirectory();
             return;
         }
@@ -599,7 +599,10 @@ public class ModManager {
 
     private void saveConfig() {
         if (configFile == null) return;
-        try (FileWriter writer = new FileWriter(configFile)) {
+        // Write to a sibling and rename, so a crash mid-write leaves the previous config intact
+        // instead of a truncated file that resets every mod to enabled on the next read.
+        File tmp = new File(configFile.getParentFile(), configFile.getName() + ".tmp");
+        try (FileWriter writer = new FileWriter(tmp)) {
             List<Map<String, Object>> configList = new ArrayList<>();
             for (int i = 0; i < modOrder.size(); i++) {
                 String modId = modOrder.get(i);
@@ -612,6 +615,17 @@ public class ModManager {
             gson.toJson(configList, writer);
         } catch (Exception ignored) {
             AppLog.warnOnce(TAG, "ModManager:433", "Ignored a failure at ModManager:433", ignored);
+            //noinspection ResultOfMethodCallIgnored
+            tmp.delete();
+            return;
+        }
+        try {
+            java.nio.file.Files.move(tmp.toPath(), configFile.toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            AppLog.warnOnce(TAG, "ModManager:443", "Could not replace the mod config", e);
+            //noinspection ResultOfMethodCallIgnored
+            tmp.delete();
         }
     }
 

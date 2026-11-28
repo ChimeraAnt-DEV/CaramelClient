@@ -304,3 +304,87 @@ the export will not be the thing being signed.
 - The skin staying Steve is still **separate**: SweetLoader has no signature rules for 1.26.60, so
   the game rejects the patched binary's hooks and no cosmetic or skin hook runs. Do not read a
   Steve skin as an auth failure.
+
+## 8. Update, 2026-11-28 (second pass): the refresh fix was inert, and two library-order traps
+
+An external audit of this repository claimed five compounding bugs behind the 26.60 "sign-in loop".
+Each was checked against the code here. Two were real and are fixed; the rest are either already
+deliberate (section 6.3) or describe a different symptom.
+
+### 8.1 `refreshExportedAccount` never matched the pointer (real; fix 6.1.2 was inert)
+
+`MsftAccountStore.updateAuthMaterial` passes the account's **`id`** (a random UUID) while
+`XalExporter.writePointer` stores **`msUserId`** in `Xal.Current.json`. The guard
+`accountId.equals(currentAccountId(ctx))` could therefore never be true, so the re-export that
+section 6.1.2 added never ran: a refreshed chain stayed in the store and the game kept the previous,
+about-to-expire one.
+
+**Fixed:** `refreshExportedAccount(Context, String accountId)` now matches either the pointer's
+`msUserId` or the passed `id`, and returns before exporting when neither matches (the pointer still
+decides *which* account the game reads). `XalExporterRefreshTest`.
+
+### 8.2 The bundling decision for `libPlayFabMultiplayer.so` / `libmaesdk.so` (real; fixed)
+
+The launcher bundles both libraries and `loadAllLibraries` used to open `libminecraftpe.so`
+**before** them. `libminecraftpe.so` names both in `DT_NEEDED` (see section 1), so the linker
+resolved those sonames from the launcher's `jniLibs` copies inside its own APK — the version-matched
+copies the build ships in the extracted cache were never used by the game. A stale PlayFab client
+against 26.60's backend is exactly the shape of a "Connecting…" loop that never completes.
+
+**Fixed:** `NativeLibraryVersionGate.loadOrder(versionCode)` is now the single load order: the
+version-gated libraries (`libpairipcore.so` excluded because it must be `dlopen`-mapped, not
+`System.load`ed) come first, then `RequiredNativeLibraries.BASE`, then the bundled fallbacks.
+`GamePackageManager.loadAllLibraries` uses it, and `loadLibraryDetailed` prefers the extracted copy
+when one exists (`resolveLibraryPath != null`), falling back to `System.loadLibrary` for builds that
+do not ship these. `NativeLibraryVersionGateTest` pins the order and the no-duplicates rule;
+`LibraryLoadPlanTest` still pins the skip arithmetic (file order is not what it asserts).
+
+This is **not** device-verified. On a 26.60 phone the check is the launch trace: `Loaded
+libPlayFabMultiplayer.so … in <n>ms from Minecraft extracted library cache` (not "launcher bundled
+library"), and then whether the game's "Connecting…" dialog clears.
+
+### 8.3 What the audit got wrong, so nobody re-fixes it
+
+- **"`systemLoadedLibs` preloads `c++_shared`, `fmod`, `MediaDecoders_Android`,
+  `PlayFabMultiplayer`, `maesdk`"** — the real list was only `PlayFabMultiplayer` and `maesdk`
+  (now `NativeLibraryVersionGate.BUNDLED_FALLBACKS`); `c++_shared`, `fmod` and
+  `MediaDecoders_Android` are opened from the extracted cache. The defect was the *order*, not the
+  membership (8.2).
+- **"Forged `Dtoken`, empty `agg`/`prv`, `ClientAttested = false`, `GAME_VERSION = "1.21.110"`,
+  `IssueInstant` = NotAfter − 8 h"** — all present, all deliberate guesses documented in 6.3.
+  Changing them without a real `files/xal/` from the genuine client trades one guess for another.
+- **`BrowserLaunchActivity.onDestroy` recursing `finish()`** — false. The guard is
+  `isFinishing() && mOperationId != 0` and `finishOperation` zeroes `mOperationId`, so the second
+  `finish()` cannot happen. The process-death half (a redirect URI dropped when `savedInstanceState`
+  is non-null) was real and is fixed.
+- **"Mod Menu version loop"** — half right. The shipped rule set stops at `1.26.50.99`, so the
+  byte-pattern hooks cannot install and `InGameMenuController.show()` prints
+  `mod_menu_not_live_body`. But the *frame boundary* the menu draws from needs no rule at all, and
+  it was installed after the gate's early return; section 9.1 fixes that.
+
+## 9. Update, 2026-11-28 (third pass): the frame boundary, and the version we claimed to be
+
+### 9.1 The EGL present hook now installs before the rules gate
+
+`GameHooks.cpp` returned from `InitGameHooks` when `GameHookRulesConfigured()` was false, and
+`InstallSwapFrameBoundary()` sat *after* that return. Hooking `eglSwapBuffers` needs no rule — it is
+a `dlsym` on `libEGL.so` — so on every build above `1.26.50.99` the ImGui frame boundary never
+installed, `pl::menu::Frame()` never ran, the menu's live flag stayed false, and each tap produced
+`mod_menu_not_live_body`. The boundary (and `InitPlayerRenderSource`) now install first; only the
+byte-pattern hooks stay behind the gate, and `PumpGameHookInstall` retries the boundary on every
+frame tick until `libEGL` is mapped. The install itself is now a mutex-guarded, atomic state machine
+in `SwapFrameBoundary.cpp`, so a second caller cannot install a second hook.
+
+The consequence to keep honest: on an uncovered build the menu now *renders*, while the modules
+behind it still need a rule pack. That is the correct fail-open boundary — a visible menu that says
+a module is unavailable is better than a menu that cannot open and a message blaming the version.
+
+### 9.2 The client now reports the instance's Bedrock version to the auth chain
+
+`MsftAuthManager.GAME_VERSION` was the literal `"1.21.110"` and every `BedrockAuthManager` call site
+used it, so a 1.26.60 launch introduced itself as a 1.21 client. The likely effect is a PlayFab
+session created for the wrong build; it is not proven to be the "Connecting…" loop, and it is wrong
+regardless. `MinecraftRuntimePreparer` now calls `MsftAuthManager.setActiveGameVersion` with the
+resolved instance version, `1.26.60.4` and `1.26.50.04_RC3` normalise to a dotted version, and a
+placeholder (`latest`, `26`, empty) is ignored so the last good value stands.
+`MsftAuthManagerGameVersionTest`.

@@ -165,9 +165,12 @@
 # SIGABRT right after the game files were prepared). The com.mojang.minecraftpe and com.microsoft.xal
 # stubs are the surface the game's own libminecraftpe.so calls into, so they must keep their names
 # too, or sign-in and the game activity entry points fail in a way that looks like a sign-in loop.
+# org.fmod is the class libfmod.so registers its natives against in JNI_OnLoad; renaming it makes
+# the load fail with an UnsatisfiedLinkError that only the minified release build shows.
 # ---------------------------------------------------------------------------
 -keep class com.xbox.httpclient.** { *; }
 -keep class com.microsoft.playfab.utilities.multiplayer.** { *; }
 -keep class com.microsoft.applications.events.** { *; }
 -keep class com.mojang.minecraftpe.** { *; }
 -keep class com.microsoft.xal.** { *; }
+-keep class org.fmod.** { *; }

@@ -79,6 +79,9 @@ object MinecraftRuntimePreparer {
             ?: throw IllegalArgumentException("No Minecraft version specified")
         fileListener.onLog("Using ${version.directoryName} (${version.versionCode})")
         trace.mark("Minecraft version resolved", "${version.directoryName} ${version.versionCode}")
+        // The launcher's own Xbox/PlayFab chain reports this build in the session start; reporting
+        // the version the launcher was written against made a 26.60 launch describe a 1.21 client.
+        org.chimeramc.client.core.auth.MsftAuthManager.setActiveGameVersion(version.versionCode)
 
         fileListener.onProgress(12,"Preparing game files")
         // Hand the loading screen's listener to the package manager so the extraction - by far the

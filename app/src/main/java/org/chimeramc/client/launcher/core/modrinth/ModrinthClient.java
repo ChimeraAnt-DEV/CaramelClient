@@ -150,27 +150,33 @@ public class ModrinthClient {
     }
 
     /**
+     * The version-list URL. The project id is a path segment rather than concatenated text, and the
+     * version filter is real JSON, so a slug with a slash or a version with a quote cannot change
+     * the request.
+     */
+    static String buildVersionsUrl(String projectIdOrSlug, java.util.List<String> gameVersions) {
+        HttpUrl.Builder builder = HttpUrl.parse(BASE_URL).newBuilder()
+                .addPathSegment("project")
+                .addPathSegment(projectIdOrSlug == null ? "" : projectIdOrSlug)
+                .addPathSegment("version");
+        if (gameVersions != null && !gameVersions.isEmpty()) {
+            com.google.gson.JsonArray versions = new com.google.gson.JsonArray();
+            for (String version : gameVersions) {
+                versions.add(version);
+            }
+            builder.addQueryParameter("game_versions", versions.toString());
+        }
+        return builder.build().toString();
+    }
+
+    /**
      * Lists a project's versions.
      *
      * @param gameVersions exact game versions to filter on; may be null or empty.
      */
     public void getVersions(String projectIdOrSlug, java.util.List<String> gameVersions,
                             ModrinthCallback<ModrinthVersion[]> callback) {
-        HttpUrl.Builder builder =
-                HttpUrl.parse(BASE_URL + "/project/" + projectIdOrSlug + "/version").newBuilder();
-        if (gameVersions != null && !gameVersions.isEmpty()) {
-            StringBuilder json = new StringBuilder("[");
-            for (int i = 0; i < gameVersions.size(); i++) {
-                if (i > 0) {
-                    json.append(',');
-                }
-                json.append('"').append(gameVersions.get(i)).append('"');
-            }
-            json.append(']');
-            builder.addQueryParameter("game_versions", json.toString());
-        }
-
-        Request request = request(builder.build().toString()).build();
+        Request request = request(buildVersionsUrl(projectIdOrSlug, gameVersions)).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

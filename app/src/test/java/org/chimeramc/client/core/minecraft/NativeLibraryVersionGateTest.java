@@ -174,4 +174,53 @@ public class NativeLibraryVersionGateTest {
             }
         }
     }
+
+    @Test
+    public void theBuildsOwnPlayFabAndMaeAreOpenedBeforeTheGameLibrary() {
+        java.util.List<String> order = NativeLibraryVersionGate.loadOrder("1.26.60.4");
+        int playFab = order.indexOf("libPlayFabMultiplayer.so");
+        int mae = order.indexOf("libmaesdk.so");
+        int game = order.indexOf("libminecraftpe.so");
+        assertTrue("PlayFab is in the list", playFab >= 0);
+        assertTrue("MAE SDK is in the list", mae >= 0);
+        assertTrue("the game library is opened last", game > playFab && game > mae);
+    }
+
+    @Test
+    public void theReleasesAfterTheBoundaryKeepEveryGateOpen() {
+        // mcpedl.org on 2026-11-19 listed 26.60, 26.63, 26.66 (latest release) and 26.70.26
+        // (latest beta). The gates are at-least thresholds, so a newer build must keep every
+        // library the 26.60 layout needs rather than silently reverting to the old set.
+        for (String version : new String[]{
+                "1.26.63", "1.26.63.1", "1.26.66", "1.26.70.20", "1.26.70.26", "26.70.26"}) {
+            assertTrue("pairip must stay gated for " + version,
+                    NativeLibraryVersionGate.shouldLoadPairIp(version));
+            assertEquals(version,
+                    java.util.Arrays.asList(
+                            "libpairipcore.so", "libHttpClient.Android.so", "libmaesdk.so",
+                            "libPlayFabMultiplayer.so"),
+                    NativeLibraryVersionGate.gatedLibraries(version));
+        }
+    }
+
+    @Test
+    public void pairIpIsMappedNotLoaded() {
+        // Its JNI_OnLoad returns -1, so System.load would abort; GameLibraryOpener maps it instead.
+        assertFalse(NativeLibraryVersionGate.loadOrder("1.26.60.4").contains("libpairipcore.so"));
+    }
+
+    @Test
+    public void aBuildWithoutTheGatedBundleKeepsTheOldOrder() {
+        java.util.List<String> order = NativeLibraryVersionGate.loadOrder("1.21.80");
+        assertEquals("libc++_shared.so", order.get(0));
+        assertTrue(order.contains("libminecraftpe.so"));
+        assertTrue("the bundled fallbacks are still appended",
+                order.contains("libPlayFabMultiplayer.so"));
+    }
+
+    @Test
+    public void noLibraryAppearsTwice() {
+        java.util.List<String> order = NativeLibraryVersionGate.loadOrder("1.26.60.4");
+        assertEquals(order.size(), new java.util.HashSet<>(order).size());
+    }
 }

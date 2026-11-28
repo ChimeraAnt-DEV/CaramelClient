@@ -66,12 +66,7 @@ public class ModNativeLoader {
 
         List<Mod> mods = modManager.getMods();
         String minecraftVersion = modManager.getCurrentVersion().versionCode;
-        int totalEnabled = 0;
-        for (Mod mod : mods) {
-            if (mod.isEnabled()) {
-                totalEnabled++;
-            }
-        }
+        int totalEnabled = countNativeEnabled(mods);
         if (listener != null) {
             listener.onScanStarted(totalEnabled);
         }
@@ -270,6 +265,24 @@ public class ModNativeLoader {
      */
     static boolean mayLoad(Mod mod) {
         return mod.getDeclaredSha256().isEmpty() || mod.isVerified();
+    }
+
+    /**
+     * How many enabled mods this loader will actually hand to the linker.
+     *
+     * <p>Enabled {@code .universe}/{@code .singularity} packages are skipped in the loop below, so
+     * counting them left the progress bar short of its total on every such install.
+     */
+    static int countNativeEnabled(List<Mod> mods) {
+        int count = 0;
+        if (mods == null) return count;
+        for (Mod mod : mods) {
+            if (mod.isEnabled()
+                    && ModPackageFormat.fromFileName(mod.getEntryPath()) == ModPackageFormat.NATIVE_SO) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private static void notifyMessage(LoadListener listener, String message) {

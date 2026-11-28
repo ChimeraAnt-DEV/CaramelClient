@@ -55,7 +55,19 @@ public final class MsftAuthManager {
     }
 
     private static final String TAG = "MsftAuthManager";
-    private static final String GAME_VERSION = "1.21.110";
+
+    /**
+     * The version the launcher's own chain reports before any instance version is known.
+     *
+     * <p>{@code BedrockAuthManager} hands this string to the PlayFab session start, so it must name
+     * the build being played. The launch preparer calls {@link #setActiveGameVersion} with the
+     * selected instance's code; this default only covers sign-in from the launcher UI before a
+     * launch. 1.26.66 is the newest Android release on mcpedl.org (19.11.2026); it is replaced by
+     * the instance's own code on the next launch.
+     */
+    static final String DEFAULT_GAME_VERSION = "1.26.66";
+
+    private static volatile String activeGameVersion = DEFAULT_GAME_VERSION;
 
     /**
      * The Bedrock Android title id, used for every sign-in flow.
@@ -67,6 +79,49 @@ public final class MsftAuthManager {
      */
     public static String bedrockClientId() {
         return MsaConstants.BEDROCK_ANDROID_TITLE_ID;
+    }
+
+    /**
+     * Sets the Bedrock version the launcher's chain reports for the rest of the process.
+     *
+     * <p>The PlayFab session start carries it, so a launcher that reported 1.21.110 while launching
+     * a 1.26.60 build described a client that is not the one running. Blank or unparseable input is
+     * ignored rather than replacing a known-good value with nothing.
+     */
+    public static void setActiveGameVersion(String versionCode) {
+        String normalized = normalizeGameVersion(versionCode);
+        if (!normalized.isEmpty()) {
+            activeGameVersion = normalized;
+        }
+    }
+
+    /** The version the launcher's chain currently reports. */
+    public static String activeGameVersion() {
+        return activeGameVersion;
+    }
+
+    /**
+     * Reduces a version label to the dotted form the session start expects.
+     *
+     * <p>{@code "26.66"} becomes {@code "1.26.66"}; {@code "1.26.60.4"} is unchanged; a channel
+     * suffix ({@code "-beta"}, {@code "_RC3"}) is dropped. A label without at least two numeric
+     * components is rejected with an empty string, so a placeholder cannot be reported as a version.
+     */
+    static String normalizeGameVersion(String versionCode) {
+        if (versionCode == null) return "";
+        String value = versionCode.trim();
+        int end = 0;
+        while (end < value.length()
+                && (Character.isDigit(value.charAt(end)) || value.charAt(end) == '.')) {
+            end++;
+        }
+        value = value.substring(0, end);
+        while (value.endsWith(".")) {
+            value = value.substring(0, value.length() - 1);
+        }
+        if (!value.contains(".")) return "";
+        if (!value.startsWith("1.")) value = "1." + value;
+        return value;
     }
 
     /**
@@ -94,7 +149,7 @@ public final class MsftAuthManager {
         net.raphimc.minecraftauth.msa.model.MsaToken msaToken =
                 new net.raphimc.minecraftauth.msa.model.MsaToken(
                         expiresAtMs, accessToken, refreshToken);
-        return BedrockAuthManager.create(httpClient, GAME_VERSION)
+        return BedrockAuthManager.create(httpClient, activeGameVersion)
                 .msaApplicationConfig(config)
                 .login(msaToken);
     }
@@ -212,7 +267,7 @@ public final class MsftAuthManager {
         HttpClient httpClient = createHttpClient();
         MsaApplicationConfig config = getAppConfig();
         MsaToken token = httpClient.executeAndHandle(new MsaAuthCodeTokenRequest(config, code));
-        return BedrockAuthManager.create(httpClient, GAME_VERSION)
+        return BedrockAuthManager.create(httpClient, activeGameVersion)
                 .msaApplicationConfig(config)
                 .login(token);
     }
@@ -248,7 +303,7 @@ public final class MsftAuthManager {
             try {
                 MsaToken token = httpClient.executeAndHandle(new MsaDeviceCodeTokenRequest(config, deviceCode));
                 emitState(stateConsumer, DeviceCodeState.AUTHORIZED);
-                return BedrockAuthManager.create(httpClient, GAME_VERSION)
+                return BedrockAuthManager.create(httpClient, activeGameVersion)
                         .msaApplicationConfig(config)
                         .login(token);
             } catch (MsaRequestException e) {
@@ -320,7 +375,7 @@ public final class MsftAuthManager {
         }
         HttpClient httpClient = createHttpClient();
         JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
-        BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, GAME_VERSION, json);
+        BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, activeGameVersion, json);
         authManager.getMinecraftCertificateChain().getUpToDate();
         return authManager;
     }
@@ -358,7 +413,7 @@ public final class MsftAuthManager {
         try {
             HttpClient httpClient = createHttpClient();
             JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
-            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, GAME_VERSION, json);
+            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, activeGameVersion, json);
 
             // Touch every step so each renews if it is near expiry, then serialise the result. The
             // certificate chain is the one the game validates, so it is the last to be pulled.
@@ -472,7 +527,7 @@ public final class MsftAuthManager {
         try {
             HttpClient httpClient = createHttpClient();
             JsonObject json = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
-            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, GAME_VERSION, json);
+            BedrockAuthManager authManager = BedrockAuthManager.fromJson(httpClient, activeGameVersion, json);
             net.raphimc.minecraftauth.xbl.model.XblXstsToken xsts =
                     authManager.getXboxLiveXstsToken().getUpToDate();
             if (xsts == null) return null;

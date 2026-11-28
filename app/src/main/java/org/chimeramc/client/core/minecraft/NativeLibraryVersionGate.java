@@ -1,6 +1,8 @@
 package org.chimeramc.client.core.minecraft;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,6 +56,13 @@ public final class NativeLibraryVersionGate {
     public static final String PAIRIP_RELEASE = "1.26.60";
     public static final String PAIRIP_BETA = "1.26.60.0";
 
+    /**
+     * The libraries the launcher bundles in its own {@code jniLibs} for builds that do not ship
+     * them. They are the fallback, never the first choice: see {@link #loadOrder}.
+     */
+    public static final List<String> BUNDLED_FALLBACKS = Collections.unmodifiableList(
+            Arrays.asList("libPlayFabMultiplayer.so", "libmaesdk.so"));
+
     /** Whether the build ships and needs {@code libHttpClient.Android.so}. */
     public static boolean shouldLoadHttpClient(String versionCode) {
         return atLeast(versionCode, HTTP_CLIENT_RELEASE, HTTP_CLIENT_BETA);
@@ -90,6 +99,33 @@ public final class NativeLibraryVersionGate {
         if (shouldLoadHttpClient(versionCode)) libs.add("libHttpClient.Android.so");
         if (shouldLoadMaesdk(versionCode)) libs.add("libmaesdk.so");
         if (shouldLoadPlayFab(versionCode)) libs.add("libPlayFabMultiplayer.so");
+        return libs;
+    }
+
+    /**
+     * Every library the loader opens, in the order it opens them.
+     *
+     * <p>The version-gated libraries come first, and {@code libpairipcore.so} is not in the list at
+     * all: it refuses {@code System.load} (its {@code JNI_OnLoad} returns -1), so
+     * {@code GameLibraryOpener} maps it with {@code dlopen(RTLD_GLOBAL)} instead.
+     *
+     * <p>The order matters because a library that appears in {@code libminecraftpe.so}'s
+     * {@code DT_NEEDED} is bound to whichever copy is loaded when the game library opens. Opening
+     * {@code libPlayFabMultiplayer.so} and {@code libmaesdk.so} first is what makes the build's own
+     * copies win over the launcher's bundled fallbacks; a bundled copy loaded first satisfies the
+     * soname for the rest of the process.
+     */
+    public static List<String> loadOrder(String versionCode) {
+        List<String> libs = new ArrayList<>(10);
+        for (String lib : gatedLibraries(versionCode)) {
+            if (!"libpairipcore.so".equals(lib)) libs.add(lib);
+        }
+        for (String lib : RequiredNativeLibraries.BASE) {
+            if (!libs.contains(lib)) libs.add(lib);
+        }
+        for (String lib : BUNDLED_FALLBACKS) {
+            if (!libs.contains(lib)) libs.add(lib);
+        }
         return libs;
     }
 

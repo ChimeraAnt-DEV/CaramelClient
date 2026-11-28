@@ -1,6 +1,19 @@
 ## SweetLoader signature rules (sweetloader.SweetLoaderSignatureRulesManager)
 - Rule sources resolve in a fixed order: the host's **own** copy is authoritative, Levi's upstream repo is the fallback, and the bundled asset (`resources/sweetloader/sweetloader_signature_rules_source.json`) is the last resort for offline launches. Keep the bundled snapshot refreshed тАФ it must contain every rule the live source has (e.g. the 1.26.50 rule), or an offline launch will reject a version the online source would accept.
 
+### What the gate does and does not cover (2026-11-28)
+- The gate only covers the byte-pattern hooks. The EGL present boundary, the RTTI/vtable seams and
+  the ImGui menu shell need no rule and are installed before `GameHookRulesConfigured()` is even
+  consulted (`InitGameHooks` / `PumpGameHookInstall` in `src/pl/runtime/GameHooks.cpp`). On an
+  uncovered build the menu draws; the modules behind it report themselves unavailable.
+- Newest builds seen while this was written: **1.26.66** (26.66, 2026-11-19) and **1.26.70.26**
+  (beta, 2026-11-17). The `NativeLibraryVersionGate` thresholds are at-least comparisons, so those
+  builds keep the 26.60 library set (PairIP mapped, `libHttpClient.Android.so` / `libmaesdk.so` /
+  `libPlayFabMultiplayer.so` loaded from the APK) and `BedrockTransport` keeps them on NetherNet;
+  `NativeLibraryVersionGateTest` and `BedrockTransportTest` pin both.
+- The pinned default in `MsftAuthManager.DEFAULT_GAME_VERSION` is `1.26.66`. It is only a fallback:
+  the preparer sets the active instance's version for every launch.
+
 ### The shipped ceiling is 1.26.50.99 (do not fake a newer rule)
 - The bundled rules (revision 7) cover Bedrock builds only up to **1.26.50.99**. Nothing above that
   is covered: `PreloaderRules.newerThanRules` reports "newer than the rules" and the launcher warns

@@ -173,7 +173,9 @@ public final class SweetLoaderSignatureRulesManager {
                 ? (version.startsWith("1.") ? version.substring(2) : version)
                 : "?";
         return "No signature rule covers Bedrock " + expected
-                + ": byte-pattern hooks (menu/HUD screens) are disabled for this build";
+                + ": the pause-screen/HUD byte-pattern hooks are off for this build. The Mod Menu "
+                + "still draws (it needs no per-version signature), and sign-in and the game launch "
+                + "are unaffected";
     }
 
     /**

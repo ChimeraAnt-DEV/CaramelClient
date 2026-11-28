@@ -15,10 +15,16 @@ public class DeviceInfo {
     public static String GetDeviceId(@NotNull Context context) {
         String paddedId;
         @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(context.getContentResolver(), "android_id");
+        if (deviceId == null) {
+            deviceId = "";
+        }
         int[] chunkSizes = {8, 4, 4, 4, 12};
         int idLength = deviceId.length();
         int index = 0;
-        if (idLength < 32) {
+        if (idLength > 32) {
+            paddedId = deviceId.substring(0, 32);
+        } else if (idLength < 32) {
+            // "%00d" is not a valid format, so a 32-character id must skip the padding entirely.
             paddedId = String.format("%0" + (32 - idLength) + "d", 0) + deviceId;
         } else {
             paddedId = deviceId;

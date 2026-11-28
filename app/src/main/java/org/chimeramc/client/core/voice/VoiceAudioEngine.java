@@ -112,7 +112,7 @@ public final class VoiceAudioEngine {
     private static final float LEVEL_HEADROOM = 6f;
 
     /** Opens the device; returns false when a capture or playback stream cannot be created. */
-    public boolean start(boolean transmit) {
+    public synchronized boolean start(boolean transmit) {
         if (running.get()) return true;
         micEnabled = transmit;
 
@@ -310,7 +310,7 @@ public final class VoiceAudioEngine {
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
         playGate.signal();
         if (!running.compareAndSet(true, false)) {
             closeCapture();

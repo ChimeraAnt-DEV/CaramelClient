@@ -76,8 +76,23 @@ public class XalExporter {
      */
     public static boolean refreshExportedAccount(Context ctx, String accountId) {
         if (ctx == null || accountId == null) return false;
-        if (!accountId.equals(currentAccountId(ctx))) return false;
-        return exportAccount(ctx, accountId);
+        MsftAccountStore.MsftAccount account = MsftAccountStore.find(ctx, accountId.trim());
+        if (account == null) return false;
+        if (!pointerNamesAccount(currentAccountId(ctx), account.id, account.msUserId)) return false;
+        return exportAccount(ctx, account.id);
+    }
+
+    /**
+     * Whether the pointer the game reads names this account.
+     *
+     * <p>The pointer holds {@code msUserId} (that is what {@link #writePointer} writes), while the
+     * launcher identifies an account by its random {@code id}. Comparing only the id rejected every
+     * refresh, so a renewed chain was stored and never re-exported.
+     */
+    static boolean pointerNamesAccount(String pointer, String accountId, String msUserId) {
+        if (pointer == null) return false;
+        String value = pointer.trim();
+        return value.equals(msUserId) || value.equals(accountId);
     }
 
     /** The account the last export pointed the game at, or null. */

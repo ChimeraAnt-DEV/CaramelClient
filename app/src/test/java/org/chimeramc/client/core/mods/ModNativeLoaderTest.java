@@ -1,5 +1,6 @@
 package org.chimeramc.client.core.mods;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -48,6 +49,24 @@ public class ModNativeLoaderTest {
     public void unpinnedModsAlwaysLoad() {
         Mod unpinned = new Mod("m", "libm.so", "libm.so", "M", true, 0);
         assertTrue(ModNativeLoader.mayLoad(unpinned));
+    }
+
+    @Test
+    public void theScanTotalCountsOnlyNativePackages() {
+        Mod nativeMod = new Mod("a", "liba.so", "liba.so", "A", true, 0);
+        Mod universe = new Mod("b", "mod.universe", "mod.universe", "B", true, 0);
+        Mod singularity = new Mod("c", "mod.singularity", "mod.singularity", "C", true, 0);
+        Mod disabled = new Mod("d", "libd.so", "libd.so", "D", false, 0);
+
+        assertEquals("only the enabled .so is handed to the linker",
+                1, ModNativeLoader.countNativeEnabled(
+                        Arrays.asList(nativeMod, universe, singularity, disabled)));
+    }
+
+    @Test
+    public void anEmptyOrNullListCountsZero() {
+        assertEquals(0, ModNativeLoader.countNativeEnabled(Collections.emptyList()));
+        assertEquals(0, ModNativeLoader.countNativeEnabled(null));
     }
 
     @Test

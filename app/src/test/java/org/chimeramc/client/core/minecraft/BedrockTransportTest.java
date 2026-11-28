@@ -33,6 +33,17 @@ public class BedrockTransportTest {
     }
 
     @Test
+    public void theReleasesAfterTheBoundaryStayOnNetherNet() {
+        // mcpedl.org on 2026-11-19: 26.63, 26.66 (latest release) and 26.70.26 (latest beta). A
+        // newer build must not fall back to RakNet, or every server reads "offline" on it.
+        for (String version : new String[]{
+                "1.26.63", "1.26.63.1", "1.26.66", "1.26.70.20", "1.26.70.26", "26.66"}) {
+            assertEquals(version, BedrockTransport.Transport.NETHERNET,
+                    BedrockTransport.forVersion(version));
+        }
+    }
+
+    @Test
     public void theShortSpellingReadsAsTheSameBuild() {
         assertEquals(BedrockTransport.Transport.NETHERNET, BedrockTransport.forVersion("26.60"));
         assertEquals(BedrockTransport.Transport.NETHERNET, BedrockTransport.forVersion("26.60.28"));

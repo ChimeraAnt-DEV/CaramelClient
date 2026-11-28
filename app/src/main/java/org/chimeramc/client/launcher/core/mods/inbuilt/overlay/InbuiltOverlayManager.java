@@ -15,10 +15,10 @@ import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuControl
 import org.chimeramc.pojavcontrols.PojavControls;
 import org.chimeramc.pojavcontrols.PojavControlsHost;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class InbuiltOverlayManager {
     public interface HudEditorSelectionListener {
@@ -34,7 +34,9 @@ public class InbuiltOverlayManager {
 
     private static volatile InbuiltOverlayManager instance;
     private final Activity activity;
-    private final List<BaseOverlayButton> overlays = new ArrayList<>();
+    // Written on the UI thread (showEnabledOverlays / handleModToggle) while tick() iterates it on
+    // the game thread, so a plain ArrayList threw ConcurrentModificationException under a toggle.
+    private final List<BaseOverlayButton> overlays = new CopyOnWriteArrayList<>();
     private final Map<String, Boolean> modActiveStates = new HashMap<>();
     private final Map<String, BaseOverlayButton> modOverlayMap = new HashMap<>();
     private final Map<String, ExternalButtonOverlay> externalButtonOverlayMap = new HashMap<>();

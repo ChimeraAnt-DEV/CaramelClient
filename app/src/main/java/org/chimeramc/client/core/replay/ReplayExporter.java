@@ -136,15 +136,32 @@ public final class ReplayExporter {
                     MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
             int trackCount = extractor.getTrackCount();
             int[] muxerTrack = new int[trackCount];
+            int[] maxInputSize = new int[trackCount];
             for (int i = 0; i < trackCount; i++) {
-                muxerTrack[i] = muxer.addTrack(extractor.getTrackFormat(i));
+                android.media.MediaFormat format = extractor.getTrackFormat(i);
+                muxerTrack[i] = muxer.addTrack(format);
+                maxInputSize[i] = maxInputSize(format);
             }
             muxer.start();
             muxerStarted = true;
+
+            // Seeking to the previous sync lands before startUs, and clamping those timestamps to 0
+            // stacked several frames at the head of the clip. Rebase every track on the earliest
+            // sample the muxer will carry instead: relative offsets stay intact, so audio stays in
+            // sync, and the first timestamp is still 0.
+            long originUs = Long.MAX_VALUE;
+            for (int i = 0; i < trackCount; i++) {
+                long first = firstSampleTimeUs(extractor, i, startUs, maxInputSize[i]);
+                if (first >= 0L && first < originUs) originUs = first;
+            }
+            if (originUs == Long.MAX_VALUE) {
+                throw new IllegalStateException("no samples in the trim window");
+            }
+
             for (int i = 0; i < trackCount; i++) {
                 extractor.selectTrack(i);
                 extractor.seekTo(startUs, android.media.MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
-                java.nio.ByteBuffer buffer = java.nio.ByteBuffer.allocate(1024 * 1024);
+                java.nio.ByteBuffer buffer = java.nio.ByteBuffer.allocate(maxInputSize[i]);
                 android.media.MediaCodec.BufferInfo info = new android.media.MediaCodec.BufferInfo();
                 while (true) {
                     int size = extractor.readSampleData(buffer, 0);
@@ -153,7 +170,7 @@ public final class ReplayExporter {
                     if (time > endUs) break;
                     info.offset = 0;
                     info.size = size;
-                    info.presentationTimeUs = Math.max(0L, time - startUs);
+                    info.presentationTimeUs = Math.max(0L, time - originUs);
                     info.flags = extractor.getSampleFlags();
                     muxer.writeSampleData(muxerTrack[i], buffer, info);
                     if (!extractor.advance()) break;
@@ -187,6 +204,38 @@ public final class ReplayExporter {
                 }
             }
         }
+    }
+
+    /**
+     * The buffer size the track's format asks for.
+     *
+     * <p>A fixed 1 MB buffer fails for a sample larger than it; the format carries the real bound
+     * for most encoders, so use it and keep 2 MB as the fallback for the ones that do not.
+     */
+    private static int maxInputSize(android.media.MediaFormat format) {
+        try {
+            int declared = format.getInteger(android.media.MediaFormat.KEY_MAX_INPUT_SIZE);
+            if (declared > 0) return declared;
+        } catch (RuntimeException ignored) {
+            AppLog.warnOnce(TAG, "ReplayExporter:210", "format has no KEY_MAX_INPUT_SIZE", ignored);
+        }
+        return 2 * 1024 * 1024;
+    }
+
+    /** The first sample time a track would produce after seeking, or -1 when it has none. */
+    private static long firstSampleTimeUs(android.media.MediaExtractor extractor, int track,
+                                          long startUs, int bufferSize) {
+        long first = -1L;
+        extractor.selectTrack(track);
+        try {
+            extractor.seekTo(startUs, android.media.MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+            if (extractor.readSampleData(java.nio.ByteBuffer.allocate(bufferSize), 0) >= 0) {
+                first = extractor.getSampleTime();
+            }
+        } finally {
+            extractor.unselectTrack(track);
+        }
+        return first;
     }
 
     /**
