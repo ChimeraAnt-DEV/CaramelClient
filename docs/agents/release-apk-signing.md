@@ -17,7 +17,8 @@ launcher's storage, worlds included. Two things caused it, and both are fixed:
 Rules that must not be regressed:
 
 - **A secret cannot be read from a step `if:`**, so presence is turned into a job-level env flag
-  once (`HAS_SIGNING_KEY: ${{ secrets.SIGNING_KEY_STORE != '' }}`) and the steps test
+  once (`HAS_SIGNING_KEY: $&#123;&#123; secrets.SIGNING_KEY_STORE != '' &#125;&#125;`, escaped
+  here because VitePress renders the raw form as a template) and the steps test
   `env.HAS_SIGNING_KEY == 'true'`.
 - **Never publish a debug-signed APK.** On a fork pull request the secrets are absent; that run only
   proves the release variant compiles and says so with a `::warning::`, instead of uploading an APK
