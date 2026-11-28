@@ -524,16 +524,8 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
         } catch (Throwable t) {
             AppLog.warnOnce(TAG, "buildNews", "Could not read the changelog feed", t);
         }
-        // A bundled announcement that is not part of the changelog feed: it carries its own link,
-        // which the launcher opens in its own browser rather than handing the user to a browser.
-        out.add(new CaramelNewsInfo(
-                getString(R.string.caramel_news_honey_title),
-                getString(R.string.caramel_news_honey_body),
-                getString(R.string.caramel_news_honey_meta),
-                false,
-                getString(R.string.caramel_news_honey_button),
-                "https://honeyclient.github.io/",
-                R.drawable.news_banner_honey));
+        // Bundled announcements that are not part of the changelog feed.
+        out.addAll(org.chimeramc.client.core.changelog.BundledNews.posts(this));
         return out;
     }
 

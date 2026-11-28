@@ -9,35 +9,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check tag for BETA and notify Discord
+        # Release fields come through `env` rather than `${{ }}` inside the script: a substituted
+        # value is parsed by bash, so a tag or release name carrying a quote would break the step.
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK2 }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          if [ -z "$WEBHOOK_URL" ]; then
+          set -uo pipefail
+
+          if [ -z "${WEBHOOK_URL:-}" ]; then
             echo "Webhook secret DISCORD_WEBHOOK2 is empty!"
             exit 1
           fi
 
-          TAG="${{ github.event.release.tag_name }}"
-          NAME="${{ github.event.release.name }}"
-          URL="${{ github.event.release.html_url }}"
+          TAG="${RELEASE_TAG:-}"
+          NAME="${RELEASE_NAME:-$TAG}"
+          URL_FIELD="${RELEASE_URL:-}"
 
-          # Case-SENSITIVE check — only matches literal "BETA" in caps
-          if echo "$TAG" | grep -q "BETA"; then
-            echo "BETA tag detected: $TAG"
+          # Case-sensitive check: only a literal "BETA" tag notifies this channel.
+          case "$TAG" in
+            *BETA*) ;;
+            *) echo "Tag '$TAG' does not contain BETA (caps-only). Skipping."; exit 0 ;;
+          esac
 
-            SANITIZED_URL=$(echo "$WEBHOOK_URL" | tr -d '[:space:]')
+          echo "BETA tag detected: $TAG"
 
-            MESSAGE=$(printf "@everyone\n\n**Beta Release Published!** \n\n**Version:** %s\n**Release:** %s\n\n**[View Release on GitHub](%s)**\n\nThis is a beta build. Report any bugs in #bug-reports." "$TAG" "$NAME" "$URL")
+          SANITIZED_URL=$(printf '%s' "$WEBHOOK_URL" | tr -d '[:space:]')
 
-            PAYLOAD=$(jq -n --arg content "$MESSAGE" '{
-              content: $content,
-              allowed_mentions: { parse: ["everyone"] }
-            }')
+          MESSAGE=$(printf '@everyone\n\n**Beta Release Published!** \n\n**Version:** %s\n**Release:** %s\n\n**[View Release on GitHub](%s)**\n\nThis is a beta build. Report any bugs in #bug-reports.' "$TAG" "$NAME" "$URL_FIELD")
 
-            curl -H "Content-Type: application/json" \
-                 -X POST \
-                 -d "$PAYLOAD" \
-                 "$SANITIZED_URL"
-          else
-            echo "Tag '$TAG' does not contain BETA (caps-only). Skipping."
-           fi
+          PAYLOAD=$(printf '%s' "$MESSAGE" | jq -Rs '{content: ., allowed_mentions: {parse: ["everyone"]}}')
+
+          HTTP=$(curl -sS -o /tmp/discord-reply.json -w '%{http_code}' \
+            -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$SANITIZED_URL")
+          case "$HTTP" in
+            2*) echo "sent ($HTTP)" ;;
+            *) echo "Discord rejected the message: HTTP $HTTP"; cat /tmp/discord-reply.json; exit 1 ;;
+          esac

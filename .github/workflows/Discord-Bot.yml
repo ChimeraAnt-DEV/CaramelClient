@@ -19,43 +19,61 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Notification to Discord
+        # The release body is handed over through `env`, never interpolated into the script with
+        # `${{ }}`. GitHub substitutes that expression textually before bash parses the step, so a
+        # release note containing a quote, a backtick or `$(...)` rewrote the script: the BETA9
+        # release published fine and this job failed with a shell syntax error.
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          INPUT_TITLE: ${{ github.event.inputs.title }}
+          INPUT_MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          if [ -z "$WEBHOOK_URL" ]; then
-            echo "Webhook secret is empty!"
+          set -uo pipefail
+
+          if [ -z "${WEBHOOK_URL:-}" ]; then
+            echo "DISCORD_WEBHOOK is not set"
             exit 1
           fi
 
-          # Sanitize the URL (removes accidental spaces)
-          SANITIZED_URL=$(echo "$WEBHOOK_URL" | tr -d '[:space:]')
+          URL=$(printf '%s' "$WEBHOOK_URL" | tr -d '[:space:]')
 
-          if [ "${{ github.event_name }}" == "release" ]; then
-            TAG="${{ github.event.release.tag_name }}"
-            NAME="${{ github.event.release.name }}"
-            BODY="${{ github.event.release.body }}"
-            URL="${{ github.event.release.html_url }}"
-
+          LIMIT=1900
+          if [ "${EVENT_NAME:-}" = "release" ]; then
+            TAG="${RELEASE_TAG:-}"
+            NAME="${RELEASE_NAME:-$TAG}"
+            BODY="${RELEASE_BODY:-}"
+            LINK="${RELEASE_URL:-}"
             if [ -z "$BODY" ]; then
               BODY="No detailed changelog provided. Click the link below to view the release."
             fi
-
-            TRUNCATED_BODY=$(echo "$BODY" | head -c 1500)
-            
-            # Build the message with title, changelog, and clickable link
-            MESSAGE=$(printf "**%s (%s)** \n\n%s\n\n**[View Full Release on GitHub](%s)**" "$NAME" "$TAG" "$TRUNCATED_BODY" "$URL")
+            HEAD="$(printf '**%s (%s)**\n\n' "$NAME" "$TAG")"
+            TAIL="$(printf '\n\n**[View Full Release on GitHub](%s)**' "$LINK")"
+            MESSAGE="${HEAD}${BODY}${TAIL}"
+            # Discord rejects a message over 2000 characters. The changelog is what gets cut, so
+            # the link to the full release always survives; bash substring indexing counts
+            # characters, so a multi-byte one is never split into an invalid payload.
+            if [ "${#MESSAGE}" -gt "$LIMIT" ]; then
+              BUDGET=$(( LIMIT - ${#HEAD} - ${#TAIL} - 3 ))
+              if [ "$BUDGET" -lt 200 ]; then BUDGET=200; fi
+              MESSAGE="${HEAD}${BODY:0:$BUDGET}...${TAIL}"
+            fi
           else
-            TITLE="${{ github.event.inputs.title }}"
-            BODY="${{ github.event.inputs.message }}"
-            
-            MESSAGE=$(printf "**%s** \n\n%s" "$TITLE" "$BODY")
+            MESSAGE=$(printf '**%s**\n\n%s' "${INPUT_TITLE:-}" "${INPUT_MESSAGE:-}")
+            if [ "${#MESSAGE}" -gt "$LIMIT" ]; then
+              MESSAGE="${MESSAGE:0:$((LIMIT - 3))}..."
+            fi
           fi
 
-          # Create JSON payload safely
-          PAYLOAD=$(jq -n --arg content "$MESSAGE" '{content: $content}')
+          PAYLOAD=$(printf '%s' "$MESSAGE" | jq -Rs '{content: .}')
 
-          # Send to Discord
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d "$PAYLOAD" \
-               "$SANITIZED_URL"
+          HTTP=$(curl -sS -o /tmp/discord-reply.json -w '%{http_code}' \
+            -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$URL")
+          case "$HTTP" in
+            2*) echo "sent ($HTTP)" ;;
+            *) echo "Discord rejected the message: HTTP $HTTP"; cat /tmp/discord-reply.json; exit 1 ;;
+          esac

@@ -1,26 +1,23 @@
 {
   "schemaVersion": 1,
   "newest": {
-    "version": "BETA3",
-    "headline": "Glass, capes and a cinematic replay engine",
+    "version": "BETA9",
+    "headline": "Sign-in, the CurseForge browser and the in-game menu",
     "items": [
       {
-        "text": "The shared cards read as glass on every Compose screen, not a flat grey rectangle."
+        "text": "The Microsoft account the game reads now matches the one the launcher exports."
       },
       {
-        "text": "Buttons now press: a ripple and a depressed face on the accent, Play and instance controls, plus a visible focus ring for controller and keyboard."
+        "text": "CurseForge lists Bedrock content before you search, in sections, with each project's own picture."
       },
       {
-        "text": "The character preview samples the authored cape art, and the cape textures carry real shading."
+        "text": "XAPK and zip packages import from the device, with progress."
       },
       {
-        "text": "The splash island turns as one solid rock instead of a pile of loose boxes."
+        "text": "The floating Mod Menu button opens the menu again, and says so when a build cannot."
       },
       {
-        "text": "The account skin re-syncs every 24 hours, at startup and when a preview resolves."
-      },
-      {
-        "text": "Replay: a .glowreplay container, an offline simulator, a cinematic camera rig with FOV and Bezier easing, and a Compose keyframe timeline."
+        "text": "The logcat overlay switch applies at once instead of at the next launch."
       }
     ]
   },

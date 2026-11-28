@@ -1610,4 +1610,16 @@
     <string name="caramel_import_instance_unsupported">Этот файл не является пакетом .apk, .xapk или .zip.</string>
     <string name="caramel_import_instance_empty">В этом пакете нет base.apk.</string>
     <string name="mod_menu_not_live_body">В этой сборке внутриигровое меню не загружено. Переустановите клиент или обновите его.</string>
+    <string name="caramel_news_offsets_title">Скоро больше модулей</string>
+    <string name="caramel_news_offsets_body">Мы размечаем смещения движка 26.60. Каждое подтверждённое открывает модуль, который раньше только читался.</string>
+    <string name="caramel_news_offsets_meta">План</string>
+    <string name="caramel_news_christmas_shop_title">Новогодний магазин косметики</string>
+    <string name="caramel_news_christmas_shop_body">Зимний набор плащей, шляп и питомцев появится в магазине косметики в декабре.</string>
+    <string name="caramel_news_christmas_shop_meta">Косметика</string>
+    <string name="caramel_news_plus_title">Caramel+ уже скоро</string>
+    <string name="caramel_news_plus_body">Подписка за $6 в месяц с косметикой и ранними сборками. Пока не продаётся; подробности появятся здесь.</string>
+    <string name="caramel_news_plus_meta">Подписка</string>
+    <string name="caramel_news_christmas_title">С Рождеством от Caramel</string>
+    <string name="caramel_news_christmas_body">Спасибо, что играли с нами весь год. Хороших праздников и следите за магазином.</string>
+    <string name="caramel_news_christmas_meta">Объявление</string>
 </resources>

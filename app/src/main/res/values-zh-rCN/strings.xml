@@ -1592,4 +1592,16 @@
     <string name="caramel_import_instance_unsupported">该文件不是 .apk、.xapk 或 .zip 包。</string>
     <string name="caramel_import_instance_empty">该包中没有 base.apk。</string>
     <string name="mod_menu_not_live_body">此版本未加载游戏内菜单。请重新安装客户端或更新。</string>
+    <string name="caramel_news_offsets_title">更多模块即将到来</string>
+    <string name="caramel_news_offsets_body">我们正在梳理 26.60 的引擎偏移。每验证一个，就会解锁一个此前只能读取的模块。</string>
+    <string name="caramel_news_offsets_meta">路线图</string>
+    <string name="caramel_news_christmas_shop_title">圣诞外观商店</string>
+    <string name="caramel_news_christmas_shop_body">披风、帽子和宠物的冬季套装将于今年十二月上架外观商店。</string>
+    <string name="caramel_news_christmas_shop_meta">外观</string>
+    <string name="caramel_news_plus_title">Caramel+ 即将推出</string>
+    <string name="caramel_news_plus_body">每月 6 美元，包含外观和抢先版本。尚未开售，详情会先在这里公布。</string>
+    <string name="caramel_news_plus_meta">会员</string>
+    <string name="caramel_news_christmas_title">Caramel 祝你圣诞快乐</string>
+    <string name="caramel_news_christmas_body">感谢你今年与我们一起游戏。祝你假期愉快，也别忘了关注商店。</string>
+    <string name="caramel_news_christmas_meta">公告</string>
 </resources>

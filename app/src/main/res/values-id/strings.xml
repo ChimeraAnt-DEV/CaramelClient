@@ -1595,4 +1595,16 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="caramel_import_instance_unsupported">Berkas itu bukan paket .apk, .xapk, atau .zip.</string>
     <string name="caramel_import_instance_empty">Paket itu tidak berisi base.apk.</string>
     <string name="mod_menu_not_live_body">Menu dalam game tidak dimuat di versi ini. Instal ulang klien atau perbarui.</string>
+    <string name="caramel_news_offsets_title">Lebih banyak modul segera hadir</string>
+    <string name="caramel_news_offsets_body">Kami sedang memetakan offset mesin 26.60. Setiap offset yang terbukti membuka modul yang sebelumnya hanya bisa dibaca.</string>
+    <string name="caramel_news_offsets_meta">Peta jalan</string>
+    <string name="caramel_news_christmas_shop_title">Toko kosmetik Natal</string>
+    <string name="caramel_news_christmas_shop_body">Set musim dingin berisi jubah, topi, dan hewan peliharaan hadir di toko kosmetik Desember ini.</string>
+    <string name="caramel_news_christmas_shop_meta">Kosmetik</string>
+    <string name="caramel_news_plus_title">Caramel+ segera hadir</string>
+    <string name="caramel_news_plus_body">Keanggotaan $6 per bulan dengan kosmetik dan versi awal. Belum dijual; detailnya akan muncul di sini.</string>
+    <string name="caramel_news_plus_meta">Keanggotaan</string>
+    <string name="caramel_news_christmas_title">Selamat Natal dari Caramel</string>
+    <string name="caramel_news_christmas_body">Terima kasih telah bermain bersama kami tahun ini. Nikmati liburan dan pantau tokonya.</string>
+    <string name="caramel_news_christmas_meta">Pengumuman</string>
 </resources>

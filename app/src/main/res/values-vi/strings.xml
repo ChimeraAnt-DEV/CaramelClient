@@ -1601,4 +1601,16 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_import_instance_unsupported">Tệp đó không phải gói .apk, .xapk hoặc .zip.</string>
     <string name="caramel_import_instance_empty">Gói đó không có base.apk.</string>
     <string name="mod_menu_not_live_body">Menu trong game chưa được tải trong bản dựng này. Hãy cài lại hoặc cập nhật ứng dụng.</string>
+    <string name="caramel_news_offsets_title">Sắp có thêm mô-đun</string>
+    <string name="caramel_news_offsets_body">Chúng tôi đang lập bản đồ offset của engine 26.60. Mỗi offset chứng minh được sẽ mở một mô-đun trước đây chỉ đọc được.</string>
+    <string name="caramel_news_offsets_meta">Lộ trình</string>
+    <string name="caramel_news_christmas_shop_title">Cửa hàng mỹ phẩm Giáng sinh</string>
+    <string name="caramel_news_christmas_shop_body">Bộ mùa đông gồm áo choàng, mũ và thú cưng sẽ có tại cửa hàng mỹ phẩm trong tháng 12 này.</string>
+    <string name="caramel_news_christmas_shop_meta">Mỹ phẩm</string>
+    <string name="caramel_news_plus_title">Caramel+ sắp ra mắt</string>
+    <string name="caramel_news_plus_body">Gói thành viên $6 mỗi tháng với mỹ phẩm và bản dựng sớm. Chưa mở bán; thông tin sẽ có tại đây trước.</string>
+    <string name="caramel_news_plus_meta">Thành viên</string>
+    <string name="caramel_news_christmas_title">Caramel chúc mừng Giáng sinh</string>
+    <string name="caramel_news_christmas_body">Cảm ơn bạn đã chơi cùng chúng tôi trong năm nay. Chúc kỳ nghỉ vui vẻ và nhớ ghé cửa hàng.</string>
+    <string name="caramel_news_christmas_meta">Thông báo</string>
 </resources>

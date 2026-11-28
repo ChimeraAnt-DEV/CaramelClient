@@ -1571,4 +1571,16 @@ A migração deve ser concluída antes que o CaramelClient continue.</string>
     <string name="caramel_import_instance_unsupported">Esse arquivo não é um pacote .apk, .xapk ou .zip.</string>
     <string name="caramel_import_instance_empty">Esse pacote não contém um base.apk.</string>
     <string name="mod_menu_not_live_body">O menu no jogo não está carregado nesta versão. Reinstale o cliente ou atualize-o.</string>
+    <string name="caramel_news_offsets_title">Mais módulos a caminho</string>
+    <string name="caramel_news_offsets_body">Estamos mapeando os offsets da engine 26.60. Cada um que provamos libera um módulo que antes só podia ser lido.</string>
+    <string name="caramel_news_offsets_meta">Roteiro</string>
+    <string name="caramel_news_christmas_shop_title">Loja de cosméticos de Natal</string>
+    <string name="caramel_news_christmas_shop_body">Um conjunto de inverno de capas, chapéus e pets chega à loja de cosméticos em dezembro.</string>
+    <string name="caramel_news_christmas_shop_meta">Cosméticos</string>
+    <string name="caramel_news_plus_title">Caramel+ está chegando</string>
+    <string name="caramel_news_plus_body">Uma assinatura de $6 por mês com cosméticos e versões antecipadas. Ainda não está à venda; os detalhes aparecem aqui.</string>
+    <string name="caramel_news_plus_meta">Assinatura</string>
+    <string name="caramel_news_christmas_title">Feliz Natal da equipe Caramel</string>
+    <string name="caramel_news_christmas_body">Obrigado por jogar com a gente neste ano. Aproveite as festas e fique de olho na loja.</string>
+    <string name="caramel_news_christmas_meta">Anúncio</string>
 </resources>

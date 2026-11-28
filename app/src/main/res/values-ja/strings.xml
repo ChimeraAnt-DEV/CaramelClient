@@ -1568,4 +1568,16 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_import_instance_unsupported">このファイルは .apk、.xapk、.zip のパッケージではありません。</string>
     <string name="caramel_import_instance_empty">このパッケージには base.apk が含まれていません。</string>
     <string name="mod_menu_not_live_body">このビルドではゲーム内メニューが読み込まれていません。クライアントを再インストールするか更新してください。</string>
+    <string name="caramel_news_offsets_title">さらにモジュールを追加予定</string>
+    <string name="caramel_news_offsets_body">26.60 のエンジンオフセットを解析中です。証明できたものは、これまで読むだけだったモジュールを解禁します。</string>
+    <string name="caramel_news_offsets_meta">ロードマップ</string>
+    <string name="caramel_news_christmas_shop_title">クリスマスコスメショップ</string>
+    <string name="caramel_news_christmas_shop_body">ケープ、帽子、ペットの冬セットが今月コスメショップに登場します。</string>
+    <string name="caramel_news_christmas_shop_meta">コスメ</string>
+    <string name="caramel_news_plus_title">Caramel+ 近日公開</string>
+    <string name="caramel_news_plus_body">コスメと先行ビルド付きの月額 6 ドルのメンバーシップです。まだ販売前で、詳細はここでお知らせします。</string>
+    <string name="caramel_news_plus_meta">メンバーシップ</string>
+    <string name="caramel_news_christmas_title">Caramel よりメリークリスマス</string>
+    <string name="caramel_news_christmas_body">今年も一緒に遊んでくれてありがとうございます。良い休暇を。ショップもお見逃しなく。</string>
+    <string name="caramel_news_christmas_meta">お知らせ</string>
 </resources>

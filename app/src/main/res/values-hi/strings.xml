@@ -1599,4 +1599,16 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="caramel_import_instance_unsupported">यह फ़ाइल .apk, .xapk या .zip पैकेज नहीं है।</string>
     <string name="caramel_import_instance_empty">इस पैकेज में base.apk नहीं है।</string>
     <string name="mod_menu_not_live_body">इस बिल्ड में इन-गेम मेनू लोड नहीं है। क्लाइंट को फिर से इंस्टॉल करें या अपडेट करें।</string>
+    <string name="caramel_news_offsets_title">और मॉड्यूल आ रहे हैं</string>
+    <string name="caramel_news_offsets_body">हम 26.60 इंजन ऑफ़सेट मैप कर रहे हैं। जो भी सिद्ध होता है, वह एक ऐसा मॉड्यूल खोलता है जो पहले केवल पढ़ा जा सकता था।</string>
+    <string name="caramel_news_offsets_meta">रोडमैप</string>
+    <string name="caramel_news_christmas_shop_title">क्रिसमस कॉस्मेटिक्स शॉप</string>
+    <string name="caramel_news_christmas_shop_body">केप, टोपी और पेट्स का सर्दियों का सेट इस दिसंबर कॉस्मेटिक्स स्टोर में आ रहा है।</string>
+    <string name="caramel_news_christmas_shop_meta">कॉस्मेटिक्स</string>
+    <string name="caramel_news_plus_title">Caramel+ आ रहा है</string>
+    <string name="caramel_news_plus_body">कॉस्मेटिक्स और जल्दी बिल्ड के साथ $6 प्रति माह की सदस्यता। अभी बिक्री पर नहीं; जानकारी पहले यहीं आएगी।</string>
+    <string name="caramel_news_plus_meta">सदस्यता</string>
+    <string name="caramel_news_christmas_title">Caramel की ओर से क्रिसमस की शुभकामनाएँ</string>
+    <string name="caramel_news_christmas_body">इस साल हमारे साथ खेलने के लिए धन्यवाद। छुट्टियों का आनंद लें और स्टोर पर नज़र रखें।</string>
+    <string name="caramel_news_christmas_meta">घोषणा</string>
 </resources>

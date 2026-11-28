@@ -1598,4 +1598,16 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_import_instance_unsupported">Bu dosya bir .apk, .xapk veya .zip paketi değil.</string>
     <string name="caramel_import_instance_empty">Bu pakette base.apk yok.</string>
     <string name="mod_menu_not_live_body">Bu sürümde oyun içi menü yüklü değil. İstemciyi yeniden yükleyin veya güncelleyin.</string>
+    <string name="caramel_news_offsets_title">Daha fazla modül yolda</string>
+    <string name="caramel_news_offsets_body">26.60 motor ofsetlerini haritalıyoruz. Kanıtladığımız her ofset, önceden yalnızca okunabilen bir modülün kilidini açıyor.</string>
+    <string name="caramel_news_offsets_meta">Yol haritası</string>
+    <string name="caramel_news_christmas_shop_title">Noel kozmetik mağazası</string>
+    <string name="caramel_news_christmas_shop_body">Pelerin, şapka ve evcil hayvanlardan oluşan kış seti bu aralıkta kozmetik mağazasına geliyor.</string>
+    <string name="caramel_news_christmas_shop_meta">Kozmetik</string>
+    <string name="caramel_news_plus_title">Caramel+ geliyor</string>
+    <string name="caramel_news_plus_body">Kozmetikler ve erken sürümler içeren ayda $6 üyelik. Henüz satışta değil; ayrıntılar önce burada.</string>
+    <string name="caramel_news_plus_meta">Üyelik</string>
+    <string name="caramel_news_christmas_title">Caramel\'dan mutlu Noeller</string>
+    <string name="caramel_news_christmas_body">Bu yıl bizimle oynadığınız için teşekkürler. Tatilin tadını çıkarın ve mağazayı takip edin.</string>
+    <string name="caramel_news_christmas_meta">Duyuru</string>
 </resources>
