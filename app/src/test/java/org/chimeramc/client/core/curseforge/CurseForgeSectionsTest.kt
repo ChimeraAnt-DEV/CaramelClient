@@ -22,7 +22,7 @@ class CurseForgeSectionsTest {
         assertEquals(4984, CurseForgeSection.ADDONS.classId)
         assertEquals(6929, CurseForgeSection.TEXTURE_PACKS.classId)
         assertEquals(6940, CurseForgeSection.SCRIPTS.classId)
-        assertEquals(6913, CurseForgeSection.MAPS.classId)
+        assertEquals(6913, CurseForgeSection.WORLDS.classId)
         assertEquals(6925, CurseForgeSection.SKINS.classId)
     }
 

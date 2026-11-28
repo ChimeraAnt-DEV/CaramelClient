@@ -8,7 +8,8 @@ import org.chimeramc.client.R
  * The catalogue sections the CurseForge tab browses, in the order the tab shows them.
  *
  * <p>The class ids are the API's own for Minecraft Bedrock (`gameId` 78022), read from
- * `/v1/categories?gameId=78022`: the entries with `isClass = true` are Addons 4984, Maps 6913,
+ * `/v1/categories?gameId=78022`: the entries with `isClass = true` are Addons 4984, Maps 6913 (shown as Worlds: a Bedrock
+ * world is distributed through that class),
  * Skins 6925, Texture Packs 6929 and Scripts 6940. They are not guesses — a wrong id would return
  * another game's catalogue or nothing at all.
  *
@@ -20,7 +21,7 @@ enum class CurseForgeSection(val classId: Int, private val labelRes: Int) {
     ADDONS(4984, R.string.caramel_curseforge_section_addons),
     TEXTURE_PACKS(6929, R.string.caramel_curseforge_section_texture_packs),
     SCRIPTS(6940, R.string.caramel_curseforge_section_scripts),
-    MAPS(6913, R.string.caramel_curseforge_section_maps),
+    WORLDS(6913, R.string.caramel_curseforge_section_worlds),
     SKINS(6925, R.string.caramel_curseforge_section_skins),
     ;
 

@@ -1591,7 +1591,7 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_curseforge_section_addons">Eklentiler</string>
     <string name="caramel_curseforge_section_texture_packs">Doku Paketleri</string>
     <string name="caramel_curseforge_section_scripts">Betikler</string>
-    <string name="caramel_curseforge_section_maps">Haritalar</string>
+    <string name="caramel_curseforge_section_worlds">Dünyalar</string>
     <string name="caramel_curseforge_section_skins">Skinler</string>
     <string name="caramel_import_instance_title">Örnek içe aktarılıyor</string>
     <string name="caramel_import_instance_wait">Bitene kadar başlatıcıyı açık tutun.</string>

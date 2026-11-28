@@ -1585,7 +1585,7 @@
     <string name="caramel_curseforge_section_addons">附加内容</string>
     <string name="caramel_curseforge_section_texture_packs">材质包</string>
     <string name="caramel_curseforge_section_scripts">脚本</string>
-    <string name="caramel_curseforge_section_maps">地图</string>
+    <string name="caramel_curseforge_section_worlds">世界</string>
     <string name="caramel_curseforge_section_skins">皮肤</string>
     <string name="caramel_import_instance_title">正在导入实例</string>
     <string name="caramel_import_instance_wait">请保持启动器打开直到完成。</string>

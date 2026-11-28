@@ -1564,7 +1564,7 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="caramel_curseforge_section_addons">Extensions</string>
     <string name="caramel_curseforge_section_texture_packs">Packs de textures</string>
     <string name="caramel_curseforge_section_scripts">Scripts</string>
-    <string name="caramel_curseforge_section_maps">Cartes</string>
+    <string name="caramel_curseforge_section_worlds">Mondes</string>
     <string name="caramel_curseforge_section_skins">Skins</string>
     <string name="caramel_import_instance_title">Importation de l\'instance</string>
     <string name="caramel_import_instance_wait">Gardez le launcher ouvert jusqu\'à la fin.</string>

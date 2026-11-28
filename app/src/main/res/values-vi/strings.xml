@@ -1594,7 +1594,7 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_curseforge_section_addons">Tiện ích</string>
     <string name="caramel_curseforge_section_texture_packs">Gói kết cấu</string>
     <string name="caramel_curseforge_section_scripts">Tập lệnh</string>
-    <string name="caramel_curseforge_section_maps">Bản đồ</string>
+    <string name="caramel_curseforge_section_worlds">Thế giới</string>
     <string name="caramel_curseforge_section_skins">Skin</string>
     <string name="caramel_import_instance_title">Đang nhập phiên bản</string>
     <string name="caramel_import_instance_wait">Giữ trình khởi chạy mở cho đến khi xong.</string>

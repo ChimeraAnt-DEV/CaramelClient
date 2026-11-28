@@ -1561,7 +1561,7 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_curseforge_section_addons">アドオン</string>
     <string name="caramel_curseforge_section_texture_packs">テクスチャパック</string>
     <string name="caramel_curseforge_section_scripts">スクリプト</string>
-    <string name="caramel_curseforge_section_maps">マップ</string>
+    <string name="caramel_curseforge_section_worlds">ワールド</string>
     <string name="caramel_curseforge_section_skins">スキン</string>
     <string name="caramel_import_instance_title">インスタンスをインポート中</string>
     <string name="caramel_import_instance_wait">完了するまでランチャーを開いたままにしてください。</string>

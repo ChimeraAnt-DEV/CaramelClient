@@ -1588,7 +1588,7 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="caramel_curseforge_section_addons">Add-on</string>
     <string name="caramel_curseforge_section_texture_packs">Paket Tekstur</string>
     <string name="caramel_curseforge_section_scripts">Skrip</string>
-    <string name="caramel_curseforge_section_maps">Peta</string>
+    <string name="caramel_curseforge_section_worlds">Dunia</string>
     <string name="caramel_curseforge_section_skins">Skin</string>
     <string name="caramel_import_instance_title">Mengimpor instans</string>
     <string name="caramel_import_instance_wait">Biarkan launcher terbuka sampai selesai.</string>

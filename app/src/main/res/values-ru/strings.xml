@@ -1603,7 +1603,7 @@
     <string name="caramel_curseforge_section_addons">Дополнения</string>
     <string name="caramel_curseforge_section_texture_packs">Наборы текстур</string>
     <string name="caramel_curseforge_section_scripts">Скрипты</string>
-    <string name="caramel_curseforge_section_maps">Карты</string>
+    <string name="caramel_curseforge_section_worlds">Миры</string>
     <string name="caramel_curseforge_section_skins">Скины</string>
     <string name="caramel_import_instance_title">Импорт экземпляра</string>
     <string name="caramel_import_instance_wait">Не закрывайте лаунчер до завершения.</string>
