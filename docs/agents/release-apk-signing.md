@@ -16,6 +16,14 @@ launcher's storage, worlds included. Two things caused it, and both are fixed:
 
 Rules that must not be regressed:
 
+- **The no-key case selects `signingConfigs.debug`, it does not point `storeFile` at a path that may
+  not exist.** `storeFile file('')` throws at configuration time, and pointing at
+  `~/.android/debug.keystore` fails `:app:validateSigningBeta` on a runner where no debug build has
+  ever run (measured: the `Build Release APK` job died with `Keystore file
+  '/home/runner/.android/debug.keystore' not found`). Selecting the `debug` config lets AGP create
+  that key itself, so a fork pull request still gets an installable beta — which the job then
+  deliberately does not upload.
+
 - **A secret cannot be read from a step `if:`**, so presence is turned into a job-level env flag
   once (`HAS_SIGNING_KEY: $&#123;&#123; secrets.SIGNING_KEY_STORE != '' &#125;&#125;`, escaped
   here because VitePress renders the raw form as a template) and the steps test

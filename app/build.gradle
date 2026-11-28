@@ -110,19 +110,16 @@ android {
     // local.properties, which is gitignored: a signing key is not source. With no key configured the
     // build falls back to the debug key so a clean clone still produces an installable beta, and the
     // About screen's build line is what tells a locally built beta from a published one.
+    def betaKeystoreConfigured = localProperties.getProperty('caramel.keystore.file', '')
     signingConfigs {
         beta {
-            def storePath = localProperties.getProperty('caramel.keystore.file', '')
-            if (storePath) {
-                storeFile file(storePath)
+            // Left empty when no key is configured: file('') throws at configuration time, and the
+            // beta build type selects the debug config instead.
+            if (betaKeystoreConfigured) {
+                storeFile file(betaKeystoreConfigured)
                 storePassword localProperties.getProperty('caramel.keystore.storePassword', '')
                 keyAlias localProperties.getProperty('caramel.keystore.keyAlias', '')
                 keyPassword localProperties.getProperty('caramel.keystore.keyPassword', '')
-            } else {
-                storeFile file(System.getProperty('user.home') + '/.android/debug.keystore')
-                storePassword 'android'
-                keyAlias 'androiddebugkey'
-                keyPassword 'android'
             }
         }
     }
@@ -232,7 +229,10 @@ android {
             resValue "string", "app_name", "Caramel Client Beta"
             buildConfigField "boolean", "IS_BETA", "true"
             matchingFallbacks = ["debug"]
-            signingConfig signingConfigs.beta
+            // A path to a keystore that does not exist fails validateSigningBeta, which is what a CI
+            // runner that restores no secrets hit. The debug config is the right fallback there: AGP
+            // creates that key itself, so the build still produces an installable APK.
+            signingConfig betaKeystoreConfigured ? signingConfigs.beta : signingConfigs.debug
             // Debug symbols are the one debug-build property worth dropping: they are most of the
             // 131 MB download and nothing in the beta channel reads them.
             ndk { debugSymbolLevel 'SYMBOL_TABLE' }
