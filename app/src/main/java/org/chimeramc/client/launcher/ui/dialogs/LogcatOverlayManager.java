@@ -1,13 +1,19 @@
 package org.chimeramc.client.ui.dialogs;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.ViewGroup;
-import org.chimeramc.client.settings.FeatureSettings;
+
 import org.chimeramc.client.core.minecraft.MinecraftLoadingActivity;
+import org.chimeramc.client.settings.FeatureSettings;
+import org.chimeramc.client.settings.SettingsStorage;
 import org.chimeramc.client.ui.activities.SplashActivity;
 import org.chimeramc.client.util.MainThread;
+
 
 public class LogcatOverlayManager {
 
@@ -17,9 +23,22 @@ public class LogcatOverlayManager {
     private final Handler mainHandler = MainThread.handler();
     private volatile boolean onSplash = false;
     private volatile boolean onLoading = false;
+    /** Cleared on pause, so it cannot outlive the screen it points at. */
+    private volatile Activity resumedActivity;
+
+    /**
+     * Held in a field on purpose: {@code registerOnSharedPreferenceChangeListener} keeps only a
+     * weak reference to its listener, so a listener passed inline is collected at the next GC and
+     * the overlay silently stops answering the switch until the process restarts. That was the
+     * "logcat needs a restart" report.
+     */
+    private final SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
     private LogcatOverlayManager(Application app) {
         this.app = app;
+        settingsListener = (prefs, key) -> {
+            if (SettingsStorage.KEY_SETTINGS_JSON.equals(key)) updateVisibility();
+        };
         registerLifecycleCallbacks();
         registerSettingsListener();
     }
@@ -45,9 +64,18 @@ public class LogcatOverlayManager {
         updateVisibility();
     }
 
+    /**
+     * Re-reads the switch and shows or hides the strip.
+     *
+     * <p>The overlay is created lazily: a switch flipped before any activity attached one still has
+     * to take effect, so the currently resumed activity is used when there is no overlay yet.
+     */
     private void updateVisibility() {
-        boolean show = FeatureSettings.getInstance().isLogcatOverlayEnabled() && !onSplash && !onLoading;
+        boolean show = LogcatOverlayVisibility.shouldShow(
+                FeatureSettings.getInstance().isLogcatOverlayEnabled(), onSplash, onLoading);
+        Activity activity = resumedActivity;
         mainHandler.post(() -> {
+            if (overlay == null && activity != null && !activity.isFinishing()) attachTo(activity);
             if (overlay == null) return;
             if (show) overlay.show(); else overlay.hide();
         });
@@ -58,11 +86,14 @@ public class LogcatOverlayManager {
             @Override public void onActivityResumed(Activity activity) {
                 onSplash = activity instanceof SplashActivity;
                 onLoading = activity instanceof MinecraftLoadingActivity;
+                resumedActivity = onSplash || onLoading ? null : activity;
                 attachTo(activity);
             }
             @Override public void onActivityCreated(Activity a, Bundle b) {}
             @Override public void onActivityStarted(Activity a) {}
-            @Override public void onActivityPaused(Activity a) {}
+            @Override public void onActivityPaused(Activity a) {
+                if (resumedActivity == a) resumedActivity = null;
+            }
             @Override public void onActivityStopped(Activity a) {}
             @Override public void onActivitySaveInstanceState(Activity a, Bundle b) {}
             @Override public void onActivityDestroyed(Activity a) {}
@@ -70,13 +101,9 @@ public class LogcatOverlayManager {
     }
 
     private void registerSettingsListener() {
-        SharedPreferences sp = app.getSharedPreferences("feature_settings", Context.MODE_PRIVATE);
-        sp.registerOnSharedPreferenceChangeListener((prefs, key) -> {
-            if ("settings_json".equals(key)) updateVisibility();
-        });
+        SharedPreferences sp = app.getSharedPreferences(SettingsStorage.SP_NAME, Context.MODE_PRIVATE);
+        sp.registerOnSharedPreferenceChangeListener(settingsListener);
     }
 
     public void refreshVisibility() { updateVisibility(); }
-
-
 }
