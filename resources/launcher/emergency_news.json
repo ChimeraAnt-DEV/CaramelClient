@@ -1,0 +1,5 @@
+{
+  "$comment": "Announcements that ship without a build. Edit, commit to main, and every install shows them on the next launch. id must be stable (that is what de-duplicates a post across launches and keeps a dismissed-looking post from reappearing under a new id). expiresAt is ISO-8601 and optional; an empty string means no expiry. url is optional and opens in the launcher's own browser.",
+  "schemaVersion": 1,
+  "posts": []
+}

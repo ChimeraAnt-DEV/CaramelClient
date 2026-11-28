@@ -162,6 +162,11 @@ class LauncherApplication : Application() {
             org.chimeramc.client.core.cosmetics.AccountSkinService
                 .refreshIfStale(applicationContext)
         }
+        // Announcements that were published after this build shipped. One small document, cached, so
+        // a notice about a broken release reaches the install without waiting for the next one.
+        step("emergency_news") {
+            org.chimeramc.client.core.news.EmergencyNews.refresh(applicationContext, null)
+        }
     }
 
     /**

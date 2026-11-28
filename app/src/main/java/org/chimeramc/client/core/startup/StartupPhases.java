@@ -52,6 +52,8 @@ public final class StartupPhases {
         NATIVE_COSMETICS,
         /** The account skin re-sync: a cache read plus a background fetch, not needed to draw. */
         ACCOUNT_SKIN_SYNC,
+        /** Announcements published since this build: one small fetch, not needed to draw. */
+        EMERGENCY_NEWS,
     }
 
     private StartupPhases() {
