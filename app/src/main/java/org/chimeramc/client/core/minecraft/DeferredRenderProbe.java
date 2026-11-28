@@ -4,7 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
+import org.chimeramc.client.util.AppLog;
 
 import java.lang.reflect.Method;
 
@@ -23,6 +23,9 @@ public final class DeferredRenderProbe {
 
     /** The feature string the platform declares when a Vulkan driver is present. */
     private static final String FEATURE_VULKAN_VERSION = "android.hardware.vulkan.version";
+
+    private static volatile boolean exactVersionChecked;
+    private static Method exactVersionMethod;
 
     private DeferredRenderProbe() {
     }
@@ -53,7 +56,8 @@ public final class DeferredRenderProbe {
             return org.chimeramc.client.core.cosmetics.GpuFamily
                     .isSoftware(org.chimeramc.client.core.cosmetics.GpuFamily.fromNativeCode(code));
         } catch (Throwable t) {
-            Log.w(TAG, "GPU family could not be read; not treating as software", t);
+            AppLog.warnOnce(TAG, "gpu-family",
+                    "GPU family could not be read; not treating as software", t);
             return false;
         }
     }
@@ -82,7 +86,8 @@ public final class DeferredRenderProbe {
             int oneOne = (1 << 22) | (1 << 12);
             return pm.hasSystemFeature(FEATURE_VULKAN_VERSION, oneOne) ? oneOne : (1 << 22);
         } catch (Throwable t) {
-            Log.w(TAG, "Vulkan version could not be read; treating as absent", t);
+            AppLog.warnOnce(TAG, "vulkan",
+                    "Vulkan version could not be read; treating as absent", t);
             return 0;
         }
     }
@@ -90,13 +95,41 @@ public final class DeferredRenderProbe {
     /** The feature's reported version via the hidden framework API, or 0 when it is not reachable. */
     private static int systemFeatureVersion(PackageManager pm, String feature) {
         try {
-            Method method = PackageManager.class.getMethod("getSystemFeatureVersion", String.class);
+            Method method = getSystemFeatureVersionMethod();
+            if (method == null) return 0;
             Object value = method.invoke(pm, feature);
             return value instanceof Integer ? (Integer) value : 0;
         } catch (Throwable t) {
-            Log.w(TAG, "Exact Vulkan version unavailable; using the minimum-version query", t);
+            AppLog.warnOnce(TAG, "vulkan-exact", "Exact Vulkan version unreadable; using the "
+                    + "minimum-version query", t);
             return 0;
         }
+    }
+
+    /**
+     * The hidden accessor, resolved once per process, or null when this platform does not expose it.
+     *
+     * <p>{@code getSystemFeatureVersion} is not public API: it is present on some builds and absent
+     * on others, so a lookup that fails is the ordinary case rather than a fault. Caching the
+     * verdict keeps that one miss from costing a reflection lookup (and a stack trace) on every
+     * launch, where it was the loudest thing in logcat.
+     */
+    private static Method getSystemFeatureVersionMethod() {
+        if (exactVersionChecked) return exactVersionMethod;
+        synchronized (DeferredRenderProbe.class) {
+            if (exactVersionChecked) return exactVersionMethod;
+            Method resolved = null;
+            try {
+                resolved = PackageManager.class.getMethod("getSystemFeatureVersion",
+                        String.class);
+            } catch (NoSuchMethodException absent) {
+                AppLog.warnOnce(TAG, "vulkan-exact-method", "PackageManager has no "
+                        + "getSystemFeatureVersion; Vulkan is gated at 1.0 or 1.1 only", absent);
+            }
+            exactVersionMethod = resolved;
+            exactVersionChecked = true;
+        }
+        return exactVersionMethod;
     }
 
     private static int glEsVersion(Context context) {
@@ -107,7 +140,8 @@ public final class DeferredRenderProbe {
             ConfigurationInfo info = am.getDeviceConfigurationInfo();
             return info == null ? 0 : info.reqGlEsVersion;
         } catch (Throwable t) {
-            Log.w(TAG, "GLES version could not be read; treating as absent", t);
+            AppLog.warnOnce(TAG, "gles",
+                    "GLES version could not be read; treating as absent", t);
             return 0;
         }
     }
