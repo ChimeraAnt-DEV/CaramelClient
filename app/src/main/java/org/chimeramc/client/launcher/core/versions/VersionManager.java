@@ -1344,7 +1344,7 @@ public class VersionManager {
         callback.onProgress(10);
 
         if (kind == ImportedPackageLayout.Kind.ARCHIVE) {
-            extractArchive(gameFile, tempDir, callback);
+            ArchiveExtractor.extract(gameFile, tempDir, callback::onProgress);
         } else {
             File apkDir = new File(tempDir, ImportedPackageLayout.APK_DIR);
             apkDir.mkdirs();
@@ -1378,53 +1378,6 @@ public class VersionManager {
         deleteDir(tempDir);
     }
 
-    private void extractArchive(File archive, File outputDir, VersionCallback callback) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(archive)))) {
-            ZipEntry entry;
-            int totalEntries = Math.max(1, countEntries(archive));
-            int processed = 0;
-
-            while ((entry = zis.getNextEntry()) != null) {
-                if (ImportedPackageLayout.isUnsafeEntry(entry.getName())) {
-                    AppLog.warnOnce(TAG, "import-unsafe-entry",
-                            "Skipped an archive entry that points outside the import directory", null);
-                    zis.closeEntry();
-                    continue;
-                }
-                File outputFile = new File(outputDir, entry.getName());
-
-                if (entry.isDirectory()) {
-                    outputFile.mkdirs();
-                } else {
-                    File parent = outputFile.getParentFile();
-                    if (parent != null) parent.mkdirs();
-                    try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                        byte[] buffer = new byte[BUFFER_SIZE];
-                        int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            fos.write(buffer, 0, len);
-                        }
-                    }
-                }
-
-                processed++;
-                int progress = 10 + (processed * 40 / totalEntries);
-                callback.onProgress(progress);
-
-                zis.closeEntry();
-            }
-        }
-    }
-    private int countEntries(File zipFile) throws IOException {
-        int count = 0;
-        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)))) {
-            while (zis.getNextEntry() != null) {
-                count++;
-                zis.closeEntry();
-            }
-        }
-        return count;
-    }
 
     private void splitIntoSandbox(File sourceDir, File versionDir, VersionCallback callback) {
         // Create sandboxed directory structure

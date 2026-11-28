@@ -90,7 +90,7 @@ fun CaramelCurseForgeScreen(
     }
     CaramelPage(stringResource(R.string.caramel_curseforge_title), stringResource(R.string.caramel_curseforge_sub)) {
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            items(CurseForgeSection.entries.toList(), key = { it.name }) { section ->
+            items(CurseForgeSection.entries, key = { it.name }) { section ->
                 FilterChip(
                     section.label(),
                     state.curseForgeSection == section,
