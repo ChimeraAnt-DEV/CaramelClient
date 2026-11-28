@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -189,10 +190,15 @@ fun CaramelTheme(prefs: CaramelUiPrefs = rememberCaramelUiPrefs(), content: @Com
     // choice changes, so resolving it here (rather than observing it) is enough.
     val light = org.chimeramc.client.util.ThemeManager.isLightActive(context)
     CaramelColors.light = light
+    // The dp layout is drawn for a 360dp-wide phone. Narrow windows (split screen, a small or
+    // low-resolution screen) and large tablets get a gentle density scale so the same fixed dp
+    // columns neither overflow nor read as a phone app on a big screen.
+    val window = LocalConfiguration.current
+    val resize = UiResizeRule.scaleFor(window.screenWidthDp, window.screenHeightDp)
     CompositionLocalProvider(
         LocalCaramelPrefs provides prefs,
         LocalCaramelFamily provides family,
-        LocalDensity provides Density(density.density, prefs.fontScale),
+        LocalDensity provides Density(density.density * resize, prefs.fontScale),
     ) {
         androidx.compose.material3.MaterialTheme(
             colorScheme = if (light) {

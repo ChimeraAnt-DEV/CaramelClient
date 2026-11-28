@@ -109,6 +109,7 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
     private ContentManager contentManager;
     private CosmeticStore cosmeticStore;
     private XboxFriendsClient friendsClient;
+    private org.chimeramc.client.core.news.EmergencyNews.Listener emergencyNewsListener;
     private XboxFriendRequestClient friendRequestClient;
 
     /** The settings panel's store; the launcher's gear renders it. */
@@ -204,6 +205,9 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
         super.onCreate(savedInstanceState);
         minecraftLauncher = new MinecraftLauncher(this);
         settingsController = new LauncherSettingsController(this);
+        // A published announcement can land after the first frame; redraw when it does.
+        emergencyNewsListener = () -> runOnUiThread(this::refreshState);
+        org.chimeramc.client.core.news.EmergencyNews.addListener(emergencyNewsListener);
         launcherState = CaramelLauncherHost.state();
         serverFavourites = ServerFavouritesStore.load(this);
         applyInitialTab(getIntent());
@@ -538,6 +542,9 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
         } catch (Throwable t) {
             AppLog.warnOnce(TAG, "buildNews", "Could not read the changelog feed", t);
         }
+        // Published announcements first: a notice that a release is broken has to be the first thing
+        // the News tab shows, ahead of the bundled posts.
+        out.addAll(org.chimeramc.client.core.news.EmergencyNews.newsItems(this));
         // Bundled announcements that are not part of the changelog feed.
         out.addAll(org.chimeramc.client.core.changelog.BundledNews.posts(this));
         return out;
@@ -1644,6 +1651,7 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
 
     @Override
     protected void onDestroy() {
+        org.chimeramc.client.core.news.EmergencyNews.removeListener(emergencyNewsListener);
         if (friendsClient != null) friendsClient.close();
         super.onDestroy();
     }
