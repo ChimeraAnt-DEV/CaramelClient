@@ -11,8 +11,7 @@ import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
  *
  * <p>The menu itself is drawn natively (Dear ImGui), and until this button existed the only way to
  * open it was the keyboard or controller bind — a phone with neither had no entry point at all, and
- * the "Open the Mod Menu" description had nothing to describe. The glyph is the Caramel apple, the
- * same mark the launcher wears, so the button reads as the client's own.
+ * the "Open the Mod Menu" description had nothing to describe.
  */
 public class ModMenuButtonOverlay extends BaseOverlayButton {
 
@@ -25,9 +24,19 @@ public class ModMenuButtonOverlay extends BaseOverlayButton {
         return ModIds.MOD_MENU;
     }
 
+    /**
+     * The drawable the floating button wears.
+     *
+     * <p>A plain three-bar handle, not the client's apple: the button sits on top of the game and
+     * every screenshot, and the brand mark there announced the client rather than the menu.
+     */
+    static int iconResource() {
+        return R.drawable.mod_menu_handle;
+    }
+
     @Override
     protected int getIconResource() {
-        return R.drawable.mod_menu_icon;
+        return iconResource();
     }
 
     @Override
