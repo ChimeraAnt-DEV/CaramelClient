@@ -14,6 +14,7 @@ import org.chimeramc.client.ui.compose.caramel.CaramelCosmeticInfo
 import org.chimeramc.client.ui.compose.caramel.CaramelServerInfo
 import org.chimeramc.client.launcher.core.splash.SplashShow
 import org.chimeramc.client.ui.compose.caramel.CaramelSettingsProvider
+import org.chimeramc.client.ui.compose.caramel.CaramelWindowScale
 
 /**
  * The Java-facing entry point for the Caramel launcher UI.
@@ -105,12 +106,14 @@ object CaramelLauncherHost {
     ) {
         composeView.setContent {
             CaramelTheme {
-                CaramelLauncherScreen(
-                    state = state.value,
-                    actions = actions,
-                    skinViewer = skinViewerProvider,
-                    settings = settings,
-                )
+                CaramelWindowScale {
+                    CaramelLauncherScreen(
+                        state = state.value,
+                        actions = actions,
+                        skinViewer = skinViewerProvider,
+                        settings = settings,
+                    )
+                }
             }
         }
     }

@@ -1,5 +1,19 @@
 package org.chimeramc.client.ui.compose.caramel
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntSize
+
 /**
  * How much the launcher's dp layout is scaled for the window it is actually in.
  *
@@ -41,5 +55,39 @@ object UiResizeRule {
     fun scaleForPixels(widthPx: Int, heightPx: Int, density: Float): Float {
         if (density <= 0f) return 1f
         return scaleFor((widthPx / density).toInt(), (heightPx / density).toInt())
+    }
+}
+
+/**
+ * Runs [content] at the density [UiResizeRule] picks for the window it is given.
+ *
+ * <p>The window is measured in pixels first: a pixel reading does not move when the density does,
+ * whereas reading the window in dp from inside the scaled scope would feed the new density back into
+ * its own constraints and oscillate. An ordinary phone lands on scale 1 and takes the untinted path,
+ * so the default look is bit-for-bit what it was.
+ */
+@Composable
+fun CaramelWindowScale(content: @Composable () -> Unit) {
+    val base = LocalDensity.current
+    var sizePx by remember { mutableStateOf(IntSize.Zero) }
+    val scale = if (sizePx.width <= 0 || sizePx.height <= 0) {
+        1f
+    } else {
+        UiResizeRule.scaleForPixels(sizePx.width, sizePx.height, base.density)
+    }
+    Box(
+        Modifier
+            .fillMaxSize()
+            .onSizeChanged { sizePx = it },
+    ) {
+        if (scale == 1f) {
+            content()
+        } else {
+            CompositionLocalProvider(
+                LocalDensity provides Density(base.density * scale, base.fontScale),
+            ) {
+                content()
+            }
+        }
     }
 }

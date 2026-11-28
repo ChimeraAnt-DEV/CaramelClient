@@ -837,7 +837,9 @@ object CaramelSettingsHost {
     ) {
         composeView.setContent {
             CaramelTheme {
-                CaramelSettingsScreen(state, actions) { onClose.run() }
+                CaramelWindowScale {
+                    CaramelSettingsScreen(state, actions) { onClose.run() }
+                }
             }
         }
     }
