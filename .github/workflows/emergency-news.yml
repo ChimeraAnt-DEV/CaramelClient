@@ -1,0 +1,73 @@
+name: Emergency news
+
+# Publishes a red "Emergency" post to every install without shipping a build: run this workflow,
+# type the message, and the commit it makes is what the client fetches on its next launch.
+#
+# Emergency means something is broken right now. For "read this soon" use the Urgent news workflow
+# instead — the two write the same document with a different severity badge, and the client shows
+# both, so the distinction is only honest if it is used for what it says.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "What to tell players. One or two sentences, plain text."
+        required: true
+        type: string
+      title:
+        description: "Headline. Leave empty to use the first sentence of the message."
+        required: false
+        type: string
+        default: ""
+      expires_hours:
+        description: "Hide the post automatically after this many hours. 0 keeps it until it is removed."
+        required: false
+        type: string
+        default: "24"
+      banner:
+        description: "Reserved for the banner asset name. Leave empty for the launcher's own gradient."
+        required: false
+        type: string
+        default: ""
+
+concurrency:
+  group: emergency-news
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Publish the post
+        env:
+          MESSAGE: ${{ inputs.message }}
+          TITLE: ${{ inputs.title }}
+          EXPIRES_HOURS: ${{ inputs.expires_hours }}
+          BANNER: ${{ inputs.banner }}
+        run: |
+          python3 scripts/publish_emergency_news.py \
+            --severity emergency \
+            --message "$MESSAGE" \
+            --title "$TITLE" \
+            --expires-hours "$EXPIRES_HOURS" \
+            --banner "$BANNER"
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet -- resources/launcher/emergency_news.json; then
+            echo "The document is unchanged; nothing to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resources/launcher/emergency_news.json
+          git commit -m "feat(news): publish an emergency post"
+          git push origin HEAD:main

@@ -1612,4 +1612,6 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_news_christmas_meta">Duyuru</string>
     <string name="caramel_friend_row_request_received">Arkadaşlık isteği alındı</string>
     <string name="caramel_friend_row_request_sent">Arkadaşlık isteği gönderildi</string>
+    <string name="news_severity_emergency">Acil</string>
+    <string name="news_severity_urgent">Önemli</string>
 </resources>

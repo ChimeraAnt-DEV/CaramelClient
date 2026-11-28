@@ -1,0 +1,5 @@
+{
+  "$comment": "Xuids of accounts that are known to run CaramelClient. The client fetches this at startup and caches it; an id here draws the Caramel badge on that account in the Xbox friends list and in friend search. Publish an id only with its owner's consent: the badge is a claim about another person, and the wire evidence (voice or cosmetic sync) already covers anyone this device has actually met. Add ids as strings, lower case or upper case both work.",
+  "schemaVersion": 1,
+  "xuids": []
+}

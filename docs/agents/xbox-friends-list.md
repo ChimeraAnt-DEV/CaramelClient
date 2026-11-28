@@ -58,3 +58,24 @@ Fix, all unit-tested without a device:
 Not verified on a device: that `/people/followers` is served for a Bedrock account's XSTS token.
 The code degrades to the plain friend list with the error line when it is not, which is the old
 behaviour, so a wrong path costs the request labels and nothing else.
+
+### The Caramel badge: wire evidence, plus a published list
+
+The chip beside a name is a claim about another person ("this account runs CaramelClient"), so the
+rule has to be evidence. It used to be *only* wire evidence — an account seen on a Caramel-only
+protocol (voice or cosmetic sync) — which meant the badge never lit for a friend who plays Caramel in
+another world. That is half of what the friends screen is for.
+
+- **`CaramelUserRegistry`** reads `resources/launcher/caramel_users.json`
+  (`{"schemaVersion":1,"xuids":[...]}`, or a bare array) at startup, caches it, and keeps the cached
+  copy when a fetch fails, so an outage cannot silently turn every badge off. Only string entries are
+  ids; a number or a nested object that snuck into the list is dropped rather than compared.
+- **`CaramelUserDirectory.isCaramelUser(context, xuid)`** is wire evidence ∪ published list, and the
+  two call sites (`addFriendRows`, friend search) ask with a context. `isCaramelUser(xuid, heard,
+  published)` is the pure rule the tests pin. A blank id never matches, whatever either set contains.
+- **Publishing is an operator action.** Nothing in the client adds an id to that list: an id belongs
+  there only with its owner's consent. The wire evidence still covers anyone this device has actually
+  met, so the list can stay small.
+- Tests: `CaramelUserRegistryTest` (both document shapes, normalisation, junk entries, malformed
+  document) and the extended `CaramelUserDirectoryTest` (published id earns the badge, unknown and
+  blank ids do not).

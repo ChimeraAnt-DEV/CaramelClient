@@ -1582,4 +1582,6 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_news_christmas_meta">お知らせ</string>
     <string name="caramel_friend_row_request_received">フレンド申請が届きました</string>
     <string name="caramel_friend_row_request_sent">フレンド申請を送信しました</string>
+    <string name="news_severity_emergency">緊急</string>
+    <string name="news_severity_urgent">重要</string>
 </resources>

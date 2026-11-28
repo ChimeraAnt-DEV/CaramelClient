@@ -8,6 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,8 +50,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.verticalScroll
 import org.chimeramc.client.R
 import org.chimeramc.client.ui.compose.caramel.C
+import org.chimeramc.client.ui.compose.caramel.CaramelLayoutRule
 import org.chimeramc.client.ui.compose.caramel.CaramelFriendRelation
 import org.chimeramc.client.ui.compose.caramel.CaramelFriendRow
 import org.chimeramc.client.ui.compose.caramel.CaramelNotice
@@ -73,31 +79,90 @@ fun CaramelHomeScreen(
     onLaunch: () -> Unit,
     onOpenScreenshots: () -> Unit,
 ) {
-    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-            Hero(state, onLaunch, onOpenScreenshots, Modifier.fillMaxWidth().height(320.dp))
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.caramel_latest_news), style = T.Title, modifier = Modifier.weight(1f))
-                Text(
-                    stringResource(R.string.caramel_view_all_news),
-                    style = T.Label.copy(color = C.Text2, fontSize = 11.5.sp_),
-                    modifier = Modifier.clickable(remember { MutableInteractionSource() }, null) { state.newsAll = true },
-                )
-            }
-            Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                val cards = state.news.take(3)
-                if (cards.isEmpty()) {
-                    EmptyCard(stringResource(R.string.caramel_no_news_title), stringResource(R.string.caramel_no_news_body), Modifier.weight(1f))
-                } else {
-                    cards.forEachIndexed { i, n ->
-                        NewsCard(state, n, newsArt(i), Modifier.weight(1f))
-                    }
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val widthDp = maxWidth.value.toInt()
+        val heightAvailable = maxHeight
+        val gutter = CaramelLayoutRule.gutter(widthDp)
+        if (CaramelLayoutRule.homeSplitsSideBySide(widthDp)) {
+            // A landscape phone is wide and short: the cards keep their proportions, the column that
+            // overflows scrolls rather than clipping the bottom of a news card, and the promo card is
+            // dropped when the side column cannot hold it instead of being squashed to a sliver.
+            val tallSideColumn = heightAvailable >= 600.dp
+            Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(gutter)) {
+                Column(
+                    Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(gutter),
+                ) {
+                    Hero(state, onLaunch, onOpenScreenshots, Modifier.fillMaxWidth().height(minOf(320.dp, heightAvailable * 0.62f)))
+                    NewsHeader(state)
+                    NewsStrip(state, CaramelLayoutRule.newsColumns(widthDp), Modifier.fillMaxWidth(), gutter)
+                }
+                Column(
+                    Modifier.width(CaramelLayoutRule.sideColumnWidth(widthDp) ?: 374.dp).fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(gutter),
+                ) {
+                    FriendsCard(
+                        state,
+                        if (tallSideColumn) {
+                            Modifier.fillMaxWidth().height(320.dp)
+                        } else {
+                            Modifier.fillMaxWidth().weight(1f)
+                        },
+                    )
+                    if (tallSideColumn) PromoCard(state, Modifier.fillMaxWidth().weight(1f))
                 }
             }
+        } else {
+            // One column on a phone-held window: the same cards, in the order a reader expects them
+            // (what am I launching, what happened, who is on) rather than a squeezed two-column row.
+            Column(
+                Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(gutter),
+            ) {
+                Hero(state, onLaunch, onOpenScreenshots, Modifier.fillMaxWidth().height(minOf(320.dp, heightAvailable * 0.55f)))
+                NewsHeader(state)
+                NewsStrip(state, CaramelLayoutRule.newsColumns(widthDp), Modifier.fillMaxWidth(), gutter)
+                FriendsCard(state, Modifier.fillMaxWidth().height(320.dp))
+                PromoCard(state, Modifier.fillMaxWidth().height(220.dp))
+            }
         }
-        Column(Modifier.width(374.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-            FriendsCard(state, Modifier.fillMaxWidth().height(320.dp))
-            PromoCard(state, Modifier.fillMaxWidth().weight(1f))
+    }
+}
+
+/** "Latest news" and the link to the full list, shared by both layouts. */
+@Composable
+private fun NewsHeader(state: CaramelLauncherState) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(stringResource(R.string.caramel_latest_news), style = T.Title, modifier = Modifier.weight(1f))
+        Text(
+            stringResource(R.string.caramel_view_all_news),
+            style = T.Label.copy(color = C.Text2, fontSize = 11.5.sp_),
+            modifier = Modifier.clickable(remember { MutableInteractionSource() }, null) { state.newsAll = true },
+        )
+    }
+}
+
+/**
+ * The latest posts, [columns] to a row.
+ *
+ * <p>A row of three cards is the design at tablet width; at phone width three equal weights leave a
+ * 90dp card that truncates its own title, so the rule drops to one or two and the cards keep their
+ * proportions.
+ */
+@Composable
+private fun NewsStrip(state: CaramelLauncherState, columns: Int, modifier: Modifier, gutter: androidx.compose.ui.unit.Dp) {
+    val cards = state.news.take(3)
+    if (cards.isEmpty()) {
+        EmptyCard(stringResource(R.string.caramel_no_news_title), stringResource(R.string.caramel_no_news_body), modifier)
+        return
+    }
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(gutter)) {
+        cards.withIndex().chunked(columns).forEach { row ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(gutter)) {
+                row.forEach { (i, n) -> NewsCard(state, n, newsArt(i), Modifier.weight(1f)) }
+                // A short last row must not stretch its cards across the full width.
+                repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
+            }
         }
     }
 }
@@ -123,31 +188,50 @@ private fun Hero(state: CaramelLauncherState, onLaunch: () -> Unit, onOpenScreen
                 radius = size.width * 0.5f,
             )
         }
-        Image(painterResource(R.drawable.ic_caramel_logo), null, Modifier.align(Alignment.CenterStart).padding(start = 24.dp).size(210.dp))
-        Column(
-            Modifier.align(Alignment.Center).padding(start = 130.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Text(stringResource(R.string.caramel_ready), style = T.Body)
-            LaunchSplitButton(state, onLaunch)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                GlassButton(stringResource(R.string.caramel_profiles), { state.launchMenu = true }, icon = Icons.Rounded.Folder, height = 32)
-                GlassButton(stringResource(R.string.caramel_instances), { state.instanceSettings = true }, icon = Icons.Rounded.Tune, height = 32)
-                GlassButton(stringResource(R.string.caramel_screenshots_title), onOpenScreenshots, icon = Icons.Rounded.PhotoCamera, height = 32)
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            // The composition is the design's at full width and compact when the hero is squeezed by a
+            // narrow column or a short window: the art is dropped, the launch button takes the width it
+            // has, and the action buttons wrap instead of running off the right edge.
+            val compact = maxWidth < 560.dp || maxHeight < 240.dp
+            if (!compact) {
+                Image(
+                    painterResource(R.drawable.ic_caramel_logo), null,
+                    Modifier.align(Alignment.CenterStart).padding(start = 24.dp).size(210.dp),
+                )
             }
-            val line = state.instanceName.ifEmpty { stringResource(R.string.caramel_no_instance) }
-            Text(line, style = T.Caption)
+            Column(
+                Modifier.fillMaxSize().padding(
+                    start = if (compact) 16.dp else 130.dp,
+                    end = 16.dp,
+                    top = 10.dp,
+                    bottom = 10.dp,
+                ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 14.dp, Alignment.CenterVertically),
+            ) {
+                Text(stringResource(R.string.caramel_ready), style = T.Body)
+                LaunchSplitButton(state, onLaunch, Modifier.fillMaxWidth().widthIn(max = 340.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    GlassButton(stringResource(R.string.caramel_profiles), { state.launchMenu = true }, icon = Icons.Rounded.Folder, height = 32)
+                    GlassButton(stringResource(R.string.caramel_instances), { state.instanceSettings = true }, icon = Icons.Rounded.Tune, height = 32)
+                    GlassButton(stringResource(R.string.caramel_screenshots_title), onOpenScreenshots, icon = Icons.Rounded.PhotoCamera, height = 32)
+                }
+                val line = state.instanceName.ifEmpty { stringResource(R.string.caramel_no_instance) }
+                Text(line, style = T.Caption)
+            }
         }
     }
 }
 
 /** LAUNCH GAME with a split chevron that opens the launch menu, from the pack's `LaunchSplitButton`. */
 @Composable
-private fun LaunchSplitButton(state: CaramelLauncherState, onLaunch: () -> Unit) {
+private fun LaunchSplitButton(state: CaramelLauncherState, onLaunch: () -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(20.dp)
     Row(
-        Modifier.width(340.dp).height(72.dp).clip(shape)
+        modifier.height(72.dp).clip(shape)
             .background(Brush.verticalGradient(listOf(C.GreenLight, C.GreenDark)))
             .background(Brush.verticalGradient(listOf(Color.White.copy(0.22f), Color.Transparent, Color.Transparent)))
             .border(1.dp, Color.White.copy(0.3f), shape),
@@ -224,6 +308,13 @@ private fun NewsCard(state: CaramelLauncherState, post: CaramelNewsInfo, art: Li
             }
             Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(post.title, style = T.Subtitle.copy(fontSize = 13.5.sp_), maxLines = 2)
+                if (post.severityLabel.isNotEmpty()) {
+                    // A service warning looks like a warning on Home too, not only in the News tab.
+                    Text(
+                        post.severityLabel,
+                        style = T.Label.copy(color = if (post.emergency) C.Red else Color(0xFFFFB300)),
+                    )
+                }
                 Text(post.meta, style = T.Body, maxLines = 2)
                 if (post.actionLabel.isNotEmpty() && post.actionUrl.isNotEmpty()) {
                     // The card's own action, so the announcement is one tap from Home too. Same

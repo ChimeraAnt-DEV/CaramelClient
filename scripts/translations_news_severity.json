@@ -1,0 +1,42 @@
+{
+  "es": {
+    "news_severity_emergency": "Emergencia",
+    "news_severity_urgent": "Urgente"
+  },
+  "fr": {
+    "news_severity_emergency": "Urgence",
+    "news_severity_urgent": "Important"
+  },
+  "hi": {
+    "news_severity_emergency": "आपातकाल",
+    "news_severity_urgent": "ज़रूरी"
+  },
+  "id": {
+    "news_severity_emergency": "Darurat",
+    "news_severity_urgent": "Penting"
+  },
+  "ja": {
+    "news_severity_emergency": "緊急",
+    "news_severity_urgent": "重要"
+  },
+  "pt": {
+    "news_severity_emergency": "Emergência",
+    "news_severity_urgent": "Urgente"
+  },
+  "ru": {
+    "news_severity_emergency": "Критично",
+    "news_severity_urgent": "Важно"
+  },
+  "tr": {
+    "news_severity_emergency": "Acil",
+    "news_severity_urgent": "Önemli"
+  },
+  "vi": {
+    "news_severity_emergency": "Khẩn cấp",
+    "news_severity_urgent": "Quan trọng"
+  },
+  "zh-rCN": {
+    "news_severity_emergency": "紧急",
+    "news_severity_urgent": "重要"
+  }
+}

@@ -96,7 +96,7 @@ public class FriendsListWiringTest {
         String activity = read(
                 "app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java");
         assertTrue("a friend row's badge must come from the Caramel-user directory",
-                activity.contains("CaramelUserDirectory.isCaramelUser(f.xuid)"));
+                activity.contains("CaramelUserDirectory.isCaramelUser(this, f.xuid)"));
         String labels = read(
                 "app/src/main/java/org/chimeramc/client/ui/compose/caramel/CaramelLabels.kt");
         assertTrue("the friend row must draw the Caramel chip only for a confirmed account",

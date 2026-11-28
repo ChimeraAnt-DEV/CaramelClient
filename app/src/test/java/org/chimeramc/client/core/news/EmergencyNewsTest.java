@@ -1,6 +1,7 @@
 package org.chimeramc.client.core.news;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -34,6 +35,38 @@ public class EmergencyNewsTest {
         assertEquals("Sign-in is down", posts.get(0).title);
         assertEquals("Status", posts.get(0).meta);
         assertEquals("https://status.example", posts.get(0).url);
+    }
+
+    @Test
+    public void theSeverityIsReadAndDefaultsToUrgent() {
+        String json = "{\"posts\":["
+                + "{\"id\":\"e\",\"title\":\"Broken\",\"body\":\"Body\",\"severity\":\"emergency\"},"
+                + "{\"id\":\"u\",\"title\":\"Soon\",\"body\":\"Body\",\"severity\":\"urgent\"},"
+                + "{\"id\":\"d\",\"title\":\"Default\",\"body\":\"Body\"}]}";
+        List<EmergencyNews.Post> posts = EmergencyNews.parse(json, now());
+        assertEquals(3, posts.size());
+        assertTrue(posts.get(0).isEmergency());
+        assertEquals(NewsSeverity.EMERGENCY, posts.get(0).severity);
+        assertFalse(posts.get(1).isEmergency());
+        // A missing value reads as urgent: under-reporting an outage is worse than an extra badge.
+        assertFalse(posts.get(2).isEmergency());
+        assertEquals(NewsSeverity.URGENT, posts.get(2).severity);
+    }
+
+    @Test
+    public void anUnknownSeverityReadsAsUrgent() {
+        String json = "{\"posts\":[{\"id\":\"x\",\"title\":\"T\",\"body\":\"B\","
+                + "\"severity\":\"critical\"}]}";
+        List<EmergencyNews.Post> posts = EmergencyNews.parse(json, now());
+        assertEquals(1, posts.size());
+        assertEquals(NewsSeverity.URGENT, posts.get(0).severity);
+    }
+
+    @Test
+    public void severityIsCaseInsensitiveOnTheWire() {
+        String json = "{\"posts\":[{\"id\":\"e\",\"title\":\"T\",\"body\":\"B\","
+                + "\"severity\":\" EMERGENCY \"}]}";
+        assertTrue(EmergencyNews.parse(json, now()).get(0).isEmergency());
     }
 
     @Test

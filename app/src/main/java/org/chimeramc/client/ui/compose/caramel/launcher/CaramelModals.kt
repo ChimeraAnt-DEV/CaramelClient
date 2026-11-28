@@ -310,7 +310,14 @@ fun CaramelNewsModal(state: CaramelLauncherState, actions: CaramelLauncherHost.A
                                     }
                                 }
                                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    if (post.featured) StatusLabel(stringResource(R.string.caramel_featured), C.Caramel)
+                                    if (post.severityLabel.isNotEmpty()) {
+                                        StatusLabel(
+                                            post.severityLabel,
+                                            if (post.emergency) C.Red else Color(0xFFFFB300),
+                                        )
+                                    } else if (post.featured) {
+                                        StatusLabel(stringResource(R.string.caramel_featured), C.Caramel)
+                                    }
                                     Text(post.title, style = T.Subtitle.copy(fontSize = 15.sp_), maxLines = 2)
                                     Text(post.summary, style = T.Body, maxLines = 3)
                                     Text(post.meta, style = T.Caption)

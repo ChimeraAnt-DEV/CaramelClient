@@ -1585,4 +1585,6 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="caramel_news_christmas_meta">Annonce</string>
     <string name="caramel_friend_row_request_received">Demande d\'ami reçue</string>
     <string name="caramel_friend_row_request_sent">Demande d\'ami envoyée</string>
+    <string name="news_severity_emergency">Urgence</string>
+    <string name="news_severity_urgent">Important</string>
 </resources>

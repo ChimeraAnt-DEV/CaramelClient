@@ -140,6 +140,15 @@ data class CaramelNewsInfo @JvmOverloads constructor(
      * card never shows an empty hole where art is missing.
      */
     val imageRes: Int = 0,
+    /**
+     * The severity badge text ("Emergency" / "Urgent"), empty for an ordinary post.
+     *
+     * <p>Only the emergency-news channel sets this: a bundled changelog entry is never urgent, and
+     * a badge on every card would stop meaning anything.
+     */
+    val severityLabel: String = "",
+    /** Whether [severityLabel] is the emergency one, which draws red instead of amber. */
+    val emergency: Boolean = false,
 )
 
 /**

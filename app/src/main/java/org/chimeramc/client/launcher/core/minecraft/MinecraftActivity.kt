@@ -265,6 +265,12 @@ class MinecraftActivity : MainActivity(), PojavControlsHost {
 
     private fun startPlaytimeSession(profileId: String?) {
         PlaytimeManager.startSession(profileId)
+        // A launch is the moment the account is known to be live in the game, so it is also when a
+        // skin changed since the last session should be picked up - the "constant sync" entry point
+        // otherwise only runs at launcher start.
+        runCatching {
+            org.chimeramc.client.core.cosmetics.AccountSkinService.refreshIfStale(applicationContext)
+        }
         playtimeHeartbeatHandler.removeCallbacks(playtimeHeartbeat)
         playtimeHeartbeatHandler.postDelayed(playtimeHeartbeat, PlaytimeManager.HEARTBEAT_INTERVAL_MS)
     }

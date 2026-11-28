@@ -2830,6 +2830,10 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_news_christmas_title">Merry Christmas from Caramel</string>
     <string name="caramel_news_christmas_body">Thank you for playing with us this year. Enjoy the holidays, and keep an eye on the shop.</string>
     <string name="caramel_news_christmas_meta">Announcement</string>
+    <!-- The badge on an emergency-news post. Emergency means something is broken right now;
+         urgent means it needs reading soon. Both are published, never guessed from the text. -->
+    <string name="news_severity_emergency">Emergency</string>
+    <string name="news_severity_urgent">Urgent</string>
     <string name="caramel_mods_sub">Browse, install and toggle mods for this instance</string>
     <string name="caramel_search_mods">Search mods</string>
     <string name="caramel_open_mods_folder">Open mods folder</string>

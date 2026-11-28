@@ -1606,4 +1606,6 @@
     <string name="caramel_news_christmas_meta">公告</string>
     <string name="caramel_friend_row_request_received">收到好友请求</string>
     <string name="caramel_friend_row_request_sent">好友请求已发送</string>
+    <string name="news_severity_emergency">紧急</string>
+    <string name="news_severity_urgent">重要</string>
 </resources>

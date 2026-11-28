@@ -1613,4 +1613,6 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="caramel_news_christmas_meta">घोषणा</string>
     <string name="caramel_friend_row_request_received">मित्रता अनुरोध मिला</string>
     <string name="caramel_friend_row_request_sent">मित्रता अनुरोध भेजा गया</string>
+    <string name="news_severity_emergency">आपातकाल</string>
+    <string name="news_severity_urgent">ज़रूरी</string>
 </resources>

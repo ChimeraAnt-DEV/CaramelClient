@@ -167,6 +167,11 @@ class LauncherApplication : Application() {
         step("emergency_news") {
             org.chimeramc.client.core.news.EmergencyNews.refresh(applicationContext, null)
         }
+        // Who else runs Caramel. Cached like the announcements, so the badge on a friend's row works
+        // from the first launch instead of only for accounts this device has stood next to.
+        step("caramel_users") {
+            org.chimeramc.client.core.cosmetics.CaramelUserRegistry.refresh(applicationContext)
+        }
     }
 
     /**

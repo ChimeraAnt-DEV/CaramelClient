@@ -1624,4 +1624,6 @@
     <string name="caramel_news_christmas_meta">Объявление</string>
     <string name="caramel_friend_row_request_received">Заявка в друзья получена</string>
     <string name="caramel_friend_row_request_sent">Заявка в друзья отправлена</string>
+    <string name="news_severity_emergency">Критично</string>
+    <string name="news_severity_urgent">Важно</string>
 </resources>

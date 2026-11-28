@@ -38,14 +38,41 @@ public final class CaramelUserDirectory {
     }
 
     /**
-     * Whether {@code xuid} has been seen on a Caramel-only protocol.
+     * Whether {@code xuid} is a Caramel user, by wire evidence or by the published list.
      *
-     * <p>Matching is case-insensitive on the trimmed id; a null or blank xuid is never a Caramel
-     * user, so a half-resolved account cannot accidentally earn a badge.
+     * <p>The wire set alone only ever covered accounts this device had stood next to, so a friend
+     * from the Xbox list who plays on Caramel in another world never earned the badge. The published
+     * list ({@link CaramelUserRegistry}) closes that gap for ids published with their owner's
+     * consent; a badge is still never guessed from a gamertag.
+     */
+    public static boolean isCaramelUser(android.content.Context context, String xuid) {
+        Set<String> published = CaramelUserRegistry.ids(context);
+        return isCaramelUser(xuid, knownXuids(), published);
+    }
+
+    /**
+     * Whether {@code xuid} has been seen on a Caramel-only protocol, ignoring the published list.
+     *
+     * <p>Kept for the wire-only question; the screens ask {@link #isCaramelUser(android.content.Context,
+     * String)} so a published id counts too. Matching is case-insensitive on the trimmed id, and a
+     * null or blank xuid is never a Caramel user.
      */
     public static boolean isCaramelUser(String xuid) {
+        return isCaramelUser(xuid, knownXuids(), null);
+    }
+
+    /**
+     * The pure badge rule: an id is a Caramel user when either evidence set names it.
+     *
+     * @param xuid      the id the screen is about, possibly blank
+     * @param heard     ids confirmed on a Caramel-only protocol (may be null)
+     * @param published ids from the published list (may be null)
+     */
+    public static boolean isCaramelUser(String xuid, Set<String> heard, Set<String> published) {
         if (xuid == null || xuid.trim().isEmpty()) return false;
-        return knownXuids().contains(xuid.trim().toLowerCase(java.util.Locale.ROOT));
+        String normalised = xuid.trim().toLowerCase(java.util.Locale.ROOT);
+        return (heard != null && heard.contains(normalised))
+                || (published != null && published.contains(normalised));
     }
 
     /**

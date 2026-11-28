@@ -70,4 +70,36 @@ public class CaramelUserDirectoryTest {
                 Arrays.asList((CosmeticSyncProtocol.Advert) null),
                 Arrays.asList((VoicePeer) null)).isEmpty());
     }
+
+    @Test
+    public void aPublishedIdEarnsTheBadgeWithoutHavingMetTheAccount() {
+        // The gap the friends screen had: a Caramel user you have never stood next to. The published
+        // list is the evidence, and it is the only thing that makes this id a Caramel user here.
+        Set<String> heard = Collections.emptySet();
+        Set<String> published = Collections.singleton("2533274812345678");
+        assertTrue(CaramelUserDirectory.isCaramelUser("2533274812345678", heard, published));
+        // ...and the wire set keeps working on its own.
+        assertTrue(CaramelUserDirectory.isCaramelUser(
+                "2533274811111111", Collections.singleton("2533274811111111"),
+                Collections.emptySet()));
+    }
+
+    @Test
+    public void anUnknownIdIsStillNotABadge() {
+        Set<String> published = Collections.singleton("2533274812345678");
+        assertFalse(CaramelUserDirectory.isCaramelUser("2533274899999999",
+                Collections.emptySet(), published));
+        assertFalse("a blank id must never match", CaramelUserDirectory.isCaramelUser(
+                "  ", Collections.emptySet(), published));
+        assertFalse(CaramelUserDirectory.isCaramelUser(null, null, published));
+        assertFalse(CaramelUserDirectory.isCaramelUser("2533274812345678", null, null));
+    }
+
+    @Test
+    public void matchingIsCaseAndWhitespaceInsensitive() {
+        assertTrue(CaramelUserDirectory.isCaramelUser(" 2533274812345678 ",
+                Collections.emptySet(), Collections.singleton("2533274812345678")));
+        assertTrue(CaramelUserDirectory.isCaramelUser("25332748ABCDEF01",
+                Collections.emptySet(), Collections.singleton("25332748abcdef01")));
+    }
 }

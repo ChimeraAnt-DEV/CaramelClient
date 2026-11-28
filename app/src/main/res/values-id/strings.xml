@@ -1609,4 +1609,6 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="caramel_news_christmas_meta">Pengumuman</string>
     <string name="caramel_friend_row_request_received">Permintaan pertemanan diterima</string>
     <string name="caramel_friend_row_request_sent">Permintaan pertemanan terkirim</string>
+    <string name="news_severity_emergency">Darurat</string>
+    <string name="news_severity_urgent">Penting</string>
 </resources>

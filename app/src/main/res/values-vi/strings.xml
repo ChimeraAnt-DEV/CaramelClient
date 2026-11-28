@@ -1615,4 +1615,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_news_christmas_meta">Thông báo</string>
     <string name="caramel_friend_row_request_received">Đã nhận lời mời kết bạn</string>
     <string name="caramel_friend_row_request_sent">Đã gửi lời mời kết bạn</string>
+    <string name="news_severity_emergency">Khẩn cấp</string>
+    <string name="news_severity_urgent">Quan trọng</string>
 </resources>

@@ -118,3 +118,6 @@ file is missing from the index.
 - [The Xbox friends list (the card and modal that never showed a friend)](docs/agents/xbox-friends-list.md)
 - [Microsoft sign-in: device code, not MSAL](docs/agents/microsoft-sign-in-device-code-not-msal.md)
 - [The mods-folder browser (the "Open mods folder" button that did nothing)](docs/agents/mods-folder-browser.md)
+- [Emergency news: publishing a notice without shipping a build](docs/agents/emergency-news-publishing.md)
+- [Release signing: the APK people install must be the release-shaped, release-signed one](docs/agents/release-apk-signing.md)
+- [Launcher layout: resize (scale) and rearrange (columns)](docs/agents/launcher-layout-resize-and-rearrange.md)

@@ -2,6 +2,7 @@ package org.chimeramc.client.core.news;
 
 import android.content.Context;
 
+import org.chimeramc.client.R;
 import org.chimeramc.client.ui.compose.caramel.CaramelNewsInfo;
 import org.chimeramc.client.util.AppLog;
 import org.json.JSONArray;
@@ -57,13 +58,21 @@ public final class EmergencyNews {
         public final String body;
         public final String meta;
         public final String url;
+        public final NewsSeverity severity;
 
-        Post(String id, String title, String body, String meta, String url) {
+        Post(String id, String title, String body, String meta, String url,
+             NewsSeverity severity) {
             this.id = id;
             this.title = title;
             this.body = body;
             this.meta = meta;
             this.url = url;
+            this.severity = severity == null ? NewsSeverity.URGENT : severity;
+        }
+
+        /** Whether this post carries the emergency label rather than the urgent one. */
+        public boolean isEmergency() {
+            return severity.isEmergency();
         }
     }
 
@@ -109,7 +118,8 @@ public final class EmergencyNews {
                 if (id.isEmpty()) id = title;
                 if (!seen.add(id)) continue;
                 out.add(new Post(id, title, body, raw.optString("meta", "").trim(),
-                        raw.optString("url", "").trim()));
+                        raw.optString("url", "").trim(),
+                        NewsSeverity.fromWire(raw.optString("severity", ""))));
             }
         } catch (Throwable t) {
             // A malformed document is not a reason to clear the tab: it yields no posts, and the
@@ -146,7 +156,13 @@ public final class EmergencyNews {
     public static List<CaramelNewsInfo> newsItems(Context context) {
         List<CaramelNewsInfo> out = new ArrayList<>();
         for (Post p : posts(context)) {
-            out.add(new CaramelNewsInfo(p.title, p.body, p.meta, true, "", p.url, 0));
+            // The badge is the only way a reader can tell a service warning from a normal post, so
+            // it is derived from the published severity rather than from the wording.
+            String label = p.isEmergency()
+                    ? context.getString(R.string.news_severity_emergency)
+                    : context.getString(R.string.news_severity_urgent);
+            out.add(new CaramelNewsInfo(p.title, p.body, p.meta, true, "", p.url, 0,
+                    label, p.isEmergency()));
         }
         return out;
     }

@@ -1,4 +1,4 @@
-name: Build Debug APK
+name: Build Release APK
 
 on:
   push:
@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # A secret cannot be read from a step `if:`, so its presence is turned into an env flag once.
+      HAS_SIGNING_KEY: ${{ secrets.SIGNING_KEY_STORE != '' }}
     steps:
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v7
@@ -71,12 +74,60 @@ jobs:
         # visible on a build machine.
         run: ./gradlew :app:lintDebug
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug
+      - name: Restore the release signing key
+        # This workflow publishes the APK people install, so it has to carry the same signature as
+        # the tagged release: Android refuses an update signed by a different key, and the only way
+        # out is to uninstall, which wipes the worlds and settings in the app's storage. A
+        # debug-signed APK is therefore never uploaded; without secrets (a fork pull request) the
+        # build only proves the release variant compiles.
+        if: env.HAS_SIGNING_KEY == 'true'
+        env:
+          SIGNING_KEY_STORE: ${{ secrets.SIGNING_KEY_STORE }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          KEYSTORE="$RUNNER_TEMP/release.jks"
+          printf '%s' "$SIGNING_KEY_STORE" | base64 -d > "$KEYSTORE"
+          test -s "$KEYSTORE"
+          {
+            echo "caramel.keystore.file=$KEYSTORE"
+            echo "caramel.keystore.storePassword=$SIGNING_STORE_PASSWORD"
+            echo "caramel.keystore.keyAlias=$SIGNING_KEY_ALIAS"
+            echo "caramel.keystore.keyPassword=$SIGNING_KEY_PASSWORD"
+          } >> local.properties
 
-      - name: Upload debug APK
+      - name: Build the beta (release-shaped) APK
+        # `beta` is the channel users download: unminified, because R8 on this tree produced a build
+        # whose game launch died in libfmod's JNI_OnLoad (app/build.gradle records that where the
+        # channel is defined). `release` keeps R8 and is built here as a compile gate only.
+        run: ./gradlew assembleBeta assembleRelease
+
+      - name: Name the APK and write its digest
+        if: env.HAS_SIGNING_KEY == 'true'
+        run: |
+          SRC=$(ls app/build/outputs/apk/beta/*.apk | head -1)
+          DST="CaramelClient-beta.apk"
+          cp "$SRC" "$DST"
+          # B16: no public artifact ships without a digest.
+          python3 scripts/compute_checksums.py --dir . --pattern "$DST"
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          # The certificate digest is public - it is in every installed copy - and printing it is
+          # the only way a reviewer can tell this APK from one signed with a different key.
+          "$APKSIGNER" verify --print-certs "$DST" | grep -i "SHA-256" | head -2
+
+      - name: Upload the signed APK
+        if: env.HAS_SIGNING_KEY == 'true'
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: CaramelClient-beta-apk
+          path: |
+            CaramelClient-beta.apk
+            CaramelClient-beta.apk.sha256
           if-no-files-found: error
+
+      - name: Say why there is no installable APK
+        if: env.HAS_SIGNING_KEY != 'true'
+        run: |
+          echo "::warning::No signing key on this run (fork pull request?), so no APK is uploaded."
+          echo "The release variant compiled; see the steps above for the build result."

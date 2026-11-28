@@ -350,13 +350,15 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
     }
 
     /** Adds one class of PeopleHub row, in the order the read returned it. */
-    private static void addFriendRows(List<CaramelFriendInfo> rows, List<XboxPeopleHub.Friend> people,
+    private void addFriendRows(List<CaramelFriendInfo> rows, List<XboxPeopleHub.Friend> people,
             CaramelFriendRelation relation) {
         if (people == null) return;
         for (XboxPeopleHub.Friend f : people) {
             rows.add(new CaramelFriendInfo(
                     f.xuid, f.gamertag, f.displayPicRaw, f.isOnline(), f.presenceText,
-                    CaramelUserDirectory.isCaramelUser(f.xuid), relation));
+                    // The published list counts here, so a friend who plays Caramel in another
+                    // world shows the badge without having been stood next to.
+                    CaramelUserDirectory.isCaramelUser(this, f.xuid), relation));
         }
     }
 
@@ -1140,7 +1142,7 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
                 if (user != null) {
                     CaramelFoundUser found = new CaramelFoundUser(
                             user.xuid, user.label(), user.avatarUrl);
-                    boolean caramel = CaramelUserDirectory.isCaramelUser(user.xuid);
+                    boolean caramel = CaramelUserDirectory.isCaramelUser(this, user.xuid);
                     mutateState(s -> {
                         s.setFriendSearchRunning(false);
                         s.setFriendFound(found);
