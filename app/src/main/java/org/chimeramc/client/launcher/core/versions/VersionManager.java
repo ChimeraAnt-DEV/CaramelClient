@@ -1318,13 +1318,12 @@ public class VersionManager {
     public void importGameFile(File gameFile, VersionCallback callback) {
         AppExecutors.run(AppExecutors.Kind.DISK, "version-import", () -> {
             try {
-                String fileName = gameFile.getName().toLowerCase();
-                
-                if (fileName.endsWith(".xapk") || fileName.endsWith(".apk")) {
-                    extractAndSplit(gameFile, callback);
-                } else {
-                    callback.onError("Unsupported file format. Please use .apk or .xapk files.");
+                ImportedPackageLayout.Kind kind = ImportedPackageLayout.detect(gameFile);
+                if (kind == ImportedPackageLayout.Kind.UNKNOWN) {
+                    callback.onError(context.getString(R.string.caramel_import_instance_unsupported));
+                    return;
                 }
+                extractAndSplit(gameFile, kind, callback);
             } catch (Exception e) {
                 AppLog.error(TAG, "Importing the game file failed", e);
                 callback.onError(UserFacingError.shortReasonForText(context, "Import failed", e.getMessage()));
@@ -1332,62 +1331,73 @@ public class VersionManager {
         });
     }
 
-    private void extractAndSplit(File gameFile, VersionCallback callback) throws IOException {
+    private void extractAndSplit(File gameFile, ImportedPackageLayout.Kind kind,
+                                 VersionCallback callback) throws IOException {
         String versionId = java.util.UUID.randomUUID().toString();
         File baseDir = LauncherStorage.getMinecraftRoot(context);
         File versionDir = new File(baseDir, versionId);
         File tempDir = new File(context.getCacheDir(), "temp_extract_" + versionId);
-        
-        // Clean temp directory
+
         deleteDir(tempDir);
         tempDir.mkdirs();
-        
+
         callback.onProgress(10);
-        
-        // Extract XAPK/APK contents
-        if (gameFile.getName().endsWith(".xapk")) {
-            extractXapk(gameFile, tempDir, callback);
+
+        if (kind == ImportedPackageLayout.Kind.ARCHIVE) {
+            extractArchive(gameFile, tempDir, callback);
         } else {
-            // Single APK - create simple structure
-            File apkDir = new File(tempDir, "apk");
+            File apkDir = new File(tempDir, ImportedPackageLayout.APK_DIR);
             apkDir.mkdirs();
-            copyFile(gameFile, new File(apkDir, "base.apk"));
-            
-            // Extract version info
-            String versionName = getApkVersionName(gameFile);
-            saveVersionMetadata(versionId, versionName, gameFile.length(), versionDir);
+            copyFile(gameFile, new File(apkDir, ImportedPackageLayout.BASE_APK));
         }
-        
+
         callback.onProgress(50);
-        
-        // Split and organize files into sandboxed directories
+
+        // An XAPK keeps its APKs at the root and its OBB under Android/obb/; an exported instance
+        // may nest everything one folder down. Both are collected into the layout the installer reads.
+        ImportedPackageLayout.Result layout = ImportedPackageLayout.normalise(tempDir);
+        if (!layout.installable()) {
+            deleteDir(tempDir);
+            callback.onError(context.getString(R.string.caramel_import_instance_empty));
+            return;
+        }
+
+        File baseApk = new File(tempDir, ImportedPackageLayout.APK_DIR + "/"
+                + ImportedPackageLayout.BASE_APK);
+        saveVersionMetadata(versionId, getApkVersionName(baseApk), gameFile.length(), versionDir);
+
         splitIntoSandbox(tempDir, versionDir, callback);
-        
+
         callback.onProgress(90);
-        
-        // Mark as available by creating a custom version entry
+
         createCustomVersionFromImport(versionId, versionDir);
-        
+
         callback.onProgress(100);
         callback.onSuccess(versionId);
-        
-        // Cleanup temp
+
         deleteDir(tempDir);
     }
 
-    private void extractXapk(File xapkFile, File outputDir, VersionCallback callback) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(xapkFile)))) {
+    private void extractArchive(File archive, File outputDir, VersionCallback callback) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(archive)))) {
             ZipEntry entry;
-            int totalEntries = countEntries(xapkFile);
+            int totalEntries = Math.max(1, countEntries(archive));
             int processed = 0;
-            
+
             while ((entry = zis.getNextEntry()) != null) {
+                if (ImportedPackageLayout.isUnsafeEntry(entry.getName())) {
+                    AppLog.warnOnce(TAG, "import-unsafe-entry",
+                            "Skipped an archive entry that points outside the import directory", null);
+                    zis.closeEntry();
+                    continue;
+                }
                 File outputFile = new File(outputDir, entry.getName());
-                
+
                 if (entry.isDirectory()) {
                     outputFile.mkdirs();
                 } else {
-                    outputFile.getParentFile().mkdirs();
+                    File parent = outputFile.getParentFile();
+                    if (parent != null) parent.mkdirs();
                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                         byte[] buffer = new byte[BUFFER_SIZE];
                         int len;
@@ -1396,16 +1406,15 @@ public class VersionManager {
                         }
                     }
                 }
-                
+
                 processed++;
                 int progress = 10 + (processed * 40 / totalEntries);
                 callback.onProgress(progress);
-                
+
                 zis.closeEntry();
             }
         }
     }
-
     private int countEntries(File zipFile) throws IOException {
         int count = 0;
         try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)))) {

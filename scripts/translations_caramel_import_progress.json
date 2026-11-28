@@ -1,0 +1,72 @@
+{
+  "es": {
+    "caramel_import_instance_sub": "Importa un .apk, .xapk o .zip desde este dispositivo",
+    "caramel_import_instance_title": "Importando instancia",
+    "caramel_import_instance_wait": "Mantén el launcher abierto hasta que termine.",
+    "caramel_import_instance_unsupported": "Ese archivo no es un paquete .apk, .xapk o .zip.",
+    "caramel_import_instance_empty": "Ese paquete no contiene un base.apk."
+  },
+  "fr": {
+    "caramel_import_instance_sub": "Importez un .apk, .xapk ou .zip depuis cet appareil",
+    "caramel_import_instance_title": "Importation de l'instance",
+    "caramel_import_instance_wait": "Gardez le launcher ouvert jusqu'à la fin.",
+    "caramel_import_instance_unsupported": "Ce fichier n'est pas un paquet .apk, .xapk ou .zip.",
+    "caramel_import_instance_empty": "Ce paquet ne contient pas de base.apk."
+  },
+  "hi": {
+    "caramel_import_instance_sub": "इस डिवाइस से .apk, .xapk या .zip आयात करें",
+    "caramel_import_instance_title": "इंस्टेंस आयात हो रहा है",
+    "caramel_import_instance_wait": "पूरा होने तक लॉन्चर खुला रखें।",
+    "caramel_import_instance_unsupported": "यह फ़ाइल .apk, .xapk या .zip पैकेज नहीं है।",
+    "caramel_import_instance_empty": "इस पैकेज में base.apk नहीं है।"
+  },
+  "id": {
+    "caramel_import_instance_sub": "Impor .apk, .xapk, atau .zip dari perangkat ini",
+    "caramel_import_instance_title": "Mengimpor instans",
+    "caramel_import_instance_wait": "Biarkan launcher terbuka sampai selesai.",
+    "caramel_import_instance_unsupported": "Berkas itu bukan paket .apk, .xapk, atau .zip.",
+    "caramel_import_instance_empty": "Paket itu tidak berisi base.apk."
+  },
+  "ja": {
+    "caramel_import_instance_sub": "この端末から .apk、.xapk、.zip をインポート",
+    "caramel_import_instance_title": "インスタンスをインポート中",
+    "caramel_import_instance_wait": "完了するまでランチャーを開いたままにしてください。",
+    "caramel_import_instance_unsupported": "このファイルは .apk、.xapk、.zip のパッケージではありません。",
+    "caramel_import_instance_empty": "このパッケージには base.apk が含まれていません。"
+  },
+  "pt": {
+    "caramel_import_instance_sub": "Importe um .apk, .xapk ou .zip deste dispositivo",
+    "caramel_import_instance_title": "Importando instância",
+    "caramel_import_instance_wait": "Mantenha o launcher aberto até terminar.",
+    "caramel_import_instance_unsupported": "Esse arquivo não é um pacote .apk, .xapk ou .zip.",
+    "caramel_import_instance_empty": "Esse pacote não contém um base.apk."
+  },
+  "ru": {
+    "caramel_import_instance_sub": "Импортируйте .apk, .xapk или .zip с этого устройства",
+    "caramel_import_instance_title": "Импорт экземпляра",
+    "caramel_import_instance_wait": "Не закрывайте лаунчер до завершения.",
+    "caramel_import_instance_unsupported": "Этот файл не является пакетом .apk, .xapk или .zip.",
+    "caramel_import_instance_empty": "В этом пакете нет base.apk."
+  },
+  "tr": {
+    "caramel_import_instance_sub": "Bu cihazdan .apk, .xapk veya .zip içe aktar",
+    "caramel_import_instance_title": "Örnek içe aktarılıyor",
+    "caramel_import_instance_wait": "Bitene kadar başlatıcıyı açık tutun.",
+    "caramel_import_instance_unsupported": "Bu dosya bir .apk, .xapk veya .zip paketi değil.",
+    "caramel_import_instance_empty": "Bu pakette base.apk yok."
+  },
+  "vi": {
+    "caramel_import_instance_sub": "Nhập .apk, .xapk hoặc .zip từ thiết bị này",
+    "caramel_import_instance_title": "Đang nhập phiên bản",
+    "caramel_import_instance_wait": "Giữ trình khởi chạy mở cho đến khi xong.",
+    "caramel_import_instance_unsupported": "Tệp đó không phải gói .apk, .xapk hoặc .zip.",
+    "caramel_import_instance_empty": "Gói đó không có base.apk."
+  },
+  "zh-rCN": {
+    "caramel_import_instance_sub": "从此设备导入 .apk、.xapk 或 .zip",
+    "caramel_import_instance_title": "正在导入实例",
+    "caramel_import_instance_wait": "请保持启动器打开直到完成。",
+    "caramel_import_instance_unsupported": "该文件不是 .apk、.xapk 或 .zip 包。",
+    "caramel_import_instance_empty": "该包中没有 base.apk。"
+  }
+}

@@ -1596,4 +1596,8 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_curseforge_section_scripts">Tập lệnh</string>
     <string name="caramel_curseforge_section_maps">Bản đồ</string>
     <string name="caramel_curseforge_section_skins">Skin</string>
+    <string name="caramel_import_instance_title">Đang nhập phiên bản</string>
+    <string name="caramel_import_instance_wait">Giữ trình khởi chạy mở cho đến khi xong.</string>
+    <string name="caramel_import_instance_unsupported">Tệp đó không phải gói .apk, .xapk hoặc .zip.</string>
+    <string name="caramel_import_instance_empty">Gói đó không có base.apk.</string>
 </resources>

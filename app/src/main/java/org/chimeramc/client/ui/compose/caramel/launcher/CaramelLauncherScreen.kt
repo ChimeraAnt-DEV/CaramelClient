@@ -82,6 +82,7 @@ fun CaramelLauncherScreen(
         CaramelAddServerModal(state, actions)
         CaramelInstanceSettingsModal(state, actions)
         CaramelWebModal(state)
+        CaramelImportProgressModal(state)
         CaramelToast(state)
     }
 }

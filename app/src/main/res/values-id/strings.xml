@@ -1590,4 +1590,8 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="caramel_curseforge_section_scripts">Skrip</string>
     <string name="caramel_curseforge_section_maps">Peta</string>
     <string name="caramel_curseforge_section_skins">Skin</string>
+    <string name="caramel_import_instance_title">Mengimpor instans</string>
+    <string name="caramel_import_instance_wait">Biarkan launcher terbuka sampai selesai.</string>
+    <string name="caramel_import_instance_unsupported">Berkas itu bukan paket .apk, .xapk, atau .zip.</string>
+    <string name="caramel_import_instance_empty">Paket itu tidak berisi base.apk.</string>
 </resources>

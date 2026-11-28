@@ -1428,12 +1428,15 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
     /** Copies the picked package into the cache, then hands it to the version importer. */
     private void importInstanceFrom(Uri uri) {
         if (versionManager == null) return;
-        mutateState(s -> s.setBusyMessage(getString(R.string.caramel_import_instance_progress, 0)));
+        mutateState(s -> {
+            s.setBusyMessage(getString(R.string.caramel_import_instance_progress, 0));
+            s.setImportProgress(0);
+        });
         AppExecutors.run(AppExecutors.Kind.DISK, "instance-import-copy", () -> {
             File copied = null;
             try {
                 String name = queryDisplayName(uri);
-                if (name == null || name.isEmpty()) name = "instance.xapk";
+                if (name == null || name.isEmpty()) name = "instance.apk";
                 File dir = new File(getCacheDir(), "instance-import");
                 if (!dir.exists() && !dir.mkdirs()) throw new java.io.IOException("no cache directory");
                 copied = new File(dir, name);
@@ -1449,7 +1452,10 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
                     @Override
                     public void onSuccess(String versionId) {
                         runOnUiThread(() -> {
-                            mutateState(s -> s.setBusyMessage(""));
+                            mutateState(s -> {
+                                s.setBusyMessage("");
+                                s.setImportProgress(-1);
+                            });
                             toast(getString(R.string.caramel_import_instance_done, versionId));
                             refreshState();
                         });
@@ -1458,21 +1464,29 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
                     @Override
                     public void onError(String error) {
                         runOnUiThread(() -> {
-                            mutateState(s -> s.setBusyMessage(""));
+                            mutateState(s -> {
+                                s.setBusyMessage("");
+                                s.setImportProgress(-1);
+                            });
                             toastWarning(getString(R.string.caramel_import_instance_failed, error));
                         });
                     }
 
                     @Override
                     public void onProgress(int percent) {
-                        runOnUiThread(() -> mutateState(s ->
-                                s.setBusyMessage(getString(R.string.caramel_import_instance_progress, percent))));
+                        runOnUiThread(() -> mutateState(s -> {
+                            s.setBusyMessage(getString(R.string.caramel_import_instance_progress, percent));
+                            s.setImportProgress(percent);
+                        }));
                     }
                 });
             } catch (Throwable t) {
                 AppLog.warnOnce(TAG, "instance-import", "Copying the picked package failed", t);
                 runOnUiThread(() -> {
-                    mutateState(s -> s.setBusyMessage(""));
+                    mutateState(s -> {
+                        s.setBusyMessage("");
+                        s.setImportProgress(-1);
+                    });
                     toastWarning(getString(R.string.caramel_import_instance_failed,
                             t.getMessage() == null ? "" : t.getMessage()));
                 });

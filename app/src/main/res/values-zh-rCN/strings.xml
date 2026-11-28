@@ -1587,4 +1587,8 @@
     <string name="caramel_curseforge_section_scripts">脚本</string>
     <string name="caramel_curseforge_section_maps">地图</string>
     <string name="caramel_curseforge_section_skins">皮肤</string>
+    <string name="caramel_import_instance_title">正在导入实例</string>
+    <string name="caramel_import_instance_wait">请保持启动器打开直到完成。</string>
+    <string name="caramel_import_instance_unsupported">该文件不是 .apk、.xapk 或 .zip 包。</string>
+    <string name="caramel_import_instance_empty">该包中没有 base.apk。</string>
 </resources>

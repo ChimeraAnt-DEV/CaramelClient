@@ -2881,7 +2881,11 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_roadloader_soon">This preloader option is still in development. Ask one of the lead developers for more information.</string>
     <string name="caramel_skip">Skip</string>
     <string name="caramel_import_instance">Import instance</string>
-    <string name="caramel_import_instance_sub">Import a .zip or a folder from this device</string>
+    <string name="caramel_import_instance_sub">Import an .apk, .xapk or .zip from this device</string>
+    <string name="caramel_import_instance_title">Importing instance</string>
+    <string name="caramel_import_instance_wait">Keep the launcher open until this finishes.</string>
+    <string name="caramel_import_instance_unsupported">That file is not an .apk, .xapk or .zip package.</string>
+    <string name="caramel_import_instance_empty">That package has no base.apk inside it.</string>
     <string name="caramel_import_instance_progress">Importing instance… %1$d%%</string>
     <string name="caramel_import_instance_done">Imported instance %1$s</string>
     <string name="caramel_import_instance_failed">Import failed: %1$s</string>

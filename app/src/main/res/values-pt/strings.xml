@@ -1566,4 +1566,8 @@ A migração deve ser concluída antes que o CaramelClient continue.</string>
     <string name="caramel_curseforge_section_scripts">Scripts</string>
     <string name="caramel_curseforge_section_maps">Mapas</string>
     <string name="caramel_curseforge_section_skins">Skins</string>
+    <string name="caramel_import_instance_title">Importando instância</string>
+    <string name="caramel_import_instance_wait">Mantenha o launcher aberto até terminar.</string>
+    <string name="caramel_import_instance_unsupported">Esse arquivo não é um pacote .apk, .xapk ou .zip.</string>
+    <string name="caramel_import_instance_empty">Esse pacote não contém um base.apk.</string>
 </resources>

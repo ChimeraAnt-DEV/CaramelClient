@@ -303,6 +303,9 @@ class CaramelLauncherState {
     /** A status line shown while a long action (sign-in, repair) is running; empty when idle. */
     var busyMessage by mutableStateOf("")
 
+    /** Import progress, 0-100, or -1 when no instance import is running. */
+    var importProgress by mutableStateOf(-1)
+
     /** The Microsoft device code shown in the add-account modal, empty when no sign-in is running. */
     var deviceCode by mutableStateOf("")
 

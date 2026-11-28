@@ -1605,4 +1605,8 @@
     <string name="caramel_curseforge_section_scripts">Скрипты</string>
     <string name="caramel_curseforge_section_maps">Карты</string>
     <string name="caramel_curseforge_section_skins">Скины</string>
+    <string name="caramel_import_instance_title">Импорт экземпляра</string>
+    <string name="caramel_import_instance_wait">Не закрывайте лаунчер до завершения.</string>
+    <string name="caramel_import_instance_unsupported">Этот файл не является пакетом .apk, .xapk или .zip.</string>
+    <string name="caramel_import_instance_empty">В этом пакете нет base.apk.</string>
 </resources>
