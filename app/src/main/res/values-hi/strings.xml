@@ -1598,4 +1598,5 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="caramel_import_instance_wait">पूरा होने तक लॉन्चर खुला रखें।</string>
     <string name="caramel_import_instance_unsupported">यह फ़ाइल .apk, .xapk या .zip पैकेज नहीं है।</string>
     <string name="caramel_import_instance_empty">इस पैकेज में base.apk नहीं है।</string>
+    <string name="mod_menu_not_live_body">इस बिल्ड में इन-गेम मेनू लोड नहीं है। क्लाइंट को फिर से इंस्टॉल करें या अपडेट करें।</string>
 </resources>

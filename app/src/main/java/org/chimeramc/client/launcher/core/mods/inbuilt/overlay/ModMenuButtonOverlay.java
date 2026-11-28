@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 
 import org.chimeramc.client.R;
 import org.chimeramc.client.core.mods.inbuilt.model.ModIds;
+import org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuController;
 
 /**
  * The floating button that opens the in-game Mod Menu on a touch screen.
@@ -46,8 +47,12 @@ public class ModMenuButtonOverlay extends BaseOverlayButton {
 
     @Override
     protected void onButtonClick() {
-        org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuController menu =
-                org.chimeramc.client.launcher.core.mods.inbuilt.overlay.InGameMenuController.getInstance();
+        InGameMenuController menu = InGameMenuController.getInstance();
+        if (menu == null) {
+            // The game activity installs the controller when a session starts; installing here keeps
+            // the button working when it is pressed before that (or from another host).
+            menu = InGameMenuController.install(activity);
+        }
         if (menu == null) return;
         menu.toggle();
         setPressedIcon(menu.isMenuOpen());

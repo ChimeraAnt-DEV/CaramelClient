@@ -1570,4 +1570,5 @@ La migration doit être terminée avant de continuer avec CaramelClient.</string
     <string name="caramel_import_instance_wait">Gardez le launcher ouvert jusqu\'à la fin.</string>
     <string name="caramel_import_instance_unsupported">Ce fichier n\'est pas un paquet .apk, .xapk ou .zip.</string>
     <string name="caramel_import_instance_empty">Ce paquet ne contient pas de base.apk.</string>
+    <string name="mod_menu_not_live_body">Le menu en jeu n\'est pas chargé dans cette version. Réinstallez le client ou mettez-le à jour.</string>
 </resources>

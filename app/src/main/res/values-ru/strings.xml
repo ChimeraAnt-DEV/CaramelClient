@@ -1609,4 +1609,5 @@
     <string name="caramel_import_instance_wait">Не закрывайте лаунчер до завершения.</string>
     <string name="caramel_import_instance_unsupported">Этот файл не является пакетом .apk, .xapk или .zip.</string>
     <string name="caramel_import_instance_empty">В этом пакете нет base.apk.</string>
+    <string name="mod_menu_not_live_body">В этой сборке внутриигровое меню не загружено. Переустановите клиент или обновите его.</string>
 </resources>

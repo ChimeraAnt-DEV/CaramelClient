@@ -65,17 +65,29 @@ public class ModNotificationManager {
 
     public void show(String modName, String modId) {
         if (activity.isFinishing() || activity.isDestroyed()) return;
-        handler.post(() -> showInternal(modName, modId));
+        String message = activity.getString(R.string.mod_status_enabled);
+        int icon = ModIconHelper.getModIcon(modId);
+        handler.post(() -> showInternal(modName, message, icon));
     }
 
-    private void showInternal(String modName, String modId) {
+    /**
+     * Shows a notice that is not a module toggle: a title and the line the caller wants read.
+     *
+     * <p>Used when an action could not be carried out and silence would read as a broken button.
+     */
+    public void showNotice(String title, String message) {
+        if (activity.isFinishing() || activity.isDestroyed()) return;
+        handler.post(() -> showInternal(title, message, R.drawable.mod_menu_handle));
+    }
+
+    private void showInternal(String modName, String message, int iconRes) {
         if (activity.isFinishing() || activity.isDestroyed()) return;
 
         shiftNotificationsUp();
 
         try {
             View notificationView = LayoutInflater.from(activity).inflate(R.layout.overlay_mod_notification, null);
-            setupViews(notificationView, modName, modId);
+            setupViews(notificationView, modName, message, iconRes);
 
             int margin = (int) (BASE_MARGIN_DP * density);
             int bottomOffset = (int) (BOTTOM_OFFSET_DP * density);
@@ -146,16 +158,16 @@ public class ModNotificationManager {
         }
     }
 
-    private void setupViews(View notificationView, String modName, String modId) {
+    private void setupViews(View notificationView, String modName, String messageText, int iconRes) {
         ImageView icon = notificationView.findViewById(R.id.notification_icon);
         TextView title = notificationView.findViewById(R.id.notification_title);
         TextView message = notificationView.findViewById(R.id.notification_message);
 
-        icon.setImageResource(ModIconHelper.getModIcon(modId));
+        icon.setImageResource(iconRes);
         icon.setImageTintList(null);
         icon.setColorFilter(null);
         title.setText(modName);
-        message.setText(activity.getString(R.string.mod_status_enabled));
+        message.setText(messageText);
     }
 
     private void animateIn(View view) {

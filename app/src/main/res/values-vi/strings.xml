@@ -1600,4 +1600,5 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_import_instance_wait">Giữ trình khởi chạy mở cho đến khi xong.</string>
     <string name="caramel_import_instance_unsupported">Tệp đó không phải gói .apk, .xapk hoặc .zip.</string>
     <string name="caramel_import_instance_empty">Gói đó không có base.apk.</string>
+    <string name="mod_menu_not_live_body">Menu trong game chưa được tải trong bản dựng này. Hãy cài lại hoặc cập nhật ứng dụng.</string>
 </resources>

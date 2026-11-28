@@ -1594,4 +1594,5 @@ Migrasi harus selesai sebelum CaramelClient dapat melanjutkan.</string>
     <string name="caramel_import_instance_wait">Biarkan launcher terbuka sampai selesai.</string>
     <string name="caramel_import_instance_unsupported">Berkas itu bukan paket .apk, .xapk, atau .zip.</string>
     <string name="caramel_import_instance_empty">Paket itu tidak berisi base.apk.</string>
+    <string name="mod_menu_not_live_body">Menu dalam game tidak dimuat di versi ini. Instal ulang klien atau perbarui.</string>
 </resources>

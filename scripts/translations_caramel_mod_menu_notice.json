@@ -1,0 +1,32 @@
+{
+  "es": {
+    "mod_menu_not_live_body": "El menú del juego no está cargado en esta versión. Reinstala el cliente o actualízalo."
+  },
+  "fr": {
+    "mod_menu_not_live_body": "Le menu en jeu n'est pas chargé dans cette version. Réinstallez le client ou mettez-le à jour."
+  },
+  "hi": {
+    "mod_menu_not_live_body": "इस बिल्ड में इन-गेम मेनू लोड नहीं है। क्लाइंट को फिर से इंस्टॉल करें या अपडेट करें।"
+  },
+  "id": {
+    "mod_menu_not_live_body": "Menu dalam game tidak dimuat di versi ini. Instal ulang klien atau perbarui."
+  },
+  "ja": {
+    "mod_menu_not_live_body": "このビルドではゲーム内メニューが読み込まれていません。クライアントを再インストールするか更新してください。"
+  },
+  "pt": {
+    "mod_menu_not_live_body": "O menu no jogo não está carregado nesta versão. Reinstale o cliente ou atualize-o."
+  },
+  "ru": {
+    "mod_menu_not_live_body": "В этой сборке внутриигровое меню не загружено. Переустановите клиент или обновите его."
+  },
+  "tr": {
+    "mod_menu_not_live_body": "Bu sürümde oyun içi menü yüklü değil. İstemciyi yeniden yükleyin veya güncelleyin."
+  },
+  "vi": {
+    "mod_menu_not_live_body": "Menu trong game chưa được tải trong bản dựng này. Hãy cài lại hoặc cập nhật ứng dụng."
+  },
+  "zh-rCN": {
+    "mod_menu_not_live_body": "此版本未加载游戏内菜单。请重新安装客户端或更新。"
+  }
+}

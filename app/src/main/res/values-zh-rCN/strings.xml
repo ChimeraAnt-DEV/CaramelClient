@@ -1591,4 +1591,5 @@
     <string name="caramel_import_instance_wait">请保持启动器打开直到完成。</string>
     <string name="caramel_import_instance_unsupported">该文件不是 .apk、.xapk 或 .zip 包。</string>
     <string name="caramel_import_instance_empty">该包中没有 base.apk。</string>
+    <string name="mod_menu_not_live_body">此版本未加载游戏内菜单。请重新安装客户端或更新。</string>
 </resources>

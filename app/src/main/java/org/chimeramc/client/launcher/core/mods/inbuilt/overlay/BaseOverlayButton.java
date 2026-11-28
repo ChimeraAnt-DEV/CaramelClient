@@ -37,8 +37,7 @@ public abstract class BaseOverlayButton {
     private OverlayResizeHandle.Corner resizeCorner = null;
     private OverlayResizeHandle.Geometry resizeStart;
     private long touchDownTime = 0;
-    private static final long TAP_TIMEOUT = 200;
-    private static final float DRAG_THRESHOLD = 10f;
+    private static final float DRAG_THRESHOLD = OverlayTapRule.MOVE_SLOP_PX;
     private final Handler handler = MainThread.handler();
     private boolean isShowing = false;
     private boolean isHiding = false;
@@ -394,11 +393,10 @@ public abstract class BaseOverlayButton {
                 long elapsed = SystemClock.uptimeMillis() - touchDownTime;
                 float totalDx = event.getRawX() - initialTouchX;
                 float totalDy = event.getRawY() - initialTouchY;
-                boolean wasDragging = Math.abs(totalDx) > DRAG_THRESHOLD || Math.abs(totalDy) > DRAG_THRESHOLD;
 
                 if (resizeCorner != null) {
                     commitResize();
-                } else if (!wasDragging && elapsed < TAP_TIMEOUT && !isHudEditorMode) {
+                } else if (OverlayTapRule.isTap(totalDx, totalDy, elapsed, isHudEditorMode)) {
                     handler.post(this::onButtonClick);
                 } else if (isDragging && isHudEditorMode) {
                     savePosition(wmParams.x, wmParams.y);
@@ -524,9 +522,8 @@ public abstract class BaseOverlayButton {
                 long elapsed = SystemClock.uptimeMillis() - touchDownTime;
                 float totalDx = event.getRawX() - initialTouchX;
                 float totalDy = event.getRawY() - initialTouchY;
-                boolean wasDragging = Math.abs(totalDx) > DRAG_THRESHOLD || Math.abs(totalDy) > DRAG_THRESHOLD;
 
-                if (!wasDragging && elapsed < TAP_TIMEOUT && !isHudEditorMode) {
+                if (OverlayTapRule.isTap(totalDx, totalDy, elapsed, isHudEditorMode)) {
                     handler.post(this::onButtonClick);
                 } else if (isDragging && (!isLocked || isHudEditorMode)) {
                     savePosition(params.leftMargin, params.topMargin);

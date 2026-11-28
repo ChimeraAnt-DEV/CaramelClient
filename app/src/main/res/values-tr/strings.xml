@@ -1597,4 +1597,5 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_import_instance_wait">Bitene kadar başlatıcıyı açık tutun.</string>
     <string name="caramel_import_instance_unsupported">Bu dosya bir .apk, .xapk veya .zip paketi değil.</string>
     <string name="caramel_import_instance_empty">Bu pakette base.apk yok.</string>
+    <string name="mod_menu_not_live_body">Bu sürümde oyun içi menü yüklü değil. İstemciyi yeniden yükleyin veya güncelleyin.</string>
 </resources>

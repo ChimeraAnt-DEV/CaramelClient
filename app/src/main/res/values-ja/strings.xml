@@ -1567,4 +1567,5 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_import_instance_wait">完了するまでランチャーを開いたままにしてください。</string>
     <string name="caramel_import_instance_unsupported">このファイルは .apk、.xapk、.zip のパッケージではありません。</string>
     <string name="caramel_import_instance_empty">このパッケージには base.apk が含まれていません。</string>
+    <string name="mod_menu_not_live_body">このビルドではゲーム内メニューが読み込まれていません。クライアントを再インストールするか更新してください。</string>
 </resources>

@@ -105,8 +105,11 @@ public final class InGameMenuController {
     public void show() {
         if (!PreloaderMenu.isMenuLive()) {
             // The present hook has not installed (or this build has none). The menu cannot draw, so
-            // it must not open onto a black screen; say so once instead.
+            // it must not open onto a black screen — but a press that does nothing reads as a broken
+            // button, so the failure is said out loud as well as logged.
             AppLog.warnOnce(TAG, "show", "The in-game menu is not live on this build", null);
+            notifications.showNotice(activity.getString(R.string.mod_menu_unavailable),
+                    activity.getString(R.string.mod_menu_not_live_body));
             return;
         }
         pushCatalogue();
