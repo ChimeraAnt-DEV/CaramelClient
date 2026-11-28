@@ -2901,6 +2901,12 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_curseforge_no_results_title">Nothing found</string>
     <string name="caramel_curseforge_no_results_body">No project matched that search. Try a shorter query or a different spelling.</string>
     <string name="caramel_curseforge_downloads">%1$s downloads</string>
+    <string name="caramel_curseforge_section_all">All</string>
+    <string name="caramel_curseforge_section_addons">Add-ons</string>
+    <string name="caramel_curseforge_section_texture_packs">Texture packs</string>
+    <string name="caramel_curseforge_section_scripts">Scripts</string>
+    <string name="caramel_curseforge_section_maps">Maps</string>
+    <string name="caramel_curseforge_section_skins">Skins</string>
     <string name="caramel_diagnostics_title">Diagnostics</string>
     <string name="caramel_diagnostics_sub">The build, the device and the instance store, as text you can share</string>
     <string name="caramel_diagnostics_build">Build</string>

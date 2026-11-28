@@ -1588,4 +1588,10 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="caramel_update_latest">नवीनतम रिलीज़: %1$s</string>
     <string name="settings_developer_mode">डेवलपर मोड</string>
     <string name="settings_developer_mode_desc">उन्नत विकल्प दिखाता है, जिसमें CurseForge API कुंजी भी शामिल है।</string>
+    <string name="caramel_curseforge_section_all">सभी</string>
+    <string name="caramel_curseforge_section_addons">ऐड-ऑन</string>
+    <string name="caramel_curseforge_section_texture_packs">टेक्सचर पैक</string>
+    <string name="caramel_curseforge_section_scripts">स्क्रिप्ट</string>
+    <string name="caramel_curseforge_section_maps">मानचित्र</string>
+    <string name="caramel_curseforge_section_skins">स्किन</string>
 </resources>

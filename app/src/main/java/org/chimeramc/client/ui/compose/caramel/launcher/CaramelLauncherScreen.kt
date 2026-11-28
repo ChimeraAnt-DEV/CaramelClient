@@ -53,7 +53,7 @@ fun CaramelLauncherScreen(
                     CaramelTab.News -> CaramelNewsScreen(state)
                     CaramelTab.CurseForge -> CaramelCurseForgeScreen(
                         state,
-                        onSearch = actions::searchCurseForge,
+                        onBrowse = { section, query -> actions.searchCurseForge(query, section.classId) },
                         onDownload = actions::downloadCurseForge,
                     )
                     CaramelTab.Store -> CaramelStoreScreen(state)

@@ -1581,4 +1581,10 @@
     <string name="caramel_update_latest">最新版本：%1$s</string>
     <string name="settings_developer_mode">开发者模式</string>
     <string name="settings_developer_mode_desc">显示高级选项，包括 CurseForge API 密钥。</string>
+    <string name="caramel_curseforge_section_all">全部</string>
+    <string name="caramel_curseforge_section_addons">附加内容</string>
+    <string name="caramel_curseforge_section_texture_packs">材质包</string>
+    <string name="caramel_curseforge_section_scripts">脚本</string>
+    <string name="caramel_curseforge_section_maps">地图</string>
+    <string name="caramel_curseforge_section_skins">皮肤</string>
 </resources>

@@ -1,0 +1,82 @@
+{
+  "es": {
+    "caramel_curseforge_section_all": "Todos",
+    "caramel_curseforge_section_addons": "Complementos",
+    "caramel_curseforge_section_texture_packs": "Paquetes de texturas",
+    "caramel_curseforge_section_scripts": "Scripts",
+    "caramel_curseforge_section_maps": "Mapas",
+    "caramel_curseforge_section_skins": "Skins"
+  },
+  "fr": {
+    "caramel_curseforge_section_all": "Tous",
+    "caramel_curseforge_section_addons": "Extensions",
+    "caramel_curseforge_section_texture_packs": "Packs de textures",
+    "caramel_curseforge_section_scripts": "Scripts",
+    "caramel_curseforge_section_maps": "Cartes",
+    "caramel_curseforge_section_skins": "Skins"
+  },
+  "hi": {
+    "caramel_curseforge_section_all": "सभी",
+    "caramel_curseforge_section_addons": "ऐड-ऑन",
+    "caramel_curseforge_section_texture_packs": "टेक्सचर पैक",
+    "caramel_curseforge_section_scripts": "स्क्रिप्ट",
+    "caramel_curseforge_section_maps": "मानचित्र",
+    "caramel_curseforge_section_skins": "स्किन"
+  },
+  "id": {
+    "caramel_curseforge_section_all": "Semua",
+    "caramel_curseforge_section_addons": "Add-on",
+    "caramel_curseforge_section_texture_packs": "Paket Tekstur",
+    "caramel_curseforge_section_scripts": "Skrip",
+    "caramel_curseforge_section_maps": "Peta",
+    "caramel_curseforge_section_skins": "Skin"
+  },
+  "ja": {
+    "caramel_curseforge_section_all": "すべて",
+    "caramel_curseforge_section_addons": "アドオン",
+    "caramel_curseforge_section_texture_packs": "テクスチャパック",
+    "caramel_curseforge_section_scripts": "スクリプト",
+    "caramel_curseforge_section_maps": "マップ",
+    "caramel_curseforge_section_skins": "スキン"
+  },
+  "pt": {
+    "caramel_curseforge_section_all": "Todos",
+    "caramel_curseforge_section_addons": "Complementos",
+    "caramel_curseforge_section_texture_packs": "Pacotes de textura",
+    "caramel_curseforge_section_scripts": "Scripts",
+    "caramel_curseforge_section_maps": "Mapas",
+    "caramel_curseforge_section_skins": "Skins"
+  },
+  "ru": {
+    "caramel_curseforge_section_all": "Все",
+    "caramel_curseforge_section_addons": "Дополнения",
+    "caramel_curseforge_section_texture_packs": "Наборы текстур",
+    "caramel_curseforge_section_scripts": "Скрипты",
+    "caramel_curseforge_section_maps": "Карты",
+    "caramel_curseforge_section_skins": "Скины"
+  },
+  "tr": {
+    "caramel_curseforge_section_all": "Tümü",
+    "caramel_curseforge_section_addons": "Eklentiler",
+    "caramel_curseforge_section_texture_packs": "Doku Paketleri",
+    "caramel_curseforge_section_scripts": "Betikler",
+    "caramel_curseforge_section_maps": "Haritalar",
+    "caramel_curseforge_section_skins": "Skinler"
+  },
+  "vi": {
+    "caramel_curseforge_section_all": "Tất cả",
+    "caramel_curseforge_section_addons": "Tiện ích",
+    "caramel_curseforge_section_texture_packs": "Gói kết cấu",
+    "caramel_curseforge_section_scripts": "Tập lệnh",
+    "caramel_curseforge_section_maps": "Bản đồ",
+    "caramel_curseforge_section_skins": "Skin"
+  },
+  "zh-rCN": {
+    "caramel_curseforge_section_all": "全部",
+    "caramel_curseforge_section_addons": "附加内容",
+    "caramel_curseforge_section_texture_packs": "材质包",
+    "caramel_curseforge_section_scripts": "脚本",
+    "caramel_curseforge_section_maps": "地图",
+    "caramel_curseforge_section_skins": "皮肤"
+  }
+}

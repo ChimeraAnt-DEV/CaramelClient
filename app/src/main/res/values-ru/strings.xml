@@ -1599,4 +1599,10 @@
     <string name="caramel_update_latest">Последняя версия: %1$s</string>
     <string name="settings_developer_mode">Режим разработчика</string>
     <string name="settings_developer_mode_desc">Показывает дополнительные параметры, включая ключ API CurseForge.</string>
+    <string name="caramel_curseforge_section_all">Все</string>
+    <string name="caramel_curseforge_section_addons">Дополнения</string>
+    <string name="caramel_curseforge_section_texture_packs">Наборы текстур</string>
+    <string name="caramel_curseforge_section_scripts">Скрипты</string>
+    <string name="caramel_curseforge_section_maps">Карты</string>
+    <string name="caramel_curseforge_section_skins">Скины</string>
 </resources>

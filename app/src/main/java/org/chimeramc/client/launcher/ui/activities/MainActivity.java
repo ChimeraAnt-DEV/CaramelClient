@@ -1496,13 +1496,15 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
     }
 
     @Override
-    public void searchCurseForge(String query) {
+    public void searchCurseForge(String query, int classId) {
         mutateState(s -> {
             s.setCurseForgeQuery(query == null ? "" : query);
+            s.setCurseForgeSection(org.chimeramc.client.ui.compose.caramel.CurseForgeSection
+                    .Companion.forClassId(classId));
             s.setCurseForgeBusy(true);
             s.setCurseForgeStatus(getString(R.string.caramel_curseforge_searching));
         });
-        CurseForgeBrowser.search(this, query, new CurseForgeBrowser.SearchListener() {
+        CurseForgeBrowser.search(this, query, classId, new CurseForgeBrowser.SearchListener() {
             @Override
             public void onResults(List<CaramelCurseForgeItem> items) {
                 mutateState(s -> {

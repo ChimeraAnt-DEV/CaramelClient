@@ -78,8 +78,11 @@ object CaramelLauncherHost {
         fun setInstanceLaunchVertical(enabled: Boolean)
         /** Toggles the in-game resource-pack changer for this instance. */
         fun setInstancePackChanger(enabled: Boolean)
-        /** Runs a CurseForge search for [query] and publishes the results into the state. */
-        fun searchCurseForge(query: String)
+        /**
+         * Browses [classId] (0 for every section) with [query], publishing the results into the
+         * state. An empty query is the tab's default listing, not an error.
+         */
+        fun searchCurseForge(query: String, classId: Int)
         /** Downloads [item]'s newest file and imports it into the selected instance. */
         fun downloadCurseForge(item: CaramelCurseForgeItem)
         fun quit()

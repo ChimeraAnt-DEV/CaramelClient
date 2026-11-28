@@ -436,6 +436,9 @@ class CaramelLauncherState {
     /** True once a search has run, so the empty state can tell "not searched" from "no matches". */
     var curseForgeSearched by mutableStateOf(false)
 
+    /** The catalogue section the tab is browsing; [CurseForgeSection.ALL] until one is picked. */
+    var curseForgeSection by mutableStateOf(CurseForgeSection.ALL)
+
     // --- Update check ---------------------------------------------------------------------
 }
 

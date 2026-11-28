@@ -1557,4 +1557,10 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_update_latest">最新リリース: %1$s</string>
     <string name="settings_developer_mode">開発者モード</string>
     <string name="settings_developer_mode_desc">CurseForge API キーを含む詳細オプションを表示します。</string>
+    <string name="caramel_curseforge_section_all">すべて</string>
+    <string name="caramel_curseforge_section_addons">アドオン</string>
+    <string name="caramel_curseforge_section_texture_packs">テクスチャパック</string>
+    <string name="caramel_curseforge_section_scripts">スクリプト</string>
+    <string name="caramel_curseforge_section_maps">マップ</string>
+    <string name="caramel_curseforge_section_skins">スキン</string>
 </resources>

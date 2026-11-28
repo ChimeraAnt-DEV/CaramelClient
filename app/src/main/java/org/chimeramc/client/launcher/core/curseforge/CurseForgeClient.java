@@ -95,10 +95,12 @@ public class CurseForgeClient {
         return new IOException("Unexpected response from CurseForge: HTTP " + code);
     }
 
-    public void searchContent(String query, int classId, String version, int index, int pageSize,
-                              String sortField, String sortOrder,
-                              CurseForgeCallback<ContentSearchResponse> callback) {
-        if (!requireKey(callback)) return;
+    /**
+     * The search URL for one page, built without touching the network so the parameters that decide
+     * what a section shows are unit-tested rather than assumed.
+     */
+    static HttpUrl searchUrl(String query, int classId, String version, int index, int pageSize,
+                             String sortField, String sortOrder) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(BASE_URL + "/v1/mods/search").newBuilder();
         urlBuilder.addQueryParameter("gameId", String.valueOf(GAME_ID_MINECRAFT));
         urlBuilder.addQueryParameter("sortField", sortField != null ? sortField : SORT_POPULARITY);
@@ -115,8 +117,16 @@ public class CurseForgeClient {
         if (version != null && !version.isEmpty() && !"All".equals(version)) {
             urlBuilder.addQueryParameter("gameVersion", version);
         }
+        return urlBuilder.build();
+    }
 
-        Request request = authedRequest(urlBuilder.build().toString()).build();
+    public void searchContent(String query, int classId, String version, int index, int pageSize,
+                              String sortField, String sortOrder,
+                              CurseForgeCallback<ContentSearchResponse> callback) {
+        if (!requireKey(callback)) return;
+        Request request = authedRequest(
+                searchUrl(query, classId, version, index, pageSize, sortField, sortOrder).toString())
+                .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override

@@ -1560,4 +1560,10 @@ A migração deve ser concluída antes que o CaramelClient continue.</string>
     <string name="caramel_update_latest">Versão mais recente: %1$s</string>
     <string name="settings_developer_mode">Modo desenvolvedor</string>
     <string name="settings_developer_mode_desc">Mostra opções avançadas, incluindo a chave de API do CurseForge.</string>
+    <string name="caramel_curseforge_section_all">Todos</string>
+    <string name="caramel_curseforge_section_addons">Complementos</string>
+    <string name="caramel_curseforge_section_texture_packs">Pacotes de textura</string>
+    <string name="caramel_curseforge_section_scripts">Scripts</string>
+    <string name="caramel_curseforge_section_maps">Mapas</string>
+    <string name="caramel_curseforge_section_skins">Skins</string>
 </resources>

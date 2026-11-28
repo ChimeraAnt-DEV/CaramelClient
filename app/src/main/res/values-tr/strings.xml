@@ -1587,4 +1587,10 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_update_latest">En yeni sürüm: %1$s</string>
     <string name="settings_developer_mode">Geliştirici modu</string>
     <string name="settings_developer_mode_desc">CurseForge API anahtarı dahil gelişmiş seçenekleri gösterir.</string>
+    <string name="caramel_curseforge_section_all">Tümü</string>
+    <string name="caramel_curseforge_section_addons">Eklentiler</string>
+    <string name="caramel_curseforge_section_texture_packs">Doku Paketleri</string>
+    <string name="caramel_curseforge_section_scripts">Betikler</string>
+    <string name="caramel_curseforge_section_maps">Haritalar</string>
+    <string name="caramel_curseforge_section_skins">Skinler</string>
 </resources>

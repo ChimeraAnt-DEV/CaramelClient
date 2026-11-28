@@ -7,6 +7,7 @@ import org.chimeramc.client.core.curseforge.models.ContentAuthor;
 import org.chimeramc.client.core.curseforge.models.ContentFile;
 import org.chimeramc.client.core.curseforge.models.ContentSearchResponse;
 import org.chimeramc.client.ui.compose.caramel.CaramelCurseForgeItem;
+import org.chimeramc.client.ui.compose.caramel.CurseForgeSectionsKt;
 import org.chimeramc.client.util.AppExecutors;
 import org.chimeramc.client.util.AppLog;
 import org.chimeramc.client.util.MainThread;
@@ -49,11 +50,17 @@ public final class CurseForgeBrowser {
         void onError(String message);
     }
 
-    /** Searches by free text, newest-download ranking, and reports a mapped list. */
-    public static void search(Context context, String query, SearchListener listener) {
+    /**
+     * Browses or searches one catalogue section and reports a mapped list.
+     *
+     * <p>An empty [query] is a browse, not an error: it is what the tab shows before anyone types
+     * anything. [classId] is the section's CurseForge class, with 0 meaning "every section" — the
+     * same convention {@link CurseForgeClient#searchContent} uses.
+     */
+    public static void search(Context context, String query, int classId, SearchListener listener) {
         CurseForgeClient.getInstance(context).searchContent(
                 query == null ? "" : query,
-                0,
+                classId,
                 null,
                 0,
                 PAGE_SIZE,
@@ -68,7 +75,7 @@ public final class CurseForgeBrowser {
                                 rows.add(toItem(content));
                             }
                         }
-                        main(() -> listener.onResults(rows));
+                        main(() -> listener.onResults(CurseForgeSectionsKt.sortedByDownloads(rows)));
                     }
 
                     @Override

@@ -1590,4 +1590,10 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_update_latest">Bản phát hành mới nhất: %1$s</string>
     <string name="settings_developer_mode">Chế độ nhà phát triển</string>
     <string name="settings_developer_mode_desc">Hiện các tùy chọn nâng cao, gồm khóa API CurseForge.</string>
+    <string name="caramel_curseforge_section_all">Tất cả</string>
+    <string name="caramel_curseforge_section_addons">Tiện ích</string>
+    <string name="caramel_curseforge_section_texture_packs">Gói kết cấu</string>
+    <string name="caramel_curseforge_section_scripts">Tập lệnh</string>
+    <string name="caramel_curseforge_section_maps">Bản đồ</string>
+    <string name="caramel_curseforge_section_skins">Skin</string>
 </resources>
