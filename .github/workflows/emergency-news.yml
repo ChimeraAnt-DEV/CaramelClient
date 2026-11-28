@@ -25,7 +25,7 @@ on:
         type: string
         default: "24"
       banner:
-        description: "Reserved for the banner asset name. Leave empty for the launcher's own gradient."
+        description: "Banner key: emergency, urgent, christmas or caramel_plus. Leave empty for the art the severity implies."
         required: false
         type: string
         default: ""

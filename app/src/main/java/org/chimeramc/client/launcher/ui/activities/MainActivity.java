@@ -520,9 +520,16 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
         return out;
     }
 
-    /** Reads the bundled changelog feed into news rows; an unreadable feed yields no rows. */
+    /**
+     * Reads the published announcements and the bundled changelog feed into news rows; an
+     * unreadable feed yields no release rows.
+     *
+     * <p>A published announcement goes first: a notice that a release is broken, or that a service
+     * is down, has to be the first thing the News tab opens on, ahead of the release cards.
+     */
     private List<CaramelNewsInfo> buildNews() {
-        List<CaramelNewsInfo> out = new ArrayList<>();
+        List<CaramelNewsInfo> out = new ArrayList<>(
+                org.chimeramc.client.core.news.EmergencyNews.newsItems(this));
         try (InputStream in = getAssets().open("launcher/changelog_feed.json")) {
             byte[] buf = new byte[8192];
             StringBuilder sb = new StringBuilder();
@@ -534,19 +541,20 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
             ChangelogFeed.Section newest = feed.newest();
             if (newest != null && newest.headline != null && !newest.headline.isEmpty()) {
                 out.add(new CaramelNewsInfo(newest.headline, joinItems(newest.items),
-                        newest.version, true, "", "", R.drawable.news_banner_beta3));
+                        newest.version, true, "", "",
+                        org.chimeramc.client.core.news.NewsBanners.drawableFor(newest.bannerKey,
+                                null)));
             }
             ChangelogFeed.Section upcoming = feed.upcoming();
             if (upcoming != null && upcoming.headline != null && !upcoming.headline.isEmpty()) {
                 out.add(new CaramelNewsInfo(upcoming.headline, joinItems(upcoming.items),
-                        upcoming.version, false, "", "", R.drawable.news_banner_berryapi));
+                        upcoming.version, false, "", "",
+                        org.chimeramc.client.core.news.NewsBanners.drawableFor(upcoming.bannerKey,
+                                null)));
             }
         } catch (Throwable t) {
             AppLog.warnOnce(TAG, "buildNews", "Could not read the changelog feed", t);
         }
-        // Published announcements first: a notice that a release is broken has to be the first thing
-        // the News tab shows, ahead of the bundled posts.
-        out.addAll(org.chimeramc.client.core.news.EmergencyNews.newsItems(this));
         // Bundled announcements that are not part of the changelog feed.
         out.addAll(org.chimeramc.client.core.changelog.BundledNews.posts(this));
         return out;

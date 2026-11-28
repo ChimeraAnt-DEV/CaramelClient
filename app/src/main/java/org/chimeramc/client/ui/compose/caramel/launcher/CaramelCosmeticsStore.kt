@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -287,11 +289,10 @@ private fun CosmeticTile(c: CaramelCosmeticInfo, onFav: () -> Unit, onEquip: () 
 fun CaramelNewsScreen(state: CaramelLauncherState) {
     CaramelPage(stringResource(R.string.caramel_news_title), stringResource(R.string.caramel_news_sub)) {
         Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            // The featured slot follows the card the user pressed, falling back to the newest
-            // flagged post. Without this the screen always showed the first post and the other two
-            // announcements could not be opened at all.
+            // The featured slot follows the card the user pressed, falling back to the first row,
+            // which is a published announcement when there is one. Without the press override the
+            // screen could not open any post but its first.
             val featured = state.news.firstOrNull { it.title == state.featuredNewsTitle }
-                ?: state.news.firstOrNull { it.featured }
                 ?: state.news.firstOrNull()
             if (featured == null) {
                 EmptyState(stringResource(R.string.caramel_no_news_title), stringResource(R.string.caramel_no_news_body), Modifier.fillMaxSize())
@@ -331,8 +332,13 @@ fun CaramelNewsScreen(state: CaramelLauncherState) {
                         }
                     }
                 }
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    state.news.filter { it.title != featured.title }.take(3).forEachIndexed { i, n ->
+                // Every other post, not the first three: the bundled announcements sit behind them
+                // in the list, so a cap here hid the Christmas and Caramel+ posts entirely.
+                LazyColumn(
+                    Modifier.weight(1f).fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    itemsIndexed(state.news.filter { it.title != featured.title }) { i, n ->
                         GlassPanel(
                             Modifier.fillMaxWidth().height(130.dp)
                                 .clickable(remember { MutableInteractionSource() }, null) {
@@ -347,10 +353,13 @@ fun CaramelNewsScreen(state: CaramelLauncherState) {
                                         .background(Brush.verticalGradient(listOf(cosAccents[i % 4].copy(0.5f), cosAccents[i % 4].copy(0.1f))), RoundedCornerShape(12.dp)),
                                 ) {
                                     if (n.imageRes != 0) {
+                                        // Fit, not Crop: a thumbnail this small would cut the
+                                        // banner's own text, so it shows the whole frame on the
+                                        // row's gradient instead.
                                         androidx.compose.foundation.Image(
                                             androidx.compose.ui.res.painterResource(n.imageRes),
                                             contentDescription = null,
-                                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Fit,
                                             modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)),
                                         )
                                     }

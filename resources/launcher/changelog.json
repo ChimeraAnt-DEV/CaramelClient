@@ -2,83 +2,93 @@
   "schemaVersion": 1,
   "releasedAt": "2026-11-28T00:00:00Z",
   "supportUntil": "2027-05-28T00:00:00Z",
-  "headline": "CaramelClient BETA9 - Sign-in, the CurseForge browser and the in-game menu",
-  "summary": "This release is about the parts that quietly did not work: the Microsoft account the game reads, the CurseForge tab before you searched, and the floating button that opened nothing. Each fix is one small change with a test behind it, and the ones that still need a device are named as such rather than claimed.",
+  "headline": "CaramelClient BETA10 - banners, badges and a home screen that fits",
+  "summary": "The home screen used to stack its buttons on top of the art and cut the news card in half. This beta is mostly about the parts you actually look at: real art on every news post, a badge that shows who else runs Caramel, and a layout that rearranges itself instead of squeezing. It also fixes the reason an update kept asking you to uninstall the old build first.",
   "sections": [
     {
-      "title": "Sign-in",
+      "title": "News",
+      "kind": "added",
+      "items": [
+        {
+          "text": "Emergency, urgent, Christmas and the Caramel+ announcement now have proper banner art instead of a gradient.",
+          "url": ""
+        },
+        {
+          "text": "A post can name one of those banners, and a post that names none draws the art for its severity.",
+          "url": ""
+        },
+        {
+          "text": "Announcements can be published without shipping a build, and they appear on the next launch.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Badges",
+      "kind": "added",
+      "items": [
+        {
+          "text": "Friends who run Caramel show the Caramel badge next to their name in the Xbox friends list.",
+          "url": ""
+        },
+        {
+          "text": "The badge comes from the published list or from a reply the client has actually seen, not from a guess.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Home screen",
       "kind": "fixed",
       "items": [
         {
-          "text": "The launcher's exported account now lands in the store the game actually reads, in the game's own base64 alphabet.",
+          "text": "The Launch button and the three tab buttons no longer sit on top of the hero art, and Screenshots is no longer cut off.",
           "url": ""
         },
         {
-          "text": "The Minecraft services and multiplayer relying parties are minted at sign-in, so a session no longer falls back to a default skin.",
-          "url": ""
-        }
-      ]
-    },
-    {
-      "title": "CurseForge",
-      "kind": "added",
-      "items": [
-        {
-          "text": "The tab lists Bedrock content before you search, in sections: All, Add-ons, Texture packs, Scripts, Worlds and Skins.",
+          "text": "The news column scrolls, so a card is not chopped at the bottom edge.",
           "url": ""
         },
         {
-          "text": "Every card shows the project's own CurseForge picture instead of a placeholder.",
+          "text": "The friends card fills the side column instead of squashing the promo card into a sliver.",
           "url": ""
         }
       ]
     },
     {
-      "title": "Installations",
-      "kind": "added",
-      "items": [
-        {
-          "text": "XAPK and zip packages can be imported from the device, with a progress line while they unpack.",
-          "url": ""
-        }
-      ]
-    },
-    {
-      "title": "Changed",
+      "title": "Layout",
       "kind": "changed",
       "items": [
         {
-          "text": "Glass cards carry a cool tint in the light palette instead of reading as plain white boxes.",
+          "text": "The hero drops its art and wraps its buttons when the window is short, instead of drawing them on top of each other.",
           "url": ""
         },
         {
-          "text": "The launcher scales its layout to the window, so split screen and large tablets are not cramped.",
-          "url": ""
-        },
-        {
-          "text": "The in-game button shows a plain three-bar handle rather than the client mark.",
+          "text": "The two-column home layout starts at 720dp, which is where it actually fits.",
           "url": ""
         }
       ]
     },
     {
-      "title": "In-game menu and overlays",
+      "title": "Updates",
       "kind": "fixed",
       "items": [
         {
-          "text": "The floating button opens the Mod Menu again: a deliberate press is a tap, not a 200 ms race.",
+          "text": "Every build is signed with the same key, so an update installs over the old version instead of asking you to delete it first.",
           "url": ""
         },
         {
-          "text": "A build without the native menu says so instead of doing nothing.",
+          "text": "This one may still ask once, because the beta you have now was signed with a different key. Every update after it installs straight over.",
           "url": ""
-        },
+        }
+      ]
+    },
+    {
+      "title": "Playtime",
+      "kind": "fixed",
+      "items": [
         {
-          "text": "The button wears a plain three-bar handle rather than the client mark.",
-          "url": ""
-        },
-        {
-          "text": "The logcat overlay switch takes effect immediately instead of at the next launch.",
+          "text": "A session is recorded as live when it starts, as well as when it ends, so a crash no longer loses the time.",
           "url": ""
         }
       ]

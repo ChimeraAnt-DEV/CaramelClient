@@ -46,6 +46,15 @@ public class ChangelogFeedTest {
     }
 
     @Test
+    public void aSectionCarriesItsBannerKey() {
+        ChangelogFeed feed = ChangelogFeed.parse("{\"schemaVersion\":1,"
+                + "\"newest\":{\"headline\":\"x\",\"banner\":\"beta3\",\"items\":[{\"text\":\"a\"}]},"
+                + "\"upcoming\":{\"headline\":\"y\",\"items\":[{\"text\":\"b\"}]}}");
+        assertEquals("beta3", feed.newest().bannerKey);
+        assertEquals("a section that names no banner has none", "", feed.upcoming().bannerKey);
+    }
+
+    @Test
     public void itParsesTheSneakPeeks() {
         ChangelogFeed feed = ChangelogFeed.parse(JSON);
         assertEquals(2, feed.sneakPeeks().size());

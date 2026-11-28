@@ -301,10 +301,12 @@ fun CaramelNewsModal(state: CaramelLauncherState, actions: CaramelLauncherHost.A
                                     ),
                                 ) {
                                     if (post.imageRes != 0) {
+                                        // Fit: the row's thumbnail is narrower than a banner, and
+                                        // cropping it would cut the banner's own words.
                                         androidx.compose.foundation.Image(
                                             androidx.compose.ui.res.painterResource(post.imageRes),
                                             contentDescription = null,
-                                            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Fit,
                                             modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)),
                                         )
                                     }

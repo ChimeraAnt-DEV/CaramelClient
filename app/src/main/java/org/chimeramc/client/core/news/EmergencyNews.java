@@ -58,15 +58,18 @@ public final class EmergencyNews {
         public final String body;
         public final String meta;
         public final String url;
+        /** The banner key the post named, empty when it named none. See {@link NewsBanners}. */
+        public final String bannerKey;
         public final NewsSeverity severity;
 
-        Post(String id, String title, String body, String meta, String url,
+        Post(String id, String title, String body, String meta, String url, String bannerKey,
              NewsSeverity severity) {
             this.id = id;
             this.title = title;
             this.body = body;
             this.meta = meta;
             this.url = url;
+            this.bannerKey = bannerKey == null ? "" : bannerKey;
             this.severity = severity == null ? NewsSeverity.URGENT : severity;
         }
 
@@ -118,7 +121,7 @@ public final class EmergencyNews {
                 if (id.isEmpty()) id = title;
                 if (!seen.add(id)) continue;
                 out.add(new Post(id, title, body, raw.optString("meta", "").trim(),
-                        raw.optString("url", "").trim(),
+                        raw.optString("url", "").trim(), raw.optString("banner", "").trim(),
                         NewsSeverity.fromWire(raw.optString("severity", ""))));
             }
         } catch (Throwable t) {
@@ -139,10 +142,15 @@ public final class EmergencyNews {
         }
     }
 
-    /** The cached posts, or an empty list when none were ever fetched successfully. */
+    /**
+     * The cached posts, or the ones the build shipped with when nothing was fetched yet. A notice
+     * that ships with a release has to be readable on a device that has never had a network, and
+     * the shipped document is the same one {@link #SOURCE_URL} publishes.
+     */
     public static List<Post> posts(Context context) {
         if (context == null) return new ArrayList<>();
         String json = readCache(context);
+        if (json == null) json = readShipped(context);
         if (json == null) return new ArrayList<>();
         return parse(json, System.currentTimeMillis());
     }
@@ -150,8 +158,8 @@ public final class EmergencyNews {
     /**
      * The cached posts as News-tab rows.
      *
-     * <p>The banner is left to the screen's gradient: a remote document cannot ship a drawable, and a
-     * post with no picture is honest about having none.
+     * <p>A post cannot ship a drawable, so its picture comes from the fixed set in
+     * {@link NewsBanners}: the key it named, or the art its severity implies.
      */
     public static List<CaramelNewsInfo> newsItems(Context context) {
         List<CaramelNewsInfo> out = new ArrayList<>();
@@ -161,8 +169,8 @@ public final class EmergencyNews {
             String label = p.isEmergency()
                     ? context.getString(R.string.news_severity_emergency)
                     : context.getString(R.string.news_severity_urgent);
-            out.add(new CaramelNewsInfo(p.title, p.body, p.meta, true, "", p.url, 0,
-                    label, p.isEmergency()));
+            out.add(new CaramelNewsInfo(p.title, p.body, p.meta, true, "", p.url,
+                    NewsBanners.drawableFor(p.bannerKey, p.severity), label, p.isEmergency()));
         }
         return out;
     }
@@ -250,6 +258,15 @@ public final class EmergencyNews {
             return readAll(in);
         } catch (Throwable t) {
             AppLog.warnOnce(TAG, "cacheRead", "Could not read the cached emergency news", t);
+            return null;
+        }
+    }
+
+    private static String readShipped(Context context) {
+        try (InputStream in = context.getAssets().open("launcher/" + CACHE_FILE)) {
+            return readAll(in);
+        } catch (Throwable t) {
+            AppLog.warnOnce(TAG, "shippedRead", "Could not read the shipped emergency news", t);
             return null;
         }
     }

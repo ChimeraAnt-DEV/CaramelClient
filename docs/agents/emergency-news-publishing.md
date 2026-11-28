@@ -12,6 +12,19 @@ next APK.
   outage is worse than an extra badge. The client draws the badge red for emergency, amber for urgent,
   on the Home card and in the News modal (`CaramelNewsInfo.severityLabel` / `.emergency`). Strings are
   `news_severity_emergency` / `news_severity_urgent`, translated in all 10 locales.
+- **A post names its banner, the client supplies the picture:** `"banner"` takes one of a fixed
+  set of keys — `emergency`, `urgent`, `christmas`, `caramel_plus` (also `caramel+` / `plus`),
+  `berryapi` — and `NewsBanners.drawableFor` maps it to a bundled drawable. A document that is
+  fetched cannot name a resource id (that would be an instruction, not data), so the keys are the
+  whole vocabulary; an unknown key falls back to the art its severity implies and a post with
+  neither keeps the card's gradient. The changelog feed's sections name keys the same way.
+- **Published notices come first.** `MainActivity.buildNews()` starts the list with the announcements
+  and appends the changelog and bundled rows, so the News tab's featured card is an outage notice
+  when there is one, and the Home strip's first cards are too. The strip shows the first three rows.
+- **The document also ships with the build.** `resources/launcher/emergency_news.json` is an assets
+  root, so a fresh install with no cache yet (first launch, or a fetch that failed before any post
+  was cached) reads the packaged copy — the channel works before the network does, and a notice can
+  be baked into a release as well as published to `main`.
 - **Two dispatchable workflows, both writing that one document:**
   - `.github/workflows/emergency-news.yml` — severity `emergency`, default expiry 24h.
   - `.github/workflows/urgent-news.yml` — severity `urgent`, default expiry 72h.
@@ -30,6 +43,11 @@ next APK.
   expired post is dropped at read time, a repeated id is shown once, and a document that is not JSON
   yields no posts rather than an exception in the News tab. The text is displayed, never executed, and
   a post's only URL opens in the launcher's own browser.
-- **What is still manual:** the banner asset. The `banner` field is carried through the document and
-  ignored by the client until a drawable-shipping route exists; today a post without art keeps the
-  generated gradient rather than showing a hole.
+- **What is still manual:** a *new* banner picture. The published document names one of the bundled
+  keys, so shipping a new picture means adding a drawable and a key to `NewsBanners` in a build; the
+  art itself is never fetched.
+- **Verified on device (Mobilebox, `caramel-test`, arm64):** with a post per key in the packaged
+  document, the News tab opened on the EMERGENCY hero, the URGENT post sat under it, and the
+  Christmas and Caramel+ posts drew their thumbs in the modal; the Home strip led with the emergency
+  and urgent cards. The card art is drawn fit-centre over a blurred fill, so a wide picture is shown
+  whole instead of cropped at phone width.

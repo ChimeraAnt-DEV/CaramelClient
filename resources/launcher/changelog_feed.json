@@ -1,39 +1,41 @@
 {
   "schemaVersion": 1,
   "newest": {
-    "version": "BETA9",
-    "headline": "Sign-in, the CurseForge browser and the in-game menu",
+    "version": "BETA10",
+    "headline": "News banners, the Caramel badge, and a home screen that fits",
     "items": [
       {
-        "text": "The Microsoft account the game reads now matches the one the launcher exports."
+        "text": "News posts name their own banner art: emergency, urgent, Christmas, Caramel+ and BerryAPI."
       },
       {
-        "text": "CurseForge lists Bedrock content before you search, in sections, with each project's own picture."
+        "text": "The Caramel badge shows next to friends who run the client."
       },
       {
-        "text": "XAPK and zip packages import from the device, with progress."
+        "text": "The hero buttons no longer overlap the art, the news column scrolls, and the side card fills its column."
       },
       {
-        "text": "The floating Mod Menu button opens the menu again, and says so when a build cannot."
+        "text": "Builds share one signing key, so updates install over the old version."
       },
       {
-        "text": "The logcat overlay switch applies at once instead of at the next launch."
+        "text": "A session counts as live from the moment it starts."
       }
-    ]
+    ],
+    "banner": ""
   },
   "upcoming": {
     "headline": "What is being worked on next",
     "items": [
       {
+        "text": "The sign-in hand-off for Bedrock 1.26.60, which still needs a real phone and a real Microsoft account to confirm."
+      },
+      {
         "text": "The replay recorder capturing the full world from BerryAPI's native world feed, not only the local player and voice peers."
       },
       {
         "text": "BerryAPI's encrypted voice system, replacing the launcher's own relay settings."
-      },
-      {
-        "text": "More authored cape art and preview poses."
       }
-    ]
+    ],
+    "banner": "berryapi"
   },
   "sneakPeeks": [
     {

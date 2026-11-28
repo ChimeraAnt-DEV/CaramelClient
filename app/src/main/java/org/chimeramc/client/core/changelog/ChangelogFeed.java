@@ -36,11 +36,14 @@ public final class ChangelogFeed {
     public static final class Section {
         public final String version;
         public final String headline;
+        /** The banner key the section named, empty when it named none. See NewsBanners. */
+        public final String bannerKey;
         public final List<String> items;
 
-        Section(String version, String headline, List<String> items) {
+        Section(String version, String headline, String bannerKey, List<String> items) {
             this.version = version == null ? "" : version;
             this.headline = headline == null ? "" : headline;
+            this.bannerKey = bannerKey == null ? "" : bannerKey;
             this.items = Collections.unmodifiableList(items);
         }
     }
@@ -56,7 +59,7 @@ public final class ChangelogFeed {
         }
     }
 
-    private static final Section EMPTY_SECTION = new Section("", "", new ArrayList<>());
+    private static final Section EMPTY_SECTION = new Section("", "", "", new ArrayList<>());
 
     private final Section newest;
     private final Section upcoming;
@@ -141,7 +144,7 @@ public final class ChangelogFeed {
             }
         }
         return new Section(optString(object, "version", ""),
-                optString(object, "headline", ""), items);
+                optString(object, "headline", ""), optString(object, "banner", ""), items);
     }
 
     private static List<SneakPeek> parseSneakPeeks(JsonArray array) {
