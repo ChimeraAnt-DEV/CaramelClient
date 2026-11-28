@@ -66,16 +66,16 @@ fun GlassPanel(
     // so the only honest knob is how much light the layered fills hold. A low strength reads as a
     // near-flat card, a high one as heavier glass; neither claims a blur the platform cannot do.
     val glass = caramelPrefs.glassStrength
-    // "UI Transparency" is the base fill's opacity. It stops at 0.30 rather than 0, because a
-    // fully transparent panel puts its label straight on the backdrop and the text stops being
-    // readable; the last third of the slider is where the surface is already as thin as it can go.
-    val fill = 0.30f + 0.70f * caramelPrefs.uiTransparency.coerceIn(0f, 1f)
+    val fill = glassFill(caramelPrefs.uiTransparency)
+    // On a light page a white fill has nothing to separate it from the page, so the cool tint is
+    // carried a little further there. The card then reads as tinted glass in both palettes.
+    val tintWeight = if (C.light) 1.8f else 1f
     Box(
         modifier
             .shadow(elevation, shape, ambientColor = Color.Black, spotColor = Color(0xFF00010F))
             .clip(shape)
-            .background(C.Navy.copy(alpha = fill))
-            .background(tint.copy(alpha = tint.alpha * glass * fill))
+            .background(C.Glass.copy(alpha = fill))
+            .background(tint.copy(alpha = (tint.alpha * tintWeight).coerceAtMost(0.30f) * glass * fill))
             .background(
                 Brush.verticalGradient(
                     listOf(C.sheen(0.075f * glass * fill), C.sheen(0.015f * glass * fill)),
@@ -91,6 +91,16 @@ fun GlassPanel(
         content = content,
     )
 }
+
+/**
+ * The glass card's base fill for a "UI Transparency" setting in 0..1.
+ *
+ * <p>It stops at 0.30 rather than 0: a fully transparent panel puts its label straight on the
+ * backdrop and the text stops being readable, so the last part of the slider is where the surface
+ * is already as thin as it can go.
+ */
+internal fun glassFill(uiTransparency: Float): Float =
+    0.30f + 0.70f * uiTransparency.coerceIn(0f, 1f)
 
 /**
  * The navy wallpaper with soft colour pools, ported from the pack's `Backdrop`.

@@ -56,6 +56,15 @@ object CaramelColors {
 
     val Abyss: Color get() = if (light) Color(0xFFF2F5FB) else Color(0xFF060B1A)
     val Navy: Color get() = if (light) Color(0xFFFFFFFF) else Color(0xFF0A1330)
+
+    /**
+     * The base a glass card is filled with.
+     *
+     * <p>It is not [Navy] in light mode: that is pure white, so every panel drew as a plain white
+     * rectangle with no separation from the page behind it. A cool tint keeps the card reading as
+     * a surface rather than as the absence of one.
+     */
+    val Glass: Color get() = if (light) Color(0xFFF4F7FE) else Color(0xFF0A1330)
     val DeepBlue: Color get() = if (light) Color(0xFFE6ECF8) else Color(0xFF0F1B44)
     val Blue: Color get() = if (light) Color(0xFF3559E0) else Color(0xFF4A78FF)
     val BlueLight: Color get() = if (light) Color(0xFF4A6BE8) else Color(0xFF628CFF)

@@ -204,7 +204,7 @@ private fun SkinViewport(
     Box(
         modifier
             .clip(RoundedCornerShape(22.dp))
-            .background(Brush.verticalGradient(listOf(C.Navy, C.Abyss)))
+            .background(Brush.verticalGradient(listOf(C.Glass, C.DeepBlue)))
             .border(1.dp, C.sheen(0.10f), RoundedCornerShape(22.dp)),
         Alignment.Center,
     ) {
