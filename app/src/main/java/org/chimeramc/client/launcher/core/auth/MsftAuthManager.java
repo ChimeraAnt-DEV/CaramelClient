@@ -131,6 +131,28 @@ public final class MsftAuthManager {
         return age >= TOKEN_MAX_TRUST_MS;
     }
 
+    /**
+     * Whether a stored chain has no Minecraft Services relying party.
+     *
+     * <p>That token is minted by {@link #refreshStoredAccount} and by a fresh sign-in now, but an
+     * account saved by an older build carries none, and the export then omits
+     * {@code rp://api.minecraftservices.com/} while nothing else about the account is stale. The
+     * launch path refreshes such an account once regardless of its age instead of waiting out the
+     * twelve-hour window.
+     */
+    public static boolean needsMinecraftServicesToken(String serializedAuthManager) {
+        if (!hasUsableAuthMaterial(serializedAuthManager)) return false;
+        try {
+            JsonObject json = JsonParser.parseString(serializedAuthManager).getAsJsonObject();
+            return !json.has("javaXstsToken") || json.get("javaXstsToken").isJsonNull();
+        } catch (Exception unreadable) {
+            AppLog.warnOnce(TAG, "MsftAuthManager:javaXstsProbe",
+                    "Could not read the stored chain to check for the Minecraft Services token",
+                    unreadable);
+            return false;
+        }
+    }
+
     /** Whether a stored chain can be used at all (it exists and is the JSON the library writes). */
     public static boolean hasUsableAuthMaterial(String serializedAuthManager) {
         if (serializedAuthManager == null) return false;
@@ -529,7 +551,12 @@ public final class MsftAuthManager {
         }
         authManager.getXboxLiveXstsToken().getUpToDate();
 
-        String serialized = BedrockAuthManager.toJson(authManager).toString();
+        JsonObject snapshot = BedrockAuthManager.toJson(authManager);
+        // Minted here as well as on a refresh: the export runs offline and cannot mint it, and a
+        // fresh sign-in can sit in the store for twelve hours before anything refreshes it, so
+        // without this a new account reached the game with no rp://api.minecraftservices.com/.
+        mergeMinecraftServicesXsts(createHttpClient(), snapshot);
+        String serialized = snapshot.toString();
         MsftAccountStore.MsftAccount account = MsftAccountStore.addOrUpdate(
                 context,
                 msaUserId,

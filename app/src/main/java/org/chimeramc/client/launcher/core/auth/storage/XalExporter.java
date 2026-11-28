@@ -149,6 +149,8 @@ public class XalExporter {
                 : (bundle.soonestExpiryMs - nowMs) / 1000L;
         return "Exported " + bundle.files.size() + " file(s) to " + userDir.getAbsolutePath()
                 + "; relying parties " + bundle.distinctRelyingParties()
+                + "; crypto prefs " + bundle.cryptoPrefs.size()
+                + (bundle.cryptoPrefs.containsKey("private") ? " (device key written)" : " (no device key)")
                 + "; soonest token expiry "
                 + (remainingSeconds < 0 ? "unknown" : remainingSeconds + "s");
     }

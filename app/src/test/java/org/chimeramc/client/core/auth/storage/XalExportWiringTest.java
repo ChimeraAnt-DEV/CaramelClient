@@ -80,10 +80,34 @@ public class XalExportWiringTest {
         assertTrue("the relying parties must be named: " + line,
                 line.contains(XalExportBundle.RP_BEDROCK));
         assertTrue("the time to expiry must be reported: " + line, line.contains("1s"));
+        assertTrue("the device-key status must be reported: " + line, line.contains("no device key"));
         for (String secret : new String[]{"SECRET-MSA-ACCESS", "SECRET-MSA-REFRESH", "SECRET-DEVICE-TOKEN",
                 "SECRET-USER-TOKEN", "SECRET-BEDROCK-TOKEN", "account-id", "Gamertag", "xuid"}) {
             assertFalse("the log line must not carry " + secret + ": " + line, line.contains(secret));
         }
+    }
+
+    /**
+     * The export line answers "was the device key written?" without a debugger.
+     *
+     * <p>A key written in the wrong Base64 alphabet is the defect that leaves XAL unable to sign a
+     * proof of possession, so the presence of the key in the exported preferences is the one fact
+     * worth reading off a phone's logcat.
+     */
+    @Test
+    public void theLogLineSaysWhenTheDeviceKeyWasWritten() {
+        JsonObject snapshot = new JsonObject();
+        snapshot.addProperty("deviceId", "device-uuid");
+        JsonObject keyPair = new JsonObject();
+        keyPair.addProperty("publicKey", "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+/+//n4=");
+        keyPair.addProperty("privateKey", "MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD//g==");
+        snapshot.add("deviceKeyPair", keyPair);
+
+        XalExportBundle bundle = XalExportBundle.build(snapshot, "account-id", "Gamertag", "xuid");
+        String line = XalExporter.exportLogLine(bundle, new File("/data/user/0/app/files/xal/abc"), 0L);
+
+        assertTrue("the written key must be reported: " + line, line.contains("(device key written)"));
+        assertFalse("the key material must not be logged: " + line, line.contains("MFkwEwYHKoZIzj0"));
     }
 
     private static JsonObject token(String token, String refreshToken, long expireTimeMs) {

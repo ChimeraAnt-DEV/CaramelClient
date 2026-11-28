@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -145,13 +146,43 @@ public final class XalExportBundle {
         files.put(userFile(userBase64), userRoot.toString());
 
         JsonObject keyPair = object(authJson, "deviceKeyPair");
-        if (keyPair != null && string(keyPair, "publicKey") != null && string(keyPair, "privateKey") != null) {
-            prefs.put("id", "{" + orEmpty(deviceId) + "}");
-            prefs.put("public", string(keyPair, "publicKey"));
-            prefs.put("private", string(keyPair, "privateKey"));
+        if (keyPair != null) {
+            String publicKey = urlSafeBase64(string(keyPair, "publicKey"));
+            String privateKey = urlSafeBase64(string(keyPair, "privateKey"));
+            if (publicKey != null && privateKey != null) {
+                prefs.put("id", "{" + orEmpty(deviceId) + "}");
+                prefs.put("public", publicKey);
+                prefs.put("private", privateKey);
+            }
         }
 
         return new XalExportBundle(files, prefs, relyingParties, soonestExpiry);
+    }
+
+    /**
+     * The key material re-encoded the way the game's `Ecdsa` reads it.
+     *
+     * <p>`MinecraftAuth` writes the DER bytes in standard Base64 (`+`, `/`, `=`), while
+     * `Ecdsa.restoreKeyAndId` decodes with `URL_SAFE | NO_PADDING | NO_WRAP` and throws
+     * `IllegalArgumentException: bad base-64` on the first of those characters. A throw there leaves
+     * XAL with no device key, so every proof-of-possession signing step fails. Both alphabets are
+     * accepted on input, so a snapshot that already carries URL-safe text round-trips unchanged.
+     *
+     * @return URL-safe unpadded Base64, or null when the value is not Base64 at all — the crypto
+     *         preferences are then left untouched and the game generates its own key instead of
+     *         crashing on a restore.
+     */
+    static String urlSafeBase64(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String compact = value.replace("\n", "").replace("\r", "").trim();
+        try {
+            byte[] raw = compact.indexOf('-') >= 0 || compact.indexOf('_') >= 0
+                    ? Base64.getUrlDecoder().decode(compact)
+                    : Base64.getDecoder().decode(compact);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(raw);
+        } catch (IllegalArgumentException notBase64) {
+            return null;
+        }
     }
 
     /** The distinct relying parties, for a log line. */

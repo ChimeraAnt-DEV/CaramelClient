@@ -1,9 +1,11 @@
 package org.chimeramc.client.core.auth.storage;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -27,6 +29,12 @@ public class XalExportBundleTest {
 
     private static final long NOW = 1_700_000_000_000L;
     private static final long MINUTE = 60_000L;
+    // A real EC public/private key as MinecraftAuth writes it: standard Base64, with +, / and =.
+    private static final String STANDARD_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+/+//n4=";
+    private static final String URL_SAFE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE-_-__n4";
+    private static final String STANDARD_PRIVATE_KEY = "MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD//g==";
+    private static final String URL_SAFE_PRIVATE_KEY = "MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD__g";
+
     private static final String USER_ID = "msa-user-id";
     private static final String GAMERTAG = "CaramelTester";
     private static final String XUID = "2535400000000001";
@@ -112,8 +120,44 @@ public class XalExportBundleTest {
         XalExportBundle bundle = XalExportBundle.build(fullSnapshot(), USER_ID, GAMERTAG, XUID);
 
         assertEquals("{device-uuid}", bundle.cryptoPrefs.get("id"));
-        assertEquals("PUBLIC-KEY", bundle.cryptoPrefs.get("public"));
-        assertEquals("PRIVATE-KEY", bundle.cryptoPrefs.get("private"));
+        assertEquals(URL_SAFE_PUBLIC_KEY, bundle.cryptoPrefs.get("public"));
+        assertEquals(URL_SAFE_PRIVATE_KEY, bundle.cryptoPrefs.get("private"));
+    }
+
+    @Test
+    public void theKeyPairIsReEncodedTheWayTheGameDecodesIt() {
+        // Ecdsa.restoreKeyAndId decodes with URL_SAFE | NO_PADDING | NO_WRAP, so a standard-alphabet
+        // key (MinecraftAuth writes +, / and =) throws IllegalArgumentException: bad base-64 and the
+        // game is left with no device key to sign a proof of possession with.
+        XalExportBundle bundle = XalExportBundle.build(fullSnapshot(), USER_ID, GAMERTAG, XUID);
+
+        for (String key : new String[]{"public", "private"}) {
+            String encoded = bundle.cryptoPrefs.get(key);
+            assertNotNull(key, encoded);
+            assertFalse(key + " kept a standard-alphabet character: " + encoded,
+                    encoded.contains("+") || encoded.contains("/") || encoded.contains("="));
+            // The bytes must survive the re-encoding unchanged, or the key no longer matches the
+            // certificate the sign-in was made with.
+            assertArrayEquals(
+                    java.util.Base64.getDecoder().decode(
+                            "public".equals(key) ? STANDARD_PUBLIC_KEY : STANDARD_PRIVATE_KEY),
+                    java.util.Base64.getUrlDecoder().decode(encoded));
+        }
+    }
+
+    @Test
+    public void aKeyThatIsNotBase64IsNotWritten() {
+        // Writing it would make restoreKeyAndId throw; leaving the prefs empty makes the game
+        // generate its own key instead.
+        JsonObject snapshot = fullSnapshot();
+        JsonObject keyPair = new JsonObject();
+        keyPair.addProperty("publicKey", "not base 64 !!!");
+        keyPair.addProperty("privateKey", STANDARD_PRIVATE_KEY);
+        snapshot.add("deviceKeyPair", keyPair);
+
+        XalExportBundle bundle = XalExportBundle.build(snapshot, USER_ID, GAMERTAG, XUID);
+
+        assertTrue(bundle.cryptoPrefs.isEmpty());
     }
 
     private static JsonObject userJson(XalExportBundle bundle) {
@@ -138,8 +182,8 @@ public class XalExportBundleTest {
         snapshot.addProperty("deviceId", "device-uuid");
 
         JsonObject keyPair = new JsonObject();
-        keyPair.addProperty("publicKey", "PUBLIC-KEY");
-        keyPair.addProperty("privateKey", "PRIVATE-KEY");
+        keyPair.addProperty("publicKey", STANDARD_PUBLIC_KEY);
+        keyPair.addProperty("privateKey", STANDARD_PRIVATE_KEY);
         snapshot.add("deviceKeyPair", keyPair);
 
         JsonObject msa = new JsonObject();

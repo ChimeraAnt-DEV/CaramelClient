@@ -623,10 +623,15 @@ object MinecraftRuntimePreparer {
         try {
             val now = System.currentTimeMillis()
             val accounts = MsftAccountStore.list(context)
-            if (accounts.none {
-                    org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
-                        it.lastUpdated, now)
-                }) {
+            // An account stored before the Minecraft Services relying party existed is refreshed on
+            // this launch even when its tokens are fresh, otherwise the export keeps omitting
+            // rp://api.minecraftservices.com/ for twelve hours after the update.
+            fun needsRefresh(account: MsftAccountStore.MsftAccount): Boolean =
+                org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
+                    account.lastUpdated, now) ||
+                    org.chimeramc.client.core.auth.MsftAuthManager.needsMinecraftServicesToken(
+                        account.serializedAuthManager)
+            if (accounts.none { needsRefresh(it) }) {
                 return
             }
             fileListener.onProgress(97, "Refreshing sign-in")
@@ -635,8 +640,7 @@ object MinecraftRuntimePreparer {
             }
             try {
                 for (account in accounts) {
-                    if (!org.chimeramc.client.core.auth.MsftAuthManager.shouldRefreshTokens(
-                            account.lastUpdated, now)) {
+                    if (!needsRefresh(account)) {
                         continue
                     }
                     val future = executor.submit<Boolean> {

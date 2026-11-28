@@ -31,6 +31,34 @@ public class MsftAuthManagerFreshnessTest {
                 NOW - 2 * MsftAuthManager.TOKEN_MAX_TRUST_MS, NOW));
     }
 
+    /**
+     * An account store predating the Minecraft Services relying party.
+     *
+     * <p>Nothing about such an account is stale, so the twelve-hour rule left it alone and the export
+     * kept omitting {@code rp://api.minecraftservices.com/}; the launch path refreshes it once on the
+     * strength of this check instead.
+     */
+    @Test
+    public void aChainWithoutTheMinecraftServicesTokenIsFlagged() {
+        assertTrue(MsftAuthManager.needsMinecraftServicesToken(
+                "{\"msaToken\":{},\"xblDeviceToken\":{},\"bedrockXstsToken\":{}}"));
+        assertTrue(MsftAuthManager.needsMinecraftServicesToken("{\"javaXstsToken\":null}"));
+    }
+
+    @Test
+    public void aChainThatAlreadyHasTheTokenIsNotFlagged() {
+        assertFalse(MsftAuthManager.needsMinecraftServicesToken(
+                "{\"msaToken\":{},\"javaXstsToken\":{\"xstsToken\":\"x\"}}"));
+    }
+
+    @Test
+    public void aChainThatCannotBeReadIsNotFlagged() {
+        assertFalse(MsftAuthManager.needsMinecraftServicesToken(null));
+        assertFalse(MsftAuthManager.needsMinecraftServicesToken(""));
+        assertFalse(MsftAuthManager.needsMinecraftServicesToken("not json at all"));
+        assertFalse(MsftAuthManager.needsMinecraftServicesToken("{ truncated"));
+    }
+
     @Test
     public void theBoundaryIsExactlyTheTrustWindow() {
         assertFalse(MsftAuthManager.shouldRefreshTokens(

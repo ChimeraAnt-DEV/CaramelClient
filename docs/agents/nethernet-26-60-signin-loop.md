@@ -227,3 +227,80 @@ hours, `Msa.json` still carries `"foci": ""` and the access token still carries 
 Each of these is a guess at the shape the real XAL client writes, and changing them without a device
 would only trade one guess for another. They are the first things to compare against a
 `files/xal/` directory produced by the genuine client on a 26.60 phone.
+
+## 7. The two defects the first round left behind
+
+Both were reported against the first export rewrite and both are confirmed in the code; neither is
+a guess.
+
+### 7.1 The device key was written in the wrong Base64 alphabet
+
+`MinecraftAuth`'s `JsonUtil.encodeKeyPair` encodes the DER bytes of `deviceKeyPair.publicKey` and
+`deviceKeyPair.privateKey` with `java.util.Base64.getEncoder()` — the **standard** alphabet, with
+`+`, `/` and `=`.
+
+The game reads them in `Ecdsa.restoreKeyAndId`, which calls `Base64.decode(str, 11)`, and 11 is
+`URL_SAFE | NO_PADDING | NO_WRAP`. That decoder throws `IllegalArgumentException: bad base-64` on
+the first `+`, `/` or `=`. An ECDSA public key is 65 bytes, so its Base64 is 88 characters with
+`=` padding: **every** key hits it. The throw escapes `restoreKeyAndId`, XAL is left without a
+device key, and no proof-of-possession can be signed — which is exactly a sign-in that never
+completes while the rest of the session looks fine.
+
+The first rewrite dropped the re-encoding the old `XalExporter` did (decode with `DEFAULT`, encode
+with `NO_WRAP | NO_PADDING | URL_SAFE`) when it moved the prefs map into `XalExportBundle`. It is
+back, as `XalExportBundle.urlSafeBase64`, which accepts either alphabet on input and returns null
+for a value that is not Base64 at all, so the crypto prefs are then left empty and the game
+generates its own key instead of throwing on a restore.
+
+Evidence: `XalExportBundleTest.theKeyPairIsReEncodedTheWayTheGameDecodesIt` (a real 65-byte public
+key and its PKCS#8 private half, asserted to contain no `+`/`/`/`=` and to decode back to the same
+bytes with the URL-safe decoder) and `aKeyThatIsNotBase64IsNotWritten`.
+
+### 7.2 The Minecraft Services token was only minted on a refresh
+
+`rp://api.minecraftservices.com/` needs a Java XSTS exchange, which `XalExporter` cannot do — it
+runs offline and writes what the stored snapshot already holds. `mergeMinecraftServicesXsts` was
+called from `refreshStoredAccount` only, and `MinecraftRuntimePreparer.refreshAccountsForLaunch`
+refreshes an account only when `shouldRefreshTokens` says it is twelve hours old. So a **fresh
+sign-in** reached the export with no `javaXstsToken` at all, and an account signed in within the
+last twelve hours never picked one up either. The export then wrote five relying parties, not six.
+
+Two changes:
+
+- `MsftAuthManager.saveAccountOrThrow` mints the token before it stores the chain, so the account
+  is complete the moment it is saved. The merge swallows its own failure, so a bad network cannot
+  fail a sign-in that otherwise succeeded.
+- `MsftAuthManager.needsMinecraftServicesToken(serializedAuthManager)` is the launch-path probe:
+  true when the stored chain has no `javaXstsToken`. `refreshAccountsForLaunch` now refreshes on
+  `shouldRefreshTokens(...) || needsMinecraftServicesToken(...)`, so an account saved by an older
+  build is migrated on its next launch instead of waiting out the window.
+
+Evidence: `MsftAuthManagerFreshnessTest.aChainWithoutTheMinecraftServicesTokenIsFlagged`,
+`aChainThatAlreadyHasTheTokenIsNotFlagged`, `aChainThatCannotBeReadIsNotFlagged`. The network half
+of the fix has no JVM test — there is no device and no live account here — so it is verified only by
+the `XalExporter` log line on a phone: `rp://api.minecraftservices.com/` must appear in
+`relying parties [...]`.
+
+### 7.3 What the exporter now logs
+
+One line, tag `XalExporter`, no token, account id or gamertag:
+
+```
+Exported 4 file(s) to /data/user/0/org.chimeramc.client/files/xal/<b64>; relying parties [...];
+crypto prefs 3 (device key written); soonest token expiry <n>s
+```
+
+`crypto prefs 3 (device key written)` versus `crypto prefs 0 (no device key)` distinguishes 7.1 from
+everything else without a debugger: if the key was not written, the game will generate its own and
+the export will not be the thing being signed.
+
+### 7.4 Still needs a device
+
+- That `Ecdsa.restoreKeyAndId` now returns instead of throwing (the encode is proven; the game's
+  read of it is not).
+- That XAL accepts the `Dtoken` envelope as sufficient to mint an uncached relying party.
+- That six relying parties is the complete set 1.26.60 asks for — a missing one now shows up as a
+  request for a relying party that is absent from the log line.
+- The skin staying Steve is still **separate**: SweetLoader has no signature rules for 1.26.60, so
+  the game rejects the patched binary's hooks and no cosmetic or skin hook runs. Do not read a
+  Steve skin as an auth failure.
