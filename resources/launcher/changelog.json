@@ -44,6 +44,24 @@
       ]
     },
     {
+      "title": "Changed",
+      "kind": "changed",
+      "items": [
+        {
+          "text": "Glass cards carry a cool tint in the light palette instead of reading as plain white boxes.",
+          "url": ""
+        },
+        {
+          "text": "The launcher scales its layout to the window, so split screen and large tablets are not cramped.",
+          "url": ""
+        },
+        {
+          "text": "The in-game button shows a plain three-bar handle rather than the client mark.",
+          "url": ""
+        }
+      ]
+    },
+    {
       "title": "In-game menu and overlays",
       "kind": "fixed",
       "items": [

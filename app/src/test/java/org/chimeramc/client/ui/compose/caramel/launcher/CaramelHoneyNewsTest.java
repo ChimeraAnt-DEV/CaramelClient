@@ -28,7 +28,7 @@ public class CaramelHoneyNewsTest {
 
     @Test
     public void theAnnouncementIsAddedToTheNewsList() throws IOException {
-        String activity = read("app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java");
+        String activity = read("app/src/main/java/org/chimeramc/client/core/changelog/BundledNews.java");
         int at = activity.indexOf("caramel_news_honey_title");
         assertTrue("the HoneyClient announcement is not built into the news list", at >= 0);
         String call = activity.substring(at, Math.min(activity.length(), at + 600));
