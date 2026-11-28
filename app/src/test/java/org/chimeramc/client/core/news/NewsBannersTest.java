@@ -70,6 +70,18 @@ public class NewsBannersTest {
         assertBannerFile("news_banner_urgent", "webp");
         assertBannerFile("news_banner_christmas", "webp");
         assertBannerFile("news_banner_plus", "webp");
+        assertBannerFile("news_banner_beta10", "webp");
+    }
+
+    @Test
+    public void theReleaseCardNamesItsOwnBanner() throws IOException {
+        // The newest section is the card the News tab opens on, so it has to name the art that was
+        // made for it rather than falling back to the gradient.
+        assertEquals(R.drawable.news_banner_beta10,
+                NewsBanners.drawableFor(NewsBanners.KEY_BETA10, null));
+        String feed = read("resources/launcher/changelog_feed.json");
+        assertTrue("the shipped feed must give its newest section a banner",
+                feed.contains("\"banner\": \"" + NewsBanners.KEY_BETA10 + "\""));
     }
 
     @Test

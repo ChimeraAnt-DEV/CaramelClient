@@ -2,25 +2,16 @@
   "schemaVersion": 1,
   "newest": {
     "version": "BETA10",
-    "headline": "News banners, the Caramel badge, and a home screen that fits",
+    "headline": "The launcher that fits your screen",
     "items": [
-      {
-        "text": "News posts name their own banner art: emergency, urgent, Christmas, Caramel+ and BerryAPI."
-      },
-      {
-        "text": "The Caramel badge shows next to friends who run the client."
-      },
-      {
-        "text": "The hero buttons no longer overlap the art, the news column scrolls, and the side card fills its column."
-      },
-      {
-        "text": "Builds share one signing key, so updates install over the old version."
-      },
-      {
-        "text": "A session counts as live from the moment it starts."
-      }
+      "Every news post has its own banner art now, and announcements sit at the top of the tab.",
+      "The home screen scales to the window it is in: no buttons on the art, no clipped news card.",
+      "CurseForge lists Bedrock content before you search, with each project's own picture.",
+      "XAPK and zip packages install, and the import shows its progress.",
+      "Friend requests show up, and friends who run Caramel wear the badge.",
+      "This build updates over the last one instead of asking you to delete it first."
     ],
-    "banner": ""
+    "banner": "beta10"
   },
   "upcoming": {
     "headline": "What is being worked on next",

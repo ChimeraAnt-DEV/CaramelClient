@@ -2,37 +2,103 @@
   "schemaVersion": 1,
   "releasedAt": "2026-11-28T00:00:00Z",
   "supportUntil": "2027-05-28T00:00:00Z",
-  "headline": "CaramelClient BETA10 - banners, badges and a home screen that fits",
-  "summary": "The home screen used to stack its buttons on top of the art and cut the news card in half. This beta is mostly about the parts you actually look at: real art on every news post, a badge that shows who else runs Caramel, and a layout that rearranges itself instead of squeezing. It also fixes the reason an update kept asking you to uninstall the old build first.",
+  "headline": "CaramelClient BETA10 - the launcher that fits your screen",
+  "summary": "This one was mostly me staring at the home screen until it stopped fighting itself. The buttons no longer sit on top of the art, the news column scrolls instead of getting chopped, and the whole launcher now scales to whatever window it is in instead of pretending every phone is 360dp wide. On top of that: real banner art on every news post, a badge that shows who else runs Caramel, a CurseForge tab that actually lists things before you type, XAPK and zip imports, friend requests that show up, and an install that updates over the old version instead of making you delete it first.",
   "sections": [
     {
       "title": "News",
       "kind": "added",
       "items": [
         {
-          "text": "Emergency, urgent, Christmas and the Caramel+ announcement now have proper banner art instead of a gradient.",
+          "text": "Emergency, urgent, Christmas, Caramel+ and BerryAPI posts each carry their own banner art instead of a gradient.",
           "url": ""
         },
         {
-          "text": "A post can name one of those banners, and a post that names none draws the art for its severity.",
+          "text": "A post names one of those banners, and a post that names none draws the art for how serious it is.",
           "url": ""
         },
         {
-          "text": "Announcements can be published without shipping a build, and they appear on the next launch.",
+          "text": "Announcements can be published without shipping a build, and they land on your next launch.",
+          "url": ""
+        },
+        {
+          "text": "Announcements sit at the top of the tab now, so an outage notice is the first thing you see instead of the fourth.",
           "url": ""
         }
       ]
     },
     {
-      "title": "Badges",
+      "title": "CurseForge",
       "kind": "added",
       "items": [
         {
-          "text": "Friends who run Caramel show the Caramel badge next to their name in the Xbox friends list.",
+          "text": "The tab lists Bedrock content before you search, in sections: All, Add-ons, Texture packs, Scripts, Worlds and Skins.",
           "url": ""
         },
         {
-          "text": "The badge comes from the published list or from a reply the client has actually seen, not from a guess.",
+          "text": "Every card draws the project's own picture instead of the same CurseForge logo on everything.",
+          "url": ""
+        },
+        {
+          "text": "Each section sorts by total downloads, and the list is re-sorted on the phone so a row cannot come out in the wrong order.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Installing packages",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "XAPK and zip packages install now. Before, only a bare .apk did, and an XAPK produced an instance that refused to launch.",
+          "url": ""
+        },
+        {
+          "text": "The biggest APK in the archive becomes the base and the splits are kept, so both layouts work.",
+          "url": ""
+        },
+        {
+          "text": "The import shows a progress ring with a percentage instead of looking frozen.",
+          "url": ""
+        },
+        {
+          "text": "Archive entries that try to write outside the import folder are skipped.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Friends",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "Requests show up and are labelled. Xbox has no request object, so a follow that was not returned back is the request, and only one direction was being read.",
+          "url": ""
+        },
+        {
+          "text": "A friend who runs Caramel wears the Caramel badge next to their name.",
+          "url": ""
+        },
+        {
+          "text": "If the friend list fails to load, the last one stays on screen with the reason instead of going blank.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Sign-in",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "The exported device key is written in the alphabet the game decodes with. It was standard base64, and the game throws on the first +, / or =, so the key never loaded.",
+          "url": ""
+        },
+        {
+          "text": "The Minecraft Services token is minted when you sign in, not only on the twelve-hourly refresh, so a fresh sign-in reaches the game with it.",
+          "url": ""
+        },
+        {
+          "text": "The export log line says whether the device key was written, so a missing key is readable from logcat.",
           "url": ""
         }
       ]
@@ -42,11 +108,11 @@
       "kind": "fixed",
       "items": [
         {
-          "text": "The Launch button and the three tab buttons no longer sit on top of the hero art, and Screenshots is no longer cut off.",
+          "text": "The Launch button and the three tab buttons no longer draw on top of the hero art, and Screenshots is not cut off any more.",
           "url": ""
         },
         {
-          "text": "The news column scrolls, so a card is not chopped at the bottom edge.",
+          "text": "The news column scrolls, so a card is not sliced at the bottom edge.",
           "url": ""
         },
         {
@@ -60,7 +126,15 @@
       "kind": "changed",
       "items": [
         {
-          "text": "The hero drops its art and wraps its buttons when the window is short, instead of drawing them on top of each other.",
+          "text": "The window is measured in pixels and the density is scaled by a rule, so split screen and small windows stop overflowing and a tablet stops looking like a phone app stretched over glass.",
+          "url": ""
+        },
+        {
+          "text": "An ordinary 360dp-to-600dp phone is pinned at exactly 1.0, so the normal look does not change.",
+          "url": ""
+        },
+        {
+          "text": "The hero drops its art and wraps its buttons when the window is short instead of drawing them on top of each other.",
           "url": ""
         },
         {
@@ -70,15 +144,43 @@
       ]
     },
     {
+      "title": "In-game menu",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "The floating button opens the menu on a normal press. It used to need you to lift your finger within 200ms, so a deliberate press was neither a tap nor a drag and did nothing.",
+          "url": ""
+        },
+        {
+          "text": "The controller is installed on demand if you press the button before a session installs it.",
+          "url": ""
+        },
+        {
+          "text": "A build without the native menu says so instead of doing nothing.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Settings",
+      "kind": "fixed",
+      "items": [
+        {
+          "text": "The logcat overlay switch applies immediately instead of on the next screen resume. Its listener was handed over as a lambda, so it was garbage-collected straight away.",
+          "url": ""
+        }
+      ]
+    },
+    {
       "title": "Updates",
       "kind": "fixed",
       "items": [
         {
-          "text": "Every build is signed with the same key, so an update installs over the old version instead of asking you to delete it first.",
+          "text": "Every build shares one signing key, so an update installs over the old version instead of asking you to delete it first.",
           "url": ""
         },
         {
-          "text": "This one may still ask once, because the beta you have now was signed with a different key. Every update after it installs straight over.",
+          "text": "If you are on the BETA9 apk you still have to uninstall once, because that one was signed with a different key. Every update after this installs straight over.",
           "url": ""
         }
       ]
@@ -88,7 +190,33 @@
       "kind": "fixed",
       "items": [
         {
-          "text": "A session is recorded as live when it starts, as well as when it ends, so a crash no longer loses the time.",
+          "text": "A session counts as live from the moment it starts, not only when it ends, so a crash no longer loses the time.",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "Known issues",
+      "kind": "known",
+      "items": [
+        {
+          "text": "SweetLoader has no signature rules for Bedrock 1.26.60 yet, so the byte-pattern hooks stay off there. Most in-game modules are limited or unavailable on that version.",
+          "url": ""
+        },
+        {
+          "text": "The 26.60 sign-in export is tested in code, not yet on a phone with a real Microsoft account. If the game still sits on Signing in, it is that, and the logcat tag is XalExporter.",
+          "url": ""
+        },
+        {
+          "text": "A skin can still look like plain Steve on 1.26.60. That is the hook gap above, not the sign-in, and they are two different bugs.",
+          "url": ""
+        },
+        {
+          "text": "Replay records the local player and voice peers, not the whole world. That needs BerryAPI's native world feed.",
+          "url": ""
+        },
+        {
+          "text": "Voice chat uses the launcher's own relay. BerryAPI's encrypted voice is not wired in yet.",
           "url": ""
         }
       ]

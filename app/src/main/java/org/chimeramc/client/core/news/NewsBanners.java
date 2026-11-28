@@ -25,6 +25,8 @@ public final class NewsBanners {
     public static final String KEY_CHRISTMAS = "christmas";
     public static final String KEY_CARAMEL_PLUS = "caramel_plus";
     public static final String KEY_BERRYAPI = "berryapi";
+    /** The card for the build that is in the store right now. */
+    public static final String KEY_BETA10 = "beta10";
 
     /** No banner: the card draws its gradient. */
     public static final int NO_BANNER = 0;
@@ -52,6 +54,8 @@ public final class NewsBanners {
                 return R.drawable.news_banner_plus;
             case KEY_BERRYAPI:
                 return R.drawable.news_banner_berryapi;
+            case KEY_BETA10:
+                return R.drawable.news_banner_beta10;
             default:
                 return severityDefault(severity);
         }
