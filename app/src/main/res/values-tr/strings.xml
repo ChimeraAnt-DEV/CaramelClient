@@ -1610,4 +1610,6 @@ CaramelClient\'ın devam edebilmesi için taşımanın tamamlanması gerekiyor.<
     <string name="caramel_news_christmas_title">Caramel\'dan mutlu Noeller</string>
     <string name="caramel_news_christmas_body">Bu yıl bizimle oynadığınız için teşekkürler. Tatilin tadını çıkarın ve mağazayı takip edin.</string>
     <string name="caramel_news_christmas_meta">Duyuru</string>
+    <string name="caramel_friend_row_request_received">Arkadaşlık isteği alındı</string>
+    <string name="caramel_friend_row_request_sent">Arkadaşlık isteği gönderildi</string>
 </resources>

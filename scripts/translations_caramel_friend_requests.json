@@ -1,0 +1,42 @@
+{
+  "es": {
+    "caramel_friend_row_request_received": "Solicitud de amistad recibida",
+    "caramel_friend_row_request_sent": "Solicitud de amistad enviada"
+  },
+  "fr": {
+    "caramel_friend_row_request_received": "Demande d'ami reçue",
+    "caramel_friend_row_request_sent": "Demande d'ami envoyée"
+  },
+  "hi": {
+    "caramel_friend_row_request_received": "मित्रता अनुरोध मिला",
+    "caramel_friend_row_request_sent": "मित्रता अनुरोध भेजा गया"
+  },
+  "id": {
+    "caramel_friend_row_request_received": "Permintaan pertemanan diterima",
+    "caramel_friend_row_request_sent": "Permintaan pertemanan terkirim"
+  },
+  "ja": {
+    "caramel_friend_row_request_received": "フレンド申請が届きました",
+    "caramel_friend_row_request_sent": "フレンド申請を送信しました"
+  },
+  "pt": {
+    "caramel_friend_row_request_received": "Pedido de amizade recebido",
+    "caramel_friend_row_request_sent": "Pedido de amizade enviado"
+  },
+  "ru": {
+    "caramel_friend_row_request_received": "Заявка в друзья получена",
+    "caramel_friend_row_request_sent": "Заявка в друзья отправлена"
+  },
+  "tr": {
+    "caramel_friend_row_request_received": "Arkadaşlık isteği alındı",
+    "caramel_friend_row_request_sent": "Arkadaşlık isteği gönderildi"
+  },
+  "vi": {
+    "caramel_friend_row_request_received": "Đã nhận lời mời kết bạn",
+    "caramel_friend_row_request_sent": "Đã gửi lời mời kết bạn"
+  },
+  "zh-rCN": {
+    "caramel_friend_row_request_received": "收到好友请求",
+    "caramel_friend_row_request_sent": "好友请求已发送"
+  }
+}

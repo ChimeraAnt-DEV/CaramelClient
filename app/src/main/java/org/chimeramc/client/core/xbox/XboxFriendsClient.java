@@ -32,55 +32,111 @@ public final class XboxFriendsClient {
 
     private static final int MAX_ITEMS = 100;
     private static final int TIMEOUT_MS = 12_000;
+    private static final String NOT_SIGNED_IN =
+            "This account is not signed in, so its friends cannot be read.";
 
     // The shared executor owner, so no raw thread is constructed here.
     private final ExecutorService executor = org.chimeramc.client.util.AppExecutors.single("xbox-friends");
+
+    /** Where a graph read's result goes. {@code graph} is null when the read failed. */
+    public interface GraphCallback {
+        void onResult(XboxPeopleHub.Graph graph, String error);
+    }
 
     /**
      * Fetches the friends of the account identified by {@code xuid}, authenticating with the given
      * XSTS {@code userHash} and {@code token}. The callback is always invoked exactly once.
      */
     public void fetch(String xuid, String userHash, String token, Callback callback) {
-        if (xuid == null || xuid.isEmpty() || token == null || token.isEmpty()) {
-            callback.onResult(java.util.Collections.emptyList(),
-                    "This account is not signed in, so its friends cannot be read.");
+        if (!usable(xuid, userHash, token)) {
+            callback.onResult(java.util.Collections.emptyList(), NOT_SIGNED_IN);
             return;
         }
         executor.execute(() -> {
-            List<XboxPeopleHub.Friend> friends = java.util.Collections.emptyList();
-            String error = null;
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(XboxPeopleHub.friendsUrl(xuid, MAX_ITEMS));
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Authorization",
-                        XboxPeopleHub.authorizationHeader(userHash, token));
-                connection.setRequestProperty("x-xbl-contract-version",
-                        XboxPeopleHub.contractVersion());
-                connection.setRequestProperty("Accept", "application/json");
-                connection.setConnectTimeout(TIMEOUT_MS);
-                connection.setReadTimeout(TIMEOUT_MS);
-
-                int code = connection.getResponseCode();
-                String body = read(code >= 400 ? connection.getErrorStream()
-                        : connection.getInputStream());
-                if (code >= 200 && code < 300) {
-                    friends = XboxPeopleHub.parsePeople(body);
-                } else {
-                    String parsed = XboxPeopleHub.parseError(body);
-                    error = parsed != null ? parsed
-                            : ("Xbox Live returned " + code + ".");
-                }
-            } catch (Throwable t) {
-                error = "Could not reach Xbox Live.";
-                AppLog.warnOnce("CaramelClient", "XboxFriendsClient:fetch",
-                        "Reading the Xbox Live friends list failed", t);
-            } finally {
-                if (connection != null) connection.disconnect();
-            }
-            callback.onResult(friends, error);
+            Read result = read(XboxPeopleHub.friendsUrl(xuid, MAX_ITEMS), userHash, token);
+            callback.onResult(result.people, result.error);
         });
+    }
+
+    /**
+     * Fetches the friends and both request directions in one go.
+     *
+     * <p>Two reads: the accounts the caller follows and the accounts that follow the caller. Xbox
+     * keeps no request object, so the difference between the two is the request list. A failed
+     * follow read does not throw the friend list away - it degrades to the plain friend list and
+     * reports why the requests are missing, because showing nothing is how the requests went
+     * unnoticed in the first place.
+     */
+    public void fetchGraph(String xuid, String userHash, String token, GraphCallback callback) {
+        if (!usable(xuid, userHash, token)) {
+            callback.onResult(null, NOT_SIGNED_IN);
+            return;
+        }
+        executor.execute(() -> {
+            Read following = read(XboxPeopleHub.friendsUrl(xuid, MAX_ITEMS), userHash, token);
+            if (following.error != null) {
+                callback.onResult(null, following.error);
+                return;
+            }
+            Read followers = read(XboxPeopleHub.followersUrl(xuid, MAX_ITEMS), userHash, token);
+            boolean known = followers.error == null;
+            callback.onResult(
+                    XboxPeopleHub.classify(following.people, followers.people, known),
+                    known ? null : followers.error);
+        });
+    }
+
+    private static boolean usable(String xuid, String userHash, String token) {
+        return xuid != null && !xuid.isEmpty()
+                && userHash != null && !userHash.isEmpty()
+                && token != null && !token.isEmpty();
+    }
+
+    /** One PeopleHub read: the accounts it returned, or the reason it did not. */
+    private static final class Read {
+        final List<XboxPeopleHub.Friend> people;
+        final String error;
+
+        Read(List<XboxPeopleHub.Friend> people, String error) {
+            this.people = people;
+            this.error = error;
+        }
+    }
+
+    /** Performs one PeopleHub read. Never throws; a failure is the returned {@code error}. */
+    private Read read(String requestUrl, String userHash, String token) {
+        List<XboxPeopleHub.Friend> people = java.util.Collections.emptyList();
+        String error = null;
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(requestUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization",
+                    XboxPeopleHub.authorizationHeader(userHash, token));
+            connection.setRequestProperty("x-xbl-contract-version",
+                    XboxPeopleHub.contractVersion());
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(TIMEOUT_MS);
+            connection.setReadTimeout(TIMEOUT_MS);
+
+            int code = connection.getResponseCode();
+            String body = read(code >= 400 ? connection.getErrorStream()
+                    : connection.getInputStream());
+            if (code >= 200 && code < 300) {
+                people = XboxPeopleHub.parsePeople(body);
+            } else {
+                String parsed = XboxPeopleHub.parseError(body);
+                error = parsed != null ? parsed : ("Xbox Live returned " + code + ".");
+            }
+        } catch (Throwable t) {
+            error = "Could not reach Xbox Live.";
+            AppLog.warnOnce("CaramelClient", "XboxFriendsClient:read",
+                    "Reading the Xbox Live people list failed", t);
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+        return new Read(people, error);
     }
 
     /** Releases the fetch thread. */

@@ -1580,4 +1580,6 @@ CaramelClient を続行するには移行を完了する必要があります。
     <string name="caramel_news_christmas_title">Caramel よりメリークリスマス</string>
     <string name="caramel_news_christmas_body">今年も一緒に遊んでくれてありがとうございます。良い休暇を。ショップもお見逃しなく。</string>
     <string name="caramel_news_christmas_meta">お知らせ</string>
+    <string name="caramel_friend_row_request_received">フレンド申請が届きました</string>
+    <string name="caramel_friend_row_request_sent">フレンド申請を送信しました</string>
 </resources>

@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.chimeramc.client.R
 import org.chimeramc.client.ui.compose.caramel.C
+import org.chimeramc.client.ui.compose.caramel.CaramelFriendRelation
 import org.chimeramc.client.ui.compose.caramel.CaramelFriendRow
 import org.chimeramc.client.ui.compose.caramel.CaramelNotice
 import org.chimeramc.client.ui.compose.caramel.CaramelLauncherState
@@ -280,7 +281,12 @@ private fun FriendsCard(state: CaramelLauncherState, modifier: Modifier) {
                         Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        state.friends.take(4).forEach { friend ->
+                        // Friends first, then the requests, so the card is not filled by people who
+                        // have not accepted yet; the row's own label says which is which.
+                        val shown = (state.friends.filter { it.relation == CaramelFriendRelation.FRIEND }
+                                + state.friends.filter { it.relation != CaramelFriendRelation.FRIEND })
+                            .take(4)
+                        shown.forEach { friend ->
                             CaramelFriendRow(friend)
                         }
                     }

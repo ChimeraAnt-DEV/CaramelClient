@@ -1613,4 +1613,6 @@ Quá trình chuyển đổi phải hoàn tất trước khi CaramelClient có th
     <string name="caramel_news_christmas_title">Caramel chúc mừng Giáng sinh</string>
     <string name="caramel_news_christmas_body">Cảm ơn bạn đã chơi cùng chúng tôi trong năm nay. Chúc kỳ nghỉ vui vẻ và nhớ ghé cửa hàng.</string>
     <string name="caramel_news_christmas_meta">Thông báo</string>
+    <string name="caramel_friend_row_request_received">Đã nhận lời mời kết bạn</string>
+    <string name="caramel_friend_row_request_sent">Đã gửi lời mời kết bạn</string>
 </resources>

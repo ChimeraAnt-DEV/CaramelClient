@@ -1604,4 +1604,6 @@
     <string name="caramel_news_christmas_title">Caramel 祝你圣诞快乐</string>
     <string name="caramel_news_christmas_body">感谢你今年与我们一起游戏。祝你假期愉快，也别忘了关注商店。</string>
     <string name="caramel_news_christmas_meta">公告</string>
+    <string name="caramel_friend_row_request_received">收到好友请求</string>
+    <string name="caramel_friend_row_request_sent">好友请求已发送</string>
 </resources>

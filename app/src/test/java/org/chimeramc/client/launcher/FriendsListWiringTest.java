@@ -37,8 +37,12 @@ public class FriendsListWiringTest {
     public void theActivityLoadsFriendsThroughTheRealClient() {
         String activity = read(
                 "app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java");
-        assertTrue("the activity must call the Xbox friends client",
-                activity.contains("friendsClient.fetch("));
+        assertTrue("the activity must call the Xbox friends client for the whole graph",
+                activity.contains("friendsClient.fetchGraph("));
+        assertTrue("a received request must be kept apart from a friend",
+                activity.contains("CaramelFriendRelation.REQUEST_RECEIVED"));
+        assertTrue("a sent request must be kept apart from a friend",
+                activity.contains("CaramelFriendRelation.REQUEST_SENT"));
         assertTrue("the friends read must use the account's XSTS token",
                 activity.contains("MsftAuthManager.xboxLiveXsts("));
         assertTrue("a rebuild must not refetch while the same account is signed in",
@@ -59,7 +63,7 @@ public class FriendsListWiringTest {
         String activity = read(
                 "app/src/main/java/org/chimeramc/client/launcher/ui/activities/MainActivity.java");
         assertTrue("a read only counts as loaded when it succeeded",
-                activity.contains("friendsLoaded = error == null;"));
+                activity.contains("friendsLoaded = graph != null;"));
         assertTrue("a token that was not ready must not mark the account loaded",
                 activity.contains("friendsLoaded = false;"));
         assertTrue("the automatic path retries an unloaded account",
@@ -70,6 +74,8 @@ public class FriendsListWiringTest {
 
     @Test
     public void theFriendsScreensRenderRows() {
+        String modalsRow = read(
+                "app/src/main/java/org/chimeramc/client/ui/compose/caramel/CaramelLabels.kt");
         String home = read(
                 "app/src/main/java/org/chimeramc/client/ui/compose/caramel/launcher/CaramelHome.kt");
         assertTrue("the card must draw real friends", home.contains("CaramelFriendRow(friend)"));
@@ -77,6 +83,10 @@ public class FriendsListWiringTest {
                 "app/src/main/java/org/chimeramc/client/ui/compose/caramel/launcher/CaramelModals.kt");
         assertTrue("the modal must list real friends",
                 modals.contains("items(visible) { friend -> CaramelFriendRow(friend) }"));
+        assertTrue("a request must be labelled in the row, not drawn as presence",
+                modalsRow.contains("caramel_friend_row_request_received"));
+        assertTrue("a sent request must be labelled too",
+                modalsRow.contains("caramel_friend_row_request_sent"));
         assertFalse("the modal must not draw the empty-state body as a row",
                 modals.contains("stringResource(R.string.caramel_no_friends_body),\n                            style = T.Body,\n                            modifier = Modifier.padding(start = 8.dp, top = 6.dp)"));
     }

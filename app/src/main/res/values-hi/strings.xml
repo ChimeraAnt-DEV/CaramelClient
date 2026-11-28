@@ -1611,4 +1611,6 @@ CaramelClient जारी रखने से पहले माइग्र�
     <string name="caramel_news_christmas_title">Caramel की ओर से क्रिसमस की शुभकामनाएँ</string>
     <string name="caramel_news_christmas_body">इस साल हमारे साथ खेलने के लिए धन्यवाद। छुट्टियों का आनंद लें और स्टोर पर नज़र रखें।</string>
     <string name="caramel_news_christmas_meta">घोषणा</string>
+    <string name="caramel_friend_row_request_received">मित्रता अनुरोध मिला</string>
+    <string name="caramel_friend_row_request_sent">मित्रता अनुरोध भेजा गया</string>
 </resources>

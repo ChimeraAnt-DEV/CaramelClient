@@ -1583,4 +1583,6 @@ A migração deve ser concluída antes que o CaramelClient continue.</string>
     <string name="caramel_news_christmas_title">Feliz Natal da equipe Caramel</string>
     <string name="caramel_news_christmas_body">Obrigado por jogar com a gente neste ano. Aproveite as festas e fique de olho na loja.</string>
     <string name="caramel_news_christmas_meta">Anúncio</string>
+    <string name="caramel_friend_row_request_received">Pedido de amizade recebido</string>
+    <string name="caramel_friend_row_request_sent">Pedido de amizade enviado</string>
 </resources>

@@ -195,6 +195,15 @@ data class CaramelReleaseNotes(
 }
 
 /** One Xbox Live friend: the Friends card and modal draw these from PeopleHub. */
+/**
+ * How the signed-in account and this one relate on Xbox Live.
+ *
+ * <p>Xbox has no request object: a follow that is not returned is a request. Without this the three
+ * cases drew identically, so a request - either direction - looked like a friend, and the requests
+ * screen had nothing to be wrong about.
+ */
+enum class CaramelFriendRelation { FRIEND, REQUEST_RECEIVED, REQUEST_SENT }
+
 data class CaramelFriendInfo(
     val xuid: String,
     val gamertag: String,
@@ -207,6 +216,8 @@ data class CaramelFriendInfo(
      * claim that the account runs CaramelClient, and only a Caramel channel is evidence of that.
      */
     val caramel: Boolean = false,
+    /** Whether this account is a mutual friend or a request in either direction. */
+    val relation: CaramelFriendRelation = CaramelFriendRelation.FRIEND,
 )
 
 /**

@@ -262,12 +262,23 @@ fun CaramelFriendRow(friend: CaramelFriendInfo, modifier: Modifier = Modifier) {
                 // account shows as itself, so the badge stays a fact rather than decoration.
                 if (friend.caramel) CaramelUserChip()
             }
-            val presence = when {
-                friend.online && friend.presence.isNotEmpty() -> friend.presence
-                friend.online -> stringResource(R.string.caramel_account_online)
-                else -> stringResource(R.string.caramel_offline)
+            // A request says so instead of showing presence: "Offline" next to someone asking to be
+            // added is the line that made a request look like a friend who is not online.
+            if (friend.relation != CaramelFriendRelation.FRIEND) {
+                val label = if (friend.relation == CaramelFriendRelation.REQUEST_RECEIVED) {
+                    stringResource(R.string.caramel_friend_row_request_received)
+                } else {
+                    stringResource(R.string.caramel_friend_row_request_sent)
+                }
+                Text(label, style = T.Caption.copy(color = C.Caramel))
+            } else {
+                val presence = when {
+                    friend.online && friend.presence.isNotEmpty() -> friend.presence
+                    friend.online -> stringResource(R.string.caramel_account_online)
+                    else -> stringResource(R.string.caramel_offline)
+                }
+                Text(presence, style = T.Caption.copy(color = if (friend.online) C.Green else C.Text3))
             }
-            Text(presence, style = T.Caption.copy(color = if (friend.online) C.Green else C.Text3))
         }
     }
 }

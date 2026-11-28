@@ -3011,6 +3011,8 @@ CaramelClient must complete the migration before continuing.</string>
     <string name="caramel_search_friends">Search friends</string>
     <string name="caramel_no_friends_title">No friends yet</string>
     <string name="caramel_no_friends_body">Friends of your signed-in account appear here.</string>
+    <string name="caramel_friend_row_request_received">Friend request received</string>
+    <string name="caramel_friend_row_request_sent">Request sent</string>
     <string name="caramel_friends_loading">Loading friends…</string>
     <string name="caramel_friends_unavailable">Sign in again to see your friends.</string>
     <string name="caramel_offline">Offline</string>

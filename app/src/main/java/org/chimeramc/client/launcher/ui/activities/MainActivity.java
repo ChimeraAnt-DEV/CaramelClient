@@ -53,6 +53,7 @@ import org.chimeramc.client.ui.compose.caramel.CaramelCosmeticInfo;
 import org.chimeramc.client.ui.compose.caramel.CaramelCosmeticKind;
 import org.chimeramc.client.ui.compose.caramel.CaramelFileEntry;
 import org.chimeramc.client.ui.compose.caramel.CaramelFriendInfo;
+import org.chimeramc.client.ui.compose.caramel.CaramelFriendRelation;
 import org.chimeramc.client.ui.compose.caramel.CaramelFoundUser;
 import org.chimeramc.client.ui.compose.caramel.CaramelLauncherState;
 import org.chimeramc.client.ui.compose.caramel.CaramelModInfo;
@@ -321,25 +322,38 @@ public class MainActivity extends BaseActivity implements CaramelLauncherHost.Ac
                 });
                 return;
             }
-            friendsClient.fetch(xuid, xsts[0], xsts[1], (friends, error) -> runOnUiThread(() -> {
+            friendsClient.fetchGraph(xuid, xsts[0], xsts[1], (graph, error) -> runOnUiThread(() -> {
                 List<CaramelFriendInfo> rows = new ArrayList<>();
-                if (friends != null) {
-                    for (XboxPeopleHub.Friend f : friends) {
-                        rows.add(new CaramelFriendInfo(
-                                f.xuid, f.gamertag, f.displayPicRaw, f.isOnline(), f.presenceText,
-                                CaramelUserDirectory.isCaramelUser(f.xuid)));
-                    }
+                if (graph != null) {
+                    // Requests first: a request that is not at the top of the list is a request the
+                    // user never sees, which is the state this list was in before the split.
+                    addFriendRows(rows, graph.incoming, CaramelFriendRelation.REQUEST_RECEIVED);
+                    addFriendRows(rows, graph.friends, CaramelFriendRelation.FRIEND);
+                    addFriendRows(rows, graph.outgoing, CaramelFriendRelation.REQUEST_SENT);
                 }
                 friendsLoading = false;
                 // A read that came back with a reason did not succeed, so it is retried on the next
-                // resume; only a clean read (even an empty one) marks the account as loaded.
-                friendsLoaded = error == null;
+                // resume; only a clean read (even an empty one) marks the account as loaded. A
+                // follow-read failure still returns the friend list, so it counts as loaded with
+                // its reason on screen rather than looping the whole read.
+                friendsLoaded = graph != null;
                 mutateState(s -> {
                     s.setFriends(rows);
                     s.setFriendsStatus(error == null ? "" : error);
                 });
             }));
         });
+    }
+
+    /** Adds one class of PeopleHub row, in the order the read returned it. */
+    private static void addFriendRows(List<CaramelFriendInfo> rows, List<XboxPeopleHub.Friend> people,
+            CaramelFriendRelation relation) {
+        if (people == null) return;
+        for (XboxPeopleHub.Friend f : people) {
+            rows.add(new CaramelFriendInfo(
+                    f.xuid, f.gamertag, f.displayPicRaw, f.isOnline(), f.presenceText,
+                    CaramelUserDirectory.isCaramelUser(f.xuid), relation));
+        }
     }
 
     /** Points the content manager at the selected instance's folders, then rescans. */

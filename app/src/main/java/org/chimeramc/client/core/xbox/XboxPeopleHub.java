@@ -1,7 +1,9 @@
 package org.chimeramc.client.core.xbox;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,15 +32,27 @@ public final class XboxPeopleHub {
         public final String realName;
         public final String presenceState;
         public final String presenceText;
+        /** Whether this account follows the caller, when the response said so. */
+        public final boolean followingCaller;
+        /** Whether the caller follows this account, when the response said so. */
+        public final boolean followedByCaller;
 
         public Friend(String xuid, String gamertag, String displayPicRaw, String realName,
                       String presenceState, String presenceText) {
+            this(xuid, gamertag, displayPicRaw, realName, presenceState, presenceText, false, false);
+        }
+
+        public Friend(String xuid, String gamertag, String displayPicRaw, String realName,
+                      String presenceState, String presenceText,
+                      boolean followingCaller, boolean followedByCaller) {
             this.xuid = nz(xuid);
             this.gamertag = nz(gamertag);
             this.displayPicRaw = nz(displayPicRaw);
             this.realName = nz(realName);
             this.presenceState = nz(presenceState);
             this.presenceText = nz(presenceText);
+            this.followingCaller = followingCaller;
+            this.followedByCaller = followedByCaller;
         }
 
         /** Whether the friend is online right now. */
@@ -76,7 +90,9 @@ public final class XboxPeopleHub {
                         person.optString("displayPicRaw", ""),
                         person.optString("realName", ""),
                         person.optString("presenceState", ""),
-                        person.optString("presenceText", "")));
+                        person.optString("presenceText", ""),
+                        person.optBoolean("isFollowingCaller", false),
+                        person.optBoolean("isFollowedByCaller", false)));
             }
         } catch (JSONException e) {
             return new ArrayList<>();
@@ -101,6 +117,94 @@ public final class XboxPeopleHub {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    /**
+     * The three lists the UI needs, split by who follows whom.
+     *
+     * <p>Xbox has no separate "friend request" object: a follow from an account the caller has not
+     * followed back is a request the caller received, and a follow by the caller that is not
+     * returned is a request the caller sent. Reading only {@code /people} - the accounts the caller
+     * follows - therefore made both directions invisible: every row looked like a friend.
+     *
+     * <p>{@code friends} and {@code outgoing} come from {@code /people}; {@code incoming} is the
+     * difference between {@code /followers} and {@code /people}. When the follow read failed,
+     * {@link #followersKnown} is false and nothing is claimed about requests: the rows are the plain
+     * friend list, which is what this build showed before the split existed.
+     */
+    public static final class Graph {
+        public final List<Friend> friends;
+        public final List<Friend> incoming;
+        public final List<Friend> outgoing;
+        public final boolean followersKnown;
+
+        Graph(List<Friend> friends, List<Friend> incoming, List<Friend> outgoing,
+              boolean followersKnown) {
+            this.friends = friends;
+            this.incoming = incoming;
+            this.outgoing = outgoing;
+            this.followersKnown = followersKnown;
+        }
+    }
+
+    /**
+     * Splits the accounts the caller follows and the accounts that follow the caller into friends
+     * and the two request directions.
+     *
+     * @param following the {@code /people} read: accounts the caller follows
+     * @param followers the {@code /followers} read: accounts that follow the caller
+     * @param followersKnown false when the follow read failed, in which case no request is reported
+     */
+    public static Graph classify(List<Friend> following, List<Friend> followers,
+                                 boolean followersKnown) {
+        List<Friend> followingList = following == null ? new ArrayList<Friend>() : following;
+        Set<String> followedXuids = new HashSet<>();
+        List<Friend> friends = new ArrayList<>();
+        List<Friend> outgoing = new ArrayList<>();
+        for (Friend f : followingList) {
+            if (f == null || f.xuid.isEmpty()) continue;
+            boolean mutual;
+            if (followersKnown) {
+                mutual = containsXuid(followers, f.xuid);
+            } else if (f.followingCaller) {
+                // Without the follow read the per-entry flag is the only evidence there is.
+                mutual = true;
+            } else if (f.followedByCaller) {
+                mutual = false;
+            } else {
+                // No evidence either way: keep the row a friend rather than invent a request.
+                mutual = true;
+            }
+            if (mutual) {
+                friends.add(f);
+            } else {
+                outgoing.add(f);
+            }
+            followedXuids.add(f.xuid);
+        }
+        List<Friend> incoming = new ArrayList<>();
+        if (followersKnown && followers != null) {
+            for (Friend f : followers) {
+                if (f == null || f.xuid.isEmpty()) continue;
+                if (!followedXuids.contains(f.xuid)) incoming.add(f);
+            }
+        }
+        return new Graph(friends, incoming, outgoing, followersKnown);
+    }
+
+    private static boolean containsXuid(List<Friend> people, String xuid) {
+        if (people == null) return false;
+        for (Friend f : people) {
+            if (f != null && xuid.equals(f.xuid)) return true;
+        }
+        return false;
+    }
+
+    /** The PeopleHub URL for the accounts that follow {@code xuid}, capped. */
+    public static String followersUrl(String xuid, int maxItems) {
+        int cap = Math.max(1, Math.min(100, maxItems));
+        return "https://peoplehub.xboxlive.com/users/xuid(" + xuid + ")/people/followers"
+                + "?decoration=preferredColor,presenceDetail&maxItems=" + cap;
     }
 
     /** The PeopleHub URL that lists the friends of {@code xuid}, most recent first, capped. */
