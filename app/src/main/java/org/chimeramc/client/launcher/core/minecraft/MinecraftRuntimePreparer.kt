@@ -215,45 +215,19 @@ object MinecraftRuntimePreparer {
             )
         }
 
-        // F2: an instance can be bound to a specific Microsoft account. Export that account's XAL
-        // data before the game starts, so the instance signs in as the account it was bound to
-        // rather than whichever one is globally active. A binding whose account is gone is left in
-        // place and reported, never silently re-pointed; a failure is logged and the launch
-        // continues, because an account problem must not block a launch.
+        // The account this launch will use must be written into the XAL store before the game
+        // starts, and that is true for the active account as well as a bound one: the export used
+        // to run only on sign-in, so a refreshed chain, a re-bound instance or a first launch after
+        // an update handed the game the previous snapshot or nothing at all.
         try {
-            // Refresh the sign-in material before it is exported. A serialised chain is a snapshot
-            // with its own expiries, so an account signed in a day ago holds an expired certificate
-            // and exporting it as-is gives the game a sign-in it rejects -- the game starts signed
-            // out and the user is asked to sign in again. This is a network call once per launch,
-            // and a failure leaves the stored chain untouched so an offline launch still exports
-            // what it has rather than nothing.
+            // Refresh first: a serialised chain is a snapshot with its own expiries, so an account
+            // signed in a day ago holds an expired certificate and exporting it as-is gives the
+            // game a sign-in it rejects. A failure leaves the stored chain untouched, so an
+            // offline launch still exports what it has rather than nothing.
             refreshAccountsForLaunch(context, fileListener, trace)
-
-            val boundAccountId = version.boundAccountId
-            if (boundAccountId != null && boundAccountId.isNotEmpty()) {
-                val accounts = MsftAccountStore.list(context).map {
-                    object : InstanceAccountBinding.Account {
-                        override fun id() = it.id
-                        override fun active() = it.active
-                        override fun hasAuthMaterial() = it.serializedAuthManager != null
-                    }
-                }
-                val resolution = InstanceAccountBinding.resolve(boundAccountId, accounts)
-                val chosen = resolution.account
-                if (chosen != null && chosen.id() == boundAccountId) {
-                    if (XalExporter.exportAccount(context, boundAccountId)) {
-                        fileListener.onLog("Bound account exported for this instance")
-                    } else {
-                        fileListener.onLog("Bound account has no usable sign-in data")
-                    }
-                } else if (resolution.bindingStale) {
-                    fileListener.onLog(
-                        "This instance is bound to an account that is no longer available; " +
-                            "launching with the active account instead")
-                }
-            }
+            exportAccountForLaunch(context, version, fileListener, trace)
         } catch (error: Throwable) {
-            trace.error("Instance account binding failed", error.javaClass.simpleName)
+            trace.error("Instance account export failed", error.javaClass.simpleName)
         }
 
         // Publish the equipped set into the native cosmetics registry before every launch, so the
@@ -696,6 +670,59 @@ object MinecraftRuntimePreparer {
         } catch (error: Throwable) {
             // An account problem must never block a launch; the export below still runs.
             trace.error("Sign-in refresh failed", error.javaClass.simpleName)
+        }
+    }
+
+    /**
+     * Writes the account the game must read into the XAL store.
+     *
+     * <p>A bound instance exports its own account and points the store at it; otherwise the active
+     * account is exported. A binding whose account is gone is reported and left in place, never
+     * silently re-pointed, and the active account is used for the launch.
+     *
+     * <p>A failure is logged and the launch continues: an account problem must not block a launch.
+     */
+    private fun exportAccountForLaunch(
+        context: Context,
+        version: GameVersion,
+        listener: ProgressListener,
+        trace: LaunchTrace,
+    ) {
+        val boundAccountId = version.boundAccountId
+        if (boundAccountId != null && boundAccountId.isNotEmpty()) {
+            val accounts = MsftAccountStore.list(context).map {
+                object : InstanceAccountBinding.Account {
+                    override fun id() = it.id
+                    override fun active() = it.active
+                    override fun hasAuthMaterial() = it.serializedAuthManager != null
+                }
+            }
+            val resolution = InstanceAccountBinding.resolve(boundAccountId, accounts)
+            val chosen = resolution.account
+            if (chosen != null && chosen.id() == boundAccountId) {
+                if (XalExporter.exportAccount(context, boundAccountId)) {
+                    listener.onLog("Bound account exported for this instance")
+                    trace.mark("Bound account exported")
+                } else {
+                    listener.onLog("Bound account has no usable sign-in data")
+                    trace.warning("Bound account export failed", boundAccountId)
+                }
+                return
+            }
+            if (resolution.bindingStale) {
+                listener.onLog(
+                    "This instance is bound to an account that is no longer available; " +
+                        "launching with the active account instead")
+                trace.warning("Instance account binding stale", boundAccountId)
+            }
+        }
+
+        if (XalExporter.exportActiveAccount(context)) {
+            listener.onLog("Active account exported for this launch")
+            trace.mark("Active account exported")
+        } else {
+            listener.onLog("No Microsoft account to export; the game will ask for sign-in")
+            trace.mark("No account exported")
         }
     }
 

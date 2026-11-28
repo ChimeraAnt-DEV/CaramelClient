@@ -2,34 +2,38 @@ package org.chimeramc.client.core.auth.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import com.microsoft.xal.androidjava.XalStorageContract;
 
 import org.chimeramc.client.core.auth.MsftAccountStore;
 import org.chimeramc.client.util.JsonIOUtils;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Map;
 
+/**
+ * Writes the launcher's Microsoft account into the store the game's XAL reads.
+ *
+ * <p>The layout, the account directory and the "which account" pointer come from
+ * {@link XalStorageContract}, which the game-side {@code Storage} also uses. That shared contract is
+ * the point: the exporter used to write {@code files/xal/<user>/...} while the game read
+ * {@code files/} unless a settings toggle was on, so a launcher that was signed in handed the game
+ * nothing and the game asked for a sign-in that had already happened.
+ */
 public class XalExporter {
     private static final String TAG = "XalExporter";
-    private static final Gson GSON = new Gson();
 
     /**
      * Exports a specific account instead of the globally active one (F2).
      *
      * <p>Used when an instance is bound to an account: the launch must write <em>that</em> account's
-     * tokens, not whichever account happens to be active in the launcher UI. The active account is
-     * deliberately left marked active, so choosing an account for one instance does not silently
-     * change the account the launcher shows everywhere else.
+     * tokens, not whichever account happens to be active in the launcher UI. The active flag is
+     * deliberately left alone, so choosing an account for one instance does not silently change the
+     * account the launcher shows everywhere else; the export pointer records the choice instead.
      *
      * <p>Returns false when the account cannot be resolved or carries no auth material, so the
      * caller can report it rather than launching signed out with no explanation. A false result
@@ -37,48 +41,126 @@ public class XalExporter {
      * available, and wiping it would sign the user out mid-session.
      */
     public static boolean exportAccount(Context ctx, String accountId) {
-        if (accountId == null || accountId.trim().isEmpty()) return false;
+        if (ctx == null || accountId == null || accountId.trim().isEmpty()) return false;
         try {
             MsftAccountStore.MsftAccount account = MsftAccountStore.find(ctx, accountId.trim());
-            if (account == null || account.serializedAuthManager == null) {
-                return false;
-            }
-            JsonObject authJson = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
-            export(ctx, authJson, account.msUserId, account.xboxGamertag, account.xuid);
-            return true;
+            return write(ctx, account);
         } catch (Exception e) {
             Log.e(TAG, "Failed to export XAL data for a bound account", e);
             return false;
         }
     }
 
-    public static void exportActiveAccount(Context ctx) {
+    /** Exports the account the launcher marks active. Returns false when there is none. */
+    public static boolean exportActiveAccount(Context ctx) {
+        if (ctx == null) return false;
         try {
-            MsftAccountStore.MsftAccount active = null;
-            for (MsftAccountStore.MsftAccount acc : MsftAccountStore.list(ctx)) {
-                if (acc.active) {
-                    active = acc;
-                    break;
-                }
-            }
-
-            if (active == null || active.serializedAuthManager == null) {
+            MsftAccountStore.MsftAccount active = activeAccount(ctx);
+            if (active == null) {
                 clearXalData(ctx);
-                return;
+                return false;
             }
-
-            JsonObject authJson = JsonParser.parseString(active.serializedAuthManager).getAsJsonObject();
-            export(ctx, authJson, active.msUserId, active.xboxGamertag, active.xuid);
-
+            return write(ctx, active);
         } catch (Exception e) {
             Log.e(TAG, "Failed to export XAL data", e);
+            return false;
         }
     }
 
+    /**
+     * Rewrites an account's exported tokens without moving the export pointer.
+     *
+     * <p>Called after a token refresh. A refresh can run for any stale account, including one this
+     * launch is not going to use, so it must not change which account the game reads. When the game
+     * is not pointed at this account there is nothing to update and this is a no-op.
+     */
+    public static boolean refreshExportedAccount(Context ctx, String accountId) {
+        if (ctx == null || accountId == null) return false;
+        if (!accountId.equals(currentAccountId(ctx))) return false;
+        return exportAccount(ctx, accountId);
+    }
+
+    /** The account the last export pointed the game at, or null. */
+    public static String currentAccountId(Context ctx) {
+        if (ctx == null) return null;
+        return XalStorageContract.readAccountPointer(xalRoot(ctx));
+    }
+
+    private static MsftAccountStore.MsftAccount activeAccount(Context ctx) {
+        for (MsftAccountStore.MsftAccount account : MsftAccountStore.list(ctx)) {
+            if (account.active) return account;
+        }
+        return null;
+    }
+
+    private static boolean write(Context ctx, MsftAccountStore.MsftAccount account) {
+        if (account == null || account.serializedAuthManager == null) return false;
+        if (account.msUserId == null || account.msUserId.trim().isEmpty()) return false;
+
+        JsonObject authJson = JsonParser.parseString(account.serializedAuthManager).getAsJsonObject();
+        XalExportBundle bundle = XalExportBundle.build(
+                authJson, account.msUserId, account.xboxGamertag, account.xuid);
+
+        File userDir = new File(xalRoot(ctx), XalStorageContract.encodeUserId(account.msUserId));
+        if (!userDir.exists() && !userDir.mkdirs()) {
+            Log.w(TAG, "Could not create the XAL account directory " + userDir.getAbsolutePath());
+            return false;
+        }
+
+        for (Map.Entry<String, String> file : bundle.files.entrySet()) {
+            JsonIOUtils.write(new File(userDir, file.getKey()), file.getValue());
+        }
+        writeCryptoPrefs(ctx, bundle.cryptoPrefs);
+        writePointer(ctx, account.msUserId);
+        logExport(bundle, userDir);
+        return true;
+    }
+
+    private static void writePointer(Context ctx, String msUserId) {
+        JsonObject pointer = new JsonObject();
+        pointer.addProperty(XalStorageContract.CURRENT_ACCOUNT_KEY, msUserId);
+        JsonIOUtils.write(new File(xalRoot(ctx), XalStorageContract.CURRENT_ACCOUNT_FILE),
+                pointer.toString());
+    }
+
+    private static void writeCryptoPrefs(Context ctx, Map<String, String> prefs) {
+        if (prefs.isEmpty()) return;
+        SharedPreferences.Editor edit = ctx.getSharedPreferences(
+                XalStorageContract.CRYPTO_PREFS_LAUNCHER, Context.MODE_PRIVATE).edit();
+        for (Map.Entry<String, String> pref : prefs.entrySet()) {
+            edit.putString(pref.getKey(), pref.getValue());
+        }
+        edit.apply();
+    }
+
+    /**
+     * One line per export: which relying parties were written, when the soonest token expires, and
+     * where. Deliberately no token, no account id and no gamertag, so the line is safe to paste into
+     * a bug report.
+     */
+    private static void logExport(XalExportBundle bundle, File userDir) {
+        Log.i(TAG, exportLogLine(bundle, userDir, System.currentTimeMillis()));
+    }
+
+    /** The export log line, built from counts and times only so it can never carry a token. */
+    static String exportLogLine(XalExportBundle bundle, File userDir, long nowMs) {
+        long remainingSeconds = bundle.soonestExpiryMs <= 0
+                ? -1
+                : (bundle.soonestExpiryMs - nowMs) / 1000L;
+        return "Exported " + bundle.files.size() + " file(s) to " + userDir.getAbsolutePath()
+                + "; relying parties " + bundle.distinctRelyingParties()
+                + "; soonest token expiry "
+                + (remainingSeconds < 0 ? "unknown" : remainingSeconds + "s");
+    }
+
+    private static File xalRoot(Context ctx) {
+        return new File(ctx.getApplicationContext().getFilesDir(), XalStorageContract.XAL_DIR);
+    }
+
     private static void clearXalData(Context ctx) {
-        File xalDir = new File(ctx.getApplicationContext().getFilesDir(), "xal");
-        deleteDirectory(xalDir);
-        SharedPreferences.Editor edit = ctx.getSharedPreferences("org.chimeramc.xal.crypto", Context.MODE_PRIVATE).edit();
+        deleteDirectory(xalRoot(ctx));
+        SharedPreferences.Editor edit = ctx.getSharedPreferences(
+                XalStorageContract.CRYPTO_PREFS_LAUNCHER, Context.MODE_PRIVATE).edit();
         edit.clear();
         edit.apply();
     }
@@ -96,146 +178,5 @@ public class XalExporter {
             }
         }
         return dir.delete();
-    }
-
-    public static void export(Context ctx, JsonObject authJson, String msaUserId, String gamertag, String xuid) {
-        File root = new File(ctx.getApplicationContext().getFilesDir(), "xal");
-        if (!root.exists()) root.mkdirs();
-
-        String b64User = Base64.encodeToString(msaUserId.getBytes(StandardCharsets.UTF_8),
-                Base64.URL_SAFE | Base64.NO_PADDING | Base64.NO_WRAP);
-        File userDir = new File(root, b64User);
-        if (!userDir.exists()) userDir.mkdirs();
-
-        String tid = "1739947436";
-
-        // DeviceIdentity.json
-        if (authJson.has("deviceId") && !authJson.get("deviceId").isJsonNull()) {
-            String deviceId = authJson.get("deviceId").getAsString();
-            JsonObject di = new JsonObject();
-            di.addProperty("Id", "{" + deviceId + "}");
-            di.addProperty("Key", "Serialized to SharedPreferences");
-            File diFile = new File(userDir, "Xal.Production.RETAIL.DeviceIdentity.json");
-            JsonIOUtils.write(diFile, GSON.toJson(di));
-        }
-
-        // Default.json
-        JsonObject def = new JsonObject();
-        def.addProperty("default", msaUserId);
-        File defFile = new File(userDir, "Xal." + tid + ".Production.Default.json");
-        JsonIOUtils.write(defFile, GSON.toJson(def));
-
-        // Msa.json
-        if (authJson.has("msaToken")) {
-            JsonObject msaJson = authJson.getAsJsonObject("msaToken");
-            JsonObject rootMsa = new JsonObject();
-            rootMsa.addProperty("user_id", msaUserId);
-            rootMsa.addProperty("refresh_token", msaJson.has("refreshToken") && !msaJson.get("refreshToken").isJsonNull() ? msaJson.get("refreshToken").getAsString() : "");
-            rootMsa.addProperty("foci", "");
-
-            JsonObject at = new JsonObject();
-            String tokenVal = msaJson.has("accessToken") ? msaJson.get("accessToken").getAsString() : "";
-            at.addProperty("access_token", "t=" + tokenVal);
-            long expireTimeMs = msaJson.has("expireTimeMs") ? msaJson.get("expireTimeMs").getAsLong() : System.currentTimeMillis();
-            at.addProperty("xal_expires", formatDate(expireTimeMs));
-            at.addProperty("scopes", "service::user.auth.xboxlive.com::mbi_ssl");
-
-            JsonArray ats = new JsonArray();
-            ats.add(at);
-            rootMsa.add("access_tokens", ats);
-            File msaFile = new File(userDir, "Xal." + tid + ".Production.Msa." + b64User + ".json");
-            JsonIOUtils.write(msaFile, GSON.toJson(rootMsa));
-        }
-
-        // User.json (User + XSTS tokens)
-        JsonObject uRoot = new JsonObject();
-        uRoot.addProperty("deviceId", "{" + (authJson.has("deviceId") ? authJson.get("deviceId").getAsString() : "") + "}");
-        JsonArray tokens = new JsonArray();
-
-        // XSTS tokens
-        if (authJson.has("xboxLiveXstsToken")) tokens.add(buildXstsEnvelope("Xtoken", "http://xboxlive.com", msaUserId, gamertag, xuid, authJson.getAsJsonObject("xboxLiveXstsToken")));
-        if (authJson.has("playFabXstsToken")) tokens.add(buildXstsEnvelope("Xtoken", "https://b980a380.minecraft.playfabapi.com/", msaUserId, gamertag, xuid, authJson.getAsJsonObject("playFabXstsToken")));
-        if (authJson.has("realmsXstsToken")) tokens.add(buildXstsEnvelope("Xtoken", "https://pocket.realms.minecraft.net/", msaUserId, gamertag, xuid, authJson.getAsJsonObject("realmsXstsToken")));
-        
-        // User token
-        if (authJson.has("xblUserToken")) tokens.add(buildXstsEnvelope("Utoken", "http://auth.xboxlive.com", msaUserId, gamertag, xuid, authJson.getAsJsonObject("xblUserToken")));
-
-        uRoot.add("tokens", tokens);
-        File uFile = new File(userDir, "Xal." + tid + ".Production.RETAIL.User." + b64User + ".json");
-        JsonIOUtils.write(uFile, GSON.toJson(uRoot));
-
-        // Write KeyPair to SharedPreferences
-        if (authJson.has("deviceKeyPair")) {
-            JsonObject kp = authJson.getAsJsonObject("deviceKeyPair");
-            if (kp.has("publicKey") && kp.has("privateKey")) {
-                SharedPreferences.Editor edit = ctx.getSharedPreferences("org.chimeramc.xal.crypto", Context.MODE_PRIVATE).edit();
-                edit.putString("id", "{" + (authJson.has("deviceId") ? authJson.get("deviceId").getAsString() : "") + "}");
-                
-                String pubB64 = kp.get("publicKey").getAsString();
-                String privB64 = kp.get("privateKey").getAsString();
-                
-                try {
-                    byte[] pubBytes = android.util.Base64.decode(pubB64, android.util.Base64.DEFAULT);
-                    byte[] privBytes = android.util.Base64.decode(privB64, android.util.Base64.DEFAULT);
-                    edit.putString("public", Base64.encodeToString(pubBytes, Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE));
-                    edit.putString("private", Base64.encodeToString(privBytes, Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE));
-                } catch (Exception e) {
-                    edit.putString("public", pubB64);
-                    edit.putString("private", privB64);
-                }
-                edit.apply();
-            }
-        }
-    }
-
-    private static JsonObject buildXstsEnvelope(String identityType, String relyingParty, String msaUserId, String gamertag, String xuid, JsonObject tokenObj) {
-        long expireTimeMs = tokenObj.has("expireTimeMs") ? tokenObj.get("expireTimeMs").getAsLong() : System.currentTimeMillis();
-        String tokenStr = tokenObj.has("token") ? tokenObj.get("token").getAsString() : "";
-        String uhs = tokenObj.has("userHash") ? tokenObj.get("userHash").getAsString() : "";
-
-        JsonObject xui = new JsonObject();
-        xui.addProperty("uhs", uhs);
-        xui.addProperty("gtg", gamertag);
-        xui.addProperty("mgt", "");
-        xui.addProperty("mgs", "");
-        xui.addProperty("umg", "");
-        xui.addProperty("xid", xuid);
-        xui.addProperty("agg", "");
-        xui.addProperty("prv", "");
-        xui.addProperty("usr", "");
-        xui.addProperty("uer", "");
-        xui.addProperty("utr", "");
-
-        JsonArray xuiArr = new JsonArray();
-        xuiArr.add(xui);
-
-        JsonObject displayClaims = new JsonObject();
-        displayClaims.add("xui", xuiArr);
-
-        JsonObject data = new JsonObject();
-        data.addProperty("Token", tokenStr);
-        data.addProperty("NotAfter", formatDate(expireTimeMs));
-        data.addProperty("IssueInstant", formatDate(expireTimeMs - 8 * 60 * 60 * 1000L)); // Approx 8 hours before expiry
-        data.addProperty("ClientAttested", false);
-        data.add("DisplayClaims", displayClaims);
-
-        JsonObject env = new JsonObject();
-        env.addProperty("MsaUserId", msaUserId);
-        env.addProperty("HasSignInDisplayClaims", true);
-        env.addProperty("IdentityType", identityType);
-        env.addProperty("Environment", "Production");
-        env.addProperty("Sandbox", "RETAIL");
-        env.addProperty("TokenType", "JWT");
-        env.addProperty("RelyingParty", relyingParty);
-        env.addProperty("SubRelyingParty", "");
-        env.add("TokenData", data);
-
-        return env;
-    }
-
-    private static String formatDate(long millis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-        return sdf.format(new Date(millis));
     }
 }

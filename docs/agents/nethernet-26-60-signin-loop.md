@@ -134,3 +134,96 @@ What is still UNKNOWN, with the exact evidence to capture on a 26.60 instance:
   launcher supplies no socket for it, and nothing in this repo has been observed to fail with
   `Transport::RAKNET` selected, so `BedrockTransport` stays a pure gate with no caller and
   `core/nethernet` stays unwired (see the README in that package).
+
+## 6. Update, 2026-11-28: the export the game reads, and five defects in it
+
+The report for this pass: the launcher already holds the account, the game still opens on "Sign In";
+after signing in, the gamertag and Social (1) appear and Marketplace loads, but
+"Signing in with your Microsoft account....." never clears and the skin stays default.
+
+That split matters. A user token is clearly present (Social, Marketplace), so the game is not
+failing to authenticate at all; what it cannot finish is the part that needs a *relying party it
+does not have*. The launcher's XAL export is the only place those tokens come from, so the export
+is where the defects are. Each item below is confirmed by reading the code and pinned by a JVM
+test; none of them has been observed on a phone yet, and section 6.2 says what a device still has
+to show.
+
+### 6.1 Confirmed in code, with tests
+
+1. **The game read a different directory than the exporter wrote.** `Storage.getStoragePath`
+   returned plain `files/` unless `launcherManagedMcLoginEnabled` was true, and that setting
+   defaults to false (`FeatureSettings`). `XalExporter` wrote `files/xal/<b64>/` unconditionally.
+   On a default install the export was therefore invisible to the game.
+   **Fixed:** `XalStorageContract` (in the `minecraft` module, used by both sides) owns the layout
+   and the "which account" rule, and `Storage` now uses the launcher store whenever an exported
+   account exists, not only when the toggle is on. `XalStorageContractTest`.
+
+   Why the toggle exists at all, and why it was not simply forced on: it is the opt-in "the
+   launcher manages the game's Microsoft sign-in" switch (`SettingsRegistry` entry
+   `launcher_managed_login`, default off), and it also drives `AndroidLaunchProbe.signInRequired`,
+   i.e. whether a launch is *blocked* until the user signs in. Forcing it on would rewrite a
+   user-visible setting and change a launch gate; making the exporter obey it would keep exporting
+   nothing on a default install, which is the reported symptom. Treating a present export as
+   authoritative is the smallest rule that makes the writer and the reader agree, and it leaves the
+   toggle meaning what it always meant for the launch gate and for a fresh install with no export.
+2. **A refreshed token never reached the game.** `MsftAccountStore.updateAuthMaterial` saved the
+   new chain and stopped. **Fixed:** it now calls `XalExporter.refreshExportedAccount`, which
+   rewrites only the account the pointer names, so a background refresh of another account cannot
+   re-point the launch. `XalExportWiringTest`.
+3. **The export wrote the bound account, the game read the active one.** `exportAccount` (F2
+   per-instance binding) wrote `<b64_bound>`, while `Storage` resolved the `active` flag in
+   `Xal.Accounts.json`. **Fixed:** every export writes `Xal.Current.json` with the account id, and
+   the reader prefers that pointer over the active flag.
+   `XalStorageContractTest.theExportPointerWinsOverTheActiveAccount`.
+4. **No Dtoken.** The export never emitted a `Dtoken` envelope, so XAL had no device token with
+   which to mint a relying party that was not cached. **Fixed:** a `Dtoken` envelope is written
+   from `xblDeviceToken` against `http://auth.xboxlive.com`. The library's device token carries no
+   user hash, so the user token's `uhs` is reused.
+   `XalExportBundleTest.theDeviceTokenIsWrittenSoXalCanMintAMissingRelyingParty`.
+5. **Missing relying parties.** Only `http://xboxlive.com`, PlayFab, Realms and the `Utoken` were
+   written. **Fixed:** `https://multiplayer.minecraft.net/` (from `bedrockXstsToken`) and
+   `rp://api.minecraftservices.com/` (minted by the Java chain and kept in the snapshot as
+   `javaXstsToken`, because the exporter runs offline and cannot mint it) are written too, and
+   `refreshStoredAccount` renews the Bedrock XSTS and Realms tokens as well as MSA, Xbox Live and
+   the certificate chain. A token the snapshot does not carry is omitted rather than faked.
+
+Also changed: the export now runs on **every launch** for the account the game will read (the bound
+account when there is one, otherwise the active account), not only on sign-in; and the exporter logs
+one line, tag `XalExporter`, with the relying parties written, the seconds to the soonest expiry and
+the target directory, and no token, id or gamertag.
+
+### 6.2 Still UNVERIFIED, and what would settle it
+
+There is no device in this environment, so nothing above proves XAL accepts the files. What is
+proven is that the writer produces the file set, the relying parties, the `Dtoken` and the account
+directory that the reader resolves — and that the reader no longer looks somewhere else.
+
+On a 26.60 phone, with the launcher signed in:
+
+```
+adb logcat -s Xal:* XalSignIn:* XalExporter:* com.mojang.minecraftpe:*
+```
+
+Expected from the launcher, once per launch and once per refresh:
+
+```
+I XalExporter | Exported 4 file(s) to /data/user/0/org.chimeramc.client/files/xal/<b64>; relying parties [http://auth.xboxlive.com, http://xboxlive.com, https://multiplayer.minecraft.net/, https://b980a380.minecraft.playfabapi.com/, https://pocket.realms.minecraft.net/, rp://api.minecraftservices.com/]; soonest token expiry <n>s
+```
+
+- No `XalExporter` line at all means the export never ran (launch-path defect, not auth).
+- A line whose `soonest token expiry` is negative means the stored chain was already expired when
+  exported, i.e. the refresh did not run or failed (it is logged as `Could not refresh the stored
+  sign-in material`).
+- `files/xal/<b64>` that does not match the account the launcher shows means the pointer and the
+  account list disagree; `Xal.Current.json` says which one the game used.
+- Then watch whether the game's "Signing in with your Microsoft account....." clears. If it clears
+  and the skin is still Steve, that is the separate signature-rules gap in 5.3, not auth.
+
+### 6.3 The unverified guesses that were deliberately left alone
+
+`MsftAuthManager.GAME_VERSION` is still `1.21.110`, the title id in the file names is still
+`1739947436`, `ClientAttested` is still `false`, `IssueInstant` is still `NotAfter` minus eight
+hours, `Msa.json` still carries `"foci": ""` and the access token still carries the `t=` prefix.
+Each of these is a guess at the shape the real XAL client writes, and changing them without a device
+would only trade one guess for another. They are the first things to compare against a
+`files/xal/` directory produced by the genuine client on a 26.60 phone.

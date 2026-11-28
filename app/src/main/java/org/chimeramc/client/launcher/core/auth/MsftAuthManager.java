@@ -29,6 +29,7 @@ import net.raphimc.minecraftauth.util.http.exception.ApiHttpRequestException;
 import net.raphimc.minecraftauth.util.http.exception.InformativeHttpRequestException;
 import net.raphimc.minecraftauth.xbl.exception.XblRequestException;
 import net.raphimc.minecraftauth.xbl.model.XblUserProfile;
+import net.raphimc.minecraftauth.xbl.model.XblXstsToken;
 
 import org.chimeramc.client.BuildConfig;
 import org.chimeramc.client.util.AppLog;
@@ -340,25 +341,67 @@ public final class MsftAuthManager {
             // Touch every step so each renews if it is near expiry, then serialise the result. The
             // certificate chain is the one the game validates, so it is the last to be pulled.
             // The XBL token has no public accessor; it is pulled implicitly by the XSTS request,
-            // which is the step that actually needs it. Touching MSA, XSTS, the certificate chain
-            // and PlayFab covers every step the login path serialises.
+            // which is the step that actually needs it. Every relying party the exporter writes is
+            // renewed here, or the export would hand the game a fresh certificate next to a stale
+            // per-service token.
             authManager.getMsaToken().getUpToDate();
             authManager.getXboxLiveXstsToken().getUpToDate();
+            // The Bedrock XSTS token is the one authorised for multiplayer.minecraft.net, and the
+            // certificate chain below is minted from it.
+            authManager.getBedrockXstsToken().getUpToDate();
+            // Per-service tokens are best-effort: PlayFab is telemetry and Realms is only used when
+            // the player opens Realms, so neither may fail the refresh. They are logged rather than
+            // swallowed, so a persistent failure is visible.
+            refreshBestEffort("PlayFab", authManager.getPlayFabXstsToken());
+            refreshBestEffort("Realms", authManager.getRealmsXstsToken());
             authManager.getMinecraftCertificateChain().getUpToDate();
-            try {
-                authManager.getPlayFabXstsToken().getUpToDate();
-            } catch (Exception e) {
-                // PlayFab is only used for telemetry, so a failure must not fail the refresh — but
-                // it is logged rather than swallowed, so a persistent failure is visible.
-                Log.w(TAG, "PlayFab token unavailable during refresh", e);
-            }
 
-            String refreshed = BedrockAuthManager.toJson(authManager).toString();
-            MsftAccountStore.updateAuthMaterial(context, account.id, refreshed);
+            JsonObject refreshedJson = BedrockAuthManager.toJson(authManager);
+            // The Minecraft Services relying party needs a Java XSTS exchange, which the Bedrock
+            // chain does not perform. Mint it once per refresh and keep it in the same snapshot:
+            // the exporter runs offline and cannot mint it itself.
+            mergeMinecraftServicesXsts(httpClient, refreshedJson);
+
+            MsftAccountStore.updateAuthMaterial(context, account.id, refreshedJson.toString());
             return true;
         } catch (Throwable t) {
             Log.w(TAG, "Could not refresh the stored sign-in material", t);
             return false;
+        }
+    }
+
+    /** Renews one optional relying party without failing the whole refresh. */
+    private static void refreshBestEffort(
+            String name, net.raphimc.minecraftauth.util.holder.Holder<XblXstsToken> holder) {
+        try {
+            holder.getUpToDate();
+        } catch (Exception e) {
+            Log.w(TAG, name + " token unavailable during refresh", e);
+        }
+    }
+
+    /**
+     * Adds the Minecraft Services XSTS token to a Bedrock snapshot.
+     *
+     * <p>Both chains read the same base keys ({@code msaApplicationConfig}, {@code deviceType},
+     * {@code deviceKeyPair}, {@code deviceId}, {@code msaToken}), so the Bedrock snapshot can be
+     * read as a Java one and the Java chain mints {@code rp://api.minecraftservices.com/} from it
+     * without a second sign-in. The token is stored under {@code javaXstsToken}, the key the Java
+     * chain itself uses, so a later refresh reuses it instead of minting another.
+     *
+     * <p>Best-effort: a failure leaves the snapshot without that relying party, which the exporter
+     * reports honestly rather than faking.
+     */
+    private static void mergeMinecraftServicesXsts(HttpClient httpClient, JsonObject bedrockJson) {
+        try {
+            net.raphimc.minecraftauth.java.JavaAuthManager javaAuth =
+                    net.raphimc.minecraftauth.java.JavaAuthManager.fromJson(httpClient, bedrockJson);
+            XblXstsToken token = javaAuth.getJavaXstsToken().getUpToDate();
+            if (token != null) {
+                bedrockJson.add("javaXstsToken", XblXstsToken.toJson(token));
+            }
+        } catch (Throwable t) {
+            Log.w(TAG, "Minecraft Services XSTS token unavailable during refresh", t);
         }
     }
 

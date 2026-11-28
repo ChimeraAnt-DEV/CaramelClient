@@ -139,7 +139,12 @@ public class MsftAccountStore {
                 changed = true;
             }
         }
-        if (changed) save(ctx, accounts);
+        if (changed) {
+            save(ctx, accounts);
+            // The game reads the exported copy, not this store, so a refreshed chain that is not
+            // re-exported leaves the game holding the previous (about to expire) sign-in.
+            org.chimeramc.client.core.auth.storage.XalExporter.refreshExportedAccount(ctx, id);
+        }
     }
 
     public static synchronized void remove(Context ctx, String id) {

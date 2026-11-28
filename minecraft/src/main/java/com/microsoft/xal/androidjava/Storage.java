@@ -2,90 +2,89 @@ package com.microsoft.xal.androidjava;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * Where this XAL copy keeps its state.
+ *
+ * <p>The game asks for one directory and writes every token file into it. When the launcher has
+ * exported an account, that directory must be the exported account's own, or the game reads a
+ * store the launcher never wrote and shows a Sign In button next to a signed-in launcher.
+ *
+ * <p>The layout and the account-resolution rule live in {@link XalStorageContract}, which the
+ * launcher's exporter also uses, so the writer and the reader cannot drift apart.
+ */
 public class Storage {
+    private static final String TAG = "XalStorage";
+    private static final String FEATURE_PREFS = "feature_settings";
+    private static final String FEATURE_JSON = "settings_json";
+    private static final String LAUNCHER_MANAGED_LOGIN = "launcherManagedMcLoginEnabled";
+
     @NotNull
     public static String getStoragePath(@NotNull Context context) {
-        boolean takeover = false;
-        try {
-            SharedPreferences sp = context.getSharedPreferences("feature_settings", Context.MODE_PRIVATE);
-            String json = sp.getString("settings_json", null);
-            if (json != null) {
-                JSONObject obj = new JSONObject(json);
-                takeover = obj.optBoolean("launcherManagedMcLoginEnabled", false);
-            }
-        } catch (Throwable ignored) {
+        File filesDir = context.getApplicationContext().getFilesDir();
+        if (!launcherStoreInUse(context)) {
+            return filesDir.getPath();
         }
 
-        File xalRoot;
-        if (takeover) {
-            File internalXal = new File(context.getApplicationContext().getFilesDir(), "xal");
+        File xalRoot = xalRoot(context);
+        if (!xalRoot.exists() && !xalRoot.mkdirs()) {
+            return filesDir.getPath();
+        }
 
-            if (!internalXal.exists()) internalXal.mkdirs();
-            xalRoot = internalXal;
-
-            String activeMsUserId = null;
-            File accountsFile = new File(xalRoot, "Xal.Accounts.json");
-            if (accountsFile.exists()) {
-                try (FileInputStream fis = new FileInputStream(accountsFile)) {
-                    byte[] buf = new byte[(int) Math.min(accountsFile.length(), 1024 * 1024)];
-                    int read = fis.read(buf);
-                    String body = new String(buf, 0, Math.max(0, read), StandardCharsets.UTF_8);
-                    JSONArray arr = new JSONArray(body);
-                    for (int i = 0; i < arr.length(); i++) {
-                        JSONObject a = arr.optJSONObject(i);
-                        if (a == null) continue;
-                        if (a.optBoolean("active", false)) {
-                            String msUserId = a.optString("msUserId", null);
-                            if (!msUserId.isEmpty()) {
-                                activeMsUserId = msUserId;
-                                break;
-                            }
-                        }
-                    }
-                    if (activeMsUserId == null) {
-                        for (int i = 0; i < arr.length(); i++) {
-                            JSONObject a = arr.optJSONObject(i);
-                            if (a == null) continue;
-                            String msUserId = a.optString("msUserId", null);
-                            if (!msUserId.isEmpty()) {
-                                activeMsUserId = msUserId;
-                                break;
-                            }
-                        }
-                    }
-                } catch (Throwable ignored) {}
-            }
-
-            if (activeMsUserId != null && !activeMsUserId.isEmpty()) {
-                String b64 = Base64.encodeToString(
-                        activeMsUserId.getBytes(StandardCharsets.UTF_8),
-                       Base64.URL_SAFE | Base64.NO_PADDING | Base64.NO_WRAP
-                );
-                File userDir = new File(xalRoot, b64);
-                if (!userDir.exists()) {
-                    try {
-                        userDir.mkdirs();
-                    } catch (Exception e) {
-
-                    }
-                }
-                return userDir.getAbsolutePath();
-            }
+        File userDir = XalStorageContract.accountDirectory(xalRoot);
+        if (userDir == null) {
+            // No account to point at: the game still gets the launcher's directory, so anything
+            // it writes lands beside the export instead of in a store nobody reads.
             return xalRoot.getAbsolutePath();
         }
+        if (!userDir.exists() && !userDir.mkdirs()) {
+            return xalRoot.getAbsolutePath();
+        }
+        return userDir.getAbsolutePath();
+    }
 
-        return context.getApplicationContext().getFilesDir().getPath();
+    /**
+     * Whether the launcher's store is the one to use.
+     *
+     * <p>True when the user asked for launcher-managed login, and also when an account has already
+     * been exported: exporting an account while this XAL copy reads somewhere else is the defect
+     * this rule removes, and the export runs unconditionally on sign-in and on every launch.
+     */
+    public static boolean launcherStoreInUse(@NotNull Context context) {
+        return launcherManagedLoginEnabled(context) || launcherDataPresent(context);
+    }
+
+    /** The crypto preferences name that matches the storage-path decision. */
+    public static String cryptoPrefsName(@NotNull Context context) {
+        return XalStorageContract.cryptoPrefsName(
+                launcherManagedLoginEnabled(context), launcherDataPresent(context));
+    }
+
+    public static boolean launcherManagedLoginEnabled(@NotNull Context context) {
+        try {
+            SharedPreferences prefs = context.getSharedPreferences(FEATURE_PREFS, Context.MODE_PRIVATE);
+            String json = prefs.getString(FEATURE_JSON, null);
+            if (json == null) return false;
+            return new JSONObject(json).optBoolean(LAUNCHER_MANAGED_LOGIN, false);
+        } catch (Throwable unreadable) {
+            // Fail closed to "not managed", but say so: silently reading the wrong store is what
+            // produced a sign-in prompt next to a signed-in launcher.
+            Log.w(TAG, "Could not read the launcher-managed login setting", unreadable);
+            return false;
+        }
+    }
+
+    public static boolean launcherDataPresent(@NotNull Context context) {
+        return XalStorageContract.launcherDataPresent(xalRoot(context));
+    }
+
+    private static File xalRoot(@NotNull Context context) {
+        return new File(context.getApplicationContext().getFilesDir(), XalStorageContract.XAL_DIR);
     }
 }

@@ -32,19 +32,14 @@ public class Ecdsa {
     private KeyPair keyPair;
     private String uniqueId;
 
+    /**
+     * The key pair must be read from wherever the launcher wrote it, which is the same decision as
+     * the storage path ({@link com.microsoft.xal.androidjava.Storage#cryptoPrefsName}).
+     */
     private static SharedPreferences getCryptoPrefs(@NonNull Context context) {
-        boolean takeover = false;
-        try {
-            SharedPreferences sp = context.getSharedPreferences("feature_settings", 0);
-            String json = sp.getString("settings_json", null);
-            if (json != null) {
-                org.json.JSONObject obj = new org.json.JSONObject(json);
-                takeover = obj.optBoolean("launcherManagedMcLoginEnabled", false);
-            }
-        } catch (Throwable ignored) {}
-        String name = takeover ? "org.chimeramc.xal.crypto" : "com.microsoft.xal.crypto";
-        return context.getSharedPreferences(name, 0);
-   }
+        return context.getSharedPreferences(
+                com.microsoft.xal.androidjava.Storage.cryptoPrefsName(context), 0);
+    }
 
     @Nullable
     public static Ecdsa restoreKeyAndId(@NonNull Context context) throws ClassCastException, IllegalArgumentException, NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException {
