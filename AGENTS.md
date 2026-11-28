@@ -34,6 +34,7 @@ file is missing from the index.
 - [Splash screen (ui.activities.SplashActivity + core.splash + drawable-nodpi/splash_bg_*)](docs/agents/splash-screen.md)
 - [Launch tab layout & news removal](docs/agents/launch-tab-layout-news-removal.md)
 - [Mod Hub (org.chimeramc.client.ui.activities.ModHubActivity + core.modrinth + core.downloads)](docs/agents/mod-hub.md)
+- [CurseForge tab (CaramelCurseForgeTab + CurseForgeSections + core.curseforge)](docs/agents/caramel-curseforge-tab.md)
 - [Controller illustrations (ui.views.ControllerIllustrationView)](docs/agents/controller-illustrations-ui-views-controllerillustrationview.md)
 - [Mod load diagnostics & crash-loop safe mode (core.mods.ModLoadDiagnostics + ModSafeMode)](docs/agents/mod-load-diagnostics-crash-loop-safe-mode.md)
 - [Per-instance mod sets & the hero "N active" stat (core.mods.ModManager + MainActivity)](docs/agents/per-instance-mod-sets-the-hero-n-active-stat.md)
