@@ -47,3 +47,28 @@ What has not been verified here is the CI run itself, since the secrets only exi
 
 The workflow `name:` changed from "Build Debug APK" to "Build Release APK". If branch protection
 lists the old check name as required, update it, or the new context will sit unrequired.
+
+## What is still open (measured 2026-11-28)
+
+The `Build Release APK` run on `4329c93` logs `HAS_SIGNING_KEY: false`, so the repository secrets
+(`SIGNING_KEY_STORE`, `SIGNING_KEY_ALIAS`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_PASSWORD`) are not
+visible to the runner (`gh secret list` from a session token cannot see them either). Consequences:
+
+- Every CI run builds `beta` with the **debug** key, and that key is generated fresh on each runner
+  (`~/.android/debug.keystore` does not exist until AGP creates it), so **two consecutive CI betas are
+  signed with different keys**. Installing one over the other therefore always demands the
+  data-wiping uninstall — which is the exact symptom the user reported, and it repeats for CI-to-CI
+  updates, not just local-to-CI ones.
+- The job deliberately does not upload an APK in that state (`::warning::No signing key on this run`),
+  so nothing debug-signed is published from here.
+
+Uploading the key was **not** done: that places a private key in the repository's secrets, which
+needs the owner's explicit go-ahead. The command, once that is given, is
+
+    base64 -w0 /workspace/keys/ci-test.jks | gh secret set SIGNING_KEY_STORE
+    gh secret set SIGNING_KEY_ALIAS --body <alias>
+    gh secret set SIGNING_STORE_PASSWORD --body <store password>
+    gh secret set SIGNING_KEY_PASSWORD --body <key password>
+
+then re-run `Build Release APK` and confirm the run logs `HAS_SIGNING_KEY: true` and that
+`apksigner verify --print-certs` on the artifact reports one fixed `CN`, the same one in every run.
